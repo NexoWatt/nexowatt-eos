@@ -1,0 +1,1069 @@
+# ------------------------------
+# Increase this version number whenever you update the lib
+# ------------------------------
+LIBRARY_VERSION="2026-09-30" # format YYYY-MM-DD
+
+# ------------------------------
+# Supported and suggested node versions
+# (default fallback values, overridden by versions.json if reachable)
+# ------------------------------
+# The reviewed entry point supplies local/bundled versions.json. Never fetch a
+# mutable remote policy while executing an installer or standalone library test.
+NODE_MAJOR=24
+# Space separated list of the major versions ioBroker supports.
+# Fallback only, overridden by nodeJsAccepted from versions.json below.
+NODE_ACCEPTED="22 24 26"
+VERSIONS_JSON="${EOS_VERSIONS_JSON:-}"
+if [ -n "$VERSIONS_JSON" ]; then
+    NODE_MAJOR_FROM_JSON=$(echo "$VERSIONS_JSON" | grep '"nodeJsRecommended"' | sed 's/.*"nodeJsRecommended"[[:space:]]*:[[:space:]]*\([0-9]*\).*/\1/')
+    if [ -n "$NODE_MAJOR_FROM_JSON" ] && [[ "$NODE_MAJOR_FROM_JSON" =~ ^[0-9]+$ ]]; then
+        NODE_MAJOR=$NODE_MAJOR_FROM_JSON
+    fi
+    # "nodeJsAccepted": [22, 24, 26] -> "22 24 26"
+    # Portable on purpose: this library also runs on macOS and FreeBSD, where grep -P is absent.
+    NODE_ACCEPTED_FROM_JSON=$(echo "$VERSIONS_JSON" | sed -n 's/.*"nodeJsAccepted"[[:space:]]*:[[:space:]]*\[\([0-9,[:space:]]*\)\].*/\1/p' | tr ',' ' ')
+    if [ -n "$NODE_ACCEPTED_FROM_JSON" ]; then
+        # unquoted on purpose: collapses the separators into a single spaced list
+        # shellcheck disable=SC2086
+        NODE_ACCEPTED=$(echo $NODE_ACCEPTED_FROM_JSON)
+    fi
+fi
+NODE_JS_BREW_URL="https://nodejs.org/dist/latest-v${NODE_MAJOR}.x/"
+
+# ------------------------------
+# test function of the library
+# ------------------------------
+function get_lib_version() { echo "$LIBRARY_VERSION"; }
+
+# ------------------------------
+# functions for ioBroker Installer/Fixer
+# ------------------------------
+
+enable_colored_output() {
+    # Enable colored output
+    if test -t 1; then                                  # if terminal
+        ncolors=$(which tput >/dev/null && tput colors) # supports color
+        if test -n "$ncolors" && test "$ncolors" -ge 8; then
+            termcols=$(tput cols)
+            bold="$(tput bold)"
+            underline="$(tput smul)"
+            standout="$(tput smso)"
+            normal="$(tput sgr0)"
+            black="$(tput setaf 0)"
+            red="$(tput setaf 1)"
+            green="$(tput setaf 2)"
+            yellow="$(tput setaf 3)"
+            blue="$(tput setaf 4)"
+            magenta="$(tput setaf 5)"
+            cyan="$(tput setaf 6)"
+            white="$(tput setaf 7)"
+        fi
+    fi
+}
+
+print_step() {
+    stepname="$1"
+    stepnr="$2"
+    steptotal="$3"
+
+    echo
+    echo "${bold}${HLINE}${normal}"
+    echo "${bold}    ${stepname} ${blue}(${stepnr}/${steptotal})${normal}"
+    echo "${bold}${HLINE}${normal}"
+    echo
+}
+
+print_bold() {
+    title="$1"
+    echo
+    echo "${bold}${HLINE}${normal}"
+    echo
+    echo "    ${bold}${title}${normal}"
+    for text in "${@:2}"; do
+        echo "    ${text}"
+    done
+    echo
+    echo "${bold}${HLINE}${normal}"
+    echo
+}
+
+print_msg() {
+    text="$1"
+    echo
+    echo -e "${text}"
+    echo
+}
+
+HLINE="=========================================================================="
+enable_colored_output
+
+get_platform_params() {
+    # Test which platform this script is being run on
+    # When adding another supported platform, also add detection for the install command
+    # HOST_PLATFORM:    Name of the platform
+    # INSTALL_CMD:      Command for package installation
+    # INSTALL_CMD_ARGS: Arguments for $INSTALL_CMD to install something
+    # INSTALL_CMD_UPD_ARGS: Subcommand and arguments for $INSTALL_CMD to refresh the
+    #                   package metadata, so callers do not have to branch per manager
+    # IOB_DIR:          Directory where iobroker should be installed
+    # IOB_USER:          The user to run ioBroker as
+
+    INSTALL_CMD_UPD_ARGS="update"
+
+    unamestr=$(uname)
+    case "$unamestr" in
+    "Linux")
+        HOST_PLATFORM="linux"
+        INSTALL_CMD="apt-get"
+        INSTALL_CMD_ARGS="install -yq"
+        if [[ $(which "dnf" 2>/dev/null) == *"/dnf" ]]; then
+            INSTALL_CMD="dnf"
+            # The args -y and -q have to be separate
+            INSTALL_CMD_ARGS="install -q -y"
+            INSTALL_CMD_UPD_ARGS="-y makecache"
+        elif [[ $(which "yum" 2>/dev/null) == *"/yum" ]]; then
+            INSTALL_CMD="yum"
+            # The args -y and -q have to be separate
+            INSTALL_CMD_ARGS="install -q -y"
+            INSTALL_CMD_UPD_ARGS="-y makecache"
+        fi
+        IOB_DIR="/opt/iobroker"
+        IOB_USER="iobroker"
+        ;;
+    "Darwin")
+        # OSX and Linux are the same in terms of install procedure
+        HOST_PLATFORM="osx"
+        ROOT_GROUP="wheel"
+        INSTALL_CMD="brew"
+        INSTALL_CMD_ARGS="install"
+        IOB_DIR="/usr/local/iobroker"
+        IOB_USER="$USER"
+        ;;
+    "FreeBSD")
+        HOST_PLATFORM="freebsd"
+        ROOT_GROUP="wheel"
+        INSTALL_CMD="pkg"
+        INSTALL_CMD_ARGS="install -yq"
+        IOB_DIR="/opt/iobroker"
+        IOB_USER="iobroker"
+        ;;
+    *)
+        # The following should never happen, but better be safe than sorry
+        echo "Unsupported platform $unamestr"
+        exit 1
+        ;;
+    esac
+    if [ "$IS_ROOT" = true ]; then
+        USER_GROUP="$ROOT_GROUP"
+    fi
+}
+
+function set_some_common_params() {
+    CONTROLLER_DIR="$IOB_DIR/node_modules/iobroker.js-controller"
+    INSTALLER_INFO_FILE="$IOB_DIR/INSTALLER_INFO.txt"
+
+    # Where the fixer script is located
+    FIXER_URL="https://iobroker.net/fix.sh"
+
+    # Where the diag script is located
+    DIAG_URL="https://iobroker.net/diag.sh"
+
+    # Where the nodejs Update script is located
+    NODE_UPDATER_URL="https://iobroker.net/node-update.sh"
+
+    # Remember the full path of bash
+    BASH_CMDLINE=$(which bash)
+
+    # Check if "sudo" command is available (in case we're not root)
+    if [ "$IS_ROOT" != true ]; then
+        if [[ $(which "sudo" 2>/dev/null) != *"/sudo" ]]; then
+            echo "${red}Cannot continue because the \"sudo\" command is not available!${normal}"
+            echo "Please install it first using \"$INSTALL_CMD install sudo\""
+            exit 1
+        fi
+    fi
+
+    # Starting with Debian 10 (Buster), we need to add the [/usr[/local]]/sbin
+    # directories to PATH for non-root users
+    if [ -d "/sbin" ]; then add_to_path "/sbin"; fi
+    if [ -d "/usr/sbin" ]; then add_to_path "/usr/sbin"; fi
+    if [ -d "/usr/local/sbin" ]; then add_to_path "/usr/local/sbin"; fi
+}
+
+install_package_linux() {
+    package="$1"
+    # Test if the package is installed
+    if [ "$INSTALL_CMD" = "yum" ] || [ "$INSTALL_CMD" = "dnf" ]; then
+        rpm -q "$package" &>/dev/null
+    else
+        dpkg -s "$package" &>/dev/null
+    fi
+    if [ $? -ne 0 ]; then
+        if [ "$INSTALL_CMD" = "yum" ] || [ "$INSTALL_CMD" = "dnf" ]; then
+            # Install it; capture stderr for error reporting, discard stdout
+            errormessage=$($SUDOX $INSTALL_CMD $INSTALL_CMD_ARGS "$package" 2>&1 >/dev/null)
+            install_exit=$?
+            if [ $install_exit -eq 0 ]; then
+                echo "Installed $package"
+            elif [ "$errormessage" != "" ]; then
+                echo "$errormessage"
+            fi
+        else
+            # Install it
+            errormessage=$($SUDOX $INSTALL_CMD update -qq && $SUDOX $INSTALL_CMD $INSTALL_CMD_ARGS --no-install-recommends -yqq $package)
+            # Hide "Error: Nothing to do"
+            if [ "$errormessage" != "Error: Nothing to do" ]; then
+                if [ "$errormessage" != "" ]; then
+                    echo "$errormessage"
+                fi
+                echo "Installed $package"
+            fi
+        fi
+    fi
+}
+
+install_package_freebsd() {
+    package="$1"
+    # check if package is installed (pkg is nice enough to provide us with a exitcode)
+    if ! $INSTALL_CMD info "$1" >/dev/null 2>&1; then
+        # Install it
+        $SUDOX $INSTALL_CMD $INSTALL_CMD_ARGS "$1" >/dev/null
+        echo "Installed $package"
+    fi
+}
+
+install_package_macos() {
+    package="$1"
+    # Test if the package is installed (Use brew to install essential tools)
+    $INSTALL_CMD list | grep "$package" &>/dev/null
+    if [ $? -ne 0 ]; then
+        # Install it
+        $INSTALL_CMD $INSTALL_CMD_ARGS $package &>/dev/null
+        if [ $? -eq 0 ]; then
+            echo "Installed $package"
+        else
+            echo "$package was not installed"
+        fi
+    fi
+}
+
+install_package() {
+    case "$HOST_PLATFORM" in
+    "linux")
+        install_package_linux $1
+        ;;
+    "osx")
+        install_package_macos $1
+        ;;
+    "freebsd")
+        install_package_freebsd $1
+        ;;
+    # The following should never happen, but better be safe than sorry
+    *)
+        echo "Unsupported platform $HOST_PLATFORM"
+        ;;
+    esac
+}
+
+install_necessary_packages() {
+    # Determine the platform we operate on and select the installation routine/packages accordingly
+    # TODO: Which other packages do we need by default?
+    case "$HOST_PLATFORM" in
+    "linux")
+        declare -a packages=(
+            "acl"         # To use setfacl
+            "sudo"        # To use sudo (obviously)
+            "libcap2-bin" # To inspect/remove legacy global Node.js capabilities
+            # These are used by a couple of adapters and should therefore exist:
+            "build-essential"
+            "gcc"
+            "make"
+            "libavahi-compat-libdnssd-dev"
+            "libudev-dev"
+            "libpam0g-dev"
+            "pkg-config"
+            "git"
+            "curl"
+            "unzip"
+            "distro-info"
+            # These are required for canvas
+            "libcairo2-dev"
+            "libpango1.0-dev"
+            "libjpeg-dev"
+            "libgif-dev"
+            "librsvg2-dev"
+            "libpixman-1-dev"
+            "net-tools"     # To fix issue #277
+            "cmake"         # https://github.com/ioBroker/ioBroker.js-controller/issues/1604
+            "polkitd"       # some LXC miss it
+            "passwd"        # some LXC miss it
+            "lsb-release"   # some LXC miss it
+        )
+        for pkg in "${packages[@]}"; do
+            install_package $pkg
+        done
+
+        # ==================
+        # Configure packages
+
+        # Do not grant capabilities to the shared Node.js executable. Recognized
+        # legacy settings are inspected/migrated with the Linux account policy.
+        ;;
+    "freebsd")
+        declare -a packages=(
+            "sudo"
+            "git"
+            "curl"
+            "bash"
+            "unzip"
+            "avahi-libdns" # avahi gets installed along with this
+            "dbus"
+            "nss_mdns" # needed for the mdns host resolution
+            "gcc"
+            "python" # Required for node-gyp compilation
+        )
+        for pkg in "${packages[@]}"; do
+            install_package $pkg
+        done
+        # we need to do some setting up things after installing the packages
+        # ensure dns_sd.h is where node-gyp expect it
+        ln -s /usr/local/include/avahi-compat-libdns_sd/dns_sd.h /usr/include/dns_sd.h
+        # enable dbus in the avahi configuration
+        # FreeBSD sed needs an explicit backup extension after -i, GNU sed does not
+        sed -i '' -e 's/#enable-dbus/enable-dbus/' /usr/local/etc/avahi/avahi-daemon.conf
+        # enable mdns usage for host resolution
+        sed -i '' -e 's/hosts: file dns/hosts: file dns mdns/' /etc/nsswitch.conf
+
+        # enable services avahi/dbus
+        sysrc -f /etc/rc.conf dbus_enable="YES"
+        sysrc -f /etc/rc.conf avahi_daemon_enable="YES"
+
+        # start services
+        service dbus start
+        service avahi-daemon start
+        ;;
+    "osx")
+        # Test if brew is installed. If it is, install some packages that are often used.
+        $INSTALL_CMD -v &>/dev/null
+        if [ $? -eq 0 ]; then
+            declare -a packages=(
+                # These are used by a couple of adapters and should therefore exist:
+                "pkg-config"
+                "git"
+                "curl"
+                "unzip"
+            )
+            for pkg in "${packages[@]}"; do
+                install_package $pkg
+            done
+        else
+            echo "${yellow}Since brew is not installed, frequently-used dependencies could not be installed."
+            echo "Before installing some adapters, you might have to install some packages yourself."
+            echo "Please check the adapter manuals before installing them.${normal}"
+        fi
+        ;;
+    *) ;;
+
+    esac
+}
+
+disable_npm_audit() {
+    # Make sure the npmrc file exists
+    $SUDOX touch .npmrc
+    # If .npmrc does not contain "audit=false", we need to change it
+    $SUDOX grep -q -E "^audit=false" .npmrc &>/dev/null
+    if [ $? -ne 0 ]; then
+        # Remember its contents (minus any possible audit=true)
+        NPMRC_FILE=$($SUDOX grep -v -E "^audit=true" .npmrc)
+        # And write it back
+        write_to_file "$NPMRC_FILE" .npmrc
+        # Append the line to disable audit
+        append_to_file "# disable npm audit warnings" .npmrc
+        append_to_file "audit=false" .npmrc
+    fi
+    # Make sure that npm can access the .npmrc
+    if [ "$HOST_PLATFORM" = "osx" ]; then
+        $SUDOX chown -R $USER .npmrc
+    else
+        $SUDOX chown -R $USER:$USER_GROUP .npmrc
+    fi
+}
+
+disable_npm_updatenotifier() {
+    # Make sure the npmrc file exists
+    $SUDOX touch .npmrc
+    # If .npmrc does not contain "update-notifier=false", we need to change it
+    $SUDOX grep -q -E "^update-notifier=false" .npmrc &>/dev/null
+    if [ $? -ne 0 ]; then
+        # Remember its contents (minus any possible update-notifier=true)
+        NPMRC_FILE=$($SUDOX grep -v -E "^update-notifier=true" .npmrc)
+        # And write it back
+        write_to_file "$NPMRC_FILE" .npmrc
+        # Append the line to disable update-notifier
+        append_to_file "# disable npm update-notifier information" .npmrc
+        append_to_file "update-notifier=false" .npmrc
+    fi
+    # Make sure that npm can access the .npmrc
+    if [ "$HOST_PLATFORM" = "osx" ]; then
+        $SUDOX chown -R $USER .npmrc
+    else
+        $SUDOX chown -R $USER:$USER_GROUP .npmrc
+    fi
+}
+
+# This is obsolete and can maybe removed
+set_npm_python() {
+    # Make sure the npmrc file exists
+    $SUDOX touch .npmrc
+    # If .npmrc does not contain "python=", we need to change it
+    $SUDOX grep -q -E "^python=" .npmrc &>/dev/null
+    if [ $? -ne 0 ]; then
+        # Remember its contents
+        NPMRC_FILE=$($SUDOX grep -v -E "^python=" .npmrc)
+        # And write it back
+        write_to_file "$NPMRC_FILE" .npmrc
+        # Append the line to change the python binary
+        append_to_file "# change link from python3 to python2.7 (needed for gyp)" .npmrc
+        append_to_file "python=/usr/local/bin/python2.7" .npmrc
+    fi
+    # Make sure that npm can access the .npmrc
+    if [ "$HOST_PLATFORM" = "osx" ]; then
+        $SUDOX chown -R $USER .npmrc
+    else
+        $SUDOX chown -R $USER:$USER_GROUP .npmrc
+    fi
+}
+
+force_strict_npm_version_checks() {
+    # Make sure the npmrc file exists
+    $SUDOX touch .npmrc
+    # If .npmrc does not contain "engine-strict=true", we need to change it
+    $SUDOX grep -q -E "^engine-strict=true" .npmrc &>/dev/null
+    if [ $? -ne 0 ]; then
+        # Remember its contents (minus any possible engine-strict=false)
+        NPMRC_FILE=$($SUDOX grep -v -E "^engine-strict=false" .npmrc)
+        # And write it back
+        write_to_file "$NPMRC_FILE" .npmrc
+        # Append the line to force strict version checks
+        append_to_file "# force strict version checks" .npmrc
+        append_to_file "engine-strict=true" .npmrc
+    fi
+    # Make sure that npm can access the .npmrc
+    if [ "$HOST_PLATFORM" = "osx" ]; then
+        $SUDOX chown -R $USER .npmrc
+    else
+        $SUDOX chown -R $USER:$USER_GROUP .npmrc
+    fi
+}
+
+# Adds dirs to the PATH variable without duplicating entries
+add_to_path() {
+    case ":$PATH:" in
+    *":$1:"*) : ;; # already there
+    *) PATH="$1:$PATH" ;;
+    esac
+}
+
+function write_to_file() {
+    echo "$1" | $SUDOX tee "$2" &>/dev/null
+}
+function append_to_file() {
+    echo "$1" | $SUDOX tee -a "$2" &>/dev/null
+}
+
+running_in_docker() {
+    # Test if we're running inside a container or as github actions job while building docker container image
+    if awk -F/ '$2 == "docker"' /proc/self/cgroup | read || awk -F/ '$2 == "buildkit"' /proc/self/cgroup | read || test -f /.dockerenv || test -f /run/.containerenv || test -f /opt/scripts/.docker_config/.thisisdocker; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+change_npm_command_user() {
+    # patches the npm command for the current user (if iobroker was installed as non-root),
+    # so that it is executed as `iobroker` when inside the iobroker directory
+    NPM_COMMAND_FIX_PATH=~/.iobroker/npm_command_fix
+    NPM_COMMAND_FIX=$(
+        cat <<-EOF
+		# While inside the iobroker directory, execute npm as iobroker
+		function npm() {
+			local __real_npm
+			__real_npm=\$(type -P npm) || return 1
+			if [[ \$PWD == "$IOB_DIR" || \$PWD == "$IOB_DIR/"* ]]; then
+				sudo -H -u "$IOB_USER" -- "\$__real_npm" "\$@"
+			else
+				"\$__real_npm" "\$@"
+			fi
+		}
+		EOF
+    )
+    BASHRC_LINES=$(
+        cat <<-EOF
+
+		# Forces npm to run as $IOB_USER when inside the iobroker installation dir
+		source ~/.iobroker/npm_command_fix
+		EOF
+    )
+
+    mkdir -p ~/.iobroker
+    write_to_file "$NPM_COMMAND_FIX" "$NPM_COMMAND_FIX_PATH"
+    # Activate the change
+    source "$NPM_COMMAND_FIX_PATH"
+
+    # Make sure the bashrc file exists - it should, but you never know...
+    touch ~/.bashrc
+    # If .bashrc does not contain the source command, we need to add it
+    sudo grep -q -E "^source ~/\.iobroker/npm_command_fix" ~/.bashrc &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "$BASHRC_LINES" >>~/.bashrc
+    fi
+}
+
+change_npm_command_root() {
+    # patches the npm command for the ROOT user (always! (independent of which user installed iobroker)),
+    # so that it is executed as `iobroker` when inside the iobroker directory
+    NPM_COMMAND_FIX_PATH=/root/.iobroker/npm_command_fix
+    NPM_COMMAND_FIX=$(
+        cat <<-EOF
+		# While inside the iobroker directory, execute npm as iobroker
+		function npm() {
+			local __real_npm
+			__real_npm=\$(type -P npm) || return 1
+			if [[ \$PWD == "$IOB_DIR" || \$PWD == "$IOB_DIR/"* ]]; then
+				sudo -H -u "$IOB_USER" -- "\$__real_npm" "\$@"
+			else
+				"\$__real_npm" "\$@"
+			fi
+		}
+		EOF
+    )
+    BASHRC_LINES=$(
+        cat <<-EOF
+
+		# Forces npm to run as $IOB_USER when inside the iobroker installation dir
+		source /root/.iobroker/npm_command_fix
+		EOF
+    )
+
+    sudo mkdir -p /root/.iobroker
+    write_to_file "$NPM_COMMAND_FIX" "$NPM_COMMAND_FIX_PATH"
+    # Activate the change
+    if [ "$IS_ROOT" = "true" ]; then
+        source "$NPM_COMMAND_FIX_PATH"
+    fi
+
+    # Make sure the bashrc file exists - it should, but you never know...
+    sudo touch /root/.bashrc
+    # If .bashrc does not contain the source command, we need to add it
+    sudo grep -q -E "^source /root/\.iobroker/npm_command_fix" /root/.bashrc &>/dev/null
+    if [ $? -ne 0 ]; then
+        append_to_file "$BASHRC_LINES" /root/.bashrc
+    fi
+}
+
+enable_cli_completions() {
+    # Performs the necessary configuration for CLI auto completion
+    COMPLETIONS_PATH=~/.iobroker/iobroker_completions
+    COMPLETIONS=$(
+        cat <<-'EOF'
+		iobroker_yargs_completions()
+		{
+			local cur_word args type_list
+
+			cur_word="${COMP_WORDS[COMP_CWORD]}"
+			args=("${COMP_WORDS[@]}")
+
+			# ask yargs to generate completions.
+			type_list=$(iobroker --get-yargs-completions "${args[@]}")
+
+			COMPREPLY=( $(compgen -W "${type_list}" -- ${cur_word}) )
+
+			# if no match was found, fall back to filename completion
+			if [ ${#COMPREPLY[@]} -eq 0 ]; then
+			COMPREPLY=()
+			fi
+
+			return 0
+		}
+		complete -o default -F iobroker_yargs_completions iobroker
+		complete -o default -F iobroker_yargs_completions iob
+		EOF
+    )
+    BASHRC_LINES=$(
+        cat <<-EOF
+
+		# Enable ioBroker command auto-completion
+		source ~/.iobroker/iobroker_completions
+		EOF
+    )
+
+    mkdir -p ~/.iobroker
+    write_to_file "$COMPLETIONS" "$COMPLETIONS_PATH"
+    # Activate the change
+    source "$COMPLETIONS_PATH"
+
+    # Make sure the bashrc file exists - it should, but you never know...
+    touch ~/.bashrc
+    # If .bashrc does not contain the source command, we need to add it
+    sudo grep -q -E "^source ~/\.iobroker/iobroker_completions" ~/.bashrc &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "$BASHRC_LINES" >>~/.bashrc
+    fi
+}
+
+set_root_permissions() {
+    file="$1"
+    $SUDOX chown root:$ROOT_GROUP $file
+    $SUDOX chmod 755 $file
+}
+
+make_executable() {
+    file="$1"
+    $SUDOX chmod 755 $file
+}
+
+change_owner() {
+    user="$1"
+    file="$2"
+    if [ "$HOST_PLATFORM" == "osx" ]; then
+        owner="$user"
+    else
+        owner="$user:$user"
+    fi
+    cmdline="$SUDOX chown"
+    if [ -d $file ]; then
+        # recursively chown directories
+        cmdline="$cmdline -R"
+    elif [ -L $file ]; then
+        # change ownership of symbolic links
+        cmdline="$cmdline -h"
+    fi
+    $cmdline $owner $file
+}
+
+function add2sudoers() {
+    local xsudoers=$1
+    shift
+    xarry=("$@")
+    for cmd in "${xarry[@]}"; do
+        # Test each command if and where it is installed
+        cmd_bin=$(echo $cmd | cut -d ' ' -f1)
+        cmd_path=$(which $cmd_bin 2>/dev/null)
+        if [ $? -eq 0 ]; then
+            # Then add the command to SUDOERS_CONTENT
+            full_cmd=$(echo "$cmd" | sed -e "s|$cmd_bin|$cmd_path|")
+            SUDOERS_CONTENT+=$xsudoers"NOPASSWD: $full_cmd\n"
+        fi
+    done
+}
+
+# This recognizer accepts only the exact old generator's rule shapes. A custom
+# policy is never silently replaced, even if its permissions look equivalent.
+linux_sudo_policy_content() {
+    printf '%s\n' '# Managed by ioBroker Linux installer: host-policy-v1' \
+        '# No sudo privileges are granted to the runtime or arbitrary local users.' \
+        '# Operators use their existing operating-system sudo authorization.'
+}
+
+is_legacy_linux_sudo_policy() {
+    local username="$1" content="$2" line command command_bin command_args saw_header=false
+    local saw_start=false saw_stop=false saw_restart=false runtime_rules=0
+    while IFS= read -r line || [ -n "$line" ]; do
+        [ -z "$line" ] && continue
+        if [ "$saw_header" = false ]; then
+            [ "$line" = "$username ALL=(ALL) ALL" ] || return 1
+            saw_header=true
+            continue
+        fi
+        case "$line" in
+            "$username ALL=(ALL) NOPASSWD: "*)
+                command=${line#"$username ALL=(ALL) NOPASSWD: "}
+                command_bin=${command%% *}
+                command_args=${command#"$command_bin"}
+                [[ "$command_bin" =~ ^(/usr/local/(s?bin)|/usr/(s?bin)|/(s?bin))/(shutdown|halt|poweroff|reboot|systemctl|mount|umount|systemd-run|apt-get|apt|dpkg|make|docker|ping|fping|arp-scan|setcap|nmcli|vcgencmd|cat|df|mysqldump|ldconfig)$ ]] || return 1
+                if [[ "$command_bin" = */systemctl ]]; then
+                    [[ "$command_args" = ' start' || "$command_args" = ' stop' ]] || return 1
+                else
+                    [ -z "$command_args" ] || return 1
+                fi
+                runtime_rules=$((runtime_rules + 1))
+                ;;
+            'ALL ALL=NOPASSWD: '*)
+                command=${line#'ALL ALL=NOPASSWD: '}
+                [[ "$command" =~ ^(/usr/local/(s?bin)|/usr/(s?bin)|/(s?bin))/systemctl\ (start|stop|restart)\ iobroker$ ]] || return 1
+                case "$command" in
+                    *' start iobroker') saw_start=true ;;
+                    *' stop iobroker') saw_stop=true ;;
+                    *' restart iobroker') saw_restart=true ;;
+                esac
+                ;;
+            "ALL ALL=($username) NOPASSWD: "*)
+                command=${line#"ALL ALL=($username) NOPASSWD: "}
+                command_bin=${command%% *}
+                [[ "$command_bin" =~ ^(/usr/local/(s?bin)|/usr/(s?bin)|/(s?bin))/node$ ]] || return 1
+                [ "${command#"$command_bin"}" = " $CONTROLLER_DIR/iobroker.js *" ] || return 1
+                ;;
+            *) return 1 ;;
+        esac
+    done <<< "$content"
+    # Require the distinctive complete systemd-era template, not a standalone
+    # manually authored service-user rule. Older non-systemd layouts need review.
+    [ "$saw_header" = true ] && [ "$runtime_rules" -ge 3 ] &&
+        [ "$saw_start" = true ] && [ "$saw_stop" = true ] && [ "$saw_restart" = true ]
+}
+
+inspect_linux_sudo_policy() {
+    local username="$1" policy=/etc/sudoers.d/iobroker content expected
+    # Tests may stub commands, but production paths are never environment overrides.
+    if $SUDOX test -L "$policy"; then
+        echo 'Refusing a symbolic-link ioBroker sudoers policy; administrator review required.' >&2
+        return 1
+    fi
+    if $SUDOX test -e "$policy"; then
+        $SUDOX test -f "$policy" || return 1
+        content=$($SUDOX cat -- "$policy") || return 1
+        expected=$(linux_sudo_policy_content)
+        if [ "$content" != "$expected" ] && ! is_legacy_linux_sudo_policy "$username" "$content"; then
+            echo 'Unrecognized/custom ioBroker sudoers policy; unchanged. Review it before retrying.' >&2
+            return 1
+        fi
+    fi
+}
+
+replace_linux_sudo_policy() {
+    local username="$1" temporary policy=/etc/sudoers.d/iobroker
+    inspect_linux_sudo_policy "$username" || return 1
+    # The root-owned parent prevents service-user path substitution. Never use ~
+    # for a privileged policy, and keep the old file until validation succeeds.
+    temporary=$($SUDOX mktemp /etc/sudoers.d/.iobroker-policy.XXXXXX) || return 1
+    if ! linux_sudo_policy_content | $SUDOX tee "$temporary" >/dev/null ||
+       ! $SUDOX chown root:root "$temporary" ||
+       ! $SUDOX chmod 440 "$temporary" ||
+       ! $SUDOX visudo -c -q -f "$temporary" ||
+       ! $SUDOX mv -f -- "$temporary" "$policy"; then
+        $SUDOX rm -f -- "$temporary"
+        echo 'Could not install validated ioBroker host policy.' >&2
+        return 1
+    fi
+    echo 'ioBroker runtime receives no automatic sudo privileges.'
+}
+
+inspect_node_file_capabilities() {
+    local capabilities names mode capability sorted
+    NODE_LEGACY_CAPS=false
+    NODE_CAPABILITY_PATH=$(type -P node) || return 1
+    NODE_CAPABILITY_PATH=$(readlink -f -- "$NODE_CAPABILITY_PATH") || return 1
+    [ -f "$NODE_CAPABILITY_PATH" ] || return 1
+    capabilities=$($SUDOX getcap "$NODE_CAPABILITY_PATH") || return 1
+    [ -z "$capabilities" ] && return 0
+    [[ "$capabilities" = "$NODE_CAPABILITY_PATH "* ]] || return 1
+    capabilities=${capabilities#"$NODE_CAPABILITY_PATH "}
+    names=${capabilities%%=*}
+    mode=${capabilities#*=}
+    sorted=$(printf '%s\n' "$names" | tr ',' '\n' | LC_ALL=C sort | paste -sd, -)
+    if [ "$mode" = eip ] && {
+        [ "$sorted" = cap_net_admin,cap_net_bind_service,cap_net_raw ] ||
+        [ "$sorted" = cap_net_bind_service,cap_net_raw ];
+    }; then
+        NODE_LEGACY_CAPS=true
+        return 0
+    fi
+    echo 'Unrecognized Node.js file capabilities; unchanged. Administrator review required.' >&2
+    return 1
+}
+
+create_user_linux() {
+    local username="$1" group memberships primary_group runtime_uid
+    # Preflight both legacy migrations before changing either setting.
+    inspect_linux_sudo_policy "$username" || return 1
+    inspect_node_file_capabilities || return 1
+    if id "$username" &>/dev/null; then
+        runtime_uid=$(id -u "$username") || return 1
+        [[ "$runtime_uid" =~ ^[1-9][0-9]*$ ]] || {
+            echo 'The ioBroker runtime account must have a nonzero numeric UID.' >&2
+            return 1
+        }
+        primary_group=$(id -gn "$username") || return 1
+        if [[ "$primary_group" = docker || "$primary_group" = redis ]]; then
+            echo 'Unsafe custom primary group for ioBroker; review before migration.' >&2
+            return 1
+        fi
+    else
+        $SUDOX useradd -m -s /usr/sbin/nologin "$username" || return 1
+        runtime_uid=$(id -u "$username") || return 1
+        [[ "$runtime_uid" =~ ^[1-9][0-9]*$ ]] || return 1
+        echo "User $username created"
+    fi
+    replace_linux_sudo_policy "$username" || return 1
+    if [ "$NODE_LEGACY_CAPS" = true ]; then
+        $SUDOX setcap -r "$NODE_CAPABILITY_PATH" || return 1
+        echo 'Removed recognized legacy global Node.js file capabilities.'
+    fi
+    # Remove only groups automatically granted by the old installer which cross
+    # host/service boundaries. Other device memberships require operator review.
+    memberships=$(id -nG "$username") || return 1
+    for group in docker redis; do
+        if [[ " $memberships " = *" $group "* ]]; then
+            $SUDOX gpasswd -d "$username" "$group" || return 1
+            echo "Removed legacy $group membership; restart the service to apply."
+        fi
+    done
+    # Neither operators nor devices are enrolled into additional groups here.
+    # Operators use their existing OS administration rights when needed.
+}
+
+create_user_freebsd() {
+    username="$1"
+    id "$username" &>/dev/null
+    if [ $? -ne 0 ]; then
+        # User does not exist
+        $SUDOX pw useradd -m -s /usr/sbin/nologin -n "$username"
+    fi
+    # Add the user to all groups we need and give him passwordless sudo privileges
+    # Define which commands may be executed as sudo without password
+    SUDOERS_CONTENT="$username ALL=(ALL) ALL\n"
+    # Add the user to all groups we need and give him passwordless sudo privileges
+    # Define which commands iobroker may execute as sudo without password
+    declare -a iob_commands=(
+        "shutdown" "halt" "poweroff" "reboot"
+        "service iobroker start" "service iobroker stop"
+        "mount" "umount" "systemd-run"
+        "pkg" "make"
+        "docker"
+        "ping" "fping"
+        "arp-scan"
+        "setcap"
+        "nmcli"
+        "vcgencmd"
+        "cat"
+        "df"
+        "mysqldump"
+        "ldconfig"
+    )
+    add2sudoers "$username ALL=(ALL) " "${iob_commands[@]}"
+
+    # Additionally, define which iobroker-related commands may be executed by every user
+    declare -a all_user_commands=(
+        "service iobroker start"
+        "service iobroker stop"
+        "service iobroker restart"
+    )
+    add2sudoers "ALL ALL=" "${all_user_commands[@]}"
+
+    # Furthermore, allow all users to execute node iobroker.js as iobroker
+    if [ "$IOB_USER" != "$USER" ]; then
+        add2sudoers "ALL ALL=($IOB_USER) " "node $CONTROLLER_DIR/iobroker.js *"
+    fi
+
+    SUDOERS_FILE="/usr/local/etc/sudoers.d/iobroker"
+    $SUDOX rm -f $SUDOERS_FILE
+    echo -e "$SUDOERS_CONTENT" >~/temp_sudo_file
+    $SUDOX visudo -c -q -f ~/temp_sudo_file &&
+        $SUDOX chown root:$ROOT_GROUP ~/temp_sudo_file &&
+        $SUDOX chmod 440 ~/temp_sudo_file &&
+        $SUDOX mv ~/temp_sudo_file $SUDOERS_FILE &&
+        echo "Created $SUDOERS_FILE"
+
+    # Add the user to all groups if they exist
+    declare -a groups=(
+        audio
+        bluetooth
+        dialout
+        docker
+        gpio
+        i2c
+        plugdev
+        redis
+        tty
+        video
+    )
+    for grp in "${groups[@]}"; do
+        getent group $grp && $SUDOX pw group mod $grp -m $username
+    done
+}
+
+fix_dir_permissions() {
+    # Give the user access to all necessary directories
+    # When autostart is enabled, we need to fix the permissions so that `iobroker` can access it
+    echo "Fixing directory permissions..."
+
+    change_owner "$IOB_USER" "$IOB_DIR" || return 1
+    # These commands are only for the fixer
+    if [ "$FIXER_VERSION" != "" ]; then
+        # ioBroker install dir
+        change_owner "$IOB_USER" "$IOB_DIR" || return 1
+        # and the npm cache dir
+        if [ -d "/home/$IOB_USER/.npm" ]; then
+            change_owner "$IOB_USER" "/home/$IOB_USER/.npm" || return 1
+        fi
+    fi
+
+    # Give the iobroker group write access to all files by setting the default ACL
+    if ! $SUDOX setfacl -Rdm g:"$IOB_USER":rwx "$IOB_DIR" &>/dev/null ||
+       ! $SUDOX setfacl -Rm g:"$IOB_USER":rwx "$IOB_DIR" &>/dev/null; then
+        echo "${yellow}Could not establish the required runtime permissions; maintenance aborted.${normal}" >&2
+        # Runtime-owned paths must never be opened for a privileged log append.
+        echo "ACL enabled: false"
+        return 1
+    else
+        echo "ACL enabled: true"
+    fi
+}
+
+install_nodejs() {
+    print_bold "Installing Node.js $NODE_MAJOR..."
+
+    if [ "$INSTALL_CMD" = "yum" ] || [ "$INSTALL_CMD" = "dnf" ]; then
+        $SUDOX rm -f /etc/yum.repos.d/nodesource*.repo
+        REPO_DIR="/etc/yum.repos.d"
+        SYS_ARCH=$(uname -m)
+        NODEJS_REPO_CONTENT="[nodesource-nodejs]
+name=Node.js Packages for Linux RPM based distros - $SYS_ARCH
+baseurl=https://rpm.nodesource.com/pub_${NODE_MAJOR}.x/nodistro/nodejs/$SYS_ARCH
+priority=9
+enabled=1
+gpgcheck=1
+gpgkey=https://rpm.nodesource.com/gpgkey/ns-operations-public.key
+module_hotfixes=1"
+
+        if [ "$IS_ROOT" = true ]; then
+            echo "$NODEJS_REPO_CONTENT" | tee $REPO_DIR/nodesource-nodejs.repo >/dev/null
+            $INSTALL_CMD makecache --disablerepo="*" --enablerepo="nodesource-nodejs"
+            $INSTALL_CMD $INSTALL_CMD_ARGS nodejs
+        else
+            echo "$NODEJS_REPO_CONTENT" | $SUDOX tee $REPO_DIR/nodesource-nodejs.repo >/dev/null
+            $SUDOX $INSTALL_CMD makecache --disablerepo="*" --enablerepo="nodesource-nodejs"
+            $SUDOX $INSTALL_CMD $INSTALL_CMD_ARGS nodejs
+        fi
+    elif [ "$INSTALL_CMD" = "pkg" ]; then
+        $SUDOX $INSTALL_CMD $INSTALL_CMD_ARGS node
+    elif [ "$INSTALL_CMD" = "brew" ]; then
+        echo "${red}Cannot install Node.js using brew.${normal}"
+        echo "Please download Node.js from $NODE_JS_BREW_URL"
+        echo "Then try to install ioBroker again!"
+        exit 1
+    else
+        if [ "$IS_ROOT" = true ]; then
+            $INSTALL_CMD update >/dev/null 2>&1
+            $INSTALL_CMD $INSTALL_CMD_ARGS ca-certificates curl gnupg >/dev/null 2>&1
+            mkdir -p /usr/share/keyrings
+            rm -f /usr/share/keyrings/nodesource.gpg >/dev/null 2>&1
+            rm -f /etc/apt/keyrings/nodesource.gpg >/dev/null 2>&1
+            curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /usr/share/keyrings/nodesource.gpg
+            chmod 644 /usr/share/keyrings/nodesource.gpg
+            arch=$(dpkg --print-architecture)
+            if [ "$arch" != "amd64" ] && [ "$arch" != "arm64" ]; then
+                echo -e "Unsupported architecture: $arch. Only amd64 and arm64 are supported."
+            fi
+
+#   echo "deb [arch=$arch signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | $SUDOX tee /etc/apt/sources.list.d/nodesource.list > /dev/null
+rm /etc/apt/sources.list.d/nodesource.* 2>/dev/null
+    cat <<EOF | tee /etc/apt/sources.list.d/nodesource.sources > /dev/null
+Types: deb
+URIs: https://deb.nodesource.com/node_$NODE_MAJOR.x
+Suites: nodistro
+Components: main
+Architectures: $arch
+Signed-By: /usr/share/keyrings/nodesource.gpg
+EOF
+
+
+# Nodejs Config
+echo "Package: nodejs" | tee /etc/apt/preferences.d/nodejs > /dev/null
+echo "Pin: origin deb.nodesource.com" | tee -a /etc/apt/preferences.d/nodejs > /dev/null
+echo "Pin-Priority: 1001" | tee -a /etc/apt/preferences.d/nodejs > /dev/null
+
+        else
+            $SUDOX $INSTALL_CMD update >/dev/null 2>&1
+            $SUDOX $INSTALL_CMD $INSTALL_CMD_ARGS ca-certificates curl gnupg >/dev/null 2>&1
+            $SUDOX mkdir -p /usr/share/keyrings
+            $SUDOX rm /usr/share/keyrings/nodesource.gpg >/dev/null 2>&1
+            $SUDOX rm /etc/apt/keyrings/nodesource.gpg >/dev/null 2>&1
+            curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | $SUDOX gpg --dearmor -o /usr/share/keyrings/nodesource.gpg
+            $SUDOX chmod 644 /usr/share/keyrings/nodesource.gpg
+            arch=$(dpkg --print-architecture)
+
+    if [ "$arch" != "amd64" ] && [ "$arch" != "arm64" ]; then
+      echo -e "Unsupported architecture: $arch. Only amd64 and arm64 are supported."
+    fi
+
+#   echo "deb [arch=$arch signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | $SUDOX tee /etc/apt/sources.list.d/nodesource.list > /dev/null
+$SUDOX rm /etc/apt/sources.list.d/nodesource.* 2>/dev/null
+    cat <<EOF | $SUDOX tee /etc/apt/sources.list.d/nodesource.sources > /dev/null
+Types: deb
+URIs: https://deb.nodesource.com/node_$NODE_MAJOR.x
+Suites: nodistro
+Components: main
+Architectures: $arch
+Signed-By: /usr/share/keyrings/nodesource.gpg
+EOF
+
+
+# Nodejs Config
+echo "Package: nodejs" | $SUDOX tee /etc/apt/preferences.d/nodejs > /dev/null
+echo "Pin: origin deb.nodesource.com" | $SUDOX tee -a /etc/apt/preferences.d/nodejs > /dev/null
+echo "Pin-Priority: 1001" | $SUDOX tee -a /etc/apt/preferences.d/nodejs > /dev/null
+
+        fi
+    fi
+    install_package nodejs
+
+    # Check if nodejs is now installed
+    if [[ $(which "node" 2>/dev/null) != *"/node" ]]; then
+        echo "${red}Cannot install Node.js! Please install it manually.${normal}"
+        exit 1
+    else
+        echo "${bold}Node.js installed successfully!${normal}"
+    fi
+}
+
+detect_ip_address() {
+    # Detect IP address - ensure only one IP is returned
+    local IP
+    IP_COMMAND=$(type "ip" &>/dev/null && echo "ip addr show" || echo "ifconfig")
+    # Keyed on the command actually used, not on the platform: ifconfig (macOS, FreeBSD,
+    # and any Linux without iproute2) prints "inet 10.0.0.5 netmask ...", while
+    # "ip addr show" prints "inet 10.0.0.5/24 ...". FreeBSD used to take the CIDR branch,
+    # which never matches, so the installer ended with "Open http://:8081".
+    if [ "$IP_COMMAND" = "ifconfig" ]; then
+        IP=$($IP_COMMAND | grep inet | grep -v inet6 | grep -v 127.0.0.1 | grep -Eo "([0-9]+\.){3}[0-9]+" | head -1)
+    else
+        IP=$($IP_COMMAND | grep inet | grep -v inet6 | grep -v 127.0.0.1 | grep -Eo "([0-9]+\.){3}[0-9]+\/[0-9]+" | cut -d "/" -f1 | head -1)
+    fi
+    # Ensure we return only the first IP address, removing any potential newlines or extra content
+    IP=$(echo "$IP" | head -1 | tr -d '\n\r' | awk '{print $1}')
+    echo "$IP"
+}
+
+install_redis() {
+    echo 'Redis auto-provisioning is disabled: no reviewed encrypted/authenticated profile is available.' >&2
+    echo 'Existing Redis services and configuration are left unchanged.' >&2
+    return 1
+}
+
+configure_iobroker_redis() {
+    echo 'Refusing to overwrite ioBroker configuration with an unencrypted Redis profile.' >&2
+    echo 'Use a separately reviewed controller-compatible TLS/authentication configuration.' >&2
+    return 1
+}
+
+set_valid_redis_locale() {
+    # Dynamically detect the redis-server service file path
+    local REDIS_SERVICE_FILE
+    REDIS_SERVICE_FILE=$(systemctl show -p FragmentPath redis-server 2>/dev/null | cut -d= -f2)
+    # Check if redis is installed
+    if [ -n "$REDIS_SERVICE_FILE" ] && [ -f "$REDIS_SERVICE_FILE" ]; then
+        # Check if redis is used by ioBroker
+        if grep -q "\"type\": \"redis\"" "$IOB_DIR/iobroker-data/iobroker.json" 2>/dev/null; then
+            # Check if the redis service file already contains the LC_ALL setting
+            if ! grep -q "LC_ALL" "$REDIS_SERVICE_FILE"; then
+                $SUDOX sed -i '/\[Service\]/a Environment="LC_ALL=C"' "$REDIS_SERVICE_FILE"
+                $SUDOX systemctl daemon-reload
+                $SUDOX systemctl restart redis-server
+            fi
+        fi
+    fi
+}
+
+echo "library: loaded"

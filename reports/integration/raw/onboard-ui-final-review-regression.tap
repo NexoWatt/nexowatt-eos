@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 1 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 2.05632
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 2 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 2.874888
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 3 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 202.07018
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 4 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 2.051889
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 5 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 0.805218
+  type: 'test'
+  ...
+# Subtest: onboarding public trust and secret modes survive restrictive inherited umask
+ok 6 - onboarding public trust and secret modes survive restrictive inherited umask
+  ---
+  duration_ms: 143.841984
+  type: 'test'
+  ...
+# Subtest: failure to revoke the trial permit still attempts to stop the controller
+ok 7 - failure to revoke the trial permit still attempts to stop the controller
+  ---
+  duration_ms: 0.642191
+  type: 'test'
+  ...
+# Subtest: failed revocation and failed stop report the more specific stop failure
+ok 8 - failed revocation and failed stop report the more specific stop failure
+  ---
+  duration_ms: 0.347155
+  type: 'test'
+  ...
+# Subtest: readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+ok 9 - readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+  ---
+  duration_ms: 3.459242
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected success
+ok 10 - readiness rejects admin unexpected success
+  ---
+  duration_ms: 1.588853
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unrelated forbidden response
+ok 11 - readiness rejects admin unrelated forbidden response
+  ---
+  duration_ms: 1.004819
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous writes
+ok 12 - readiness rejects UI anonymous writes
+  ---
+  duration_ms: 0.674009
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous admin
+ok 13 - readiness rejects UI anonymous admin
+  ---
+  duration_ms: 0.708051
+  type: 'test'
+  ...
+# Subtest: readiness rejects unverified peer
+ok 14 - readiness rejects unverified peer
+  ---
+  duration_ms: 0.665727
+  type: 'test'
+  ...
+# Subtest: readiness rejects old TLS version
+ok 15 - readiness rejects old TLS version
+  ---
+  duration_ms: 0.497513
+  type: 'test'
+  ...
+# Subtest: readiness rejects oversized body
+ok 16 - readiness rejects oversized body
+  ---
+  duration_ms: 1.138342
+  type: 'test'
+  ...
+# Subtest: readiness rejects invalid JSON
+ok 17 - readiness rejects invalid JSON
+  ---
+  duration_ms: 0.554118
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 579.659365

@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexowatt:eos:architecture:entitlement-response:1",
+  "title": "entitlement-response",
+  "description": "Proposed interface v1; offline shape validation only. Not an implemented or authorized runtime interface.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "requestId",
+    "issuer",
+    "systemId",
+    "subject",
+    "audience",
+    "issuedAt",
+    "expiresAt",
+    "licenseRevision",
+    "decision",
+    "reason",
+    "rights",
+    "limits"
+  ],
+  "properties": {
+    "contractVersion": {
+      "const": "1.0"
+    },
+    "requestId": {
+      "$ref": "#/$defs/uuid"
+    },
+    "issuer": {
+      "const": "identity-license"
+    },
+    "systemId": {
+      "$ref": "#/$defs/uuid"
+    },
+    "subject": {
+      "$ref": "#/$defs/licensedModule"
+    },
+    "audience": {
+      "$ref": "#/$defs/licensedModule"
+    },
+    "issuedAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "expiresAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "licenseRevision": {
+      "$ref": "#/$defs/sequence"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "deny"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "active",
+        "not-activated",
+        "expired",
+        "revoked",
+        "unavailable"
+      ]
+    },
+    "rights": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "admin.manage",
+          "ui.access",
+          "devices.read",
+          "devices.control",
+          "backup.create",
+          "backup.restore",
+          "eebus.connect"
+        ]
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chargePoints",
+        "storageSystems"
+      ],
+      "properties": {
+        "chargePoints": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "storageSystems": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      }
+    }
+  },
+  "$defs": {
+    "module": {
+      "type": "string",
+      "enum": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ]
+    },
+    "licensedModule": {
+      "type": "string",
+      "enum": [
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus"
+      ]
+    },
+    "uuid": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$(?![\\s\\S])"
+    },
+    "timestamp": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 20,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$(?![\\s\\S])"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "deny"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "maxItems": 0
+          },
+          "reason": {
+            "enum": [
+              "not-activated",
+              "expired",
+              "revoked",
+              "unavailable"
+            ]
+          },
+          "limits": {
+            "properties": {
+              "chargePoints": {
+                "const": 0
+              },
+              "storageSystems": {
+                "const": 0
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "rights": {
+            "minItems": 1
+          },
+          "reason": {
+            "const": "active"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "subject": {
+            "const": "eos-admin"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "items": {
+              "enum": [
+                "admin.manage"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "subject": {
+            "const": "nexowatt-ui"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "items": {
+              "enum": [
+                "ui.access"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "subject": {
+            "const": "nexowatt-devices"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "items": {
+              "enum": [
+                "devices.read",
+                "devices.control"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "subject": {
+            "const": "nexowatt-backitup"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "items": {
+              "enum": [
+                "backup.create",
+                "backup.restore"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "subject": {
+            "const": "eebus"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "rights": {
+            "items": {
+              "enum": [
+                "eebus.connect"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

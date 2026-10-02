@@ -1,0 +1,47 @@
+▶ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS
+  ✔ ordinary setup completes and preserves mandatory TLS configuration (2173.966163ms)
+  ✔ real bootstrap locks standard admin, repositories, diagnostics and plugins (5298.256509ms)
+  ✖ actual controller reaches alive state with no adapter instances (1488.505243ms)
+  ✖ controller stops cleanly, verifies hardened marker and starts again (6892.759169ms)
+✖ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS (18708.626494ms)
+ℹ Uncaught Rejection: Error: EOS_PROFILE_NODE_ENV
+    at denied (/tmp/eos-controller-runtime-5ze5GY/app/node_modules/iobroker.js-controller/eos-test-profile.cjs:13:39)
+    at ensure (/tmp/eos-controller-runtime-5ze5GY/app/node_modules/iobroker.js-controller/eos-test-profile.cjs:14:52)
+    at Object.environmentCheck [as assertEnvironment] (/tmp/eos-controller-runtime-5ze5GY/app/node_modules/iobroker.js-controller/eos-test-profile.cjs:77:9)
+    at Module.init (file:///tmp/eos-controller-runtime-5ze5GY/app/node_modules/iobroker.js-controller/build/esm/main.js:4539:20)
+    at file:///tmp/eos-controller-runtime-5ze5GY/app/node_modules/iobroker.js-controller/controller.js:9:47
+
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18851.89332
+
+✖ failing tests:
+
+test at tests/system/transport-controller.integration.cjs:135:13
+✖ actual controller reaches alive state with no adapter instances (1488.505243ms)
+  Error: CONTROLLER_EXITED_BEFORE_READY
+      at /workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:131:50
+      at deadline (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:20:19)
+      at async boot (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:130:9)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:136:15)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:135:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tests/system/transport-controller.integration.cjs:145:13
+✖ controller stops cleanly, verifies hardened marker and starts again (6892.759169ms)
+  Error: CONTROLLER_EXITED_BEFORE_READY
+      at /workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:131:50
+      at deadline (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:20:19)
+      at async boot (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:130:9)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:150:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:145:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

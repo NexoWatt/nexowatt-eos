@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "changeId": "EOS-RUNTIME-DEPENDENCIES-001",
+  "recordedAt": "2026-10-01T16:55:01.861769+00:00",
+  "sourceBaseCommit": "c211f1a",
+  "status": "known-esbuild-advisory-remediated-in-local-offline-probe-final-product-binding-pending",
+  "scope": "Controller7.2.2 -> loader2.5.1-1 -> esbuild0.28.2; active Admin/UI dependency tree",
+  "knownAdvisory": "GHSA-67mh-4wv8-2f99",
+  "independentAdvisories": 1,
+  "cveIds": [],
+  "baselineReportedModeratePackageNodes": 3,
+  "fullFreshEosNpmAudit": "blocked-by-automatic-approval-review-not-claimed-passed",
+  "publicLoaderProbeAudit": "passed-with-zero-findings-in-that-public-probe-only",
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "v24.19.0",
+    "npm": "11.9.0",
+    "nativeEsbuild": "@esbuild/linux-x64@0.28.2"
+  },
+  "tests": [
+    {
+      "command": "node --test --test-reporter=tap tests/integration/runtime-dependency-policy.test.cjs tests/integration/build-runtime.test.cjs",
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "raw": "raw/policy-and-builder.tap",
+      "sha256": "94ff31b6296f7d5d9d9661e6cb09093ff6c448c63e3944db591bb62cc6231fb4"
+    },
+    {
+      "command": "EOS_TEST_DEPENDENCY_APP=<verified application tree> node --test --test-reporter=tap tests/integration/esbuild-loader.integration.cjs",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "raw": "raw/controller-loader.tap",
+      "sha256": "07004b9b735a4bdea714c80407d51b2bf02c46fec2c4db9dc2bb31a1fb6cca15"
+    },
+    {
+      "command": "node --test --test-reporter=tap tests/integration/build-offline.integration.cjs",
+      "tests": 1,
+      "passed": 1,
+      "failed": 0,
+      "raw": "raw/offline-cache.tap",
+      "sha256": "75f68589b6119ddf56419088bcf3d5cff93ff106206cbc3d3d8c47134ece70a9"
+    }
+  ],
+  "sourceBindings": {
+    "tools/integration/runtime-dependency-policy.cjs": "926e103accb60a9fa5df7ee769965cfc7be857505dc3e3b3610ca3b3b9208519",
+    "tools/integration/build-runtime.cjs": "e5ae66d1051e68309979f3b8459d896cb24e18f654839ec7f999a6db5cb05845",
+    "tests/integration/runtime-dependency-policy.test.cjs": "87e99e8bbdd7f9534de7f3633a67a9c0cbdf0d519b99a4b5733184dbafab4084",
+    "tests/integration/build-runtime.test.cjs": "f3d007f80b9d6d6dc3863d9c00d582e0937da5f59019f97a68e59cc2377b01bb",
+    "tests/integration/esbuild-loader.integration.cjs": "ad9cf43f5cf57aa8a87b9b5c8c9ef56726c1713afdf8647362657e0502aaf432",
+    "tests/integration/build-offline.integration.cjs": "e4a83b28d41a66feab7fee8d23d52c5cd837f3e38e0d279671e752c4099c63b9"
+  },
+  "artifactBindings": {
+    "patched-package.json": "18c8a2e4da01ead8e32ef5f60fba7b83450e47cb46fb804fdb2634ff01d0b24b",
+    "installed-policy.json": "a400b2e682ac1e416d245732d7097e66036c9563eafbc9376f14efb45305b43d",
+    "lock-change-review.json": "ff8d5532eccc5611daa4746088f1d4be569f9cf75aa662bfe8a37b5902815430",
+    "REMEDIATION_DE.md": "972195b6f5c5b24aa9e1a2f9f1849a7dffa38d7a3fa3d1a7dc5c7a87365317e8",
+    "probe-package.json": "96385c282a18aa434a9f153fe88bb6ecc85e31a864e0a72a6342a99377f08db8",
+    "patched-package-lock.json": "775bacf8b225eab7fbfa16665381b979c5c78cfef8bd20f528e13e91b44ac4a2",
+    "public-loader-probe-audit.json": "95896c6f7812e2168a00efeb0579e031d72384206b0b382e2ccea7a01f0a39b1",
+    "approval-blocks.json": "eaf71d407c64e52f91cc4732e7d85ba311bdc9450b4d5fe6f0112eb77505e498",
+    "reachability.json": "a5e3e34b5b90445ad9718f5c113def097d5e84830ab0a748fd52e6d283b6e794",
+    "probe-package-lock.json": "e4bb6f504cec973f8483bab9217d66dc30d97f957e6f2c44cac4041de0a8155c",
+    "raw/policy-and-builder.tap": "94ff31b6296f7d5d9d9661e6cb09093ff6c448c63e3944db591bb62cc6231fb4",
+    "raw/offline-cache.tap": "75f68589b6119ddf56419088bcf3d5cff93ff106206cbc3d3d8c47134ece70a9",
+    "raw/controller-loader.tap": "07004b9b735a4bdea714c80407d51b2bf02c46fec2c4db9dc2bb31a1fb6cca15"
+  },
+  "limitations": [
+    "Final product build/SBOM and integrated process testing are owned by root integration and must bind the final artifact",
+    "No ARM64 native execution, VM appliance boot or Raspberry Pi test",
+    "No independent CRA or IEC conformity assessment",
+    "This is one advisory remediation, not a zero-vulnerability claim for the full product",
+    "Other unavailable/inactive adapters and source/development dependency trees are outside this runtime remediation",
+    "Any newer Node24 LTS toolchain is independently evaluated by root; these tests ran Node24.19.0"
+  ]
+}

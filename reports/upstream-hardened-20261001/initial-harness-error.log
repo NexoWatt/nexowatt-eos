@@ -1,0 +1,66 @@
+test_default_mode_still_grants_broad_runtime_permissions (__main__.UpstreamHardenedSourceTests.test_default_mode_still_grants_broad_runtime_permissions) ... ERROR
+test_explicit_flag_remains_hardened_despite_marker_read_error (__main__.UpstreamHardenedSourceTests.test_explicit_flag_remains_hardened_despite_marker_read_error) ... ERROR
+test_group_loop_does_not_propagate_failed_docker_removal (__main__.UpstreamHardenedSourceTests.test_group_loop_does_not_propagate_failed_docker_removal) ... ok
+test_hardened_policy_omits_general_root_tools (__main__.UpstreamHardenedSourceTests.test_hardened_policy_omits_general_root_tools) ... ERROR
+test_hardened_service_rules_still_apply_to_iobroker_group (__main__.UpstreamHardenedSourceTests.test_hardened_service_rules_still_apply_to_iobroker_group) ... ERROR
+test_marker_read_error_is_not_distinguished_from_absence (__main__.UpstreamHardenedSourceTests.test_marker_read_error_is_not_distinguished_from_absence) ... ERROR
+test_readable_marker_preserves_hardening_without_flag (__main__.UpstreamHardenedSourceTests.test_readable_marker_preserves_hardening_without_flag) ... ERROR
+
+======================================================================
+ERROR: test_default_mode_still_grants_broad_runtime_permissions (__main__.UpstreamHardenedSourceTests.test_default_mode_still_grants_broad_runtime_permissions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/6383b3161c96/EOS-upstream-review-20261001/tests/integration/upstream-hardened-source.test.py", line 64, in test_default_mode_still_grants_broad_runtime_permissions
+    policy = self.policy("false")
+             ^^^^^^^^^^^^^^^^^^^^
+TypeError: 'str' object is not callable
+
+======================================================================
+ERROR: test_explicit_flag_remains_hardened_despite_marker_read_error (__main__.UpstreamHardenedSourceTests.test_explicit_flag_remains_hardened_despite_marker_read_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/6383b3161c96/EOS-upstream-review-20261001/tests/integration/upstream-hardened-source.test.py", line 92, in test_explicit_flag_remains_hardened_despite_marker_read_error
+    policy = self.policy("true", "2")
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'str' object is not callable
+
+======================================================================
+ERROR: test_hardened_policy_omits_general_root_tools (__main__.UpstreamHardenedSourceTests.test_hardened_policy_omits_general_root_tools)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/6383b3161c96/EOS-upstream-review-20261001/tests/integration/upstream-hardened-source.test.py", line 70, in test_hardened_policy_omits_general_root_tools
+    policy = self.policy()
+             ^^^^^^^^^^^^^
+TypeError: 'str' object is not callable
+
+======================================================================
+ERROR: test_hardened_service_rules_still_apply_to_iobroker_group (__main__.UpstreamHardenedSourceTests.test_hardened_service_rules_still_apply_to_iobroker_group)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/6383b3161c96/EOS-upstream-review-20261001/tests/integration/upstream-hardened-source.test.py", line 76, in test_hardened_service_rules_still_apply_to_iobroker_group
+    policy = self.policy()
+             ^^^^^^^^^^^^^
+TypeError: 'str' object is not callable
+
+======================================================================
+ERROR: test_marker_read_error_is_not_distinguished_from_absence (__main__.UpstreamHardenedSourceTests.test_marker_read_error_is_not_distinguished_from_absence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/6383b3161c96/EOS-upstream-review-20261001/tests/integration/upstream-hardened-source.test.py", line 88, in test_marker_read_error_is_not_distinguished_from_absence
+    policy = self.policy("false", "2")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'str' object is not callable
+
+======================================================================
+ERROR: test_readable_marker_preserves_hardening_without_flag (__main__.UpstreamHardenedSourceTests.test_readable_marker_preserves_hardening_without_flag)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/6383b3161c96/EOS-upstream-review-20261001/tests/integration/upstream-hardened-source.test.py", line 82, in test_readable_marker_preserves_hardening_without_flag
+    policy = self.policy("false", "0")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'str' object is not callable
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.005s
+
+FAILED (errors=6)

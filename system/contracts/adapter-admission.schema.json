@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexowatt:eos:adapter-admission:v1",
+  "title": "EOS adapter admission catalogue v1",
+  "$comment": "Structural validation only. Use runtime/policy/admission.cjs for duplicate IDs/packages, bounded strict JSON, profile and installed/active semantics. Approval fields are trustworthy only inside a verified release bundle. Not a sandbox, source audit, or production release approval.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "catalogRevision",
+    "entries"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "kind": {
+      "const": "eos-adapter-admission"
+    },
+    "catalogRevision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "package",
+        "version",
+        "sha256",
+        "digestKind",
+        "kind",
+        "required",
+        "review",
+        "permissions",
+        "communication"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,63}$",
+          "maxLength": 64
+        },
+        "package": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^(?:@[a-z0-9][a-z0-9._-]{0,63}/)?[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(?:0|[1-9][0-9]{0,8})\\.(?:0|[1-9][0-9]{0,8})\\.(?:0|[1-9][0-9]{0,8})(?:-(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?$",
+          "maxLength": 80
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "digestKind": {
+          "const": "tree-sha256-v1"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "core",
+            "adapter"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "evidenceId"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "approved-test",
+                "approved-production",
+                "rejected"
+              ]
+            },
+            "evidenceId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]{0,63}$",
+                  "maxLength": 64
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "permissions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "capabilities",
+            "protocols",
+            "network",
+            "shellExec",
+            "additionalNpmModules",
+            "arbitraryCode"
+          ],
+          "properties": {
+            "capabilities": {
+              "type": "array",
+              "maxItems": 32,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "state.read",
+                  "state.write",
+                  "device.tcp",
+                  "device.udp",
+                  "device.serial",
+                  "device.discovery",
+                  "http.listen",
+                  "https.listen",
+                  "https.client",
+                  "backup.read",
+                  "backup.write",
+                  "process.fixed"
+                ]
+              }
+            },
+            "protocols": {
+              "type": "array",
+              "maxItems": 32,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "eos-redis-tls13-v1",
+                  "https",
+                  "modbus-tcp",
+                  "modbus-rtu",
+                  "mqtt-tls",
+                  "mqtt-legacy",
+                  "http-legacy",
+                  "ocpp-wss",
+                  "ocpp-ws-legacy",
+                  "eebus-ship",
+                  "dns",
+                  "mdns",
+                  "ntp",
+                  "serial-vendor",
+                  "eos-postgresql-mtls13-v1",
+                  "eos-channel-mtls13-v1"
+                ]
+              }
+            },
+            "network": {
+              "type": "string",
+              "enum": [
+                "none",
+                "declared-endpoints-and-discovery"
+              ]
+            },
+            "shellExec": {
+              "type": "boolean"
+            },
+            "additionalNpmModules": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "arbitraryCode": {
+              "type": "boolean"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "network": {
+                    "const": "none"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "protocols": {
+                    "maxItems": 0
+                  },
+                  "capabilities": {
+                    "items": {
+                      "not": {
+                        "enum": [
+                          "device.tcp",
+                          "device.udp",
+                          "device.discovery",
+                          "http.listen",
+                          "https.listen",
+                          "https.client"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "communication": {
+          "type": "string",
+          "enum": [
+            "eos-redis-tls13-v1",
+            "eos-postgresql-mtls13-v1",
+            "eos-channel-mtls13-v1",
+            "legacy-unintegrated"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "review": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "approved-test",
+                      "approved-production"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "package": {
+                "not": {
+                  "const": "iobroker.javascript"
+                }
+              },
+              "review": {
+                "properties": {
+                  "evidenceId": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]{0,63}$",
+                    "maxLength": 64
+                  }
+                }
+              },
+              "communication": {
+                "enum": [
+                  "eos-redis-tls13-v1",
+                  "eos-postgresql-mtls13-v1"
+                ]
+              },
+              "permissions": {
+                "properties": {
+                  "shellExec": {
+                    "const": false
+                  },
+                  "arbitraryCode": {
+                    "const": false
+                  }
+                }
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "communication": {
+                      "const": "eos-redis-tls13-v1"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "permissions": {
+                      "properties": {
+                        "protocols": {
+                          "contains": {
+                            "const": "eos-redis-tls13-v1"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "communication": {
+                      "const": "eos-postgresql-mtls13-v1"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "permissions": {
+                      "properties": {
+                        "protocols": {
+                          "contains": {
+                            "const": "eos-postgresql-mtls13-v1"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

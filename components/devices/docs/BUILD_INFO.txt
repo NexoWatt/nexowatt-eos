@@ -1,0 +1,14 @@
+NexoWatt Devices 0.5.169 - Implementation audit and TESVOLT MQTT data fixes
+Date: 2026-09-25
+Base: complete uploaded 0.5.168 VARTA_ADMIN_READABILITY_REPOSITORY
+Validation runtime: Linux, Node v24.19.0, npm 11.9.0
+Dependencies: npm ci --ignore-scripts; no new dependencies; lockfile synchronized
+Automated tests: 260 passed, 0 failed, 0 skipped
+TESVOLT coverage: 45 tests including 5 actual MQTT.js/local TCP broker tests
+Release guard: synchronized 0.5.169 versions; 195 templates; 30 test files; JavaScript syntax and compatibility checks passed
+Catalogue comparison: all 194 non-TESVOLT-IoT templates byte-content-equivalent as parsed JSON; every existing TESVOLT datapoint definition unchanged; 12 additive complete JSON datapoints
+Changes: MQTT namespace selection, reconnection namespace cleanup, JSON numeric conversion, missing-field freshness, partial subscription diagnostics, raw JSON visibility, client IDs, both Admin settings, runtime liveness/start errors, global connection state, HTTP failures, serialized UDP transactions
+No actual customer gateway, battery, wallbox, Windows installation or physical control was tested
+No package publishing, deployment or customer configuration change performed
+Full findings, installation notes and required field diagnostics: docs/IMPLEMENTATION_AUDIT_0.5.169.md
+Package inventory: npm pack --dry-run --ignore-scripts passed; 85 published files; source tests remain in full repository ZIP

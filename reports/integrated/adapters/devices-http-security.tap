@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: HTTP profile cannot disable peer verification and bounds resources
+ok 1 - HTTP profile cannot disable peer verification and bounds resources
+  ---
+  duration_ms: 2.064317
+  type: 'test'
+  ...
+# Subtest: private keys and excessive CA material are rejected
+ok 2 - private keys and excessive CA material are rejected
+  ---
+  duration_ms: 0.256077
+  type: 'test'
+  ...
+# Subtest: deadline aborts the underlying pending request and returns only a fixed diagnostic
+ok 3 - deadline aborts the underlying pending request and returns only a fixed diagnostic
+  ---
+  duration_ms: 21.764999
+  type: 'test'
+  ...
+# Subtest: failed request cannot propagate credential URLs or response data
+ok 4 - failed request cannot propagate credential URLs or response data
+  ---
+  duration_ms: 1.220085
+  type: 'test'
+  ...
+# Subtest: real HTTP transport accepts a complete response, blocks redirects and enforces body bound
+ok 5 - real HTTP transport accepts a complete response, blocks redirects and enforces body bound
+  ---
+  duration_ms: 51.116924
+  type: 'test'
+  ...
+# Subtest: real trickling HTTP body is actively aborted by the total deadline
+ok 6 - real trickling HTTP body is actively aborted by the total deadline
+  ---
+  duration_ms: 89.633369
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 356.142354

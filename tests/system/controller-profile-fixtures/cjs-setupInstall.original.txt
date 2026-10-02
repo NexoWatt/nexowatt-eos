@@ -1,0 +1,1408 @@
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var setupInstall_exports = {};
+__export(setupInstall_exports, {
+  Install: () => Install
+});
+module.exports = __toCommonJS(setupInstall_exports);
+var __import_meta_url = typeof document === "undefined" ? new (require("url".replace("", ""))).URL("file:" + __filename).href : document.currentScript && document.currentScript.src || new URL("main.js", document.baseURI).href;
+var import_js_controller_common = require("@iobroker/js-controller-common");
+var import_fs_extra = __toESM(require("fs-extra"), 1);
+var import_node_path = __toESM(require("node:path"), 1);
+var import_semver = __toESM(require("semver"), 1);
+var import_node_child_process = __toESM(require("node:child_process"), 1);
+var import_axios = __toESM(require("axios"), 1);
+var import_node_url = require("node:url");
+var import_setupUpload = require("../../lib/setup/setupUpload.js");
+var import_setupPacketManager = require("../../lib/setup/setupPacketManager.js");
+var import_utils = require("../../lib/setup/utils.js");
+var import_customError = require("../../lib/setup/customError.js");
+var import_constants = require("@iobroker/js-controller-common-db/constants");
+var import_node_module = require("node:module");
+const require2 = (0, import_node_module.createRequire)(__import_meta_url || `file://${__filename}`);
+const hostname = import_js_controller_common.tools.getHostName();
+const osPlatform = process.platform;
+const RECOMMENDED_NPM_VERSION = 8;
+class Install {
+  isRootOnUnix;
+  objects;
+  states;
+  processExit;
+  params;
+  tarballRegex;
+  upload;
+  packetManager;
+  constructor(options) {
+    this.isRootOnUnix = typeof process.getuid === "function" && process.getuid() === 0;
+    options = options || {};
+    if (!options.states) {
+      throw new Error("Invalid arguments: states is missing");
+    }
+    if (!options.objects) {
+      throw new Error("Invalid arguments: objects is missing");
+    }
+    if (!options.processExit) {
+      throw new Error("Invalid arguments: processExit is missing");
+    }
+    this.objects = options.objects;
+    this.states = options.states;
+    this.processExit = options.processExit;
+    this.params = options.params || {};
+    this.tarballRegex = /\/tarball\/[^/]+$/;
+    this.upload = new import_setupUpload.Upload(options);
+  }
+  /**
+   * Enables or disables given instances
+   *
+   * @param instances all instance objects
+   * @param enabled if enable or disable
+   */
+  async enableInstances(instances, enabled) {
+    if (instances?.length) {
+      const ts = Date.now();
+      for (const instance of instances) {
+        const updatedObj = {
+          common: {
+            enabled
+          },
+          from: `system.host.${hostname}.cli`,
+          ts
+        };
+        console.log(`host.${hostname} Adapter "${instance._id}" is ${enabled ? "started" : "stopped."}`);
+        await this.objects.extendObjectAsync(instance._id, updatedObj);
+      }
+    }
+  }
+  /**
+   * Download given packet
+   *
+   * @param repoUrlOrRepo repository url or already the repository object
+   * @param packetName name of the package to install
+   * @param options options.stopDb will stop the db before upgrade ONLY use it for controller upgrade - db is gone afterwards, does not work with stoppedList
+   * @param stoppedList list of stopped instances (as instance objects)
+   */
+  async downloadPacket(repoUrlOrRepo, packetName, options, stoppedList) {
+    if (!options || typeof options !== "object") {
+      options = {};
+    }
+    stoppedList = stoppedList || [];
+    let sources;
+    if (!repoUrlOrRepo || !import_js_controller_common.tools.isObject(repoUrlOrRepo)) {
+      sources = await (0, import_utils.getRepository)({ repoName: repoUrlOrRepo, objects: this.objects });
+    } else {
+      sources = repoUrlOrRepo;
+    }
+    if (options.stopDb && stoppedList.length) {
+      console.warn("[downloadPacket] stoppedList cannot be used if stopping of databases is requested");
+      stoppedList = [];
+    }
+    const debug = process.argv.includes("--debug");
+    let version;
+    if (packetName.includes("@")) {
+      const parts = packetName.split("@");
+      packetName = parts[0];
+      version = parts[1];
+    } else {
+      if (sources[packetName]?.version) {
+        version = sources[packetName].version;
+      } else {
+        version = "";
+      }
+    }
+    const source = sources[packetName];
+    if (!source) {
+      const errMessage = `Unknown packet name ${packetName}. Please install packages from outside the repository using "${import_js_controller_common.tools.appNameLowerCase} url <url-or-package>"!`;
+      console.error(`host.${hostname} ${errMessage}`);
+      throw new import_customError.IoBrokerError({
+        code: import_js_controller_common.EXIT_CODES.UNKNOWN_PACKET_NAME,
+        message: errMessage
+      });
+    }
+    options.packetName = packetName;
+    options.unsafePerm = source.unsafePerm;
+    if ((source.stopBeforeUpdate || osPlatform === "win32") && !stoppedList.length) {
+      stoppedList = await this._getInstancesOfAdapter(packetName);
+      await this.enableInstances(stoppedList, false);
+    }
+    if (options.stopDb) {
+      if (this.objects.destroy) {
+        await this.objects.destroy();
+        console.log("Stopped Objects DB");
+      }
+      if (this.states.destroy) {
+        await this.states.destroy();
+        console.log("Stopped States DB");
+      }
+    }
+    const npmPacketName = source.packetName ? `${import_js_controller_common.tools.appName.toLowerCase()}.${packetName}@npm:${source.packetName}` : `${import_js_controller_common.tools.appName.toLowerCase()}.${packetName}`;
+    await this._npmInstallWithCheck(`${npmPacketName}${version ? `@${version}` : ""}`, options, debug);
+    return { packetName, stoppedList };
+  }
+  /**
+   * Install npm module from url
+   *
+   * @param npmUrl parameter passed to `npm install <npmUrl>`
+   * @param options additional packet download options
+   * @param debug if debug output should be printed
+   */
+  async _npmInstallWithCheck(npmUrl, options, debug) {
+    try {
+      let npmVersion;
+      try {
+        npmVersion = import_node_child_process.default.execSync("npm -v", { encoding: "utf8" });
+        if (npmVersion) {
+          npmVersion = import_semver.default.valid(npmVersion.trim());
+        }
+        console.log(`NPM version: ${npmVersion}`);
+      } catch (e) {
+        console.error(`Error trying to check npm version: ${e.message}`);
+      }
+      if (!npmVersion) {
+        console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.error("Aborting install because the npm version could not be checked!");
+        console.error("Please check that npm is installed correctly.");
+        console.error(`Use "npm install -g npm@${RECOMMENDED_NPM_VERSION}" or "npm install -g npm@latest" to install a supported version.`);
+        console.error("You need to make sure to repeat this step after installing an update to NodeJS and/or npm");
+        console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_NPM_VERSION);
+      } else if (import_semver.default.gte(npmVersion, "5.0.0") && import_semver.default.lt(npmVersion, "5.7.1")) {
+        console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.error("NPM 5 is only supported starting with version 5.7.1!");
+        console.error(`Please use "npm install -g npm@${RECOMMENDED_NPM_VERSION}" to upgrade npm to ${RECOMMENDED_NPM_VERSION}.x or `);
+        console.error('use "npm install -g npm@latest" to install a supported version of npm!');
+        console.error("You need to make sure to repeat this step after installing an update to NodeJS and/or npm");
+        console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_NPM_VERSION);
+      }
+    } catch (e) {
+      console.error(`Could not check npm version: ${e.message}`);
+      console.error("Assuming that correct version is installed.");
+    }
+    try {
+      return await this._npmInstall({ npmUrl, options, debug, isRetry: false });
+    } catch (e) {
+      console.error(`Could not install ${npmUrl}: ${e.message}`);
+    }
+  }
+  /**
+   * Extract the adapterName e.g. `hm-rpc` from url
+   *
+   * @param npmUrl url of the npm packet
+   */
+  getAdapterNameFromUrl(npmUrl) {
+    npmUrl = npmUrl.replace(/\\/g, "/").replace(/\.git$/, "").toLowerCase();
+    if (npmUrl.includes("#")) {
+      npmUrl = npmUrl.substring(0, npmUrl.indexOf("#"));
+    }
+    if (npmUrl.includes("/") && !npmUrl.startsWith("@")) {
+      npmUrl = npmUrl.substring(npmUrl.lastIndexOf("/") + 1);
+    }
+    if (!npmUrl.startsWith("@")) {
+      npmUrl = npmUrl.split("@")[0];
+    }
+    return npmUrl;
+  }
+  /**
+   * Perform npm installation of given package
+   *
+   * @param installOptions options of package to install
+   */
+  async _npmInstall(installOptions) {
+    const { npmUrl, debug, isRetry } = installOptions;
+    let { options } = installOptions;
+    if (!import_js_controller_common.tools.isObject(options)) {
+      options = {};
+    }
+    if (this.isRootOnUnix) {
+      options.unsafePerm = true;
+    }
+    console.log(`Installing ${npmUrl}... (System call)`);
+    const result = await import_js_controller_common.tools.installNodeModule(npmUrl, {
+      debug: !!debug,
+      unsafePerm: !!options.unsafePerm
+    });
+    const isSuccess = result.success || result.exitCode === 1 && !result.stderr.startsWith("npm ERR!");
+    if (isSuccess) {
+      let packetDirName;
+      if (options.packetName) {
+        packetDirName = `${import_js_controller_common.tools.appName.toLowerCase()}.${options.packetName}`;
+      } else {
+        packetDirName = this.getAdapterNameFromUrl(npmUrl);
+      }
+      const installDir = import_js_controller_common.tools.getAdapterDir(packetDirName);
+      if (installDir && import_fs_extra.default.existsSync(installDir)) {
+        const ioPackPath = import_node_path.default.join(installDir, "io-package.json");
+        let ioPackContent;
+        try {
+          ioPackContent = import_fs_extra.default.readJSONSync(ioPackPath);
+        } catch {
+          ioPackContent = null;
+        }
+        if (ioPackContent) {
+          ioPackContent.common = ioPackContent.common || {};
+          ioPackContent.common.installedFrom = npmUrl;
+          try {
+            import_fs_extra.default.writeJsonSync(ioPackPath, ioPackContent, { encoding: "utf8", spaces: 2 });
+          } catch {
+          }
+        }
+      } else {
+        console.error(result.stderr);
+        console.error(`host.${hostname} Cannot install ${npmUrl}: ${result.exitCode}`);
+        return this.processExit(import_js_controller_common.EXIT_CODES.CANNOT_INSTALL_NPM_PACKET);
+      }
+      return { _url: npmUrl, installDir: import_node_path.default.dirname(installDir) };
+    }
+    if (!isRetry && result.stderr.includes("ENOTEMPTY")) {
+      return this.handleNpmNotEmptyError({ npmUrl, options, debug, result });
+    }
+    console.error(result.stderr);
+    console.error(`host.${hostname} Cannot install ${npmUrl}: ${result.exitCode}`);
+    return this.processExit(import_js_controller_common.EXIT_CODES.CANNOT_INSTALL_NPM_PACKET);
+  }
+  /**
+   * Handle the NPM `ENOTEMPTY` error, by deleting different affected directories and retrying installation
+   *
+   * @param notEmptyErrorOptions options of package to install
+   */
+  handleNpmNotEmptyError(notEmptyErrorOptions) {
+    const { debug, npmUrl, options, result } = notEmptyErrorOptions;
+    console.info("Try to solve ENOTEMPTY error automatically");
+    const errorFilePath = result.stderr.split("\n")?.find((line) => line.startsWith("npm ERR! dest"))?.split("dest")[1].trim();
+    const affectedNodeModulesPath = errorFilePath ? import_node_path.default.join(errorFilePath, "..") : void 0;
+    if (affectedNodeModulesPath) {
+      const parts = affectedNodeModulesPath.replace(/\\/g, "/").split("/");
+      if (parts[parts.length - 1] === "node_modules") {
+        let foundNpmGarbage = false;
+        import_fs_extra.default.readdirSync(affectedNodeModulesPath).forEach((file) => {
+          if (file.match(/^\..*-[a-zA-Z0-9]{8}$/) && file !== ".local-chromium") {
+            import_fs_extra.default.rmSync(import_node_path.default.join(affectedNodeModulesPath, file), { recursive: true, force: true });
+            foundNpmGarbage = true;
+            console.warn(`host.${hostname} deleted npm temp directory: "${file}")`);
+          }
+        });
+        if (foundNpmGarbage) {
+          return this._npmInstall({ npmUrl, options, debug, isRetry: true });
+        }
+      }
+    }
+    console.error("Could not handle ENOTEMPTY, because no deletable files were found");
+    console.error(result.stderr);
+    console.error(`host.${hostname} Cannot install ${npmUrl}: ${result.exitCode}`);
+    return this.processExit(import_js_controller_common.EXIT_CODES.CANNOT_INSTALL_NPM_PACKET);
+  }
+  async _npmUninstall(packageName, debug) {
+    const result = await import_js_controller_common.tools.uninstallNodeModule(packageName, { debug: !!debug });
+    if (!result.success) {
+      throw new Error(`host.${hostname}: Cannot uninstall ${packageName}: ${result.exitCode}`);
+    }
+  }
+  // this command is executed always on THIS host
+  async _checkDependencies(deps, globalDeps, _options) {
+    if (!deps && !globalDeps) {
+      return;
+    }
+    deps = import_js_controller_common.tools.parseDependencies(deps);
+    globalDeps = import_js_controller_common.tools.parseDependencies(globalDeps);
+    const allDeps = { ...deps, ...globalDeps };
+    const objs = await this.objects.getObjectViewAsync("system", "instance", {
+      startkey: import_constants.SYSTEM_ADAPTER_PREFIX,
+      endkey: `${import_constants.SYSTEM_ADAPTER_PREFIX}\u9999`
+    });
+    if (objs.rows.length) {
+      for (const dName in allDeps) {
+        let isFound = false;
+        if (dName === "js-controller") {
+          const version = allDeps[dName];
+          if (version !== "*") {
+            const packJson = import_fs_extra.default.readJSONSync(`${import_js_controller_common.tools.getControllerDir()}/package.json`);
+            if (!import_semver.default.satisfies(packJson.version, version, { includePrerelease: true })) {
+              console.error(`host.${hostname} Invalid version of "${dName}". Installed "${packJson.version}", required "${version}"`);
+              return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_DEPENDENCY_VERSION);
+            }
+            isFound = true;
+          } else {
+            isFound = true;
+          }
+        }
+        if (!isFound) {
+          let gInstances = [];
+          let locInstances = [];
+          if (globalDeps[dName] !== void 0) {
+            gInstances = objs.rows.filter((obj) => obj.value.common && obj.value.common.name === dName);
+          }
+          if (deps[dName] !== void 0) {
+            locInstances = objs.rows.filter((obj) => obj.value.common && obj.value.common.name === dName && obj.value.common.host === hostname);
+            if (locInstances.length === 0) {
+              console.error(`host.${hostname} Required dependency "${dName}" not found on this host.`);
+            }
+          }
+          for (const instance of locInstances) {
+            const instanceVersion = instance.value.common.version;
+            if (!import_semver.default.satisfies(instanceVersion, deps[dName], {
+              includePrerelease: true
+            })) {
+              console.error(`host.${hostname} Invalid version of "${dName}". Installed "${instanceVersion}", required "${deps[dName]}"`);
+              return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_DEPENDENCY_VERSION);
+            }
+            isFound = true;
+          }
+          for (const instance of gInstances) {
+            const instanceVersion = instance.value.common.version;
+            if (!import_semver.default.satisfies(instanceVersion, globalDeps[dName], {
+              includePrerelease: true
+            })) {
+              console.error(`host.${hostname} Invalid version of "${dName}". Installed "${instanceVersion}", required "${globalDeps[dName]}"`);
+              return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_DEPENDENCY_VERSION);
+            }
+            isFound = true;
+          }
+        }
+        if (!isFound) {
+          await this.createInstance(dName, _options);
+        }
+      }
+    }
+  }
+  async _uploadStaticObjects(adapter, _adapterConf) {
+    let adapterConf;
+    if (!_adapterConf) {
+      const adapterDir = import_js_controller_common.tools.getAdapterDir(adapter);
+      if (!adapterDir || !import_fs_extra.default.existsSync(import_node_path.default.join(adapterDir, "io-package.json"))) {
+        const message = `Adapter directory "${adapterDir}" does not exists`;
+        console.error(`host.${hostname} ${message}`);
+        throw new Error(message);
+      }
+      try {
+        adapterConf = await import_fs_extra.default.readJSON(import_node_path.default.join(adapterDir, "io-package.json"));
+      } catch (e) {
+        const message = `error reading io-package.json: ${e.message}`;
+        console.error(`host.${hostname} ${message}`, adapter);
+        throw new Error(message);
+      }
+    } else {
+      adapterConf = _adapterConf;
+    }
+    let objs;
+    if (adapterConf.objects && adapterConf.objects?.length > 0) {
+      objs = adapterConf.objects;
+    } else {
+      objs = [];
+    }
+    await this._checkDependencies(adapterConf.common.dependencies, adapterConf.common.globalDependencies, this.params);
+    adapterConf.common.installedVersion = adapterConf.common.version;
+    if (adapterConf.common.news) {
+      delete adapterConf.common.news;
+    }
+    objs.push({
+      _id: `system.adapter.${adapterConf.common.name}`,
+      type: "adapter",
+      common: adapterConf.common,
+      native: adapterConf.native
+    });
+    if (objs?.length) {
+      for (let i = 0; i < objs.length; i++) {
+        const obj = objs[i];
+        obj.from = `system.host.${hostname}.cli`;
+        obj.ts = Date.now();
+        try {
+          await this.objects.extendObjectAsync(obj._id, obj);
+        } catch (err) {
+          console.error(`host.${hostname} error setObject ${obj._id} ${err.message}`);
+          return;
+        }
+        console.log(`host.${hostname} object ${obj._id} created/updated`);
+      }
+    }
+  }
+  /**
+   * Installs given adapter
+   *
+   * @param adapter The adapter name
+   * @param repoUrl
+   * @param _installCount
+   */
+  async installAdapter(adapter, repoUrl, _installCount) {
+    _installCount = _installCount || 0;
+    const fullName = adapter;
+    if (adapter.includes("@")) {
+      adapter = adapter.split("@")[0];
+    }
+    const adapterDir = import_js_controller_common.tools.getAdapterDir(adapter);
+    console.log(`host.${hostname} install adapter ${fullName}`);
+    if (!adapterDir || !import_fs_extra.default.existsSync(import_node_path.default.join(adapterDir, "io-package.json"))) {
+      if (_installCount === 2) {
+        console.error(`host.${hostname} Cannot install ${adapter}`);
+        return this.processExit(import_js_controller_common.EXIT_CODES.CANNOT_INSTALL_NPM_PACKET);
+      }
+      _installCount++;
+      const { stoppedList } = await this.downloadPacket(repoUrl, fullName);
+      await this.installAdapter(adapter, repoUrl, _installCount);
+      await this.enableInstances(stoppedList, true);
+      return adapter;
+    }
+    let adapterConf;
+    try {
+      adapterConf = import_fs_extra.default.readJSONSync(import_node_path.default.join(adapterDir, "io-package.json"));
+    } catch (err) {
+      console.error(`host.${hostname} error: reading io-package.json ${err.message}`);
+      return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_IO_PACKAGE_JSON);
+    }
+    if (adapterConf.common && adapterConf.common.os) {
+      if (typeof adapterConf.common.os === "string" && adapterConf.common.os !== osPlatform) {
+        console.error(`host.${hostname} Adapter does not support current os. Required ${adapterConf.common.os}. Actual platform: ${osPlatform}`);
+        return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_OS);
+      } else if (Array.isArray(adapterConf.common.os) && !adapterConf.common.os.includes(osPlatform)) {
+        console.error(`host.${hostname} Adapter does not support current os. Required one of ${adapterConf.common.os.join(", ")}. Actual platform: ${osPlatform}`);
+        return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_OS);
+      }
+    }
+    let engineVersion;
+    try {
+      const packJson = import_fs_extra.default.readJSONSync(import_node_path.default.join(adapterDir, "package.json"), "utf8");
+      engineVersion = packJson?.engines?.node;
+    } catch {
+      console.error(`host.${hostname}: Cannot read and parse "${adapterDir}/package.json"`);
+    }
+    if (engineVersion) {
+      if (!import_semver.default.satisfies(process.version.replace(/^v/, ""), engineVersion)) {
+        console.error(`host.${hostname} Adapter does not support current nodejs version. Required ${engineVersion}. Actual version: ${process.version}`);
+        return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_NODE_VERSION);
+      }
+    }
+    if (adapterConf.common.osDependencies) {
+      await this.installOSPackages(adapterConf.common.osDependencies);
+    }
+    await this.upload.uploadAdapter(adapter, true, true);
+    await this.upload.uploadAdapter(adapter, false, true);
+    await this.callInstallOfAdapter(adapter, adapterConf);
+    await this._uploadStaticObjects(adapter);
+    await this.upload.upgradeAdapterObjects(adapter);
+    return adapter;
+  }
+  async installOSPackages(osDependencies) {
+    if (osPlatform in osDependencies) {
+      try {
+        this.packetManager = this.packetManager || new import_setupPacketManager.PacketManager();
+        await this.packetManager.update();
+        await this.packetManager.install(osDependencies[osPlatform]);
+      } catch (err) {
+        console.error(`host.${hostname} Could not install required OS packages: ${err.message}`);
+      }
+    }
+  }
+  async callInstallOfAdapter(adapter, config) {
+    if (config.common.install) {
+      let cmd = "node ";
+      let fileFullName;
+      try {
+        fileFullName = await import_js_controller_common.tools.resolveAdapterMainFile(adapter);
+      } catch {
+        return;
+      }
+      return new Promise((resolve) => {
+        cmd += `"${fileFullName}" --install`;
+        console.log(`host.${hostname} command: ${cmd}`);
+        const child = import_node_child_process.default.exec(cmd, { windowsHide: true });
+        if (child.stderr) {
+          import_js_controller_common.tools.pipeLinewise(child.stderr, process.stdout);
+        }
+        child.on("exit", () => resolve(adapter));
+      });
+    }
+  }
+  /**
+   * Create adapter instance
+   *
+   * @param adapter The adapter name
+   * @param options Additional instance creation options
+   */
+  async createInstance(adapter, options) {
+    let ignoreIfExists = false;
+    options = options || {};
+    options.host = options.host || hostname;
+    if (options.ignoreIfExists !== void 0) {
+      ignoreIfExists = !!options.ignoreIfExists;
+      delete options.ignoreIfExists;
+    }
+    let obj;
+    let err;
+    try {
+      obj = await this.objects.getObject(`system.adapter.${adapter}`);
+    } catch (_err) {
+      err = _err;
+    }
+    if (err || !obj || !obj.common.installedVersion) {
+      await this.installAdapter(adapter);
+      obj = await this.objects.getObject(`system.adapter.${adapter}`);
+    }
+    if (!obj) {
+      console.error("Adapter object not found, cannot create instance");
+      return void this.processExit(import_js_controller_common.EXIT_CODES.ADAPTER_NOT_FOUND);
+    }
+    await this.upload.uploadAdapter(adapter, true, false);
+    await this.upload.uploadAdapter(adapter, false, false);
+    const res = await this.objects.getObjectViewAsync("system", "instance", {
+      startkey: `${import_constants.SYSTEM_ADAPTER_PREFIX}${adapter}.`,
+      endkey: `${import_constants.SYSTEM_ADAPTER_PREFIX}${adapter}.\u9999`
+    });
+    const systemConfig = await this.objects.getObject("system.config");
+    const defaultLogLevel = systemConfig?.common?.defaultLogLevel;
+    if (!res) {
+      console.error(`host.${hostname} error: view instanceStats`);
+      return this.processExit(import_js_controller_common.EXIT_CODES.CANNOT_READ_INSTANCES);
+    }
+    if (obj.common.singleton && res.rows.length) {
+      if (ignoreIfExists) {
+        return;
+      }
+      console.error(`host.${hostname} error: this adapter does not allow multiple instances`);
+      return this.processExit(import_js_controller_common.EXIT_CODES.NO_MULTIPLE_INSTANCES_ALLOWED);
+    }
+    if (obj.common.singletonHost) {
+      for (const row of res.rows) {
+        if (row.value?.common.host === hostname) {
+          if (ignoreIfExists) {
+            return;
+          }
+          console.error(`host.${hostname} error: this adapter does not allow multiple instances on one host`);
+          return this.processExit(import_js_controller_common.EXIT_CODES.NO_MULTIPLE_INSTANCES_ALLOWED_ON_HOST);
+        }
+      }
+    }
+    let instance = null;
+    if (options.instance !== void 0) {
+      instance = options.instance;
+      if (res.rows.find((obj2) => parseInt(obj2.id.split(".").pop(), 10) === instance)) {
+        console.error(`host.${hostname} error: instance yet exists`);
+        return this.processExit(import_js_controller_common.EXIT_CODES.INSTANCE_ALREADY_EXISTS);
+      }
+    } else {
+      for (const row of res.rows) {
+        const iInstance = parseInt(row.id.split(".").pop(), 10);
+        if (instance === null || iInstance > instance) {
+          instance = iInstance;
+        }
+      }
+      if (instance === null) {
+        instance = 0;
+      } else {
+        instance++;
+      }
+    }
+    const instanceObj = {
+      ...obj,
+      common: { ...obj.common, host: options.host },
+      type: "instance",
+      _id: `system.adapter.${adapter}.${instance}`
+    };
+    if (instanceObj.common.news) {
+      delete instanceObj.common.news;
+    }
+    instanceObj.common.enabled = options.enabled === true || options.enabled === false ? options.enabled : instanceObj.common.enabled === true || instanceObj.common.enabled === false ? instanceObj.common.enabled : false;
+    if (options.port) {
+      instanceObj.native = instanceObj.native || {};
+      instanceObj.native.port = options.port;
+    }
+    if (instanceObj.common.dataFolder && instanceObj.common.dataFolder.includes("%INSTANCE%")) {
+      instanceObj.common.dataFolder = instanceObj.common.dataFolder.replace(/%INSTANCE%/g, instance.toString());
+    }
+    if (defaultLogLevel) {
+      instanceObj.common.loglevel = defaultLogLevel;
+    } else if (!instanceObj.common.loglevel) {
+      instanceObj.common.loglevel = "info";
+    }
+    console.log(`host.${hostname} create instance ${adapter}`);
+    let objs;
+    if (!instanceObj.common.onlyWWW && instanceObj.common.mode !== "once") {
+      objs = import_js_controller_common.tools.getInstanceIndicatorObjects(`${adapter}.${instance}`, instanceObj.common);
+    } else {
+      objs = [];
+    }
+    const adapterDir = import_js_controller_common.tools.getAdapterDir(adapter);
+    if (!adapterDir) {
+      console.error(`host.${hostname} error: reading io-package.json ${err.message}`);
+      return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_IO_PACKAGE_JSON);
+    }
+    if (import_fs_extra.default.existsSync(import_node_path.default.join(adapterDir, "www"))) {
+      objs.push({
+        _id: `system.adapter.${adapter}.upload`,
+        type: "state",
+        common: {
+          name: `${adapter}.upload`,
+          type: "number",
+          read: true,
+          write: false,
+          role: "indicator.state",
+          unit: "%",
+          def: 0,
+          desc: "Upload process indicator"
+        },
+        native: {}
+      });
+    }
+    let adapterConf;
+    try {
+      adapterConf = import_fs_extra.default.readJSONSync(import_node_path.default.join(adapterDir, "io-package.json"));
+    } catch (err2) {
+      console.error(`host.${hostname} error: reading io-package.json ${err2.message}`);
+      return this.processExit(import_js_controller_common.EXIT_CODES.INVALID_IO_PACKAGE_JSON);
+    }
+    adapterConf.instanceObjects = adapterConf.instanceObjects || [];
+    adapterConf.objects = adapterConf.objects || [];
+    const defStates = /* @__PURE__ */ new Map();
+    for (const instanceObject of adapterConf.instanceObjects) {
+      instanceObject._id = `${adapter}.${instance}${instanceObject._id ? `.${instanceObject._id}` : ""}`;
+      if (instanceObject.common) {
+        if (instanceObject.common.name) {
+          if (typeof instanceObject.common.name === "object") {
+            Object.keys(instanceObject.common.name).forEach((lang) => instanceObject.common.name[lang] = instanceObject.common.name[lang].replace("%INSTANCE%", instance));
+          } else {
+            instanceObject.common.name = instanceObject.common.name.replace("%INSTANCE%", instance);
+          }
+        }
+        if (instanceObject.common.desc) {
+          if (typeof instanceObject.common.desc === "object") {
+            Object.keys(instanceObject.common.desc).forEach((lang) => instanceObject.common.desc[lang] = instanceObject.common.desc[lang].replace("%INSTANCE%", instance));
+          } else {
+            instanceObject.common.desc = instanceObject.common.desc.replace("%INSTANCE%", instance);
+          }
+        }
+      }
+      objs.push(instanceObject);
+      if (instanceObject.common && instanceObject.common.def !== void 0) {
+        defStates.set(instanceObject._id, {
+          val: instanceObject.common.def
+        });
+      }
+    }
+    for (const obj2 of objs) {
+      try {
+        import_js_controller_common.tools.validateGeneralObjectProperties(obj2);
+      } catch (e) {
+        console.warn(`host.${hostname} Object ${obj2._id} is invalid: ${e.message}`);
+        continue;
+      }
+      obj2.from = `system.host.${hostname}.cli`;
+      obj2.ts = Date.now();
+      try {
+        await this.objects.setObjectAsync(obj2._id, obj2);
+        console.log(`host.${hostname} object ${obj2._id} created`);
+      } catch (err2) {
+        console.error(`host.${hostname} error: ${err2.message}`);
+      }
+    }
+    for (const [id, defState] of defStates) {
+      defState.ack = true;
+      defState.from = `system.host.${hostname}.cli`;
+      try {
+        await this.states.setStateAsync(id, defState);
+        console.log(`host.${hostname} Set default value of ${id}: ${defState.val}`);
+      } catch (err2) {
+        console.error(`host.${hostname} error: ${err2.message}`);
+      }
+    }
+    instanceObj.from = `system.host.${hostname}.cli`;
+    instanceObj.ts = Date.now();
+    try {
+      await this.objects.setObjectAsync(instanceObj._id, instanceObj);
+      console.log(`host.${hostname} object ${instanceObj._id} created`);
+    } catch (err2) {
+      console.error(`host.${hostname} error: ${err2.message}`);
+    }
+  }
+  /**
+   * Enumerate all instances of an adapter
+   *
+   * @param knownObjIDs
+   * @param notDeleted
+   * @param adapter
+   * @param instance
+   */
+  async _enumerateAdapterInstances(knownObjIDs, notDeleted, adapter, instance) {
+    if (!notDeleted) {
+      notDeleted = [];
+    }
+    const instanceRegex = instance !== void 0 ? new RegExp(`^system\\.adapter\\.${adapter}\\.${instance}$`) : new RegExp(`^system\\.adapter\\.${adapter}\\.\\d+$`);
+    try {
+      const doc = await this.objects.getObjectView("system", "instance", {
+        startkey: `system.adapter.${adapter}${instance !== void 0 ? `.${instance}` : ""}`,
+        endkey: `system.adapter.${adapter}${instance !== void 0 ? `.${instance}` : ""}\u9999`
+      });
+      const newObjIDs = doc.rows.filter((row) => !!row.value._id).filter((row) => instanceRegex.test(row.value._id)).filter((row) => {
+        if (instance !== void 0 || !row.value.common?.host || row.value.common?.host === hostname) {
+          return true;
+        }
+        if (!notDeleted.includes(row.value._id)) {
+          notDeleted.push(row.value._id);
+        }
+        return false;
+      }).map((row) => row.value._id).filter((id) => !knownObjIDs.includes(id));
+      knownObjIDs.push(...newObjIDs);
+      if (newObjIDs.length > 0) {
+        console.log(`host.${hostname} Counted ${newObjIDs.length} instances of ${adapter}${instance !== void 0 ? `.${instance}` : ""}`);
+      }
+    } catch (err) {
+      err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} error: ${err.message}`);
+    }
+  }
+  /**
+   * Enumerate all meta objects of an adapter
+   *
+   * @param knownObjIDs
+   * @param adapter
+   * @param metaFilesToDelete
+   */
+  async _enumerateAdapterMeta(knownObjIDs, adapter, metaFilesToDelete) {
+    try {
+      const doc = await this.objects.getObjectViewAsync("system", "meta", {
+        startkey: `${adapter}.`,
+        endkey: `${adapter}.\u9999`
+      });
+      if (doc.rows.length) {
+        const adapterRegex = new RegExp(`^${adapter}\\.`);
+        const newObjs = doc.rows.filter((row) => row.value._id).map((row) => row.value._id).filter((id) => adapterRegex.test(id)).filter((id) => knownObjIDs.indexOf(id) === -1);
+        knownObjIDs.push(...newObjs);
+        metaFilesToDelete.push(...newObjs);
+        if (newObjs.length) {
+          console.log(`host.${hostname} Counted ${newObjs.length} meta of ${adapter}`);
+        }
+      }
+    } catch (err) {
+      err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} error: ${err.message}`);
+    }
+  }
+  async _enumerateAdapters(knownObjIDs, adapter) {
+    try {
+      const obj = await this.objects.getObjectAsync(`system.adapter.${adapter}`);
+      if (obj) {
+        if (obj.common && obj.common.nondeletable) {
+          console.log(`host.${hostname} Adapter ${adapter} cannot be deleted completely, because it is marked non-deletable.`);
+          obj.common.installedVersion = "";
+          obj.from = `system.host.${hostname}.cli`;
+          obj.ts = Date.now();
+          await this.objects.setObjectAsync(obj._id, obj);
+          return import_js_controller_common.EXIT_CODES.CANNOT_DELETE_NON_DELETABLE;
+        }
+        knownObjIDs.push(obj._id);
+        console.log(`host.${hostname} Counted 1 adapter for ${adapter}`);
+        return import_js_controller_common.EXIT_CODES.NO_ERROR;
+      }
+    } catch (err) {
+      console.error(`host.${hostname} Cannot enumerate adapters: ${err.message}`);
+    }
+  }
+  /**
+   * Enumerates the devices of an adapter (or instance)
+   *
+   * @param knownObjIDs The already known object ids
+   * @param adapter The adapter to enumerate the devices for
+   * @param instance The instance to enumerate the devices for (optional)
+   */
+  async _enumerateAdapterDevices(knownObjIDs, adapter, instance) {
+    const adapterRegex = new RegExp(`^${adapter}${instance !== void 0 ? `\\.${instance}` : ""}\\.`);
+    try {
+      const doc = await this.objects.getObjectViewAsync("system", "device", {
+        startkey: `${adapter}${instance !== void 0 ? `.${instance}` : ""}`,
+        endkey: `${adapter}${instance !== void 0 ? `.${instance}` : ""}\u9999`
+      });
+      if (doc.rows.length) {
+        const newObjs = doc.rows.filter((row) => row.value._id).map((row) => row.value._id).filter((id) => adapterRegex.test(id)).filter((id) => !knownObjIDs.includes(id));
+        knownObjIDs.push(...newObjs);
+        if (newObjs.length > 0) {
+          console.log(`host.${hostname} Counted ${newObjs.length} devices of ${adapter}${instance !== void 0 ? `.${instance}` : ""}`);
+        }
+      }
+    } catch (err) {
+      err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} error: ${err.message}`);
+    }
+  }
+  /**
+   * Enumerates the channels of an adapter (or instance)
+   *
+   * @param knownObjIDs The already known object ids
+   * @param adapter The adapter to enumerate the channels for
+   * @param instance The instance to enumerate the channels for (optional)
+   */
+  async _enumerateAdapterChannels(knownObjIDs, adapter, instance) {
+    const adapterRegex = new RegExp(`^${adapter}${instance !== void 0 ? `\\.${instance}` : ""}\\.`);
+    try {
+      const doc = await this.objects.getObjectViewAsync("system", "channel", {
+        startkey: `${adapter}${instance !== void 0 ? `.${instance}` : ""}`,
+        endkey: `${adapter}${instance !== void 0 ? `.${instance}` : ""}\u9999`
+      });
+      if (doc.rows.length) {
+        const newObjs = doc.rows.filter((row) => row.value._id).map((row) => row.value._id).filter((id) => adapterRegex.test(id)).filter((id) => !knownObjIDs.includes(id));
+        knownObjIDs.push(...newObjs);
+        if (newObjs.length > 0) {
+          console.log(`host.${hostname} Counted ${newObjs.length} channels of ${adapter}${instance !== void 0 ? `.${instance}` : ""}`);
+        }
+      }
+    } catch (err) {
+      err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} error: ${err.message}`);
+    }
+  }
+  /**
+   * Enumerates the states of an adapter (or instance)
+   *
+   * @param knownObjIDs The already known object ids
+   * @param adapter The adapter to enumerate the states for
+   * @param instance The instance to enumerate the states for (optional)
+   */
+  async _enumerateAdapterStateObjects(knownObjIDs, adapter, instance) {
+    const adapterRegex = new RegExp(`^${adapter}${instance !== void 0 ? `\\.${instance}` : ""}\\.`);
+    const sysAdapterRegex = new RegExp(`^system\\.adapter\\.${adapter}${instance !== void 0 ? `\\.${instance}` : ""}\\.`);
+    try {
+      let doc = await this.objects.getObjectViewAsync("system", "state", {
+        startkey: `${adapter}${instance !== void 0 ? `.${instance}` : ""}`,
+        endkey: `${adapter}${instance !== void 0 ? `.${instance}` : ""}\u9999`
+      });
+      if (doc.rows.length) {
+        const newObjs = doc.rows.filter((row) => row.value._id).map((row) => row.value._id).filter((id) => adapterRegex.test(id)).filter((id) => !knownObjIDs.includes(id));
+        knownObjIDs.push(...newObjs);
+        if (newObjs.length > 0) {
+          console.log(`host.${hostname} Counted ${newObjs.length} states of ${adapter}${instance !== void 0 ? `.${instance}` : ""}`);
+        }
+      }
+      doc = await this.objects.getObjectViewAsync("system", "state", {
+        startkey: `system.adapter.${adapter}${instance !== void 0 ? `.${instance}` : ""}`,
+        endkey: `system.adapter.${adapter}${instance !== void 0 ? `.${instance}` : ""}\u9999`
+      });
+      if (doc.rows.length) {
+        const newObjs = doc.rows.filter((row) => row.value._id).map((row) => row.value._id).filter((id) => sysAdapterRegex.test(id)).filter((id) => !knownObjIDs.includes(id));
+        knownObjIDs.push(...newObjs);
+        if (newObjs.length > 0) {
+          console.log(`host.${hostname} Counted ${newObjs.length} states of system.adapter.${adapter}${instance !== void 0 ? `.${instance}` : ""}`);
+        }
+      }
+    } catch (err) {
+      err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} error: ${err.message}`);
+    }
+  }
+  /**
+   * Enumerates the docs of an adapter (or instance)
+   *
+   * @param knownObjIDs The already known object ids
+   * @param adapter The adapter to enumerate the states for
+   * @param instance The instance to enumerate the states for (optional)
+   */
+  async _enumerateAdapterDocs(knownObjIDs, adapter, instance) {
+    const adapterRegex = new RegExp(`^${adapter}${instance !== void 0 ? `\\.${instance}` : ""}\\.`);
+    const sysAdapterRegex = new RegExp(`^system\\.adapter\\.${adapter}${instance !== void 0 ? `\\.${instance}` : ""}\\.`);
+    if (instance === void 0) {
+      knownObjIDs.push(`system.host.${hostname}.adapters.${adapter}`);
+    }
+    try {
+      const doc = await this.objects.getObjectListAsync({ include_docs: true });
+      if (doc.rows.length) {
+        const newObjs = doc.rows.map((row) => row.value._id).filter((id) => adapterRegex.test(id) || sysAdapterRegex.test(id)).filter((id) => !knownObjIDs.includes(id));
+        knownObjIDs.push(...newObjs);
+        if (newObjs.length > 0) {
+          console.log(`host.${hostname} Counted ${newObjs.length} objects of ${adapter}${instance !== void 0 ? `.${instance}` : ""}`);
+        }
+      }
+    } catch (err) {
+      err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} error: ${err.message}`);
+    }
+  }
+  /**
+   * Enumerate all state IDs of an adapter (or instance)
+   *
+   * @param knownStateIDs
+   * @param adapter
+   * @param instance
+   */
+  async _enumerateAdapterStates(knownStateIDs, adapter, instance) {
+    for (const pattern of [
+      `io.${adapter}.${instance !== void 0 ? `${instance}.` : ""}*`,
+      `messagebox.${adapter}.${instance !== void 0 ? `${instance}.` : ""}*`,
+      `log.${adapter}.${instance !== void 0 ? `${instance}.` : ""}*`,
+      `${adapter}.${instance !== void 0 ? `${instance}.` : ""}*`,
+      `system.adapter.${adapter}.${instance !== void 0 ? `${instance}.` : ""}*`
+    ]) {
+      try {
+        const ids = await this.states.getKeys(pattern);
+        if (ids?.length) {
+          const newStates = ids.filter((id) => !knownStateIDs.includes(id));
+          knownStateIDs.push(...newStates);
+          if (newStates.length) {
+            console.log(`host.${hostname} Counted ${newStates.length} states (${pattern}) from states`);
+          }
+        }
+      } catch (err) {
+        console.error(`host.${hostname} Cannot get keys async: ${err.message}`);
+      }
+    }
+  }
+  /**
+   * delete WWW pages, objects and meta files
+   *
+   * @param adapter
+   * @param metaFilesToDelete
+   */
+  async _deleteAdapterFiles(adapter, metaFilesToDelete) {
+    const filesToDelete = [
+      { id: "vis", name: `widgets/${adapter}` },
+      { id: "vis", name: `widgets/${adapter}.html` },
+      { id: "vis-2", name: `widgets/${adapter}` },
+      { id: "vis-2", name: `widgets/${adapter}.html` },
+      { id: adapter },
+      { id: `${adapter}.admin` },
+      ...metaFilesToDelete.map((id) => ({ id }))
+    ];
+    for (const file of filesToDelete) {
+      const id = typeof file === "object" ? file.id : file;
+      try {
+        await this.objects.unlinkAsync(id, file.name ?? "");
+        console.log(`host.${hostname} file ${id + (file.name ? `/${file.name}` : "")} deleted`);
+      } catch (err) {
+        err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} Cannot delete ${id} files folder: ${err.message}`);
+      }
+    }
+    for (const objId of [adapter, `${adapter}.admin`]) {
+      try {
+        await this.objects.delObjectAsync(objId);
+        console.log(`host.${hostname} object ${objId} deleted`);
+      } catch (err) {
+        err !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && err.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} cannot delete objects: ${err.message}`);
+      }
+    }
+  }
+  async _deleteAdapterStates(stateIDs) {
+    if (stateIDs.length > 1e3) {
+      console.log(`host.${hostname} Deleting ${stateIDs.length} state(s). Be patient...`);
+    } else if (stateIDs.length) {
+      console.log(`host.${hostname} Deleting ${stateIDs.length} state(s).`);
+    }
+    while (stateIDs.length > 0) {
+      if (stateIDs.length % 200 === 0) {
+        console.log(`host.${hostname}: Only ${stateIDs.length} states left to be deleted.`);
+      }
+      try {
+        await this.states.delState(stateIDs.pop());
+      } catch (e) {
+        e !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && e.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && console.error(`host.${hostname} Cannot delete states: ${e.message}`);
+      }
+    }
+  }
+  async _deleteAdapterObjects(objIDs) {
+    if (objIDs.length > 1e3) {
+      console.log(`host.${hostname} Deleting ${objIDs.length} object(s). Be patient...`);
+    } else if (objIDs.length) {
+      console.log(`host.${hostname} Deleting ${objIDs.length} object(s).`);
+    }
+    let allEnums;
+    if (objIDs.length > 1) {
+      try {
+        allEnums = await import_js_controller_common.tools.getAllEnums(this.objects);
+      } catch (e) {
+        console.error(`host.${hostname}: Could not retrieve all enums: ${e.message}`);
+      }
+    }
+    while (objIDs.length > 0) {
+      if (objIDs.length % 200 === 0) {
+        console.log(`host.${hostname}: Only ${objIDs.length} objects left to be deleted.`);
+      }
+      try {
+        const id = objIDs.pop();
+        await this.objects.delObjectAsync(id);
+        await import_js_controller_common.tools.removeIdFromAllEnums(this.objects, id, allEnums);
+      } catch (e) {
+        if (e !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND && e.message !== import_js_controller_common.tools.ERRORS.ERROR_NOT_FOUND) {
+          console.error(`host.${hostname} cannot delete objects: ${e.message}`);
+        }
+      }
+    }
+  }
+  /**
+   * Deletes given adapter from filesystem and removes all instances
+   *
+   * @param adapter adapter name
+   */
+  async deleteAdapter(adapter) {
+    const knownObjectIDs = [];
+    const metaFilesToDelete = [];
+    const notDeletedObjectIDs = [];
+    const knownStateIDs = [];
+    let resultCode = import_js_controller_common.EXIT_CODES.NO_ERROR;
+    const _uninstallNpm = async () => {
+      try {
+        const adapterNpm = `${import_js_controller_common.tools.appName.toLowerCase()}.${adapter}`;
+        const ioPackPath = require2.resolve(`${adapterNpm}/io-package.json`);
+        const ioPack = await import_fs_extra.default.readJSON(ioPackPath);
+        if (!ioPack.common || !ioPack.common.nondeletable) {
+          await this._npmUninstall(adapterNpm, false);
+          if (ioPack.common.restartAdapters) {
+            if (!Array.isArray(ioPack.common.restartAdapters)) {
+              if (typeof ioPack.common.restartAdapters !== "string") {
+                return;
+              }
+              ioPack.common.restartAdapters = [ioPack.common.restartAdapters];
+            }
+            if (ioPack.common.restartAdapters.length && ioPack.common.restartAdapters[0]) {
+              const instances = await import_js_controller_common.tools.getAllInstances(ioPack.common.restartAdapters, this.objects);
+              if (instances?.length) {
+                for (const instance of instances) {
+                  const obj = await this.objects.getObjectAsync(instance);
+                  if (obj?.common?.enabled) {
+                    try {
+                      obj.common.enabled = false;
+                      obj.from = `system.host.${hostname}.cli`;
+                      obj.ts = Date.now();
+                      await this.objects.setObjectAsync(obj._id, obj);
+                      obj.common.enabled = true;
+                      obj.from = `system.host.${hostname}.cli`;
+                      obj.ts = Date.now();
+                      await this.objects.setObjectAsync(obj._id, obj);
+                      console.log(`Adapter "${obj._id}" restarted.`);
+                    } catch (err) {
+                      console.error(`Cannot restart adapter "${obj._id}": ${err.message}`);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.error(`Error deleting adapter ${adapter} from disk: ${e.message}`);
+        console.error(`You might have to delete it yourself!`);
+      }
+    };
+    try {
+      await this._enumerateAdapterInstances(knownObjectIDs, notDeletedObjectIDs, adapter);
+      if (notDeletedObjectIDs.length) {
+        for (const knownObjectID of knownObjectIDs) {
+          await this.deleteInstance(adapter, parseInt(knownObjectID.split(".").pop()));
+        }
+        await this._removeCustomFromObjects([adapter]);
+        await _uninstallNpm();
+      } else {
+        const dependentInstance = await this._hasDependentInstances(adapter);
+        if (dependentInstance) {
+          console.log(`Cannot remove adapter "${adapter}", because instance "${dependentInstance}" depends on it!`);
+          return import_js_controller_common.EXIT_CODES.CANNOT_DELETE_DEPENDENCY;
+        }
+        const instances = knownObjectIDs.map((id) => `${adapter}.${id.split(".").pop()}`);
+        await this._enumerateAdapterMeta(knownObjectIDs, adapter, metaFilesToDelete);
+        resultCode = await this._enumerateAdapters(knownObjectIDs, adapter) || resultCode;
+        await this._enumerateAdapterDevices(knownObjectIDs, adapter);
+        await this._enumerateAdapterChannels(knownObjectIDs, adapter);
+        await this._enumerateAdapterStateObjects(knownObjectIDs, adapter);
+        await this._enumerateAdapterStates(knownStateIDs, adapter);
+        await this._enumerateAdapterDocs(knownObjectIDs, adapter);
+        await this._deleteAdapterFiles(adapter, metaFilesToDelete);
+        await this._deleteAdapterObjects(knownObjectIDs);
+        await this._deleteAdapterStates(knownStateIDs);
+        if (this.params.custom) {
+          await this._removeCustomFromObjects([...instances, adapter]);
+        }
+        await _uninstallNpm();
+      }
+    } catch (e) {
+      console.error(`There was an error uninstalling ${adapter} on ${hostname}: ${e.message}`);
+    }
+    return resultCode;
+  }
+  /**
+   * Deletes given instance of an adapter
+   *
+   * @param adapter adapter name like hm-rpc
+   * @param instance e.g. 1, if undefined deletes all instances
+   */
+  async deleteInstance(adapter, instance) {
+    const knownObjectIDs = [];
+    const knownStateIDs = [];
+    const dependentInstance = await this._hasDependentInstances(adapter, instance);
+    if (dependentInstance) {
+      console.log(`Cannot remove instance "${adapter}.${instance}", because instance "${dependentInstance}" depends on it!`);
+      return import_js_controller_common.EXIT_CODES.CANNOT_DELETE_DEPENDENCY;
+    }
+    await this._removeInstancesInstalledNodeModules(adapter, instance);
+    await this._enumerateAdapterInstances(knownObjectIDs, [], adapter, instance);
+    await this._enumerateAdapterDevices(knownObjectIDs, adapter, instance);
+    await this._enumerateAdapterChannels(knownObjectIDs, adapter, instance);
+    await this._enumerateAdapterStateObjects(knownObjectIDs, adapter, instance);
+    await this._enumerateAdapterStates(knownStateIDs, adapter, instance);
+    await this._enumerateAdapterDocs(knownObjectIDs, adapter, instance);
+    await this._deleteAdapterObjects(knownObjectIDs);
+    await this._deleteAdapterStates(knownStateIDs);
+    if (this.params.custom) {
+      await this._removeCustomFromObjects([`${adapter}.${instance}`]);
+    }
+  }
+  /**
+   * Remove all node modules that has been installed by this instance
+   *
+   * @param adapter adapter name like hm-rpc
+   * @param instance e.g. 1, if undefined deletes all instances
+   */
+  async _removeInstancesInstalledNodeModules(adapter, instance) {
+    const packJson = import_fs_extra.default.readJSONSync(import_node_path.default.join(import_js_controller_common.tools.getRootDir(), "package.json"));
+    const regex = new RegExp(`^@${import_js_controller_common.tools.appNameLowerCase}-${adapter}.${instance !== void 0 ? instance : "\\d+"}\\/.*`, "g");
+    for (const packageName of Object.keys(packJson.dependencies)) {
+      if (regex.test(packageName)) {
+        console.log(`host.${hostname} Removing package ${packageName}`);
+        await this._npmUninstall(packageName, true);
+      }
+    }
+  }
+  /**
+   * Removes the custom attribute of the provided adapter/instance
+   *
+   * @param ids - id of the adapter/instance to check for
+   */
+  async _removeCustomFromObjects(ids) {
+    const res = await this.objects.getObjectViewAsync("system", "custom", {
+      startkey: "",
+      endkey: "\u9999"
+    });
+    if (res && res.rows) {
+      for (const row of res.rows) {
+        let obj;
+        for (const id of ids) {
+          if (Object.prototype.hasOwnProperty.call(row.value, id)) {
+            if (!obj) {
+              obj = await this.objects.getObjectAsync(row.id);
+            }
+            if (obj?.common?.custom) {
+              delete obj.common.custom[id];
+            }
+          }
+        }
+        if (obj) {
+          await this.objects.setObjectAsync(row.id, obj);
+        }
+      }
+    }
+  }
+  /**
+   * Installs an adapter from given url
+   *
+   * @param url url to install adapter from
+   * @param name package name
+   */
+  async installAdapterFromUrl(url, name) {
+    let parsedUrl;
+    try {
+      parsedUrl = new import_node_url.URL(url);
+    } catch {
+    }
+    const debug = process.argv.includes("--debug");
+    if (parsedUrl && parsedUrl.hostname === "github.com") {
+      if (!import_js_controller_common.tools.isGithubPathname(parsedUrl.pathname)) {
+        return console.error(`Cannot install from GitHub. Invalid URL ${url}`);
+      }
+      const { repo, user, commit } = import_js_controller_common.tools.parseGithubPathname(parsedUrl.pathname);
+      if (!commit) {
+        try {
+          const result = await (0, import_axios.default)(`http://api.github.com/repos/${user}/${repo}/commits`, {
+            headers: {
+              "User-Agent": "ioBroker Adapter install",
+              // @ts-expect-error should be okay...
+              validateStatus: (status) => status === 200
+            }
+          });
+          if (result.data && Array.isArray(result.data) && result.data.length >= 1 && result.data[0].sha) {
+            url = `${user}/${repo}#${result.data[0].sha}`;
+          } else {
+            console.log(`Info: Can not get current GitHub commit, only remember that we installed from GitHub.`);
+            url = `${user}/${repo}`;
+          }
+        } catch (err) {
+          console.log(`Info: Can not get current GitHub commit, only remember that we installed from GitHub: ${err.message}`);
+          url = `${user}/${repo}`;
+        }
+      } else {
+        url = `${user}/${repo}#${commit}`;
+      }
+    }
+    console.log(`install ${url}`);
+    if (!name) {
+      const reNpmPacket = new RegExp(`^${import_js_controller_common.tools.appName}\\.([-_\\w\\d]+)(@.*)?$`, "i");
+      const match = reNpmPacket.exec(url);
+      if (match) {
+        name = match[1];
+      } else if (url.match(/\.(tgz|gz|zip|tar\.gz)$/)) {
+        const parts = url.split("/");
+        const last = parts.pop();
+        const mm = last.match(/\.([-_\w]+)-[.\d]+/);
+        if (mm) {
+          name = mm[1];
+        }
+      } else {
+        const githubUrlParts = import_js_controller_common.tools.parseShortGithubUrl(url);
+        if (githubUrlParts) {
+          name = githubUrlParts.repo;
+        } else {
+          name = url;
+        }
+        const reG = new RegExp(`${import_js_controller_common.tools.appName}\\.([-_\\w\\d]+)$`, "i");
+        const match2 = reG.exec(name);
+        if (match2) {
+          name = match2[1];
+        }
+      }
+    }
+    if (name === "js-controller") {
+      console.error(`Cannot install "js-controller" from url, use "${import_js_controller_common.tools.appName.toLowerCase()} upgrade self"`);
+      return;
+    }
+    const options = {
+      packetName: name
+    };
+    let stoppedList = [];
+    if (osPlatform === "win32") {
+      stoppedList = await this._getInstancesOfAdapter(name);
+      await this.enableInstances(stoppedList, false);
+    }
+    const res = await this._npmInstallWithCheck(url, options, debug);
+    if (!res || !res.installDir) {
+      return;
+    }
+    await this.upload.uploadAdapter(name, true, true);
+    await this.upload.uploadAdapter(name, false, true);
+    await this.upload.upgradeAdapterObjects(name);
+    await this.enableInstances(stoppedList, true);
+  }
+  /**
+   * Checks if other adapters depend on this adapter
+   *
+   * @param adapter adapter name
+   * @param instance instance, like 1
+   * @returns if dependent exists, returns adapter name
+   */
+  async _hasDependentInstances(adapter, instance) {
+    try {
+      const doc = await this.objects.getObjectViewAsync("system", "instance", {
+        startkey: "system.adapter.",
+        endkey: "system.adapter.\u9999"
+      });
+      let scopedHostname;
+      if (instance) {
+        [scopedHostname] = doc.rows.filter((row) => row.id === `system.adapter.${adapter}.${instance}`).map((row) => row.value.common.host);
+      }
+      scopedHostname = scopedHostname || hostname;
+      for (const row of doc.rows) {
+        if (!row.value?.common) {
+          continue;
+        }
+        const localDeps = import_js_controller_common.tools.parseDependencies(row.value.common.dependencies);
+        for (const localDep of Object.keys(localDeps)) {
+          if (row.value.common.host === scopedHostname && localDep === adapter) {
+            if (instance === void 0) {
+              return `${row.value.common.name}.${row.id.split(".").pop()}`;
+            }
+            if (this._checkDependencyFulfilledThisHost(adapter, instance, doc.rows, scopedHostname)) {
+              break;
+            } else {
+              return `${row.value.common.name}.${row.id.split(".").pop()}`;
+            }
+          }
+        }
+        const globalDeps = import_js_controller_common.tools.parseDependencies(row.value.common.globalDependencies);
+        for (const globalDep of Object.keys(globalDeps)) {
+          if (globalDep === adapter) {
+            if (instance === void 0) {
+              if (this._checkDependencyFulfilledForeignHosts(adapter, doc.rows, scopedHostname)) {
+                break;
+              } else {
+                return row.value.common.name;
+              }
+            } else if (this._checkDependencyFulfilledForeignHosts(adapter, doc.rows, scopedHostname) || this._checkDependencyFulfilledThisHost(adapter, instance, doc.rows, scopedHostname)) {
+              break;
+            } else {
+              return row.value.common.name;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error(`Could not check dependent instances for "${adapter}": ${e.message}`);
+    }
+  }
+  /**
+   * Checks if adapter can also be found on another host than this
+   *
+   * @param adapter adapter name
+   * @param instancesRows all instances objects view rows
+   * @param scopedHostname hostname which should be assumed as local
+   * @returns true if an instance is present on another host
+   */
+  _checkDependencyFulfilledForeignHosts(adapter, instancesRows, scopedHostname) {
+    for (const row of instancesRows) {
+      if (row.value && row.value.common.name === adapter && row.value.common.host !== scopedHostname) {
+        return true;
+      }
+    }
+    return false;
+  }
+  /**
+   * Checks if another instance then the given is present on this host
+   *
+   * @param adapter adapter name
+   * @param instance instance number like 1
+   * @param instancesRows all instances objects view rows
+   * @param scopedHostname hostname which should be assumed as local
+   * @returns true if another instance is present on this host
+   */
+  _checkDependencyFulfilledThisHost(adapter, instance, instancesRows, scopedHostname) {
+    for (const row of instancesRows) {
+      if (row.value && row.value.common.name === adapter && row.value.common.host === scopedHostname && parseInt(row.value._id.split(".").pop()) !== instance) {
+        return true;
+      }
+    }
+    return false;
+  }
+  /**
+   * Get all instances of an adapter which are on the current host
+   *
+   * @param adapter adapter name
+   */
+  async _getInstancesOfAdapter(adapter) {
+    const instances = [];
+    const doc = await this.objects.getObjectListAsync({
+      startkey: `system.adapter.${adapter}.`,
+      endkey: `system.adapter.${adapter}.\u9999`
+    });
+    if (doc) {
+      for (const row of doc.rows) {
+        if (row.value.common.enabled && hostname === row.value.common.host) {
+          instances.push(row.value);
+        }
+      }
+    }
+    return instances;
+  }
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  Install
+});
+//# sourceMappingURL=setupInstall.js.map

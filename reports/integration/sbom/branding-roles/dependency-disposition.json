@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-npm-audit-package-node-disposition",
+  "productVersion": "0.2.0-dev.2",
+  "candidateRevision": "integrated-roles-candidate-r2",
+  "auditSha256": "b073d54c5a9339a690a06dbd753efa5078dafbedee9f540cfbd1f59f30fb5566",
+  "packageLockSha256": "b0db18741ac1aefbfb3ac15dfc74826aa551a84d327a6e0aae0be20178135ab6",
+  "scope": "Installed Admin/UI/controller laboratory dependency tree only; no all-six-component or target OS coverage.",
+  "countsArePackageNodesNotIndependentCves": true,
+  "findings": [
+    {
+      "package": "@alcalzone/esbuild-register",
+      "severity": "moderate",
+      "direct": false,
+      "reportedRange": "*",
+      "installedPaths": [
+        "node_modules/@alcalzone/esbuild-register"
+      ],
+      "via": [
+        "esbuild"
+      ],
+      "status": "under_investigation",
+      "decision": "No automatic fix applied; evaluate actual reachable call paths and a tested controller dependency update. This branding/roles change does not resolve the advisory.",
+      "owner": "NexoWatt product maintenance",
+      "acceptanceGranted": false
+    },
+    {
+      "package": "esbuild",
+      "severity": "moderate",
+      "direct": false,
+      "reportedRange": "<=0.24.2",
+      "installedPaths": [
+        "node_modules/esbuild"
+      ],
+      "via": [
+        {
+          "source": 1102341,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild enables any website to send any requests to the development server and read the response",
+          "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-346"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=0.24.2"
+        }
+      ],
+      "status": "under_investigation",
+      "decision": "No automatic fix applied; evaluate actual reachable call paths and a tested controller dependency update. This branding/roles change does not resolve the advisory.",
+      "owner": "NexoWatt product maintenance",
+      "acceptanceGranted": false
+    },
+    {
+      "package": "iobroker.js-controller",
+      "severity": "moderate",
+      "direct": true,
+      "reportedRange": ">=3.3.11",
+      "installedPaths": [
+        "node_modules/iobroker.js-controller"
+      ],
+      "via": [
+        "@alcalzone/esbuild-register"
+      ],
+      "status": "under_investigation",
+      "decision": "No automatic fix applied; evaluate actual reachable call paths and a tested controller dependency update. This branding/roles change does not resolve the advisory.",
+      "owner": "NexoWatt product maintenance",
+      "acceptanceGranted": false
+    }
+  ],
+  "productReleaseApproved": false
+}

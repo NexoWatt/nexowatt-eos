@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "kind": "integration-review-contract-not-enforcement",
+  "documentation": "ADAPTERS_INTEGRATED.md",
+  "internalTransport": "eos-redis-tls13-v1",
+  "centralLicenseClient": {
+    "package": "@nexowatt/eos-license-client",
+    "version": "1.0.1",
+    "adminInstance": "eos-admin.0",
+    "command": "eos.license.check",
+    "feature": "energy",
+    "importedByTheseFourAdapters": false,
+    "requiredNextWork": "Device-specific safe license-loss transitions and central controlled enrollment"
+  },
+  "components": [
+    {
+      "sourceDirectory": "components/devices",
+      "name": "iobroker.nexowatt-devices",
+      "baseVersion": "0.5.169",
+      "main": "bootstrap.js",
+      "intendedInstance": "nexowatt-devices.0",
+      "sourcePresent": true,
+      "runtimeInstallationObserved": null,
+      "activeInstanceObserved": null,
+      "physicalActivationApproved": false,
+      "requiredInitialEnabled": false,
+      "review": "pending",
+      "findings": [
+        "NW-EOS-ADP-261001-03",
+        "NW-EOS-ADP-261001-04",
+        "NW-EOS-ADP-261001-06",
+        "NW-EOS-ADP-261001-07"
+      ],
+      "evidence": "reports/integrated/adapters/verification.json"
+    },
+    {
+      "sourceDirectory": "components/eebus",
+      "name": "iobroker.eebus",
+      "baseVersion": "0.3.0",
+      "main": "build/main.js",
+      "intendedInstance": "eebus.0",
+      "sourcePresent": true,
+      "runtimeInstallationObserved": null,
+      "activeInstanceObserved": null,
+      "physicalActivationApproved": false,
+      "requiredInitialEnabled": false,
+      "review": "pending",
+      "findings": [
+        "NW-EOS-ADP-261001-01",
+        "NW-EOS-ADP-261001-07",
+        "NW-EOS-ADP-261001-08",
+        "NW-EOS-ADP-261001-09",
+        "NW-EOS-ADP-261001-10"
+      ],
+      "evidence": "reports/integrated/adapters/verification.json",
+      "scopedCorrections": {
+        "status": "remediated_scoped_verification",
+        "findingIds": [
+          "NW-EOS-ADP-261001-09",
+          "NW-EOS-ADP-261001-10"
+        ],
+        "evidence": "reports/integration/sbom/eebus-final-security.tap",
+        "scope": "21 local security/resource regressions; not physical SHIP/SPINE or license-transition acceptance"
+      }
+    },
+    {
+      "sourceDirectory": "components/ocpp21",
+      "name": "iobroker.ocpp21",
+      "baseVersion": "0.4.0",
+      "main": "main.js",
+      "intendedInstance": "ocpp21.0",
+      "sourcePresent": true,
+      "runtimeInstallationObserved": null,
+      "activeInstanceObserved": null,
+      "physicalActivationApproved": false,
+      "requiredInitialEnabled": false,
+      "review": "pending",
+      "findings": [
+        "NW-EOS-ADP-261001-02",
+        "NW-EOS-ADP-261001-07",
+        "NW-EOS-ADP-261001-08"
+      ],
+      "evidence": "reports/integrated/adapters/verification.json"
+    },
+    {
+      "sourceDirectory": "components/backitup",
+      "name": "iobroker.nexowatt-backup",
+      "baseVersion": "1.0.10",
+      "main": "build/main.js",
+      "intendedInstance": "nexowatt-backup.0",
+      "sourcePresent": true,
+      "runtimeInstallationObserved": null,
+      "activeInstanceObserved": null,
+      "physicalActivationApproved": false,
+      "requiredInitialEnabled": false,
+      "review": "pending",
+      "findings": [
+        "NW-EOS-ADP-261001-05",
+        "NW-EOS-ADP-261001-07"
+      ],
+      "evidence": "reports/integrated/adapters/verification.json"
+    }
+  ]
+}

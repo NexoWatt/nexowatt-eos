@@ -1,0 +1,340 @@
+Repository gate continuation after central-license fixture migration.
+
+STEP 58: npm run test:stable-1.0.8-storage-licenses
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.8-storage-licenses
+> node scripts/verify-stable-1.0.8-storage-licenses.cjs
+
+[1.0.8 storage licenses] OK: Home 2 / Pro 10, API save/import, signed/split, pool/groups, stale status, downgrade, no license and migration.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 59: npm run test:stable-1.0.9-access
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.9-access
+> node scripts/verify-stable-1.0.9-access.cjs && node scripts/verify-docs-layout.cjs
+
+[1.0.9 access] OK: real HTTPS server, Admin/Installer/customer roles, direct URLs, legacy/expired sessions, auth-disabled, unlicensed activation, Installer/Admin save/reload, customer layout/device control, SmartHome-only setup navigation, encoded static path guards, setup/DP/logic denial and feature limits.
+[docs-layout] OK: 564 Markdown files under docs, local links and package paths valid.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 60: npm run test:eos-auth-security
+
+> iobroker.nexowatt-ui@1.0.21 test:eos-auth-security
+> node --test --test-reporter=tap scripts/verify-eos-auth-security.cjs
+
+TAP version 13
+# Subtest: UI-AUTH: undefined / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 1 - UI-AUTH: undefined / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 148.497538
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: undefined / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 2 - UI-AUTH: undefined / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 34.819892
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: all / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 3 - UI-AUTH: all / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 24.344516
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: all / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 4 - UI-AUTH: all / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 28.135797
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: lan / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 5 - UI-AUTH: lan / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 23.531416
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: lan / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 6 - UI-AUTH: lan / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 33.101712
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: session / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 7 - UI-AUTH: session / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 23.54731
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: session / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 8 - UI-AUTH: session / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 15.781499
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: invalid / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 9 - UI-AUTH: invalid / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 20.702124
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: invalid / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 10 - UI-AUTH: invalid / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 108.593304
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: Kunden-Schreibfamilien verweigern vor jeder Handler-Wirkung
+ok 11 - UI-AUTH: Kunden-Schreibfamilien verweigern vor jeder Handler-Wirkung
+  ---
+  duration_ms: 15.542397
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: group-removal widerruft eine echte angemeldete Admin-Sitzung
+ok 12 - UI-SESSION: group-removal widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 17.512188
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: group-disabled widerruft eine echte angemeldete Admin-Sitzung
+ok 13 - UI-SESSION: group-disabled widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 13.77943
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: account-disabled widerruft eine echte angemeldete Admin-Sitzung
+ok 14 - UI-SESSION: account-disabled widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 12.622299
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: account-deleted widerruft eine echte angemeldete Admin-Sitzung
+ok 15 - UI-SESSION: account-deleted widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 12.744734
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: password-changed widerruft eine echte angemeldete Admin-Sitzung
+ok 16 - UI-SESSION: password-changed widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 12.922213
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: group-read-error widerruft eine echte angemeldete Admin-Sitzung
+ok 17 - UI-SESSION: group-read-error widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 22.084827
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: account-read-error widerruft eine echte angemeldete Admin-Sitzung
+ok 18 - UI-SESSION: account-read-error widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 72.552891
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: neue Gruppenrechte verlangen ebenfalls eine neue Anmeldung
+ok 19 - UI-SESSION: neue Gruppenrechte verlangen ebenfalls eine neue Anmeldung
+  ---
+  duration_ms: 16.697936
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: logout während laufender Kontoprüfung wird nicht rückgängig gemacht
+ok 20 - UI-SESSION: logout während laufender Kontoprüfung wird nicht rückgängig gemacht
+  ---
+  duration_ms: 15.011894
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: expiry während laufender Kontoprüfung wird nicht rückgängig gemacht
+ok 21 - UI-SESSION: expiry während laufender Kontoprüfung wird nicht rückgängig gemacht
+  ---
+  duration_ms: 15.086607
+  type: 'test'
+  ...
+# Subtest: UI-LOGIN: Typ-/Längenprüfung, falsche Passwörter, Rate-Limit und alte Bypass-Flags
+ok 22 - UI-LOGIN: Typ-/Längenprüfung, falsche Passwörter, Rate-Limit und alte Bypass-Flags
+  ---
+  duration_ms: 64.297029
+  type: 'test'
+  ...
+# Subtest: UI-LOGIN: Passwortänderung während Passwortprüfung erzeugt keine Sitzung
+ok 23 - UI-LOGIN: Passwortänderung während Passwortprüfung erzeugt keine Sitzung
+  ---
+  duration_ms: 9.990617
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: Passwortänderung während Gruppenprüfung sperrt den laufenden Zugriff
+ok 24 - UI-SESSION: Passwortänderung während Gruppenprüfung sperrt den laufenden Zugriff
+  ---
+  duration_ms: 18.223735
+  type: 'test'
+  ...
+# Subtest: UI-COOKIE: fehlerhafte/mehrdeutige Cookies verweigern; Server und gültige Sitzung bleiben nutzbar
+ok 25 - UI-COOKIE: fehlerhafte/mehrdeutige Cookies verweigern; Server und gültige Sitzung bleiben nutzbar
+  ---
+  duration_ms: 60.506324
+  type: 'test'
+  ...
+# Subtest: UI-COOKIE: Parser hat keinen Objekt-Prototyp und wirft bei beliebigen Header-Typen nicht
+ok 26 - UI-COOKIE: Parser hat keinen Objekt-Prototyp und wirft bei beliebigen Header-Typen nicht
+  ---
+  duration_ms: 11.330073
+  type: 'test'
+  ...
+# Subtest: UI-NETZ: Anmeldung besitzt keine LAN-/Tailscale-IP-Beschränkung
+ok 27 - UI-NETZ: Anmeldung besitzt keine LAN-/Tailscale-IP-Beschränkung
+  ---
+  duration_ms: 11.573101
+  type: 'test'
+  ...
+# Subtest: UI-DEPENDENCY: Express-Parser verarbeiten den gemeldeten Sonderfall und weisen ungültige Limits ab
+ok 28 - UI-DEPENDENCY: Express-Parser verarbeiten den gemeldeten Sonderfall und weisen ungültige Limits ab
+  ---
+  duration_ms: 2.989733
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1639.818286
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 61: npm run test:eos-account-roles
+
+> iobroker.nexowatt-ui@1.0.21 test:eos-account-roles
+> node --test test/eos-account-roles.test.cjs test/eos-sse-authorization.test.cjs test/eos-service-worker-auth.test.cjs
+
+✔ EOS-ROLES: product reads require login and canonical group identity; aliases never elevate (226.414987ms)
+✔ EOS-ACCOUNT: initial own-password setup gates data, preserves identity, revokes all sessions (3378.085376ms)
+✔ EOS-ACCOUNT: reset metadata, disabled accounts and group changes revoke active sessions (102.443746ms)
+✔ EOS-ACCOUNT: password input bounds and fail-closed initialization metadata (0.864517ms)
+✔ EOS-ACCOUNT: shared verification/derivation budget admits two and rejects excess without queue (0.997879ms)
+✔ EOS-SSE: forged logout leaves streams alive; valid logout closes only its own stream (85.003821ms)
+✔ worker installs without prefetching login-protected content (4.248879ms)
+✔ activation deletes legacy EOS caches before controlling clients (1.22305ms)
+✔ offline protected route cannot use a previous session cache: / (3.941614ms)
+✔ offline protected route cannot use a previous session cache: /index.html (2.614747ms)
+✔ offline protected route cannot use a previous session cache: /static/index.html (1.7646ms)
+✔ offline protected route cannot use a previous session cache: /api/state (1.199145ms)
+✔ offline protected route cannot use a previous session cache: /api/export.json (1.11672ms)
+✔ offline protected route cannot use a previous session cache: /config (2.059235ms)
+✔ offline protected route cannot use a previous session cache: /state/live (1.640382ms)
+✔ offline protected route cannot use a previous session cache: /static/auth.js?token=fixture (1.221979ms)
+✔ authentication denial is returned directly without cache fallback (9.964718ms)
+✔ only successful public same-origin assets are cached (2.484399ms)
+✔ public asset denied response never enters cache (3.115033ms)
+✔ public asset redirect response never enters cache (1.894407ms)
+✔ public asset offline fallback is confined to current cache (6.90642ms)
+✔ worker does not intercept native transport: GET https://other.test/asset.js (1.464546ms)
+✔ worker does not intercept native transport: GET /events (1.983061ms)
+✔ worker does not intercept native transport: POST /api/account/password (0.836615ms)
+✔ EOS-SSE each frame rechecks authorization and revocation prevents queued payload (6.321846ms)
+✔ EOS-SSE global pending cap survives closed clients until actual authorization settles (6.110516ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4460.586154
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 62: npm run test:stable-1.0.10-security
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.10-security
+> node scripts/verify-stable-1.0.10-secret-guard.cjs
+
+[1.0.10 security] OK: SMTP literals/URLs/env/private keys, runtime files, clean UI fields, obsolete bundles, real staged-index hook, redacted failures and publish gate.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 63: npm run test:stable-1.0.11-documentation
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.11-documentation
+> npm run docs:check && node scripts/verify-stable-1.0.11-documentation.cjs
+
+
+> iobroker.nexowatt-ui@1.0.21 docs:check
+> node scripts/verify-code-documentation.cjs
+
+[code-docs] OK: 235 deutsche Modulbeschreibungen und Quellverknüpfungen synchron.
+[stable-1.0.11] Dokumentationsprüfung: gültiger Stand sowie sechs Fehlerfälle bestanden.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 64: npm run test:stable-1.0.12-publish
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.12-publish
+> node scripts/verify-stable-1.0.12-publish-upgrade.cjs && npm run test:npm-version-free-guard && npm run test:npm-version-free-runtime && npm run test:publish-overlay
+
+[stable-1.0.12] OK: 15 Upgrade-/Sicherheitsfälle, Sicherungen, indirekte Chunks, Wiederholung, echter Artefakt-Guard und Publish-Vertrag.
+
+> iobroker.nexowatt-ui@1.0.21 test:npm-version-free-guard
+> node scripts/verify-npm-version-free-guard-static.js
+
+[npm-version-free-guard] OK: version guard runs first; publish verifies the immutable artifact without npm/TypeScript setup.
+
+> iobroker.nexowatt-ui@1.0.21 test:npm-version-free-runtime
+> node scripts/verify-npm-version-free-runtime.js
+
+[npm-version-free-runtime] OK: HTTP 404 releases the version; existing and ambiguous registry responses fail closed.
+
+> iobroker.nexowatt-ui@1.0.21 test:publish-overlay
+> node scripts/verify-publish-overlay.cjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+[publish-overlay] npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 prepublishOnly
+> npm run release:check-version-free && npm run release:prepare && npm run publish:check && npm run test:stable-release && node scripts/verify-publish.js && npm run test:package-runtime-start-smoke
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 release:check-version-free
+> node scripts/verify-npm-version-free.js
+
+[npm-version-free] OK: iobroker.nexowatt-ui@1.0.21 ist in http://127.0.0.1:32943 noch nicht veröffentlicht.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 release:prepare
+> node scripts/prepare-release-assets.cjs
+
+[release-prepare] OK: Keine alten Admin-Bundles; Sicherheitsprüfung erfolgreich.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 publish:check
+> node scripts/verify-release-artifact.js
+
+[secret-guard] OK: 2151 files; no findings in the supported rules.
+[release-artifact] Quellcode-Dokumentation aktuell: 235 Dateien.
+[release-artifact] OK: iobroker.nexowatt-ui@1.0.21, 401 geprüfte Paketdateien, Produkt-Runtime unverändert.
+[release-artifact] OK: Keine Installation oder Aktualisierung von npm/TypeScript erforderlich.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-release
+> node scripts/verify-stable-release.cjs
+
+[stable-release] OK: iobroker.nexowatt-ui@1.0.21 ist konsistent als Official Stable versiegelt.
+[stable-release] OK: 1.0.20-Speicherquellen/Writer, Heizstab-Tarif, 1.0.5-Speicherschutz, Auto/PV/Phasen und bisherige Home-/Liveness-/Memory-/Regelungsregressionen sind eingebunden.
+[publish-check] Checking package metadata...
+[publish-check] Scanning selected files for conflict markers...
+[publish-check] Checking selected JavaScript syntax...
+[publish-check] JS syntax checked: 19
+[publish-check] OK: JSON, ioBroker metadata, conflict markers and JS syntax look good.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:package-runtime-start-smoke
+> node scripts/verify-package-runtime-start-smoke.js
+
+[package-runtime-start-smoke] ERROR: Nicht auflösbare lokale require()-Pfade:
+scripts/verify-stable-1.0.9-access.cjs -> ./eos-tls-fixture.cjs
+
+
+1 !== 0
+

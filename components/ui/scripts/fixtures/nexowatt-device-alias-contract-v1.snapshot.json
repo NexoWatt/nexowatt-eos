@@ -1,0 +1,67 @@
+{
+  "contractId": "nexowatt-device-alias-contract",
+  "schemaVersion": 1,
+  "namespace": "v1",
+  "standardPath": "aliases.v1",
+  "categoryToDeviceClass": {
+    "EVCS": "evCharger",
+    "EVSE": "evCharger",
+    "METER": "meter",
+    "PV_INVERTER": "pvInverter",
+    "ESS": "storageSystem",
+    "BATTERY": "battery",
+    "BATTERY_INVERTER": "batteryInverter",
+    "HEAT": "heat",
+    "IO": "io",
+    "CHARGER": "solarCharger",
+    "DC_CHARGER": "solarCharger",
+    "GENERIC": "generic"
+  },
+  "requiredCanonicalAliases": {
+    "evCharger": [
+      "r.statusCode",
+      "r.statusText",
+      "r.vehicleConnected",
+      "r.charging",
+      "r.power",
+      "r.energyTotal",
+      "ctrl.run",
+      "ctrl.currentLimitA",
+      "ctrl.powerLimitW"
+    ],
+    "meter": [
+      "r.power",
+      "r.powerImport",
+      "r.powerExport",
+      "r.energyImport",
+      "r.energyExport"
+    ],
+    "pvInverter": [
+      "r.power",
+      "r.energyTotal",
+      "r.gridConnected",
+      "ctrl.run",
+      "ctrl.powerLimitPct",
+      "ctrl.powerLimitW",
+      "ctrl.powerLimitEnable"
+    ],
+    "storageSystem": [
+      "r.soc",
+      "r.power",
+      "r.powerCharge",
+      "r.powerDischarge",
+      "r.pvPower",
+      "ctrl.run",
+      "ctrl.powerSetpointW",
+      "ctrl.chargePowerW",
+      "ctrl.dischargePowerW",
+      "ctrl.maxChargePowerW",
+      "ctrl.maxDischargePowerW"
+    ],
+    "heat": [
+      "r.power",
+      "r.energyTotal",
+      "ctrl.run"
+    ]
+  }
+}

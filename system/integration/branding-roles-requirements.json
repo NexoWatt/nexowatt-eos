@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "changeId": "EOS-BRANDING-ROLES-20261001",
+  "productVersion": "0.2.0-dev.2",
+  "baseCommit": "2db4418871e9882ccee2a523e0035a0e3eae6c29",
+  "previousRequirements": "system/integration/requirements.json",
+  "scope": "Zusätzliche Anforderungen an Branding, Konten und Rollen im unverändert begrenzten Admin-/UI-Laborprofil. Keine Anlagen-, Betriebssystem- oder allgemeine Konformitätsfreigabe.",
+  "productReleaseApproved": false,
+  "conformityClaim": false,
+  "evidenceIndex": "reports/integration/branding-roles/verification-summary.json",
+  "requirements": [
+    {
+      "id": "EOS-ROLE-REQ-001",
+      "requirement": "NexoWatt EOS Produktmarke mit unveränderter technischer und rechtlicher Herkunft",
+      "stride": [
+        "Spoofing",
+        "Repudiation"
+      ],
+      "testImplementations": [
+        "tests/integration/branding.test.cjs",
+        "tests/integration/branding-browser.cjs"
+      ],
+      "evidence": [
+        "reports/integration/branding/browser-verification.json"
+      ],
+      "acceptance": "scoped-test-evidence-required; see current evidence index"
+    },
+    {
+      "id": "EOS-ROLE-REQ-002",
+      "requirement": "Service allein administrativ; Installateur und Benutzer nur über feste Gruppen und scoped APIs",
+      "stride": [
+        "Elevation of Privilege",
+        "Information Disclosure"
+      ],
+      "testImplementations": [
+        "tests/integration/accounts.test.cjs",
+        "components/admin/test/eos-roles-account.test.cjs",
+        "components/ui/test/eos-account-roles.test.cjs"
+      ],
+      "evidence": [
+        "components/admin/reports/security/branding-roles/verification.json"
+      ],
+      "acceptance": "scoped-test-evidence-required; see current evidence index"
+    },
+    {
+      "id": "EOS-ROLE-REQ-003",
+      "requirement": "Individuelle Erstpasswörter, eigener Pflichtwechsel und kein passwortloser Zugang",
+      "stride": [
+        "Spoofing",
+        "Elevation of Privilege"
+      ],
+      "testImplementations": [
+        "tests/integration/enrollment.test.cjs",
+        "tests/integration/onboard-ui.test.cjs",
+        "tests/integration/ui-controller.integration.cjs"
+      ],
+      "evidence": [
+        "reports/integration/branding-roles/raw/accounts-enrollment.tap"
+      ],
+      "acceptance": "scoped-test-evidence-required; see current evidence index"
+    },
+    {
+      "id": "EOS-ROLE-REQ-004",
+      "requirement": "Alte Sitzungen nach Passwort-, Rollen- oder Kontenänderung entziehen; keine Cache-/SSE-Umgehung",
+      "stride": [
+        "Spoofing",
+        "Information Disclosure"
+      ],
+      "testImplementations": [
+        "components/admin/test/eos-session-security.test.cjs",
+        "components/ui/test/eos-sse-authorization.test.cjs",
+        "components/ui/test/eos-service-worker-auth.test.cjs",
+        "tests/integration/ui-controller.integration.cjs"
+      ],
+      "evidence": [],
+      "acceptance": "scoped-test-evidence-required; see current evidence index"
+    },
+    {
+      "id": "EOS-ROLE-REQ-005",
+      "requirement": "Keine Browseränderung der vom Host vorgegebenen Konten- und Gruppenpolicy",
+      "stride": [
+        "Tampering",
+        "Elevation of Privilege"
+      ],
+      "testImplementations": [
+        "components/admin/test/eos-appliance-socket.integration.cjs",
+        "tests/integration/accounts.test.cjs",
+        "tests/integration/ui-controller.integration.cjs"
+      ],
+      "evidence": [],
+      "acceptance": "scoped-test-evidence-required; see current evidence index"
+    },
+    {
+      "id": "EOS-ROLE-REQ-006",
+      "requirement": "Eingehende WebSocket-Nachrichten vor Verarbeitung auf 1 MiB begrenzen",
+      "stride": [
+        "Denial of Service"
+      ],
+      "testImplementations": [
+        "tests/system/websocket-bound.test.cjs",
+        "tests/integration/ui-controller.integration.cjs"
+      ],
+      "evidence": [
+        "reports/integration/branding-roles/raw/controller-websocket.tap"
+      ],
+      "acceptance": "scoped-test-evidence-required; see current evidence index"
+    },
+    {
+      "id": "EOS-ROLE-REQ-007",
+      "requirement": "Gebautes Hauptsystem, Transformationen, SBOM und Prüfbelege eindeutig verbinden",
+      "stride": [
+        "Tampering",
+        "Repudiation"
+      ],
+      "testImplementations": [
+        "tests/integration/build-runtime.test.cjs",
+        "tests/system/sbom-test-base.test.py"
+      ],
+      "evidence": [
+        "reports/integration/sbom/branding-roles/verification.json"
+      ],
+      "acceptance": "scoped-test-evidence-required; see current evidence index"
+    }
+  ],
+  "openRisks": [
+    {
+      "id": "EOS-ROLE-RISK-001",
+      "status": "open",
+      "risk": "Passwortänderung und administrativer Reset über zwei Adapterprozesse sind nicht transaktional über CAS serialisiert. Frische Revision und Nachprüfung verkleinern das Rennen, beweisen aber keine atomare Kontenänderung.",
+      "owner": "NexoWatt development",
+      "next": "Zentrale serialisierte Kontenmutation oder DB-CAS einschließlich konkurrierender Reset-Tests vor Serienfreigabe."
+    },
+    {
+      "id": "EOS-ROLE-RISK-002",
+      "status": "open",
+      "risk": "Gemeinsame Runtime-UID und Datenbankberechtigungen bleiben eine Vertrauenszone; Rollen stoppen keinen kompromittierten Adapter mit diesen Rechten.",
+      "owner": "NexoWatt architecture",
+      "next": "Getrennte Adapteridentitäten und Datendienst-Policy sowie unabhängiger Sicherheitstest."
+    },
+    {
+      "id": "EOS-ROLE-RISK-003",
+      "status": "open",
+      "risk": "Dienstbetrieb, Erreichbarkeit, Browservertrauen, KDF-Latenz und Ressourcenlimits auf Debian12/RPi5 noch nicht nachgewiesen.",
+      "owner": "NexoWatt validation",
+      "next": "Abnahme auf frischer VM und RPi5 mit SSD, anschließend gerätespezifische Tests."
+    },
+    {
+      "id": "EOS-ROLE-RISK-004",
+      "status": "open",
+      "risk": "Personenbezogene Servicekonten, MFA, dauerhafte Auditablage und belastbarer Recovery-Prozess noch nicht vollständig umgesetzt.",
+      "owner": "NexoWatt product security",
+      "next": "Service-Identitäts- und Wiederherstellungsprozess festlegen und testen; kein universelles Servicepasswort."
+    }
+  ],
+  "technicalReferences": [
+    {
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+      "retrievedDate": "2026-10-01",
+      "scope": "Eigener Passwortwechsel nur nach erneuter aktueller Passwortprüfung, TLS und sichere Längenpolitik; keine Behauptung vollständiger OWASP-Erfüllung."
+    },
+    {
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html",
+      "retrievedDate": "2026-10-01",
+      "scope": "Deny by default und serverseitige Berechtigungsprüfung jeder Aktion."
+    }
+  ]
+}

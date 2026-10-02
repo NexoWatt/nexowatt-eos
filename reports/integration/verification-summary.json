@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-integrated-development-verification",
+  "productVersion": "0.2.0-dev.1",
+  "recordedAt": "2026-10-01T12:46:18.033825+00:00",
+  "sourceBaseCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+  "sourceState": "working tree bound by file hashes; final delivery commit recorded in external archive metadata",
+  "releaseApproved": false,
+  "productionInstallationApproved": false,
+  "nativeTargetAcceptance": false,
+  "profile": "eos-integrated-ui-lab-v1",
+  "environment": {
+    "platform": "linux-x64",
+    "host": "Ubuntu24.04 execution workspace; not Debian12 or RPi",
+    "node": "v24.19.0",
+    "uid": 0,
+    "realSystemdServicesTested": false
+  },
+  "tests": [
+    {
+      "command": "node --test --test-reporter=tap tests/system/*.test.cjs",
+      "scope": "Filesystem, controller/profile and lifecycle tests; real local crypto; simulated systemctl",
+      "counts": {
+        "tests": 224,
+        "pass": 224,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "raw": "reports/integration/raw/system-final.tap",
+      "sha256": "5c1ca394dc8e331aaad24206c42925669ad0fa4075ea6d22b14dad27dfa31f88"
+    },
+    {
+      "command": "node --test --test-reporter=tap tests/integration/build-runtime.test.cjs tests/integration/enrollment.test.cjs tests/integration/maintenance.test.cjs tests/integration/onboard-ui.test.cjs tests/integration/web-certificates.test.cjs",
+      "scope": "Selected new integration units; not historical source reproduction tests",
+      "counts": {
+        "tests": 79,
+        "pass": 79,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "raw": "reports/integration/raw/integration-unit-final.tap",
+      "sha256": "e78ae3beb0b1a0be3d6f6287cb19b63cbea47b36b97a6a46af6dd28688928d01"
+    },
+    {
+      "command": "node --test --test-reporter=tap tests/security/*.test.cjs",
+      "scope": "Existing host/CLI security regression",
+      "counts": {
+        "tests": 41,
+        "pass": 41,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0
+      },
+      "raw": "reports/integration/raw/security-final.tap",
+      "sha256": "73f5670405137622adc17dca4fcf9e6b22552bbc28546bfea17b5838ac81e4eb"
+    }
+  ],
+  "subreports": [
+    {
+      "path": "components/admin/reports/security/integrated/verification.json",
+      "sha256": "4672731fe38cb20fcfdbdaedbf1686f596924cf21ebb974c7bda2488dd4266bc"
+    },
+    {
+      "path": "components/ui/reports/security/integrated-20261001/verification-summary.json",
+      "sha256": "816bc6b700e25ebbbe63a9b7407bce059ff6262afb0788f558fc086e98729d48"
+    },
+    {
+      "path": "reports/integrated/adapters/verification.json",
+      "sha256": "865883a68b65b4bcf3ac3fa15e1eb5fde2206bd41d8e6702f561c3b217107454"
+    },
+    {
+      "path": "reports/integration/certificates-verification.json",
+      "sha256": "f2b17e1ed49db30c7d79a30061c5df880e5f6ce954b14ca8bfadd4957c867b2e"
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-summary.json",
+      "sha256": "22cefe28167dbb79e34da0d0ebc56c50bac2db185499fd47f64c2a8d239575c0"
+    },
+    {
+      "path": "reports/integration/sbom/verification.json",
+      "sha256": "84906b2ee453b58c8628aa6a63f1e48d771bc54a0de5f74fdb7b94de2b4b3b29"
+    },
+    {
+      "path": "reports/integration/dependency-disposition.json",
+      "sha256": "6eb0745b2e28a8720913cd228ed3ba07e1e9deeb714d24bf38d7bf824a83cf26"
+    },
+    {
+      "path": "reports/integration/packaging-review.json",
+      "sha256": "29850df92eeae7c8310ff9eb919743a8057a92ff8cb3aa70eb87644694203f5d"
+    },
+    {
+      "path": "reports/integration/runtime-archive-review.json",
+      "sha256": "b210c27bb1b80235865a18295245cfaf2c36925c4723326e5353ef693b2c5cba"
+    },
+    {
+      "path": "reports/integration/requirements-validation.json",
+      "sha256": "c7a6f90489e8125f4d609e13f269e425a65c758345ed8e18950cd33d61e904c4"
+    }
+  ],
+  "actualProcessLab": {
+    "summary": "reports/integration/raw/ui-controller-summary.json",
+    "stagesPassed": 7,
+    "tapNodesPassed": 8,
+    "osNetworkInterfaceFixture": true,
+    "candidateOriginalUnchanged": true,
+    "physicalAdaptersActivated": false,
+    "controlsEnabled": false
+  },
+  "finalRuntimeInputs": {
+    "packageLock": "delivery/reproducible-ui-lab/app/package-lock.json",
+    "sha256": "0bcb60b6684f7e35820d9ccc70da354154e19909ba260a841c429bf98a73a4c8",
+    "archiveInputsManifest": "delivery/reproducible-ui-lab/inputs.sha256.json",
+    "sbom": "reports/integration/sbom/candidate-final-tree.cdx.json",
+    "sbomSha256": "eddfb70cb2bb5d405750611ec4e7ddddf041990c1469d5748127e58e95b5de72"
+  },
+  "sourceFiles": [
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "4024c88b2aa912d2ea37938bf571d9a95de0d62bb6f5a0b888d7239bbafa1f14"
+    },
+    {
+      "path": "runtime/bootstrap/initialize.cjs",
+      "sha256": "51001ac973704a1d7e6468b233d784ba502c2ca976b621bcebcb0ba442cea21c"
+    },
+    {
+      "path": "runtime/controller-profile/guard.cjs",
+      "sha256": "7538f4727376c40b9f6e0e65b4aa848363166b0e95e8edf45c0e6ab63dd42a44"
+    },
+    {
+      "path": "runtime/controller-profile/pinned-build.json",
+      "sha256": "baa4d41eac1988c517e186ae9b3c822b0f4193d771a2ca77125b11bf30eb95f6"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "7a8c9f9a6994c9408be464623df0ff215d6b908fe662df0959f10d7ea1dc3ca0"
+    },
+    {
+      "path": "runtime/policy/admission.cjs",
+      "sha256": "49e3c0c908c0a0973c1ea7b642edc6848d790f700667e724389e9fde9e9a3d49"
+    },
+    {
+      "path": "runtime/policy/cli.cjs",
+      "sha256": "5dedd4bd791c6dba096a39d3e67c6ca9de93b4851c6cc487fe56893a363b8bb5"
+    },
+    {
+      "path": "runtime/release/bundle.cjs",
+      "sha256": "9c3c8f38672d84d7adbb6b05eb4b13e3c35483ced63a427697370aeb7c5c2e3b"
+    },
+    {
+      "path": "runtime/release/installed-check.cjs",
+      "sha256": "34ba7b7215ff0f73aa312aa3f985be406dd710e44f68bd1d66210ada9f1bcaa5"
+    },
+    {
+      "path": "runtime/release/maintenance.cjs",
+      "sha256": "0a189e8fd4247dd9031b3d8bc5bd70d3461bb49a7cb6dd6a66fb1a998e76083d"
+    },
+    {
+      "path": "runtime/transport/certificate-lifecycle.cjs",
+      "sha256": "5946b30c81a7e4bcd237874f45a40de99e44aeca6f60cb25b39a62d351f7f73d"
+    },
+    {
+      "path": "runtime/transport/redis-tls.cjs",
+      "sha256": "9bae14822a1c49243aaf1bf479df4cd9a8fb23f0a9047474d78d4a6d9172803e"
+    },
+    {
+      "path": "runtime/transport/web-certificates.cjs",
+      "sha256": "85b5bd01b14937015a64026ad22ab58b60b54475f6d3627fc517b09c3f9a4bd1"
+    },
+    {
+      "path": "runtime/transport/web-renewal.cjs",
+      "sha256": "daf88c06cb21c357ebfb52f2ce71bd750e1d584c3543084e1e8719323e55b6ce"
+    },
+    {
+      "path": "tools/system/activate-release.cjs",
+      "sha256": "8726a089874257bc71359f9bf619e9de51869cfaaeafa7aa27c269f0638a499d"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "24360dc08cf7e7595b027f258a559af07148d299b02b308f0d96ad0b3ef72dc8"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "5c235bb43a8f603278804d6eae997ef0aa95ca8e4f17b29c7000dd09d1a75270"
+    },
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "sha256": "20e97e69816402826870d13a68c72355567aea422c0d4a0b7d16a62fd6186b18"
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "sha256": "752d4029c5d53ef6eb2c5746f8447192bc5eca13f72e37037dfef7d1f83cc6b9"
+    },
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "sha256": "3e659e4f0406c4239bd3b5c136a4c6793ec4cce3202d78a509cc4b9b7373aab0"
+    },
+    {
+      "path": "tools/system/prepare-catalog.cjs",
+      "sha256": "b34e518cdb8910909cb223e067dca264348ed60a210564c94b04d8380981c924"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "8b468e5abeee681ad7dea9cadcc4fed22fd03004de081e4c88ab104c85c2cc84"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.service",
+      "sha256": "c846da6dfba50924577cc8c9a1cfabfb271f5e5af53fa783cbe5b79f23678bc1"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.timer",
+      "sha256": "2a8e58244851e3bbf64240fead10b4a6fcf6d1fe72bdbce2fb79f5bedf01f51b"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-controller.service",
+      "sha256": "0fa8f9a92b1b000ccc242c03d72bbd1303b52cdce21ce2bd203d24aa10172619"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-initialize.service",
+      "sha256": "8560a76fb2964b70eb0529ee184ea01c695c8a06eb5d0011a403a7035aaf118e"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-redis@.service",
+      "sha256": "dcb76e9a9bd7cf1de2eb09d737f593e68b813c96d29a796b2167881c1c85e271"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-upload.service",
+      "sha256": "79cd47374b19060dddd730f51e41a4a6035a0bf3ffa614e910961abe7e44f956"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos.target",
+      "sha256": "0e6e4e45592ad9794ad3db400c1d835a5d8d03f417d130295e5f8f727cb8bab9"
+    }
+  ],
+  "overlapWarning": "Subreports include overlapping source/built cases and TAP parent tests; do not sum into independent assurance requirements. Historical failed attempts remain preserved.",
+  "openReleaseGates": [
+    "native Debian12/VM/RPi5 unprivileged systemd and mount/network behavior",
+    "physical adapter activation with device-specific safe transitions",
+    "additional adapter enrollment profile migration and activation",
+    "complete encrypted backup/restore and general data migrations",
+    "Tailscale service access and IPv6 acceptance",
+    "hardware-bound identity/cloning assessment",
+    "per-adapter identity/least-privilege isolation beyond shared runtime trust zone",
+    "relevant dependency advisory review/remediation",
+    "OS/runtime/firmware device SBOM",
+    "manufacturer CRA classification, support, incident process and conformity procedure"
+  ]
+}

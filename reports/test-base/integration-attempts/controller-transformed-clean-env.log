@@ -1,0 +1,60 @@
+▶ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS
+  ✔ ordinary setup completes and preserves mandatory TLS configuration (2106.851431ms)
+  ✔ real bootstrap locks standard admin, repositories, diagnostics and plugins (5502.894947ms)
+  ✖ actual controller reaches alive state with no adapter instances (6071.808068ms)
+  ✖ controller stops cleanly, verifies hardened marker and starts again (6407.007501ms)
+✖ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS (23537.570073ms)
+ℹ {"status":"REJECTED","code":"PLUGIN_STATE_DRIFT"}
+
+ℹ {"status":"REJECTED","code":"PLUGIN_STATE_DRIFT"}
+
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23709.487772
+
+✖ failing tests:
+
+test at tests/system/transport-controller.integration.cjs:135:13
+✖ actual controller reaches alive state with no adapter instances (6071.808068ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:139:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:135:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/system/transport-controller.integration.cjs:145:13
+✖ controller stops cleanly, verifies hardened marker and starts again (6407.007501ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:149:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:145:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

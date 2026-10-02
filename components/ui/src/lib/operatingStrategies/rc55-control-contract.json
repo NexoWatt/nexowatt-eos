@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "release": "RC55",
+  "version": "0.8.179",
+  "defaultControlStage": "shadow",
+  "defaultAutoSource": "standard",
+  "productiveHandover": {
+    "requiresAppEnabled": true,
+    "requiresActiveProfile": true,
+    "requiresResourceOptIn": true,
+    "requiresOperatingMode": "auto",
+    "requiresAutoSource": "strategy",
+    "requiresCommissioningConfirmation": true,
+    "requiresFreshTelemetry": true,
+    "requiresFreshRequest": true
+  },
+  "fallback": "standardAuto",
+  "directHardwareWrites": false,
+  "executionOwner": "existing-load-management-and-device-writer",
+  "alwaysHigherPriority": [
+    "device-safety",
+    "emergency-stop",
+    "grid-operator",
+    "section-14a",
+    "park-controller",
+    "site-fuse",
+    "station-limit",
+    "phase-limit"
+  ]
+}

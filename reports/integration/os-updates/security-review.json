@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-os-updates-independent-agent-code-review",
+  "reviewer": "/root/os_updates_security_review",
+  "generatedAt": "2026-10-01T19:15:54Z",
+  "status": "complete-for-bound-source-snapshot",
+  "baselineCommit": "c18ae242efa69a7e8c79c81d1ce3dc074904aea6",
+  "conclusion": "No additional confirmed blocker in the reviewed change after the corrections below. Existing Redis installation hold and target-system acceptance gates remain unchanged.",
+  "qualification": "Independent parallel agent review within the same development session; not an independent laboratory penetration test, certification or CRA conformity determination.",
+  "scope": [
+    "Fixed root updater, isolated APT configuration and signed source binding",
+    "Updater process cancellation and root filesystem trust boundaries",
+    "Read-only authenticated UI status, freshness and browser restoration",
+    "Fresh-host packaging and unchanged Redis installation hold"
+  ],
+  "environment": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "aptConfigVersion": "apt 2.8.3 (amd64)",
+    "targetHardware": false
+  },
+  "sourceBindings": [
+    {
+      "path": "runtime/os-updates/runner.py",
+      "sha256": "42b5f07f06a0abd9a29127108ad0666963c44a60080a400a3e6b4815dcc741f6",
+      "bytes": 26310
+    },
+    {
+      "path": "runtime/os-updates/status.schema.json",
+      "sha256": "caefb670fa093f11d2c05b102eada87aa23abaaea184fb612aabf56e24f1d149",
+      "bytes": 9814
+    },
+    {
+      "path": "runtime/os-updates/policy.schema.json",
+      "sha256": "cd4559a5e1a5ffcc7e457c50859a74117e85897609e8200b886dbda86b0f8856",
+      "bytes": 290
+    },
+    {
+      "path": "system/test-base/os-updates/policy.json",
+      "sha256": "f3d567c897912214a963bcfe66cbb9903fb3b8aeddffd823ec4766d1c237e16c",
+      "bytes": 35
+    },
+    {
+      "path": "system/test-base/os-updates/initial-status.json",
+      "sha256": "85e81ebf3e8fab95b441787230c609a850dd8d90e4a1d1a6708d48313a63e344",
+      "bytes": 997
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "d7de6e00051469b69f71eef5dd2326ae92744d9e9dd91404141e0d9454bb7065",
+      "bytes": 1158
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.timer",
+      "sha256": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e",
+      "bytes": 319
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/os-update-status.ts",
+      "sha256": "362ca451ed8c16d1f6886ee71a3b02653f295a32e3bc4b1a26e766768d15f418",
+      "bytes": 8727
+    },
+    {
+      "path": "components/ui/lib/os-update-status.js",
+      "sha256": "abc24f1bd27d399632b568b93221d772c19372c9e2a8edb9be18780801beac49",
+      "bytes": 9414
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/www/os-update-status.ts",
+      "sha256": "24f63a45c2caa0f3cf27957a6b9be1706845093880d25d384f44a6981d460238",
+      "bytes": 6994
+    },
+    {
+      "path": "components/ui/www/os-update-status.js",
+      "sha256": "8d8124a6590effa34c8c0bed1ea32a401ba607b67523c8eb9bf1773e053449be",
+      "bytes": 7681
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/main.ts",
+      "sha256": "c5a1bb80bdb425f761ba7e68ded11aa64b731152c7fe6cfa74b3a710b2766016",
+      "bytes": 1728821
+    },
+    {
+      "path": "components/ui/main.js",
+      "sha256": "ec04a1ef0f983919c06cf473ce511c9160d29ce6b2df4576d8d8574d85a4407a",
+      "bytes": 1729476
+    },
+    {
+      "path": "components/ui/www/settings.html",
+      "sha256": "fa3cf9ae8b5cf675e634d008c979725fb7a3b4f2d9214f4b317a163e78436d8a",
+      "bytes": 64620
+    },
+    {
+      "path": "components/ui/test/eos-os-update-status.test.cjs",
+      "sha256": "8ef17d860ba13b025be0c70dcf87eea848cf3f4cfa88f5032d77395b7a520a8d",
+      "bytes": 10018
+    },
+    {
+      "path": "tests/system/os-updates.test.py",
+      "sha256": "2fe89df7f94e06e04c123678cc9da4e0659fa5555ac93e340b22794d01627f12",
+      "bytes": 17836
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "sha256": "68dcc07578c701d6f5a499b3ef5a626667bf43286a97bf69e34bb4ec4f8ade13",
+      "bytes": 14422
+    },
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "sha256": "94ffc7b010ba9bd071877f7a94a4a55ac7c55bbc356f3b712a13f7f963ba3d29",
+      "bytes": 14445
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "9ff2d52e817d69d93087e3d8774781743fcf9c58390a39260282ebe2b26ae744",
+      "bytes": 9679
+    },
+    {
+      "path": "tests/system/os-updates-host-contract.test.cjs",
+      "sha256": "05bf85c573ddeab243027b0a98580e6d0553ed06198ba16ae0a3ea71fc573f3c",
+      "bytes": 5468
+    },
+    {
+      "path": "tests/system/os-updates-cross-contract.test.cjs",
+      "sha256": "b413e325053b576d311be29a2509d173b6f44d1975a905826ce4cb740b35e240",
+      "bytes": 2822
+    }
+  ],
+  "verification": [
+    {
+      "name": "runtime-offline-regression-final",
+      "command": "PYTHONPATH=/workspace/scratch/6383b3161c96/architecture-venv/lib/python3.12/site-packages /usr/bin/python3 -B tests/system/os-updates.test.py",
+      "result": "pass",
+      "tests": 22,
+      "failed": 0,
+      "skipped": 0,
+      "reportedSeconds": 0.041,
+      "scope": "Pure functions, schema validation, actual read-only apt-config dump, mocked package commands/cache and Popen cancellation contract. No APT refresh or package installation."
+    },
+    {
+      "name": "effective-apt-configuration",
+      "result": "pass",
+      "tool": "/usr/bin/apt-config dump",
+      "configuration": "Temporary generated EOS APT_CONFIG; no host modifications",
+      "observations": [
+        "Dir::Etc::parts, main, sourceparts, netrc and netrcparts all resolve to -",
+        "No inherited DPkg Pre-Invoke/Post-Invoke or APT Update Post-Invoke hooks in this workspace",
+        "Fixed signature and HTTPS verification options remain enabled"
+      ],
+      "limitation": "Actual APT 2.8.3 configuration parsing on Ubuntu lab, not Debian12/13 installation evidence"
+    },
+    {
+      "name": "real-isolated-graceful-child",
+      "result": "pass",
+      "scope": "Commands.run launched a temporary Python child with a SIGINT handler. A 0.2 second timeout led to graceful child exit and upgrade-timeout within two seconds. No APT/systemd process was launched.",
+      "testCount": 1
+    },
+    {
+      "name": "real-isolated-inherited-file-lock",
+      "result": "pass",
+      "scope": "Python pass_fds preserved flock after parent descriptor close while a temporary child lived; another descriptor could acquire the lock after child exit.",
+      "testCount": 1,
+      "limitation": "Does not prove unattended-upgrades or dpkg descriptor lifecycle"
+    },
+    {
+      "name": "targeted-source-review",
+      "result": "pass-after-corrections",
+      "scope": "Root trust paths, fixed command arrays, signed source allowlist, exact Node exclusion within this updater, qualified holds, server-side authentication, status sanitization, unknown/error/stale handling and BFCache refresh."
+    }
+  ],
+  "correctedReviewFindings": [
+    {
+      "id": "OS-UPDATE-REVIEW-01",
+      "issue": "ProtectKernelModules=yes made /usr/lib/modules inaccessible and conflicted with kernel package maintenance.",
+      "correction": "Removed from updater unit; regression assertion added.",
+      "verification": "Final source inspection and final offline suite",
+      "primarySource": "https://manpages.debian.org/trixie/systemd/systemd.exec.5.en.html"
+    },
+    {
+      "id": "OS-UPDATE-REVIEW-02",
+      "issue": "Isolated APT configuration retained default host auth.conf/auth.conf.d paths.",
+      "correction": "Dir::Etc::netrc and netrcparts explicitly disabled.",
+      "verification": "Actual read-only apt-config dump and final regression"
+    },
+    {
+      "id": "OS-UPDATE-REVIEW-03",
+      "issue": "Initial, early-error and running snapshots could have unknown Debian major that the UI rejected.",
+      "correction": "Unknown major and initial timestamp are represented explicitly; they cannot produce healthy status.",
+      "verification": "Final server source and API contract test inspection"
+    },
+    {
+      "id": "OS-UPDATE-REVIEW-04",
+      "issue": "Browser pagehide permanently stopped polling after BFCache restoration; failed reads retained old detail values.",
+      "correction": "Persisted pageshow triggers warning and refresh; unavailable states reset detail values to unknown.",
+      "verification": "Final browser source inspection; browser test execution is owned by the UI agent, not counted in this reviewer test total"
+    },
+    {
+      "id": "OS-UPDATE-REVIEW-05",
+      "issue": "Architecture-qualified holds could be missed; malformed dotted VERSION_ID accepted.",
+      "correction": "Checks fullname/installed architecture and complete numeric version syntax.",
+      "verification": "Final offline regression"
+    },
+    {
+      "id": "OS-UPDATE-REVIEW-06",
+      "issue": "Mode0700 on APT parent prevented _apt traversal.",
+      "correction": "Root-owned mode0711 permits traversal while denying non-root listing/writes.",
+      "verification": "Runtime/installer source inspected; actual _apt target execution remains open"
+    },
+    {
+      "id": "OS-UPDATE-REVIEW-07",
+      "issue": "Separate distro automation could update the host outside EOS policy without a visible coverage caveat.",
+      "correction": "Active or unknown apt-daily-upgrade.timer state records a coverage gap; no host timer is silently disabled.",
+      "verification": "Final source and offline regression"
+    }
+  ],
+  "limitations": [
+    "No actual APT update, unattended package transaction, systemd activation or Pi/ARM64 operation was executed by this reviewer.",
+    "Debian12/13 and Raspberry Pi keyring/source/maintainer-script behavior requires target acceptance; stable repositories may combine security and other fixes.",
+    "Node/npm exclusion applies to this EOS updater only. Host root, other timers, cron, manual APT or unrelated package tools remain outside this control; only the named distro timer is observed.",
+    "Graceful SIGINT and inherited lock probes do not establish uninterrupted real dpkg operation; power failure, OOM/MemoryMax and kernel termination can still interrupt package transactions.",
+    "Status is a time-stamped snapshot, not a continuously observed assertion. Failed status writes or timer changes can remain unseen until the freshness window or another observation.",
+    "SBOM covers actual installed dpkg rows when the updater runs, not npm, containers, EEPROM firmware or manual software.",
+    "No vulnerability exploit, independent pentest, CRA certification or production release acceptance is claimed.",
+    "EOS-HOST-REDIS-20261001 remains an installation blocker. No historical signed release or evidence was rewritten."
+  ],
+  "mutationsByReviewer": [
+    "This review JSON only; isolated temporary test fixtures removed by their contexts. No implementation edit, remote host change or publication."
+  ],
+  "postTestSourceReview": [
+    {
+      "path": "tests/system/os-updates.test.py",
+      "change": "Added sys.dont_write_bytecode=True to prevent interpreter-cache files in release inputs.",
+      "verification": "Inspected change; the 22-test command already used Python -B, so this repeats the same effective interpreter-cache setting."
+    },
+    {
+      "path": "components/ui/test/eos-os-update-status.test.cjs",
+      "change": "Final UI test additions inspect the actual shipped initial-status.json, reject malformed UTF-8 bytes, and check 25 parallel reader calls plus a subsequent cached read share one file open.",
+      "verification": "Read final test source and UI agent raw TAP: 34 tests passed, zero failed/skipped. These tests were executed by the UI agent; not added to the reviewer own execution count. The concurrency test exercises the reader with filesystem fixtures, not 25 authenticated HTTP requests.",
+      "rawEvidence": "components/ui/reports/security/os-updates-20261001/status-tests.tap"
+    },
+    {
+      "path": "tests/system/os-updates-cross-contract.test.cjs",
+      "change": "New producer-consumer contract uses actual Python initial_status/classify functions and actual JavaScript sanitizer for initial, ok, pending, coverage-gap and disabled states.",
+      "verification": "Read full test source and root raw TAP/summary: two passed. No APT, systemd, network or target status-file writes. Root executed these tests; reviewer inspected evidence without repeating the suite.",
+      "rawEvidence": "reports/integration/os-updates/raw/cross-contracts.tap"
+    }
+  ],
+  "reviewedExternalEvidenceBindings": [
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/status-tests.tap",
+      "sha256": "597504a2ee47bf440b8309070420916c837aa417595187d8cd583aa50dcec3ab",
+      "bytes": 5804
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/verification-summary.json",
+      "sha256": "c9c18af707fa21c78cf593dfc7490b629209fbe981aca507f63e33ac7bc517f3",
+      "bytes": 7345
+    },
+    {
+      "path": "reports/integration/os-updates/cross-contracts.json",
+      "sha256": "27f60706bb17a849b55caeb10c97c57cafc95d57c5d0649cf518731bfdb6efcc",
+      "bytes": 1544
+    },
+    {
+      "path": "reports/integration/os-updates/raw/cross-contracts.tap",
+      "sha256": "06e9f11058c013f2edabc45c4805291af783f2d7e571e8902f92e637cf1dddca",
+      "bytes": 560
+    },
+    {
+      "path": "reports/integration/os-updates/raw/cross-contracts.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ]
+}

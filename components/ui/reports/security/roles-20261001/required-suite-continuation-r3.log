@@ -1,0 +1,382 @@
+Repository gate continuation after central-license assertion migration.
+
+STEP 26: npm run test:rc67-license-bootstrap-access
+
+> iobroker.nexowatt-ui@1.0.21 test:rc67-license-bootstrap-access
+> node scripts/verify-rc67-license-bootstrap-access.js
+
+[rc67-license-bootstrap-access] OK: Exakte Account-Recovery-Pfade bleiben erreichbar; Lizenzstatus ist rollen-geschützt und zentral verwaltet, übrige EOS-Bereiche benötigen eine zentrale Freigabe.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 27: npm run test:rc68-para14a-communication-fallback
+
+> iobroker.nexowatt-ui@1.0.21 test:rc68-para14a-communication-fallback
+> node scripts/verify-rc68-para14a-communication-fallback.js
+
+[rc68-para14a-communication-fallback] OK: Pmin-Fallback, GZF-Verteilung, Grid-Safety und lokaler PV-Zuschlag arbeiten zusammen.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 28: npm run test:dashboard-lp-status-typing
+
+> iobroker.nexowatt-ui@1.0.21 test:dashboard-lp-status-typing
+> tsc -p tsconfig.dashboard-lp-status.json --noEmit
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 29: npm run test:rc69-dashboard-lp-feedback
+
+> iobroker.nexowatt-ui@1.0.21 test:rc69-dashboard-lp-feedback
+> node scripts/verify-rc69-dashboard-lp-feedback.js
+
+[rc69-dashboard-lp-feedback] OK: Safety-, §14a-Fallback-, Lade-, PV- und Inaktiv-Status werden kundenverständlich dargestellt.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 30: npm run test:rc70-dashboard-lp-status-polish
+
+> iobroker.nexowatt-ui@1.0.21 test:rc70-dashboard-lp-status-polish
+> node scripts/verify-rc70-dashboard-lp-status-polish.js
+
+[rc70-dashboard-lp-status-polish] OK: Einzel-LP-Link und Anzeige von Benutzer-/Auto-Untermodus sind korrekt getrennt.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 31: npm run test:rc72-weather-pv-forecast-auto
+
+> iobroker.nexowatt-ui@1.0.21 test:rc72-weather-pv-forecast-auto
+> node scripts/verify-rc72-weather-pv-forecast-auto.cjs
+
+[rc72-weather-pv-forecast-auto] OK: Einstellungen, Open-Meteo, AppCenter-Fallback, Multi-LP-Planer und Browseranzeige geprüft.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 32: npm run test:rc73-ems-admin-overview
+
+> iobroker.nexowatt-ui@1.0.21 test:rc73-ems-admin-overview
+> node scripts/verify-rc73-ems-admin-overview.js
+
+[RC73] OK: read-only EMS overview contract, optional-module fallback and lifecycle verified.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 33: npm run test:rc74-pv-forecast-customer-ui
+
+> iobroker.nexowatt-ui@1.0.21 test:rc74-pv-forecast-customer-ui
+> node scripts/verify-rc74-pv-forecast-customer-ui.cjs
+
+[rc74-pv-forecast-customer-ui] OK: Scriptpfad, PV-Flächentabelle, Richtungswahl, Standortauflösung, Open-Meteo-Werte und Statusdiagnose geprüft.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 34: npm run test:rc75-pv-forecast-admin-location
+
+> iobroker.nexowatt-ui@1.0.21 test:rc75-pv-forecast-admin-location
+> node scripts/verify-rc75-pv-forecast-admin-location.cjs
+
+[rc75-pv-forecast-admin-location] OK: EOS-Admin-Standort, direkte GTI-Abfragen, sichtbare PV-Flächentabelle, Prognosewerte und zentrale EMS-Verknüpfung geprüft.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 35: npm run test:rc76-pv-forecast-runtime-hardening
+
+> iobroker.nexowatt-ui@1.0.21 test:rc76-pv-forecast-runtime-hardening
+> node scripts/verify-rc76-pv-forecast-runtime-hardening.cjs
+
+[rc76-pv-forecast-runtime-hardening] OK: GTI-Fallbackkette, Nachtprognose, Standortname, Fehlerdiagnose und überlappungsfreie PV-Flächenansicht geprüft.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 36: npm run test:rc77-pv-forecast-state-cache-bridge
+
+> iobroker.nexowatt-ui@1.0.21 test:rc77-pv-forecast-state-cache-bridge
+> node scripts/verify-rc77-pv-forecast-state-cache-bridge.cjs
+
+[rc77-pv-forecast-state-cache-bridge] OK: Provider-/EMS-Statecache, dynamische Subscription, Fehlerdiagnose, Restart-Fallback, Ablaufgrenzen, Kompatibilitätswerte und Browser-Cache geprüft.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 37: npm run test:rc78-import-only-grid-budget
+
+> iobroker.nexowatt-ui@1.0.21 test:rc78-import-only-grid-budget
+> node scripts/verify-rc78-import-only-grid-budget.cjs && npm run test:charging-grid-cap-safe && npm run test:charging-grid-cap-clamp && npm run test:loadmanagement-grid-cap-sanity && npm run test:core-limits-typed-runtime-phase1 && npm run test:core-limits-typed-runtime-phase2 && npm run test:safety-envelope-final-write
+
+[rc78-import-only-grid-budget] OK: signed NVP, central budget, EVCS cap and final writer treat the connection limit as import-only.
+
+> iobroker.nexowatt-ui@1.0.21 test:charging-grid-cap-safe
+> node scripts/verify-charging-grid-cap-safe.js
+
+OK: EVCS grid cap uses signed NVP plus fresh EVCS actual power; export increases import-only headroom and reservations stay excluded.
+
+> iobroker.nexowatt-ui@1.0.21 test:charging-grid-cap-clamp
+> node scripts/verify-charging-grid-cap-clamp.js
+
+[charging-grid-cap-clamp] OK: signed NVP import-only cap covers export, import and active shedding.
+
+> iobroker.nexowatt-ui@1.0.21 test:loadmanagement-grid-cap-sanity
+> node scripts/verify-loadmanagement-grid-cap-sanity.js
+
+[grid-cap-sanity] OK: NVP-Einspeisung erhöht die Lastfreigabe; die Anschlussgrenze begrenzt ausschließlich Netzbezug.
+
+> iobroker.nexowatt-ui@1.0.21 test:core-limits-typed-runtime-phase1
+> node scripts/verify-core-limits-typed-runtime-phase1.js
+
+[core-limits-typed-runtime-phase1] OK: zentraler Core rechnet PV, Grants, Headroom und Snapshots produktiv typisiert mit Legacy-Fallback.
+
+> iobroker.nexowatt-ui@1.0.21 test:core-limits-typed-runtime-phase2
+> node scripts/verify-core-limits-typed-runtime-phase2.js
+
+[core-limits-typed-runtime-phase2] OK: Quellenübergabe, Grants, Reservierungen, Restbudgetmutation und State-Publikation laufen typisiert mit Legacy-Fallback.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 38: npm run test:rc79-import-soft-hard-zero-export
+
+> iobroker.nexowatt-ui@1.0.21 test:rc79-import-soft-hard-zero-export
+> node scripts/verify-rc79-import-soft-hard-zero-export-feedforward.cjs && npm run test:safety-module-deactivate && npm run test:zero-export-sink-priority && npm run test:zero-export-commissioning && npm run test:zero-export-fast-path && npm run test:zero-export-sink-ack-history && npm run test:safety-envelope-final-write
+
+[RC79] OK: Import Soft-/Hard-Limit, signierter NVP, 0-Einspeise-PV-Feed-forward, Speicher-Konfliktschutz, AppCenter-Platzierung und Cold-Start-Objektinitialisierung geprueft.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-module-deactivate
+> node scripts/verify-safety-module-deactivate.js
+
+[safety-module-deactivate] OK: Cold-Start/App-AUS stoppt EVCS, Speicher, Thermik, Heizstab, MultiUse, NexoLogic und Threshold physisch; States werden vor dem Safe-Stop initialisiert und Fehler bleiben kritisch verriegelt.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-sink-priority
+> node scripts/verify-zero-export-sink-priority.js
+
+OK: 0-Einspeise Senkenreihenfolge ist Verbrauch → freigegebene Ladepunkte → flexible Verbraucher → Speicher → Mesh/Microgrid → WR-Abregelung und baut keine zweite Regelung.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-commissioning
+> node scripts/verify-zero-export-commissioning.js
+
+OK: 0-Einspeise Inbetriebnahme-Assistent ist diagnostisch, nicht doppelt geregelt und app-center-konform vorbereitet.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-fast-path
+> node scripts/verify-zero-export-fast-path.js
+
+OK: 0-Einspeise Fast-Path nutzt gespeicherte Freigaben/ACKs und keinen Schreibtest pro Regel-Tick.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-sink-ack-history
+> node scripts/verify-zero-export-sink-ack-history.js
+
+OK: 0-Einspeise Senken-ACK-Verlauf/Feldprotokoll ist vorhanden und ohne Schreibtest pro Regel-Tick abgesichert.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 39: npm run test:rc80-soft-limit-fixed-ten-percent
+
+> iobroker.nexowatt-ui@1.0.21 test:rc80-soft-limit-fixed-ten-percent
+> node scripts/verify-rc80-soft-limit-fixed-ten-percent.cjs && npm run test:safety-envelope-final-write
+
+[RC80] OK: Soft-Reserve immer exakt 10 %, Soft-Limit immer 90 %, keine Mindest-/Maximalgrenze und keine Legacy-Uebersteuerung.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 40: npm run test:rc81-nvp-assignment-single-source
+
+> iobroker.nexowatt-ui@1.0.21 test:rc81-nvp-assignment-single-source
+> node scripts/verify-rc81-nvp-assignment-single-source.cjs && npm run test:safety-envelope-final-write
+
+[RC81] OK: Zuordnung ist alleinige Quelle fuer Anschlussleistung und NVP; Legacy-Overrides ignoriert; RLM nur absenkend.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 41: npm run test:rc82-permanent-grid-protection
+
+> iobroker.nexowatt-ui@1.0.21 test:rc82-permanent-grid-protection
+> node scripts/verify-rc82-permanent-grid-protection.cjs && npm run test:nvp-coordinator-storage-pv && npm run test:safety-envelope-final-write
+
+[RC82] OK: Netzlimits dauerhaft aktiv und nicht abschaltbar; Home/Pro, Single Source, 10-%-Policy und optionale 0-Einspeisung geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:nvp-coordinator-storage-pv
+> node scripts/verify-nvp-coordinator-storage-pv.js
+
+[nvp-coordinator-storage-pv] OK: Speicher/Farm regelt zuerst; PV erhält nur den belastbaren Rest-NVP, ohne Doppelwriter oder 0-W-Richtungswechselrunde.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 42: npm run test:rc83-storage-cheap-only-log-object
+
+> iobroker.nexowatt-ui@1.0.21 test:rc83-storage-cheap-only-log-object
+> node scripts/verify-rc83-storage-cheap-only-log-object.cjs
+
+[rc83-storage-cheap-only-log-object] OK: Netzladen nur bei frischem günstigen Tarif; außerhalb günstig wird jeder Ladepfad physikalisch auf lokalen PV-Überschuss begrenzt; sinkFieldProtocolJson wird vor dem ersten Write angelegt.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 43: npm run test:rc85
+
+> iobroker.nexowatt-ui@1.0.21 test:rc85
+> node scripts/verify-rc85-stability-contract.cjs
+
+[RC85] stability contract passed
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 44: npm run test:rc86
+
+> iobroker.nexowatt-ui@1.0.21 test:rc86
+> node scripts/verify-rc86-gate-a-demand-binding.cjs
+
+[RC86] Gate A demand binding, signed hard headroom and partial-offline isolation passed
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 45: npm run test:rc87
+
+> iobroker.nexowatt-ui@1.0.21 test:rc87
+> node scripts/verify-rc87-monitoring-display-only.cjs
+
+[RC87] Monitoring-only NVP/no-demand display and real soft/hard/export limit states passed
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 46: npm run test:rc88
+
+> iobroker.nexowatt-ui@1.0.21 test:rc88
+> node scripts/verify-rc88-memory-stability.cjs
+
+[RC88/1.0.1] SSE backpressure, healthy-client retention, 10-second critical recovery and ratio-based heap guard passed
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 47: npm run test:rc89
+
+> iobroker.nexowatt-ui@1.0.21 test:rc89
+> node scripts/verify-rc89-admin-overview-health.cjs
+
+[RC89] Adapter-, EMS-Tick- und Diagnose-Publisher-Status getrennt; I/O-Timeouts und Heartbeat-Recovery bestanden.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 48: npm run test:rc90
+
+> iobroker.nexowatt-ui@1.0.21 test:rc90
+> node test/rc90-sse-resync.test.cjs
+
+[RC90 SSE resync] OK (1 runtime callback(s))
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 49: npm run test:rc91
+
+> iobroker.nexowatt-ui@1.0.21 test:rc91
+> node scripts/verify-rc91-cross-app-catalog.js
+
+[rc91-cross-app-catalog] OK: 20 sichtbare Apps und 21 Backend-Apps bleiben über Start, Save und Backup konsistent.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 50: npm run test:rc92
+
+> iobroker.nexowatt-ui@1.0.21 test:rc92
+> node scripts/verify-rc92-history-mobile.cjs
+
+[rc92-history-mobile] OK: natives Scrollen, mobile Leistungs-/Energiewerte und Tages-Zoom funktionieren gemeinsam.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 51: npm run test:rc93
+
+> iobroker.nexowatt-ui@1.0.21 test:rc93
+> node scripts/verify-rc93-certified-export-authority.cjs
+
+[rc93-certified-export-authority] OK: EZA-/Parkregler-Priorität, alleiniger Export-Guard-Writer, lokale Obergrenze, TTL/Fail-Safe, Senkenfolge und Hash-Audit geprüft.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 52: npm run test:stable-1.0.2-health
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.2-health
+> node scripts/verify-stable-1.0.2-health-heartbeat.cjs
+
+[Stable 1.0.2 baseline on 1.0.21] OK: 25-s field cycle remains online; scheduler stall and genuine offline state stay distinguishable.
+[Stable 1.0.2 baseline on 1.0.21] OK: independent 4-s adapter, scheduler and overview heartbeat lifecycle verified.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 53: npm run test:stable-1.0.3-home-appcenter
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.3-home-appcenter
+> node scripts/verify-stable-1.0.3-home-appcenter-access.cjs
+
+[Stable 1.0.3] OK: Home admin remains in AppCenter; stale Pro flags trigger no Pro API call.
+[Stable 1.0.3] OK: license/business 403 stays component-local; genuine session loss still locks fail-closed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 54: npm run test:stable-1.0.4-auto-pv
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.4-auto-pv
+> node scripts/verify-stable-1.0.4-auto-pv-phases.cjs
+
+[stable-1.0.4-auto-pv-phases] OK: 37 scenario groups, including real full ticks and phase executor; Auto PV share, storage remainder and phase minimums verified.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 55: npm run test:stable-1.0.5-storage-protection
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.5-storage-protection
+> node scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs
+
+[stable-1.0.5-storage-protection-telemetry] OK: 87 scenario groups + 960 deterministic bound checks; fresh/stale/recovery, modes, OCPP, persisted policy and real charging/storage ticks.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 56: npm run test:stable-1.0.6-dc
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.6-dc
+> node scripts/verify-stable-1.0.6-dc-control.cjs
+
+[stable-1.0.6-dc-control] OK: explicit limits, configuration bridge, AC/DC Min+PV, current domains, voltage freshness, final phase guard and alias writes.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 57: npm run test:stable-1.0.7-notifications
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.7-notifications
+> node scripts/verify-stable-1.0.7-notifications.cjs
+
+[1.0.7 notifications] OK: immediate/30min/daily, escalation, durable dedup, recovery, categories, real loopback SMTP, rejection/backoff, encryption, TLS options, module/AC/DC fault monitoring.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+STEP 58: npm run test:stable-1.0.8-storage-licenses
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.8-storage-licenses
+> node scripts/verify-stable-1.0.8-storage-licenses.cjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 2
+
+    at dispatchTests (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-stable-1.0.8-storage-licenses.cjs:60:14)
+    at /workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-stable-1.0.8-storage-licenses.cjs:167:9
+    at Object.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-stable-1.0.8-storage-licenses.cjs:169:3)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 2,
+  operator: 'strictEqual',
+  diff: 'simple'
+}

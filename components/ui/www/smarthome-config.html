@@ -1,0 +1,538 @@
+<!--
+  Datei: www/smarthome-config.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: SmartHome-Konfiguration für Endkunden und Installer: Gebäude/Räume/Geräte/Funktionen und DP-Zuordnung.
+  Zusammenhänge:
+  - Logik in www/smarthome-config.js, APIs unter /api/smarthome/*.
+  - Kundenansicht rendert die gespeicherte Struktur.
+  Wartungshinweise:
+  - Endkunden dürfen ihre SmartHome-DPs zuordnen; Hardware-Testwrites bleiben Installer/Admin vorbehalten.
+  - Gespeicherte IDs nicht ohne Migration ändern.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>NexoWatt EOS – SmartHome Konfiguration</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link href="/static/styles.css" rel="stylesheet"/>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0c0f12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NexoWatt EOS">
+  <script src="/static/auth.js"></script>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<body data-nw-required-capability="smarthome.configure" data-nw-required-role="Installer oder Admin" data-nw-page-name="SmartHome-Einrichtung" class="nw-cockpit-page nw-cockpit-skin nw-page-smarthome-config">
+<!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar nw-cockpit-topbar">
+  <script>
+  (function () {
+    try {
+      var p = window.location.pathname || "";
+      if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+        window.location.replace(p + "/" + window.location.search + window.location.hash);
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <div class="brand"><a href="./" aria-label="NexoWatt Live"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a></div>
+  <button aria-label="Menu" id="menuBtn" data-nw-menu-fallback="1" type="button">☰</button>
+  <h1>SmartHome Konfiguration</h1>
+  <nav class="tabs">
+    <button class="tab" id="liveTabBtn" type="button" onclick="window.location.href='./'">LIVE</button>
+    <button class="tab" id="historyTabBtn" type="button" onclick="window.location.href='history.html'">HISTORY</button>
+    <button class="tab active" id="tabSmartHome" type="button" onclick="window.location.href='smarthome.html'">SMARTHOME</button>
+    <button class="tab hidden" id="tabStorageFarm" type="button" onclick="window.location.href='storagefarm.html'">SPEICHERFARM</button>
+    <button class="tab" type="button" onclick="window.location.href='ems-apps.html'" title="Nur für Installer oder Admin">EMS 🔒</button>
+  </nav>
+  <div class="status-dot live" id="liveDot" title="Live Verbindung"></div>
+  <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+  <div class="menu hidden" id="menuDropdown">
+    <a class="menu-item" href="./">Live</a>
+    <a class="menu-item" href="history.html">History</a>
+    <a class="menu-item" href="smarthome.html" id="menuSmartHomeLink">SmartHome</a>
+    <a class="menu-item hidden" href="storagefarm.html" id="menuStorageFarmLink">Speicherfarm</a>
+    <a class="menu-item" href="ems-apps.html">EMS / App-Center 🔒</a>
+    <a class="menu-item" href="evcs.html" id="menuEvcsLink">EVCS</a>
+    <a class="menu-item" href="settings.html">Einstellungen</a>
+  </div>
+</header>
+
+  <section class="nw-page-hero" aria-label="Seitenübersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">Setup</div>
+      <div class="nw-page-hero__title">SmartHome Konfiguration</div>
+      <div class="nw-page-hero__subtitle">Gebäude, Räume, Geräte und Auto-Erkennung im einheitlichen Cockpit-Stil.</div>
+    </div>
+    <div class="nw-page-hero__right">
+      <span class="nw-page-hero__pill">Kundenbereich</span>
+    </div>
+  </section>
+
+
+<!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="content nw-page-shell nw-smarthome-config-page nw-subpage">
+  <div id="nw-smarthome-config-root">
+    <div class="nw-smarthome-header">
+      <div>
+        <div class="nw-smarthome-header__title">SmartHome-Konfiguration</div>
+        <div class="nw-smarthome-header__subtitle">
+          Gebäude, Räume und Geräte für die SmartHome-Visualisierung konfigurieren.
+        </div>
+      </div>
+      <div class="nw-smarthome-header__right">
+        <div class="nw-smarthome-header__actions">
+          <button id="nw-config-save-btn" class="nw-config-btn nw-config-btn--primary" type="button">Speichern</button>
+          <button id="nw-config-reload-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Neu laden</button>
+          <button id="nw-config-export-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Export</button>
+          <button id="nw-config-import-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Import</button>
+          <input id="nw-config-import-file" type="file" accept="application/json,.json" style="display:none;"/>
+          <a class="nw-config-btn nw-config-btn--ghost" href="/smarthome.html">SmartHome öffnen</a>
+	          <a class="nw-config-btn nw-config-btn--ghost" href="/logic.html">Logik öffnen</a>
+
+        </div>
+<div id="nw-config-status" class="nw-config-status"></div>
+<div id="nw-config-enabled-hint" class="nw-config-status" style="display:none;margin-top:4px;color:#facc15;"></div>
+      </div>
+    </div>
+
+    <!-- Home / Module tiles -->
+    <section id="nw-shcfg-home" class="nw-config-section nw-shcfg-home">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Projekt</h2>
+      </div>
+      <div class="nw-shcfg-home__grid">
+        <button class="nw-shcfg-tile" id="nw-shcfg-tile-building" type="button">
+          <div class="nw-shcfg-tile__icon">🏠</div>
+          <div class="nw-shcfg-tile__title">Gebäude &amp; Geräte</div>
+          <div class="nw-shcfg-tile__desc">Räume &amp; Geräte per Drag &amp; Drop konfigurieren.</div>
+        </button>
+        <button class="nw-shcfg-tile" id="nw-shcfg-tile-detect" type="button">
+          <div class="nw-shcfg-tile__icon">🪄</div>
+          <div class="nw-shcfg-tile__title">Auto‑Erkennung</div>
+          <div class="nw-shcfg-tile__desc">Type‑Detector Vorschläge prüfen und Geräte gezielt übernehmen.</div>
+        </button>
+        <button class="nw-shcfg-tile" id="nw-shcfg-tile-logic" type="button">
+          <div class="nw-shcfg-tile__icon">🧠</div>
+          <div class="nw-shcfg-tile__title">Logik‑Editor</div>
+          <div class="nw-shcfg-tile__desc">Öffnet den NexoWatt-EOS-Logikeditor.</div>
+        </button>
+        <button class="nw-shcfg-tile" id="nw-shcfg-tile-timers" type="button">
+          <div class="nw-shcfg-tile__icon">⏱️</div>
+          <div class="nw-shcfg-tile__title">Zeitschaltuhren</div>
+          <div class="nw-shcfg-tile__desc">Einfache EIN/AUS‑Timer pro Gerät konfigurieren.</div>
+        </button>
+        <button class="nw-shcfg-tile" id="nw-shcfg-tile-scenes" type="button">
+          <div class="nw-shcfg-tile__icon">🎬</div>
+          <div class="nw-shcfg-tile__title">Szenen</div>
+          <div class="nw-shcfg-tile__desc">Virtuelle Szenen mit Aktionsliste (Adapter‑ausgeführt).</div>
+        </button>
+      </div>
+      <div class="nw-shcfg-home__hint">
+        Tipp: Starte mit <b>Gebäude &amp; Geräte</b> und richte zuerst Räume und Geräte ein. Danach kannst du im Frontend direkt bedienen ✨
+      </div>
+    </section>
+
+<!-- Auto detection / suggestions -->
+<section id="nw-shcfg-detect" class="nw-shcfg-shell" style="display:none;">
+  <div class="nw-shcfg-topbar">
+    <div class="nw-shcfg-topbar__left">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-detect-back" type="button">← Zurück</button>
+      <div class="nw-shcfg-topbar__title">Auto‑Erkennung / Vorschläge</div>
+    </div>
+    <div class="nw-shcfg-topbar__right">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-detect-reload" type="button">Neu scannen</button>
+      <button class="nw-config-btn" id="nw-shcfg-detect-save" type="button">Speichern</button>
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-detect-open-classic" type="button">Expertenmodus</button>
+    </div>
+  </div>
+
+  <div class="nw-shcfg-container">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Gerätevorschläge aus NexoWatt EOS</h2>
+      </div>
+      <div class="nw-config-hint">
+        Erkennt passende Geräte aus der NexoWatt‑EOS-Datenpunktstruktur und zeigt nur Vorschläge zur Übernahme an.
+        Es wird nichts automatisch überschrieben oder gespeichert.
+      </div>
+      <div id="nw-shcfg-detect-status" class="nw-config-status" style="margin-top:8px;"></div>
+      <div id="nw-shcfg-detect-root" style="margin-top:12px;"></div>
+    </section>
+  </div>
+</section>
+
+<!-- Backup module (Datensicherung) -->
+<section id="nw-shcfg-backup" class="nw-shcfg-shell" style="display:none;">
+  <div class="nw-shcfg-topbar">
+    <div class="nw-shcfg-topbar__left">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-backup-back" type="button">← Zurück</button>
+      <div class="nw-shcfg-topbar__title">Datensicherung</div>
+    </div>
+    <div class="nw-shcfg-topbar__right">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-backup-open-classic" type="button">Expertenmodus</button>
+    </div>
+  </div>
+
+  <div class="nw-shcfg-container">
+    <section class="nw-config-section" id="nw-backup-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Datensicherung (wie App‑Center)</h2>
+      </div>
+      <div class="nw-config-hint">
+        Export/Import der gesamten NexoWatt‑Konfiguration (enthält u.a. SmartHome + Logikeditor). So kannst du jederzeit wiederherstellen.
+      </div>
+      <div class="nw-config-form-grid">
+        <div class="nw-config-row">
+          <label class="nw-config-label">Import‑Modus</label>
+          <select id="nw-backup-import-mode" class="nw-config-select">
+            <option value="merge" selected>Merge (zusammenführen)</option>
+            <option value="replace">Replace (ersetzen)</option>
+          </select>
+        </div>
+      </div>
+      <div class="nw-config-row__actions" style="margin-top:8px;">
+        <button id="nw-backup-export-btn" class="nw-config-btn" type="button">Backup exportieren</button>
+        <label class="nw-config-btn nw-config-btn--ghost" for="nw-backup-import-file" style="cursor:pointer;">Backup importieren</label>
+        <input id="nw-backup-import-file" type="file" accept="application/json" style="display:none" />
+        <button id="nw-backup-restore-userdata-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Restore aus 0_userdata</button>
+      </div>
+      <div id="nw-backup-status" class="nw-config-status" style="margin-top:8px;"></div>
+    </section>
+  </div>
+</section>
+
+<!-- Timers module (placeholder) -->
+<section id="nw-shcfg-timers" class="nw-shcfg-shell" style="display:none;">
+  <div class="nw-shcfg-topbar">
+    <div class="nw-shcfg-topbar__left">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-timers-back" type="button">← Zurück</button>
+      <div class="nw-shcfg-topbar__title">Zeitschaltuhren</div>
+    </div>
+    <div class="nw-shcfg-topbar__right">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-timers-reload" type="button">Neu laden</button>
+      <button class="nw-config-btn" id="nw-shcfg-timers-save" type="button">Speichern</button>
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-timers-open-logic" type="button">Zum Logikeditor</button>
+    </div>
+  </div>
+
+  <div class="nw-shcfg-container">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Zeitschaltuhren</h2>
+      </div>
+      <div class="nw-config-hint">
+        Lege pro Gerät eine einfache Zeitsteuerung inkl. Wochentage fest.
+        <span style="opacity:.9">(Schalter/Dimmer/Licht: <b>EIN/AUS</b> · Jalousie: <b>AUF/ZU</b> · Szene: Trigger)</span>
+        Endkunden können dieselben Zeiten auch direkt im SmartHome‑Frontend (Uhr‑Icon in der Kachel) einstellen.
+      </div>
+      <div id="nw-shcfg-timers-status" class="nw-config-status" style="margin-top:8px;"></div>
+      <div id="nw-shcfg-timers-root" style="margin-top:12px;"></div>
+    </section>
+
+    <section class="nw-config-section" style="margin-top:16px;">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Logik‑Uhren</h2>
+        <div class="nw-config-row__actions">
+          <button id="nw-shcfg-clocks-add" class="nw-config-btn nw-config-btn--ghost" type="button">+ Neue Uhr</button>
+        </div>
+      </div>
+      <div class="nw-config-hint">
+        Logik‑Uhren erzeugen einen boolean Datenpunkt (<code>…smarthome.logicClocks.&lt;id&gt;.active</code>),
+        den du im Logik‑Editor als Eingang nutzen kannst. <b>Active</b> ist innerhalb des Zeitfensters <b>Ein</b>.
+        Flanken kannst du im Logik‑Editor über den Block <b>Flanke</b> auswerten.
+      </div>
+      <div id="nw-shcfg-clocks-status" class="nw-config-status" style="margin-top:8px;"></div>
+      <div id="nw-shcfg-clocks-root" style="margin-top:12px;"></div>
+    </section>
+  </div>
+</section>
+
+<!-- Scenes module (placeholder) -->
+<section id="nw-shcfg-scenes" class="nw-shcfg-shell" style="display:none;">
+  <div class="nw-shcfg-topbar">
+    <div class="nw-shcfg-topbar__left">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-scenes-back" type="button">← Zurück</button>
+      <div class="nw-shcfg-topbar__title">Szenen</div>
+    </div>
+    <div class="nw-shcfg-topbar__right">
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-scenes-add" type="button">+ Neue Szene</button>
+      <button class="nw-config-btn" id="nw-shcfg-scenes-save" type="button">Speichern</button>
+      <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-scenes-open-logic" type="button">Zum Logikeditor</button>
+    </div>
+  </div>
+
+  <div class="nw-shcfg-container">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Szenen</h2>
+      </div>
+      <div class="nw-config-hint">
+        Szenen sind virtuelle Aktionen (z.B. "Abend", "Alles Aus") und werden direkt vom Adapter ausgeführt.
+      </div>
+      <div id="nw-shcfg-scenes-status" class="nw-config-status" style="margin-top:8px;"></div>
+      <div id="nw-shcfg-scenes-root" style="margin-top:12px;"></div>
+    </section>
+  </div>
+</section>
+
+    <!-- Drag & drop editor (Gebäude & Geräte) -->
+    <section id="nw-shcfg-builder" class="nw-config-section nw-shcfg-builder" style="display:none;">
+      <div class="nw-shcfg-builder__topbar">
+        <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-builder-back" type="button">← Übersicht</button>
+        <div class="nw-shcfg-builder__title">
+          Gebäude &amp; Geräte (Drag &amp; Drop)
+        </div>
+        <div class="nw-shcfg-builder__actions">
+          <button class="nw-config-btn nw-config-btn--ghost" id="nw-shcfg-builder-open-classic" type="button">Expertenmodus</button>
+          <button class="nw-config-btn" id="nw-shcfg-builder-save" type="button">Speichern</button>
+        </div>
+      </div>
+
+      <div class="nw-shcfg-builder__layout">
+        <div class="nw-shcfg-builder__panel nw-shcfg-builder__panel--left">
+          <div class="nw-shcfg-builder__tabs">
+            <button class="nw-shcfg-builder__tab" data-nw-tab="building" type="button">Gebäude</button>
+            <button class="nw-shcfg-builder__tab" data-nw-tab="devices" type="button">Geräte</button>
+          </div>
+          <div id="nw-shcfg-builder-lib" class="nw-shcfg-builder__panelbody"></div>
+        </div>
+
+        <div class="nw-shcfg-builder__panel nw-shcfg-builder__panel--center">
+          <div id="nw-shcfg-builder-work" class="nw-shcfg-builder__panelbody"></div>
+        </div>
+
+        <div class="nw-shcfg-builder__panel nw-shcfg-builder__panel--right">
+          <div id="nw-shcfg-builder-props" class="nw-shcfg-builder__panelbody"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Classic editor (fallback / all settings) -->
+    <div id="nw-shcfg-classic" style="display:none;">
+
+    <section class="nw-config-section">
+      <div id="nw-config-validation" class="nw-validation"></div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Navigation / Seiten (SmartHome VIS)</h2>
+        <div class="nw-config-row__actions">
+          <button id="nw-pages-default-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Standard-Seiten</button>
+          <button id="nw-pages-clear-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Leeren</button>
+          <button id="nw-pages-validate-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Prüfen</button>
+        </div>
+      </div>
+
+      <div class="nw-config-hint">
+        <b>Neu:</b> Builder‑UI mit Picker für <code>Room/Function IDs</code>, Multi‑Level Navigation (Parent → Child) und page‑spezifische Layout‑Regeln.<br>
+        (JSON bleibt als Experten‑Modus verfügbar.)
+      </div>
+
+      <div class="nw-tabs" id="nw-pages-tabs" style="margin-bottom: 10px;">
+        <button type="button" class="nw-tab nw-tab--active" data-tab="builder">Builder</button>
+        <button type="button" class="nw-tab" data-tab="json">JSON</button>
+      </div>
+
+      <div id="nw-pages-builder" class="nw-pages-builder">
+        <div class="nw-pages-builder__layout">
+          <div class="nw-pages-list">
+            <div class="nw-pages-list__header">
+              <div class="nw-pages-list__title">Seiten</div>
+              <div class="nw-pages-list__actions">
+                <button id="nw-page-add" class="nw-config-btn" type="button">+ Neu</button>
+              </div>
+            </div>
+            <div id="nw-pages-list" class="nw-pages-list__body"></div>
+            <div class="nw-config-hint" style="margin-top: 10px;">
+              Tipp: Multi‑Level Navigation z.B. <b>Wohnzimmer</b> als Parent, darunter <b>Licht</b>/<b>Rollos</b>/<b>Heizung</b> als Kinder.
+            </div>
+          </div>
+
+          <div class="nw-pages-editor">
+            <div class="nw-pages-editor__head">
+              <div class="nw-pages-editor__title" id="nw-page-editor-title">Seite bearbeiten</div>
+              <div id="nw-page-editor-status" class="nw-config-status" style="margin-top:6px;"></div>
+            </div>
+
+            <div class="nw-config-form-grid" style="margin-top: 8px;">
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-title">Title</label>
+                <input id="nw-page-title" class="nw-config-input" type="text" placeholder="z.B. Wohnzimmer" />
+              </div>
+
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-icon">Icon</label>
+                <select id="nw-page-icon" class="nw-config-select"></select>
+              </div>
+
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-id">ID</label>
+                <input id="nw-page-id" class="nw-config-input" type="text" placeholder="z.B. wohnzimmer" />
+              </div>
+
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-parent">Parent (optional)</label>
+                <select id="nw-page-parent" class="nw-config-select"></select>
+              </div>
+
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-viewmode">View Mode</label>
+                <select id="nw-page-viewmode" class="nw-config-select">
+                  <option value="rooms">Rooms (Räume)</option>
+                  <option value="functions">Functions (Funktionen)</option>
+                </select>
+              </div>
+
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-order">Order</label>
+                <input id="nw-page-order" class="nw-config-input" type="number" step="1" value="0" />
+              </div>
+
+              <div class="nw-config-row" style="grid-column: 1 / -1;">
+                <label class="nw-config-label" for="nw-page-rooms">Rooms (IDs)</label>
+                <select id="nw-page-rooms" class="nw-config-select nw-multiselect" multiple size="6"></select>
+              </div>
+
+              <div class="nw-config-row" style="grid-column: 1 / -1;">
+                <label class="nw-config-label" for="nw-page-functions">Functions (IDs)</label>
+                <select id="nw-page-functions" class="nw-config-select nw-multiselect" multiple size="6"></select>
+              </div>
+
+              <div class="nw-config-row" style="grid-column: 1 / -1;">
+                <label class="nw-config-label" for="nw-page-types">Types</label>
+                <select id="nw-page-types" class="nw-config-select nw-multiselect" multiple size="6"></select>
+                <div class="nw-config-row__actions" style="margin-top: 6px; justify-content: flex-start; gap: 8px;">
+                  <input id="nw-page-type-add" class="nw-config-input" type="text" placeholder="Custom type (z.B. camera)" style="max-width: 260px;" />
+                  <button id="nw-page-type-add-btn" class="nw-config-btn nw-config-btn--ghost" type="button">Hinzufügen</button>
+                </div>
+              </div>
+
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-sortby">Sortierung</label>
+                <select id="nw-page-sortby" class="nw-config-select">
+                  <option value="order">Order</option>
+                  <option value="name">Name</option>
+                  <option value="type">Type</option>
+                </select>
+              </div>
+
+              <div class="nw-config-row">
+                <label class="nw-config-label" for="nw-page-cardsize">Karten‑Größe</label>
+                <select id="nw-page-cardsize" class="nw-config-select">
+                  <option value="auto">Auto</option>
+                  <option value="s">S</option>
+                  <option value="m">M</option>
+                  <option value="l">L</option>
+                  <option value="xl">XL</option>
+                </select>
+              </div>
+
+              <div class="nw-config-row" style="grid-column: 1 / -1;">
+                <label class="nw-config-label">Optionen</label>
+                <div class="nw-config-row__actions" style="justify-content:flex-start; gap: 14px;">
+                  <label style="display:flex; gap:8px; align-items:center; cursor:pointer;">
+                    <input id="nw-page-groupbytype" type="checkbox" />
+                    <span>Gruppierung nach Gerätetyp (Option B)</span>
+                  </label>
+                  <label style="display:flex; gap:8px; align-items:center; cursor:pointer;">
+                    <input id="nw-page-favonly" type="checkbox" />
+                    <span>Nur Favoriten</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="nw-config-row" style="grid-column: 1 / -1;">
+                <label class="nw-config-label" for="nw-page-href">Link (optional)</label>
+                <input id="nw-page-href" class="nw-config-input" type="text" placeholder="z.B. /smarthome" />
+              </div>
+            </div>
+
+            <div class="nw-config-row__actions" style="margin-top: 10px; justify-content: flex-start; gap: 8px;">
+              <button id="nw-page-save" class="nw-config-btn" type="button">Speichern</button>
+              <button id="nw-page-cancel" class="nw-config-btn nw-config-btn--ghost" type="button">Abbrechen</button>
+              <button id="nw-page-delete" class="nw-config-btn nw-config-btn--danger" type="button">Löschen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="nw-pages-json-wrap" style="display:none;">
+        <textarea id="nw-pages-json" class="nw-config-input" rows="10" style="min-height:220px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;"></textarea>
+        <div class="nw-config-row__actions" style="margin-top:8px; justify-content:flex-start; gap: 8px;">
+          <button id="nw-pages-sync-from-json" class="nw-config-btn nw-config-btn--ghost" type="button">Aus JSON übernehmen</button>
+          <button id="nw-pages-sync-to-json" class="nw-config-btn nw-config-btn--ghost" type="button">JSON aktualisieren</button>
+        </div>
+      </div>
+
+      <div id="nw-pages-status" class="nw-config-status" style="margin-top:8px;"></div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Räume</h2>
+        <button id="nw-config-add-room-btn" class="nw-config-btn nw-config-btn--ghost" type="button">+ Raum</button>
+      </div>
+      <div id="nw-config-rooms" class="nw-config-list"></div>
+      <div id="nw-config-rooms-empty" class="nw-config-empty" style="display:none;">
+        Keine Räume definiert. Nutze <strong>„+ Raum”</strong>, um einen Raum anzulegen.</div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Funktionen</h2>
+        <button id="nw-config-add-function-btn" class="nw-config-btn nw-config-btn--ghost" type="button">+ Funktion</button>
+      </div>
+      <div id="nw-config-functions" class="nw-config-list"></div>
+      <div id="nw-config-functions-empty" class="nw-config-empty" style="display:none;">
+        Keine Funktionen definiert. Nutze <strong>„+ Funktion”</strong>, um eine Funktion anzulegen.</div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Geräte / Kacheln</h2>
+        <div class="nw-config-row__actions">
+          <select id="nw-config-template-select" class="nw-config-select" style="max-width:260px;">
+	            <option value="">Vorlage…</option>
+            <option value="switch">Schalter</option>
+            <option value="dimmer">Dimmer</option>
+            <option value="color">Farb‑Licht (RGB)</option>
+            <option value="blind">Jalousie / Rollladen</option>
+            <option value="rtr">Heizung (RTR)</option>
+            <option value="sensor">Sensor</option>
+            <option value="scene">Szene</option>
+            <option value="player">Audio-Player</option>
+            <option value="camera">Kamera</option>
+            <option value="widget">Widget (Universal)</option>
+          </select>
+	          <button id="nw-config-add-template-btn" class="nw-config-btn nw-config-btn--ghost" type="button" title="Gerät aus Vorlage anlegen">+ Vorlage</button>
+          <button id="nw-config-add-device-btn" class="nw-config-btn nw-config-btn--ghost" type="button">+ Gerät</button>
+        </div>
+      </div>
+      <div id="nw-config-devices" class="nw-config-grid"></div>
+      <div id="nw-config-devices-empty" class="nw-config-empty" style="display:none;">
+        Keine Geräte/Kacheln definiert. Nutze <strong>„+ Gerät”</strong>, um eine Kachel anzulegen.</div>
+    </section>
+
+    </div><!-- /#nw-shcfg-classic -->
+  </div>
+</main>
+
+<script src="/static/nw-shell.js"></script>
+<script src="/static/smarthome-config.js"></script>
+
+
+
+  <script src="/static/cockpit-shell.js"></script>
+
+</body>
+</html>

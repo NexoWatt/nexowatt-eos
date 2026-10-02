@@ -1,0 +1,115 @@
+#!/usr/bin/env node
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+
+const root = path.resolve(__dirname, '..');
+const introPath = path.join(root, 'src-admin', 'src', 'tabs', 'Intro.tsx');
+const componentPath = path.join(root, 'src-admin', 'src', 'components', 'Intro', 'NexoWattEmsOverview.tsx');
+const cssPath = path.join(root, 'src-admin', 'src', 'index.css');
+const packagePath = path.join(root, 'package.json');
+
+function fail(message) {
+    console.error(`[NexoWatt EMS Overview Merge] ERROR: ${message}`);
+    process.exit(1);
+}
+function read(file) {
+    try { return fs.readFileSync(file, 'utf8'); } catch (error) { fail(`${file} nicht lesbar: ${error.message}`); }
+}
+function write(file, content) { fs.writeFileSync(file, content, 'utf8'); }
+
+if (!fs.existsSync(componentPath)) fail('NexoWattEmsOverview.tsx fehlt im Merge-Paket.');
+let intro = read(introPath);
+if (!intro.includes("import NexoWattEmsOverview from '@/components/Intro/NexoWattEmsOverview';")) {
+    const importAnchor = "import IntroCardCamera from '@/components/Intro/IntroCardCamera';\n";
+    if (!intro.includes(importAnchor)) fail('Intro.tsx Importanker nicht gefunden. Der Admin-Quellstand ist nicht kompatibel.');
+    intro = intro.replace(importAnchor, `${importAnchor}import NexoWattEmsOverview from '@/components/Intro/NexoWattEmsOverview';\n`);
+}
+if (!intro.includes('<NexoWattEmsOverview')) {
+    const renderAnchor = `                    {this.getInstancesCards()}\n                    {this.getLinkCards()}\n`;
+    if (!intro.includes(renderAnchor)) fail('Intro.tsx Kartenanker nicht gefunden. Der Admin-Quellstand ist nicht kompatibel.');
+    intro = intro.replace(renderAnchor, `${renderAnchor}                    <NexoWattEmsOverview\n                        socket={this.props.socket}\n                        t={this.props.t}\n                        lang={this.props.lang}\n                        theme={this.props.theme}\n                    />\n`);
+}
+write(introPath, intro);
+
+const cssMarker = '/* nexowatt-ems-overview-v1 */';
+let css = read(cssPath);
+if (!css.includes(cssMarker)) {
+    css += `\n\n${cssMarker}\n` + String.raw`
+.eos-ems-overview-card {
+    --eos-ems-status-color: #48b9ff;
+    flex: 1 1 720px;
+    min-width: min(100%, 420px);
+    max-width: 1180px;
+    min-height: 390px;
+    margin: 10px;
+    padding: 22px;
+    border: 1px solid color-mix(in srgb, var(--eos-ems-status-color) 38%, rgba(255,255,255,.08));
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(4,24,35,.97), rgba(3,16,29,.98));
+    color: #ecf8ff;
+    box-shadow: 0 18px 55px rgba(0,0,0,.26), inset 0 0 0 1px rgba(255,255,255,.025);
+    overflow: hidden;
+}
+.eos-ems-overview-card * { box-sizing: border-box; }
+.eos-ems-overview-header { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; }
+.eos-ems-overview-header h2 { margin:5px 0 6px; font-size:clamp(1.2rem,2vw,1.65rem); color:#f5fbff; }
+.eos-ems-overview-header p { margin:0; max-width:760px; color:#9eb2c2; line-height:1.45; }
+.eos-ems-overview-eyebrow { color:#49e39e; font-size:.72rem; font-weight:900; letter-spacing:.13em; text-transform:uppercase; }
+.eos-ems-overview-state { min-width:126px; display:grid; grid-template-columns:auto 1fr; align-items:center; gap:3px 8px; padding:9px 12px; border:1px solid rgba(255,255,255,.09); border-radius:999px; background:rgba(255,255,255,.035); }
+.eos-ems-overview-state-dot { width:9px; height:9px; border-radius:50%; background:var(--eos-ems-status-color); box-shadow:0 0 15px var(--eos-ems-status-color); }
+.eos-ems-overview-state strong { color:var(--eos-ems-status-color); }
+.eos-ems-overview-state small { grid-column:2; color:#8095a6; }
+.eos-ems-overview-metrics { display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)); gap:10px; margin-top:19px; }
+.eos-ems-overview-metric { min-width:0; padding:12px; border:1px solid rgba(255,255,255,.075); border-radius:14px; background:rgba(255,255,255,.025); }
+.eos-ems-overview-metric span,.eos-ems-overview-metric small { display:block; color:#879cad; font-size:.72rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.eos-ems-overview-metric strong { display:block; margin:4px 0 2px; color:#f4fbff; font-size:1rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.eos-ems-overview-budget { height:7px; margin:12px 0 10px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden; }
+.eos-ems-overview-budget span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#01bc69,var(--eos-ems-status-color)); box-shadow:0 0 15px color-mix(in srgb,var(--eos-ems-status-color) 50%,transparent); transition:width .25s ease; }
+.eos-ems-overview-tags { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; }
+.eos-ems-overview-tags span { padding:5px 9px; border:1px solid rgba(72,185,255,.18); border-radius:999px; background:rgba(72,185,255,.07); color:#b9deef; font-size:.72rem; font-weight:750; }
+.eos-ems-overview-tags span.is-warning { border-color:rgba(255,189,89,.3); background:rgba(255,189,89,.09); color:#ffd484; }
+.eos-ems-overview-columns { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.eos-ems-overview-panel { min-width:0; padding:14px; border:1px solid rgba(255,255,255,.065); border-radius:16px; background:rgba(0,0,0,.12); }
+.eos-ems-overview-panel h3 { margin:0 0 10px; color:#dfeef6; font-size:.9rem; }
+.eos-ems-overview-decision,.eos-ems-overview-event { position:relative; display:grid; gap:2px; margin-top:7px; padding:8px 9px 8px 12px; border-radius:10px; background:rgba(255,255,255,.025); overflow:hidden; }
+.eos-ems-overview-decision::before,.eos-ems-overview-event::before { content:''; position:absolute; inset:0 auto 0 0; width:3px; background:#48b9ff; }
+.eos-ems-overview-decision--warning::before,.eos-ems-overview-event--warning::before,.eos-ems-overview-event--warn::before { background:#ffbd59; }
+.eos-ems-overview-decision--error::before,.eos-ems-overview-event--error::before { background:#ff5f72; }
+.eos-ems-overview-decision strong,.eos-ems-overview-event strong { color:#e7f4fa; font-size:.78rem; }
+.eos-ems-overview-decision span,.eos-ems-overview-event span { color:#91a5b5; font-size:.72rem; line-height:1.35; }
+.eos-ems-overview-decision small { color:#6fcba1; font-size:.68rem; }
+.eos-ems-overview-event { grid-template-columns:64px 1fr; align-items:start; }
+.eos-ems-overview-event time { color:#6f8799; font-size:.68rem; font-variant-numeric:tabular-nums; }
+.eos-ems-overview-event div { display:grid; gap:2px; min-width:0; }
+.eos-ems-overview-empty { color:#718797; font-size:.76rem; }
+.eos-ems-overview-footer { display:flex; justify-content:space-between; gap:12px; margin-top:12px; color:#60798a; font-size:.67rem; }
+.eos-ems-overview-footer a { color:#5ee0c2; font-weight:800; text-decoration:none; }
+.eos-ems-overview-footer a:hover,.eos-ems-overview-footer a:focus-visible { color:#9af2dd; text-decoration:underline; }
+@media (max-width: 1100px) {
+    .eos-ems-overview-card { flex-basis:100%; max-width:none; }
+}
+@media (max-width: 760px) {
+    .eos-ems-overview-card { min-width:100%; margin:8px 0; padding:16px; }
+    .eos-ems-overview-header { display:grid; }
+    .eos-ems-overview-state { width:max-content; }
+    .eos-ems-overview-metrics { grid-template-columns:1fr 1fr; }
+    .eos-ems-overview-columns { grid-template-columns:1fr; }
+    .eos-ems-overview-footer { display:grid; }
+}
+`;
+    write(cssPath, css);
+}
+
+const packageJson = JSON.parse(read(packagePath));
+packageJson.files = Array.isArray(packageJson.files) ? packageJson.files : [];
+const toolFile = 'tools/nexowatt-ems-overview-selftest.cjs';
+if (!packageJson.files.includes(toolFile)) packageJson.files.push(toolFile);
+packageJson.scripts = packageJson.scripts || {};
+const stability = String(packageJson.scripts['check:eos-stability'] || '');
+if (stability && !stability.includes('nexowatt-ems-overview-selftest.cjs')) {
+    packageJson.scripts['check:eos-stability'] = `${stability} && node tools/nexowatt-ems-overview-selftest.cjs`;
+}
+write(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`);
+
+console.log('[NexoWatt EMS Overview Merge] OK: Intro-Komponente, responsive Live-Diagnose und Selftest eingebunden.');

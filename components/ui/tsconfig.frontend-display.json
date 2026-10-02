@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/frontend-display",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/contracts/**/*.ts",
+    "src-ts/frontend/**/*.ts",
+    "src-ts/quality/frontend-display-cases.ts",
+    "src-ts/tests/frontend-display-runtime.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-types",
+    "build-ts"
+  ]
+}

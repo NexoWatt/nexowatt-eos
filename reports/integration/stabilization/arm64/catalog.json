@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-adapter-admission",
+  "catalogRevision": 1,
+  "entries": [
+    {
+      "id": "js-controller",
+      "package": "iobroker.js-controller",
+      "version": "7.2.2",
+      "sha256": "b0c5c51c785482b7a5dd1b7ae9795ad8f8fb744c089fec99018b289e0a859c43",
+      "digestKind": "tree-sha256-v1",
+      "kind": "core",
+      "required": true,
+      "review": {
+        "status": "approved-test",
+        "evidenceId": "eos-test-pi-20261001-admin-ui"
+      },
+      "permissions": {
+        "capabilities": [
+          "state.read",
+          "state.write",
+          "process.fixed"
+        ],
+        "protocols": [
+          "eos-redis-tls13-v1"
+        ],
+        "network": "declared-endpoints-and-discovery",
+        "shellExec": false,
+        "additionalNpmModules": [],
+        "arbitraryCode": false
+      },
+      "communication": "eos-redis-tls13-v1"
+    },
+    {
+      "id": "eos-admin",
+      "package": "iobroker.eos-admin",
+      "version": "7.10.11",
+      "sha256": "bf95b58a57c6dd7bc3b01c099845cc5a3bfb73ea9e893aae73c1a78af386233a",
+      "digestKind": "tree-sha256-v1",
+      "kind": "adapter",
+      "required": false,
+      "review": {
+        "status": "approved-test",
+        "evidenceId": "eos-test-pi-20261001-admin-ui"
+      },
+      "permissions": {
+        "capabilities": [
+          "state.read",
+          "state.write",
+          "https.listen",
+          "https.client"
+        ],
+        "protocols": [
+          "eos-redis-tls13-v1",
+          "https"
+        ],
+        "network": "declared-endpoints-and-discovery",
+        "shellExec": false,
+        "additionalNpmModules": [],
+        "arbitraryCode": false
+      },
+      "communication": "eos-redis-tls13-v1"
+    },
+    {
+      "id": "nexowatt-ui",
+      "package": "iobroker.nexowatt-ui",
+      "version": "1.0.21",
+      "sha256": "401c792dfa6f2478ce498ee4a668dc332513d280ca14a0e99ca613fa4169a33a",
+      "digestKind": "tree-sha256-v1",
+      "kind": "adapter",
+      "required": false,
+      "review": {
+        "status": "approved-test",
+        "evidenceId": "eos-test-pi-20261001-admin-ui"
+      },
+      "permissions": {
+        "capabilities": [
+          "state.read",
+          "state.write",
+          "https.listen",
+          "https.client"
+        ],
+        "protocols": [
+          "eos-redis-tls13-v1",
+          "https"
+        ],
+        "network": "declared-endpoints-and-discovery",
+        "shellExec": false,
+        "additionalNpmModules": [],
+        "arbitraryCode": false
+      },
+      "communication": "eos-redis-tls13-v1"
+    }
+  ]
+}

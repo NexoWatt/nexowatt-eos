@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/feature-visibility-resolver",
+    "declaration": false,
+    "sourceMap": false,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/contracts/**/*.ts",
+    "src-ts/resolvers/feature-visibility-resolver.ts",
+    "src-ts/frontend/customer-feature-visibility.ts",
+    "src-ts/backend/visibility/feature-visibility.ts",
+    "src-ts/quality/feature-visibility-resolver-cases.ts",
+    "src-ts/tests/feature-visibility-resolver-runtime.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-types",
+    "build-ts"
+  ]
+}

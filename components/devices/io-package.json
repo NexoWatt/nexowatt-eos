@@ -1,0 +1,687 @@
+{
+  "common": {
+    "name": "nexowatt-devices",
+    "version": "0.5.169",
+    "news": {
+      "0.5.169": {
+        "en": "Fix TESVOLT MQTT automatic topic detection, numeric payload decoding and incomplete subscription diagnostics; add full raw telemetry JSON and instance-specific client IDs. Correct runtime, HTTP and UDP error/liveness handling. See the implementation audit for validation and field-test limitations.",
+        "de": "TESVOLT-MQTT-Automatik, Zahlenformate und Diagnose teilweise verweigerter Topics korrigiert; vollständige Telemetrie-JSONs und instanzbezogene Client-IDs ergänzt. Fehler- und Online-Erkennung in Runtime, HTTP und UDP verbessert. Prüfbericht mit Validierung und Grenzen des Anlagennachweises beigefügt."
+      },
+      "0.5.168": {
+        "de": "Lesbarkeit der VARTA-Einstellungen im dunklen Admin verbessert: kontrastreiche Herstellerpanels, Auswahlfelder, Checkboxen und gegliederte Hinweise.",
+        "en": "Improve VARTA settings readability in the dark Admin theme with high-contrast manufacturer panels, controls and clearer help sections."
+      },
+      "0.5.167": {
+        "en": "Implement the supplied extended VARTA table 14 with model-specific registers, verified FC6 controls, Pextra token authentication and live scaling.",
+        "de": "Erweiterte VARTA-Tabelle 14: modellspezifische Register, geprüfte FC6-Steuerung, Pextra-Tokenfreigabe und aktuelle Skalierungsfaktoren."
+      },
+      "0.5.166": {
+        "en": "Fix DEYE unit-test startup without installed serial transport modules; add an isolated fresh-checkout regression. Device behavior unchanged.",
+        "de": "DEYE-Teststart ohne installierte serielle Transportmodule korrigiert; isolierter Regressionstest für frische Arbeitskopien. Geräteverhalten unverändert."
+      },
+      "0.5.165": {
+        "en": "Prepare three DEYE hybrid RTU profiles, serial defaults, verified configuration-limit writes and explicit remote-control restrictions.",
+        "de": "Drei vorläufige DEYE-Hybrid-RTU-Profile, serielle Vorgaben, geprüftes Schreiben von Konfigurationsgrenzen und klare Remote-Steuerungsgrenzen."
+      },
+      "0.5.164": {
+        "en": "Fix queued DEPower power commands lost during active writes; separate command acknowledgements from device readback. Add independent energy-counter resolution settings and raw counters. Preserve TESVOLT EMS/MQTT fixes.",
+        "de": "Verlorene DEPower-Sollwerte in der Schreibwarteschlange behoben; Befehlsbestätigung und Geräte-Rückmeldung getrennt. Getrennte Zählerauflösung und Energie-Rohwerte ergänzt. TESVOLT-EMS/MQTT-Korrekturen enthalten."
+      },
+      "0.5.163": {
+        "en": "Fix TESVOLT IoT Gateway reception for the observed unversioned EMS topics as well as EMS/V2. Add explicit topic selection, monitoring-only default with zero publishes, readback diagnostics, exact-topic ACL fallback and timestamp-aware telemetry freshness. Explicit control routes to the selected namespace, preserving capabilities, battery-state checks, dynamic limits and watchdogs. Existing datapoint IDs and other manufacturers remain unchanged.",
+        "de": "TESVOLT-IoT-Gateway-Datenempfang für die beobachteten unversionierten EMS-Topics und EMS/V2 korrigiert. Topic-Auswahl, standardmäßig reiner Lesebetrieb ohne Publishes, Rücklesediagnosen, Einzel-Topic-ACL-Fallback und Prüfung der Telemetrie-Zeitstempel ergänzt. Explizit aktivierte Steuerung nutzt den gewählten Topic-Pfad; Capability-, Batteriezustands-, Grenzwert- und Watchdogprüfungen bleiben erhalten. Bestehende Datenpunkt-IDs und andere Hersteller unverändert."
+      },
+      "0.5.162": {
+        "en": "Add eight separate VARTA models from public Modbus table 14: model-specific FC3 monitoring, one-character-per-register strings, low-word-first counters, live scale factors and normalised EOS power signs. FC6 scale-factor configuration only for pulse neo/flex storage, explicitly opt-in, identity-probed and readback-verified. No undocumented external power control. Shared per-endpoint request pacing, strict register gaps and no automatic writes. Existing templates remain unchanged.",
+        "de": "Acht separate VARTA-Modelle nach öffentlicher Modbus-Tabelle 14 ergänzt: modellspezifische FC3-Messwerte, ein Zeichen je Register, Low-Word-First-Zähler, aktuelle Skalierungsfaktoren und normalisierte EOS-Leistungsvorzeichen. FC6-SF-Konfiguration nur für pulse neo/flex storage, mit expliziter Freigabe, Identitätsprüfung und bestätigtem Rücklesen. Keine undokumentierte Leistungssteuerung. Gemeinsame Anfragebegrenzung je Endpunkt, strikte Registerlücken und keine automatischen Schreibzugriffe. Bestehende Templates unverändert."
+      },
+      "0.5.161": {
+        "en": "Fix DEPower AC/DC charging control when universal RW readbacks return to 0 and the connector remains in Prepare. NexoWatt now coordinates Charge mode=1, optional single-connector station-power initialization, connector power and Start in the documented order. A connector already stuck in Prepare receives a bounded Stop-to-Start re-arm edge, while active charging is never interrupted. Prepare no longer counts as a confirmed charging release. Raw RW datapoints remain true device readbacks; the stable ctrl.run and ctrl.powerLimitW aliases remain the command interface.",
+        "de": "DEPower-AC/DC-Ladesteuerung korrigiert, wenn universelle RW-Rückmeldungen wieder auf 0 springen und der Connector in Prepare stehen bleibt. NexoWatt koordiniert jetzt Charge mode=1, bei bestätigter Ein-Connector-Station die Initialisierung der Stationsleistung, die Connector-Leistung und Start in der erforderlichen Reihenfolge. Ein bereits in Prepare hängender Connector erhält begrenzt eine Stop-zu-Start-Neubewaffnung, während ein aktiver Ladevorgang niemals unterbrochen wird. Prepare gilt nicht mehr als bestätigte Ladefreigabe. Die Roh-RW-Datenpunkte bleiben echte Geräte-Rückmeldungen; ctrl.run und ctrl.powerLimitW bleiben die stabile Befehlsoberfläche."
+      },
+      "0.5.158": {
+        "en": "Improve TESVOLT IoT Gateway MQTT commissioning and diagnostics: the custom device dialog now exposes an explicit mqtt/mqtts transport choice, port, fixed Client-ID, TLS certificate verification, CA/SNI, connection timing and TESVOLT watchdog settings. TESVOLT defaults to mqtts and port 1884 with a stable NexoWatt Client-ID. MQTT runtime fallback IDs are deterministic instead of random. CONNACK authorization, credential, TLS, timeout and TCP errors now include the effective broker and Client-ID without exposing secrets, and the primary authorization error is preserved instead of being overwritten by generic close or heartbeat timeout messages. Existing device datapoints, aliases and power-control behavior remain unchanged.",
+        "de": "TESVOLT-IoT-Gateway-MQTT-Inbetriebnahme und Diagnose verbessert: Der benutzerdefinierte Gerätedialog zeigt jetzt Transportwahl mqtt/mqtts, Port, feste Client-ID, TLS-Zertifikatsprüfung, CA/SNI, Verbindungszeiten und TESVOLT-Watchdogwerte. Für TESVOLT werden mqtts und Port 1884 sowie eine stabile NexoWatt-Client-ID vorbelegt. MQTT-Fallback-IDs sind deterministisch statt zufällig. CONNACK-Autorisierungs-, Zugangsdaten-, TLS-, Timeout- und TCP-Fehler nennen nun Broker und tatsächlich verwendete Client-ID, ohne Geheimnisse auszugeben; der primäre Autorisierungsfehler wird nicht mehr durch generische Close- oder Heartbeat-Meldungen überschrieben. Bestehende Gerätedatenpunkte, Aliase und Leistungssteuerung bleiben unverändert."
+      },
+      "0.5.157": {
+        "en": "Add two manufacturer-neutral Modbus V10.03 templates for AC wallboxes and DC charging stations (connector 1 and connector 2). The integration reads universal and connector status, plug/error state, AC/DC voltage and current, phase/total power, energy and session data, and controls start/stop plus connector/station power through exact FC16 writes. The protocol exposes power control but no live current setpoint; the fallback-current register is intentionally not mapped as the EOS charging-current command. Existing 181 production templates and legacy aliases remain unchanged.",
+        "de": "Zwei herstellerneutrale Modbus-V10.03-Templates für AC-Wallboxen und DC-Ladestationen ergänzt (Connector 1 und Connector 2). Die Integration liest universelle und connectorbezogene Status-, Stecker- und Fehlerwerte, AC-/DC-Spannung und -Strom, Phasen-/Gesamtleistung, Energie- und Sitzungsdaten und steuert Start/Stop sowie Connector-/Stationsleistung über exakte FC16-Schreibzugriffe. Das Protokoll bietet eine Leistungs-, aber keine laufende Stromvorgabe; der Fallback-Strom wird bewusst nicht als EOS-Ladestromsollwert abgebildet. Die bestehenden 181 Produktionstemplates und Legacy-Aliase bleiben unverändert."
+      },
+      "0.5.156": {
+        "en": "Fix the Windows-only release-test failure where the nested npm pack process returned status=null before npm started. The workspace-isolation test now invokes npm through the npm JavaScript CLI exposed by the lifecycle environment and falls back to cmd.exe only when necessary. The final package boundary and dirty-worktree checks remain active. No runtime, device template, datapoint, alias, freshness or control behavior is changed.",
+        "de": "Windows-spezifischen Release-Testfehler behoben, bei dem der verschachtelte npm-pack-Prozess bereits vor dem Start von npm mit status=null endete. Der Arbeitsordner-Isolationstest ruft npm jetzt über die vom Lifecycle bereitgestellte JavaScript-CLI auf und verwendet cmd.exe nur als sicheren Fallback. Paketgrenze und Altdatei-Prüfung bleiben aktiv. Laufzeit, Gerätetemplates, Datenpunkte, Aliase, Freshness- und Steuerlogik bleiben unverändert."
+      },
+      "0.5.155": {
+        "en": "Release validation is now independent of harmless files left in an existing Windows worktree. Extra root Markdown files and unlisted test files are reported as notices, but are neither executed nor published: npm test runs only test/test-manifest.json and the npm files whitelist excludes test/ and unapproved root files. Missing or modified managed files, invalid JSON, merge conflicts, syntax errors, template regressions and failing approved tests still block release. No runtime, device template, datapoint, alias or control behavior is changed.",
+        "de": "Die Release-Prüfung ist jetzt unabhängig von harmlosen Altdateien in einem bestehenden Windows-Arbeitsordner. Zusätzliche Markdown-Dateien im Projektstamm und nicht gelistete Testdateien werden nur noch als Hinweis gemeldet, aber weder ausgeführt noch veröffentlicht: npm test nutzt ausschließlich test/test-manifest.json und die npm-files-Whitelist schließt test/ sowie nicht freigegebene Stammdateien aus. Fehlende oder veränderte verwaltete Dateien, ungültiges JSON, Merge-Konflikte, Syntaxfehler, Template-Regressionen und fehlgeschlagene freigegebene Tests blockieren weiterhin. Laufzeit, Gerätetemplates, Datenpunkte, Aliase und Steuerlogiken bleiben unverändert."
+      },
+      "0.5.154": {
+        "en": "Keep safety-critical EV charger feedback fresh even when idle values do not change. After every successful charger snapshot, legacy and Alias Contract v1 status/power/current/vehicle aliases are periodically re-published at a bounded cadence (normally 5 s), while static metadata, energy counters and commands remain change-only. No timer fabricates freshness during communication loss; heartbeat online/lastSeen remain tied to real device data. The fix applies generically to all EVCS/EVSE templates and changes no register, datapoint ID, alias path or control logic.",
+        "de": "Sicherheitsrelevante Ladepunkt-Rückmeldungen bleiben jetzt auch bei unveränderten Leerlaufwerten zeitlich frisch. Nach jedem erfolgreichen Gerätesnapshot werden Legacy- und Alias-Contract-v1-Status-, Leistungs-, Strom- und Fahrzeug-Aliase in begrenztem Takt (normalerweise 5 s) erneut bestätigt; statische Metadaten, Energiezähler und Befehlsaliase bleiben änderungsbasiert. Bei Kommunikationsausfall wird keine Frische künstlich erzeugt; Online/LastSeen bleiben an echte Gerätedaten gekoppelt. Die Korrektur gilt generisch für alle EVCS-/EVSE-Templates und ändert keine Register, Datenpunkt-IDs, Alias-Pfade oder Steuerlogiken."
+      },
+      "0.5.153": {
+        "en": "Refine the TESVOLT IoT Gateway MQTT V2 integration from vendor feedback: TLS/MQTTS connection options, cyclic full Power + Reactive_Power setpoint refresh, configurable local command watchdog, safe 0 W on startup/reconnect/stale EOS command/controlled shutdown, no automatic non-zero resume after reconnect, tighter configurable telemetry freshness, and measurement-derived setpoint tracking. Battery contactor control remains deliberately disabled. Existing templates, datapoints and legacy aliases remain unchanged.",
+        "de": "TESVOLT-IoT-Gateway-MQTT-V2-Integration anhand der Herstellerantwort nachgebessert: TLS/MQTTS-Verbindungsoptionen, zyklische vollständige Wirk- und Blindleistungsvorgabe, konfigurierbarer lokaler Sollwert-Watchdog, sichere 0-W-Vorgabe bei Start/Wiederverbindung/veraltetem EOS-Befehl/kontrolliertem Stopp, keine automatische Wiederaufnahme eines alten Nicht-Null-Sollwerts, engere konfigurierbare Datenfrische und aus den Measurements abgeleitete Sollwertverfolgung. Die DC-Schützsteuerung bleibt bewusst deaktiviert. Bestehende Templates, Datenpunkte und Legacy-Aliase bleiben unverändert."
+      },
+      "0.5.152": {
+        "en": "Fix Alfen ACE Mode 3 status decoding when the numeric Modbus word order is configured as LE. Alfen ASCII strings now keep sequential register order and network byte order, so A/B1/B2/C1/C2/D1/D2/E/F are decoded correctly and the vehicle status no longer falls back to EVSE availability (Operative). No template, register, alias path or Alfen write/control logic is changed.",
+        "de": "Alfen-ACE-Mode-3-Status bei numerischer Modbus-Wortreihenfolge LE korrigiert. Alfen-ASCII-Strings behalten jetzt die fortlaufende Registerreihenfolge und Network Byte Order, sodass A/B1/B2/C1/C2/D1/D2/E/F korrekt erkannt werden und der Fahrzeugstatus nicht mehr auf die EVSE-Verfügbarkeit (Operative) zurückfällt. Templates, Register, Alias-Pfade sowie die Alfen-Schreib-/Steuerlogik bleiben unverändert."
+      },
+      "0.5.151": {
+        "en": "Extend the existing FENECON Home ESS Modbus template additively with the documented ctrlBalancing0 block (component/header metadata, controller state and SetGridActivePower). The new command shifts the grid-connection control target with documented sign semantics, is exposed only through canonical aliases.v1 grid/NAP setpoint paths, verifies the component ID before every first write, and keeps all existing raw datapoints and legacy aliases unchanged.",
+        "de": "Bestehendes FENECON-Home-ESS-Modbus-Template additiv um den dokumentierten ctrlBalancing0-Block erweitert (Komponenten-/Headerdaten, Controllerstatus und SetGridActivePower). Die neue Vorgabe verschiebt den Ausregelpunkt am Netzanschluss mit dokumentierter Vorzeichenlogik, wird ausschließlich über die standardisierten aliases.v1-Grid-/NAP-Sollwertpfade bereitgestellt, prüft vor dem ersten Schreiben die Component-ID und lässt alle bestehenden Rohdatenpunkte sowie Legacy-Aliase unverändert."
+      },
+      "0.5.150": {
+        "en": "Additive first implementation of the TESVOLT IoT Gateway MQTT EMS Interface V2: read API/gateway/inverter/battery metadata, AC/DC measurements, SOC, energy, states, errors and dynamic limits; publish atomic inverter active-power commands with NexoWatt/TESVOLT sign conversion, capability/state/limit validation, stale-value fail-safe handling and canonical storage aliases. Existing TESVOLT Modbus templates and all production datapoints/legacy aliases remain unchanged.",
+        "de": "Additive Erstimplementierung des TESVOLT IoT Gateway MQTT EMS Interface V2: API-/Gateway-/Wechselrichter-/Batteriedaten, AC-/DC-Messwerte, SOC, Energie, Zustände, Fehler und dynamische Grenzen lesen; atomare Wirkleistungsvorgaben mit NexoWatt-/TESVOLT-Vorzeichenumkehr, Capability-/Zustands-/Grenzprüfung, Failsafe für veraltete Werte und standardisierten Speicher-Aliassen senden. Bestehende TESVOLT-Modbus-Templates sowie alle Produktionsdatenpunkte und Legacy-Aliase bleiben unverändert."
+      },
+      "0.5.148": {
+        "en": "ABL eMH1 live-power fail-safe: derived phase-current and charging-power aliases are reset to 0 when EVCC2/3 reports state A/B/E/F, returns the documented unavailable-current sentinel, omits the atomic R5 current block, loses communication, or exceeds the heartbeat timeout. Raw diagnostic datapoints and all existing alias paths/conversions remain unchanged.",
+        "de": "ABL-eMH1-Liveleistungs-Failsafe: Berechnete Phasenstrom- und Ladeleistungs-Aliase werden auf 0 gesetzt, sobald EVCC2/3 einen Zustand A/B/E/F meldet, den dokumentierten Strom-nicht-verfügbar-Sentinel liefert, der atomare R5-Stromblock fehlt, die Kommunikation ausfällt oder der Heartbeat-Timeout erreicht wird. Roh-Diagnosedatenpunkte sowie alle bestehenden Alias-Pfade und Umrechnungen bleiben unverändert."
+      },
+      "0.5.147": {
+        "en": "Alfen ACE adaptive write compatibility: keep the official document-register-minus-one/low-word-first layout as the canonical path, retry the direct table-address layout only after Modbus exception 2, detect the 32-bit word order from the configured safe current, cache the working variant per Unit-ID, shift only the corresponding control readbacks, and provide an actionable Advanced Settings diagnostic when both layouts are rejected. No template, alias or existing datapoint path is changed.",
+        "de": "Alfen-ACE-Schreibkompatibilität erweitert: Der offizielle Pfad mit Dokumentregister minus 1 und Low-Word-First bleibt unverändert der Standard. Nur nach Modbus Exception 2 wird zusätzlich die direkte Tabellenadresse geprüft; die 32-Bit-Wortreihenfolge wird anhand des konfigurierten Safe Current erkannt, die funktionierende Variante je Unit-ID gespeichert und nur die zugehörigen Steuer-Rückmeldungen angepasst. Werden beide Varianten abgelehnt, nennt die Diagnose die erforderlichen ACE-Advanced-Settings. Templates, Aliase und bestehende Datenpunktpfade bleiben unverändert."
+      },
+      "0.5.146": {
+        "en": "Alias Contract v1 is now strictly additive for existing installations. All 181 raw templates and every legacy aliases.* definition are locked against the 0.5.143 production baseline; canonical paths exist only below aliases.v1/meta. A fixed test manifest detects mixed source folders and invalid Modbus writes are verified through info.lastError.",
+        "de": "Alias Contract v1 ist für Bestandsanlagen jetzt strikt additiv abgesichert. Alle 181 Roh-Templates und sämtliche bisherigen aliases.*-Definitionen werden gegen den Produktionsstand 0.5.143 geprüft; kanonische Pfade liegen nur unter aliases.v1/meta. Ein festes Testmanifest erkennt vermischte Quellordner und ungültige Modbus-Schreibwerte werden über info.lastError geprüft."
+      },
+      "0.5.145": {
+        "en": "Documentation structure cleaned up: all technical Markdown files are now grouped under docs/, the root README once again starts with the actual adapter overview, and the release guard prevents future Markdown clutter in the project root.",
+        "de": "Dokumentationsstruktur bereinigt: Alle technischen Markdown-Dateien liegen jetzt gesammelt unter docs/, die Haupt-README beginnt wieder direkt mit der eigentlichen Adapterübersicht und der Release-Guard verhindert künftig neue Markdown-Dateien im Projektstamm."
+      },
+      "0.5.144": {
+        "en": "Alias Contract v1 introduced as the stable interface for NexoWatt UI auto-discovery: all 181 templates now declare an explicit device class, canonical aliases are exposed under aliases.v1 with fixed paths/types/roles/SI units, and aliases.meta publishes the manifest and capabilities. Legacy aliases remain available. EV chargers are separated from solar/DC chargers, dynamic TA CMI mappings are mirrored into canonical heat aliases, and the release guard validates the contract on every build.",
+        "de": "Alias Contract v1 als feste Schnittstelle für die automatische Geräteerkennung im NexoWatt UI eingeführt: Alle 181 Templates besitzen jetzt eine eindeutige Geräteklasse; unter aliases.v1 stehen kanonische Pfade mit festen Typen, Rollen und SI-Einheiten bereit, während aliases.meta Manifest und Fähigkeiten veröffentlicht. Bestehende Aliase bleiben erhalten. EV-Ladepunkte sind von Solar-/DC-Ladereglern getrennt, dynamische TA-CMI-Zuordnungen werden auf standardisierte Heizungsaliase gespiegelt und der Release-Guard prüft den Vertrag bei jedem Build."
+      },
+      "0.5.143": {
+        "en": "ABL eMH1 PWM current control corrected: NexoWatt EOS continues to command amperes, which are converted to the documented IEC 61851 duty cycle before writing register 0x0014. Zero or sub-6-A commands and the run/charge-enable pause now write 100% (no current available); resume restores the last active duty cycle. Register 0x0005 remains an expert/service command only.",
+        "de": "ABL-eMH1-PWM-Stromsteuerung korrigiert: NexoWatt EOS gibt weiterhin Ampere vor; der Adapter rechnet vor dem Schreiben auf Register 0x0014 in den dokumentierten IEC-61851-Tastgrad um. 0 A beziehungsweise Werte unter 6 A sowie die Pause über Run/Ladefreigabe schreiben jetzt 100 % (kein Strom verfügbar); beim Fortsetzen wird der letzte aktive Tastgrad wiederhergestellt. Register 0x0005 bleibt ausschließlich ein Experten-/Servicebefehl."
+      },
+      "0.5.142": {
+        "en": "ABL eMH1 Modbus-ASCII read-group fix: send device/firmware register 0x0001 as the required R2 request and Modbus settings register 0x0003 separately as R1. The adapter no longer combines them into the unsupported 0x0001/R3 request that makes EVCC2/3 remain silent and causes a 2-second timeout.",
+        "de": "ABL-eMH1-Modbus-ASCII-Lesegruppen korrigiert: Geräte-/Firmware-Register 0x0001 wird jetzt als vorgeschriebene R2-Anfrage und das Modbus-Einstellregister 0x0003 separat als R1-Anfrage gelesen. Der Adapter kombiniert sie nicht mehr zur nicht unterstützten Anfrage 0x0001/R3, auf die EVCC2/3 nicht antwortet und dadurch einen 2-Sekunden-Timeout erzeugt."
+      },
+      "0.5.141": {
+        "en": "ABL eMH1 current-feedback correction: expose L1/L2/L3 phase currents, report the comparable live charging current as the highest phase instead of adding amperes across phases, retain the phase-current sum only for estimated power, add a separate applied current-limit readback, and fix the IEC 61851 85 percent PWM boundary.",
+        "de": "ABL-eMH1-Stromrückmeldung korrigiert: L1/L2/L3-Phasenströme als Aliase ergänzt, der vergleichbare Ist-Ladestrom wird als höchste Phase statt als Summe der Amperewerte ausgegeben, die Phasenstromsumme bleibt nur für die Leistungsschätzung erhalten, ein separater Rückmeldewert für das angewendete Stromlimit wurde ergänzt und die IEC-61851-Grenze bei 85 Prozent PWM korrigiert."
+      },
+      "0.5.140": {
+        "en": "Alfen ACE write audit: retain the verified Socket FC16 frame, restore a real Unit-ID 200 Station/SCN control profile with an atomic three-phase setpoint, surface rejected manual writes in info.lastError, add exact accepted-write traces, and remove the duplicate current refresh path.",
+        "de": "Alfen-ACE-Schreibprüfung: bestätigten Socket-FC16-Frame beibehalten, echtes Station/SCN-Steuerprofil auf Unit-ID 200 mit atomarem Drei-Phasen-Sollwert wiederhergestellt, abgelehnte manuelle Schreibbefehle in info.lastError sichtbar gemacht, exakte Write-Traces ergänzt und den doppelten Strom-Refresh entfernt."
+      },
+      "0.5.139": {
+        "en": "Technische Alternative CMI/CMI-S integration: dynamically read all supported values from configured CAN nodes via JSON API v8 and control heating bidirectionally through an integrated Modbus TCP server with 64 analog and 64 digital channels per direction.",
+        "de": "Technische Alternative CMI/CMI-S integriert: alle unterstützten Werte der konfigurierten CAN-Knoten werden dynamisch über die JSON API v8 gelesen; die Heizung lässt sich bidirektional über einen integrierten Modbus-TCP-Server mit je 64 analogen und 64 digitalen Kanälen pro Richtung steuern."
+      },
+      "0.5.138": {
+        "en": "Sungrow Residential Hybrid 1-second control telemetry: critical live datapoints use a fixed 1000 ms poll target, Modbus TCP operation spacing is reduced to 200 ms for the four fast read groups, and battery power is read back immediately after EMS writes. The proven 0.5.133 charge/discharge direction mapping is unchanged.",
+        "de": "Sungrow Residential Hybrid mit 1-Sekunden-Regelwerten: kritische Live-Datenpunkte laufen mit festem 1000-ms-Pollziel, der Modbus-TCP-Abstand wird für die vier schnellen Lesegruppen auf 200 ms reduziert und die Batterieleistung wird nach EMS-Schreibbefehlen sofort zurückgelesen. Die bewährte Lade-/Entladerichtung aus 0.5.133 bleibt unverändert."
+      },
+      "0.5.137": {
+        "en": "Add Weidmüller Charge Wallbox Business CH-W-B Modbus TCP support: Unit-ID 255, live status/voltage/current/power/session energy, charging release control, current setpoint in amperes, RFID diagnostics and stable EVCS aliases.",
+        "de": "Weidmüller Charge Wallbox Business CH-W-B per Modbus TCP ergänzt: Unit-ID 255, Status/Spannung/Strom/Leistung/Sitzungsenergie, Ladefreigabe, Stromvorgabe in Ampere, RFID-Diagnose und stabile EVCS-Aliase."
+      },
+      "0.5.132": {
+        "en": "Sungrow Residential Hybrid EMS write-point support: sET_ACTIVE_POWER, sET_CHARGE_POWER and sET_DISCHARGE_POWER are now single EMS-facing datapoints; the Modbus driver writes External EMS mode, command, power and heartbeat automatically according to Sungrow V1.1.11.",
+        "de": "Sungrow Residential Hybrid EMS-Schreibpunkt-Unterstützung: sET_ACTIVE_POWER, sET_CHARGE_POWER und sET_DISCHARGE_POWER sind jetzt einzelne EMS-Datenpunkte; der Modbus-Treiber schreibt External-EMS-Modus, Kommando, Leistung und Heartbeat automatisch gemäß Sungrow V1.1.11."
+      },
+      "0.5.131": {
+        "en": "Sungrow Residential Hybrid protocol V1.1.11: update hybrid template metadata/registers, add PV power limitation, MG8RL/MG10RL model codes, switch signed battery control to External EMS mode with fixed 20 s heartbeat, and reduce fast polling of RW registers.",
+        "de": "Sungrow Residential Hybrid Protokoll V1.1.11: Hybrid-Template/Register aktualisiert, PV power limitation ergänzt, MG8RL/MG10RL-Modellcodes ergänzt, signierte Speichersteuerung auf External EMS Mode mit festem 20-s-Heartbeat umgestellt und schnelles Polling von RW-Registern reduziert."
+      },
+      "0.5.130": {
+        "en": "Sungrow ESS heartbeat fix: write External EMS/VPP heartbeat as a fixed 20 s timeout instead of an invalid counter, throttle heartbeat refreshes, and keep primary storage power commands running if optional Sungrow helper writes are rejected.",
+        "de": "Sungrow-ESS-Heartbeat korrigiert: External-EMS-/VPP-Heartbeat wird als fester 20-s-Timeout statt als ungültiger Counter geschrieben, Heartbeat-Refreshes werden gedrosselt und Speicher-Leistungsbefehle laufen weiter, wenn optionale Sungrow-Hilfsschreibvorgänge abgelehnt werden."
+      },
+      "0.5.129": {
+        "en": "Alfen ACE control-stable template: reduce polling to essential registers, enforce Socket Unit-ID protocol writes, keep Max Current and phase commands alive every 5 s, and remove unstable All-IDs/SCN mirror control from the default profile.",
+        "de": "Alfen-ACE-Steuerung stabilisiert: Polling auf notwendige Register reduziert, Socket-Unit-ID-Schreibpfad strikt erzwungen, Max Current und Phasenbefehl alle 5 s gehalten und instabile All-IDs-/SCN-Spiegelsteuerung aus dem Standardprofil entfernt."
+      },
+      "0.5.128": {
+        "en": "Sungrow ESS control diagnostics: move EMS/charge-discharge control registers into the fast poll, speed up hybrid live polling to 2s, and refresh battery power setpoints every 5s for quicker storage response.",
+        "de": "Sungrow-ESS-Steuerdiagnose: EMS-/Lade-Entlade-Steuerregister werden jetzt im Fast-Poll gelesen, Hybrid-Livewerte laufen mit 2 s und Batterie-Leistungssollwerte werden alle 5 s erneuert."
+      },
+      "0.5.127": {
+        "en": "Sungrow hybrid direction fix: restore documented charge/discharge command mapping while keeping signed ESS convention (+W discharge, -W charge).",
+        "de": "Sungrow-Hybrid-Richtungsfix: dokumentiertes Charge/Discharge-Command-Mapping wiederhergestellt, bei unveränderter ESS-Vorzeichenlogik (+W entladen, -W laden)."
+      },
+      "0.5.126": {
+        "en": "Sungrow hybrid control fix: correct charge/discharge command mapping for signed battery power setpoints so positive values discharge and negative values charge.",
+        "de": "Sungrow-Hybrid-Steuerung korrigiert: Charge/Discharge-Command-Mapping für signierte Batteriesollwerte korrigiert, damit positive Werte entladen und negative Werte laden."
+      },
+      "0.5.124": {
+        "en": "Alfen ACE cleanup: fix All-IDs alias runtime helpers, make public aliases Socket-1 primary without automatic UID2/SCN mirroring, correct chargingReleased when setpoint is not accounted, and normalize implausible Alfen validity-time aliases.",
+        "de": "Alfen-ACE-Bereinigung: All-IDs-Alias-Runtime-Helfer korrigiert, öffentliche Aliase schreiben Socket 1 primär ohne automatische UID2/SCN-Spiegelung, chargingReleased bei nicht berücksichtigtem Setpoint korrigiert und unplausible Alfen-Validity-Time-Aliase normalisiert."
+      },
+      "0.5.122": {
+        "en": "Alfen ACE All-IDs control: use SCN current as primary control in Station/All-IDs template, mirror writes independently to Socket 1/2, keep phase writes with FC16 plus optional FC6 compatibility, and make chargingReleased reflect charger-side accounted/valid-time readbacks.",
+        "de": "Alfen ACE All-IDs-Steuerung: Station/All-IDs-Template nutzt SCN-Strom als primäre Steuerung, spiegelt Schreibbefehle unabhängig auf Socket 1/2, hält Phasenbefehle per FC16 plus optionalem FC6-Kompatibilitätsschreibzugriff und lässt chargingReleased den echten Wallbox-Status über Accounted/Valid-Time anzeigen."
+      },
+      "0.5.121": {
+        "en": "Alfen ACE all-IDs station mode: station template now reads Socket 1, Socket 2 and SCN/server-address 200 values, mirrors current/phase commands to Socket 2 and SCN where supported, and retries watchdog writes without long unsupported latches.",
+        "de": "Alfen ACE All-IDs-Station-Modus: Das Station-Template liest jetzt Socket 1, Socket 2 und SCN/Serveradresse 200, spiegelt Strom-/Phasenbefehle auf Socket 2 und SCN soweit unterstützt und blockiert Watchdog-Schreibbefehle nicht mehr durch lange Unsupported-Sperren."
+      },
+      "0.5.120": {
+        "en": "Alfen ACE Modbus: fix manual alias writes and phase switching. Charge Using Phases now uses audited FC16@1214 len=1, stale stored phase=1 is ignored on startup, and automatic keepalive can no longer overwrite queued user commands.",
+        "de": "Alfen ACE Modbus: manuelle Alias-Schreibzugriffe und Phasenumschaltung korrigiert. Charge Using Phases schreibt jetzt geprüft per FC16@1214 len=1, alte gespeicherte Phase=1 wird beim Start ignoriert, und automatische Keepalives überschreiben keine wartenden User-Kommandos mehr."
+      },
+      "0.5.119": {
+        "en": "Alfen ACE control clean-up: phase switching now writes register 1215 as protocol address 1214 via FC16 length 1, command aliases accept UI labels with units, phase keepalive is seeded from aliases before old setpoint memory, and readback alias r.phaseMode was added.",
+        "de": "Alfen-ACE-Steuerung bereinigt: Phasenumschaltung schreibt Register 1215 jetzt als Protokolladresse 1214 per FC16 Länge 1, Steuer-Aliase akzeptieren UI-Werte mit Einheiten, Phasen-Keepalive wird zuerst aus den Aliasen statt aus altem Setpoint-Speicher gesetzt, und r.phaseMode wurde als Readback-Alias ergänzt."
+      },
+      "0.5.118": {
+        "en": "Alfen ACE watchdog/runtime fix: queued user current commands now immediately become the active watchdog value, run/chargeEnable no longer overwrite dynamic Min+PV/PV current limits with 16 A, add powerLimitW alias converting W to A, and align Alfen keepalive tick to 5 s.",
+        "de": "Alfen-ACE-Watchdog-/Runtime-Fix: Warteschlangen-Schreibbefehle für Strom werden sofort zum aktiven Watchdog-Sollwert, run/chargeEnable überschreiben dynamische Min+PV/PV-Stromlimits nicht mehr mit 16 A, powerLimitW-Alias mit W→A-Umrechnung ergänzt und Alfen-Keepalive auf 5 s ausgerichtet."
+      },
+      "0.5.117": {
+        "en": "Alfen ACE watchdog fix: seed EMS setpoint keepalive from command aliases after adapter restarts, persist last Alfen current/phase commands, and refresh current/phase writes every 5s from the last commanded values.",
+        "de": "Alfen-ACE-Watchdog-Fix: EMS-Sollwert-Keepalive nach Adapter-Neustarts aus den Steuer-Aliases initialisieren, letzte Alfen-Strom-/Phasenbefehle speichern und Strom-/Phasen-Schreibbefehle alle 5s aus den letzten Befehlswerten erneuern."
+      },
+      "0.5.116": {
+        "en": "Alfen ACE Modbus template re-audited against Configuration Guide v1.0 EN 05/2025: enforce document-register-minus-1 protocol addresses, remove alternate +1 control fallbacks, write Max Current at FC16@1209 and Charge Using Phases at FC6@1214, refresh active Alfen write setpoints every 5 s from the last command value, and keep Alfen energy counters normalized to kWh.",
+        "de": "Alfen-ACE-Modbus-Template gegen Configuration Guide v1.0 EN 05/2025 neu geprüft: Dokumentregister-minus-1-Protokolladressen werden fest erzwungen, alternative +1-Control-Fallbacks entfernt, Max Current wird auf FC16@1209 und Charge Using Phases auf FC6@1214 geschrieben, aktive Alfen-Schreibsollwerte werden alle 5 s aus dem letzten Befehlswert erneuert und Alfen-Energiewerte bleiben direkt auf kWh normalisiert."
+      },
+      "0.5.115": {
+        "en": "Alfen ACE address audit: keep strict protocol addresses (document register - 1), fix Max Current valid-time word order to little-word-endian, keep cyclic watchdog refresh only on Max Current, and confirm phase switching once after 5 s without cyclic re-triggering.",
+        "de": "Alfen-ACE-Adressaudit: strikte Protokolladressen bleiben aktiv (Dokumentregister - 1), Max-Current-Valid-Time nutzt jetzt Little-Word-Endian, zyklischer Watchdog-Refresh läuft nur für Max Current, Phasenumschaltung wird einmal nach 5 s bestätigt und nicht zyklisch neu getriggert."
+      },
+      "0.5.114": {
+        "en": "Alfen ACE safety rollback: keep cyclic watchdog refresh only on the Max Current setpoint, repeat phase switching once after 5 s but do not cyclically re-trigger the phase register. This avoids unintended short charge releases after phase/control changes while keeping current setpoints alive.",
+        "de": "Alfen-ACE-Sicherheits-Rollback: zyklischer Watchdog-Refresh bleibt nur auf dem Max-Current-Stromsollwert, Phasenumschaltung wird einmal nach 5 s bestätigt, aber nicht zyklisch erneut getriggert. Das vermeidet unbeabsichtigte kurze Ladefreigaben nach Phasen-/Steueränderungen und hält Stromsollwerte weiter lebendig."
+      },
+      "0.5.113": {
+        "en": "Alfen ACE: refresh the phase-switch command like the max-current command. Charge-using-phases is repeated after 5 s idle and kept alive every 5 s from the last commanded value, using the audited protocol address 1214 without +1 fallback.",
+        "de": "Alfen ACE: Phasenumschaltung wie die Stromvorgabe auffrischen. Charge-using-phases wird nach 5 s Ruhe erneut gesendet und anschließend alle 5 s mit dem zuletzt befohlenen Wert wachgehalten, über die geprüfte Protokolladresse 1214 ohne +1-Fallback."
+      },
+      "0.5.112": {
+        "en": "Alfen ACE strict write-address fix: Max Current is written only to protocol address 1209 (document 1210..1211) with no +1/table-address fallback, readback uses the separate Actual Applied Max Current register, and Alfen command watchdog confirms writes after 5 s idle with 5 s Max Current refresh.",
+        "de": "Alfen-ACE-Schreibadress-Fix: Max Current wird ausschließlich auf Protokolladresse 1209 geschrieben (Dokumentregister 1210..1211), ohne +1-/Tabellenadress-Fallback. Der Readback nutzt das separate Actual-Applied-Max-Current-Register, und der Alfen-Command-Watchdog bestätigt Schreibwerte nach 5 s Ruhe mit 5-s-Max-Current-Refresh."
+      },
+      "0.5.110": {
+        "en": "MENNEKES AMTRON cleanup: expose EVCS energy aliases and native Mennekes energy datapoints in kWh, add heartbeat/read-error grace to prevent online/offline flapping on slower wallboxes, and reduce Mennekes optional read warnings.",
+        "de": "MENNEKES-AMTRON-Bereinigung: EVCS-Energie-Aliase und native Mennekes-Energiedatenpunkte werden in kWh ausgegeben, Heartbeat-/Read-Error-Grace verhindert Online/Offline-Flattern bei langsameren Wallboxen, und optionale Mennekes-Lesefehler werden weniger laut protokolliert."
+      },
+      "0.5.109": {
+        "en": "KEBA P40 clean-up: coerce boolean alias states correctly, make KEBA command buttons command-only, fix unlock/fast-charge command values, and stop polling unsupported FENECON home component-id strings by default.",
+        "de": "KEBA-P40-Bereinigung: boolsche Alias-States korrekt typisieren, KEBA-Befehlstaster als reine Befehls-Aliase behandeln, Unlock-/Fast-Charge-Kommandowerte korrigieren und nicht unterstützte FENECON-home-Component-ID-Strings standardmäßig nicht mehr pollen."
+      },
+      "0.5.108": {
+        "en": "Implement KEBA KeContact P40/P40 Pro Modbus TCP V1.02 precisely: Unit-ID 255, FC3 isolated single-register reads, FC6 writes, max 2-word reads, all KEBA mA/mW/0.1Wh values normalized to A/W/Wh in datapoints and aliases, A-based write control converted back to mA, and safe 5-second write pacing.",
+        "de": "KEBA KeContact P40/P40 Pro Modbus TCP V1.02 exakt umgesetzt: Unit-ID 255, isolierte FC3-Einzelregister-Lesezugriffe, FC6-Schreiben, maximal 2-Wort-Lesezugriffe, alle KEBA-mA/mW/0,1Wh-Werte in Datenpunkten und Aliassen auf A/W/Wh normalisiert, A-basierte Schreibsteuerung intern zurück nach mA gewandelt und sichere 5-Sekunden-Schreib-Taktung."
+      },
+      "0.5.107": {
+        "en": "Modbus runtime stabilization: use safe contiguous default reads, adaptive split recovery for rejected read groups, soft handling for unsupported optional registers, and KEBA P40 safe profile with Unit-ID 255/address offset 0 plus charging/cable state datapoints.",
+        "de": "Modbus-Laufzeit stabilisiert: sichere zusammenhängende Lesegruppen als Default, adaptive Split-Recovery bei abgelehnten Read-Gruppen, weiche Behandlung nicht unterstützter optionaler Register und KEBA-P40-Safe-Profil mit Unit-ID 255/Adress-Offset 0 sowie Lade-/Kabelstatus-Datenpunkten."
+      },
+      "0.5.106": {
+        "en": "Alfen ACE status cleanup: expose human-readable Mode 3/status aliases, add raw Mode 3 code alias, state labels for statusCode, and normalize Alfen current-limit valid-time readback variants.",
+        "de": "Alfen-ACE-Status bereinigt: Mode-3-/Status-Aliase geben jetzt verständliche Texte aus, zusätzlicher Rohcode-Alias, StatusCode-States und Normalisierung der Alfen-Current-Limit-Valid-Time-Readbacks."
+      },
+      "0.5.105": {
+        "en": "Alfen ACE cleanup: cache the accepted adaptive control address for the whole socket-control readback block, keep control aliases on the last commanded value instead of volatile readback, and refresh only Max Current every 10s for the watchdog.",
+        "de": "Alfen-ACE-Bereinigung: akzeptierte adaptive Control-Adresse wird für den gesamten Socket-Control-Readback-Block gecacht, Steuer-Aliase behalten den zuletzt gesendeten Sollwert statt volatilem Readback, und der Watchdog refreshed nur noch Max Current alle 10 s."
+      },
+      "0.5.104": {
+        "en": "Alfen ACE Modbus adaptive control-block addressing: probe socket/SCN control registers safely, support chargers exposing the writable EMS block at the table address, cache the working address for reads/writes, and keep watchdog refresh at 10 s without warning spam.",
+        "de": "Alfen-ACE-Modbus: adaptive Adressierung für den Control-Block ergänzt. Socket-/SCN-Steuerregister werden sicher geprüft, Wallboxen mit schreibbarem EMS-Block auf Tabellenadresse werden unterstützt, die funktionierende Adresse wird für Lesen/Schreiben gecacht und der 10-s-Watchdog läuft ohne Warnspam."
+      },
+      "0.5.103": {
+        "en": "Alfen ACE stability: preflight-probe socket/SCN control registers before writes, suppress unsupported control writes into meter-only profiles, keep addresses fixed at document register - 1, and improve Alfen-specific ECONNREFUSED diagnostics.",
+        "de": "Alfen-ACE-Stabilität: Socket-/SCN-Control-Register werden vor Schreibzugriffen geprüft, nicht freigegebene Control-Writes in Meter-only-Profilen werden sauber unterdrückt, Adressen bleiben fest auf Dokumentregister - 1, und Alfen-spezifische ECONNREFUSED-Diagnose wurde verbessert."
+      },
+      "0.5.102": {
+        "en": "Alfen NG9xx/ACE stability fix: prevent crash on rejected alias writes, enforce template protocol address offset over stale device config, and keep Alfen current setpoint writes rounded/in cooldown after Modbus rejects.",
+        "de": "Alfen-NG9xx/ACE-Stabilitätsfix: kein Absturz mehr bei abgelehnten Alias-Schreibzugriffen, Template-Protokolladressierung überschreibt alte Geräte-Offsets, und Alfen-Stromsollwerte werden gerundet sowie nach Modbus-Ablehnung sauber pausiert."
+      },
+      "0.5.101": {
+        "en": "Alfen NG9xx/ACE Modbus hardening: remove unsafe off-by-one fallback writes, keep documented protocol addresses (register minus 1), stop automatic retries on unsupported socket-control writes during cooldown, and reduce misleading write spam when the charger exposes meter data but not the EMS control block.",
+        "de": "Alfen NG9xx/ACE Modbus gehärtet: unsichere Off-by-One-Fallback-Schreibzugriffe entfernt, dokumentierte Protokolladressen (Register minus 1) beibehalten, automatische Wiederholungen auf nicht unterstützte Socket-Control-Schreibregister während Cooldown gestoppt und irreführende Schreib-Logflut reduziert, wenn die Wallbox Messwerte liefert, aber den EMS-Control-Block nicht freigibt."
+      },
+      "0.5.100": {
+        "en": "MENNEKES AMTRON HEMS stability hardening: disable cyclic write keepalive because Mennekes resets its HEMS timeout through regular Modbus reads, restore only the last explicitly written current/power setpoint on reconnect, and stop automatic reconnect rewrites of safe-current, timeout, legacy and network registers.",
+        "de": "MENNEKES-AMTRON-HEMS-Stabilisierung: zyklisches Write-Keepalive deaktiviert, weil Mennekes den HEMS-Timeout bereits durch regelmäßige Modbus-Lesezugriffe zurücksetzt; beim Reconnect wird nur noch der zuletzt explizit geschriebene Strom-/Leistungs-Sollwert wiederhergestellt, Safe-Current, Timeout, Legacy- und Netzwerkregister werden nicht mehr automatisch neu geschrieben."
+      },
+      "0.5.99": {
+        "en": "Alfen NG9xx/ACE socket-mode hardening: safe default polling now focuses on socket live/control registers, Station/SCN UID200 blocks are no longer polled or kept alive by default in the mixed template, and the max-current watchdog runs every 10 seconds only after an actual successful write.",
+        "de": "Alfen-NG9xx/ACE-Socket-Mode gehärtet: Safe-Default-Polling fokussiert jetzt Socket-Live-/Control-Register, Station/SCN-UID200-Blöcke werden im gemischten Template standardmäßig nicht mehr gepollt oder per Keepalive beschrieben, und der Max-Current-Watchdog läuft alle 10 Sekunden erst nach einem tatsächlich erfolgreichen Schreibzugriff."
+      },
+      "0.5.98": {
+        "en": "Alfen NG9xx/ACE diagnostics and watchdog update: keep writable Alfen setpoints on a 10-second refresh, add Alfen-specific hints for missing socket control/status blocks, and map unsupported U64/NaN register values to null to avoid ioBroker type warnings.",
+        "de": "Alfen-NG9xx/ACE Diagnose- und Watchdog-Update: Alfen-Schreibwerte werden im 10-Sekunden-Takt erneuert, Alfen-spezifische Hinweise für nicht freigeschaltete Socket-Control-/Statusblöcke ergänzt und nicht unterstützte U64/NaN-Registerwerte auf null gemappt, damit keine ioBroker-Typwarnungen entstehen."
+      },
+      "0.5.97": {
+        "en": "Alfen NG9xx/ACE compatibility fix: isolate important socket reads so unsupported optional meter/register values do not hide neighbours; add stable aliases for Mode-3 status, vehicle connected/charging, applied current limit, valid-time, setpoint acknowledgement, phase mode and charging release; refresh Alfen writable setpoints every 10 seconds for the watchdog.",
+        "de": "Alfen-NG9xx/ACE-Kompatibilitätsfix: wichtige Socket-Reads werden einzeln gelesen, damit nicht unterstützte optionale Meter-/Registerwerte keine Nachbarwerte mitreißen; stabile Aliase für Mode-3-Status, Fahrzeug verbunden/Ladevorgang aktiv, angewendetes Stromlimit, Valid-Time, Setpoint-Übernahme, Phasenmodus und Ladefreigabe ergänzt; Alfen-Schreibwerte werden für den Watchdog alle 10 Sekunden erneuert."
+      },
+      "0.5.96": {
+        "en": "Alfen NG9xx/ACE Modbus fix: support per-register Unit-IDs, add Socket-mode fallback values to the Station/SCN template, reduce Alfen polling to stable fast groups and make unsupported station/SCN blocks optional.",
+        "de": "Alfen-NG9xx/ACE-Modbus-Fix: Unit-ID pro Registergruppe unterstützt, Socket-Mode-Fallbackwerte im Station/SCN-Template ergänzt, Alfen-Polling auf stabile Fast-Gruppen reduziert und nicht unterstützte Station/SCN-Blöcke optional gemacht."
+      },
+      "0.5.95": {
+        "en": "Alfen NG9xx/ACE Modbus TCP fix: convert all Alfen template registers to protocol addresses (register - 1), enforce the fixed Unit-IDs for socket1/socket2/station-SCN, add write-value validation/diagnostics, and keep connection state online for non-transport write rejections.",
+        "de": "Alfen-NG9xx/ACE-Modbus-TCP-Fix: alle Alfen-Template-Register auf echte Protokolladressen (Register - 1) umgestellt, feste Unit-IDs für Socket1/Socket2/Station-SCN erzwungen, Schreibwert-Validierung/Diagnose ergänzt und Verbindungsstatus bei reinen Write-Ablehnungen nicht mehr fälschlich auf offline gesetzt."
+      },
+      "0.5.94": {
+        "en": "MENNEKES AMTRON Modbus TCP stability fix: add hard operation/connect timeouts, force stale TCP socket cleanup, avoid poisoned Modbus queues after timeouts, reduce AMTRON polling load with fast/slow groups, and add periodic HEMS setpoint refresh.",
+        "de": "MENNEKES-AMTRON-Modbus-TCP-Stabilitätsfix: harte Operation-/Connect-Timeouts ergänzt, hängende TCP-Sockets sauber geschlossen, blockierte Modbus-Queues nach Timeouts verhindert, AMTRON-Polling auf Fast-/Slow-Gruppen reduziert und periodische HEMS-Sollwert-Auffrischung ergänzt."
+      },
+      "0.5.92": {
+        "en": "Mennekes AMTRON Modbus TCP connection fix: enforce Unit-ID fallback to template default 1 when config contains 0/invalid, and split Mennekes reads into strict contiguous register blocks to avoid requests across unmapped gaps.",
+        "de": "Mennekes-AMTRON-Modbus-TCP-Verbindungsfix: Unit-ID fällt bei 0/ungültiger Konfiguration sauber auf Template-Default 1 zurück, und Mennekes-Lesezugriffe werden in strikt zusammenhängende Registerblöcke getrennt, damit keine nicht belegten Registerlücken mitgelesen werden."
+      },
+      "0.5.91": {
+        "en": "Add MENNEKES AMTRON 4You 500 / 4Business 700 Modbus TCP template with full register map, writable HEMS current/power limits, safe-current/timeout control, and charging-point-network EMS current block write support.",
+        "de": "MENNEKES AMTRON 4You 500 / 4Business 700 Modbus-TCP-Template ergänzt: kompletter Registersatz, schreibbare HEMS-Strom-/Leistungsgrenzen, Safe-Current-/Timeout-Steuerung und Block-Schreibzugriff für Charging-Point-Network-EMS-Stromlimit."
+      },
+      "0.5.90": {
+        "en": "Add Sungrow Modbus templates for grid-connected PV inverters, residential hybrid ESS, Logger1000/3000/4000 and iHomeManager. Includes compound write handling for Sungrow charge/discharge and power-limit setpoints.",
+        "de": "Sungrow-Modbus-Templates für netzgekoppelte PV-Wechselrichter, Residential-Hybrid-ESS, Logger1000/3000/4000 und iHomeManager ergänzt. Inklusive zusammengesetzter Schreiblogik für Sungrow Lade-/Entlade- und Leistungsbegrenzungs-Sollwerte."
+      },
+      "0.5.89": {
+        "en": "ABL eMH1 serial settings are no longer forced by the template. Added diagnostic datapoints for register 0x0003 and readable aliases for the effective Modbus baud/parity/stop-bit settings.",
+        "de": "ABL eMH1 Serienparameter werden vom Template nicht mehr hart erzwungen. Zusätzlich wurden Diagnose-Datenpunkte für Register 0x0003 sowie lesbare Aliase für die effektiven Modbus-Einstellungen (Baud/Parität/Stopbits) ergänzt."
+      },
+      "0.5.88": {
+        "en": "ABL eMH1 template audit: fixed EN2 bit mapping, corrected upstream communication boolean semantics, treat 0x03E8 current sentinel as unavailable, and added computed charging power/current aliases from phase currents.",
+        "de": "ABL eMH1 Template-Prüfung: EN2-Bitzuordnung korrigiert, Upstream-Kommunikations-Boolean semantisch korrigiert, 0x03E8-Strom-Sentinel als \"nicht verfügbar\" behandelt und berechnete Ladeleistungs-/Gesamtstrom-Aliase aus den Phasenströmen ergänzt.",
+        "ru": "Проверка шаблона ABL eMH1: исправлено сопоставление бита EN2, скорректирована семантика булевого флага связи Upstream, значение тока 0x03E8 теперь считается \"недоступно\", добавлены вычисляемые алиасы мощности/суммарного тока по фазным токам.",
+        "pt": "Auditoria do template ABL eMH1: corrigido o mapeamento do bit EN2, ajustada a semântica booleana da comunicação upstream, o sentinela de corrente 0x03E8 passa a ser tratado como \"indisponível\" e foram adicionados aliases calculados de potência/corrente total a partir das correntes de fase.",
+        "nl": "ABL eMH1-templatecontrole: EN2-bitmapping gecorrigeerd, semantiek van de upstream-communicatieboolean gecorrigeerd, stroomsentinel 0x03E8 wordt nu als \"niet beschikbaar\" behandeld en berekende laadvermogen-/totale-stroom-aliassen op basis van fasestromen toegevoegd.",
+        "fr": "Audit du modèle ABL eMH1 : correction du mapping du bit EN2, correction de la sémantique booléenne de la communication amont, la valeur sentinelle de courant 0x03E8 est désormais traitée comme « indisponible », et ajout d’alias calculés de puissance/courant total à partir des courants de phase.",
+        "it": "Verifica del template ABL eMH1: corretta la mappatura del bit EN2, corretta la semantica booleana della comunicazione upstream, il valore sentinella di corrente 0x03E8 viene ora trattato come \"non disponibile\" e sono stati aggiunti alias calcolati per potenza/corrente totale a partire dalle correnti di fase.",
+        "es": "Auditoría de la plantilla ABL eMH1: corregido el mapeo del bit EN2, ajustada la semántica booleana de la comunicación upstream, el valor centinela de corriente 0x03E8 ahora se trata como \"no disponible\" y se añadieron alias calculados de potencia/corriente total a partir de las corrientes de fase.",
+        "pl": "Audyt szablonu ABL eMH1: poprawiono mapowanie bitu EN2, skorygowano semantykę boolowską komunikacji upstream, wartość prądu 0x03E8 jest teraz traktowana jako „niedostępna”, a także dodano wyliczane aliasy mocy/prądu całkowitego z prądów fazowych.",
+        "uk": "Аудит шаблону ABL eMH1: виправлено відображення біта EN2, скориговано булеву семантику зв’язку upstream, значення струму 0x03E8 тепер вважається «недоступним», а також додано обчислювані аліаси потужності/загального струму за фазними струмами.",
+        "zh-cn": "ABL eMH1 模板审查：修正了 EN2 位映射，修正了上游通信布尔语义，将 0x03E8 电流哨兵值视为“不可用”，并根据各相电流新增了计算得到的充电功率/总电流别名。"
+      },
+      "0.5.87": {
+        "en": "Modbus ASCII robustness: accept CR-only line endings, tolerate alternate response starter for ABL (> or :), and include recent TX/RX trace in timeout messages for diagnostics.",
+        "de": "Modbus-ASCII robuster gemacht: akzeptiert CR-only-Zeilenenden, toleriert für ABL alternative Antwortstarter (> oder :), und ergänzt Timeout-Meldungen um eine kurze TX/RX-Spur zur Diagnose.",
+        "ru": "Повышена устойчивость Modbus ASCII: принимаются окончания строк только CR, допускается альтернативный старт ответа для ABL (> или :), а в сообщения о тайм-ауте добавляется короткая трассировка TX/RX для диагностики.",
+        "pt": "Robustez do Modbus ASCII aprimorada: aceita finais de linha apenas CR, tolera iniciador alternativo de resposta para ABL (> ou :), e adiciona um pequeno rastreio TX/RX às mensagens de timeout para diagnóstico.",
+        "nl": "Modbus ASCII robuuster gemaakt: accepteert CR-only regeleinden, tolereert voor ABL alternatieve antwoordstarters (> of :), en voegt een korte TX/RX-trace toe aan timeoutmeldingen voor diagnose.",
+        "fr": "Robustesse Modbus ASCII améliorée : prise en charge des fins de ligne CR seules, tolérance d’un démarreur de réponse alternatif pour ABL (> ou :), et ajout d’une courte trace TX/RX aux messages de timeout pour le diagnostic.",
+        "it": "Maggiore robustezza per Modbus ASCII: accetta terminatori di riga solo CR, tollera per ABL un carattere iniziale di risposta alternativo (> o :), e aggiunge una breve traccia TX/RX ai messaggi di timeout per la diagnostica.",
+        "es": "Se mejora la robustez de Modbus ASCII: acepta finales de línea solo CR, tolera para ABL un inicio alternativo de respuesta (> o :), y añade una breve traza TX/RX a los mensajes de timeout para diagnóstico.",
+        "pl": "Zwiększono odporność Modbus ASCII: akceptowane są zakończenia linii tylko CR, tolerowany jest alternatywny znak początku odpowiedzi dla ABL (> lub :), a do komunikatów timeout dodawany jest krótki ślad TX/RX do diagnostyki.",
+        "uk": "Покращено стійкість Modbus ASCII: приймаються завершення рядка лише CR, допускається альтернативний початок відповіді для ABL (> або :), а до повідомлень про тайм-аут додається короткий трасувальний слід TX/RX для діагностики.",
+        "zh-cn": "增强了 Modbus ASCII 的健壮性：接受仅 CR 的行结束符，兼容 ABL 的替代响应起始符（> 或 :），并在超时消息中附带简短的 TX/RX 跟踪信息以便诊断。"
+      },
+      "0.5.86": {
+        "en": "Revert 0.5.85 IPC3020 host auto-provisioning and restore the previous stable behavior from 0.5.84. The admin dialog fix and earlier RS485/FENECON improvements remain included.",
+        "de": "Rollback der IPC3020-Host-Autoprovisionierung aus 0.5.85 und Wiederherstellung des vorherigen stabilen Verhaltens aus 0.5.84. Der Admin-Dialog-Fix sowie frühere RS485-/FENECON-Verbesserungen bleiben enthalten."
+      },
+      "0.5.84": {
+        "en": "Fix admin device edit dialog regression in 0.5.83 (tpl reference).",
+        "de": "Fix für Regression im Admin-Geräte-Dialog aus 0.5.83 (tpl-Referenz)."
+      },
+      "0.5.83": {
+        "en": "RS485 fix: lazy-connect Kostal PIKO RS485 polling driver, add ABL eMH1 custom Modbus ASCII serial bus with support for non-standard '>' responses, and enforce ABL serial defaults (38400 8E1).",
+        "de": "RS485-Fix: Lazy-Connect für den Kostal-PIKO-RS485-Polling-Treiber, eigener Modbus-ASCII-Seriell-Bus für ABL eMH1 mit Unterstützung für nicht standardkonforme '>'-Antworten sowie erzwungene ABL-Seriell-Defaults (38400 8E1)."
+      },
+      "0.5.82": {
+        "en": "FENECON home.ess: add dedicated AC-side battery power datapoint at register 415, keep hybrid/DC-inclusive battery power separate, and restore battery aliases to the real AC-side charge/discharge power.",
+        "de": "FENECON home.ess: dedizierten AC-seitigen Batterie-Leistungs-DP auf Register 415 ergänzt, hybride/DC-inklusive Speicherleistung separat belassen und Batterie-Aliase wieder auf die reale AC-seitige Lade-/Entladeleistung umgestellt."
+      },
+      "0.5.81": {
+        "en": "FENECON home.ess: add signed battery balance power alias (load - grid - PV), expose AC-side ESS power separately, and align battery power aliases with the FENECON balance view.",
+        "de": "FENECON home.ess: signierten Batterie-Balance-DP (Verbrauch - Netz - PV) ergänzt, AC-seitige ESS-Leistung separat bereitgestellt und Batterie-Leistungs-Aliase an die FENECON-Balanceansicht angepasst."
+      },
+      "0.5.80": {
+        "en": "Add Shelly Pro 4PM as an IO template via Shelly Gen2 RPC (4 inputs, 4 outputs, per-channel power/voltage/current/frequency/power factor/energy/temperature).",
+        "de": "Shelly Pro 4PM als IO-Template über Shelly Gen2 RPC hinzugefügt (4 Eingänge, 4 Ausgänge sowie kanalweise Leistung/Spannung/Strom/Frequenz/Leistungsfaktor/Energie/Temperatur)."
+      },
+      "0.5.79": {
+        "en": "Admin UI: keep explicit /dev/com2 serial selections stable (do not auto-switch to a hot-plugged USB dongle). Add serial port conflict diagnostics and validation so incompatible reuse of the same /dev path is flagged before it causes \"Cannot lock port\" or timeouts.",
+        "de": "Admin UI: explizite /dev/com2-Auswahl bleibt stabil (kein automatisches Umschalten auf einen eingesteckten USB-Dongle). Zusätzlich werden Konflikte bei seriellen Ports erkannt und validiert, damit inkompatible Mehrfachnutzung derselben /dev-Pfad-Auswahl vor \"Cannot lock port\" oder Timeouts auffällt."
+      },
+      "0.5.78": {
+        "en": "FENECON home.ess: fix charge/discharge power alias source and sign handling (prefer ess0 ActivePower). Runtime stability: ignore internal ack=true state changes and avoid redundant setState writes to reduce event storms and RAM growth.",
+        "de": "FENECON home.ess: Quelle und Vorzeichen für Lade-/Entladeleistung korrigiert (bevorzugt ess0 ActivePower). Laufzeit-Stabilität: interne ack=true State-Änderungen ignorieren und redundante setState-Schreibvorgänge vermeiden, um Event-Stürme und RAM-Anstieg zu reduzieren."
+      },
+      "0.5.77": {
+        "en": "Hotfix: Fix alias definition build for ESS/Battery devices (undefined findById). This restores working control aliases (e.g. SolaX power setpoint) and prevents templates from losing alias linkage after updates.",
+        "de": "Hotfix: Alias-Definitionen für ESS/Batterie-Geräte repariert (undefiniertes findById). Dadurch funktionieren Control-Aliase (z.B. SolaX Leistungs-Sollwert) wieder und Templates verlieren nach Updates nicht mehr die Alias-Verknüpfung."
+      },
+      "0.5.76": {
+        "en": "Hotfix: restore stable alias computation (fix ReferenceError in battery power alias) to prevent devices like SolaX ESS from breaking after update.",
+        "de": "Hotfix: stabile Alias-Berechnung wiederhergestellt (ReferenceError im Battery-Power-Alias behoben), damit Geräte wie SolaX ESS nach Updates nicht ausfallen."
+      },
+      "0.5.75": {
+        "en": "FENECON Home ESS: fix Battery Charge Power register mapping (FC04/411), improve ESS aliases to prefer charge/discharge power for net power (r.power / r.powerCharge / r.powerDischarge), and add NaN/sentinel-to-null handling for enum/status datapoints.",
+        "de": "FENECON Home ESS: Batterieladeleistung (AC) korrekt auf FC04/411 gemappt, ESS-Aliase verbessern (netto Leistung bevorzugt aus Charge/Discharge-Power → r.power / r.powerCharge / r.powerDischarge), sowie NaN/Sentinel→null Handling für Enum/Status-Datenpunkte."
+      },
+      "0.5.74": {
+        "en": "FENECON home.ess: added missing charge power datapoint, completed read/write registers (ess0 block) and improved SoC alias fallback.",
+        "de": "FENECON home.ess: fehlenden Ladeleistungs-Datenpunkt ergänzt, Lese/Schreib-Register (ess0) vervollständigt und SoC-Alias robuster gemacht."
+      },
+      "0.5.73": {
+        "en": "Admin UI: serial port selection is now a real dropdown (like ioBroker modbus adapter). Discovered ports are selectable, include /dev/serial/by-id, support hotplug refresh, and provide a manual entry option.",
+        "de": "Admin UI: Serielle Ports sind jetzt als echtes Dropdown auswählbar (wie beim ioBroker Modbus-Adapter). Gefundene Ports inkl. /dev/serial/by-id sind auswählbar, Hotplug-Refresh bleibt aktiv und es gibt eine manuelle Eingabeoption."
+      },
+      "0.5.72": {
+        "en": "Admin UI: dynamic serial port discovery (USB-RS485 dongles). Serial port datalist is now populated from the host via messagebox, includes /dev/serial/by-id paths, and supports hotplug via periodic refresh while the device dialog is open.",
+        "de": "Admin UI: Dynamische Erkennung von seriellen Ports (USB-RS485 Dongles). Die Port-Liste wird jetzt vom Host abgefragt (inkl. /dev/serial/by-id) und unterstützt Hotplug durch periodisches Aktualisieren solange der Gerätedialog offen ist."
+      },
+      "0.5.71": {
+        "en": "Fix FENECON home.ess SoC alias: use input register eSS_SOC_IN for aliases.r.soc (holding SoC sometimes reports 0xFFFF). Map 0xFFFF to null for the holding SoC datapoint.",
+        "de": "Fix FENECON home.ess SoC Alias: aliases.r.soc nutzt jetzt eSS_SOC_IN (Input-Register), da Holding-SoC teilweise 0xFFFF liefert. Holding-SoC 0xFFFF wird auf null gemappt."
+      },
+      "0.5.69": {
+        "en": "Kostal PIKO: add Modbus SunSpec templates (TCP/RTU) with writable active power setpoints (percent + W) for inverter power limiting.",
+        "de": "Kostal PIKO: Modbus SunSpec Templates (TCP/RTU) hinzugefügt inkl. schreibbarer Wirkleistungs-Sollwerte (Prozent + W) für Leistungsbegrenzung."
+      },
+      "0.5.67": {
+        "en": "Add Kostal PIKO RJ45/TCP (port 81) PV inverter templates (1P/3P/BA) + Kostal TCP driver.",
+        "de": "Kostal PIKO RJ45/TCP (Port 81) PV-Wechselrichter-Templates (1P/3P/BA) + Kostal TCP Treiber hinzugefügt."
+      },
+      "0.5.66": {
+        "en": "Change project license to Nexowatt proprietary (internal use). Added THIRD_PARTY_NOTICES.md and updated metadata.",
+        "de": "Projektlizenz auf Nexowatt proprietär (interne Nutzung) umgestellt. THIRD_PARTY_NOTICES.md hinzugefügt und Metadaten aktualisiert."
+      },
+      "0.5.65": {
+        "en": "Admin UI: back to EnergyBridge-style device configuration page (classic device picker Category -> Manufacturer -> Template -> Protocol) in Nexowatt black/green. Added JSON import/export for devices and ensured compatibility with both native.devices and legacy devicesJson.",
+        "de": "Admin UI: Zurück zur EnergyBridge-ähnlichen Geräte-Konfigurationsseite (klassischer Device-Picker Kategorie -> Hersteller -> Template -> Protokoll) im Nexowatt Schwarz/Grün. Zusätzlich JSON Import/Export für Geräte sowie Kompatibilität zu native.devices und legacy devicesJson."
+      },
+      "0.5.63": {
+        "en": "Fix Admin JSON-Config: use string translation keys (i18n files) instead of {en,de} objects to prevent Admin React crash (TypeError: replace is not a function).",
+        "de": "Fix Admin JSON-Config: String-Keys + i18n-Dateien statt {en,de} Objekte, um Admin-React Crash zu verhindern (TypeError: replace is not a function)."
+      },
+      "0.5.62": {
+        "en": "Admin UI migrated to JSON config (modern ioBroker admin) + legacy devicesJson auto-migration",
+        "de": "Admin UI auf JSON-Config (modernes ioBroker Admin) migriert + Auto-Migration von legacy devicesJson"
+      },
+      "0.5.60": {
+        "en": "SolaX ESS: VPP Mode 8 now behaves like VPP4: writing PV power target OR battery power target triggers one single FC16 block write (0xA0..0xA7) incl. all required parameters (TargetSetType, ExecDuration, NextMotion) with unlock password handling.",
+        "de": "SolaX ESS: VPP Mode 8 verhält sich jetzt wie VPP4: Schreiben von PV-Leistungsziel ODER Batterie-Leistungsziel triggert einen einzelnen FC16 Block-Write (0xA0..0xA7) inkl. aller benötigten Parameter (TargetSetType, ExecDuration, NextMotion) inkl. Unlock/Passwort-Handling."
+      },
+      "0.5.59": {
+        "en": "SolaX ESS: add VPP Mode 8 (PV&BAT Individual Setting - Duration) control datapoints incl. PV power target/limit, with proper VPP multi-write block (FC16 @ 0x00A0) and Modbus write-unlock (password). Add ESS alias ctrl.pvPowerLimitW if supported by template.",
+        "de": "SolaX ESS: VPP Mode 8 (PV&BAT Individual Setting - Duration) Steuerung ergänzt inkl. PV Power Target/Limit, mit korrektem VPP Multi-Write Block (FC16 @ 0x00A0) und Modbus Write-Unlock (Passwort). Zusätzlich ESS-Alias ctrl.pvPowerLimitW falls vom Template unterstützt."
+      },
+      "0.5.58": {
+        "en": "Admin UI: add per-device Heartbeat Timeout (ms) field (writes to devicesJson as heartbeatTimeoutMs). This controls when aliases.r.online flips to false if no fresh data is received.",
+        "de": "Admin UI: Feld für per-Device Heartbeat Timeout (ms) hinzugefügt (wird in devicesJson als heartbeatTimeoutMs gespeichert). Steuert, wann aliases.r.online bei fehlenden frischen Daten auf false gesetzt wird."
+      },
+      "0.5.57": {
+        "en": "Add per-device heartbeat alias states for safety logic: aliases.r.heartbeat (counter), aliases.r.lastSeenMs, aliases.r.online. Heartbeat ticks only on real incoming data (poll success / new Speedwire telegram / MQTT message / CAN frame) and includes an automatic online/offline timeout.",
+        "de": "Pro Gerät Heartbeat-Alias-Datenpunkte für Sicherheits-Logik hinzugefügt: aliases.r.heartbeat (Counter), aliases.r.lastSeenMs, aliases.r.online. Heartbeat wird nur bei echten eingehenden Daten aktualisiert (Poll erfolgreich / neues Speedwire-Telegramm / MQTT Message / CAN Frame) inkl. automatischem Online/Offline Timeout."
+      },
+      "0.5.56": {
+        "en": "Speedwire: add soft-stale mode (keep cached values flowing on telegram gaps), add freshness datapoints (ageMs/stale/lastSeen), and set SMA Energy Meter Speedwire template to 1s update cadence via driverHints.",
+        "de": "Speedwire: Soft-Stale Modus (bei Telegram-Lücken letzte Werte weiter ausgeben), Freshness-Datenpunkte (ageMs/stale/lastSeen) sowie SMA Energy Meter Speedwire Template mit 1s Update-Cadence (driverHints)."
+      },
+      "0.5.54": {
+        "en": "Speedwire stability improvements: larger UDP receive buffer, on-stale multicast rejoin attempt, and increased default stale timeout to 30s (configurable).",
+        "de": "Speedwire Stabilitäts-Verbesserungen: größerer UDP Receive-Buffer, bei Stale automatisch Multicast-Rejoin versuchen, und Default Stale-Timeout auf 30s erhöht (konfigurierbar)."
+      },
+      "0.5.53": {
+        "en": "Add Samsung SDI ESS (HTTP) templates and go-e Charger HTTP templates (v1 /status+/mqtt and v2 /api/status+/api/set); HTTP driver now supports sign mapping from status codes; minor EVCS alias fix.",
+        "de": "Samsung SDI ESS (HTTP) Templates sowie go-e Charger HTTP Templates (v1 /status+/mqtt und v2 /api/status+/api/set) hinzugefügt; HTTP-Treiber unterstützt nun Vorzeichen-Mapping über Statuscodes; kleiner EVCS-Alias-Fix."
+      },
+      "0.5.51": {
+        "en": "Added SunSpec model scanning + KACO (blueplanet NX3 / GridSave / Hybrid10) templates; updated adapter logo.",
+        "de": "SunSpec Modell-Scan + KACO Templates (blueplanet NX3 / GridSave / Hybrid10) hinzugefügt; modernes Adapter-Logo aktualisiert."
+      },
+      "0.5.47": {
+        "en": "Add wired M-Bus serial protocol (generic template + admin UI connection block).",
+        "de": "Wired M-Bus (seriell) Protokoll hinzugefügt (Generic-Template + Admin-UI Verbindungseinstellungen)."
+      },
+      "0.5.46": {
+        "en": "Add 1-Wire (Linux sysfs) protocol driver and implement Modbus meter templates for Eastron SDM120/SDM630 and Carlo Gavazzi EM100/EM300.",
+        "de": "1-Wire (Linux sysfs) Protokoll-Treiber hinzugefügt sowie Modbus-Zähler-Templates für Eastron SDM120/SDM630 und Carlo Gavazzi EM100/EM300 implementiert."
+      },
+      "0.5.45": {
+        "en": "SMA STP125-70: add explicit MPPT1..12 datapoints (U/I/P) and Modbus improvements (FC4 for input registers, NaN->null).",
+        "de": "SMA STP125-70: explizite MPPT1..12 Werte (U/I/P) hinzugefügt sowie Modbus-Verbesserungen (FC4 für Input-Register, NaN->null)."
+      },
+      "0.5.42": {
+        "en": "Add Modbus ASCII protocol support and ABL eMH1 (EVCC2/3) device template.",
+        "de": "Modbus-ASCII Protokoll-Unterstützung sowie ABL eMH1 (EVCC2/3) Geräte-Template hinzugefügt."
+      },
+      "0.5.39": {
+        "en": "Fix: SMA STPxx-50 (Modbus) template corrected (status registers, energy counter, start/stop and power limit addresses).",
+        "de": "Fix: SMA STPxx-50 (Modbus) Vorlage korrigiert (Status-Register, Energiezaehler, Start/Stop- und Leistungsbegrenzungs-Adressen)."
+      },
+      "0.5.38": {
+        "en": "Add TECALOR (ISG Modbus) heat pump templates (WPM 3(i), LWZ/LWA).",
+        "de": "TECALOR (ISG Modbus) Wärmepumpen-Vorlagen hinzugefügt (WPM 3(i), LWZ/LWA)."
+      },
+      "0.5.37": {
+        "en": "Fix: LAMBDA heat pump template now appears in Admin UI (templates.json sync).",
+        "de": "Fix: LAMBDA Wärmepumpe-Vorlage erscheint jetzt auch im Admin-UI (templates.json synchronisiert)."
+      },
+      "0.5.36": {
+        "en": "Add LAMBDA heat pump (Modbus TCP) template and HEAT aliases.",
+        "de": "LAMBDA Wärmepumpe (Modbus TCP) Vorlage + HEAT-Aliases hinzugefügt."
+      },
+      "0.5.35": {
+        "en": "SolaX: 1Hz command scheduler (max. 1 Modbus command/s) with 3s polling and 1s write coalescing; improved Modbus TCP socket-open detection; fixed poll scheduling to avoid catch-up under latency; pre-write cooldown.",
+        "de": "SolaX: 1Hz-Command-Scheduler (max. 1 Modbus-Befehl/s) mit 3s Polling und 1s Write-Coalescing; verbesserte Modbus-TCP Socket-Open-Erkennung; Poll-Scheduling gegen Catch-up bei Latenz; PreWrite-Cooldown."
+      },
+      "0.5.34": {
+        "en": "Stability fix for Modbus (SolaX etc.): guard against null client (writeRegister), retry write once after reconnect; allow template hints to set Modbus timeout (cfg > template > global).",
+        "de": "Stabilitaets-Fix fuer Modbus (u.a. SolaX): Schutz gegen null-Client (writeRegister), Write einmal nach Reconnect erneut versuchen; Template-Hints koennen Modbus-Timeout setzen (Config > Template > Global)."
+      },
+      "0.5.32": {
+        "en": "Speedwire stability: join UDP multicast group on all non-internal IPv4 interfaces by default (helps in Docker/LXC/VM and multi-homed hosts).",
+        "de": "Speedwire-Stabilität: UDP-Multicast-Gruppe wird standardmäßig auf allen nicht-internen IPv4-Interfaces gejoint (hilft in Docker/LXC/VM und bei Multi-Homing)."
+      },
+      "0.5.31": {
+        "en": "Add W&T Web-IO relay modules templates (5773) with read inputs and controllable relay outputs incl. aliases.",
+        "de": "W&T Web-IO Relais-Module (5773) als Templates ergänzt (Inputs lesen, Relais schalten inkl. Aliases)."
+      },
+      "0.5.30": {
+        "en": "Improve SolaX templates: enable split polling (fast subset + slow full refresh) so key power values can update every few seconds without spamming the device.",
+        "de": "SolaX-Templates verbessert: Split-Polling (schnelle Teilmenge + langsames Full-Refresh) aktiviert, damit wichtige Leistungswerte alle paar Sekunden aktualisieren ohne das Gerät zu fluten."
+      },
+      "0.5.29": {
+        "en": "Add Solar-Log Modbus TCP templates: DPM (direct marketing) + PM V2 (power management). Includes auto-watchdog and unit scaling (kW/kVar, 2 decimals).",
+        "de": "Solar-Log Modbus-TCP-Templates ergänzt: DPM (Direktvermarktung) + PM V2 (Power Management). Inkl. Auto-Watchdog und einheitlicher Skalierung (kW/kVar, 2 Dezimalstellen)."
+      },
+      "0.5.27": {
+        "en": "Fix admin UI driver list: sync admin/templates.json with runtime templates. Add FENECON home.ess ESS Modbus template to the selection list (read SoC/PV/grid/load/energy; write signed active power setpoint and max charge/discharge limits).",
+        "de": "Fix für die Admin-UI Treiberliste: admin/templates.json wird wieder mit den Runtime-Templates synchronisiert. FENECON home.ess ESS Modbus-Template ist nun in der Auswahl sichtbar (Read: SoC/PV/Netz/Last/Energie; Write: vorzeichenbehafteter Wirkleistungs-Sollwert sowie max. Be-/Entladeleistung)."
+      },
+      "0.5.26": {
+        "en": "Add FENECON Home ESS Modbus template (read: SoC, PV/grid/load power, energy counters; write: active power setpoint and max charge/discharge limits). Improve BATTERY/ESS alias mapping: battery power alias now uses the underlying datapoint unit and new aliases ctrl.maxChargePowerW/ctrl.maxDischargePowerW are generated when supported.",
+        "de": "FENECON Home ESS Modbus-Template hinzugefügt (Read: SoC, PV-/Netz-/Last-Leistung, Energiezähler; Write: Be-/Entlade-Sollwert sowie max. Be-/Entladeleistung). BATTERY/ESS-Alias-Mapping verbessert: r.power nutzt jetzt die Unit des zugrundeliegenden Datenpunkts; zusätzlich werden bei Unterstützung ctrl.maxChargePowerW/ctrl.maxDischargePowerW-Aliases angelegt."
+      },
+      "0.5.25": {
+        "en": "Stability: treat Modbus timeouts (\"Timed out\" without error code) as transport failures and force a clean reconnect automatically.",
+        "de": "Stabilität: Modbus-Timeouts (\"Timed out\" ohne Error-Code) werden als Transportfehler behandelt und lösen automatisch einen sauberen Reconnect aus."
+      },
+      "0.5.24": {
+        "en": "Add SMA Speedwire (UDP multicast) protocol driver and templates (e.g., SMA Energy Meter).",
+        "de": "SMA Speedwire (UDP Multicast) Protokolltreiber und Templates ergänzt (z.B. SMA Energy Meter)."
+      },
+      "0.5.23": {
+        "en": "Fix Modbus reconnect on dropped sockets (\"Port Not Open\"), enable TCP keepalive (best-effort), and throttle repetitive error logs. Improve error hints for closed ports and proactively disconnect on transport errors.",
+        "de": "Fix für Modbus-Reconnect bei abgerissenen Verbindungen (\"Port Not Open\"), TCP-Keepalive (best-effort) und Drosselung wiederholter Fehlermeldungen. Verbesserte Hinweise bei geschlossenen Ports und proaktives Disconnect bei Transport-Fehlern."
+      },
+      "0.5.22": {
+        "en": "Add built-in EV charger template for SolaX X1/X3-HAC EV-Charger G2 (Modbus RTU/TCP) with key read/control points and kW/kWh scaling. Improve EVCS alias mapping: ctrl.run supports command-style control registers (start=4/stop=3) when paired with an EVSE state register.",
+        "de": "EV-Ladestations-Template für SolaX X1/X3-HAC EV-Charger G2 (Modbus RTU/TCP) ergänzt (wichtige Lese-/Steuerpunkte, Skalierung kW/kWh). EVCS-Alias-Mapping verbessert: ctrl.run unterstützt nun auch Command-Register (Start=4/Stop=3) in Kombination mit EVSE-State."
+      },
+      "0.5.21": {
+        "en": "Add built-in PV inverter template for SolaX X3-MEGA G2 / X3-FORTH (Modbus RTU) with key read/control points and kW/kWh scaling. Extend PV inverter alias mapping: ctrl.run also supports vendor command registers (0xAF start / 0xAE stop).",
+        "de": "PV-Wechselrichter-Template für SolaX X3-MEGA G2 / X3-FORTH (Modbus RTU) ergänzt (wichtige Lese-/Steuerpunkte, Skalierung kW/kWh). PV-Inverter-Alias-Mapping erweitert: ctrl.run unterstützt nun auch herstellerspezifische Command-Register (0xAF Start / 0xAE Stop)."
+      },
+      "0.5.19": {
+        "en": "Keep alias objects in sync across updates (extendObject). This ensures consistent alias units/roles (e.g. kW) without having to delete alias states manually.",
+        "de": "Alias-Objekte werden bei Updates ebenfalls per extend aktualisiert. Dadurch bleiben Units/Rollen der Aliases (z.B. kW) konsistent, ohne dass Alias-States manuell gelöscht werden müssen."
+      },
+      "0.5.18": {
+        "en": "Improve Janitza meter templates (UMG604/604-PRO and new UMG96-PA): scale power/energy to kW/kWh, add proper units/roles, and support per-datapoint rounding. Existing objects are extended so unit/role updates apply without manual deletion.",
+        "de": "Janitza-Zähler-Templates verbessert (UMG604/604-PRO sowie neu UMG96-PA): Leistung/Energie auf kW/kWh skaliert, korrekte Units/Rollen ergänzt und Rundung pro Datenpunkt unterstützt. Vorhandene Objekte werden per extend aktualisiert, sodass Unit/Role-Updates ohne manuelles Löschen greifen."
+      },
+      "0.5.17": {
+        "en": "Auto-watchdog fail-safe: watchdog registers are only refreshed while control setpoints are actively updated. Optional automatic disable of VK control when setpoints are stale (TESVOLT).",
+        "de": "Auto-Watchdog Fail-Safe: Watchdog-Register werden nur noch beschrieben, solange Steuer-Sollwerte aktiv aktualisiert werden. Optionales automatisches Deaktivieren der VK-Regelung bei inaktiven Sollwerten (TESVOLT)."
+      },
+      "0.5.16": {
+        "en": "Add template-defined Modbus auto-watchdog writer (periodic watchdog register updates) and enable it for TESVOLT Energy Manager VK interface.",
+        "de": "Template-definierten Modbus Auto-Watchdog-Writer ergänzt (periodisches Beschreiben der Watchdog-Register) und für TESVOLT Energy Manager Vermarkter-Schnittstelle aktiviert."
+      },
+      "0.5.15": {
+        "en": "Add TESVOLT Energy Manager (Vermarkter-Schnittstelle) Modbus TCP template with PV limit, grid/NAP setpoint and battery power control (incl. stable aliases).",
+        "de": "TESVOLT Energy Manager (Vermarkter-Schnittstelle) Modbus-TCP-Template ergänzt: PV-Abregelung, Netzanschlusspunkt/NAP-Sollwert und Batterie-Leistungssteuerung (inkl. stabiler Aliases)."
+      },
+      "0.5.12": {
+        "en": "Add optional Modbus write password field and template-defined write-unlock sequence (used for SolaX VPP write commands).",
+        "de": "Optionales Modbus-Schreibpasswort ergänzt und template-definierte Write-Unlock-Sequenz implementiert (für SolaX VPP-Schreibbefehle)."
+      },
+      "0.5.11": {
+        "en": "Add SolaX Hybrid X1/X3 ESS Modbus template (PV power, SoC, battery power and VPP battery power target control) and expose PV power via aliases for ESS devices.",
+        "de": "SolaX Hybrid X1/X3 ESS Modbus-Template hinzugefügt (PV-Leistung, SoC, Batterieleistung sowie VPP-Batterie-Leistungs-Sollwert) und PV-Leistung als Alias für ESS-Geräte verfügbar gemacht."
+      },
+      "0.5.10": {
+        "en": "Improve Modbus error diagnostics (transport vs Modbus-layer hints) and treat timeoutMs=0 as \"use default\".",
+        "de": "Modbus-Fehlerdiagnose verbessert (Transport- vs. Modbus-Ebene mit Hinweisen) und timeoutMs=0 wird als \"Default verwenden\" interpretiert."
+      },
+      "0.5.9": {
+        "en": "Improve meter alias resolution (prefer canonical import/export IDs) and enhance Janitza UMG604 template (add active power; remove misleading duplicate energy IDs).",
+        "de": "Alias-Auflösung für Zähler verbessert (kanonische Import/Export-IDs werden bevorzugt) und Janitza UMG604 Template erweitert (Wirkleistung ergänzt; irreführende doppelte Energie-IDs entfernt)."
+      },
+      "0.5.8": {
+        "en": "Fix Admin template list (sync admin/templates.json) so new built-in templates appear in the UI. Fix Janitza meter scaling (remove unintended x1000 multiplier on float values).",
+        "de": "Admin-Template-Liste korrigiert (admin/templates.json synchronisiert), damit neue Built-in-Templates in der UI erscheinen. Janitza-Zähler-Skalierung korrigiert (unbeabsichtigten x1000-Faktor bei Float-Werten entfernt)."
+      },
+      "0.5.7": {
+        "en": "Add SMA PV inverter minimal templates for STPxx-US-41 and STPxx-50 (SMA Modbus). Improve PV inverter run control alias (support SMA Fast shut-down / FstStop). Improve SunSpec auto-discovery by also probing unitId=(configured unitId + 123).",
+        "de": "Minimale SMA-PV-Wechselrichter-Templates für STPxx-US-41 und STPxx-50 (SMA Modbus) hinzugefügt. PV-Inverter Run-Control Alias verbessert (SMA Fast shut-down / FstStop unterstützt). SunSpec Auto-Discovery verbessert (zusätzlich unitId=(konfigurierte UnitId + 123) prüfen)."
+      },
+      "0.5.6": {
+        "en": "Improve SMA SunSpec interoperability: add optional SunSpec auto-discovery (detect SunS signature to auto-adjust base/offset and unitId).",
+        "de": "SMA SunSpec-Interoperabilität verbessert: optionales SunSpec Auto-Discovery (SunS-Signatur erkennen, Base/Offset und UnitId automatisch anpassen)."
+      },
+      "0.5.5": {
+        "en": "Extend stable aliases to batteries/ESS (SoC/SoH, battery power, charge/discharge split, allowed power, setpoints, and conservative fault/warning detection).",
+        "de": "Stabile Aliases auf Batteriesysteme/ESS erweitert (SoC/SoH, Batterieleistung, Charge/Discharge-Split, erlaubte Leistung, Setpoints sowie konservative Fault/Warning-Erkennung)."
+      },
+      "0.5.4": {
+        "en": "Extend alias mapping for meters and charging stations (import/export power & energy for meters; current/power limits and unlock for chargers) and improve best-effort derived values.",
+        "de": "Alias-Mapping für Zähler und Ladestationen erweitert (Import/Export-Leistung & -Energie bei Zählern; Strom-/Leistungsgrenzen und Unlock bei Ladestationen) und best-effort abgeleitete Werte verbessert."
+      },
+      "0.5.3": {
+        "en": "Add stable alias datapoints under devices.<id>.aliases.* so downstream logic can work across manufacturers (e.g., aliases.r.power, aliases.ctrl.powerLimitPct, aliases.alarm.fault/offline). Alias writes are forwarded to the correct vendor registers; computed alarm states are provided best-effort.",
+        "de": "Stabile Alias-Datenpunkte unter devices.<id>.aliases.* ergänzt, damit nachgelagerte Logik herstellerübergreifend arbeiten kann (z.B. aliases.r.power, aliases.ctrl.powerLimitPct, aliases.alarm.fault/offline). Alias-Schreibzugriffe werden auf die passenden Herstellerregister umgesetzt; Alarm-States werden best-effort berechnet."
+      },
+      "0.5.2": {
+        "en": "Add minimal SMA PV inverter templates (SunSpec STP125-70 and Sunny Tripower X Modbus) with key read/control points and health/fault registers. Improve Modbus driver: BigInt values are converted to Number when safe (e.g., U64 energy counters).",
+        "de": "Minimale SMA-PV-Wechselrichter-Templates ergänzt (SunSpec STP125-70 und Sunny Tripower X Modbus) mit wichtigen Lese-/Steuerpunkten sowie Health/Fault-Registern. Modbus-Treiber verbessert: BigInt-Werte werden – wenn sicher – als Number ausgegeben (z.B. U64-Energiezähler)."
+      },
+      "0.5.1": {
+        "en": "Add SMA STP125-70 SunSpec Modbus PV inverter template and support dynamic scale factors via scaleFactorRef.",
+        "de": "SMA STP125-70 SunSpec-Modbus PV-Wechselrichter-Template hinzugefügt und dynamische Skalierungsfaktoren via scaleFactorRef unterstützt."
+      },
+      "0.5.0": {
+        "en": "Added Modbus RTU bus sharing (RS485), UDP protocol support (e.g. KEBA), expanded built-in device library; improved serial defaults for ED-IPC3020 (/dev/com2).",
+        "de": "Modbus RTU Bus-Sharing (RS485) ergänzt, UDP-Protokoll (z.B. KEBA) hinzugefügt, Gerätebibliothek erweitert; bessere RS485-Defaults für ED-IPC3020 (/dev/com2)."
+      },
+      "0.4.2": {
+        "en": "Fix Admin config page scripts (adapter-settings.js/translate.js paths) so device selection works. Add automatic migration for invalid adminUI strings on host adapter objects.",
+        "de": "Fix für Admin-Konfigseite (korrekte Pfade zu adapter-settings.js/translate.js), damit Geräteauswahl funktioniert. Automatische Migration für ungültige adminUI-Strings in Host-Adapter-Objekten."
+      },
+      "0.4.1": {
+        "en": "Admin UI: set light-gray page background and switch configuration selects to native selects for maximum compatibility. Add driver count indicator and cache-busting template load.",
+        "de": "Admin-UI: hellgrauen Hintergrund gesetzt und Auswahlfelder auf native Selects umgestellt (maximale Kompatibilität). Treiber-Zähler ergänzt und Template-Load mit Cache-Busting verbessert."
+      },
+      "0.4.0": {
+        "en": "Improved admin UI (theme readable, robust without Materialize JS), fixed device add/edit modal, expanded built-in templates (Wallboxes/EVCS + meters + more) and cleaned up legacy naming references.",
+        "de": "Admin-UI verbessert (theme-lesbar, robust auch ohne Materialize-JS), Gerät hinzufügen/bearbeiten gefixt, integrierte Templates erweitert (Wallboxen/EVCS + Zähler + mehr) und alte Namensreferenzen bereinigt."
+      },
+      "0.3.1": {
+        "en": "Fix adminUI definition to prevent Admin crash (adminUI must be an object with config).",
+        "de": "adminUI-Definition korrigiert, damit Admin nicht abstürzt (adminUI muss ein Objekt mit config sein)."
+      },
+      "0.3.0": {
+        "en": "Added built-in device templates for many EV chargers (EVCS) and energy meters (Modbus). Improved Modbus driver: separate read/write mappings, byteOrder support, and value transforms.",
+        "de": "Integrierte Geräte-Templates für viele Ladestationen (EVCS) und Energiezähler (Modbus) hinzugefügt. Modbus-Treiber verbessert: getrennte Read/Write-Mappings, ByteOrder-Unterstützung und Wert-Transformationen."
+      },
+      "0.2.0": {
+        "en": "Rename adapter to a valid id (no dots) and remove any external template references. Add generic built-in templates for Modbus/MQTT/HTTP.",
+        "de": "Adapter auf gültige ID umbenannt (keine Punkte) und externe Template-Referenzen entfernt. Generische Built-in-Templates für Modbus/MQTT/HTTP ergänzt."
+      },
+      "0.5.123": {
+        "en": "Alfen ACE: fix Station/All-IDs profile to use Socket-1 as primary write path again, with Socket-2/SCN only as optional mirrors. Prevents SCN-disabled stations from ignoring current setpoints while reporting setpointAccountedFor=false.",
+        "de": "Alfen ACE: Station/All-IDs-Profil nutzt wieder Socket 1 als primären Schreibpfad; Socket 2/SCN sind nur optionale Spiegelungen. Verhindert, dass Stationen mit deaktiviertem SCN Stromsollwerte ignorieren und setpointAccountedFor=false melden."
+      },
+      "0.5.125": {
+        "en": "Sungrow hybrid ESS control fix: signed battery power now refreshes periodically, restores the last command after reconnect, writes EMS mode/command/power more atomically, supports the wide power register, and clamps commands to configured charge/discharge limits.",
+        "de": "Sungrow-Hybrid-ESS-Steuerung korrigiert: signierte Batterieleistung wird periodisch erneuert, nach Reconnect wiederhergestellt, EMS-Modus/Command/Leistung konsistenter geschrieben, Wide-Power-Register unterstützt und Sollwerte auf konfigurierte Lade-/Entladegrenzen begrenzt."
+      },
+      "0.5.136": {
+        "en": "Sungrow Residential Hybrid field-test build based exactly on 0.5.133 direction handling. Only command scheduling and priority battery-power feedback are added; charge/discharge mappings and templates remain byte-identical to 0.5.133.",
+        "de": "Sungrow Residential Hybrid Feldtest auf exakt der Richtungslogik von 0.5.133. Ergänzt werden nur Schreib-Taktung und priorisierte Batterieleistungs-Rückmeldung; Lade-/Entladezuordnung und Templates bleiben bytegleich zu 0.5.133."
+      }
+    },
+    "title": "NexoWatt Devices",
+    "titleLang": {
+      "en": "NexoWatt Devices",
+      "de": "NexoWatt Devices"
+    },
+    "desc": {
+      "en": "Multi-protocol device adapter (Modbus TCP/RTU, MQTT, HTTP/JSON) with category-based configuration.",
+      "de": "Multi-Protokoll Geräteadapter (Modbus TCP/RTU, MQTT, HTTP/JSON) mit kategoriebasierter Konfiguration."
+    },
+    "authors": [
+      "Nexowatt"
+    ],
+    "license": "Proprietary",
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "loglevel": "info",
+    "icon": "nexowatt-devices.svg",
+    "adminUI": {
+      "config": "materialize"
+    },
+    "keywords": [
+      "nexowatt",
+      "devices",
+      "modbus",
+      "mqtt",
+      "http",
+      "energy"
+    ],
+    "type": "energy",
+    "enabled": true,
+    "readme": "README.md",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "messagebox": true
+  },
+  "native": {
+    "pollIntervalMs": 5000,
+    "modbusTimeoutMs": 2000,
+    "registerAddressOffset": 0,
+    "devicesJson": "[]",
+    "devices": []
+  },
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": "Connected",
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
+}

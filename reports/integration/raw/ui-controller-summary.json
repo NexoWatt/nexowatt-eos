@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "status": "PASSED_LAB_WITH_OS_INTERFACE_FIXTURE",
+  "recordedAt": "2026-10-01T12:41:45.505287+00:00",
+  "candidate": {
+    "candidate": "/workspace/scratch/6383b3161c96/integrated-ui-candidate-r4/app",
+    "files": {
+      "package-lock.json": "0bcb60b6684f7e35820d9ccc70da354154e19909ba260a841c429bf98a73a4c8",
+      "node_modules/iobroker.js-controller/eos-test-profile.json": "5c936a625beda84b7a6b61828c6469df8bea369558cfbd1b317a6ee6eccbabf8",
+      "node_modules/iobroker.nexowatt-ui/lib/eos-integrated.js": "820fa924339d361e2e4a2f80374fa6b92eff51d5ca16460302a04a1f83c9c7b2",
+      "node_modules/iobroker.nexowatt-ui/main.js": "c088c2232742a3f2a255c5ef11c382221561697673e67419cc66d2f605f9bc4b",
+      "node_modules/iobroker.eos-admin/build/main.js": "03ae7655a23e01970804ca19860f495ad137878d733ed40d347fb6f6711b748a"
+    },
+    "additionalSecurityFiles": {
+      "node_modules/iobroker.eos-admin/build/lib/eosSessionSecurity.js": "e15a7f1b409fcead3e03ccca8b9b9e1035b8687a97c3e47a711fd9c6d8f3c590",
+      "node_modules/iobroker.eos-admin/build/lib/web.js": "51c26b59e83f433719f0641afe440d3b910ca482475a0c136036bf48c6f7c01a",
+      "node_modules/iobroker.eos-admin/io-package.json": "701a12880f2d59ece96e9f4cce0596ed6debd3054d8a32ce6e3ea7ca8191be4a"
+    }
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64",
+    "uid": 0,
+    "redis": "7.2.10",
+    "controller": "7.2.2",
+    "admin": "7.10.11",
+    "ui": "1.0.21",
+    "CI": true,
+    "systemd": false,
+    "physicalDevices": false,
+    "loopbackTestsOnly": true
+  },
+  "tests": {
+    "stagesPassed": 7,
+    "tapNodesPassed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 30529.572162,
+    "evidence": "reports/integration/raw/ui-controller-attempts/attempt-11-r4-os-interface-fixture.tap",
+    "evidenceSha256": "5784b684db21bc6dbeba90c652cb14f9c797bf3686dc0c77ba3f5e67ba2a326d"
+  },
+  "command": "EOS_TEST_INTERFACE_FIXTURE=1 EOS_TEST_CONTROLLER_ROOT=/workspace/scratch/6383b3161c96/integrated-ui-candidate-r4/app EOS_TEST_REDIS_SERVER=/workspace/scratch/6383b3161c96/redis-test-tooling/redis-7.2.10/src/redis-server node --test --test-reporter=tap tests/integration/ui-controller.integration.cjs",
+  "driver": {
+    "path": "tests/integration/ui-controller.integration.cjs",
+    "sha256": "61a85e457218ee6e497825726cf36f22355060157854aa98b6e919b129139458"
+  },
+  "passedStages": [
+    "Ordinary controller setup followed by real core hardening, two authenticated TLS1.3 Redis stores",
+    "Fresh enrollment of unique strong-password admin and exactly two initially disabled approved instances",
+    "Ordinary CLI upload of local Admin/UI assets, no npm installation in runtime",
+    "Actual controller/adapter processes alive, both verified HTTPS TLS1.3 identities, TLS1.2 rejected, expected instance scope preserved",
+    "Actual root onboarding probeWeb on both listeners; Admin exact login redirect and UI strict public auth status; real UI login and Admin OAuth issue secure cookies; no-license info protected",
+    "Ephemeral Ed25519 signed NWL2 license activates via real Admin HTTP and real encrypted Redis messagebox; UI receives exact limits; no raw token or UUID export; missing mutation origin rejected",
+    "Licensed preview rejects physical/config commands with503; central license removal invalidates UI capabilities; authentication recovery remains reachable"
+  ],
+  "observedReadiness": {
+    "admin": {
+      "route": "/nexowatt/license/status",
+      "status": 302,
+      "location": "/index.html?login&href=%2Fnexowatt%2Flicense%2Fstatus",
+      "acceptApplicationJsonChangesBehavior": false
+    },
+    "ui": {
+      "route": "/api/strict-auth/status",
+      "status": 200,
+      "enabled": true,
+      "strict": true,
+      "protectWrites": true,
+      "authed": false,
+      "isAdmin": false
+    }
+  },
+  "fixture": {
+    "scope": "Only disposable copy of two dependency adapter files; frozen candidate remains byte-identical; no NODE_OPTIONS preload",
+    "reason": "Sandbox denied native uv_interface_addresses in upstream adapter startup",
+    "files": [
+      {
+        "labOnlyInterfaceFixture": "node_modules/@iobroker/js-controller-adapter/build/cjs/lib/adapter/adapter.js",
+        "originalSha256": "d7e751c93c97636b7cd5772777cb5c79afca716cb921773115a35a6436f5b27b",
+        "fixtureSha256": "e458862673508a334e8ed09373ff0923d8798a0e6751009487c1586a7c2c374a"
+      },
+      {
+        "labOnlyInterfaceFixture": "node_modules/@iobroker/js-controller-adapter/build/esm/lib/adapter/adapter.js",
+        "originalSha256": "c8ff22090bcda3316a8f39ddb6c943e1320dc806109a0668a48c7bd900eeb7af",
+        "fixtureSha256": "bf1239583e6708276147ff9fa765b905851a6e17a2e8bfbc312e8080bc22c03c"
+      }
+    ],
+    "licenseIdentity": "Fresh random UUID replaces upstream CI statistics sentinel only in isolated DB; no hardware UUID claim",
+    "keyMaterial": "Ephemeral CA/server keys and random password confined to temporary fixture; ephemeral signing private key remains in memory; exclusive new /etc/nexowatt-eos removed afterward"
+  },
+  "findings": [
+    {
+      "id": "EOS-UI-INT-01",
+      "status": "fixed and verified in final actual laboratory run",
+      "cause": "Preview barrier also denied controller default initialization through foreign-state API",
+      "fix": "Only acknowledged own state observations under captured nexowatt-ui.0 prefix are allowed; foreign/System IDs and command/object writes remain denied"
+    },
+    {
+      "id": "EOS-ADMIN-INT-GROUP-VIEW",
+      "status": "fixed by Admin owner and verified in final actual laboratory run",
+      "cause": "system/group view emits display names as row.id; session snapshot expected canonical IDs",
+      "fix": "Canonical group.value._id validated; display name not used as authority"
+    },
+    {
+      "id": "EOS-ONBOARD-INT-REDIRECT",
+      "status": "root probe corrected and verified on actual listeners",
+      "cause": "Whole Admin middleware returns protected login302 before isolated license handler403",
+      "fix": "Accept only exact observed same-origin relative login redirect with TLS1.3 and bounded response"
+    }
+  ],
+  "limitations": [
+    "Native unmodified full integration not passed; predecessor native attempt02 failed on the unchanged upstream adapter OS-interface syscall. R4 success uses explicit test-copy fixture.",
+    "No unprivileged systemd, Debian12/RPi5, VMware, IPv6, LAN or Tailscale acceptance executed.",
+    "No physical adapters or EMS loops are active; device-specific safe transitions and production activation remain blocked.",
+    "No reboot, power interruption, certificate renewal, hardware-ID cloning, throughput or resource-exhaustion acceptance.",
+    "Admin2s session bound includes PBKDF2; target-hardware login latency under load needs measurement without lowering password strength.",
+    "Encrypted shared Redis transport is not per-adapter cryptographic identity or isolation from compromised shared runtime UID.",
+    "No CRA/IEC certification or production-release approval is implied."
+  ],
+  "attempts": [
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-01.tap",
+      "sha256": "052a81854a175295bc4e30cb507ddf2589b2f9a2a70791f7713ebb1618ee27c0",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-02.tap",
+      "sha256": "865a724e297d010da22291ebce6bb9907f824f8dbc74f615a876a15d07e400b5",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-03-os-interface-fixture.tap",
+      "sha256": "f284d5b04a0707aae3551d1f39784ebc6547dfe549dc4361b1ca3ea155301702",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-04-final-os-interface-fixture.tap",
+      "sha256": "f584a4f9ac540ed6240bad68211ff51cc8769028ed8602765ab973fb6a83bac0",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-05-final-os-interface-fixture.tap",
+      "sha256": "98522172632e0ddc94ecea4a06b0dbc6f3d0d267ef3245035e2b53464cf89831",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-06-r3-os-interface-fixture.tap",
+      "sha256": "cd8cac659e8ad25d86edfd1e80a87d545e2e69be800310317370f73b27662c20",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-07-r3-os-interface-fixture.tap",
+      "sha256": "93fd081331a92862eec629b11593e09cb317cc80d7c01dd7ae1a1becde5b1ff1",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-08-r3-os-interface-fixture.tap",
+      "sha256": "6655d4a5ef43ab0acb9bfeecfa7f1d93961fed824d901e7fe5b49f4f4cc0ef98",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-09-r3-os-interface-fixture.tap",
+      "sha256": "1583f1a5d483597cf8826261291d3c9d00518b24649ac02df48e4070d456ba80",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-10-r3-os-interface-fixture.tap",
+      "sha256": "b97206cc78765ba8e82020244f073f090ed2dee74e1d0c94bd4a5435ef332b47",
+      "finalAcceptedLabEvidence": false
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-attempts/attempt-11-r4-os-interface-fixture.tap",
+      "sha256": "5784b684db21bc6dbeba90c652cb14f9c797bf3686dc0c77ba3f5e67ba2a326d",
+      "finalAcceptedLabEvidence": true
+    }
+  ]
+}

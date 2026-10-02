@@ -1,0 +1,544 @@
+TAP version 13
+# Subtest: strict input accepts two individual roles and emits nonsecret inventory
+ok 1 - strict input accepts two individual roles and emits nonsecret inventory
+  ---
+  duration_ms: 12.733584
+  type: 'test'
+  ...
+# Subtest: reject unknown root key
+ok 2 - reject unknown root key
+  ---
+  duration_ms: 1.087534
+  type: 'test'
+  ...
+# Subtest: reject unknown account key
+ok 3 - reject unknown account key
+  ---
+  duration_ms: 0.396329
+  type: 'test'
+  ...
+# Subtest: reject admin role
+ok 4 - reject admin role
+  ---
+  duration_ms: 0.271801
+  type: 'test'
+  ...
+# Subtest: reject reserved admin username
+ok 5 - reject reserved admin username
+  ---
+  duration_ms: 0.305983
+  type: 'test'
+  ...
+# Subtest: reject foreign identifier
+ok 6 - reject foreign identifier
+  ---
+  duration_ms: 0.232782
+  type: 'test'
+  ...
+# Subtest: reject mixed case identifier
+ok 7 - reject mixed case identifier
+  ---
+  duration_ms: 0.27763
+  type: 'test'
+  ...
+# Subtest: reject duplicate identity
+ok 8 - reject duplicate identity
+  ---
+  duration_ms: 0.463601
+  type: 'test'
+  ...
+# Subtest: reject only installer
+ok 9 - reject only installer
+  ---
+  duration_ms: 0.414186
+  type: 'test'
+  ...
+# Subtest: reject only one account
+ok 10 - reject only one account
+  ---
+  duration_ms: 0.695642
+  type: 'test'
+  ...
+# Subtest: reject too many accounts
+ok 11 - reject too many accounts
+  ---
+  duration_ms: 0.540868
+  type: 'test'
+  ...
+# Subtest: reject service credential reused
+ok 12 - reject service credential reused
+  ---
+  duration_ms: 0.278111
+  type: 'test'
+  ...
+# Subtest: reject temporary credential reused
+ok 13 - reject temporary credential reused
+  ---
+  duration_ms: 0.234234
+  type: 'test'
+  ...
+# Subtest: reject weak password
+ok 14 - reject weak password
+  ---
+  duration_ms: 2.135109
+  type: 'test'
+  ...
+# Subtest: reject control character
+ok 15 - reject control character
+  ---
+  duration_ms: 0.235286
+  type: 'test'
+  ...
+# Subtest: canonical group IDs work despite untrusted view display name
+ok 16 - canonical group IDs work despite untrusted view display name
+  ---
+  duration_ms: 5.084358
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects service membership escalation
+ok 17 - read-only enrollment check detects service membership escalation
+  ---
+  duration_ms: 0.639467
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects legacy inheritance
+ok 18 - read-only enrollment check detects legacy inheritance
+  ---
+  duration_ms: 0.332503
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects new admin alias
+ok 19 - read-only enrollment check detects new admin alias
+  ---
+  duration_ms: 0.360976
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects raw state write permission
+ok 20 - read-only enrollment check detects raw state write permission
+  ---
+  duration_ms: 1.463283
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects disabled role
+ok 21 - read-only enrollment check detects disabled role
+  ---
+  duration_ms: 0.411052
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects world readable password
+ok 22 - read-only enrollment check detects world readable password
+  ---
+  duration_ms: 0.340705
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects unmanaged identity
+ok 23 - read-only enrollment check detects unmanaged identity
+  ---
+  duration_ms: 0.308246
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects passwordless account
+ok 24 - read-only enrollment check detects passwordless account
+  ---
+  duration_ms: 0.223618
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects unrecorded account
+ok 25 - read-only enrollment check detects unrecorded account
+  ---
+  duration_ms: 0.638315
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects missing role group
+ok 26 - read-only enrollment check detects missing role group
+  ---
+  duration_ms: 0.358512
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects missing group policy
+ok 27 - read-only enrollment check detects missing group policy
+  ---
+  duration_ms: 0.62147
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects inconsistent first-login state
+ok 28 - read-only enrollment check detects inconsistent first-login state
+  ---
+  duration_ms: 0.418052
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects inconsistent account marker
+ok 29 - read-only enrollment check detects inconsistent account marker
+  ---
+  duration_ms: 0.429479
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects malformed marker ID
+ok 30 - read-only enrollment check detects malformed marker ID
+  ---
+  duration_ms: 0.372724
+  type: 'test'
+  ...
+# Subtest: legitimate password initialization or account disable does not mutate role enrollment
+ok 31 - legitimate password initialization or account disable does not mutate role enrollment
+  ---
+  duration_ms: 0.54844
+  type: 'test'
+  ...
+# Subtest: exact root normalization preserves archive integrity and local provenance
+ok 32 - exact root normalization preserves archive integrity and local provenance
+  ---
+  duration_ms: 4.223667
+  type: 'test'
+  ...
+# Subtest: normalization rejects mismatched actual installed identity
+ok 33 - normalization rejects mismatched actual installed identity
+  ---
+  duration_ms: 1.48795
+  type: 'test'
+  ...
+# Subtest: normalization rejects missing artifact integrity
+ok 34 - normalization rejects missing artifact integrity
+  ---
+  duration_ms: 1.059973
+  type: 'test'
+  ...
+# Subtest: normalization rejects traversal archive references
+ok 35 - normalization rejects traversal archive references
+  ---
+  duration_ms: 1.169999
+  type: 'test'
+  ...
+# Subtest: source snapshot skips execution dependencies and rejects links
+ok 36 - source snapshot skips execution dependencies and rejects links
+  ---
+  duration_ms: 5.070557
+  type: 'test'
+  ...
+# Subtest: existing output directories and duplicate components rejected before npm
+ok 37 - existing output directories and duplicate components rejected before npm
+  ---
+  duration_ms: 1.007874
+  type: 'test'
+  ...
+# Subtest: aggregate root preserves compatible component overrides
+ok 38 - aggregate root preserves compatible component overrides
+  ---
+  duration_ms: 0.398042
+  type: 'test'
+  ...
+# Subtest: conflicting or prototype-mutating component overrides fail before installation
+ok 39 - conflicting or prototype-mutating component overrides fail before installation
+  ---
+  duration_ms: 0.431272
+  type: 'test'
+  ...
+# Subtest: initial enrollment stores only hash and disabled fixed instances; verifies without writes
+ok 40 - initial enrollment stores only hash and disabled fixed instances; verifies without writes
+  ---
+  duration_ms: 4819.799323
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:0
+ok 41 - password rejects bounded invalid input string:0
+  ---
+  duration_ms: 1.501233
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:5
+ok 42 - password rejects bounded invalid input string:5
+  ---
+  duration_ms: 0.524204
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:129
+ok 43 - password rejects bounded invalid input string:129
+  ---
+  duration_ms: 0.450992
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:14
+ok 44 - password rejects bounded invalid input string:14
+  ---
+  duration_ms: 0.352243
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:21
+ok 45 - password rejects bounded invalid input string:21
+  ---
+  duration_ms: 0.187153
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 46 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.252792
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 47 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.307516
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:200
+ok 48 - password rejects bounded invalid input string:200
+  ---
+  duration_ms: 0.285282
+  type: 'test'
+  ...
+# Subtest: password allows long unicode passphrase without composition tricks
+ok 49 - password allows long unicode passphrase without composition tricks
+  ---
+  duration_ms: 0.642533
+  type: 'test'
+  ...
+# Subtest: rejects marker pending without repair
+ok 50 - rejects marker pending without repair
+  ---
+  duration_ms: 2.870414
+  type: 'test'
+  ...
+# Subtest: rejects config changed without repair
+ok 51 - rejects config changed without repair
+  ---
+  duration_ms: 1.318596
+  type: 'test'
+  ...
+# Subtest: rejects physical enabled without repair
+ok 52 - rejects physical enabled without repair
+  ---
+  duration_ms: 1.426259
+  type: 'test'
+  ...
+# Subtest: rejects core binding without repair
+ok 53 - rejects core binding without repair
+  ---
+  duration_ms: 1.02443
+  type: 'test'
+  ...
+# Subtest: rejects remote repo without repair
+ok 54 - rejects remote repo without repair
+  ---
+  duration_ms: 1.974378
+  type: 'test'
+  ...
+# Subtest: rejects automatic updates without repair
+ok 55 - rejects automatic updates without repair
+  ---
+  duration_ms: 1.72409
+  type: 'test'
+  ...
+# Subtest: rejects disabled admin without repair
+ok 56 - rejects disabled admin without repair
+  ---
+  duration_ms: 5.697053
+  type: 'test'
+  ...
+# Subtest: rejects world-readable service hash without repair
+ok 57 - rejects world-readable service hash without repair
+  ---
+  duration_ms: 0.788753
+  type: 'test'
+  ...
+# Subtest: rejects weak password without repair
+ok 58 - rejects weak password without repair
+  ---
+  duration_ms: 1.641054
+  type: 'test'
+  ...
+# Subtest: rejects extra executable without repair
+ok 59 - rejects extra executable without repair
+  ---
+  duration_ms: 1.832513
+  type: 'test'
+  ...
+# Subtest: rejects node arguments without repair
+ok 60 - rejects node arguments without repair
+  ---
+  duration_ms: 1.239346
+  type: 'test'
+  ...
+# Subtest: rejects remote host without repair
+ok 61 - rejects remote host without repair
+  ---
+  duration_ms: 1.069283
+  type: 'test'
+  ...
+# Subtest: rejects admin plaintext without repair
+ok 62 - rejects admin plaintext without repair
+  ---
+  duration_ms: 3.661301
+  type: 'test'
+  ...
+# Subtest: rejects UI no auth without repair
+ok 63 - rejects UI no auth without repair
+  ---
+  duration_ms: 4.456444
+  type: 'test'
+  ...
+# Subtest: rejects UI trusted header without repair
+ok 64 - rejects UI trusted header without repair
+  ---
+  duration_ms: 1.375782
+  type: 'test'
+  ...
+# Subtest: rejects UI path without repair
+ok 65 - rejects UI path without repair
+  ---
+  duration_ms: 1.003518
+  type: 'test'
+  ...
+# Subtest: controller alive blocks first mutation
+ok 66 - controller alive blocks first mutation
+  ---
+  duration_ms: 0.505375
+  type: 'test'
+  ...
+# Subtest: failed enrollment retains pending gate and never enables partially written instances
+ok 67 - failed enrollment retains pending gate and never enables partially written instances
+  ---
+  duration_ms: 2638.088535
+  type: 'test'
+  ...
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 68 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 2.267619
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 69 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 3.183433
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 70 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 211.826458
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 71 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 95.099835
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 72 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 55.358165
+  type: 'test'
+  ...
+# Subtest: onboarding public trust and secret modes survive restrictive inherited umask
+ok 73 - onboarding public trust and secret modes survive restrictive inherited umask
+  ---
+  duration_ms: 206.335946
+  type: 'test'
+  ...
+# Subtest: failure to revoke the trial permit still attempts to stop the controller
+ok 74 - failure to revoke the trial permit still attempts to stop the controller
+  ---
+  duration_ms: 1.973073
+  type: 'test'
+  ...
+# Subtest: failed revocation and failed stop report the more specific stop failure
+ok 75 - failed revocation and failed stop report the more specific stop failure
+  ---
+  duration_ms: 1.821594
+  type: 'test'
+  ...
+# Subtest: concurrent release change is rejected after acquiring the maintenance lock
+ok 76 - concurrent release change is rejected after acquiring the maintenance lock
+  ---
+  duration_ms: 7.345547
+  type: 'test'
+  ...
+# Subtest: readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+ok 77 - readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+  ---
+  duration_ms: 2.762917
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected success
+ok 78 - readiness rejects admin unexpected success
+  ---
+  duration_ms: 1.103398
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unrelated forbidden response
+ok 79 - readiness rejects admin unrelated forbidden response
+  ---
+  duration_ms: 0.488989
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin external redirect
+ok 80 - readiness rejects admin external redirect
+  ---
+  duration_ms: 3.358508
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin protocol relative redirect
+ok 81 - readiness rejects admin protocol relative redirect
+  ---
+  duration_ms: 0.572566
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected local redirect
+ok 82 - readiness rejects admin unexpected local redirect
+  ---
+  duration_ms: 0.413655
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin extra redirect parameters
+ok 83 - readiness rejects admin extra redirect parameters
+  ---
+  duration_ms: 0.296979
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous writes
+ok 84 - readiness rejects UI anonymous writes
+  ---
+  duration_ms: 0.390741
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous admin
+ok 85 - readiness rejects UI anonymous admin
+  ---
+  duration_ms: 0.426094
+  type: 'test'
+  ...
+# Subtest: readiness rejects unverified peer
+ok 86 - readiness rejects unverified peer
+  ---
+  duration_ms: 0.445603
+  type: 'test'
+  ...
+# Subtest: readiness rejects old TLS version
+ok 87 - readiness rejects old TLS version
+  ---
+  duration_ms: 6.030388
+  type: 'test'
+  ...
+# Subtest: readiness rejects oversized body
+ok 88 - readiness rejects oversized body
+  ---
+  duration_ms: 8.698662
+  type: 'test'
+  ...
+# Subtest: readiness rejects invalid UI JSON
+ok 89 - readiness rejects invalid UI JSON
+  ---
+  duration_ms: 0.774992
+  type: 'test'
+  ...
+1..89
+# tests 89
+# suites 0
+# pass 89
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7688.693529

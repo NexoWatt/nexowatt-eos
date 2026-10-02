@@ -1,0 +1,125 @@
+<!--
+  Datei: www/smarthome.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: SmartHome-Kundenansicht: Gebäude-/Raumstruktur, Geräte, Szenen und mobile Drawer-Navigation.
+  Zusammenhänge:
+  - Logik in www/smarthome.js, Konfiguration in www/smarthome-config.html/js.
+  Wartungshinweise:
+  - Kundenansicht muss ohne Installerrechte funktionieren.
+-->
+<html lang="de">
+<head>
+<script>
+/* NexoWatt: normalize base path so relative links work even if opened without trailing slash */
+(function () {
+  try {
+    var p = window.location.pathname || "";
+    if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+      window.location.replace(p + "/" + window.location.search + window.location.hash);
+    }
+  } catch (e) {}
+})();
+</script>
+
+
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>NexoWatt EOS – SmartHome</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link href="/static/styles.css" rel="stylesheet"/>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0c0f12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NexoWatt EOS">
+  <script src="/static/nw-i18n.js" defer></script>
+  <script src="/static/auth.js" defer></script>
+</head>
+<!-- NexoWatt Detail-Kommentar (DE) -->
+<!-- SmartHome-Kundenansicht. Struktur-IDs werden von www/smarthome.js für Drawer, Räume und Geräte-Kacheln genutzt. -->
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-smarthome">
+<!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar">
+  <div class="brand">
+    <a href="/"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a>
+  </div>
+  <button aria-label="Menu" id="menuBtn">☰</button>
+  <h1>SmartHome</h1>
+
+  <nav class="tabs">
+    <button class="tab" onclick="window.location.href='./'">LIVE</button>
+    <button class="tab" onclick="window.location.href='history.html'">HISTORY</button>
+    <button id="tabEvcs" class="tab hidden" onclick="window.location.href='evcs.html'">EVCS</button>
+    <button id="tabSmartHome" class="tab active" onclick="window.location.href='smarthome.html'">SMARTHOME</button>
+  </nav>
+
+  <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+<div class="menu hidden" id="menuDropdown">
+    <a class="menu-item" href="./">Live</a>
+    <a class="menu-item" href="history.html">History</a>
+    <a class="menu-item hidden" id="menuEvcsLink" href="evcs.html">EVCS</a>
+    <a class="menu-item hidden" id="menuSmartHomeLink" href="smarthome.html">SmartHome</a>
+    <a class="menu-item" href="smarthome-config.html" data-nw-config-link="smarthome.configure" hidden style="display:none">SmartHome-Einstellungen</a>
+    <a class="menu-item" href="settings.html">Einstellungen</a>
+  </div>
+</header>
+
+<!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="content nw-page-shell nw-smarthome-page nw-subpage">
+  <section class="nw-page-hero" aria-label="SmartHome Übersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">SmartHome</div>
+      <h2>Gebäudevisualisierung</h2>
+      <p class="nw-page-hero__subtitle">Räume, Geräte und Favoriten im Cockpit-Look – mit responsiver Seitenleiste und mobiler Drawer-Navigation.</p>
+    </div>
+    <!-- Die Einrichtung gehört fachlich hierher. Unsichtbar bis zur echten
+         Installer-/Admin-Sitzung (auth.js strict-auth); Kunden bedienen nur
+         vorhandene Geräte. main.ts sperrt auch direkte Editor-/API-Aufrufe. -->
+    <div class="nw-page-hero__actions">
+      <a id="nwSmartHomeSettingsLink" class="btn" href="smarthome-config.html" data-nw-config-link="smarthome.configure" hidden style="display:none">SmartHome einrichten</a>
+    </div>
+  </section>
+  <div id="nw-smarthome-root">
+    <div class="nw-sh-layout">
+      <!-- Left sidebar navigation (desktop/tablet). On mobile it becomes a drawer. -->
+      <aside id="nwShSidebar" class="nw-sh-sidebar" aria-label="SmartHome Navigation">
+        <div class="nw-sh-sidebar-header">
+          <div class="nw-sh-sidebar-title">Smart Home</div>
+        </div>
+        <nav id="nwShNav" class="nw-sh-nav"></nav>
+      </aside>
+
+      <section class="nw-sh-main">
+        <div class="nw-sh-topbar">
+          <button class="nw-sh-nav-toggle" id="nwShNavToggle" aria-label="Navigation öffnen">☰</button>
+          <div class="nw-sh-topbar-title">
+            <div id="nwShPageTitle">SmartHome</div>
+            <div id="nwShPageSubTitle" class="nw-sh-topbar-subtitle" style="display:none;"></div>
+          </div>
+        </div>
+
+        <!-- Filter-/Chip-Leiste bewusst entfernt (Endkunden-UI soll clean bleiben). -->
+
+        <div id="nw-smarthome-empty" class="nw-sh-empty nw-sh-empty--loading">SmartHome wird geladen …</div>
+        <div id="nw-smarthome-rooms" class="nw-sh-rooms"></div>
+      </section>
+    </div>
+
+    <!-- Mobile drawer overlay (controlled by JS) -->
+    <div id="nwShOverlay" class="nw-sh-overlay" style="display:none;"></div>
+  </div>
+</main>
+
+<script src="/static/smarthome.js"></script>
+
+  <script src="/static/cockpit-shell.js"></script>
+
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

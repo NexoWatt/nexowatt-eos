@@ -1,0 +1,32 @@
+▶ published controller Redis clients against two real TLS-only Redis stores
+  ✔ both real stores accept only authenticated TLS1.3 (20.577571ms)
+  ✔ wrong password, CA and DNS identity rejected (105.264497ms)
+  ✔ Redis listener rejects plaintext and TLS1.2 (3.619234ms)
+  ✔ TLS without authentication cannot read or write data (10.427395ms)
+  ✔ published 7.2.2 objects/states clients initialize over TLS (108.127928ms)
+  ✔ objects and states roundtrip plus subscriptions use actual controller clients (10.653372ms)
+  ✔ controller messagebox delivery passes encrypted Redis path (27.156665ms)
+  ✔ runtime account cannot reconfigure server, install modules or destroy database (29.259131ms)
+  ✖ store restart persists data, reconnects controller and resumes subscription (17117.959786ms)
+✖ published controller Redis clients against two real TLS-only Redis stores (17695.428631ms)
+ℹ Controller CONFIG requests intentionally denied; observed denial notices: 3. No raw controller messages retained.
+ℹ tests 10
+ℹ suites 0
+ℹ pass 8
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20042.288366
+
+✖ failing tests:
+
+test at tests/system/transport-redis.integration.cjs:145:13
+✖ store restart persists data, reconnects controller and resumes subscription (17117.959786ms)
+  Error: TEST_DEADLINE_EXCEEDED
+      at waitFor (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-redis.integration.cjs:24:57)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-redis.integration.cjs:152:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-redis.integration.cjs:145:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

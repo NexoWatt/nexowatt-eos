@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-adapter-admission",
+  "catalogRevision": 2,
+  "entries": [
+    {
+      "id": "js-controller",
+      "package": "iobroker.js-controller",
+      "version": "7.2.2",
+      "sha256": "b79be08d7f6e0887131e0a3e5792fde7fad42083ebdd889644112e750b19f82b",
+      "digestKind": "tree-sha256-v1",
+      "kind": "core",
+      "required": true,
+      "review": {
+        "status": "approved-test",
+        "evidenceId": "eos-postgresql-test-install-20261002"
+      },
+      "permissions": {
+        "capabilities": [
+          "state.read",
+          "state.write",
+          "process.fixed"
+        ],
+        "protocols": [
+          "eos-postgresql-mtls13-v1"
+        ],
+        "network": "declared-endpoints-and-discovery",
+        "shellExec": false,
+        "additionalNpmModules": [],
+        "arbitraryCode": false
+      },
+      "communication": "eos-postgresql-mtls13-v1"
+    },
+    {
+      "id": "eos-admin",
+      "package": "iobroker.eos-admin",
+      "version": "7.10.11",
+      "sha256": "bf95b58a57c6dd7bc3b01c099845cc5a3bfb73ea9e893aae73c1a78af386233a",
+      "digestKind": "tree-sha256-v1",
+      "kind": "adapter",
+      "required": false,
+      "review": {
+        "status": "approved-test",
+        "evidenceId": "eos-postgresql-test-install-20261002"
+      },
+      "permissions": {
+        "capabilities": [
+          "state.read",
+          "state.write",
+          "https.listen",
+          "https.client"
+        ],
+        "protocols": [
+          "eos-postgresql-mtls13-v1",
+          "https"
+        ],
+        "network": "declared-endpoints-and-discovery",
+        "shellExec": false,
+        "additionalNpmModules": [],
+        "arbitraryCode": false
+      },
+      "communication": "eos-postgresql-mtls13-v1"
+    },
+    {
+      "id": "nexowatt-ui",
+      "package": "iobroker.nexowatt-ui",
+      "version": "1.0.21",
+      "sha256": "161a9de2d6518015fe1b9c6ee17664063c3266f2b636daecfd4f894ccbc154f5",
+      "digestKind": "tree-sha256-v1",
+      "kind": "adapter",
+      "required": false,
+      "review": {
+        "status": "approved-test",
+        "evidenceId": "eos-postgresql-test-install-20261002"
+      },
+      "permissions": {
+        "capabilities": [
+          "state.read",
+          "state.write",
+          "https.listen",
+          "https.client"
+        ],
+        "protocols": [
+          "eos-postgresql-mtls13-v1",
+          "https"
+        ],
+        "network": "declared-endpoints-and-discovery",
+        "shellExec": false,
+        "additionalNpmModules": [],
+        "arbitraryCode": false
+      },
+      "communication": "eos-postgresql-mtls13-v1"
+    }
+  ]
+}

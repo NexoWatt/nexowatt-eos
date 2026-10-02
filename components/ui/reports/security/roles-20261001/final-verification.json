@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "change": "EOS-UI-ROLES-001",
+  "component": "iobroker.nexowatt-ui",
+  "version": "1.0.21",
+  "closedAt": "2026-10-01T15:50:34.037883+00:00",
+  "status": "development-component-ready-with-open-mesh-performance-gate",
+  "packageFrozen": true,
+  "packageFilesManifestEntries": 402,
+  "finalPackageDriftFromFreeze": [],
+  "productRuntimeChangedDuringGateMigration": false,
+  "historicalComponentReportChangedFiles": {
+    "explanation": "Earlier verification-summary.json records the earlier component snapshot. Runtime and test sources bound there remain byte-identical; final package-list and explicit M2M documentation updates are bound by frozen-package-hashes.json.",
+    "paths": [
+      "components/ui/package.json",
+      "components/ui/docs/security/EOS_UI_ROLES_2026-10-01_DE.md"
+    ]
+  },
+  "requiredFullSuite": {
+    "schemaVersion": 1,
+    "command": "npm run test:all",
+    "startedAt": "2026-10-01T15:44:33.391Z",
+    "finishedAt": "2026-10-01T15:48:30.881Z",
+    "exitCode": 1,
+    "signal": null,
+    "environment": {
+      "node": "v24.19.0",
+      "platform": "linux",
+      "arch": "x64",
+      "chromium": "153.0.8010.0 portable; single process/no zygote; web security remains enabled"
+    },
+    "result": "FAILED",
+    "failure": "scripts/verify-mesh-coordinator.cjs:134: 99-peer 250-ms workload with parallel archive fsync failed validity assertion",
+    "gateRemainsOpen": true
+  },
+  "isolatedMesh": {
+    "command": "npm run test:mesh-coordinator",
+    "startedAt": "2026-10-01T15:48:56.080Z",
+    "finishedAt": "2026-10-01T15:49:02.717Z",
+    "exitCode": 0,
+    "signal": null,
+    "scope": "Single component invocation without other tasks from this agent; shared sandbox and not target hardware; no threshold change",
+    "result": "PASSED",
+    "p95Ms": 92,
+    "maximumMs": 121,
+    "responses": 792,
+    "doesNotOverrideFullSuiteFailure": true
+  },
+  "build": {
+    "command": "npm run build:ts",
+    "startedAt": "2026-10-01T15:43:25.775Z",
+    "finishedAt": "2026-10-01T15:43:59.646Z",
+    "exitCode": 0,
+    "signal": null
+  },
+  "finalPublishCheck": {
+    "command": "npm run publish:check",
+    "exitCode": 0,
+    "manifestEntriesVerified": 402,
+    "codeDocumentationModules": 235,
+    "targetedSecretDetectorFiles": 2261,
+    "doesNotProveAbsenceOfAllSecretsOrVulnerabilities": true
+  },
+  "downstreamSeparateChecks": [
+    {
+      "index": 67,
+      "command": "npm run test:zero-export-pv",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "index": 68,
+      "command": "npm run test:stable-1.0.18-charging",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "index": 69,
+      "command": "npm run test:stable-1.0.19-grid-share",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "index": 70,
+      "command": "npm run test:stable-1.0.20-storage",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "index": 71,
+      "command": "npm run test:zero-export-inverter-mapping",
+      "exitCode": 0,
+      "signal": null
+    }
+  ],
+  "focusedChecks": {
+    "passed": 69,
+    "failed": 0,
+    "realBrowserOwnAccountFlow": "passed at 390px including mandatory setup, own password, reauthentication, normal dialog and logout"
+  },
+  "cleanup": {
+    "schemaVersion": 1,
+    "restoredDeletedBaselineBuildCacheFiles": 226,
+    "remainingDeleted": [],
+    "scope": "Only baseline tracked build-ts helper/type caches deleted by clean:ts; no product runtime/source restored. Auth runtime/mirrors are outside this build-cache set."
+  },
+  "openItems": [
+    {
+      "id": "UI-MESH-PERF-20261001",
+      "severity": "release-gate-open",
+      "description": "Full-suite timing outcome is intermittent: earlier full attempt passed at P95 84/max111ms, final full attempt failed, single separate final invocation passed at P95 92/max121ms. Root cause is not established and requires controlled investigation; target Pi5 performance remains unverified."
+    },
+    {
+      "id": "UI-M2M-IDENTITY",
+      "description": "Unattended legacy mesh exchange/energy HTTP requests are blocked by login boundary. Separate device identity/authentication/authorization/encryption profile is required before enabling machine-to-machine operation."
+    },
+    {
+      "id": "UI-ACCOUNT-CAS",
+      "description": "No cross-adapter atomic compare-and-write for simultaneous administrative password reset; coordinate resets until transactional design exists."
+    }
+  ],
+  "claimLimits": [
+    "No successful complete test:all claimed. No timing deadline was relaxed or test bypass added.",
+    "No production, CRA, IEC or target-hardware acceptance claimed.",
+    "Shared adapter runtime/database boundary remains; this work does not isolate compromised adapter code."
+  ],
+  "supersedesSuiteStatus": "required-suite-status.json (historical initial attempt retained)",
+  "evidence": [
+    {
+      "path": "reports/security/roles-20261001/test-all.log",
+      "sha256": "e4743995feaa76bab81b403303277ce55c42fce155afa5b610833e5b4031ac4f"
+    },
+    {
+      "path": "reports/security/roles-20261001/test-all-final.log",
+      "sha256": "c452f1ffa349416fba49806191cc7a3bc49f919ff3ef36dd3cd6f142f9ff5f85"
+    },
+    {
+      "path": "reports/security/roles-20261001/test-all-final-r2.log",
+      "sha256": "39df00b9b81a7b6c4dfe5e676426e36ecbe2392ae1a58146f0175a4e4b83d914"
+    },
+    {
+      "path": "reports/security/roles-20261001/test-all-final-r2.json",
+      "sha256": "a31f4faeb2edf3c7fe3d687164faf1142f5ae1e400c36a5606ff0fe5ec36dac5"
+    },
+    {
+      "path": "reports/security/roles-20261001/mesh-isolated-final.log",
+      "sha256": "71a1fa47c05e9afa5af01c7ae991a178393fb5de28183500b9b88bdb5dbf7d2e"
+    },
+    {
+      "path": "reports/security/roles-20261001/mesh-isolated-final.json",
+      "sha256": "8b497832039c38e74ee0a8368b335159dc1d773e01c2f738df4e18a3baf2ff4f"
+    },
+    {
+      "path": "reports/security/roles-20261001/final-build.log",
+      "sha256": "f76ada70ea231453773d950f862c5f9c2cf2c62f4541e55819c8c3daebf9d4ee"
+    },
+    {
+      "path": "reports/security/roles-20261001/final-build.json",
+      "sha256": "cff139f10862c89abf73e6a4575f94d86ceef6ac4c48db61f1dc0e3103e93026"
+    },
+    {
+      "path": "reports/security/roles-20261001/publish-check-final-r2.log",
+      "sha256": "1aae9de344132aa953cd26af49b8204e1196d051f0ac02f1cf95780c4df2ac6e"
+    },
+    {
+      "path": "reports/security/roles-20261001/required-suite-continuation-r6.log",
+      "sha256": "9eb3bd555cc6b801fb5c63c0d4071295efb3750f35d34f42b015eeca3c8be287"
+    },
+    {
+      "path": "reports/security/roles-20261001/required-suite-continuation-r6.json",
+      "sha256": "54b9b3cd2828d4ad2c90a3aeff604c9ec0fa116acd38b9be099153884d318fed"
+    },
+    {
+      "path": "reports/security/roles-20261001/roles-auth-tls-sse-sw.tap",
+      "sha256": "946a2dfda7f8ab71acf83d2ad9a968c7213154cbe327ed1bed71d0e5a6399bd9"
+    },
+    {
+      "path": "reports/security/roles-20261001/browser-acceptance.log",
+      "sha256": "bb15c2b5a3ca081da7fc39fb96c595e59c2cdad81805ed41eea1c68923d13652"
+    },
+    {
+      "path": "reports/security/roles-20261001/ui-own-password-390.png",
+      "sha256": "6f53c9d959b2c5d3443843a0b912e9b8ae12ab25d9a842687e9b22a5475ef9da"
+    },
+    {
+      "path": "reports/security/roles-20261001/publish-overlay-fixture-fix.log",
+      "sha256": "ed630667901f5cb4e584c20c128ff89e92a09fecec4a0776305d7067aac6838a"
+    },
+    {
+      "path": "reports/security/roles-20261001/test-gate-migration.json",
+      "sha256": "8aa8c4d9a45bb847f0539cff2a1a3a4fc264b775c373af971b7b15f097e99f75"
+    },
+    {
+      "path": "reports/security/roles-20261001/frozen-package-hashes.json",
+      "sha256": "72f7a9a64d08768ef952e9d7dd55dbc8b0a3bef62a4f65938aa642de847812ca"
+    },
+    {
+      "path": "reports/security/roles-20261001/final-buildcache-cleanup.json",
+      "sha256": "b63d3958c6cf56ff57a6c1f4b961e4a24fc31be5b68cd0ddba54f740d47949db"
+    }
+  ]
+}

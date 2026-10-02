@@ -1,0 +1,69 @@
+TAP version 13
+# Subtest: integrated UI laboratory WITH OS-interface fixture: TLS setup, enrollment, HTTPS login, central license and denied physical control
+    # Subtest: ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+    ok 1 - ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+      ---
+      duration_ms: 8002.689186
+      type: 'test'
+      ...
+    # Subtest: fresh enrollment creates unique protected admin and exactly two disabled approved instances
+    ok 2 - fresh enrollment creates unique protected admin and exactly two disabled approved instances
+      ---
+      duration_ms: 979.195131
+      type: 'test'
+      ...
+    # Subtest: ordinary CLI uploads local Admin/UI assets without installation or npm
+    ok 3 - ordinary CLI uploads local Admin/UI assets without installation or npm
+      ---
+      duration_ms: 4770.981883
+      type: 'test'
+      ...
+    # Subtest: actual controller starts Admin and UI with real HTTPS identities and no physical adapters
+    not ok 4 - actual controller starts Admin and UI with real HTTPS identities and no physical adapters
+      ---
+      duration_ms: 36591.102741
+      type: 'test'
+      location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:68:57'
+      failureType: 'testCodeFailure'
+      error: 'LAB_DEADLINE'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        wait (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:26:60)
+        process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        async /workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:138:11
+        async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:68:77)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async stage (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:68:49)
+        async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:128:5)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    1..4
+not ok 1 - integrated UI laboratory WITH OS-interface fixture: TLS setup, enrollment, HTTPS login, central license and denied physical control
+  ---
+  duration_ms: 58963.503211
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:54:1'
+  failureType: 'testCodeFailure'
+  error: 'LAB_STAGE_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    stage (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:68:120)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:128:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# {"labOnlyInterfaceFixture":"node_modules/@iobroker/js-controller-adapter/build/cjs/lib/adapter/adapter.js","originalSha256":"d7e751c93c97636b7cd5772777cb5c79afca716cb921773115a35a6436f5b27b","fixtureSha256":"e458862673508a334e8ed09373ff0923d8798a0e6751009487c1586a7c2c374a"}
+# {"labOnlyInterfaceFixture":"node_modules/@iobroker/js-controller-adapter/build/esm/lib/adapter/adapter.js","originalSha256":"c8ff22090bcda3316a8f39ddb6c943e1320dc806109a0668a48c7bd900eeb7af","fixtureSha256":"bf1239583e6708276147ff9fa765b905851a6e17a2e8bfbc312e8080bc22c03c"}
+# HTTPS readiness [{"port":8188,"route":"/api/strict-auth/status","error":"ECONNREFUSED"},{"port":8081,"route":"/version","status":200}]
+# 2026-10-01 14:19:15.869  - [32minfo[39m: host.eos-ui-lab iobroker.js-controller version 7.2.2 js-controller starting\\n2026-10-01 14:19:15.871  - [32minfo[39m: host.eos-ui-lab Copyright (c) 2014-2024 bluefox, 2014 hobbyquaker\\n2026-10-01 14:19:15.871  - [32minfo[39m: host.eos-ui-lab hostname: eos-ui-lab, node: v24.19.0\\nCan not find local IPs: A system error occurred: uv_interface_addresses returned Unknown system error 1 (Unknown system error 1)\\n2026-10-01 14:19:15.872  - [32minfo[39m: host.eos-ui-lab ip addresses: \\n2026-10-01 14:19:15.895  - [33mwarn[39m: host.eos-ui-lab Unable to increase LUA script timeout: NOPERM User eos-runtime has no permissions to run the 'config|set' command\\n2026-10-01 14:19:15.898  - [33mwarn[39m: host.eos-ui-lab Unable to enable Expiry Keyspace events from Redis Server: NOPERM User eos-runtime has no permissions to run the 'config|set' command\\n2026-10-01 14:19:15.930  - [33mwarn[39m: host.eos-ui-lab Unable to enable Expiry Keyspace events from Redis Server: NOPERM User eos-runtime has no permissions to run the 'config|set' command\\n2026-10-01 14:19:16.070  - [32minfo[39m: host.eos-ui-lab connected to Objects and States\\n2026-10-01 14:19:16.115  - [32minfo[39m: host.eos-ui-lab Node.js version has changed from unknown to 24.19.0\\n2026-10-01 14:19:16.143  - [32minfo[39m: host.eos-ui-lab added notifications configuration of host\\nCan not find local IPs: A system error occurred: uv_interface_addresses returned Unknown system error 1 (Unknown system error 1)\\n2026-10-01 14:19:16.159  - [32minfo[39m: host.eos-ui-lab 2 instances found\\nhost.eos-ui-lab check instance "system.adapter.eos-admin.0" for host "eos-ui-lab"\\nhost.eos-ui-lab check instance "system.adapter.nexowatt-ui.0" for host "eos-ui-lab"\\n2026-10-01 14:19:16.162  - [32minfo[39m: host.eos-ui-lab starting 2 instances\\n2026-10-01 14:19:16.168  - [32minfo[39m: host.eos-ui-lab Delete state "system.host.eos-ui-lab.plugins.sentry.enabled"\\n2026-10-01 14:19:16.175  - [32minfo[39m: host.eos-ui-lab Some obsolete host states deleted.\\n2026-10-01 14:19:16.189  - [32minfo[39m: host.eos-ui-lab instance system.adapter.eos-admin.0 in version "7.10.11" started with pid 110\\n================================== > LOG REDIRECT system.adapter.eos-admin.0 => false [system.adapter.eos-admin.0.logging]\\n2026-10-01 14:19:17.296  - [32minfo[39m: host.eos-ui-lab stopInstance system.adapter.eos-admin.0 (force=false, process=true)\\n2026-10-01 14:19:17.296  - [32minfo[39m: host.eos-ui-lab stopInstance system.adapter.eos-admin.0 send kill signal\\n================================== > LOG REDIRECT system.adapter.eos-admin.0 => false [Process stopped]\\n2026-10-01 14:19:17.831  - [32minfo[39m: host.eos-ui-lab instance system.adapter.eos-admin.0 terminated with code 11 (ADAPTER_REQUESTED_TERMINATION)\\n================================== > LOG REDIRECT system.adapter.eos-admin.0 => false [system.adapter.eos-admin.0.logging]\\n2026-10-01 14:19:20.271  - [32minfo[39m: host.eos-ui-lab instance system.adapter.nexowatt-ui.0 in version "1.0.21" started with pid 126\\n2026-10-01 14:19:20.867  - [32minfo[39m: host.eos-ui-lab instance system.adapter.eos-admin.0 in version "7.10.11" started with pid 134\\nCan not find local IPs: A system error occurred: uv_interface_addresses returned Unknown system error 1 (Unknown system error 1)\\n
+1..1
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 59216.696154

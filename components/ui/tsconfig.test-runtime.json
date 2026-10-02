@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/test-runtime",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "removeComments": false,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/contracts/**/*.ts",
+    "src-ts/utils/**/*.ts",
+    "src-ts/quality/**/*.ts",
+    "src-ts/tests/energy-flow-regression-runtime.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-ts"
+  ]
+}

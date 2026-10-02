@@ -1,0 +1,118 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:mesh-coordinator
+> npm run test:mesh-timing-contract && node scripts/verify-mesh-coordinator.cjs && node scripts/verify-mesh-coordinator-access.cjs && node scripts/verify-mesh-transformer-accounting.cjs && node scripts/verify-mesh-app-lifecycle.cjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:mesh-timing-contract
+> node --test --test-reporter=tap test/eos-mesh-timing.test.cjs
+
+TAP version 13
+# Subtest: differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+ok 1 - differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+  ---
+  duration_ms: 226.158025
+  type: 'test'
+  ...
+# Subtest: differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+ok 2 - differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+  ---
+  duration_ms: 158.898326
+  type: 'test'
+  ...
+# Subtest: idle degraded target inspections are independent of repeated messages; budgets remain reserved
+ok 3 - idle degraded target inspections are independent of repeated messages; budgets remain reserved
+  ---
+  duration_ms: 128.146789
+  type: 'test'
+  ...
+# Subtest: current failed duration is reported independently of the previous successful RTT
+ok 4 - current failed duration is reported independently of the previous successful RTT
+  ---
+  duration_ms: 4.154915
+  type: 'test'
+  ...
+# Subtest: 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease
+ok 5 - 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease
+  ---
+  duration_ms: 1.94424
+  type: 'test'
+  ...
+# Subtest: bounded current attempt identifies transport rejection and retains failsafe
+ok 6 - bounded current attempt identifies transport rejection and retains failsafe
+  ---
+  duration_ms: 1.059363
+  type: 'test'
+  ...
+# Subtest: bounded current attempt identifies signature rejection and retains failsafe
+ok 7 - bounded current attempt identifies signature rejection and retains failsafe
+  ---
+  duration_ms: 1.65963
+  type: 'test'
+  ...
+# Subtest: late HELLO has current attempt evidence and cannot establish a session
+ok 8 - late HELLO has current attempt evidence and cannot establish a session
+  ---
+  duration_ms: 0.555381
+  type: 'test'
+  ...
+# Subtest: protocol reset during pending transport cannot restore stale attempt or lease
+ok 9 - protocol reset during pending transport cannot restore stale attempt or lease
+  ---
+  duration_ms: 8.269869
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 718.158048
+OK 99 Slaves; 100., doppelte ID und unsichere Rückfallsumme abgewiesen
+OK HTTP nur im Tailnet/Loopback; HMAC erkennt Manipulation
+OK Wiederanlauf erst nach bestätigtem Rückfall; 99 Teilnehmer innerhalb Budget
+OK Ein fehlender Slave: übrige Teilnehmer erhalten Rückfall, Altbudget bleibt reserviert
+OK Wiederverbindung mit begrenztem Wiederanlauf
+OK Hauptzähler-Ausfall setzt Wiederanlauf zurück; keine sofortige Freigabe
+OK Replay, fremder Boot, alte Revision und verspätete Antwort verlängern keine Lease
+OK Master-Neustart reserviert Maxima und verlangt neue Synchronisation
+OK Strangreserve und Phasen begrenzen zusätzlich; Null bleibt Null
+OK Finale Sicherheitsprüfung begrenzt Boost und addierte Ladepunkte; Ablauf erzwingt Null
+OK Finaler PV-/Speicher-Writer prüft aktuelle Nullgrenzen und Exportbudget
+OK Speicher-Freigabe nutzt kanonisches storage.controlMode und sperrt Farm/Sondermodi
+OK Schnelle Publish-Syntaxprüfung führt Code nicht aus und erkennt Fehler
+OK Microgrid-Meldung: Diagnose still, Anlauf normal, Betriebsausfall kritisch, ein Ereignis
+OK echte parallele HTTP-Kommunikation: 99 Slaves, Handshake + Freigabe in 489 ms (Loopback, kein Feldnachweis)
+OK 99 warme HTTP-Kanäle im 250-ms-Takt mit Archiv-fsync: 792 Antworten, P95 84 ms, Maximum 91 ms (Loopback)
+Mesh-Lastdiagnose (bisheriger Rückfallpfad): [{"round":0,"networkMs":108.32858099999999,"archiveMs":132.04856699999982,"checkedAfterBothMs":132.08104600000001,"state":"SITE_DEGRADED"},{"round":1,"networkMs":116.70671500000003,"archiveMs":136.9458400000001,"checkedAfterBothMs":136.97382300000004,"state":"SITE_DEGRADED"},{"round":2,"networkMs":74.23479600000019,"archiveMs":85.50577500000009,"checkedAfterBothMs":85.53730300000007,"state":"SITE_DEGRADED"},{"round":3,"networkMs":55.34252400000014,"archiveMs":70.72389000000021,"checkedAfterBothMs":70.75372500000003,"state":"SITE_DEGRADED"},{"round":4,"networkMs":63.29943899999989,"archiveMs":83.48961000000008,"checkedAfterBothMs":83.519045,"state":"SITE_DEGRADED"},{"round":5,"networkMs":49.7660579999997,"archiveMs":69.61151699999982,"checkedAfterBothMs":69.63772699999981,"state":"SITE_DEGRADED"},{"round":6,"networkMs":64.1921040000002,"archiveMs":85.52379100000007,"checkedAfterBothMs":85.57205400000021,"state":"SITE_DEGRADED"},{"round":7,"networkMs":68.583482,"archiveMs":82.35484799999995,"checkedAfterBothMs":82.37867400000005,"state":"SITE_DEGRADED"}]
+OK NORMAL mit simuliert bestätigter Anwendung: 297 Antworten, P95 113 ms, Maximum 116 ms; kein Hardwarebeleg
+OK unerreichbarer Slave-Kanal blockiert andere 98 Kanäle nicht
+OK verschlüsselte Konfiguration und Neustart
+OK fehlende aktive Konfiguration bleibt durch Marker verriegelt
+OK beschädigte persistierte Konfiguration verriegelt
+Mesh coordinator: 21 Prüfgruppen bestanden.
+OK Express: Mesh-Rechte, alte Kunden-Wildcards, individuelle Paarung, Schlüssel-Redaktion, HMAC, 64-KiB-Limit; Auth=true
+OK Express: Mesh-Rechte, alte Kunden-Wildcards, individuelle Paarung, Schlüssel-Redaktion, HMAC, 64-KiB-Limit; Auth=false
+OK 250-ms-Profil strikt validiert; Freigabe und Messwertalter passen zusammen
+OK Schnelle EMS-Ticks verschieben nicht die Messwertbestätigung desselben Befehls
+OK Bedarfsverteilung: freie Häuser lokal, belastete Häuser nutzen freie Anteile
+OK Wartende AC/DC-Lader melden Bedarf vor Verbrauch; knappe Leistung wird nicht unter Mindestwerte zerteilt
+OK Trafo-Hysterese, Export, Phase und Strang begrenzen unabhängig
+OK 99 Slaves: kurze Takte, 750-ms-Anwendung, keine Befehlsjagd; Ausfall bleibt reserviert
+OK Offline-Zähleroriginal persistiert; getrennte kumulative Register und Quellenzeiten
+OK Nachlieferung: ACK nach dauerhafter Speicherung; Kopie bleibt lokal; Neustartabgleich
+OK Dubletten idempotent; geänderte Dublette, Lücke, falsches Haus und fremdes ACK abgewiesen
+OK Zählerrücksprung über Lücke und Neustart gesperrt; neue Epoche startet getrennt
+OK Archivfehler stoppt ACK, nicht die unabhängige Regelfunktion
+OK Abrechnung: genaue Randstände, Centrechnung, Teilzeitraum, keine überbrückten Zählerwechsel
+OK Gerissene Datei wird erkannt und nicht automatisch repariert oder bestätigt
+OK Betriebsvorgaben persistieren ohne Protokollneustart; technisch unzulässige Werte gesperrt
+Mesh transformer/accounting: 14 Prüfgruppen bestanden.
+OK Nicht installiert: keine Timer, Kommunikation, Aufzeichnung oder Konfiguration
+OK Installiert/inaktiv: Einrichtung möglich; Aktivieren/Aus/Reaktivieren folgen dem AppCenter
+OK Versionsumstieg: bestehende aktive Anlage sichtbar, Paarung/Grenzen/Protokoll erhalten, einmalige Migration
+OK Manipuliertes Aus-Flag: Rückfall bleibt wirksam; keine weitere Netz-/Archivkommunikation

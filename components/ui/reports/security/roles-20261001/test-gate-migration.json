@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "change": "EOS-UI-ROLES-001-test-gate-migration",
+  "recordedAt": "2026-10-01T15:37:26.050024+00:00",
+  "scope": "Repository test/tooling and shipped test dependency closure only; reviewed product runtime remains unchanged.",
+  "changes": [
+    {
+      "path": "scripts/verify-ts-main-runtime-helpers.js",
+      "oldFailure": "Obsolete local normalizeLicenseKeyForStorage requirement in main runtime.",
+      "newContract": "Require central client and eos-admin management; reject retired local secret/key evaluators. Preserve helper type/import checks.",
+      "shipped": false,
+      "sha256": "4bd08266f9f353682937002db9c9afb1b3118bde083ea4b5d394365e6fd2020d"
+    },
+    {
+      "path": "scripts/verify-rc66-station-display-stable.js",
+      "oldFailure": "Old SW logo-precache assertion conflicts with network-only protected routes.",
+      "newContract": "Execute actual SW public-asset predicate; logo eligible, HTML and API JSON ineligible. Preserve display/layout tests.",
+      "shipped": false,
+      "sha256": "ac5c51d77afde8c491e8c8985f153351c0d80690f5f5507b55fcb7463781d520"
+    },
+    {
+      "path": "scripts/verify-rc67-license-bootstrap-access.js",
+      "oldFailure": "Old local refresh, local key save and direct control-unlock assertions.",
+      "newContract": "Check prior login gate, exact account recovery allowlist, central lease, service capability, local-save409, no browser key storage and preview control lock.",
+      "shipped": false,
+      "sha256": "3e62257cbdef59f356c70a58c2d763d4dca6eb17e7e69e40ce74739db9071285"
+    },
+    {
+      "path": "scripts/verify-stable-1.0.8-storage-licenses.cjs",
+      "oldFailure": "Fixture only set retired local license flags, producing zero valid storage slots.",
+      "newContract": "Use central lease getStatus/isAllowed fixture; preserve all storage allocation, downgrade, API save/import limits. Add denial despite forged old local flags.",
+      "shipped": true,
+      "sha256": "03b227f15374f2d491c81154a1b9212fc31b4a5cd31c4a65f2d86324d9233543"
+    },
+    {
+      "path": "package.json",
+      "oldFailure": "Package dependency-closure gate found shipped access test missing TLS fixture.",
+      "newContract": "Include existing scripts/eos-tls-fixture.cjs in package files; no embedded private key. Fixture generates ephemeral local key/certificate.",
+      "shipped": true,
+      "sha256": "6fb85c2b6a57749a66802d43d9cf874d895ceb819a9973fcee4953f3142d4da4"
+    },
+    {
+      "path": "scripts/verify-mesh-coordinator-access.cjs",
+      "oldFailure": "Old anonymous exchange/energy expectations stop behind the new global login gate; old Pro fixture only set retired local license flags.",
+      "newContract": "Preserve anonymous401 before and after activation. Exercise unchanged HMAC/size/lifecycle rules with authenticated installer and central Pro capability fixture; no runtime bypass.",
+      "shipped": true,
+      "sha256": "5e1a3ac63e45a98bfd6e5d2f010f375e9e990601bdb53b2c105421d7220d0de6"
+    },
+    {
+      "path": "docs/security/EOS_UI_ROLES_2026-10-01_DE.md",
+      "oldFailure": "Mesh/M2M boundary needed explicit documentation.",
+      "newContract": "Document unattended M2M blocked in test profile and separate later identity/authorization/encryption review; browser sessions are not an operational M2M design.",
+      "shipped": true,
+      "sha256": "6bbb56516ea29c530b44b9b95aedcf31ccc1b985d95541f4ff0bfd314428ba4b"
+    }
+  ],
+  "generatedMirrors": [
+    "src-ts/runtime-mirrors/scripts/verify-ts-main-runtime-helpers.ts",
+    "src-ts/runtime-mirrors/scripts/verify-rc66-station-display-stable.ts",
+    "src-ts/runtime-mirrors/scripts/verify-rc67-license-bootstrap-access.ts"
+  ],
+  "packageFiles": 402,
+  "sealCommand": "npm run release:generate-manifest (explicit reviewed development step; not publish hook)",
+  "runtimeChangesDuringMigration": false,
+  "retainedFailures": [
+    "test-all.log",
+    "required-suite-continuation.json",
+    "required-suite-continuation-r2.log",
+    "required-suite-continuation-r3.log",
+    "required-suite-continuation-r4.log",
+    "required-suite-continuation-r5.log",
+    "test-all-final.log"
+  ],
+  "openTimingObservation": {
+    "test": "test:mesh-coordinator",
+    "observed": "99-peer loopback workload with concurrent archive fsync exceeded validity budget in this shared sandbox; failed closed.",
+    "thresholdChanged": false,
+    "notAFieldPerformanceProof": true,
+    "sequentialFullAttempt": {
+      "result": "passed without timing changes",
+      "p95Ms": 84,
+      "maximumMs": 111,
+      "responses": 792,
+      "raw": "test-all-final.log"
+    },
+    "rootCause": "Not established; investigate scheduling, I/O and implementation on controlled environment and target hardware. No general attribution to the environment is claimed.",
+    "isolatedFinalAttempt": {
+      "result": "passed",
+      "p95Ms": 92,
+      "maximumMs": 121,
+      "responses": 792,
+      "raw": "mesh-isolated-final.log",
+      "scope": "single separate invocation, same shared sandbox; not field-performance acceptance"
+    }
+  },
+  "fullSuiteStatus": "FAILED: final test:all-r2 stopped at unchanged mesh timing assertion; separately invoked complete mesh gate passed. Full-suite gate remains open; no thresholds changed."
+}

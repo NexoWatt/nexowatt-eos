@@ -1,0 +1,128 @@
+
+COMMAND ["node", "scripts/verify-mesh-coordinator-access.cjs"]
+OK Express: Mesh-Rechte, alte Kunden-Wildcards, individuelle Paarung, Schlüssel-Redaktion, HMAC, 64-KiB-Limit; Auth=true
+OK Express: Mesh-Rechte, alte Kunden-Wildcards, individuelle Paarung, Schlüssel-Redaktion, HMAC, 64-KiB-Limit; Auth=false
+
+COMMAND ["node", "scripts/verify-mesh-transformer-accounting.cjs"]
+OK 250-ms-Profil strikt validiert; Freigabe und Messwertalter passen zusammen
+OK Schnelle EMS-Ticks verschieben nicht die Messwertbestätigung desselben Befehls
+OK Bedarfsverteilung: freie Häuser lokal, belastete Häuser nutzen freie Anteile
+OK Wartende AC/DC-Lader melden Bedarf vor Verbrauch; knappe Leistung wird nicht unter Mindestwerte zerteilt
+OK Trafo-Hysterese, Export, Phase und Strang begrenzen unabhängig
+OK 99 Slaves: kurze Takte, 750-ms-Anwendung, keine Befehlsjagd; Ausfall bleibt reserviert
+OK Offline-Zähleroriginal persistiert; getrennte kumulative Register und Quellenzeiten
+OK Nachlieferung: ACK nach dauerhafter Speicherung; Kopie bleibt lokal; Neustartabgleich
+OK Dubletten idempotent; geänderte Dublette, Lücke, falsches Haus und fremdes ACK abgewiesen
+OK Zählerrücksprung über Lücke und Neustart gesperrt; neue Epoche startet getrennt
+OK Archivfehler stoppt ACK, nicht die unabhängige Regelfunktion
+OK Abrechnung: genaue Randstände, Centrechnung, Teilzeitraum, keine überbrückten Zählerwechsel
+OK Gerissene Datei wird erkannt und nicht automatisch repariert oder bestätigt
+OK Betriebsvorgaben persistieren ohne Protokollneustart; technisch unzulässige Werte gesperrt
+Mesh transformer/accounting: 14 Prüfgruppen bestanden.
+
+COMMAND ["node", "scripts/verify-mesh-app-lifecycle.cjs"]
+OK Nicht installiert: keine Timer, Kommunikation, Aufzeichnung oder Konfiguration
+OK Installiert/inaktiv: Einrichtung möglich; Aktivieren/Aus/Reaktivieren folgen dem AppCenter
+OK Versionsumstieg: bestehende aktive Anlage sichtbar, Paarung/Grenzen/Protokoll erhalten, einmalige Migration
+OK Manipuliertes Aus-Flag: Rückfall bleibt wirksam; keine weitere Netz-/Archivkommunikation
+
+COMMAND ["npm", "run", "test:zero-export-pv"]
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-pv
+> node scripts/verify-zero-export-pv-coordinator.cjs && node scripts/verify-zero-export-charging.cjs && node scripts/verify-heating-rod-central-zero-export.js && node scripts/verify-zero-export-storage-probe.cjs && node scripts/verify-zero-export-appcenter.cjs && node scripts/verify-zero-export-core.cjs && node scripts/verify-heating-rod-zero-export-tariff.cjs
+
+[zero-export-pv] PASS Nulleinspeisung tagsüber: EV erhält seine echte einphasige Mindestlast
+[zero-export-pv] PASS PV-Reaktion allein reicht nicht: erst das physikalische Budget übernimmt
+[zero-export-pv] PASS Zufällige Nullbilanz ohne PV-Anstieg bestätigt keine neue Solarleistung
+[zero-export-pv] PASS PV wird gemeinsames Budget: vorherige Prüflast erhält keinen doppelten Leistungsanspruch
+[zero-export-pv] PASS Netzbezug: kein dauerhafter PV-Versuch und gemeinsamer Wiederholschutz
+[zero-export-pv] PASS Batterieentladung bei 0 W NVP: kein dauerhafter PV-Versuch und gemeinsamer Wiederholschutz
+[zero-export-pv] PASS Bereits vorhandener Netzbezug oder Batterieentladung verhindert einen Start
+[zero-export-pv] PASS Ein Versuch gleichzeitig: EV und Heizstab addieren ihre Prüflasten nicht
+[zero-export-pv] PASS Priorität: bereits physikalisch versorgte Last blockiert keinen zulässigen Heizstab
+[zero-export-pv] PASS Priorität: DC-Mindestleistung oberhalb Prüflastgrenze blockiert keinen zulässigen Heizstab
+[zero-export-pv] PASS Priorität: lokales Leistungslimit unter Mindestlast blockiert keinen zulässigen Heizstab
+[zero-export-pv] PASS DC: definierte Mindestleistung wird gewährt, niemals durch AC-6-A-Werte ersetzt
+[zero-export-pv] PASS DC: Mindestleistung, Gesamtlimit und Zusatzleistungsgrenze gelten gleichzeitig
+[zero-export-pv] PASS Geänderte technische Mindestleistung entzieht eine inzwischen unzulässige Lease
+[zero-export-pv] PASS NVP veraltet: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS PV veraltet: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Nacht: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Batteriemessung fehlt: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Schutzhülle sperrt: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS externe Autorität sperrt: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Tarifabregelung: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Veralteter Core-Snapshot und fehlende Verbraucherrückmeldung geben keine Leistung frei
+[zero-export-pv] PASS Wiederholte Anforderungen verlängern keine Lease
+[zero-export-pv] PASS Keine Reaktion des Fahrzeugs: begrenzter Versuch statt Dauerfreigabe
+[zero-export-pv] PASS Phasenumschaltung: STOP-/Schaltwartezeit gilt nicht als neue PV-Last
+[zero-export-pv] PASS Phasenumschaltung verliert bei veraltetem Lastwert sofort ihre Prüffreigabe
+[zero-export-pv] PASS Phasenumschaltung hängt: auch laufende Rückmeldungen verlängern 90 s Wartezeit nicht
+[zero-export-pv] PASS Auch während Phasen-STOP werden 20 Wh Fremdenergie begrenzt
+[zero-export-pv] PASS Uhr-Rücksprung hebt aktive Prüflast auf und verhindert sofortige Neufreigabe
+[zero-export-pv] PASS 80 W Importbias: bestätigte 1.380-W-Mindestlast bleibt bei 1.300 W PV stabil
+[zero-export-pv] PASS Importbias wird erst nach Übergabe an den nächsten Core-Zyklus separat gehalten
+[zero-export-pv] PASS Importbias hält nur bestätigte Leistung; größerer Sollwert benötigt eigenen Prüfschritt
+[zero-export-pv] PASS Importbias ist kein Batterieanteil und übersteht weder Laststopp noch veraltete Messung
+[zero-export-pv] PASS Importbias: eine gehaltene EV-Mindestlast blockiert keine spätere Heizstab-Prüfung
+[zero-export-pv] PASS Importbias wird beim Halten nicht über die konfigurierte Summe ausgedehnt
+[zero-export-pv] PASS Importbias: zwei bestätigte Verbraucher bekommen zusammen höchstens 80 W
+[zero-export-pv] PASS Importbias hebt geänderte technische Mindestleistung nicht auf
+[zero-export-pv] PASS Uhr-Rücksprung entzieht auch den zuvor bestätigten Import-Halteanteil
+[zero-export-pv] PASS Diagnose und ausgeschaltete Strategie bleiben auch bei guten Messungen passiv
+[zero-export-pv] PASS Abschalten zwischen Core-Ticks entzieht beim Writer die bestehende Freigabe
+[zero-export-pv] PASS Quellenprüfung: echte PV und NVP genügen bei Anlage ohne Speicher
+[zero-export-pv] PASS Quellenprüfung: Forecast oder neu veröffentlichte Bilanz macht alte PV nicht frisch
+[zero-export-pv] PASS Quellenprüfung: frische 0-W-PV bleibt 0 W; fehlender Wert wird nicht als frisch behandelt
+[zero-export-pv] PASS Quellenprüfung: NVP-Alter addiert Originalmessung und Snapshot-Verzögerung
+[zero-export-pv] PASS Quellenprüfung: aktive Batterie verlangt echten gerichteten Leistungsnachweis
+[zero-export-pv] PASS Quellenprüfung: ein einzelner Lade-Kanal schließt Batterieentladung nicht aus
+[zero-export-pv] PASS Quellenprüfung: Speicherfarm-Netto-Laden darf Entladung eines zweiten Speichers nicht verbergen
+[zero-export-pv] PASS Quellenprüfung: ausstehende oder überholte externe Netzvorgabe sperrt Prüflast
+[zero-export-pv] PASS Unbestätigte Prüflast bleibt von einem zweiten PV-Budget ausgeschlossen
+[zero-export-pv] PASS Teilweise zugewiesene laufende Last reserviert den gesamten erworbenen Prüflastanteil
+[zero-export-pv] 50 passed, 0 failed
+[zero-export-charging] OK: AC/DC minima, exclusive lease, PV accounting, limits, expiry and safe phase transitions
+[zero-export-charging] real runtime ticks and writes OK
+[heating-rod-central-zero-export] OK: zentrale Freigabe, reale Stufen, Frische, Grenzen, Rücknahme und finaler Writer-Guard.
+[zero-export-storage] OK: Schutzvoraussetzungen, echter Split-Writer, getrennte Budgetreservierung, Total-Cap und Lease-Widerruf.
+[zero-export-appcenter] OK: Alias-/Save-Vertrag, komplette Kartenbreite, WR-Zuordnung/Neuzeichnen, Messwerte, Defaults und aufklappbare Diagnose in Quelle/Typed Mirror.
+[zero-export-core] OK: Core-Reserve, echte Wärmemessung, Null/0, Prüflast, 120 Netz/PV-Rückkopplungszyklen und Batterieabzug.
+[heating-rod-zero-export-tariff] OK: 5 echte Tarif-Ticks ohne PV/Strategie; explizite Strategiegrenzen, Gesamtgrenzen, PV-only, Aus/Diagnose, Grant-Frische, NVP und Batterie bleiben geschützt.
+
+COMMAND ["npm", "run", "test:stable-1.0.18-charging"]
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.18-charging
+> node scripts/verify-stable-1.0.18-charging.cjs
+
+[1.0.18] OK: begrenzte Überbrückung, Auszeit, Mess-/Schutzgrenzen, gemeinsames Budget, Boost AC/DC und Phasenwahl
+[1.0.18] OK: echte Regelticks/Writer für Boost 1p/3p, Wolke45s, Wiederanlaufsperre180s und Erholung
+
+COMMAND ["npm", "run", "test:stable-1.0.19-grid-share"]
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.19-grid-share
+> node scripts/verify-stable-1.0.19-grid-share.cjs
+
+[1.0.19] OK: Netzanteil+PV, 120 Mehr-LP-Fälle, Istreservierung, Phasen und Zielplanung
+[1.0.19] OK: reale Writer Auto/Boost/PV-Verlust, 1p/3p und unveränderte Bestandsanlage
+
+COMMAND ["npm", "run", "test:stable-1.0.20-storage"]
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.20-storage
+> node scripts/verify-zero-export-storage-credit.cjs && node scripts/verify-stable-1.0.20-storage-allocation.cjs && node scripts/verify-stable-1.0.20-storage-grid-share.cjs
+
+[zero-export-storage-credit] OK: frischer Nettoanteil, Hausvorrang, Reserven, Akzeptanz und Farm/Split-Frische
+[1.0.20] OK: getrennte Quellen, 240 Mehr-LP-Fälle, Schutz, Istreservierung, Min+PV und konservative Phasenwahl
+[1.0.20-storage-grid-share] OK: 42 reale Regler-/Writer-Szenarien, Netzbezug, Speicherfreigabe/-schutz, Mindestladen und Widerruf.
+
+COMMAND ["npm", "run", "test:zero-export-inverter-mapping"]
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-inverter-mapping
+> node scripts/verify-zero-export-inverter-mapping.cjs
+
+[zero-export-inverter-mapping] OK: 33 Konfigurations-, Konflikt-, Alias-, Totband- und Writer-Fälle bestanden.

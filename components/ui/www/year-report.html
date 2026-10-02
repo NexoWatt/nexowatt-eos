@@ -1,0 +1,126 @@
+<!--
+  Datei: www/year-report.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!doctype html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Report-Seite: Druck-/PDF-/CSV-nahe Auswertung für History, EVCS, Tarif, §14a oder RFID.
+  Zusammenhänge:
+  - Logik liegt in gleichnamiger .js-Datei und gemeinsamen Report-Hilfen.
+  - Daten kommen aus Report-APIs in main.js.
+  Wartungshinweise:
+  - Drucklayout und Tabellenbreiten beachten.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NexoWatt EOS – Jahresreport</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="stylesheet" href="/static/evcs-report.css" />
+  <link rel="stylesheet" href="/static/year-report.css" />
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-year-report">
+  <!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar">
+    <script>
+      // Normalize base path (works with /history vs /static/year-report.html etc.)
+      (function () {
+        var p = window.location.pathname;
+        if (!p.endsWith('/') && !p.endsWith('.html')) {
+          window.history.replaceState({}, '', p + '/');
+        }
+      })();
+    </script>
+
+    <div class="brand"><img alt="NexoWatt" src="/static/nexowatt-logo.png" /></div>
+    <button id="menuBtn" aria-label="Menü">☰</button>
+    <h1>NexoWatt EOS</h1>
+
+    <nav class="tabs">
+      <button class="tab" id="liveTabBtn" data-tab="live" onclick="window.location.href='/'">LIVE</button>
+      <button class="tab active" id="historyTabBtn" data-tab="history" onclick="window.location.href='/history'">HISTORY</button>
+      <button class="tab hidden" id="tabStorageFarm" onclick="window.location.href='/storagefarm.html'">SPEICHERFARM</button>
+      <button class="tab hidden" id="tabSmartHome" onclick="window.location.href='/smarthome'">SMARTHOME</button>
+      <button class="tab hidden" id="tabEvcs" onclick="window.location.href='/evcs'">EVCS</button>
+    </nav>
+    <div class="status-dot" id="liveDot" title="Live Verbindung"></div>
+
+    <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+<div class="menu hidden" id="menuDropdown">
+      <a class="menu-item" href="/">Live</a>
+      <a class="menu-item" href="/history">History</a>
+      <a class="menu-item hidden" id="menuStorageFarmLink" href="/storagefarm.html">Speicherfarm</a>
+      <a class="menu-item hidden" id="menuSmartHomeLink" href="/smarthome">SmartHome</a>
+      <a class="menu-item hidden" id="menuEvcsLink" href="/evcs">EVCS</a>
+      <a class="menu-item" href="/settings">Einstellungen</a>
+    </div>
+  </header>
+
+  <section class="nw-page-hero" aria-label="Seitenübersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">Report</div>
+      <div class="nw-page-hero__title">Jahresreport</div>
+      <div class="nw-page-hero__subtitle">Jahreswerte, Erzeuger, Verbraucher, Speicher und Quoten im Überblick.</div>
+    </div>
+    <div class="nw-page-hero__right">
+      <span class="nw-page-hero__pill">Jahr</span>
+    </div>
+  </section>
+
+
+  <!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="wrap report-wrap nw-subpage nw-subpage-report">
+    <div class="report-head">
+      <div class="report-head-left">
+        <h2>Jahresreport</h2>
+        <div class="report-meta" id="rangeMeta"></div>
+      </div>
+      <div class="report-head-right">
+        <button id="backBtn" class="btn sm" type="button">Zurück</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button id="reloadBtn">Neu laden</button>
+      <button id="printBtn">Drucken / PDF</button>
+      <button id="exportBtn">CSV / Excel</button>
+    </div>
+
+    <div class="year-tabs" id="yearTabs">
+      <button class="btn sm rep-tab active" data-tab="all">Übersicht</button>
+      <button class="btn sm rep-tab" data-tab="summary">Aufsummiert</button>
+      <button class="btn sm rep-tab" data-tab="producers">Erzeuger</button>
+      <button class="btn sm rep-tab" data-tab="consumers">Verbraucher</button>
+      <button class="btn sm rep-tab" data-tab="battery">Batterien</button>
+      <button class="btn sm rep-tab" data-tab="quotes">Quoten</button>
+      <button class="btn sm" id="infoBtn" type="button">Info</button>
+    </div>
+
+    <div id="err" class="err hidden"></div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="hint" id="hint"></div>
+    </div>
+  </main>
+
+  <script src="/static/year-report.js"></script>
+
+  <script src="/static/cockpit-shell.js"></script>
+
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/ship-security.test.cjs",
+        "test/ship-resource.integration.test.cjs"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "test/config.js"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "test/cls-control-parser.js"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "test/nexowatt-bridge.js"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "test/implementation-result-order.js"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "allPassed": true
+}

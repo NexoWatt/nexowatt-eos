@@ -1,0 +1,165 @@
+{
+    "type": "panel",
+    "label": "Extra-Settings",
+    "items": {
+        "_header": {
+            "type": "header",
+            "size": 2,
+            "text": "Additional setting",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "notificationEnabled": {
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Enable notifications",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "restoreTab": {
+            "type": "checkbox",
+            "label": "Show restore tab",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "debugLevel": {
+            "type": "checkbox",
+            "label": "extended log output",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "ignoreErrors": {
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Ignore backup errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "advancedDelete": {
+            "type": "checkbox",
+            "label": "Advanced delete functions for external storage",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "historyEntriesNumber": {
+            "newLine": true,
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 1,
+            "max": 50,
+            "type": "number",
+            "label": "Number of history entries"
+        },
+        "fileSizeWarning": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 1,
+            "max": 5000,
+            "type": "number",
+            "label": "Local hard disk space Limit value for warning message (MB)"
+        },
+        "fileSizeError": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 1,
+            "max": 5000,
+            "type": "number",
+            "label": "Local hard disk space Limit value for error message (MB)"
+        },
+        "_header1": {
+            "type": "header",
+            "size": 2,
+            "text": "Multihost settings",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "hostType": {
+            "type": "select",
+            "label": "Host Type",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "options": [
+                {
+                    "label": "Single",
+                    "value": "Single"
+                },
+                {
+                    "label": "Master",
+                    "value": "Master"
+                },
+                {
+                    "label": "Slave",
+                    "value": "Slave"
+                }
+            ],
+            "newLine": true
+        },
+        "slaveInstance": {
+            "type": "selectSendTo",
+            "command": "slaveInstance",
+            "jsonData": "{ \"instance\": \"nexowatt-backup\" }",
+            "multiple": true,
+            "noTranslation": true,
+            "hidden": "data.hostType !== 'Master'",
+            "label": "Slave instances",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "slaveNameSuffix": {
+            "hidden": "data.hostType !== 'Slave'",
+            "type": "text",
+            "label": "Slave name suffix",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "stopSlaveAfter": {
+            "hidden": "data.hostType !== 'Master'",
+            "type": "checkbox",
+            "label": "Slave Instances stopping after backup",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        }
+    }
+}

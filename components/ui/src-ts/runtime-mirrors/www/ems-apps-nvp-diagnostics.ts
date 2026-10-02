@@ -1,0 +1,333 @@
+// @ts-nocheck
+/**
+ * TypeScript-Parallelspiegel: www/ems-apps-nvp-diagnostics.js
+ *
+ * Zweck:
+ * Diese Datei ist die TypeScript-Vorbereitung der bestehenden JavaScript-Runtime-Datei.
+ * Sie wird noch nicht produktiv ausgeführt. Die zugehörige erzeugte JavaScript-Laufzeitdatei ist:
+ * www/ems-apps-nvp-diagnostics.js
+ *
+ * Zusammenhang:
+ * Der Spiegel hilft uns, die JS-Datei später schrittweise zu typisieren, zu testen und
+ * kontrolliert auf TypeScript umzustellen. Produktive Originalquellen liegen unter
+ * src-ts/runtime-executables/ bzw. den im generierten JS genannten TS-Pfaden.
+ * Dort ändern, Laufzeit erzeugen und danach die Spiegel synchronisieren.
+ * Build-/Prüfskripte ohne TS-Original werden weiterhin unter scripts/ gepflegt.
+ *
+ * Wichtig für die Migration:
+ * - Diese Datei enthält vorübergehend @ts-nocheck.
+ * - Der nächste Schritt ist pro Modul echte Typisierung statt pauschalem No-Check.
+ * - Fachliche Kommentare markieren die Abschnitte, die später einzeln migriert werden.
+ *
+ * Original-Hash: e54f6bf5bbdcf0d7bbdb75e4bfaa0260ead82512593f0378b292a0f08c1fc305
+ */
+
+/**
+ * Code-Teil: Runtime-Spiegel der kompletten Datei
+ *
+ * Zweck:
+ * Dieser Abschnitt enthält den ursprünglichen JavaScript-Code als TypeScript-Parallelkopie.
+ * Einzelne Funktionen werden später pro Modul weiter typisiert; Dateien ohne eigene
+ * Funktionsdeklarationen bleiben trotzdem über diesen Dateikommentar dokumentiert.
+ */
+
+/**
+ * AUTO-GENERATED RUNTIME FILE - NICHT MANUELL BEARBEITEN.
+ *
+ * Quelle: src-ts/runtime-executables/www/ems-apps-nvp-diagnostics.ts
+ * Quell-Hash: sha256:16e2d49deafccddc74135b4a20e422fd09d44ff0c2dfd00a89fccea9d8b5ff8b
+ * Erzeugung: npm run sync:ts-runtime-executables
+ *
+ * Zweck:
+ * Diese JavaScript-Datei ist das ausführbare Build-Artefakt für www/ems-apps-nvp-diagnostics.js.
+ * Die fachliche Bearbeitung erfolgt ab 0.7.131 in der TypeScript-Quelle.
+ * Ab 0.7.132 sind doppelte Legacy-JS-Bäume wie .nwcore entfernt.
+ *
+ * Pflege-Regel:
+ * 1. Änderung zuerst in src-ts/runtime-executables/ vornehmen.
+ * 2. npm run sync:ts-runtime-executables ausführen.
+ * 3. npm run test:runtime-executables prüfen.
+ */
+/**
+ * NexoWatt Quellcode-Erklärung (DE)
+ * Aufgabe: Zeigt NVP-bezogene Messwerte, Netzgrenzen und Regelungsdiagnosen im App-Center an.
+ * Daten und Wirkung: Verbindet die in dieser Datei sichtbaren Browser-Eingaben, Anzeigeelemente und API-/Hilfsaufrufe. Der Backend-Pfad entscheidet weiterhin über Berechtigungen und zulässige Schreibwirkungen.
+ * Bei Änderungen: DOM-/API-Verträge und Rollenrechte mitprüfen; Kommentare und docs:build nach fachlichen Änderungen aktualisieren.
+ * Verknüpfungen: docs/quellcode/src-ts/runtime-executables/www/ems-apps-nvp-diagnostics.md
+ * Einstieg: docs/QUELLCODE_WEGWEISER_DE.md; Pflege: docs/DOKUMENTATIONSSTANDARD_DE.md
+ */
+'use strict';
+/**
+ * Code-Teil: finiteNumber
+ *
+ * Zweck:
+ * Automatisch markierter Arrow-Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+const finiteNumber = (value) => {
+    if (value === null || value === undefined || value === '' || typeof value === 'boolean')
+        return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+};
+/**
+ * Code-Teil: fmtW
+ *
+ * Zweck:
+ * Automatisch markierter Arrow-Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+const fmtW = (value) => {
+    const n = finiteNumber(value);
+    if (n === null)
+        return '—';
+    if (Math.abs(n) >= 1000)
+        return `${(n / 1000).toFixed(2)} kW`;
+    return `${Math.round(n)} W`;
+};
+/**
+ * Code-Teil: fmtTs
+ *
+ * Zweck:
+ * Automatisch markierter Arrow-Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+const fmtTs = (value) => {
+    const n = finiteNumber(value);
+    if (n === null)
+        return '';
+    try {
+        const date = new Date(n);
+        return Number.isFinite(date.getTime()) ? date.toLocaleString() : '';
+    }
+    catch {
+        return '';
+    }
+};
+/**
+ * Code-Teil: fmtAge
+ *
+ * Zweck:
+ * Automatisch markierter Arrow-Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+const fmtAge = (value) => {
+    const n = finiteNumber(value);
+    if (n === null)
+        return '—';
+    if (n < 1000)
+        return `${Math.max(0, Math.round(n))} ms`;
+    return `${(Math.max(0, n) / 1000).toFixed(1)} s`;
+};
+/**
+ * Code-Teil: fmtBool
+ *
+ * Zweck:
+ * Automatisch markierter Arrow-Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+const fmtBool = (value) => value === true ? 'Ja' : (value === false ? 'Nein' : '—');
+/**
+ * Code-Teil: text
+ *
+ * Zweck:
+ * Automatisch markierter Arrow-Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+const text = (value, fallback = '—') => {
+    const normalized = value === undefined || value === null ? '' : String(value).trim();
+    return normalized || fallback;
+};
+/**
+ * Code-Teil: makeCard
+ *
+ * Zweck:
+ * Automatisch markierter Arrow-Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+const makeCard = (titleText, rows, kind = '') => {
+    const card = document.createElement('div');
+    card.className = 'nw-config-card';
+    const header = document.createElement('div');
+    header.className = 'nw-config-card__header';
+    const title = document.createElement('div');
+    title.className = 'nw-config-card__title';
+    title.textContent = titleText;
+    header.appendChild(title);
+    card.appendChild(header);
+    const body = document.createElement('div');
+    body.className = 'nw-config-card__body';
+    for (const rowDef of rows) {
+        const row = document.createElement('div');
+        row.className = 'nw-config-row';
+        const left = document.createElement('div');
+        left.className = 'nw-config-row__primary';
+        left.textContent = rowDef.label;
+        const right = document.createElement('div');
+        right.className = 'nw-config-row__status';
+        right.style.textAlign = 'right';
+        right.textContent = rowDef.value;
+        if (rowDef.kind === 'ok')
+            right.style.color = '#6ee7b7';
+        if (rowDef.kind === 'warn')
+            right.style.color = '#fde68a';
+        if (rowDef.kind === 'error')
+            right.style.color = '#fca5a5';
+        row.appendChild(left);
+        row.appendChild(right);
+        body.appendChild(row);
+    }
+    if (kind === 'error')
+        card.style.borderColor = 'rgba(252,165,165,.65)';
+    if (kind === 'ok')
+        card.style.borderColor = 'rgba(110,231,183,.45)';
+    card.appendChild(body);
+    return card;
+};
+/**
+ * Code-Teil: renderNvpCoordinator
+ *
+ * Zweck:
+ * Automatisch markierter Funktion-Abschnitt aus der ursprünglichen JavaScript-Datei.
+ * Dieser Kommentar dient als Orientierung für die schrittweise TypeScript-Migration.
+ *
+ * Zusammenhang:
+ * Die produktive Logik liegt aktuell noch in der JS-Datei. Dieser TS-Spiegel zeigt,
+ * welcher konkrete Code-Abschnitt später typisiert, getestet und übernommen werden muss.
+ */
+function renderNvpCoordinator(payload = {}) {
+    const mount = document.getElementById('nvpCoordinatorStatus');
+    const logMount = document.getElementById('nvpCoordinatorLog');
+    if (!mount && !logMount)
+        return;
+    if (mount)
+        mount.replaceChildren();
+    if (logMount)
+        logMount.replaceChildren();
+    const snap = payload.nvpCoordinator && typeof payload.nvpCoordinator === 'object'
+        ? payload.nvpCoordinator
+        : null;
+    const tariff = payload.tariffStatus && typeof payload.tariffStatus === 'object'
+        ? payload.tariffStatus
+        : null;
+    if (!snap) {
+        if (mount)
+            mount.appendChild(makeCard('NVP-Koordinator', [
+                { label: 'Status', value: 'Noch keine Diagnosedaten verfügbar', kind: 'warn' },
+            ]));
+        if (logMount) {
+            const empty = document.createElement('div');
+            empty.className = 'nw-config-row';
+            empty.textContent = 'Noch keine Logeinträge verfügbar.';
+            logMount.appendChild(empty);
+        }
+        return;
+    }
+    const statusKind = snap.stable === true
+        ? 'ok'
+        : (/stale|failed|blocked|timeout|error/.test(String(snap.status || '').toLowerCase()) ? 'error' : 'warn');
+    const pv = snap.pv && typeof snap.pv === 'object' ? snap.pv : {};
+    const effective = tariff && tariff.effective && typeof tariff.effective === 'object' ? tariff.effective : {};
+    if (mount) {
+        mount.appendChild(makeCard('Regelstatus', [
+            { label: 'Status', value: text(snap.status), kind: statusKind },
+            { label: 'Grund', value: text(snap.reason), kind: statusKind },
+            { label: 'Letzte Aktualisierung', value: fmtTs(snap.ts) || '—' },
+            { label: 'Stabil im Zielband', value: fmtBool(snap.stable), kind: snap.stable ? 'ok' : 'warn' },
+        ], statusKind));
+        mount.appendChild(makeCard('Netzverknüpfungspunkt (NVP)', [
+            { label: 'Istwert', value: fmtW(snap.rawNvpW), kind: snap.nvpUsable ? '' : 'error' },
+            { label: 'Ziel / Toleranz', value: `${fmtW(snap.nvpTargetW)} ± ${fmtW(snap.deadbandW)}` },
+            { label: 'Regelfehler', value: fmtW(snap.nvpErrorW), kind: snap.withinBand ? 'ok' : 'warn' },
+            { label: 'Prognose nach Speicher', value: fmtW(snap.projectedNvpW), kind: snap.projectedWithinBand ? 'ok' : '' },
+            { label: 'Quelle / Alter', value: `${text(snap.nvpSource)} · ${fmtAge(snap.nvpMeasurementAgeMs)}`, kind: snap.nvpUsable ? '' : 'error' },
+        ], snap.nvpUsable ? '' : 'error'));
+        mount.appendChild(makeCard('Speicher / Speicherfarm', [
+            { label: 'Topologie', value: text(snap.topology), kind: snap.topology === 'none' ? 'warn' : 'ok' },
+            { label: 'Istleistung', value: fmtW(snap.storageActualW), kind: snap.storageActualFresh ? '' : 'warn' },
+            { label: 'Sollleistung', value: fmtW(snap.storageTargetW) },
+            { label: 'Ausstehende Änderung', value: fmtW(snap.storagePendingDeltaW), kind: snap.storageResponsePending ? 'warn' : 'ok' },
+            { label: 'Write', value: `${snap.storageWriteOk ? 'OK' : 'nicht bestätigt'} · ${text(snap.storageWriteStatus)}`, kind: snap.storageWriteAccepted ? 'ok' : (snap.storageBlocked || snap.storageWriteFailed ? 'error' : 'warn') },
+            { label: 'Vorweggenommen / Reaktionsalter', value: `${fmtBool(snap.storageCommandCredited)} · ${fmtAge(snap.storageResponseAgeMs)}`, kind: snap.storageCommandCredited ? 'warn' : '' },
+        ], snap.storageBlocked || snap.storageWriteFailed ? 'error' : ''));
+        const setpointW = finiteNumber(pv.setpointW);
+        const setpointPct = finiteNumber(pv.setpointPct);
+        const pvSetpoint = setpointW !== null && setpointW !== 0
+            ? fmtW(setpointW)
+            : (setpointPct !== null ? `${setpointPct.toFixed(1)} %` : '—');
+        mount.appendChild(makeCard('PV-/WR-Restregelung', [
+            { label: 'NVP für PV-Regler', value: fmtW(snap.pvControlNvpW) },
+            { label: 'Aktion / Modus', value: `${text(pv.action)} · ${text(pv.mode)}`, kind: pv.error ? 'error' : '' },
+            { label: 'Sollwert', value: pvSetpoint },
+            { label: 'Write ausgeführt', value: fmtBool(pv.applied), kind: pv.error ? 'error' : '' },
+            { label: 'Fehler', value: text(pv.error, 'Keiner'), kind: pv.error ? 'error' : 'ok' },
+        ], pv.error ? 'error' : ''));
+        mount.appendChild(makeCard('Dynamischer Tarif', [
+            { label: 'Kompakte LIVE-Zeile', value: text(effective.statusText, 'Tarif nicht aktiv') },
+            { label: 'Ausführliche Kette', value: text(effective.detailStatusText, 'Keine Detaildaten') },
+        ]));
+    }
+    const log = Array.isArray(snap.log) ? snap.log.slice(-30).reverse() : [];
+    if (!logMount)
+        return;
+    if (!log.length) {
+        const empty = document.createElement('div');
+        empty.className = 'nw-config-row';
+        empty.textContent = 'Noch keine Logeinträge verfügbar.';
+        logMount.appendChild(empty);
+        return;
+    }
+    for (const rawEntry of log) {
+        const entry = rawEntry && typeof rawEntry === 'object' ? rawEntry : {};
+        const row = document.createElement('div');
+        row.className = 'nw-config-row';
+        const left = document.createElement('div');
+        left.className = 'nw-config-row__primary';
+        const title = document.createElement('div');
+        title.style.fontWeight = '600';
+        title.textContent = `${fmtTs(entry.ts)} · ${text(entry.status)}`;
+        const sub = document.createElement('div');
+        sub.style.fontSize = '0.75rem';
+        sub.style.opacity = '0.85';
+        sub.textContent = text(entry.reason);
+        left.appendChild(title);
+        left.appendChild(sub);
+        const right = document.createElement('div');
+        right.className = 'nw-config-row__status';
+        right.style.textAlign = 'right';
+        right.textContent = `NVP ${fmtW(entry.nvpW)} → Prognose ${fmtW(entry.projectedNvpW)} · Speicher ${fmtW(entry.storageActualW)} / ${fmtW(entry.storageTargetW)} · PV ${text(entry.pvAction)}`;
+        row.appendChild(left);
+        row.appendChild(right);
+        logMount.appendChild(row);
+    }
+}
+const api = { render: renderNvpCoordinator };
+window.NexoWattNvpDiagnostics = api;

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "kind": "nexowatt-eos-product-workspace",
+  "name": "NexoWatt EOS",
+  "version": "0.2.0-dev.8",
+  "workspaceRole": "main-consolidated-product-source",
+  "deliveryType": "complete-source-evidence-adapter-channel-development",
+  "basedOn": "ioBroker",
+  "ownKernel": false,
+  "ownJavaScriptRuntime": false,
+  "installedRuntimeProfile": "eos-integrated-ui-lab-v1",
+  "accountPolicyVersion": 1,
+  "enrollmentMarkerVersion": 2,
+  "roles": {
+    "service": {
+      "technicalAccount": "system.user.admin",
+      "adminGroup": "system.group.administrator",
+      "sharedDefaultPassword": false
+    },
+    "installer": {
+      "group": "system.group.installateur",
+      "ownPasswordRequired": true
+    },
+    "enduser": {
+      "group": "system.group.endkunde",
+      "ownPasswordRequired": true
+    }
+  },
+  "sources": "system/integration/components.json",
+  "architecture": "docs/architecture/INTEGRATED_SYSTEM.md",
+  "accountInputSchema": "system/integration/accounts.schema.json",
+  "currentVerification": "reports/integration/adapter-channel/verification-summary.json",
+  "productionReleaseApproved": false,
+  "targetHardwareAccepted": false,
+  "publicRepositoryPublished": false,
+  "legacyUpstreamInstallerPackage": "package.json",
+  "newInstallationApproved": false,
+  "isolatedPostgresqlTestCandidateInstallable": true,
+  "currentRuntimeArtifact": "delivery/test-pi-0.2.0-test.2/delivery.json",
+  "installationHold": "EOS-HOST-REDIS-20261001",
+  "historicalRuntimeArtifact": "delivery/test-pi-0.2.0-test.1/delivery.json",
+  "osSecurityUpdates": {
+    "sourceImplemented": true,
+    "targetInstalled": false,
+    "actualPackageTransactionTested": false,
+    "defaultAutomatic": true,
+    "automaticReboot": false,
+    "statusInterface": "GET /api/system/os-updates",
+    "documentation": "docs/security/OS_SECURITY_UPDATES_DE.md",
+    "runtimeVersionPinFinding": "EOS-OS-UPDATES-RUNTIME-PIN-20261001"
+  },
+  "postgresqlBackend": {
+    "userSelected": true,
+    "sourceImplemented": true,
+    "experimentalProfile": "eos-postgresql-mtls13-v1",
+    "testHostInstallerImplemented": true,
+    "controller": "7.2.2",
+    "packagesVersion": "0.1.0-dev.2",
+    "targetServer": "17.11",
+    "nodeDriver": "8.23.1",
+    "nativeServerIntegrationTested": false,
+    "targetInstalled": false,
+    "productionApproved": false,
+    "perAdapterDatabaseAuthorizationImplemented": false,
+    "documentation": "runtime/postgresql/README.md",
+    "releaseGate": "EOS-PG-INTEGRATION-20261001"
+  },
+  "currentRuntimeContainsDev8Changes": false,
+  "adapterChannel": {
+    "profile": "eos-channel-mtls13-v1",
+    "sourceImplemented": true,
+    "loopbackTlsLaboratoryTested": true,
+    "nativePostgresqlIntegrationTested": false,
+    "perPeerCapabilitiesImplemented": true,
+    "osIsolationAccepted": false,
+    "installerEnabled": false,
+    "javascriptAdapterEnabled": false,
+    "documentation": "docs/security/ADAPTER_CHANNEL_DEV8_DE.md"
+  }
+}

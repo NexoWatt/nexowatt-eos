@@ -1,0 +1,298 @@
+TAP version 13
+# Subtest: host status uses no service actions and releases common maintenance lock
+ok 1 - host status uses no service actions and releases common maintenance lock
+  ---
+  duration_ms: 3279.759535
+  type: 'test'
+  ...
+# Subtest: explicit host rotation uses only fixed bounded stop/start operations and resets start limits
+ok 2 - explicit host rotation uses only fixed bounded stop/start operations and resets start limits
+  ---
+  duration_ms: 171.794406
+  type: 'test'
+  ...
+# Subtest: root privilege and installed release verification precede service actions
+ok 3 - root privilege and installed release verification precede service actions
+  ---
+  duration_ms: 98.934041
+  type: 'test'
+  ...
+# Subtest: release activation/enrollment lock blocks certificate maintenance
+ok 4 - release activation/enrollment lock blocks certificate maintenance
+  ---
+  duration_ms: 90.616213
+  type: 'test'
+  ...
+# Subtest: live certificate process lock is not stolen by recovery
+ok 5 - live certificate process lock is not stolen by recovery
+  ---
+  duration_ms: 90.110677
+  type: 'test'
+  ...
+# Subtest: explicit recovery can reclaim dead certificate operation and preserve old generation
+ok 6 - explicit recovery can reclaim dead certificate operation and preserve old generation
+  ---
+  duration_ms: 186.279918
+  type: 'test'
+  ...
+# Subtest: a controller still running after stop prevents swap and retains recovery evidence
+ok 7 - a controller still running after stop prevents swap and retains recovery evidence
+  ---
+  duration_ms: 185.229198
+  type: 'test'
+  ...
+# Subtest: both marker hashes update; unrelated fields remain exact
+ok 8 - both marker hashes update; unrelated fields remain exact
+  ---
+  duration_ms: 184.048606
+  type: 'test'
+  ...
+# Subtest: invalid optional enrollment marker blocks both writes
+ok 9 - invalid optional enrollment marker blocks both writes
+  ---
+  duration_ms: 89.156723
+  type: 'test'
+  ...
+# Subtest: partial marker update can be reversed without accepting unrelated hashes
+ok 10 - partial marker update can be reversed without accepting unrelated hashes
+  ---
+  duration_ms: 175.833258
+  type: 'test'
+  ...
+# Subtest: version, service, role, ACL and password-setup drift all block both marker writes
+ok 11 - version, service, role, ACL and password-setup drift all block both marker writes
+  ---
+  duration_ms: 103.462004
+  type: 'test'
+  ...
+# Subtest: account drift during marker commit is detected by post-write verification
+ok 12 - account drift during marker commit is detected by post-write verification
+  ---
+  duration_ms: 75.055792
+  type: 'test'
+  ...
+# Subtest: real second marker write interruption recovers v2 hashes without changing accounts
+ok 13 - real second marker write interruption recovers v2 hashes without changing accounts
+  ---
+  duration_ms: 160.809977
+  type: 'test'
+  ...
+# Subtest: core-only marker update remains valid with no enrollment/account lookup
+ok 14 - core-only marker update remains valid with no enrollment/account lookup
+  ---
+  duration_ms: 79.404364
+  type: 'test'
+  ...
+# Subtest: status timer performs no rotation and systemd parses both units
+ok 15 - status timer performs no rotation and systemd parses both units
+  ---
+  duration_ms: 73.683705
+  type: 'test'
+  ...
+# Subtest: status includes HTTPS expiry and rejects exposed CA signing key
+ok 16 - status includes HTTPS expiry and rejects exposed CA signing key
+  ---
+  duration_ms: 161.499855
+  type: 'test'
+  ...
+# Subtest: explicit HTTPS renewal restarts controller and leaves Redis running
+ok 17 - explicit HTTPS renewal restarts controller and leaves Redis running
+  ---
+  duration_ms: 225.855769
+  type: 'test'
+  ...
+# Subtest: permit cleanup failure still attempts physical stop of controller and both Redis stores
+ok 18 - permit cleanup failure still attempts physical stop of controller and both Redis stores
+  ---
+  duration_ms: 577.748873
+  type: 'test'
+  ...
+# Subtest: actual generated certificates: status contains fingerprints and dates but no credentials or private material
+ok 19 - actual generated certificates: status contains fingerprints and dates but no credentials or private material
+  ---
+  duration_ms: 121.42522
+  type: 'test'
+  ...
+# Subtest: pre-expiry, expired and not-yet-valid statuses use certificate validity rather than manifest lifetime
+ok 20 - pre-expiry, expired and not-yet-valid statuses use certificate validity rather than manifest lifetime
+  ---
+  duration_ms: 108.896484
+  type: 'test'
+  ...
+# Subtest: wrong certificate key and broadened permissions are rejected
+ok 21 - wrong certificate key and broadened permissions are rejected
+  ---
+  duration_ms: 91.391545
+  type: 'test'
+  ...
+# Subtest: symlink and duplicate unsafe Redis TLS directive are rejected
+ok 22 - symlink and duplicate unsafe Redis TLS directive are rejected
+  ---
+  duration_ms: 86.321725
+  type: 'test'
+  ...
+# Subtest: CA or credential configuration drift is rejected before preparation
+ok 23 - CA or credential configuration drift is rejected before preparation
+  ---
+  duration_ms: 98.899462
+  type: 'test'
+  ...
+# Subtest: prepare is exclusive, preserves live bytes and credentials and generates independent trust
+ok 24 - prepare is exclusive, preserves live bytes and credentials and generates independent trust
+  ---
+  duration_ms: 199.613547
+  type: 'test'
+  ...
+# Subtest: activation preserves config, ACL, key permissions and data; rebinds only config hash
+ok 25 - activation preserves config, ACL, key permissions and data; rebinds only config hash
+  ---
+  duration_ms: 187.198718
+  type: 'test'
+  ...
+# Subtest: actual TLS 1.3 handshake: new trust succeeds and old CA cannot authenticate new server
+ok 26 - actual TLS 1.3 handshake: new trust succeeds and old CA cannot authenticate new server
+  ---
+  duration_ms: 265.792684
+  type: 'test'
+  ...
+# Subtest: changed staged file is rejected before any service stop
+ok 27 - changed staged file is rejected before any service stop
+  ---
+  duration_ms: 185.005965
+  type: 'test'
+  ...
+# Subtest: failed controller trial restores old files, old trust and old marker then restarts
+ok 28 - failed controller trial restores old files, old trust and old marker then restarts
+  ---
+  duration_ms: 208.618174
+  type: 'test'
+  ...
+# Subtest: interrupted prepared transaction is recoverable with retained journal
+ok 29 - interrupted prepared transaction is recoverable with retained journal
+  ---
+  duration_ms: 226.06598
+  type: 'test'
+  ...
+# Subtest: interrupted old-renamed transaction is recoverable with retained journal
+ok 30 - interrupted old-renamed transaction is recoverable with retained journal
+  ---
+  duration_ms: 327.802965
+  type: 'test'
+  ...
+# Subtest: interrupted new-renamed transaction is recoverable with retained journal
+ok 31 - interrupted new-renamed transaction is recoverable with retained journal
+  ---
+  duration_ms: 284.286994
+  type: 'test'
+  ...
+# Subtest: interrupted config-switched transaction is recoverable with retained journal
+ok 32 - interrupted config-switched transaction is recoverable with retained journal
+  ---
+  duration_ms: 271.896734
+  type: 'test'
+  ...
+# Subtest: expired rollback leaves all services stopped and transaction evidence retained
+ok 33 - expired rollback leaves all services stopped and transaction evidence retained
+  ---
+  duration_ms: 277.792802
+  type: 'test'
+  ...
+# Subtest: crash after committed rotation keeps new generation instead of restoring old trust
+ok 34 - crash after committed rotation keeps new generation instead of restoring old trust
+  ---
+  duration_ms: 329.186634
+  type: 'test'
+  ...
+# Subtest: marker rebind refuses pending marker or unrelated config mutation and is idempotent for recovery
+ok 35 - marker rebind refuses pending marker or unrelated config mutation and is idempotent for recovery
+  ---
+  duration_ms: 74.530712
+  type: 'test'
+  ...
+# Subtest: CLI status emits valid JSON; invalid options never expose filesystem or secret details
+ok 36 - CLI status emits valid JSON; invalid options never expose filesystem or secret details
+  ---
+  duration_ms: 301.70986
+  type: 'test'
+  ...
+# Subtest: 24 caller SANs plus three default loopbacks can be inspected and renewed
+ok 37 - 24 caller SANs plus three default loopbacks can be inspected and renewed
+  ---
+  duration_ms: 198.820677
+  type: 'test'
+  ...
+# Subtest: CA directory and key exposure are rejected; CA key must match public certificate
+ok 38 - CA directory and key exposure are rejected; CA key must match public certificate
+  ---
+  duration_ms: 84.539601
+  type: 'test'
+  ...
+# Subtest: leaf renewal retains exact browser trust and SANs while replacing leaf keys
+ok 39 - leaf renewal retains exact browser trust and SANs while replacing leaf keys
+  ---
+  duration_ms: 171.553837
+  type: 'test'
+  ...
+# Subtest: renewal can replace expired leaves without relaxing public inspection
+ok 40 - renewal can replace expired leaves without relaxing public inspection
+  ---
+  duration_ms: 177.95155
+  type: 'test'
+  ...
+# Subtest: renewal refuses CA with insufficient remaining lifetime
+ok 41 - renewal refuses CA with insufficient remaining lifetime
+  ---
+  duration_ms: 95.166179
+  type: 'test'
+  ...
+# Subtest: tampered stage fails before stopping any service
+ok 42 - tampered stage fails before stopping any service
+  ---
+  duration_ms: 207.695213
+  type: 'test'
+  ...
+# Subtest: failed new listener probe restores previous HTTPS leaf
+ok 43 - failed new listener probe restores previous HTTPS leaf
+  ---
+  duration_ms: 178.325781
+  type: 'test'
+  ...
+# Subtest: web interrupted prepared is recoverable
+ok 44 - web interrupted prepared is recoverable
+  ---
+  duration_ms: 158.821027
+  type: 'test'
+  ...
+# Subtest: web interrupted old-renamed is recoverable
+ok 45 - web interrupted old-renamed is recoverable
+  ---
+  duration_ms: 174.485062
+  type: 'test'
+  ...
+# Subtest: web interrupted new-renamed is recoverable
+ok 46 - web interrupted new-renamed is recoverable
+  ---
+  duration_ms: 197.94252
+  type: 'test'
+  ...
+# Subtest: actual HTTPS TLS probe checks both exact deployed leaf identities after renewal
+ok 47 - actual HTTPS TLS probe checks both exact deployed leaf identities after renewal
+  ---
+  duration_ms: 539.665025
+  type: 'test'
+  ...
+# Subtest: web crash after durable commit confirms new leaf and never restores old leaf
+ok 48 - web crash after durable commit confirms new leaf and never restores old leaf
+  ---
+  duration_ms: 327.940904
+  type: 'test'
+  ...
+1..48
+# tests 48
+# suites 0
+# pass 48
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6228.850625

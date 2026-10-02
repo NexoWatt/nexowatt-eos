@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>NexoWatt EOS – Energieherkunft & Ladebilanz</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    body{margin:0;background:#07100d;color:#eefaf2;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.ledger-shell{max-width:1380px;margin:0 auto;padding:20px}.ledger-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}.ledger-head h1{margin:0;font-size:28px}.muted{color:#9ab5a4}.warn{color:#ffd166}.error{color:#ff8e8e}.ok{color:#8ff7b0}.pill{border:1px solid rgba(0,200,83,.35);border-radius:999px;padding:7px 11px;background:rgba(0,200,83,.08);color:#8ff7b0;font-weight:800}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:rgba(11,18,16,.96);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;box-shadow:0 18px 40px rgba(0,0,0,.24)}.card small{display:block;color:#9ab5a4;margin-bottom:6px}.card b{font-size:22px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.actions a,.actions button,.periods button{border:1px solid rgba(0,200,83,.35);border-radius:12px;background:rgba(0,200,83,.12);color:#eefaf2;padding:10px 12px;text-decoration:none;cursor:pointer}.actions a:hover,.actions button:hover,.periods button:hover,.periods button.active{background:rgba(0,200,83,.24)}.table-wrap{overflow:auto;border-radius:18px;border:1px solid rgba(255,255,255,.08);margin-top:14px}table{width:100%;border-collapse:collapse;min-width:1250px;background:rgba(8,14,12,.92)}th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;text-align:left;vertical-align:top}th{color:#8ff7b0;background:rgba(0,200,83,.08);position:sticky;top:0}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.bar{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}.bar>span{display:block;height:100%;background:linear-gradient(90deg,#00c853,#87f59f)}.tag{display:inline-block;border-radius:8px;padding:3px 7px;margin:2px;background:rgba(255,255,255,.08);font-size:12px}.code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;word-break:break-all}.legal{border-color:rgba(255,209,102,.35);background:rgba(255,209,102,.06)}.periods{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.periods button{padding:7px 10px}.section-title{font-size:18px;font-weight:800;margin:0 0 10px}.kv{display:grid;grid-template-columns:minmax(130px,auto) 1fr;gap:7px 12px;font-size:13px}.kv>span:nth-child(odd){color:#9ab5a4}@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}.ledger-shell{padding:12px}}.nw-feature-gated:not(.nw-feature-authorized){visibility:hidden}
+  </style>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-energy-ledger nw-feature-gated">
+  <header class="topbar">
+    <div class="brand"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></div>
+    <button aria-label="Menu" id="menuBtn" data-nw-menu-fallback="1">☰</button>
+    <h1>NexoWatt EOS</h1>
+    <nav class="tabs" aria-label="Hauptnavigation">
+      <button class="tab" type="button" onclick="window.location.href='/'">LIVE</button>
+      <button class="tab" id="historyTabBtn" type="button" onclick="window.location.href='/history.html'">HISTORY</button>
+      <button class="tab hidden active" id="tabEnergyLedger" type="button" onclick="window.location.href='/ledger/energy-origin'">BILANZ</button>
+      <button class="tab hidden" id="tabEvcs" type="button" onclick="window.location.href='/evcs.html'">EVCS</button>
+      <button class="tab hidden" id="tabSmartHome" type="button" onclick="window.location.href='/smarthome.html'">SMARTHOME</button>
+      <button class="tab hidden" id="tabStorageFarm" type="button" onclick="window.location.href='/storagefarm.html'">SPEICHERFARM</button>
+    </nav>
+    <div class="status-dot" id="liveDot" title="Live Verbindung"></div>
+    <a class="topbar-gear" href="/settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+    <div class="menu hidden" id="menuDropdown">
+      <a class="menu-item" href="/">Live</a>
+      <a class="menu-item" href="/history.html">History</a>
+      <a class="menu-item hidden" id="menuEnergyLedgerLink" href="/ledger/energy-origin">Energieherkunft &amp; Ladebilanz</a>
+      <a class="menu-item hidden" id="menuEvcsLink" href="/evcs.html">EVCS</a>
+      <a class="menu-item hidden" id="menuSmartHomeLink" href="/smarthome.html">SmartHome</a>
+      <a class="menu-item hidden" id="menuStorageFarmLink" href="/storagefarm.html">Speicherfarm</a>
+      <a class="menu-item" href="/settings.html">Einstellungen</a>
+    </div>
+  </header>
+  <main class="ledger-shell nw-page-shell">
+    <header class="ledger-head">
+      <div>
+        <h1>Energieherkunft &amp; Ladebilanz</h1>
+        <div class="muted">Read-only Herkunftsbilanz für Netz, PV, Speicher und ladepunktbezogene Energie. Keine Hardwaresteuerung.</div>
+      </div>
+      <span id="ledgerStatus" class="pill">lade…</span>
+    </header>
+
+    <section class="grid">
+      <div class="card"><small>Ladeenergie im Zeitraum</small><b id="evcsTotal">--</b></div>
+      <div class="card"><small>Operativ erneuerbar</small><b id="renewableTotal">--</b><div class="bar"><span id="renewableBar" style="width:0%"></span></div></div>
+      <div class="card"><small>Netzenergie</small><b id="gridTotal">--</b></div>
+      <div class="card"><small>Nicht eindeutig zugeordnet</small><b id="unknownTotal">--</b></div>
+      <div class="card"><small>Direkte PV-Energie</small><b id="pvDirect">--</b></div>
+      <div class="card"><small>PV aus Speicher</small><b id="storedPv">--</b></div>
+      <div class="card"><small>DE THG-Nachweiskandidat</small><b id="deCandidate">--</b></div>
+      <div class="card"><small>NL ERE-Nachweiskandidat</small><b id="nlCandidate">--</b></div>
+    </section>
+
+    <nav class="actions">
+      <div class="periods" aria-label="Zeitraum">
+        <button type="button" data-period="today">Heute</button>
+        <button type="button" data-period="month">Monat</button>
+        <button type="button" data-period="year">Jahr</button>
+        <button type="button" data-period="recent" class="active">Letzte 7 Tage</button>
+        <button type="button" data-period="all">Alle im Puffer</button>
+      </div>
+      <a id="jsonExport" href="/api/ledger/energy-origin.json?period=recent">JSON</a>
+      <a id="csvExport" href="/api/ledger/energy-origin.csv?period=recent">CSV</a>
+      <button id="refreshLedger" type="button">Aktualisieren</button>
+    </nav>
+
+    <section class="two">
+      <div class="card">
+        <h2 class="section-title">Messkette</h2>
+        <div id="meterStatus" class="muted">--</div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Speicher-Herkunftskonto</h2>
+        <div id="storageInventory" class="muted">--</div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Letztes Intervall</h2>
+        <div id="lastInterval" class="muted">--</div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Nachweisstatus</h2>
+        <div id="evidenceStatus" class="muted">--</div>
+      </div>
+    </section>
+
+    <section class="card legal" style="margin-top:12px">
+      <small>Rechtlicher Hinweis</small>
+      <div id="legalNote">Nachweiskandidat; keine automatische behördliche Anerkennung oder Vergütungszusage.</div>
+      <div class="muted" style="margin-top:6px">Die Anerkennung hängt vom Messsystem, Messkonzept, Betreiberstatus und dem jeweils gültigen behördlichen Verfahren ab. Fehlende Intervalle werden nicht still geschätzt.</div>
+    </section>
+
+    <section class="table-wrap">
+      <table>
+        <thead><tr><th>Intervall</th><th>Qualität</th><th>EVCS kWh</th><th>PV direkt</th><th>EE direkt</th><th>PV Speicher</th><th>EE Speicher</th><th>Netz direkt</th><th>Netz Speicher</th><th>Unbekannt</th><th>DE</th><th>NL</th><th>Hash</th></tr></thead>
+        <tbody id="ledgerRows"><tr><td colspan="13" class="muted">lade…</td></tr></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/static/energy-origin-ledger-view.js" defer></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    });
+  }
+  </script>
+  <script src="/static/cockpit-shell.js"></script>
+  <script src="/static/nw-shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-admission-controller-verification",
+  "checkedAt": "2026-10-01T10:29:04.664Z",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "scope": "unit-and-real-compiled-function-fixtures",
+  "command": "node --test --test-reporter=tap tests/system/policy-admission.test.cjs tests/system/controller-profile.test.cjs",
+  "result": {
+    "tests": 52,
+    "passed": 52,
+    "failed": 0,
+    "skipped": 0
+  },
+  "evidence": "reports/test-base/admission-and-controller.tap",
+  "schemaCheck": {
+    "standard": "JSON Schema Draft 2020-12",
+    "tool": "jsonschema 4.26.0",
+    "result": "valid-schema",
+    "instanceSchemaParity": "not-exhaustively-tested"
+  },
+  "controllerBuildEvidence": "reports/test-base/controller-profile-transform.json",
+  "hardwareTested": false,
+  "productionApproved": false,
+  "fullUpstreamTypeScriptBuildPerformed": false,
+  "files": [
+    {
+      "path": "runtime/policy/admission.cjs",
+      "sha256": "49e3c0c908c0a0973c1ea7b642edc6848d790f700667e724389e9fde9e9a3d49"
+    },
+    {
+      "path": "runtime/policy/cli.cjs",
+      "sha256": "5dedd4bd791c6dba096a39d3e67c6ca9de93b4851c6cc487fe56893a363b8bb5"
+    },
+    {
+      "path": "runtime/controller-profile/guard.cjs",
+      "sha256": "7538f4727376c40b9f6e0e65b4aa848363166b0e95e8edf45c0e6ab63dd42a44"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "2430b3e26b387d95cadcdb543f16542263bdf37e495660fabe0b4a83fdcf79ed"
+    },
+    {
+      "path": "system/contracts/adapter-admission.schema.json",
+      "sha256": "817d1981359c7f7cee3b1acd629255a6b7ca428736a60ba314b9fc325cec4ddd"
+    },
+    {
+      "path": "tests/system/policy-admission.test.cjs",
+      "sha256": "258467debe7e29129e7f72e20c588e62e62296c9c3685e09e7712bdefd2155e3"
+    },
+    {
+      "path": "tests/system/controller-profile.test.cjs",
+      "sha256": "fa0a3bbce79dba75fda3b50f7c1be4af8047819dcfe224258cc25ecd684ed21a"
+    },
+    {
+      "path": "docs/security/ADAPTER_ADMISSION.md",
+      "sha256": "f311391047bcb20b9e50b878c281f121850afc99f09535b1dee32a77b731c008"
+    },
+    {
+      "path": "docs/security/CONTROLLER_TEST_PROFILE.md",
+      "sha256": "5570b58ba76f03657c82acfc9bdd81dfbffbf9be2e146fd8806ba6433277fb99"
+    },
+    {
+      "path": "runtime/controller-profile/pinned-build.json",
+      "sha256": "934a71031c9dea06ecbb337b05913a76fe46b6d63b7113b075a187d3c571eecd"
+    }
+  ]
+}

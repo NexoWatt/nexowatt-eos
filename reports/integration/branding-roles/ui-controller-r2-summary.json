@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-branding-roles-realprocess-verification",
+  "testedAt": "2026-10-01T15:49:17.213002+00:00",
+  "passed": true,
+  "candidate": "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/app",
+  "candidateFilesSha256": {
+    "package-lock.json": "b0db18741ac1aefbfb3ac15dfc74826aa551a84d327a6e0aae0be20178135ab6",
+    "node_modules/iobroker.js-controller/eos-test-profile.json": "5c936a625beda84b7a6b61828c6469df8bea369558cfbd1b317a6ee6eccbabf8",
+    "node_modules/iobroker.eos-admin/build/main.js": "327e7038782f316e25570ccc02d9dd3769bd4a07458aba5788c6dc92f1b3b959",
+    "node_modules/iobroker.eos-admin/build/lib/web.js": "11227efff01c9c6265095d90269239dbd8a06126813e2395bfbfc0f8b2118696",
+    "node_modules/iobroker.eos-admin/adminWww/js/eos-role-bootstrap.js": "0804f7a98c25bbddb588f84c9408a88be31687211afc84c68d705109d3303548",
+    "node_modules/iobroker.nexowatt-ui/main.js": "47a51c3f8338271a5fbb586ae654d80921a89abdf1751c879bc23fb979a8ea9f",
+    "node_modules/iobroker.nexowatt-ui/lib/eos-integrated.js": "c62c8e0e3ae0be4255e1d2dee7e49920dd566fc5f967fe1a7c71b7d49d6330a0",
+    "node_modules/iobroker.nexowatt-ui/www/auth.js": "1bed25157f6206b63d37dd859fc0352282734eb77f7a9f4f80201ede8097e5a0",
+    "node_modules/@iobroker/ws-server/build/index.js": "f88d1bcf2344c1c3e404b47abc8f03fceffc8b236ca97f008bd2bbac635ba9e0"
+  },
+  "sourceFilesSha256": {
+    "tests/integration/ui-controller.integration.cjs": "3470ba3abb2f272a78ddad28f18fe523c10f0b7f5e5e7f87cc3700de86e8e636",
+    "tests/integration/ui-browser-smoke.cjs": "180a157154e7a97f4ea39aa83e5d6606983553e7a752098bc7d034457fc728b2",
+    "runtime/bootstrap/enrollment.cjs": "58d0f8ef241fe21226677ce7928a9ce816b9ad2425aef3757e9f8ac81391bbcd",
+    "runtime/bootstrap/accounts.cjs": "0e9bfb4a13ffa963a6d3f8d2f590f595e8c2fac3feb35815b240f28dfddaffad",
+    "runtime/controller-profile/transform.cjs": "79ea05d3b31b550d68be8b7232b088269cccf2590289121b7867e1bc882830a1",
+    "runtime/controller-profile/guard.cjs": "7538f4727376c40b9f6e0e65b4aa848363166b0e95e8edf45c0e6ab63dd42a44",
+    "components/admin/src/lib/web.ts": "06e75789d94f9e8c5047ac9741bdb6bae92cb82c6b19f7bc95c826b6a66b0121",
+    "components/admin/src/main.ts": "58e6b641d0dea07d91d75aa776f8d1a534ceaa735278c94ff6a9db128c32bb2d",
+    "components/admin/src/lib/eosSessionSecurity.js": "81c27a33278a20d6b410ea39cdb4060fce4f533f27847487078253c184181f3e",
+    "components/admin/adminWww/js/eos-role-bootstrap.js": "0804f7a98c25bbddb588f84c9408a88be31687211afc84c68d705109d3303548",
+    "components/ui/main.js": "47a51c3f8338271a5fbb586ae654d80921a89abdf1751c879bc23fb979a8ea9f",
+    "components/ui/www/auth.js": "1bed25157f6206b63d37dd859fc0352282734eb77f7a9f4f80201ede8097e5a0"
+  },
+  "result": {
+    "stages": 14,
+    "tapCasesIncludingParent": 15,
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 87449.826973,
+    "checks": [
+      "ordinary setup and core hardening over two authenticated TLS1.3 Redis stores",
+      "fresh enrollment creates device-specific service admin and two separate accounts plus exactly two disabled approved instances",
+      "ordinary CLI uploads local Admin/UI assets without installation or npm",
+      "actual controller starts Admin and UI with real HTTPS identities and no physical adapters",
+      "both HTTPS entrypoints deliver the supplied NexoWatt identity and require login",
+      "installer and enduser must choose own passwords with current credential and lose earlier sessions",
+      "enduser can change only their own password through UI and invalidates sessions on both ports",
+      "installer and enduser cannot enter service administration or promote roles through account endpoints",
+      "password completion preserves enrolled accounts, fixed groups and runtime safety invariants",
+      "real authenticated WebSocket rejects installer/enduser raw account, group and credential writes",
+      "real admin and UI authenticate unique account; unauthenticated license data denied",
+      "central signed test license activates UI capabilities via real encrypted messagebox without raw license export",
+      "real Chromium opens role-specific product portal, installer account/settings dialogs and licensed EOS UI",
+      "licensed preview denies physical commands and central removal closes capabilities"
+    ]
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "os": "Ubuntu 24.04 execution environment",
+    "arch": "x64",
+    "uid": 0,
+    "browser": "HeadlessChrome/153.0.8010.0",
+    "browserWebSecurityEnabled": true,
+    "browserSandboxEnabled": false,
+    "browserCertificateTrust": "Only exact ephemeral Admin and UI leaf SPKI hashes; Node HTTPS probes independently verify CA, host, and TLS1.3",
+    "networkInterfaces": "Explicit hashed fixture in disposable copies of two adapter library files; controller still reports native uv_interface_addresses denied",
+    "systemd": false,
+    "rpiHardware": false,
+    "productionAcceptance": false
+  },
+  "testedVersions": {
+    "iobroker.js-controller": "7.2.2",
+    "iobroker.eos-admin": "7.10.11",
+    "iobroker.nexowatt-ui": "1.0.21",
+    "@iobroker/ws-server": "4.5.1",
+    "@iobroker/socket-classes": "2.6.0"
+  },
+  "reproduce": {
+    "command": "node --test --test-reporter=tap tests/integration/ui-controller.integration.cjs",
+    "env": {
+      "EOS_TEST_INTERFACE_FIXTURE": "1",
+      "EOS_TEST_CONTROLLER_ROOT": "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/app",
+      "EOS_TEST_REDIS_SERVER": "/workspace/scratch/6383b3161c96/redis-test-tooling/redis-7.2.10/src/redis-server",
+      "EOS_TEST_BROWSER_PUPPETEER": "/workspace/scratch/6383b3161c96/integrated-staging/components/admin/node_modules/puppeteer",
+      "EOS_TEST_BROWSER_CHROMIUM_MODULE": "/workspace/scratch/6383b3161c96/browser-test-tooling/node_modules/@sparticuz/chromium/build/index.js"
+    }
+  },
+  "attempts": [
+    {
+      "path": "reports/integration/branding-roles/raw/ui-controller-attempt-01-r1.tap",
+      "sha256": "2c50c6defa153795a72ef26e9c4843837ecd28576cc4e6795e945c21a01ae4c8",
+      "passed": false,
+      "disposition": "Test contract corrected: explicit Bearer requests without ambient cookies may omit Origin; CSRF negative now uses ambient cookie without Origin and rejects a foreign Origin."
+    },
+    {
+      "path": "reports/integration/branding-roles/raw/ui-controller-attempt-02-r1.tap",
+      "sha256": "4244d86a3e8c7543236c95432632e21ce4f799d0e7bcd05883a16b8592cfa2ea",
+      "passed": false,
+      "disposition": "Test contract corrected: revoked OAuth Bearer token is rejected with HTTP 401; unauthenticated navigation without a token redirects with HTTP 302."
+    },
+    {
+      "path": "reports/integration/branding-roles/raw/ui-controller-attempt-03-r1.tap",
+      "sha256": "6d4dce0dc7e79d9b6742f03619f2698836006b418000e13fd8d322f7a36f73a8",
+      "passed": true,
+      "disposition": null
+    },
+    {
+      "path": "reports/integration/branding-roles/raw/ui-controller-attempt-04-r2.tap",
+      "sha256": "c85279e45037efbed8c3d89814e59c34230590af31bc26ac224ad7e84dd9f4a3",
+      "passed": true,
+      "disposition": "Final rebuilt r2 runtime with exact local package archives; all 14 stages and parent passed again."
+    }
+  ],
+  "securityEvidence": {
+    "anonymousProductApiDenied": true,
+    "pendingUsersNoCapabilities": true,
+    "installerFirstPasswordViaActualBrowser": true,
+    "longLowercasePassphraseAccepted": true,
+    "oldPasswordAndCrossPortSessionsRevoked": true,
+    "nonServiceLicenseAndRawAdminMutationsDenied": true,
+    "webSocketOversizedFrame": {
+      "bytes": 1048577,
+      "closeCode": 1009,
+      "adminContinuesServing": true
+    },
+    "providedFaviconSha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+    "nonServicePortalUsesScopedHttp": true,
+    "centralSignedLicenseViaTlsMessagebox": true,
+    "physicalControlRemainsDenied": true
+  },
+  "cleanup": {
+    "fixedFixtureRemoved": true,
+    "credentialsPersistedInEvidence": false,
+    "secretPatternReview": "Runtime credentials/tokens/UUIDs redacted before diagnostic output; all four raw attempts scanned for private key, signed license token and full password-hash patterns with zero matches. This is not a general secret-scanning proof."
+  },
+  "limitations": [
+    "No Debian12/VM/systemd/Raspberry Pi acceptance run.",
+    "Browser sandbox is disabled in isolated UID0 environment; browser web security remains enabled.",
+    "Only approved Admin and UI instances active; physical device controls remain blocked.",
+    "No per-adapter process or database identity isolation acceptance.",
+    "Browser checks cover first-password form, product portal, installer basic/account dialogs and licensed Cockpit navigation; they do not validate every legacy Admin or field-device workflow.",
+    "No independent CRA or IEC conformity assessment."
+  ],
+  "candidateRevision": "r2",
+  "acceptanceStatus": "final-development-runtime-verification-exact-candidate",
+  "runtimeComparisonToR1": {
+    "referenceSummary": "reports/integration/branding-roles/ui-controller-r1-summary.json",
+    "referenceSummarySha256": "e1598f54e317e52c1b9ce6e6d6fc7a4fbd1cd708466c94c55b32a3b5ccedd1e7",
+    "sameRuntimeFiles": [
+      "node_modules/iobroker.js-controller/eos-test-profile.json",
+      "node_modules/iobroker.eos-admin/build/main.js",
+      "node_modules/iobroker.eos-admin/build/lib/web.js",
+      "node_modules/iobroker.eos-admin/adminWww/js/eos-role-bootstrap.js",
+      "node_modules/iobroker.nexowatt-ui/main.js",
+      "node_modules/iobroker.nexowatt-ui/lib/eos-integrated.js",
+      "node_modules/iobroker.nexowatt-ui/www/auth.js",
+      "node_modules/@iobroker/ws-server/build/index.js"
+    ],
+    "changedBoundFiles": [
+      "package-lock.json"
+    ],
+    "scope": "Exact comparison of the nine bound files. Eight selected executable/profile/frontend files match r1; lock changed because the UI archive now includes corrected shipped test metadata/helper. This is not a whole-filesystem equality claim.",
+    "unchangedBoundSourceFiles": 12
+  },
+  "finalRawEvidence": {
+    "path": "reports/integration/branding-roles/raw/ui-controller-attempt-04-r2.tap",
+    "sha256": "c85279e45037efbed8c3d89814e59c34230590af31bc26ac224ad7e84dd9f4a3"
+  },
+  "buildEvidenceSha256": "5816c5cae72396e8d191e519a3fd20b938b8d018446348bb9bc99f911ff45f11",
+  "componentArchives": {
+    "iobroker.eos-admin": {
+      "filename": "iobroker.eos-admin-7.10.11.tgz",
+      "sha256": "54b81623b4851ad17f8d0a0ab8cc49c52a1b49b9f43621bb4f788d3c27c548bb"
+    },
+    "iobroker.nexowatt-ui": {
+      "filename": "iobroker.nexowatt-ui-1.0.21.tgz",
+      "sha256": "cef7b490d3c0e756e5526ab502d8a54843d263b4448042c942dffff56f028593"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src-ts/runtime-executables",
+    "outDir": "build-ts/runtime-executables",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "jsx": "react-jsx",
+    "removeComments": false,
+    "moduleDetection": "legacy",
+    "noCheck": true
+  },
+  "include": [
+    "src-ts/runtime-executables/**/*.ts",
+    "src-ts/runtime-executables/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "build-ts"
+  ]
+}

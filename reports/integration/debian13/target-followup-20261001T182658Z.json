@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-reported-test-host-followup",
+  "userMessageAt": "2026-10-01T18:26:58Z",
+  "recordedAt": "2026-10-01T18:29:22.204090+00:00",
+  "sourceCommitReviewed": "c18ae242efa69a7e8c79c81d1ce3dc074904aea6",
+  "origin": "user-pasted-read-only-command-output; no direct access to Pi",
+  "observed": {
+    "rootFilesystem": {
+      "device": "/dev/mmcblk0p2",
+      "size": "58G",
+      "used": "4.5G",
+      "available": "52G",
+      "usedPercent": 9
+    },
+    "packages": [
+      {
+        "name": "nodejs",
+        "version": "22.22.2-1nodesource1",
+        "architecture": "arm64"
+      },
+      {
+        "name": "openssl",
+        "version": "3.5.5-1~deb13u2+rpt1",
+        "architecture": "arm64"
+      },
+      {
+        "name": "systemd",
+        "version": "257.9-1~deb13u1",
+        "architecture": "arm64"
+      }
+    ],
+    "executedNodeVersion": "22.22.2",
+    "redisServerAndToolsRowsPresent": false,
+    "existingPaths": [
+      "/etc/nexowatt-eos",
+      "/var/lib/nexowatt-eos"
+    ],
+    "iobrokerPathReportedPresent": false
+  },
+  "limits": [
+    "dpkg-query output did not include installation status; no Redis rows do not exclude manual or container installation",
+    "test -e proves path existence, not directory type, provenance, contents or running services",
+    "No target configuration, credentials, file contents or service state received",
+    "OpenSSL Raspberry Pi package suffix requires vendor-specific update assessment; no security clearance from version string"
+  ],
+  "assessment": {
+    "newInstallationApproved": false,
+    "redisSecurityHoldStillActive": true,
+    "freshHostPathChecksWouldFail": true,
+    "nodeExactVersionCheckWouldFail": true,
+    "historicalBundleRequiredNode": "24.21.0",
+    "systemdMajorMeetsDiagnosticMinimum": true,
+    "systemdRuntimeVerified": false,
+    "existingInstallationStatus": "undetermined"
+  },
+  "nextReadOnlyChecks": [
+    "types and owners of fixed EOS paths",
+    "bounded path listing without file contents",
+    "installed and loaded EOS/ioBroker/Redis unit names and states",
+    "Redis executable location and process names without arguments"
+  ],
+  "webRechecked": [
+    {
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-81934",
+      "result": "trixie5:8.0.2-3+deb13u2 still listed vulnerable; not proof of target installation"
+    },
+    {
+      "url": "https://nodejs.org/en/about/previous-releases",
+      "result": "Node22 and Node24 listed LTS; exactEOSbuildcontract is separate"
+    },
+    {
+      "url": "https://packages.debian.org/trixie/openssl",
+      "result": "Debian3.5.7-1~deb13u3 listed; Raspberry Pi-specific3.5.5+rpt1 assessment unresolved"
+    }
+  ],
+  "softwareChanged": false,
+  "targetChangesPerformed": false,
+  "testsPerformedThisFollowup": false
+}

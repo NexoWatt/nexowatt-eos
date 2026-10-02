@@ -1,0 +1,38 @@
+▶ supplemental PostgreSQL schema SQL and RLS in WASM
+  ✔ schema initializes on fresh database (19.942478ms)
+  ✔ runtime roles have no superuser or role administration powers (3.736652ms)
+  ✔ objects role can store own domain with binary value (4.781974ms)
+  ✖ objects role cannot insert states or escape to owner (3.641638ms)
+  ✔ states role cannot read or change objects domain (4.588972ms)
+  ✔ event rows are isolated by database role (4.194635ms)
+  ✔ input byte limits and domain checks are enforced (206.199821ms)
+  ✔ runtime cannot create schema, change schema version, or disable RLS (18.719397ms)
+  ✔ parameterized SQL preserves injection text as data (2.147729ms)
+✖ supplemental PostgreSQL schema SQL and RLS in WASM (4329.446501ms)
+ℹ {"scope":"WASM SQL/RLS only","engine":"PostgreSQL 18.3 (PGlite 0.5.8) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit","schemaSha256":"19fd184544f6d87f12ef254181d0a3d0b743636c367861e7a4b5a6f9557ae33d"}
+ℹ tests 10
+ℹ suites 0
+ℹ pass 8
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4463.501696
+
+✖ failing tests:
+
+test at tests/postgresql/schema-wasm.test.cjs:31:10
+✖ objects role cannot insert states or escape to owner (3.641638ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/postgresql/schema-wasm.test.cjs:33:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/postgresql/schema-wasm.test.cjs:31:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: '42501' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

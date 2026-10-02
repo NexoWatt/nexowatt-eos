@@ -1,0 +1,103 @@
+TAP version 13
+# Subtest: fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS
+    # Subtest: ordinary setup completes and preserves mandatory TLS configuration
+    ok 1 - ordinary setup completes and preserves mandatory TLS configuration
+      ---
+      duration_ms: 2091.002384
+      type: 'test'
+      ...
+    # Subtest: real bootstrap locks standard admin, repositories, diagnostics and plugins
+    ok 2 - real bootstrap locks standard admin, repositories, diagnostics and plugins
+      ---
+      duration_ms: 5411.940545
+      type: 'test'
+      ...
+    # Subtest: actual controller reaches alive state with no adapter instances
+    ok 3 - actual controller reaches alive state with no adapter instances
+      ---
+      duration_ms: 6394.417092
+      type: 'test'
+      ...
+    # Subtest: controller stops cleanly, verifies hardened marker and starts again
+    ok 4 - controller stops cleanly, verifies hardened marker and starts again
+      ---
+      duration_ms: 7004.300486
+      type: 'test'
+      ...
+    1..4
+ok 1 - fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS
+  ---
+  duration_ms: 24645.014413
+  type: 'test'
+  ...
+# Subtest: published controller Redis clients against two real TLS-only Redis stores
+    # Subtest: both real stores accept only authenticated TLS1.3
+    ok 1 - both real stores accept only authenticated TLS1.3
+      ---
+      duration_ms: 25.094499
+      type: 'test'
+      ...
+    # Subtest: wrong password, CA and DNS identity rejected
+    ok 2 - wrong password, CA and DNS identity rejected
+      ---
+      duration_ms: 104.728234
+      type: 'test'
+      ...
+    # Subtest: Redis listener rejects plaintext and TLS1.2
+    ok 3 - Redis listener rejects plaintext and TLS1.2
+      ---
+      duration_ms: 3.614535
+      type: 'test'
+      ...
+    # Subtest: TLS without authentication cannot read or write data
+    ok 4 - TLS without authentication cannot read or write data
+      ---
+      duration_ms: 8.283877
+      type: 'test'
+      ...
+    # Subtest: published 7.2.2 objects/states clients initialize over TLS
+    ok 5 - published 7.2.2 objects/states clients initialize over TLS
+      ---
+      duration_ms: 105.179167
+      type: 'test'
+      ...
+    # Subtest: objects and states roundtrip plus subscriptions use actual controller clients
+    ok 6 - objects and states roundtrip plus subscriptions use actual controller clients
+      ---
+      duration_ms: 10.949188
+      type: 'test'
+      ...
+    # Subtest: controller messagebox delivery passes encrypted Redis path
+    ok 7 - controller messagebox delivery passes encrypted Redis path
+      ---
+      duration_ms: 25.880628
+      type: 'test'
+      ...
+    # Subtest: runtime account cannot reconfigure server, install modules or destroy database
+    ok 8 - runtime account cannot reconfigure server, install modules or destroy database
+      ---
+      duration_ms: 28.613079
+      type: 'test'
+      ...
+    # Subtest: store restart persists data, reconnects controller and resumes subscription
+    ok 9 - store restart persists data, reconnects controller and resumes subscription
+      ---
+      duration_ms: 5151.907785
+      type: 'test'
+      ...
+    1..9
+ok 2 - published controller Redis clients against two real TLS-only Redis stores
+  ---
+  duration_ms: 5714.690739
+  type: 'test'
+  ...
+# Controller CONFIG requests intentionally denied; observed denial notices: 3. No raw controller messages retained.
+1..2
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 24841.486

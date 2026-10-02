@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-os-update-host-regression-attempt",
+  "evidenceSource": "direct-exec-tool-result",
+  "toolChunkId": "c7a67e",
+  "exactRunTimestampRecorded": false,
+  "command": [
+    "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+    "--test",
+    "tests/system/preflight-installation.test.cjs",
+    "tests/system/release-cli.test.cjs",
+    "tests/system/activation.test.cjs"
+  ],
+  "exitCode": 1,
+  "tests": 43,
+  "passed": 41,
+  "failed": 2,
+  "skipped": 0,
+  "durationMilliseconds": 1516.098165,
+  "failures": [
+    {
+      "test": "valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host",
+      "location": "tests/system/preflight-installation.test.cjs:17",
+      "assertion": "report.host.prerequisitesReady",
+      "expected": true,
+      "actual": false
+    },
+    {
+      "test": "actual Redis admission hold prevents direct signed installation before staging, accounts or services",
+      "location": "tests/system/preflight-installation.test.cjs:117",
+      "assertion": "report.prerequisitesReady",
+      "expected": true,
+      "actual": false
+    }
+  ],
+  "cause": "The shared installation fixture did not yet provide the newly required Debian keyring or installed-state output from its mocked dpkg-query command.",
+  "correction": "Added a fixture-only keyring and mocked package status to tests/system/fixtures/installation-bundle.cjs; no production security gate was relaxed.",
+  "subsequentDirectRerun": {
+    "toolChunkId": "9433ac",
+    "exitCode": 0,
+    "tests": 43,
+    "passed": 43,
+    "failed": 0,
+    "skipped": 0,
+    "durationMilliseconds": 1520.34249
+  },
+  "rawTapPersistedForThisInitialAttempt": false,
+  "scope": "Offline fixtures and real release validation. No APT commands, target installation or hardware acceptance. Final captured combined run is separate."
+}

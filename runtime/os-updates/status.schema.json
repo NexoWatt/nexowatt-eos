@@ -1,0 +1,459 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "generatedAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "state": {
+      "enum": [
+        "running",
+        "ok",
+        "attention",
+        "error",
+        "never-run",
+        "disabled"
+      ]
+    },
+    "lastAttemptAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lastSuccessAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lastError": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "enum": [
+                "configuration-invalid",
+                "prerequisite-missing",
+                "unsupported-host",
+                "apt-refresh-failed",
+                "upgrade-failed",
+                "upgrade-interrupted",
+                "upgrade-timeout",
+                "pending-scan-failed",
+                "inventory-failed",
+                "status-write-failed",
+                "internal-error"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "code",
+            "message"
+          ]
+        }
+      ]
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxAgeSeconds": {
+          "const": 129600
+        }
+      },
+      "required": [
+        "maxAgeSeconds"
+      ]
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "automatic": {
+          "type": "boolean"
+        },
+        "rebootAutomatic": {
+          "const": false
+        },
+        "schedule": {
+          "const": "*-*-* 02:00:00 Europe/Berlin"
+        },
+        "randomizedDelaySeconds": {
+          "const": 900
+        },
+        "debianMajor": {
+          "enum": [
+            "12",
+            "13",
+            null
+          ]
+        },
+        "origins": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "maxLength": 512
+          }
+        },
+        "serviceRestartsPossible": {
+          "const": true
+        }
+      },
+      "required": [
+        "automatic",
+        "rebootAutomatic",
+        "schedule",
+        "randomizedDelaySeconds",
+        "debianMajor",
+        "origins",
+        "serviceRestartsPossible"
+      ]
+    },
+    "timers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "active": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "checkedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "enabled",
+        "active",
+        "checkedAt"
+      ]
+    },
+    "pending": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "securityCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "heldSecurityCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "blockedSecurityCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "availableCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "vendorCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "packages": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 512
+              },
+              "installedVersion": {
+                "type": "string",
+                "maxLength": 512
+              },
+              "securityVersion": {
+                "type": "string",
+                "maxLength": 512
+              },
+              "held": {
+                "type": "boolean"
+              },
+              "blockedReason": {
+                "enum": [
+                  "runtime-version-pin",
+                  "package-held",
+                  "candidate-pinned-or-untrusted",
+                  "remaining-after-maintenance"
+                ]
+              },
+              "securityClassified": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name",
+              "installedVersion",
+              "securityVersion",
+              "held",
+              "blockedReason",
+              "securityClassified"
+            ]
+          }
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "securityCount",
+        "heldSecurityCount",
+        "blockedSecurityCount",
+        "availableCount",
+        "vendorCount",
+        "packages",
+        "truncated"
+      ]
+    },
+    "reboot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "required",
+            "not-required",
+            "unknown"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      },
+      "required": [
+        "state",
+        "evidence"
+      ]
+    },
+    "activation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "required",
+            "not-required",
+            "unknown"
+          ]
+        },
+        "serviceRestartCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sessionRestartCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "serviceRestartCount",
+        "sessionRestartCount"
+      ]
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "complete-for-configured-origins",
+            "gap",
+            "unknown"
+          ]
+        },
+        "gaps": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "maxLength": 512
+          }
+        },
+        "outsideConfiguredOriginsCount": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "gaps"
+      ]
+    },
+    "sbom": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "const": "installed-packages.cdx.json"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "generatedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "components": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647
+            }
+          },
+          "required": [
+            "path",
+            "sha256",
+            "generatedAt",
+            "components"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "state",
+    "lastAttemptAt",
+    "lastSuccessAt",
+    "lastError",
+    "freshness",
+    "policy",
+    "timers",
+    "pending",
+    "reboot",
+    "activation",
+    "coverage",
+    "sbom"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexowatt.local/schemas/os-updates-status-v1.json",
+  "title": "EOS root-owned OS update status v1"
+}

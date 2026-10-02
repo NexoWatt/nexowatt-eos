@@ -1,0 +1,262 @@
+TAP version 13
+# Subtest: OS parser never evaluates shell substitutions or accepts malformed assignments
+ok 1 - OS parser never evaluates shell substitutions or accepts malformed assignments
+  ---
+  duration_ms: 2.658868
+  type: 'test'
+  ...
+# Subtest: fresh supported fixture matches prerequisites but cannot bypass Redis security admission
+ok 2 - fresh supported fixture matches prerequisites but cannot bypass Redis security admission
+  ---
+  duration_ms: 9.814827
+  type: 'test'
+  ...
+# Subtest: preflight rejects wrong OS and exact Node drift
+ok 3 - preflight rejects wrong OS and exact Node drift
+  ---
+  duration_ms: 10.31921
+  type: 'test'
+  ...
+# Subtest: Debian 13 ARM64 fixture requires its reviewed Redis/systemd profile without claiming hardware acceptance
+ok 4 - Debian 13 ARM64 fixture requires its reviewed Redis/systemd profile without claiming hardware acceptance
+  ---
+  duration_ms: 8.655984
+  type: 'test'
+  ...
+# Subtest: unknown OS versions and malformed release suffixes are rejected without broad family matching
+ok 5 - unknown OS versions and malformed release suffixes are rejected without broad family matching
+  ---
+  duration_ms: 15.797166
+  type: 'test'
+  ...
+# Subtest: Debian 13 rejects Debian 12 daemon versions and unexpected Redis major or malformed version output
+ok 6 - Debian 13 rejects Debian 12 daemon versions and unexpected Redis major or malformed version output
+  ---
+  duration_ms: 8.645399
+  type: 'test'
+  ...
+# Subtest: Debian 13 preserves architecture, port, runtime privilege and fresh-host gates
+ok 7 - Debian 13 preserves architecture, port, runtime privilege and fresh-host gates
+  ---
+  duration_ms: 3.779147
+  type: 'test'
+  ...
+# Subtest: preflight rejects privileged Node, existing identity and occupied database ports
+ok 8 - preflight rejects privileged Node, existing identity and occupied database ports
+  ---
+  duration_ms: 2.71024
+  type: 'test'
+  ...
+# Subtest: fresh-path check catches a dangling symlink instead of overwriting it
+ok 9 - fresh-path check catches a dangling symlink instead of overwriting it
+  ---
+  duration_ms: 2.53856
+  type: 'test'
+  ...
+# Subtest: merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+ok 10 - merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+  ---
+  duration_ms: 0.566507
+  type: 'test'
+  ...
+# Subtest: generated host config passes real transport and bootstrap validators
+ok 11 - generated host config passes real transport and bootstrap validators
+  ---
+  duration_ms: 102.866806
+  type: 'test'
+  ...
+# Subtest: private writes reject replacement and symlink targets
+ok 12 - private writes reject replacement and symlink targets
+  ---
+  duration_ms: 0.840131
+  type: 'test'
+  ...
+# Subtest: installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+ok 13 - installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+  ---
+  duration_ms: 3.361886
+  type: 'test'
+  ...
+# Subtest: installer repeats the verified integrated port profile before persistent changes
+ok 14 - installer repeats the verified integrated port profile before persistent changes
+  ---
+  duration_ms: 2.243254
+  type: 'test'
+  ...
+# Subtest: verified catalog selects web port checks without changing core-only prerequisites
+ok 15 - verified catalog selects web port checks without changing core-only prerequisites
+  ---
+  duration_ms: 0.225361
+  type: 'test'
+  ...
+# Subtest: disabled install writes restricted config and units but never enables or starts services
+ok 16 - disabled install writes restricted config and units but never enables or starts services
+  ---
+  duration_ms: 7.015062
+  type: 'test'
+  ...
+# Subtest: pinned release state write failure prevents every service start or enable
+ok 17 - pinned release state write failure prevents every service start or enable
+  ---
+  duration_ms: 4.299945
+  type: 'test'
+  ...
+# Subtest: privileged group detected after identity creation stops before provisioning
+ok 18 - privileged group detected after identity creation stops before provisioning
+  ---
+  duration_ms: 2.340971
+  type: 'test'
+  ...
+# Subtest: start follows TLS databases then init then controller and writes root marker
+ok 19 - start follows TLS databases then init then controller and writes root marker
+  ---
+  duration_ms: 4.939712
+  type: 'test'
+  ...
+# Subtest: initialization failure stops and disables units without starting controller
+ok 20 - initialization failure stops and disables units without starting controller
+  ---
+  duration_ms: 5.976802
+  type: 'test'
+  ...
+# Subtest: cleanup failure is reported rather than claimed as a stopped installation
+ok 21 - cleanup failure is reported rather than claimed as a stopped installation
+  ---
+  duration_ms: 6.912547
+  type: 'test'
+  ...
+# Subtest: unit security boundaries and network compatibility remain explicit
+ok 22 - unit security boundaries and network compatibility remain explicit
+  ---
+  duration_ms: 0.672127
+  type: 'test'
+  ...
+# Subtest: systemd-analyze accepts complete unit grammar in isolated root fixture
+ok 23 - systemd-analyze accepts complete unit grammar in isolated root fixture
+  ---
+  duration_ms: 17.471947
+  type: 'test'
+  ...
+# Subtest: web listeners are reserved only for the verified integrated profile, including IPv6
+ok 24 - web listeners are reserved only for the verified integrated profile, including IPv6
+  ---
+  duration_ms: 8.100905
+  type: 'test'
+  ...
+# Subtest: malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+ok 25 - malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+  ---
+  duration_ms: 2.684922
+  type: 'test'
+  ...
+# Subtest: untrusted or non-executable tools are rejected before executing their bytes
+ok 26 - untrusted or non-executable tools are rejected before executing their bytes
+  ---
+  duration_ms: 2.491569
+  type: 'test'
+  ...
+# Subtest: protected distribution symlink is allowed, writable target and private runtime traversal are denied
+ok 27 - protected distribution symlink is allowed, writable target and private runtime traversal are denied
+  ---
+  duration_ms: 4.689965
+  type: 'test'
+  ...
+# Subtest: nonregular executable path, unavailable manager and invalid hostname fail before installation
+ok 28 - nonregular executable path, unavailable manager and invalid hostname fail before installation
+  ---
+  duration_ms: 4.371093
+  type: 'test'
+  ...
+# Subtest: setuid or setgid runtime executables are never executed by the prerequisite checker
+ok 29 - setuid or setgid runtime executables are never executed by the prerequisite checker
+  ---
+  duration_ms: 6.76879
+  type: 'test'
+  ...
+# Subtest: execution errors cannot be accepted through otherwise plausible output and exit status
+ok 30 - execution errors cannot be accepted through otherwise plausible output and exit status
+  ---
+  duration_ms: 4.172362
+  type: 'test'
+  ...
+# Subtest: valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host
+ok 31 - valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host
+  ---
+  duration_ms: 172.508731
+  type: 'test'
+  ...
+# Subtest: tampered signed payload and wrong signer fail before target commands or credential validation
+ok 32 - tampered signed payload and wrong signer fail before target commands or credential validation
+  ---
+  duration_ms: 80.314866
+  type: 'test'
+  ...
+# Subtest: wrong signing public key is rejected even when all host prerequisites are ready
+ok 33 - wrong signing public key is rejected even when all host prerequisites are ready
+  ---
+  duration_ms: 63.304724
+  type: 'test'
+  ...
+# Subtest: a valid signature never promotes a pending catalog entry
+ok 34 - a valid signature never promotes a pending catalog entry
+  ---
+  duration_ms: 101.45143
+  type: 'test'
+  ...
+# Subtest: current release must declare the observed target architecture and exact Node version
+ok 35 - current release must declare the observed target architecture and exact Node version
+  ---
+  duration_ms: 86.913158
+  type: 'test'
+  ...
+# Subtest: duplicate service and installer credentials or browser-selected admin role fail before target commands
+ok 36 - duplicate service and installer credentials or browser-selected admin role fail before target commands
+  ---
+  duration_ms: 130.654716
+  type: 'test'
+  ...
+# Subtest: secret modes, symlinks and invalid certificate hosts are rejected before target commands
+ok 37 - secret modes, symlinks and invalid certificate hosts are rejected before target commands
+  ---
+  duration_ms: 125.885833
+  type: 'test'
+  ...
+# Subtest: occupied integrated UI port yields a non-mutating rejected report
+ok 38 - occupied integrated UI port yields a non-mutating rejected report
+  ---
+  duration_ms: 54.156599
+  type: 'test'
+  ...
+# Subtest: CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+ok 39 - CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+  ---
+  duration_ms: 167.059804
+  type: 'test'
+  ...
+# Subtest: direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+ok 40 - direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+  ---
+  duration_ms: 96.519794
+  type: 'test'
+  ...
+# Subtest: actual Redis admission hold prevents direct signed installation before staging, accounts or services
+ok 41 - actual Redis admission hold prevents direct signed installation before staging, accounts or services
+  ---
+  duration_ms: 103.520294
+  type: 'test'
+  ...
+# Subtest: verified installer forwards the same catalog port profile to the privileged host recheck
+ok 42 - verified installer forwards the same catalog port profile to the privileged host recheck
+  ---
+  duration_ms: 206.814633
+  type: 'test'
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1594.49477

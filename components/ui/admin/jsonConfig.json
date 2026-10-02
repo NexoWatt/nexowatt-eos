@@ -1,0 +1,236 @@
+{
+  "type": "tabs",
+  "items": {
+    "allgemein": {
+      "type": "panel",
+      "label": "Allgemein",
+      "title": "Allgemein",
+      "items": {
+        "__appcenterInfo": {
+          "type": "staticText",
+          "text": "Hinweis: Die EMS‑Konfiguration (Energiefluss / Datenpunkt‑Mapping / Tarife / Speicherfarm / Ladepunkte) erfolgt ausschließlich im App‑Center.\n\nApp‑Center öffnen: Im Adapter‑Reiter \"Tab\" auf \"EMS Apps öffnen\" klicken. Oder direkt aus dem Admin: /adapter/nexowatt-ui/appcenter.html?instance=<INSTANZ>. Alternativ direkt per Port: https://<HOST>:<PORT>/ems-apps.html",
+          "xs": 12,
+          "sm": 12,
+          "md": 12
+        },
+        "port": {
+          "type": "number",
+          "label": "HTTP Port",
+          "min": 1,
+          "max": 65535,
+          "attr": "port",
+          "xs": 12,
+          "sm": 12,
+          "md": 6
+        },
+        "ip": {
+          "type": "text",
+          "label": "IP-Adresse / Bind-Adresse",
+          "attr": "ip",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "help": "NexoWatt-EOS-kompatible IP-Adresse für den eingebauten Webserver. Legacy native.bind wird weiterhin als Fallback gelesen.",
+          "default": "0.0.0.0"
+        }
+      }
+    },
+    "sicherheit": {
+      "type": "panel",
+      "label": "Sicherheit",
+      "title": "Sicherheit",
+      "items": {
+        "__securityInfo": {
+          "type": "staticText",
+          "text": "Die Oberfläche kann aus allen freigegebenen Netzen, einschließlich Tailscale für Service, erreicht werden. Kundenbedienung und Einrichtung erfordern eine Anmeldung mit der passenden EOS-Rolle. Alte Einstellungen „Alle Netze“, „LAN“ oder deaktivierte Authentifizierung erlauben keine anonymen Schreibzugriffe mehr. Die automatische Anlagenregelung läuft unabhängig von der Browser-Anmeldung.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12
+        },
+        "accessControl.customerWritePolicy": {
+          "type": "select",
+          "label": "Anmeldung für Bedienung",
+          "attr": "accessControl.customerWritePolicy",
+          "default": "session",
+          "help": "Gilt unabhängig vom Netz: Kunden-, Installer- oder Admin-Anmeldung entsprechend der Funktion. Diese Einstellung schränkt den Servicezugang über Tailscale nicht auf LAN-Adressen ein.",
+          "options": [
+            {
+              "label": "Nur mit Anmeldung",
+              "value": "session"
+            }
+          ],
+          "xs": 12,
+          "sm": 12,
+          "md": 6
+        },
+        "accessControl.allowedOrigins": {
+          "type": "text",
+          "label": "Zusätzlich erlaubte Browser-Origins",
+          "attr": "accessControl.allowedOrigins",
+          "default": "",
+          "help": "Optional, durch Komma oder Zeilenumbruch getrennt, z. B. https://ems.example.de. Leer lassen, wenn kein abgesicherter Reverse-Proxy verwendet wird.",
+          "xs": 12,
+          "sm": 12,
+          "md": 6
+        },
+        "__securityNetworkWarning": {
+          "type": "staticText",
+          "text": "Port 8188 nicht direkt ins Internet weiterleiten. Für Fernzugriff VPN oder einen abgesicherten HTTPS-Reverse-Proxy verwenden.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12
+        }
+      }
+    },
+    "diagnose": {
+      "type": "panel",
+      "label": "Diagnose",
+      "title": "Diagnose",
+      "items": {
+        "__diagInfo": {
+          "type": "staticText",
+          "text": "Diagnose- und Schutzoptionen für Support und Feldbetrieb. Der Aktor-Arbiter kann ausschließlich sicherheitskritische Konflikte zwischen bereits vorhandenen Steuerpfaden blockieren; normale EMS-Regelparameter werden hier nicht verändert.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12
+        },
+        "diagnostics.actuatorArbiterMode": {
+          "type": "select",
+          "label": "Aktor-Arbiter",
+          "attr": "diagnostics.actuatorArbiterMode",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "options": [
+            {
+              "label": "Sicherheitsprioritäten verbindlich (empfohlen)",
+              "value": "enforce-safety"
+            },
+            {
+              "label": "Nur beobachten / Shadow",
+              "value": "shadow"
+            }
+          ],
+          "default": "enforce-safety"
+        },
+        "__arbiterInfo": {
+          "type": "staticText",
+          "text": "Der Sicherheits-Arbiter setzt ausschließlich Not-/Netzbetreiber-, Peak-/Anschlusslimit- und befristete manuelle Prioritäten durch. Normale EMS- und Komfortmodule untereinander bleiben zunächst unverändert.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12
+        },
+        "diagnostics.enabled": {
+          "type": "checkbox",
+          "label": "Diagnose aktiv",
+          "default": false,
+          "attr": "diagnostics.enabled",
+          "xs": 12,
+          "sm": 6,
+          "md": 6
+        },
+        "diagnostics.writeStates": {
+          "type": "checkbox",
+          "label": "Diagnose-States schreiben",
+          "default": true,
+          "attr": "diagnostics.writeStates",
+          "xs": 12,
+          "sm": 6,
+          "md": 6
+        },
+        "diagnostics.logLevel": {
+          "type": "select",
+          "label": "Diagnose Log-Level",
+          "attr": "diagnostics.logLevel",
+          "xs": 12,
+          "sm": 6,
+          "md": 6,
+          "options": [
+            {
+              "label": "debug",
+              "value": "debug"
+            },
+            {
+              "label": "info",
+              "value": "info"
+            }
+          ],
+          "default": "debug"
+        },
+        "diagnostics.logIntervalSec": {
+          "type": "number",
+          "label": "Diagnose Log-Intervall (s)",
+          "min": 0,
+          "max": 3600,
+          "step": 1,
+          "default": 10,
+          "attr": "diagnostics.logIntervalSec",
+          "xs": 12,
+          "sm": 6,
+          "md": 6
+        },
+        "diagnostics.stateIntervalSec": {
+          "type": "number",
+          "label": "Diagnose State-Intervall (s)",
+          "min": 0,
+          "max": 3600,
+          "step": 1,
+          "default": 10,
+          "attr": "diagnostics.stateIntervalSec",
+          "xs": 12,
+          "sm": 6,
+          "md": 6
+        },
+        "diagnostics.maxJsonLen": {
+          "type": "number",
+          "label": "Diagnose max JSON Länge",
+          "min": 1000,
+          "max": 500000,
+          "step": 1000,
+          "default": 20000,
+          "attr": "diagnostics.maxJsonLen",
+          "xs": 12,
+          "sm": 6,
+          "md": 6
+        }
+      }
+    },
+    "simulation": {
+      "type": "panel",
+      "label": "Simulation",
+      "title": "Simulation",
+      "items": {
+        "__simInfo": {
+          "type": "staticText",
+          "text": "Simulation/Testbetrieb: Startet den nexowatt-sim Adapter und ordnet automatisch alle relevanten Datenpunkte im App-Center zu (Grid/PV/Speicher/Tarif/EVCS). Damit lassen sich alle EMS-Logiken ohne reale Hardware testen.\n\nSimulation öffnen: /adapter/nexowatt-ui/simulation.html?instance=<INSTANZ>\nAlternativ direkt per Port: https://<HOST>:<PORT>/simulation.html\n\nHinweis: Beim Aktivieren wird die aktuelle App-Center Konfiguration als Backup gespeichert und bei 'Deaktivieren' wiederhergestellt.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12
+        }
+      }
+    },
+    "smarthome": {
+      "type": "panel",
+      "label": "SmartHome",
+      "title": "SmartHome",
+      "items": {
+        "__smarthomeInfo": {
+          "type": "staticText",
+          "text": "SmartHome: Aktiviert die SmartHome-Ansicht in der VIS (Header-Reiter + Menülink).\nDie Konfiguration (Räume/Funktionen/Geräte + Datenpunkt-Zuordnung) erfolgt in der SmartHome-Config Seite.\n\nSmartHome Config öffnen:\n• Im Adapter-Reiter \"Tab\" auf \"SmartHome Config\" klicken.\n• Oder direkt aus dem Admin: /adapter/nexowatt-ui/smarthomecfg.html?instance=<INSTANZ>\n• Alternativ direkt per Port: https://<HOST>:<PORT>/smarthome-config.html\n\nSmartHome VIS öffnen:\n• Im Adapter-Reiter \"Tab\" auf \"SmartHome VIS\" klicken.\n• Oder direkt aus dem Admin: /adapter/nexowatt-ui/smarthomevis.html?instance=<INSTANZ>\n• Alternativ direkt per Port: https://<HOST>:<PORT>/smarthome.html\n\nHinweis: Änderungen an den Adapter-Einstellungen werden von NexoWatt EOS mit einem Adapter-Neustart übernommen.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12
+        },
+        "smartHome.enabled": {
+          "type": "checkbox",
+          "label": "SmartHome aktivieren",
+          "default": false,
+          "attr": "smartHome.enabled",
+          "xs": 12,
+          "sm": 6,
+          "md": 6
+        }
+      }
+    }
+  }
+}

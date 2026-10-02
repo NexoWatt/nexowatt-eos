@@ -1,0 +1,576 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@alcalzone/esbuild-register": {
+      "name": "@alcalzone/esbuild-register",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "esbuild"
+      ],
+      "effects": [
+        "iobroker.js-controller"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@alcalzone/esbuild-register"
+      ],
+      "fixAvailable": {
+        "name": "iobroker.js-controller",
+        "version": "3.3.10",
+        "isSemVerMajor": true
+      }
+    },
+    "@iobroker/mcp-server": {
+      "name": "@iobroker/mcp-server",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/webserver"
+      ],
+      "effects": [
+        "iobroker.mcp"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@iobroker/mcp-server"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/webserver": {
+      "name": "@iobroker/webserver",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "oauth2-server"
+      ],
+      "effects": [
+        "@iobroker/mcp-server",
+        "iobroker.eos-admin",
+        "iobroker.mcp"
+      ],
+      "range": ">=1.1.0",
+      "nodes": [
+        "node_modules/@iobroker/mcp-server/node_modules/@iobroker/webserver",
+        "node_modules/@iobroker/webserver",
+        "node_modules/iobroker.mcp/node_modules/@iobroker/webserver"
+      ],
+      "fixAvailable": false
+    },
+    "ajv": {
+      "name": "ajv",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1113715,
+          "name": "ajv",
+          "dependency": "ajv",
+          "title": "ajv has ReDoS when using `$data` option",
+          "url": "https://github.com/advisories/GHSA-2g4f-4pwh-qvx6",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=7.0.0-alpha.0 <8.18.0"
+        }
+      ],
+      "effects": [
+        "ocpp-rpc"
+      ],
+      "range": "7.0.0-alpha.0 - 8.17.1",
+      "nodes": [
+        "node_modules/ocpp-rpc/node_modules/ajv"
+      ],
+      "fixAvailable": true
+    },
+    "dropbox-v2-api": {
+      "name": "dropbox-v2-api",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "request"
+      ],
+      "effects": [
+        "iobroker.nexowatt-backup"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/dropbox-v2-api"
+      ],
+      "fixAvailable": false
+    },
+    "esbuild": {
+      "name": "esbuild",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1102341,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild enables any website to send any requests to the development server and read the response",
+          "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-346"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=0.24.2"
+        }
+      ],
+      "effects": [
+        "@alcalzone/esbuild-register"
+      ],
+      "range": "<=0.24.2",
+      "nodes": [
+        "node_modules/esbuild"
+      ],
+      "fixAvailable": {
+        "name": "iobroker.js-controller",
+        "version": "3.3.10",
+        "isSemVerMajor": true
+      }
+    },
+    "form-data": {
+      "name": "form-data",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1109540,
+          "name": "form-data",
+          "dependency": "form-data",
+          "title": "form-data uses unsafe random function in form-data for choosing boundary",
+          "url": "https://github.com/advisories/GHSA-fjxv-7rqg-78g4",
+          "severity": "critical",
+          "cwe": [
+            "CWE-330"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<2.5.4"
+        },
+        {
+          "source": 1120745,
+          "name": "form-data",
+          "dependency": "form-data",
+          "title": "form-data: CRLF injection in form-data via unescaped multipart field names and filenames",
+          "url": "https://github.com/advisories/GHSA-hmw2-7cc7-3qxx",
+          "severity": "high",
+          "cwe": [
+            "CWE-93"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<2.5.6"
+        }
+      ],
+      "effects": [
+        "request"
+      ],
+      "range": "<=2.5.5",
+      "nodes": [
+        "node_modules/request/node_modules/form-data"
+      ],
+      "fixAvailable": false
+    },
+    "iobroker.eos-admin": {
+      "name": "iobroker.eos-admin",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@iobroker/webserver",
+        "iobroker.mcp"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/iobroker.eos-admin"
+      ],
+      "fixAvailable": false
+    },
+    "iobroker.js-controller": {
+      "name": "iobroker.js-controller",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@alcalzone/esbuild-register"
+      ],
+      "effects": [],
+      "range": ">=3.3.11",
+      "nodes": [
+        "node_modules/iobroker.js-controller"
+      ],
+      "fixAvailable": {
+        "name": "iobroker.js-controller",
+        "version": "3.3.10",
+        "isSemVerMajor": true
+      }
+    },
+    "iobroker.mcp": {
+      "name": "iobroker.mcp",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/mcp-server",
+        "@iobroker/webserver"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/iobroker.mcp"
+      ],
+      "fixAvailable": true
+    },
+    "iobroker.nexowatt-backup": {
+      "name": "iobroker.nexowatt-backup",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "dropbox-v2-api"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/iobroker.nexowatt-backup"
+      ],
+      "fixAvailable": false
+    },
+    "lodash": {
+      "name": "lodash",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1106913,
+          "name": "lodash",
+          "dependency": "lodash",
+          "title": "Command Injection in lodash",
+          "url": "https://github.com/advisories/GHSA-35jh-r3h4-6jhm",
+          "severity": "high",
+          "cwe": [
+            "CWE-77",
+            "CWE-94"
+          ],
+          "cvss": {
+            "score": 7.2,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": "<4.17.21"
+        },
+        {
+          "source": 1108258,
+          "name": "lodash",
+          "dependency": "lodash",
+          "title": "Regular Expression Denial of Service (ReDoS) in lodash",
+          "url": "https://github.com/advisories/GHSA-29mw-wpgm-hmr9",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=4.0.0 <4.17.21"
+        },
+        {
+          "source": 1115806,
+          "name": "lodash",
+          "dependency": "lodash",
+          "title": "lodash vulnerable to Code Injection via `_.template` imports key names",
+          "url": "https://github.com/advisories/GHSA-r5fr-rjxr-66jc",
+          "severity": "high",
+          "cwe": [
+            "CWE-94"
+          ],
+          "cvss": {
+            "score": 8.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": ">=4.0.0 <=4.17.23"
+        },
+        {
+          "source": 1115810,
+          "name": "lodash",
+          "dependency": "lodash",
+          "title": "lodash vulnerable to Prototype Pollution via array path bypass in `_.unset` and `_.omit`",
+          "url": "https://github.com/advisories/GHSA-f23m-r3pf-42rh",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L"
+          },
+          "range": "<=4.17.23"
+        },
+        {
+          "source": 1120370,
+          "name": "lodash",
+          "dependency": "lodash",
+          "title": "Lodash has Prototype Pollution Vulnerability in `_.unset` and `_.omit` functions",
+          "url": "https://github.com/advisories/GHSA-xxjr-mmjv-4gpg",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:L"
+          },
+          "range": ">=4.0.0 <=4.17.22"
+        }
+      ],
+      "effects": [
+        "oauth2-server"
+      ],
+      "range": "<=4.17.23",
+      "nodes": [
+        "node_modules/oauth2-server/node_modules/lodash"
+      ],
+      "fixAvailable": false
+    },
+    "oauth2-server": {
+      "name": "oauth2-server",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1088847,
+          "name": "oauth2-server",
+          "dependency": "oauth2-server",
+          "title": "oauth2-server through 3.1.1 vulnerable to Open Redirect",
+          "url": "https://github.com/advisories/GHSA-4rg6-fm25-gc34",
+          "severity": "high",
+          "cwe": [
+            "CWE-601"
+          ],
+          "cvss": {
+            "score": 7.2,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N"
+          },
+          "range": "<=3.1.1"
+        },
+        {
+          "source": 1089859,
+          "name": "oauth2-server",
+          "dependency": "oauth2-server",
+          "title": "Code Injection in oauth2-server",
+          "url": "https://github.com/advisories/GHSA-2fw4-mgq9-39cx",
+          "severity": "high",
+          "cwe": [
+            "CWE-94"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=3.1.1"
+        },
+        "lodash"
+      ],
+      "effects": [
+        "@iobroker/webserver"
+      ],
+      "range": "<=3.1.1",
+      "nodes": [
+        "node_modules/oauth2-server"
+      ],
+      "fixAvailable": false
+    },
+    "ocpp-rpc": {
+      "name": "ocpp-rpc",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "ajv"
+      ],
+      "effects": [],
+      "range": ">=2.1.2",
+      "nodes": [
+        "node_modules/ocpp-rpc"
+      ],
+      "fixAvailable": true
+    },
+    "qs": {
+      "name": "qs",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1113719,
+          "name": "qs",
+          "dependency": "qs",
+          "title": "qs's arrayLimit bypass in its bracket notation allows DoS via memory exhaustion",
+          "url": "https://github.com/advisories/GHSA-6rw7-vpxm-498p",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-20"
+          ],
+          "cvss": {
+            "score": 3.7,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": "<6.14.1"
+        },
+        {
+          "source": 1158507,
+          "name": "qs",
+          "dependency": "qs",
+          "title": "qs: Denial of Service via Attacker Controlled isBuffer",
+          "url": "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-248",
+            "CWE-703"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=2.2.5 <6.16.0"
+        }
+      ],
+      "effects": [
+        "request"
+      ],
+      "range": "<=6.15.3",
+      "nodes": [
+        "node_modules/request/node_modules/qs"
+      ],
+      "fixAvailable": false
+    },
+    "request": {
+      "name": "request",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096727,
+          "name": "request",
+          "dependency": "request",
+          "title": "Server-Side Request Forgery in Request",
+          "url": "https://github.com/advisories/GHSA-p8p7-x288-28g6",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-918"
+          ],
+          "cvss": {
+            "score": 6.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": "<=2.88.2"
+        },
+        "form-data",
+        "qs",
+        "tough-cookie",
+        "uuid"
+      ],
+      "effects": [
+        "dropbox-v2-api"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/request"
+      ],
+      "fixAvailable": false
+    },
+    "tough-cookie": {
+      "name": "tough-cookie",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1097682,
+          "name": "tough-cookie",
+          "dependency": "tough-cookie",
+          "title": "tough-cookie Prototype Pollution vulnerability",
+          "url": "https://github.com/advisories/GHSA-72xf-g2v4-qvf3",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N"
+          },
+          "range": "<4.1.3"
+        }
+      ],
+      "effects": [
+        "request"
+      ],
+      "range": "<4.1.3",
+      "nodes": [
+        "node_modules/tough-cookie"
+      ],
+      "fixAvailable": false
+    },
+    "uuid": {
+      "name": "uuid",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1119441,
+          "name": "uuid",
+          "dependency": "uuid",
+          "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+          "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-787",
+            "CWE-1285"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<11.1.1"
+        }
+      ],
+      "effects": [
+        "request"
+      ],
+      "range": "<11.1.1",
+      "nodes": [
+        "node_modules/uuid"
+      ],
+      "fixAvailable": false
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 10,
+      "high": 6,
+      "critical": 2,
+      "total": 18
+    },
+    "dependencies": {
+      "prod": 711,
+      "dev": 0,
+      "optional": 34,
+      "peer": 2,
+      "peerOptional": 0,
+      "total": 746
+    }
+  }
+}

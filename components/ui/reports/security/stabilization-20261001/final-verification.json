@@ -1,0 +1,448 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-01T17:07:37.161571+00:00",
+  "component": "iobroker.nexowatt-ui",
+  "version": "1.0.21",
+  "baseCommit": "c211f1a48ee0b667fcc739ee9134616af43b6076",
+  "overallStatus": "INCOMPLETE_TIMING_GATE_OPEN",
+  "findingId": "UI-MESH-PERF-20261001",
+  "rootCauseOfIntermittentDelay": "not_established",
+  "productionReleaseApproved": false,
+  "hardwareAccepted": false,
+  "craConformityEstablished": false,
+  "iecConformityEstablished": false,
+  "changes": [
+    {
+      "id": "current-attempt-diagnostics",
+      "status": "fixed_and_deterministically_tested",
+      "details": "Constant-size lastAttempt records current/failed attempt duration independently of last successful RTT; no keys/payloads; reset generation respected."
+    },
+    {
+      "id": "degraded-target-cache",
+      "status": "equivalence_and_local_cpu_reduction_tested",
+      "details": "Avoids repeated fallback target scans while preserving reservations, reductions, health checks and both fixed/transformer ramp clocks. Not claimed to resolve intermittent delay."
+    }
+  ],
+  "unchangedSafetyContract": {
+    "requestTimeoutMs": 200,
+    "sampleIntervalMs": 250,
+    "leaseMs": 3000,
+    "oldCombinedWorkloadKept": true,
+    "validityCheckedAfterArchiveAwait": true,
+    "timeoutsRelaxed": false,
+    "authenticationBypassAdded": false,
+    "productionActivationAdded": false
+  },
+  "deterministicEvidence": {
+    "tests": 9,
+    "passedInNodeVersions": [
+      "v24.19.0",
+      "v24.21.0"
+    ],
+    "referenceFixture": "test/fixtures/mesh-plan-c211f1a.cjs",
+    "targetReadsBefore": 990000,
+    "targetReadsAfter": 0,
+    "planCalls": 1000,
+    "peers": 99,
+    "fixtureOrigin": "Exact baseline plan method; source SHA and independent read-only review checked."
+  },
+  "boundedBaselineDiagnosis": {
+    "node": "v24.19.0",
+    "runs": 5,
+    "allPassed": true,
+    "selection": "Predetermined finite series, not retry until green. Does not explain retained historical failures."
+  },
+  "workloadScope": {
+    "original": "99 peers, 250ms cadence, concurrent 32 fsync records; health/lease checks after await disk; SITE_DEGRADED",
+    "added": "NORMAL allocation with markApplied feedback and actual raised targets; no concurrent fsync; statistics only when all clients NORMAL",
+    "instrumentationLimits": "2000 bounded timing samples; initial synchronous fixtures affect total lag. Later failure evidence may lie outside aggregates; direct DIAG_ACCEPT retained. CPU/GC profiler introduces overhead."
+  },
+  "previewBoundary": {
+    "componentTest": "passed,15/15",
+    "startup": "Actual onReady with meshMicrogrid installed/enabled true returns before only MeshCoordinator construction; instance undefined, flags remain true.",
+    "http": "All observed mesh POST routes and installer activation attempt return503/EOS_TEST_CONTROL_BLOCKED; no new runtime gate was required.",
+    "actualControllerTest": "Targeted stage added at tests/integration/ui-controller.integration.cjs; execution/result owned by root integration report, not inferred here.",
+    "sourceLocations": [
+      "src-ts/runtime-executables/main.ts:onReady lines11081–11113",
+      "src-ts/runtime-executables/main.ts:startServer lines11602–11609",
+      "src-ts/runtime-executables/lib/eos-integrated.ts:installPreviewWriteBoundary"
+    ],
+    "limitations": [
+      "Regular product lifecycle/API claim only; no sandbox against arbitrary code already executing in same process.",
+      "Unattended M2M needs its own reviewed identity profile; current login boundary remains.",
+      "No physical shutdown or field safety acceptance for previously active installations."
+    ]
+  },
+  "environment": {
+    "platform": "linux",
+    "architecture": "x64",
+    "nodeReleaseValidation": "v24.21.0",
+    "nodeComparativeDiagnostics": "v24.19.0",
+    "targetHardwareExecuted": false,
+    "sharedEnvironment": true,
+    "fullSuiteContext": "Root assembly may have overlapped after dedicated diagnostic runs ended. This is context, not established causation."
+  },
+  "checks": [
+    {
+      "command": "npm run build:ts",
+      "node": "v24.21.0",
+      "status": "passed",
+      "raw": "build-node2421.log"
+    },
+    {
+      "command": "npm run docs:build",
+      "node": "v24.21.0",
+      "status": "passed",
+      "raw": "docs-build-final.log"
+    },
+    {
+      "command": "npm run docs:check",
+      "node": "v24.21.0",
+      "status": "passed",
+      "raw": "docs-check-final.log"
+    },
+    {
+      "command": "npm run test:mesh-coordinator",
+      "node": "v24.19.0",
+      "status": "passed",
+      "raw": "mesh-gate-final.log",
+      "limitation": "Single successful local workload does not resolve intermittent timing finding; final all-clients NORMAL statistics refinement followed this run."
+    },
+    {
+      "command": "npm run test:mesh-coordinator",
+      "node": "v24.21.0",
+      "status": "failed",
+      "raw": "mesh-gate-node2421.log",
+      "finding": "Original 99-peer + fsync round 3: failed attempt durations 271–290 ms exceed unchanged 200 ms request budget."
+    },
+    {
+      "command": "node --cpu-prof --trace-gc scripts/diagnose-mesh-timing.cjs",
+      "node": "v24.21.0",
+      "status": "failed",
+      "raw": "diagnostic-node2421-final.log",
+      "finding": "Additional bounded diagnostic only: after successful combined and NORMAL phases, a later exchange took 200.00188499999967 ms and was correctly rejected at 200 ms. Profiling changes execution overhead."
+    },
+    {
+      "command": "npm run test:all",
+      "node": "v24.21.0",
+      "status": "failed",
+      "raw": "test-all-node2421.log",
+      "metadata": "test-all-node2421.json",
+      "finding": "All preceding &&-chained gates passed, including 9 deterministic timing tests. Original combined workload passed; extra NORMAL phase round12 failed master_timeout at 545.299266ms, timeout200ms. No full rerun followed."
+    },
+    {
+      "command": "npm run test:eos-integrated",
+      "node": "v24.21.0",
+      "status": "passed",
+      "tests": 15,
+      "raw": "preview-mesh-boundary-node2421.tap"
+    },
+    {
+      "command": "npm run publish:check",
+      "node": "v24.21.0",
+      "status": "passed",
+      "raw": "publish-post-suite-node2421.log",
+      "packageFilesVerified": 402,
+      "sourceModulesDocumented": 235,
+      "secretScanScope": "Supported patterns only; no universal secret absence claim."
+    },
+    {
+      "command": "npm pack --dry-run --json --ignore-scripts",
+      "node": "v24.21.0",
+      "status": "passed",
+      "raw": "pack-dry-run-node2421.json",
+      "entryCount": 403,
+      "integrity": "sha512-JcpWtqKGwPzJwRNdIMwDBesShJQvU/xDXYOqVpM9LBjhvIBIC+UOsvmW8uOv8eWp/MGsgRqB1MtftDPfdlgG8A=="
+    },
+    {
+      "command": "Separate remaining gates after the timing failure",
+      "node": "v24.21.0",
+      "status": "passed",
+      "raw": "remaining-gates-node2421.log",
+      "metadata": "remaining-gates-node2421.json",
+      "commands": [
+        {
+          "command": [
+            "node",
+            "scripts/verify-mesh-coordinator-access.cjs"
+          ],
+          "startedAt": "2026-10-01T17:04:47.026360+00:00",
+          "finishedAt": "2026-10-01T17:04:47.742607+00:00",
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "node",
+            "scripts/verify-mesh-transformer-accounting.cjs"
+          ],
+          "startedAt": "2026-10-01T17:04:47.742769+00:00",
+          "finishedAt": "2026-10-01T17:04:49.051241+00:00",
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "node",
+            "scripts/verify-mesh-app-lifecycle.cjs"
+          ],
+          "startedAt": "2026-10-01T17:04:49.051511+00:00",
+          "finishedAt": "2026-10-01T17:04:49.144649+00:00",
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "test:zero-export-pv"
+          ],
+          "startedAt": "2026-10-01T17:04:49.144722+00:00",
+          "finishedAt": "2026-10-01T17:04:53.410693+00:00",
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "test:stable-1.0.18-charging"
+          ],
+          "startedAt": "2026-10-01T17:04:53.410872+00:00",
+          "finishedAt": "2026-10-01T17:04:56.423682+00:00",
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "test:stable-1.0.19-grid-share"
+          ],
+          "startedAt": "2026-10-01T17:04:56.424107+00:00",
+          "finishedAt": "2026-10-01T17:05:00.312856+00:00",
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "test:stable-1.0.20-storage"
+          ],
+          "startedAt": "2026-10-01T17:05:00.313249+00:00",
+          "finishedAt": "2026-10-01T17:05:07.177210+00:00",
+          "exitCode": 0
+        },
+        {
+          "command": [
+            "npm",
+            "run",
+            "test:zero-export-inverter-mapping"
+          ],
+          "startedAt": "2026-10-01T17:05:07.177549+00:00",
+          "finishedAt": "2026-10-01T17:05:07.424374+00:00",
+          "exitCode": 0
+        }
+      ],
+      "limitation": "Does not turn failed test:all into a passed suite."
+    }
+  ],
+  "freeze": {
+    "source": "frozen-hashes.json",
+    "drift": [],
+    "runtimeAndPackageFilesUnchangedSinceFreeze": true,
+    "baselineBuildCacheDeletedFilesRestored": 226,
+    "newRepositoryOnlyFiles": [
+      "docs/security/EOS_UI_MESH_STABILIZATION_2026-10-01_DE.md",
+      "scripts/verify-eos-integrated.cjs (additional assertions)",
+      "../../tests/integration/ui-controller.integration.cjs (targeted stage)"
+    ]
+  },
+  "sbom": {
+    "dependencyAdded": false,
+    "dependencyVersionsChanged": false,
+    "requiresSystemArtifactBinding": true
+  },
+  "documentation": "docs/security/EOS_UI_MESH_STABILIZATION_2026-10-01_DE.md",
+  "evidence": [
+    {
+      "path": "reports/security/stabilization-20261001/CPU.20261001.183956.7.0.001.cpuprofile",
+      "sha256": "06fb9b126b51311fdb831a911f6038436fffe27f38d0366b75238e3603578810",
+      "bytes": 342579
+    },
+    {
+      "path": "reports/security/stabilization-20261001/CPU.20261001.185502.5.0.001.cpuprofile",
+      "sha256": "74a1cd002f6544e6e94b18852fbb91075ddfc590a18cb1797467f3a03d96cd22",
+      "bytes": 353739
+    },
+    {
+      "path": "reports/security/stabilization-20261001/baseline-diagnostic-1.log",
+      "sha256": "b0044dc12733aed906bb492b08a6700cf8a2483402936276d9b128cd9404897a",
+      "bytes": 2818
+    },
+    {
+      "path": "reports/security/stabilization-20261001/baseline-diagnostic-2.log",
+      "sha256": "87ff4266c453efe3cdb5e17d80d09180bffc3fbf84d9c52936f8489525154f0f",
+      "bytes": 2822
+    },
+    {
+      "path": "reports/security/stabilization-20261001/baseline-diagnostic-3.log",
+      "sha256": "3fe0b1f8a1eb1adbc2c9dcc5803b642099edc9368536b223fdafabf3bf55d4b8",
+      "bytes": 2823
+    },
+    {
+      "path": "reports/security/stabilization-20261001/baseline-diagnostic-4.log",
+      "sha256": "4ada627e2ad876f0cb4fc3b0fc2e9c59588d4fa4d0b2dba8502fc54ebeec85a1",
+      "bytes": 2817
+    },
+    {
+      "path": "reports/security/stabilization-20261001/baseline-diagnostic-5.log",
+      "sha256": "65289b71733330e690092d81638cf04fa208c3d996033cf6703979017cd55feb",
+      "bytes": 2824
+    },
+    {
+      "path": "reports/security/stabilization-20261001/baseline-diagnostic-series.json",
+      "sha256": "6eba24e31ec6aaa972a17b0e88c61495409f24c12ad27cbf0e8ad6014f2102b9",
+      "bytes": 567
+    },
+    {
+      "path": "reports/security/stabilization-20261001/build-node2421.log",
+      "sha256": "4b8f823ce708649a287320873d579a72d32f4c531b89a0b6b372fc28118f0fff",
+      "bytes": 9037
+    },
+    {
+      "path": "reports/security/stabilization-20261001/degraded-plan-cpu.json",
+      "sha256": "8b0f271cfde6b7afbd56115d43fd912a4af477097847f9b2500c0ab88bffd560",
+      "bytes": 1411
+    },
+    {
+      "path": "reports/security/stabilization-20261001/deterministic-tests-first.tap",
+      "sha256": "9f2dba89cc14820540a26354dd5a465e454cd8200c1609b0eccfd2e3ad3d0fb6",
+      "bytes": 7894
+    },
+    {
+      "path": "reports/security/stabilization-20261001/deterministic-tests-second.tap",
+      "sha256": "d733b29e12c283cccc56dee129781a542e5d41b6a374eb91891804a0226390bf",
+      "bytes": 1758
+    },
+    {
+      "path": "reports/security/stabilization-20261001/diagnostic-node2421-final.log",
+      "sha256": "403b64cdcd2086044ccd9ab0119474cb5d5fa4495f7e2d03b21235802fafe867",
+      "bytes": 15997
+    },
+    {
+      "path": "reports/security/stabilization-20261001/docs-build-final.log",
+      "sha256": "c278eb6a86b4609199fc6d8ed373e5317490e83e22130a601bd7dcdb12d530f1",
+      "bytes": 309
+    },
+    {
+      "path": "reports/security/stabilization-20261001/docs-build-node2421.log",
+      "sha256": "c278eb6a86b4609199fc6d8ed373e5317490e83e22130a601bd7dcdb12d530f1",
+      "bytes": 309
+    },
+    {
+      "path": "reports/security/stabilization-20261001/docs-check-final.log",
+      "sha256": "8fff1c54b54583d173c73344dd3d18239504857b45cb80cecdb681512961e9d3",
+      "bytes": 321
+    },
+    {
+      "path": "reports/security/stabilization-20261001/docs-check-node2421.log",
+      "sha256": "8fff1c54b54583d173c73344dd3d18239504857b45cb80cecdb681512961e9d3",
+      "bytes": 321
+    },
+    {
+      "path": "reports/security/stabilization-20261001/frozen-hashes.json",
+      "sha256": "0cb6caa977cef93610d08fb360084961f4b42069035e8fe7b8f31cb0535d9b50",
+      "bytes": 2085
+    },
+    {
+      "path": "reports/security/stabilization-20261001/mesh-gate-final.log",
+      "sha256": "8d0c77396c1b277af822229babe32d6dbbda5020e53fea63ebb1e57c4ca7bc24",
+      "bytes": 7481
+    },
+    {
+      "path": "reports/security/stabilization-20261001/mesh-gate-node2421.log",
+      "sha256": "1bb7de24c375f6b6125d9e3a5154f3ea22a355c90397d2be644920034fffd8ee",
+      "bytes": 19166
+    },
+    {
+      "path": "reports/security/stabilization-20261001/mirrors-node2421.log",
+      "sha256": "384b68783e8d3986481692cba0795d25ca860719ec1cc7778baace28261ef79b",
+      "bytes": 338
+    },
+    {
+      "path": "reports/security/stabilization-20261001/pack-dry-run-node2421.json",
+      "sha256": "b6b5389098344bbdcafe123b79ae0616ce1e03860826a70aad6230f82a5ed3d8",
+      "bytes": 46480
+    },
+    {
+      "path": "reports/security/stabilization-20261001/pack-dry-run-node2421.stderr",
+      "sha256": "9aac3da9a7039a99c345545c32f286aa65c358d571bfce7e00d94625d095c829",
+      "bytes": 150
+    },
+    {
+      "path": "reports/security/stabilization-20261001/preview-mesh-boundary-node2421.tap",
+      "sha256": "86ae0455a1730478bcbceeb17af241d96195001c65baab89cd0ae80c56b07f61",
+      "bytes": 1536
+    },
+    {
+      "path": "reports/security/stabilization-20261001/publish-node2421.log",
+      "sha256": "852a32006e87e3ea781fd602e35904de1a52cc0fba22a1412d4e8bbf4d5c8bee",
+      "bytes": 575
+    },
+    {
+      "path": "reports/security/stabilization-20261001/publish-post-suite-node2421.log",
+      "sha256": "1bc8e47d05fcaf759c44f462944aad8616d32b7c361d3dd418e8c0de72792acd",
+      "bytes": 575
+    },
+    {
+      "path": "reports/security/stabilization-20261001/remaining-gates-node2421.json",
+      "sha256": "5b091bf93e383d0b9751a8b24f13fde92501cd33f903db9c9e2c5a0cf4bb2326",
+      "bytes": 2089
+    },
+    {
+      "path": "reports/security/stabilization-20261001/remaining-gates-node2421.log",
+      "sha256": "b60b2a2a38d75b415065addbcdb7c5d0dbbd5c3fa1937fe38ffcafa58f88adbd",
+      "bytes": 10789
+    },
+    {
+      "path": "reports/security/stabilization-20261001/runtime-sync-final.log",
+      "sha256": "f5ce1682f8ba04bea78a32a04ded4332262b5bcbf04e47fb506228907d783324",
+      "bytes": 318
+    },
+    {
+      "path": "reports/security/stabilization-20261001/runtime-sync.log",
+      "sha256": "f5ce1682f8ba04bea78a32a04ded4332262b5bcbf04e47fb506228907d783324",
+      "bytes": 318
+    },
+    {
+      "path": "reports/security/stabilization-20261001/seal-node2421.log",
+      "sha256": "29668365f5634e362d5451222f473ad5bea6eeb2775efd050ed7f47278f69e3f",
+      "bytes": 331
+    },
+    {
+      "path": "reports/security/stabilization-20261001/test-all-node2421.json",
+      "sha256": "1ddb66bbc6a414a388289afde176361546d53fcd69ed2ed43647c9895a02ad90",
+      "bytes": 412
+    },
+    {
+      "path": "reports/security/stabilization-20261001/test-all-node2421.log",
+      "sha256": "53d2d6d95f8fcbe905e7a1c27041488d5fc2c126f78a2111b411c0920870bde3",
+      "bytes": 85427
+    },
+    {
+      "path": "reports/security/stabilization-20261001/workload-after-first.log",
+      "sha256": "b923eedf198303c73a4eda4df286403b334c65035219587962eb61a40fcf6ba5",
+      "bytes": 2816
+    }
+  ],
+  "finalExtraSourceHashes": [
+    {
+      "path": "scripts/verify-eos-integrated.cjs",
+      "sha256": "60078503c6d4bf382e31edd03bafdf4c8d86ed3b16bae9d22d306a17adb4ebb4"
+    },
+    {
+      "path": "docs/security/EOS_UI_MESH_STABILIZATION_2026-10-01_DE.md",
+      "sha256": "a41eb1fe93104eb9c374dd0df7520e336c5a7b299965428b72935ab680156914"
+    },
+    {
+      "path": "/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs",
+      "sha256": "77a0b55575fa4d6191d294a2c817da1a73de02a7c2934ebaa228db4f5b02e5c1"
+    }
+  ]
+}

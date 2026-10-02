@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-certificate-enrollment-v2-regression",
+  "changeId": "EOS-CERT-ACCOUNT-02",
+  "generatedAt": "2026-10-01T17:13:28.630219+00:00",
+  "baseCommit": "c211f1a48ee0b667fcc739ee9134616af43b6076",
+  "sourceState": "working tree correction; bound by source SHA256 values, included in pending signed test release",
+  "finding": {
+    "status": "corrected-and-regression-verified",
+    "title": "Certificate marker rebind still required legacy enrollment version 1",
+    "trigger": "A current version-2 enrollment followed by internal Redis CA rotation would reject ENROLLMENT_MARKER_REBIND_REJECTED before controller authorization.",
+    "effect": "Rotation/recovery could not complete for current integrated role profile; this was a release-blocking lifecycle compatibility defect.",
+    "rootCause": "Rotator retained v1 guard after enrollment moved to v2/accountPolicyVersion1; earlier rotation fixtures also used v1.",
+    "correction": "Accept current v2 complete marker only; reuse existing strongHash and verifyAccounts with service enabled/private ACL checks before any marker write and after readback. Preserve core-only behavior and all non-config-hash fields; do not migrate or repair roles during maintenance."
+  },
+  "environment": {
+    "nodeVersion": "v24.21.0",
+    "nodeExecutableSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+    "platform": "linux-x64",
+    "redisVersion": "7.2.10",
+    "redisExecutableSha256": "f6beb0b6e3849dedf583d677531e32285fca909a39f1035e3c5462ef95cfd708",
+    "objectsClient": {
+      "name": "@iobroker/db-objects-redis",
+      "version": "7.2.2",
+      "packageJsonSha256": "94cb30df2380fdb0ee4b8949af7ff84345d64408c53059b25af587e74a19ea3b"
+    },
+    "testAppLockSha256": "81477e727e4abb676b6a5b1af4bb51a3502d443a93b74cbefce9e1c093fd9073"
+  },
+  "commands": [
+    "node --test --test-reporter=tap tests/system/certificate-host.test.cjs tests/system/certificate-lifecycle.test.cjs tests/system/web-renewal.test.cjs",
+    "EOS_TEST_REDIS_SERVER=<verified test Redis7.2.10 absolute path> EOS_TEST_CONTROLLER_ROOT=<eos-stabilization-x64/app> node --test --test-reporter=tap tests/system/certificate-redis.integration.cjs"
+  ],
+  "totals": {
+    "tests": 49,
+    "pass": 49,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "rawEvidence": [
+    {
+      "path": "reports/integration/certificate-account-v2/raw/node24.21.0-lifecycle.tap",
+      "sha256": "c1eea5759baa588d853ee38a577bfb3a5d5342eb1294f91367e44548bffe9666",
+      "results": {
+        "tests": 48,
+        "pass": 48,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "todo": 0
+      }
+    },
+    {
+      "path": "reports/integration/certificate-account-v2/raw/node24.21.0-redis-tls.tap",
+      "sha256": "8842ae00bd7b8f60635be93c0f4d3aae2ef7adb4512d8f0fcdeb7da46aab7939",
+      "results": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "todo": 0
+      }
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "f3628d305105ba6513bd0ac64594996abad0f93282675599ad14072fbe08ebe9"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "58d0f8ef241fe21226677ce7928a9ce816b9ad2425aef3757e9f8ac81391bbcd"
+    },
+    {
+      "path": "runtime/bootstrap/accounts.cjs",
+      "sha256": "0e9bfb4a13ffa963a6d3f8d2f590f595e8c2fac3feb35815b240f28dfddaffad"
+    },
+    {
+      "path": "runtime/transport/certificate-lifecycle.cjs",
+      "sha256": "5946b30c81a7e4bcd237874f45a40de99e44aeca6f60cb25b39a62d351f7f73d"
+    },
+    {
+      "path": "tests/system/certificate-host.test.cjs",
+      "sha256": "8646606da40f95f47e087ebe9e44a056fd788476016b11a0c7e09b9cdb05437c"
+    },
+    {
+      "path": "tests/system/certificate-redis.integration.cjs",
+      "sha256": "2824f64a98228a936924f8c3145a8ccde27a5c36a74d37bc0e4f175730f86d03"
+    },
+    {
+      "path": "tests/system/fixtures/certificate-accounts.cjs",
+      "sha256": "9f61774b34f66e7e1a788205f1e5f1e9d07496d3a2b62f1ced3d6a1d84654789"
+    },
+    {
+      "path": "tests/system/certificate-lifecycle.test.cjs",
+      "sha256": "21657e868e8452d84a49795fe8cab29c1159fff73d3e46fbffaa7632df75bda6"
+    },
+    {
+      "path": "tests/system/web-renewal.test.cjs",
+      "sha256": "af285e8ed635381a2f88c3ac77a947d9436cff1ff8162f4798d460c81a9d4c51"
+    },
+    {
+      "path": "docs/operations/CERTIFICATE_LIFECYCLE.md",
+      "sha256": "f482beca45d344422c572bf5594eaa6866e7f20f92689ba0dbcf38e74454fa35"
+    }
+  ],
+  "verified": [
+    "Actual Redis child processes with authenticated TLS1.3 and AOF persist v2 enrollment, service/admin, installer/enduser credentials, canonical groups and ACLs across real CA replacement.",
+    "Existing real Objects client uses actual system design views to reject extra group users.write permission before any marker write.",
+    "Actual old Redis CA connection is rejected after rotation and both new stores pass authenticated TLS probe.",
+    "Accounts from canonical enrollment constructors use individually generated real PBKDF2 credentials; installer is pending first change and enduser initialized, both survive unchanged.",
+    "Fourteen version/policy/role/service/ACL/group/first-password/unexpected-user drift cases deny both marker writes.",
+    "Drift injected during marker writes fails post-write validation; interrupted second marker write reverses exact hashes without changing accounts.",
+    "Core-only marker path still passes with no enrollment account queries.",
+    "Existing lifecycle interrupted-operation recovery and actual HTTPS renewal leaf probes remain passing."
+  ],
+  "notVerified": [
+    "Physical Raspberry Pi or VM installation",
+    "Actual host systemd certificate rotation",
+    "Full controller restart in this focused regression",
+    "Independent security assessment or product conformity"
+  ],
+  "threatModel": {
+    "method": "STRIDE",
+    "focus": [
+      "Tampering",
+      "Elevation of privilege",
+      "Denial of service"
+    ],
+    "risk": "A permissive or legacy marker-only rebind could either block legitimate v2 recovery or authorize restart over changed account roles/ACLs.",
+    "mitigations": [
+      "Current complete v2 and old/new-only config binding",
+      "Shared account and service validators before/after writes",
+      "Only config hashes mutate",
+      "Existing exclusive root maintenance lock, stopped-controller gate and failure/recovery evidence retained"
+    ],
+    "residual": [
+      "Database reads and writes are not a single database transaction; stopped controller and host maintenance lock are the operational boundary. Root compromise remains out of scope.",
+      "Role-policy drift is rejected and requires diagnosis; this code never resets users or grants recovery access.",
+      "Real target outage duration and systemd recovery require target acceptance."
+    ]
+  },
+  "handbookReadOnlyReview": {
+    "path": "docs/operations/TEST_PI_INSTALLATION_DE.md",
+    "checked": [
+      "Actual service names",
+      "Public CA path /etc/nexowatt-eos/web/ca.crt",
+      "verify/install/onboard CLI statuses",
+      "Protected import and fresh-snapshot recovery instructions",
+      "Node archive ownership and executable modes"
+    ],
+    "nodeArm64ArchiveSha256": "6ad1325edbdb5649c379b75a237147a666c95d4f9ae8d340fef2d1575d289ad2",
+    "nodeArchiveObservation": "Archive root/bin/node and ancestor entries are mode0755 uid/gid1001; documented sudo tar --no-same-owner is required and correctly installs as root before protected /usr/bin/node symlink."
+  },
+  "releaseDecision": {
+    "focusedRegressionPassed": true,
+    "hardwareAcceptance": false,
+    "productionReleaseApproved": false,
+    "craConformityClaim": false
+  }
+}

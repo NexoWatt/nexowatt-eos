@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: additive validation admits exact new adapter and profile only
+ok 1 - additive validation admits exact new adapter and profile only
+  ---
+  duration_ms: 7.402154
+  type: 'test'
+  ...
+# Subtest: rejects sequence downgrade before service operations
+ok 2 - rejects sequence downgrade before service operations
+  ---
+  duration_ms: 1.089087
+  type: 'test'
+  ...
+# Subtest: rejects Node change before service operations
+ok 3 - rejects Node change before service operations
+  ---
+  duration_ms: 0.499675
+  type: 'test'
+  ...
+# Subtest: rejects core version change before service operations
+ok 4 - rejects core version change before service operations
+  ---
+  duration_ms: 0.705838
+  type: 'test'
+  ...
+# Subtest: rejects dependency version change before service operations
+ok 5 - rejects dependency version change before service operations
+  ---
+  duration_ms: 0.437171
+  type: 'test'
+  ...
+# Subtest: rejects controller code change before service operations
+ok 6 - rejects controller code change before service operations
+  ---
+  duration_ms: 1.278103
+  type: 'test'
+  ...
+# Subtest: rejects missing old file before service operations
+ok 7 - rejects missing old file before service operations
+  ---
+  duration_ms: 2.336904
+  type: 'test'
+  ...
+# Subtest: rejects extra core file before service operations
+ok 8 - rejects extra core file before service operations
+  ---
+  duration_ms: 0.579657
+  type: 'test'
+  ...
+# Subtest: rejects service code replacement before service operations
+ok 9 - rejects service code replacement before service operations
+  ---
+  duration_ms: 0.676002
+  type: 'test'
+  ...
+# Subtest: rejects unadmitted profile entry before service operations
+ok 10 - rejects unadmitted profile entry before service operations
+  ---
+  duration_ms: 1.54094
+  type: 'test'
+  ...
+# Subtest: existing admitted adapter bytes, version and permissions cannot change
+ok 11 - existing admitted adapter bytes, version and permissions cannot change
+  ---
+  duration_ms: 1.752595
+  type: 'test'
+  ...
+# Subtest: successful transaction verifies both releases, starts through systemd and commits pointer/state
+ok 12 - successful transaction verifies both releases, starts through systemd and commits pointer/state
+  ---
+  duration_ms: 11.72716
+  type: 'test'
+  ...
+# Subtest: new startup failure restores old pointer, verifies old startup and keeps original sequence
+ok 13 - new startup failure restores old pointer, verifies old startup and keeps original sequence
+  ---
+  duration_ms: 5.580129
+  type: 'test'
+  ...
+# Subtest: failed recovery keeps operation lock and reports manual recovery required
+ok 14 - failed recovery keeps operation lock and reports manual recovery required
+  ---
+  duration_ms: 5.643905
+  type: 'test'
+  ...
+# Subtest: concurrent or interrupted operation lock rejects new activation without commands
+ok 15 - concurrent or interrupted operation lock rejects new activation without commands
+  ---
+  duration_ms: 2.311065
+  type: 'test'
+  ...
+# Subtest: wrong signing identity and state/pointer mismatch reject before stop
+ok 16 - wrong signing identity and state/pointer mismatch reject before stop
+  ---
+  duration_ms: 2.04338
+  type: 'test'
+  ...
+# Subtest: unprivileged activation and arbitrary stage paths are refused
+ok 17 - unprivileged activation and arbitrary stage paths are refused
+  ---
+  duration_ms: 3.171817
+  type: 'test'
+  ...
+# Subtest: state commit failure triggers verified rollback rather than accepting split state
+ok 18 - state commit failure triggers verified rollback rather than accepting split state
+  ---
+  duration_ms: 5.191532
+  type: 'test'
+  ...
+# Subtest: rate limited controller is reset specifically before trial and recovery starts
+ok 19 - rate limited controller is reset specifically before trial and recovery starts
+  ---
+  duration_ms: 5.461579
+  type: 'test'
+  ...
+# Subtest: persistent journal write failure cannot block old pointer and controller restoration
+ok 20 - persistent journal write failure cannot block old pointer and controller restoration
+  ---
+  duration_ms: 5.073423
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 291.673282

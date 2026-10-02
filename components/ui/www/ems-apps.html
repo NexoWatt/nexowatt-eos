@@ -1,0 +1,2315 @@
+<!--
+  Datei: www/ems-apps.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Installer/App-Center-Oberfläche: Konfiguration der EMS-Apps, DP-Zuordnungen und Regelungsparameter.
+  Zusammenhänge:
+  - Logik in www/ems-apps.js, Speicherung über /api/installer/config.
+  - Werte werden von ems/modules/* genutzt.
+  Wartungshinweise:
+  - Nur im Installerbereich verwenden; falsche IDs brechen Config-Speicherung.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>NexoWatt EOS – App-Center (Installer)</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link href="/static/styles.css" rel="stylesheet"/>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0c0f12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NexoWatt EOS">
+  <script src="/static/admin-guard.js" data-nw-admin-page="ems-apps"></script>
+  <script src="/static/auth.js"></script>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<!-- NexoWatt Detail-Kommentar (DE) -->
+<!-- Installer/App-Center. Eingabe-IDs werden von www/ems-apps.js gelesen und in die Adapter-Konfiguration geschrieben. -->
+<body class="nw-cockpit-page nw-cockpit-skin nw-installer-page nw-page-ems-apps" data-nw-required-capability="appcenter.open" data-nw-page-name="App-Center" data-nw-required-role="Admin oder Installer">
+<!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar nw-cockpit-topbar">
+  <script>
+  (function () {
+    try {
+      var p = window.location.pathname || "";
+      if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+        window.location.replace(p + "/" + window.location.search + window.location.hash);
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <div class="brand"><a href="./" aria-label="NexoWatt Live"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a></div>
+  <button aria-label="Menu" id="menuBtn" data-nw-menu-fallback="1" type="button">☰</button>
+  <h1>EMS App-Center</h1>
+  <nav class="tabs">
+    <button class="tab" id="liveTabBtn" type="button" onclick="window.location.href='./'">LIVE</button>
+    <button class="tab" id="historyTabBtn" type="button" onclick="window.location.href='history.html'">HISTORY</button>
+    <button class="tab" id="tabSmartHome" type="button" onclick="window.location.href='smarthome.html'">SMARTHOME</button>
+    <button class="tab hidden" id="tabStorageFarm" type="button" onclick="window.location.href='storagefarm.html'">SPEICHERFARM</button>
+    <button class="tab active" type="button" onclick="window.location.href='ems-apps.html?nwAdmin=1'">APP-CENTER</button>
+  </nav>
+  <div class="status-dot live" id="liveDot" title="Live Verbindung"></div>
+  <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+  <div class="menu hidden" id="menuDropdown">
+    <a class="menu-item" href="./">Live</a>
+    <a class="menu-item" href="history.html">History</a>
+    <a class="menu-item" href="smarthome.html" id="menuSmartHomeLink">SmartHome</a>
+    <a class="menu-item hidden" href="storagefarm.html" id="menuStorageFarmLink">Speicherfarm</a>
+    <a class="menu-item" href="ems-apps.html?nwAdmin=1">App-Center</a>
+    <a class="menu-item" href="evcs.html" id="menuEvcsLink">EVCS</a>
+    <a class="menu-item" href="settings.html">Einstellungen</a>
+  </div>
+</header>
+
+  <section class="nw-page-hero" aria-label="Seitenübersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">Installer</div>
+      <div class="nw-page-hero__title">EMS App-Center</div>
+      <div class="nw-page-hero__subtitle">Alle Regelungs-Apps, Zuordnungen und Speicherfarm-Konfigurationen im einheitlichen Cockpit.</div>
+    </div>
+    <div class="nw-page-hero__right">
+      <span class="nw-page-hero__pill">Apps</span>
+    </div>
+  </section>
+
+
+<!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="content nw-page-shell nw-appcenter-page nw-subpage">
+  <div class="nw-smarthome-header">
+    <div>
+      <div class="nw-smarthome-header__title">EMS Apps &amp; Konfiguration (App-Center)</div>
+      <div class="nw-smarthome-header__subtitle">
+        Ziel: Jede Logik als „App“ (Modul) aktivieren, konfigurieren und über Datenpunkte anbinden.
+        <br/>
+        Hinweis: Diese Seite ist für Installateur-/Admin-Setup gedacht.
+      </div>
+    </div>
+    <div class="nw-smarthome-header__right">
+      <div class="nw-smarthome-header__actions">
+        <a id="nw-emsapps-back-installer" class="nw-config-btn nw-config-btn--ghost" href="/#tab-nexowatt-ui-0" title="Zurück zum NexoWatt EOS Admin">← Zurück zum Installer</a>
+        <a id="nwMailAdminLink" hidden style="display:none" class="nw-config-btn" href="/mail-setup/#/notification-mail">E-Mail-Versand einrichten</a>
+        <button id="nw-emsapps-save" class="nw-config-btn nw-config-btn--primary" type="button">Speichern &amp; EMS neu starten</button>
+        <button id="nw-emsapps-reload" class="nw-config-btn nw-config-btn--ghost" type="button">Neu laden</button>
+        <button id="nw-emsapps-validate" class="nw-config-btn nw-config-btn--ghost" type="button">Validierung prüfen</button>
+        <a class="nw-config-btn nw-config-btn--ghost" href="/">VIS öffnen</a>
+      </div>
+      <div id="nw-emsapps-status" class="nw-config-status"></div>
+    </div>
+  </div>
+
+  <div class="nw-smarthome-tabs">
+    <div class="nw-tabs" id="nw-ems-tabs">
+      <button type="button" class="nw-tab nw-tab--active" data-tab="apps">Apps</button>
+      <button type="button" class="nw-tab" data-tab="mapping">Zuordnung</button>
+      <button type="button" class="nw-tab" data-tab="storageconfig" style="display:none;">Speicher</button>
+      <button type="button" class="nw-tab" data-tab="peakconfig" style="display:none;">Peak-Shaving</button>
+      <button type="button" class="nw-tab" data-tab="aiadvisor" style="display:none;">KI‑Optimierung</button>
+      <button type="button" class="nw-tab" data-tab="storagefarm" style="display:none;">Speicherfarm</button>
+      <button type="button" class="nw-tab" data-tab="multiuse" style="display:none;">MultiUse</button>
+      <button type="button" class="nw-tab" data-tab="meshmicrogrid" style="display:none;">Mesh/Microgrid</button>
+      <button type="button" class="nw-tab" data-tab="netoperator" style="display:none;">Netzbetreiber</button>
+      <button type="button" class="nw-tab" data-tab="strategies" style="display:none;">Betriebsstrategien</button>
+      <button type="button" class="nw-tab" data-tab="ledger" style="display:none;">Energieherkunft</button>
+      <button type="button" class="nw-tab" data-tab="flow">Energiefluss</button>
+      <button type="button" class="nw-tab" data-tab="thermal" style="display:none;">Thermik</button>
+      <button type="button" class="nw-tab" data-tab="heatingrod" style="display:none;">Heizstab</button>
+      <button type="button" class="nw-tab" data-tab="bhkw" style="display:none;">BHKW</button>
+      <button type="button" class="nw-tab" data-tab="generator" style="display:none;">Generator</button>
+      <button type="button" class="nw-tab" data-tab="threshold" style="display:none;">Schwellwerte</button>
+      <button type="button" class="nw-tab" data-tab="relay" style="display:none;">Relais</button>
+      <button type="button" class="nw-tab" data-tab="grid" style="display:none;">Netzlimits</button>
+      <button type="button" class="nw-tab" data-tab="evupv" style="display:none;">EVU / PV Regelung</button>
+      <button type="button" class="nw-tab" data-tab="para14a" data-nw-market="DE" style="display:none;">§14a</button>
+      <button type="button" class="nw-tab" data-tab="evcs" style="display:none;">Ladepunkte</button>
+      <button type="button" class="nw-tab" data-tab="status">Status</button>
+    </div>
+  </div>
+
+  <div id="nw-tabpanel-apps" data-tabpanel="apps">
+
+  <section class="nw-config-section" data-appcenter-role="app-catalog">
+    <div class="nw-config-section__head">
+      <div>
+        <h2 class="nw-config-section__title">Apps (Kernlogiken)</h2>
+        <div class="nw-config-section__subtitle" style="margin:0;opacity:.85;line-height:1.35;">
+          Nur App-Katalog: Installieren und Aktivieren. Detail-Einstellungen liegen in den jeweiligen Reitern wie Zuordnung, Ladepunkte, Netzlimits oder Mesh/Microgrid.
+        </div>
+      </div>
+    </div>
+    <div class="nw-config-grid" id="appsList"></div>
+    <div class="nw-config-empty" id="appsEmpty" style="display:none;">Keine Apps verfügbar.</div>
+  </section>
+
+  </div>
+
+
+  <div id="nw-tabpanel-peakconfig" data-tabpanel="peakconfig" style="display:none;">
+
+  <section class="nw-config-section">
+    <div class="nw-config-section__head">
+      <div>
+        <h2 class="nw-config-section__title">Peak-Shaving / Lastspitzenkappung</h2>
+        <div class="nw-config-section__subtitle" style="margin:0;opacity:.85;line-height:1.35;">
+          Einstellzentrale für normale Lastspitzenkappung, atypische HLZF-Kappung und Hybrid-Betrieb. Die Netzpunkt-Messung kommt weiterhin aus <b>Zuordnung → Allgemein</b>.
+        </div>
+      </div>
+    </div>
+
+    <div class="nw-config-grid" style="margin-top:12px;">
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Betriebsart</div>
+          <div class="nw-config-card__subtitle">Welche LSK-Logik soll der EMS-Core aktiv nutzen?</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psStrategyMode">LSK-Modus</label>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <select id="psStrategyMode" class="nw-config-input">
+                <option value="standard">Normale Lastspitzenkappung</option>
+                <option value="atypical">Atypische HLZF-Kappung</option>
+                <option value="hybrid">Hybrid: normal + atypisch</option>
+                <option value="monitor">Atypisch nur beobachten</option>
+              </select>
+              <div class="nw-config-help" style="margin-top:4px;opacity:.85;line-height:1.35;">
+                <b>Normal</b> begrenzt den Netzbezug immer am eingestellten Grenzwert. <b>Atypisch</b> begrenzt nur innerhalb der Hochlastzeitfenster. <b>Hybrid</b> nimmt immer den strengeren Grenzwert.
+              </div>
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psStandardMode">Standard-Limitquelle</label>
+            <div class="nw-config-field-control">
+              <select id="psStandardMode" class="nw-config-input">
+                <option value="static">Statisch: Netzanschlussleistung</option>
+                <option value="dynamic">Dynamisch: erlaubte Leistung per DP</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psReserveW">Reserve normal (W)</label>
+            <div class="nw-config-field-control">
+              <input id="psReserveW" class="nw-config-input" type="number" min="0" step="100" placeholder="z.B. 500" />
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psSafetyMarginW">Sicherheitsmarge normal (W)</label>
+            <div class="nw-config-field-control">
+              <input id="psSafetyMarginW" class="nw-config-input" type="number" min="0" step="100" placeholder="z.B. 1000" />
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psHysteresisW">Hysterese (W)</label>
+            <div class="nw-config-field-control">
+              <input id="psHysteresisW" class="nw-config-input" type="number" min="0" step="100" placeholder="z.B. 500" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Regelverhalten</div>
+          <div class="nw-config-card__subtitle">Glättung, Verzögerung und Failsafe für reale Messwerte</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psSmoothingSeconds">Glättung (s)</label>
+            <div class="nw-config-field-control"><input id="psSmoothingSeconds" class="nw-config-input" type="number" min="1" max="600" step="1" placeholder="10" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psActivateDelaySeconds">Einschaltverzögerung (s)</label>
+            <div class="nw-config-field-control"><input id="psActivateDelaySeconds" class="nw-config-input" type="number" min="0" max="3600" step="1" placeholder="2" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psReleaseDelaySeconds">Freigabeverzögerung (s)</label>
+            <div class="nw-config-field-control"><input id="psReleaseDelaySeconds" class="nw-config-input" type="number" min="0" max="3600" step="1" placeholder="5" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psStaleTimeoutSec">Messwert-Timeout (s)</label>
+            <div class="nw-config-field-control"><input id="psStaleTimeoutSec" class="nw-config-input" type="number" min="1" max="3600" step="1" placeholder="300" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psFastTripEnabled">Fast-Trip</label>
+            <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+              <input id="psFastTripEnabled" class="nw-config-checkbox" type="checkbox" />
+              <span class="nw-config-field-hint" style="margin:0;">Schnelle Reaktion auf kurze Rohwert-/Maximalwert-Spitzen</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Atypische Netznutzung (§19)</div>
+          <div class="nw-config-card__subtitle">Zielwert für Hochlastzeitfenster aus Referenz-Peak, Entnahmeebene und Mindestverlagerung</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psAtypicalVoltageLevel">Entnahmeebene</label>
+            <div class="nw-config-field-control">
+              <select id="psAtypicalVoltageLevel" class="nw-config-input">
+                <option value="HOS">HöS</option>
+                <option value="HOS/HS">HöS/HS</option>
+                <option value="HS">HS</option>
+                <option value="HS/MS">HS/MS</option>
+                <option value="MS">MS</option>
+                <option value="MS/NS">MS/NS</option>
+                <option value="NS">NS</option>
+              </select>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psAtypicalThresholdPercent">Erheblichkeitsschwelle (%)</label>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input id="psAtypicalThresholdPercent" class="nw-config-input" type="number" min="0" max="100" step="0.1" placeholder="z.B. 20" />
+                <button id="psAtypicalApplyVoltageThreshold" type="button" class="nw-config-btn nw-config-btn--ghost">aus Ebene</button>
+              </div>
+              <div class="nw-config-help" style="margin-top:4px;opacity:.85;">HöS 5 %, HöS/HS 10 %, HS 10 %, HS/MS 20 %, MS 20 %, MS/NS 30 %, NS 30 %.</div>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psAtypicalPAbsRefW">Referenz-Jahreshöchstlast P_abs_ref (W)</label>
+            <div class="nw-config-field-control"><input id="psAtypicalPAbsRefW" class="nw-config-input" type="number" min="0" step="100" placeholder="z.B. 1000000" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psAtypicalMinShiftW">Mindestverlagerung (W)</label>
+            <div class="nw-config-field-control"><input id="psAtypicalMinShiftW" class="nw-config-input" type="number" min="0" step="100" placeholder="100000" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psAtypicalTargetLimitW">Fester HLZF-Grenzwert (W, optional)</label>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <input id="psAtypicalTargetLimitW" class="nw-config-input" type="number" min="0" step="100" placeholder="leer = automatisch berechnen" />
+              <div class="nw-config-help" style="margin-top:4px;opacity:.85;">Leer lassen, wenn der Grenzwert aus P_abs_ref, Schwelle und Mindestverlagerung berechnet werden soll.</div>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="psAtypicalSafetyMarginW">HLZF-Sicherheitsmarge (W)</label>
+            <div class="nw-config-field-control"><input id="psAtypicalSafetyMarginW" class="nw-config-input" type="number" min="0" step="100" placeholder="z.B. 2000" /></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Netzbetreiber / Nachweis</div>
+          <div class="nw-config-card__subtitle">Offizielle Quelle der Hochlastzeitfenster vom Netzbetreiber dokumentieren</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="psAtypicalGridOperator">Netzbetreiber</label><div class="nw-config-field-control"><input id="psAtypicalGridOperator" class="nw-config-input" type="text" placeholder="z.B. Westnetz GmbH" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="psAtypicalYear">Gültigkeitsjahr</label><div class="nw-config-field-control"><input id="psAtypicalYear" class="nw-config-input" type="number" min="2020" max="2100" step="1" placeholder="z.B. 2026" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="psAtypicalSourceDocument">Quelle / Dokument</label><div class="nw-config-field-control"><input id="psAtypicalSourceDocument" class="nw-config-input" type="text" placeholder="z.B. Hochlastzeitfenster_2026_MS.pdf" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="psAtypicalSourcePublishedAt">Veröffentlichungsdatum</label><div class="nw-config-field-control"><input id="psAtypicalSourcePublishedAt" class="nw-config-input" type="date" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="psAtypicalSourceUrl">Quell-URL / Ablage</label><div class="nw-config-field-control"><input id="psAtypicalSourceUrl" class="nw-config-input" type="text" placeholder="optional: Link oder interner Ablagepfad" /></div></div>
+          <div class="nw-config-field-row" style="align-items:flex-start;"><label class="nw-config-field-label" for="psAtypicalSourceNote">Bemerkung</label><div class="nw-config-field-control"><textarea id="psAtypicalSourceNote" class="nw-config-input" rows="3" placeholder="z.B. Ebene MS, Stand 31.10., manuell aus PDF übernommen"></textarea></div></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Kalender / Ausnahmen</div>
+          <div class="nw-config-card__subtitle">Tage, an denen keine Hochlastzeitfenster gelten sollen</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="psAtypicalIncludeWeekends">Wochenenden berücksichtigen</label><div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;"><input id="psAtypicalIncludeWeekends" class="nw-config-checkbox" type="checkbox" /><span class="nw-config-field-hint" style="margin:0;">Standard: aus, da HLZF typischerweise nur an Werktagen aktiv sind.</span></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="psAtypicalExcludeChristmasNewYear">24.12.–01.01. ausschließen</label><div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;"><input id="psAtypicalExcludeChristmasNewYear" class="nw-config-checkbox" type="checkbox" /><span class="nw-config-field-hint" style="margin:0;">Empfohlen aktiv lassen.</span></div></div>
+          <div class="nw-config-field-row" style="align-items:flex-start;"><label class="nw-config-field-label" for="psAtypicalHolidays">Feiertage</label><div class="nw-config-field-control nw-config-field-control--stack"><textarea id="psAtypicalHolidays" class="nw-config-input" rows="4" placeholder="2026-01-01&#10;2026-04-03"></textarea><div class="nw-config-help" style="margin-top:4px;opacity:.85;">Ein Datum pro Zeile oder kommasepariert im Format YYYY-MM-DD.</div></div></div>
+          <div class="nw-config-field-row" style="align-items:flex-start;"><label class="nw-config-field-label" for="psAtypicalBridgeDays">Brückentage</label><div class="nw-config-field-control"><textarea id="psAtypicalBridgeDays" class="nw-config-input" rows="3" placeholder="2026-05-15"></textarea></div></div>
+          <div class="nw-config-field-row" style="align-items:flex-start;"><label class="nw-config-field-label" for="psAtypicalCalendarExceptions">Weitere Ausnahmen</label><div class="nw-config-field-control"><textarea id="psAtypicalCalendarExceptions" class="nw-config-input" rows="3" placeholder="2026-12-24"></textarea></div></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" style="grid-column:1 / -1;">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__header-top">
+            <div>
+              <div class="nw-config-card__title">Nachkontrolle / §19-Prüfung</div>
+              <div class="nw-config-card__subtitle">Live-Jahreskontrolle plus optionale Jahres-Endwerte aus RLM-/Zählerexport</div>
+            </div>
+            <div class="nw-config-row__actions" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center;">
+              <input id="psAtypicalReviewExportFrom" class="nw-config-input" type="date" title="Export von" style="width:132px;" />
+              <input id="psAtypicalReviewExportTo" class="nw-config-input" type="date" title="Export bis" style="width:132px;" />
+              <button id="psAtypicalReviewRefresh" type="button" class="nw-config-btn nw-config-btn--ghost">Nachweis aktualisieren</button>
+              <button id="psAtypicalReviewExportCsv" type="button" class="nw-config-btn nw-config-btn--ghost">CSV Export</button>
+              <button id="psAtypicalReviewExportPdf" type="button" class="nw-config-btn nw-config-btn--ghost">PDF Export</button>
+            </div>
+          </div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-empty" style="margin:0 0 10px 0;line-height:1.35;">
+            Der EMS-Core schreibt laufend unter <code>peakShaving.atypical.review.*</code>: absolute Jahreshöchstlast, höchste HLZF-Last, Verlagerung, Erheblichkeit, Mindestverlagerung, Bagatellgrenze und eine JSON-Zusammenfassung. Manuelle Werte überschreiben nur die Prüfung, nicht die laufende Messung.
+          </div>
+          <div class="nw-config-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Nachkontrolle aktiv</span>
+              <span style="display:flex;align-items:center;gap:10px;">
+                <input id="psAtypicalReviewEnabled" class="nw-config-checkbox" type="checkbox" />
+                <span class="nw-config-field-hint" style="margin:0;">Live-Werte mitführen</span>
+              </span>
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Reset-Schlüssel</span>
+              <input id="psAtypicalReviewResetToken" class="nw-config-input" type="text" placeholder="ändern = Jahreswerte neu starten" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Influx-Logging</span>
+              <span style="display:flex;align-items:center;gap:10px;">
+                <input id="psAtypicalReviewInfluxLogEnabled" class="nw-config-checkbox" type="checkbox" />
+                <span class="nw-config-field-hint" style="margin:0;">Audit-Samples speichern</span>
+              </span>
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Audit-Intervall (min)</span>
+              <input id="psAtypicalReviewAuditIntervalMinutes" class="nw-config-input" type="number" min="1" max="1440" step="1" placeholder="15" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Ist-Jahreshöchstlast P_abs_ist (W)</span>
+              <input id="psAtypicalReviewPAbsActualW" class="nw-config-input" type="number" min="0" step="100" placeholder="leer = Live-Maximum" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Max. HLZF-Leistung P_HLZF_max (W)</span>
+              <input id="psAtypicalReviewPHlzfMaxW" class="nw-config-input" type="number" min="0" step="100" placeholder="leer = Live-HLZF-Maximum" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Leistungspreis (€/kW*a)</span>
+              <input id="psAtypicalReviewPowerPriceEurPerKwYear" class="nw-config-input" type="number" min="0" step="0.01" placeholder="optional" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Arbeitspreis Netzentgelt (€/kWh)</span>
+              <input id="psAtypicalReviewEnergyPriceEurPerKwh" class="nw-config-input" type="number" min="0" step="0.0001" placeholder="optional" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Jahresarbeit (kWh)</span>
+              <input id="psAtypicalReviewAnnualEnergyKwh" class="nw-config-input" type="number" min="0" step="1" placeholder="optional" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Bagatellgrenze (€)</span>
+              <input id="psAtypicalReviewSavingsBagatelleEur" class="nw-config-input" type="number" min="0" step="1" placeholder="500" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Allg. Netzentgelt/Jahr (€)</span>
+              <input id="psAtypicalReviewGeneralGridFeeEur" class="nw-config-input" type="number" min="0" step="1" placeholder="optional für 80%-Deckel" />
+            </label>
+            <label class="nw-config-field-control nw-config-field-control--stack">
+              <span class="nw-config-field-label" style="width:auto;">Max. Reduzierung (%)</span>
+              <input id="psAtypicalReviewMaxReductionPercent" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="80" />
+            </label>
+          </div>
+          <div class="nw-config-field-row" style="align-items:flex-start;margin-top:10px;">
+            <label class="nw-config-field-label" for="psAtypicalReviewNote">Prüfnotiz</label>
+            <div class="nw-config-field-control">
+              <textarea id="psAtypicalReviewNote" class="nw-config-input" rows="3" placeholder="z.B. Werte aus RLM-Jahresexport übernommen"></textarea>
+            </div>
+          </div>
+          <div id="psAtypicalReviewPreview" class="nw-config-empty" style="margin-top:10px;line-height:1.45;">Live-Nachkontrolle läuft im Adapter unter peakShaving.atypical.review.*. Manuelle Jahres-Endwerte sind optional; leer = laufende Messung verwenden.</div>
+          <div id="psAtypicalReviewExportStatus" class="nw-config-help" style="margin-top:8px;opacity:.85;line-height:1.35;">Nachweis-Historie wird automatisch in Influx über <code>peakShaving.atypical.review.*</code> und gedrosselte Audit-Samples unter <code>peakShaving.atypical.audit.*</code> mitgeführt. CSV/PDF exportieren die aktuelle Prüfung plus die Influx-Zeitreihe.</div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" style="grid-column:1 / -1;">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__header-top">
+            <div>
+              <div class="nw-config-card__title">Hochlastzeitfenster</div>
+              <div class="nw-config-card__subtitle">Zeitfenster pro Saison/Monat. Mehrere Fenster pro Tag sind möglich.</div>
+            </div>
+            <div class="nw-config-row__actions"><button id="psAtypicalAddWindow" type="button" class="nw-config-btn nw-config-btn--ghost">+ Fenster</button></div>
+          </div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-empty" style="margin:0 0 8px 0;">Wochentage: ISO-Format 1=Mo … 7=So. Monate: 1–12. Wenn Monate leer sind, wird die Saison genutzt: Winter = 12/1/2, Sommer = 6/7/8, Übergang = 3/4/5/9/10/11.</div>
+          <div id="psAtypicalWindows" class="nw-config-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+
+
+  <div id="nw-tabpanel-aiadvisor" data-tabpanel="aiadvisor" style="display:none;">
+
+  <section class="nw-config-section">
+    <div class="nw-config-section__head">
+      <div>
+        <h2 class="nw-config-section__title">KI‑Optimierung / Energieberater</h2>
+        <div class="nw-config-section__subtitle" style="margin:0;opacity:.85;line-height:1.35;">
+          Beratende KI‑Schicht für die VIS: Tagesfahrplan, Wetter-/PV‑Prognose, EV‑Zielplanung, Peak‑Learning, Anomalie‑Erkennung und Prioritäten. Im UI‑Adapter werden <b>keine</b> automatischen Schaltentscheidungen ausgeführt.
+        </div>
+      </div>
+    </div>
+
+    <div class="nw-config-grid" style="margin-top:12px;">
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Betriebsart</div>
+          <div class="nw-config-card__subtitle">Reiner Beratungsmodus in NexoWatt EOS; der Kunde kann die Anzeige zusätzlich in den Einstellungen ein- oder ausschalten.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label">Aktivierung</label>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div class="nw-config-empty" style="margin:0;line-height:1.4;">
+                Die App wird über <b>Apps → KI‑Energieberater</b> installiert/aktiviert. Diese Seite konfiguriert Verhalten, Lernlogik und Anzeige.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="aiAdvisorShowOnLive">LIVE‑Anzeige</label>
+            <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+              <input id="aiAdvisorShowOnLive" class="nw-config-checkbox" type="checkbox" />
+              <span class="nw-config-field-hint" style="margin:0;">KI‑Hinweisbox auf der Hauptseite anzeigen</span>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="aiAdvisorIntervalSec">Analyse‑Intervall (s)</label>
+            <div class="nw-config-field-control"><input id="aiAdvisorIntervalSec" class="nw-config-input" type="number" min="10" max="3600" step="5" placeholder="60" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="aiAdvisorMaxSuggestions">Max. Vorschläge</label>
+            <div class="nw-config-field-control"><input id="aiAdvisorMaxSuggestions" class="nw-config-input" type="number" min="1" max="10" step="1" placeholder="6" /></div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="aiAdvisorMinPriority">Mindest‑Priorität</label>
+            <div class="nw-config-field-control">
+              <select id="aiAdvisorMinPriority" class="nw-config-input">
+                <option value="info">Alle Hinweise</option>
+                <option value="warning">Nur relevante Hinweise</option>
+                <option value="action">Nur Handlungsempfehlungen</option>
+                <option value="critical">Nur kritische Hinweise</option>
+              </select>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="aiAdvisorOptimizationMode">Standard‑Optimierungsmodus</label>
+            <div class="nw-config-field-control">
+              <select id="aiAdvisorOptimizationMode" class="nw-config-input">
+                <option value="balanced">Ausgewogen</option>
+                <option value="cost">Kosten sparen</option>
+                <option value="autarky">Autarkie maximieren</option>
+                <option value="co2">CO₂‑arm</option>
+                <option value="peak">Netzanschluss schützen</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">KI‑Bausteine</div>
+          <div class="nw-config-card__subtitle">Welche erweiterten Logiken aktiv sind.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-grid" style="grid-template-columns:1fr;gap:8px;">
+            <label class="nw-config-checklabel"><input id="aiAdvisorDailyPlanEnabled" class="nw-config-checkbox" type="checkbox" /> <span>Tagesfahrplan erstellen</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorLearningEnabled" class="nw-config-checkbox" type="checkbox" /> <span>Lastspitzen-Lernfunktion</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorAnomalyDetectionEnabled" class="nw-config-checkbox" type="checkbox" /> <span>Anomalie-Erkennung</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorForecastQualityEnabled" class="nw-config-checkbox" type="checkbox" /> <span>Prognosequalität bewerten</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorSeasonLogicEnabled" class="nw-config-checkbox" type="checkbox" /> <span>Saisonlogik nutzen</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Schwellwerte</div>
+          <div class="nw-config-card__subtitle">Ab wann die KI Optimierungspotenzial melden soll.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorExportHighW">PV‑Überschuss ab (W)</label><div class="nw-config-field-control"><input id="aiAdvisorExportHighW" class="nw-config-input" type="number" min="0" step="100" placeholder="1500" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorImportHighW">Hoher Netzbezug ab (W)</label><div class="nw-config-field-control"><input id="aiAdvisorImportHighW" class="nw-config-input" type="number" min="0" step="100" placeholder="4000" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorPeakNearLimitPct">Peak-Warnung ab Netzanschluss (%)</label><div class="nw-config-field-control"><input id="aiAdvisorPeakNearLimitPct" class="nw-config-input" type="number" min="50" max="100" step="1" placeholder="90" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorWeatherRainRiskPct">Wetterhinweis ab Regenrisiko (%)</label><div class="nw-config-field-control"><input id="aiAdvisorWeatherRainRiskPct" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="60" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorLowSocPct">Speicher niedrig (%)</label><div class="nw-config-field-control"><input id="aiAdvisorLowSocPct" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="25" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorHighSocPct">Speicher hoch (%)</label><div class="nw-config-field-control"><input id="aiAdvisorHighSocPct" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="85" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorPvForecastHighW">PV‑Forecast hoch ab (W)</label><div class="nw-config-field-control"><input id="aiAdvisorPvForecastHighW" class="nw-config-input" type="number" min="0" step="100" placeholder="3000" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorStaleTimeoutSec">Messwert‑Timeout (s)</label><div class="nw-config-field-control"><input id="aiAdvisorStaleTimeoutSec" class="nw-config-input" type="number" min="30" max="86400" step="10" placeholder="300" /></div></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Ziele & Komfortfenster</div>
+          <div class="nw-config-card__subtitle">Basiswerte für Tagesfahrplan, EV‑Zielplanung und Thermik.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorEvReadyBy">EV fertig bis</label><div class="nw-config-field-control"><input id="aiAdvisorEvReadyBy" class="nw-config-input" type="time" value="07:00" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorEvTargetSocPct">EV Ziel‑SoC (%)</label><div class="nw-config-field-control"><input id="aiAdvisorEvTargetSocPct" class="nw-config-input" type="number" min="10" max="100" step="1" placeholder="80" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorEvBatteryCapacityKwh">EV Batteriekapazität (kWh)</label><div class="nw-config-field-control"><input id="aiAdvisorEvBatteryCapacityKwh" class="nw-config-input" type="number" min="5" max="300" step="1" placeholder="60" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorThermalReadyBy">Thermik fertig bis</label><div class="nw-config-field-control"><input id="aiAdvisorThermalReadyBy" class="nw-config-input" type="time" value="18:00" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorQuietHoursStart">Ruhezeit Start</label><div class="nw-config-field-control"><input id="aiAdvisorQuietHoursStart" class="nw-config-input" type="time" value="22:00" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorQuietHoursEnd">Ruhezeit Ende</label><div class="nw-config-field-control"><input id="aiAdvisorQuietHoursEnd" class="nw-config-input" type="time" value="06:00" /></div></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Lernen & Qualität</div>
+          <div class="nw-config-card__subtitle">Grenzen für Anomalie- und Prognosebewertung.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorAnomalyHighLoadW">Auffällig hoher Verbrauch ab (W)</label><div class="nw-config-field-control"><input id="aiAdvisorAnomalyHighLoadW" class="nw-config-input" type="number" min="0" step="100" placeholder="5500" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorNightBaseLoadW">Nachtgrundlast-Warnung ab (W)</label><div class="nw-config-field-control"><input id="aiAdvisorNightBaseLoadW" class="nw-config-input" type="number" min="0" step="50" placeholder="900" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorForecastQualityWarnPct">Prognosequalität Warnung unter (%)</label><div class="nw-config-field-control"><input id="aiAdvisorForecastQualityWarnPct" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="65" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorCo2LowGPerKwh">CO₂ niedrig bis (g/kWh)</label><div class="nw-config-field-control"><input id="aiAdvisorCo2LowGPerKwh" class="nw-config-input" type="number" min="0" step="10" placeholder="250" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorCo2HighGPerKwh">CO₂ hoch ab (g/kWh)</label><div class="nw-config-field-control"><input id="aiAdvisorCo2HighGPerKwh" class="nw-config-input" type="number" min="0" step="10" placeholder="500" /></div></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Prioritäten</div>
+          <div class="nw-config-card__subtitle">Reihenfolge, wenn mehrere flexible Lasten möglich sind.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorPriorityStorage">Speicher</label><div class="nw-config-field-control"><input id="aiAdvisorPriorityStorage" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="90" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorPriorityEvcs">Wallbox / EVCS</label><div class="nw-config-field-control"><input id="aiAdvisorPriorityEvcs" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="80" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorPriorityThermal">Thermik</label><div class="nw-config-field-control"><input id="aiAdvisorPriorityThermal" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="60" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorPriorityHeatingRod">Heizstab</label><div class="nw-config-field-control"><input id="aiAdvisorPriorityHeatingRod" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="45" /></div></div>
+          <div class="nw-config-field-row"><label class="nw-config-field-label" for="aiAdvisorPriorityGeneric">Sonstige Lasten</label><div class="nw-config-field-control"><input id="aiAdvisorPriorityGeneric" class="nw-config-input" type="number" min="0" max="100" step="1" placeholder="40" /></div></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" style="grid-column:1 / -1;">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Kategorien</div>
+          <div class="nw-config-card__subtitle">Welche Themen die KI in den Vorschlägen berücksichtigen darf.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;">
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatTariff" class="nw-config-checkbox" type="checkbox" /> <span>Tarif / Zeitpreise</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatPv" class="nw-config-checkbox" type="checkbox" /> <span>PV‑Überschuss</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatStorage" class="nw-config-checkbox" type="checkbox" /> <span>Speicher</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatEvcs" class="nw-config-checkbox" type="checkbox" /> <span>Wallbox / EVCS</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatPeak" class="nw-config-checkbox" type="checkbox" /> <span>Lastspitzen / HLZF</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatWeather" class="nw-config-checkbox" type="checkbox" /> <span>Wetter / Prognose</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatHeating" class="nw-config-checkbox" type="checkbox" /> <span>Heizstab / Thermik</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatDailyPlan" class="nw-config-checkbox" type="checkbox" /> <span>Tagesfahrplan</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatAnomaly" class="nw-config-checkbox" type="checkbox" /> <span>Anomalie-Erkennung</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatComfort" class="nw-config-checkbox" type="checkbox" /> <span>Komfortfenster</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatLearning" class="nw-config-checkbox" type="checkbox" /> <span>Lernhinweise</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatCo2" class="nw-config-checkbox" type="checkbox" /> <span>CO₂ / Autarkie</span></label>
+            <label class="nw-config-checklabel"><input id="aiAdvisorCatSystem" class="nw-config-checkbox" type="checkbox" /> <span>Systemhinweise</span></label>
+          </div>
+          <div class="nw-config-help" style="margin-top:10px;opacity:.85;line-height:1.35;">
+            Die Vorschläge werden als States unter <code>aiAdvisor.*</code> veröffentlicht und auf der LIVE‑Seite angezeigt. Es werden keine Geräte geschaltet; der Nutzer erhält nur verständliche Empfehlungen.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+
+
+  <div id="nw-tabpanel-mapping" data-tabpanel="mapping" style="display:none;">
+
+  <section class="nw-config-section">
+    <div class="nw-config-section__head">
+      <div>
+        <h2 class="nw-config-section__title">Zuordnung &amp; Einstellungen</h2>
+        <div class="nw-config-section__subtitle" style="margin:0;opacity:.85;line-height:1.35;">
+          Datenpunkte, Marktprofil und technische Verknüpfungen. App-Details bleiben aus dem Apps-Reiter heraus.
+        </div>
+      </div>
+      <div class="nw-config-row__actions">
+        <button id="nwDevicesQuickSetup" type="button" class="nw-config-btn nw-config-btn--ghost" title="Erkennt nexowatt-devices-Aliase und füllt sichere Standard-DPs in Energiefluss, Ladepunkte und Apps automatisch vor.">Schnell‑Inbetriebnahme (Geräte + DPs)</button>
+      </div>
+    </div>
+
+    <div class="nw-config-grid" id="mappingGrid">
+      <!-- 0.8.33: System-/Landprofil und NL P1/DSMR sind Zuordnungen, keine App-Karten.
+           Die Karten werden aus TypeScript hier gerendert, damit der Apps-Reiter nur
+           echte Funktionsmodule zeigt. -->
+      <div id="systemProfileMappingSlot" class="nw-appcenter-structure-slot" style="display:contents;"></div>
+      <div id="nlP1MappingSlot" class="nw-appcenter-structure-slot" style="display:contents;"></div>
+
+      <div class="nw-config-card" data-card="general">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Allgemein</div>
+          <div class="nw-config-card__subtitle">Systemweite Grenzwerte &amp; Tick-Intervall</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Netzanschlussleistung (W)</div>
+            <div class="nw-config-field-control">
+              <input id="gridConnectionPower" class="nw-config-input" type="number" min="0" step="1" placeholder="z.B. 25000"/>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Netzpunkt-Messung (W/kW) (Import+ / Export-)</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div class="nw-config-dp-input-wrapper">
+                <input id="gridPointPowerId" class="nw-config-input nw-config-dp-input" type="text" placeholder="z.B. alias.0.Leistung.NVP"/>
+                <button class="nw-config-dp-button" type="button" data-browse="gridPointPowerId">Auswählen…</button>
+                <label class="nw-unit-toggle nw-unit-toggle--mini" title="Wenn aktiv: DP liefert Watt (W). Wenn aus: DP liefert bereits kW (1 = 1 kW).">
+                  <input type="checkbox" data-flow-power-unit-key="gridPointPower" checked>
+                  <span>W</span>
+                </label>
+                <span id="val_gridPointPowerId" class="nw-config-badge nw-config-badge--idle">—</span>
+              </div>
+              <div id="gridPointPowerIdDisplay" class="nw-config-field-hint"></div>
+            </div>
+          </div>
+
+          <div class="nw-config-field-row" style="margin-top:6px;">
+            <div class="nw-config-field-label" style="color:#cbd5e1;font-weight:600;">Stale‑Meter Schutz</div>
+            <div class="nw-config-field-control">
+              <span class="nw-config-field-hint" style="margin:0;">Optional – empfohlen bei Zählern/Adaptern, die <b>nur bei Werteänderung</b> schreiben (sonst droht False‑STALE).</span>
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Netzpunkt – Connected/Online DP (optional)</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div class="nw-config-dp-input-wrapper">
+                <input id="gridPointConnectedId" class="nw-config-input nw-config-dp-input" type="text" placeholder="z.B. nexowatt-devices.0.devices.meter1.aliases.r.online (oder …comm.connected)"/>
+                <button class="nw-config-dp-button" type="button" data-browse="gridPointConnectedId">Auswählen…</button>
+                <span id="val_gridPointConnectedId" class="nw-config-badge nw-config-badge--idle">—</span>
+              </div>
+              <div id="gridPointConnectedIdDisplay" class="nw-config-field-hint">
+                Empfohlen (nexowatt-devices): <b>…aliases.r.online</b>. Wenn <b>false</b> → Failsafe (STALE_METER).
+              </div>
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Netzpunkt – Watchdog/Heartbeat DP (optional)</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div class="nw-config-dp-input-wrapper">
+                <input id="gridPointWatchdogId" class="nw-config-input nw-config-dp-input" type="text" placeholder="z.B. …aliases.r.heartbeat (oder …aliases.r.lastSeenMs / …r.frequency)"/>
+                <button class="nw-config-dp-button" type="button" data-browse="gridPointWatchdogId">Auswählen…</button>
+                <span id="val_gridPointWatchdogId" class="nw-config-badge nw-config-badge--idle">—</span>
+              </div>
+              <div id="gridPointWatchdogIdDisplay" class="nw-config-field-hint">
+                Empfohlen (nexowatt-devices): <b>…aliases.r.heartbeat</b> (zählt hoch) oder <b>…aliases.r.lastSeenMs</b>.
+                Wenn &gt; 15s ohne Update → Failsafe (STALE_METER).
+              </div>
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <label class="nw-config-field-label" for="gridInvertGrid">Netz-Vorzeichen invertieren</label>
+            <div class="nw-config-field-control" style="display:flex; align-items:center; gap:10px;">
+              <input type="checkbox" id="gridInvertGrid"/>
+              <span class="nw-config-field-hint" style="margin:0;">Bezug/Einspeisung tauschen (Import-/Export+)</span>
+            </div>
+          </div>
+
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Scheduler-Intervall (ms)</div>
+            <div class="nw-config-field-control">
+              <input id="schedulerIntervalMs" class="nw-config-input" type="number" min="250" max="1000" step="50" placeholder="1000"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" data-card="live">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Live-Kacheln (kWh/CO₂)</div>
+          <div class="nw-config-card__subtitle">Optionale Zählerstände &amp; Kennzahlen für die VIS. Wenn leer, können Werte automatisch aus Historie (z.B. Influx/History) abgeleitet werden.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div id="dpLive" class="nw-config-list"></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card nw-config-card--full nw-tariff-provider-card" data-card="tariff">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Tarife</div>
+          <div class="nw-config-card__subtitle">Preis-Signale für dynamische Tarife / Ladefreigabe</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div id="tariffProviderConfig" class="nw-config-list nw-tariff-provider-layout" style="margin-bottom:14px;">
+            <div class="nw-config-field-row">
+              <div class="nw-config-field-label">Direkter Tarifprovider</div>
+              <div class="nw-config-field-control nw-tariff-provider-grid nw-tariff-provider-grid--provider">
+                <select id="tariffProviderEnabled" class="nw-config-input"><option value="false">Aus – freie DP-Zuordnung</option><option value="true">An – Provider direkt in EOS</option></select>
+                <select id="tariffProviderId" class="nw-config-input">
+                  <option value="manual-dp">Bestehende Datenpunkte / manuell</option>
+                  <option value="tibber">Tibber API</option>
+                  <option value="energyzero">EnergyZero Marktpreise</option>
+                  <option value="entsoe">ENTSO-E Day-Ahead</option>
+                  <option value="ostrom">Ostrom API / Partnerzugang</option>
+                  <option value="custom-rest">Allgemeine REST/JSON-API</option>
+                  <option value="market-profile">Anbieterprofil / Stadtwerk</option>
+                </select>
+                <select id="tariffProviderProfileId" class="nw-config-input">
+                  <option value="local-provider">Lokaler Energieversorger / Stadtwerk</option>
+                  <option value="rabot">Rabot Energy</option><option value="enbw-dynamic">EnBW Strom dynamisch</option>
+                  <option value="lichtblick-dynamic">LichtBlick Dynamic</option><option value="elli-flex">Elli / VW Naturstrom Flex</option>
+                  <option value="zonneplan">Zonneplan</option><option value="nextenergy">NextEnergy</option>
+                  <option value="frankenergie">Frank Energie</option><option value="anwb">ANWB Energie</option>
+                </select>
+                <select id="tariffProviderSourceId" class="nw-config-input"><option value="entsoe">ENTSO-E</option><option value="energyzero">EnergyZero</option><option value="custom-rest">Custom REST</option></select>
+              </div>
+            </div>
+            <div class="nw-config-field-row">
+              <div class="nw-config-field-label">Kopplung an EMS-Logiken</div>
+              <div class="nw-config-field-control nw-tariff-provider-checks">
+                <label><input id="tariffProviderActivateLogic" type="checkbox" checked> Dynamische Tariflogik aktivieren</label>
+                <label><input id="tariffProviderAutomaticMode" type="checkbox" checked> Automatikmodus verwenden</label>
+                <label><input id="tariffProviderAutoCouple" type="checkbox" checked> Preis-DPs automatisch koppeln</label>
+              </div>
+            </div>
+            <div class="nw-config-field-row">
+              <div class="nw-config-field-label">Markt / Zeitreihe</div>
+              <div class="nw-config-field-control nw-tariff-provider-grid nw-tariff-provider-grid--market">
+                <select id="tariffProviderCountry" class="nw-config-input"><option value="DE">Deutschland</option><option value="NL">Nederland</option></select>
+                <input id="tariffProviderTimeZone" class="nw-config-input" placeholder="Europe/Berlin">
+                <select id="tariffProviderResolution" class="nw-config-input"><option value="15">15 Minuten</option><option value="30">30 Minuten</option><option value="60">60 Minuten</option></select>
+                <input id="tariffProviderRefresh" class="nw-config-input" type="number" min="5" max="360" step="1" placeholder="Abruf alle 15 min">
+                <select id="tariffProviderPriceComponent" class="nw-config-input"><option value="total">Gesamtpreis</option><option value="allInPriceIncludingVat">All-in inkl. MwSt.</option><option value="basePriceIncludingVat">Basis inkl. MwSt.</option><option value="market">Börsenpreis</option></select>
+              </div>
+            </div>
+            <details id="tariffProviderCredentialsDetails">
+              <summary>Zugangsdaten / Provider-Endpunkte</summary>
+              <div class="nw-tariff-provider-grid nw-tariff-provider-grid--credentials">
+                <input id="tariffProviderAccessToken" class="nw-config-input" type="password" autocomplete="new-password" placeholder="Tibber Access Token">
+                <input id="tariffProviderSecurityToken" class="nw-config-input" type="password" autocomplete="new-password" placeholder="ENTSO-E Security Token">
+                <input id="tariffProviderHomeId" class="nw-config-input" placeholder="Tibber Home-ID (optional)">
+                <input id="tariffProviderClientId" class="nw-config-input" placeholder="OAuth Client-ID">
+                <input id="tariffProviderClientSecret" class="nw-config-input" type="password" autocomplete="new-password" placeholder="OAuth Client-Secret">
+                <input id="tariffProviderTokenUrl" class="nw-config-input" placeholder="OAuth Token URL">
+                <input id="tariffProviderPricesUrl" class="nw-config-input" placeholder="Preis-API URL">
+                <input id="tariffProviderPostalCode" class="nw-config-input" placeholder="Postleitzahl (optional)">
+              </div>
+            </details>
+            <details id="tariffProviderFormulaDetails">
+              <summary>Tarifformel / örtlicher Energieversorger</summary>
+              <div class="nw-tariff-provider-grid nw-tariff-provider-grid--formula">
+                <input id="tariffProviderMarketMultiplier" class="nw-config-input" type="number" step="0.0001" placeholder="Marktfaktor (1)">
+                <input id="tariffProviderSupplierMarkup" class="nw-config-input" type="number" step="0.0001" placeholder="Lieferantenaufschlag €/kWh">
+                <input id="tariffProviderGridVariable" class="nw-config-input" type="number" step="0.0001" placeholder="Variables Netzentgelt €/kWh">
+                <input id="tariffProviderTax" class="nw-config-input" type="number" step="0.0001" placeholder="Steuern/Umlagen €/kWh">
+                <input id="tariffProviderOtherVariable" class="nw-config-input" type="number" step="0.0001" placeholder="Weitere variable Kosten €/kWh">
+                <input id="tariffProviderVatPct" class="nw-config-input" type="number" min="0" max="100" step="0.1" placeholder="MwSt. %">
+                <input id="tariffProviderFeedIn" class="nw-config-input" type="number" step="0.0001" placeholder="Einspeisevergütung €/kWh">
+              </div>
+            </details>
+            <details id="tariffProviderCustomRestDetails">
+              <summary>Allgemeine REST/JSON-Zuordnung</summary>
+              <div class="nw-tariff-provider-grid nw-tariff-provider-grid--rest">
+                <input id="tariffProviderRestUrl" class="nw-config-input" placeholder="https://.../prices">
+                <select id="tariffProviderRestMethod" class="nw-config-input"><option value="GET">GET</option><option value="POST">POST</option></select>
+                <select id="tariffProviderRestAuthMode" class="nw-config-input"><option value="none">Keine Authentifizierung</option><option value="bearer">Bearer Token</option><option value="api-key">API-Key Header</option><option value="basic">Basic Auth</option></select>
+                <input id="tariffProviderBearerToken" class="nw-config-input" type="password" autocomplete="new-password" placeholder="Bearer Token">
+                <input id="tariffProviderApiKey" class="nw-config-input" type="password" autocomplete="new-password" placeholder="API-Key">
+                <input id="tariffProviderApiKeyHeader" class="nw-config-input" placeholder="Headername, z.B. x-api-key">
+                <input id="tariffProviderUsername" class="nw-config-input" placeholder="Benutzername">
+                <input id="tariffProviderPassword" class="nw-config-input" type="password" autocomplete="new-password" placeholder="Passwort">
+                <input id="tariffProviderArrayPath" class="nw-config-input" placeholder="JSON-Pfad Liste, z.B. data.items">
+                <input id="tariffProviderStartPath" class="nw-config-input" placeholder="Zeitbeginn-Pfad">
+                <input id="tariffProviderEndPath" class="nw-config-input" placeholder="Zeitende-Pfad">
+                <input id="tariffProviderPricePath" class="nw-config-input" placeholder="Preispfad">
+                <select id="tariffProviderUnit" class="nw-config-input"><option value="EUR/kWh">EUR/kWh</option><option value="ct/kWh">ct/kWh</option><option value="EUR/MWh">EUR/MWh</option></select>
+                <textarea id="tariffProviderHeadersJson" class="nw-config-input" rows="2" placeholder='Zusätzliche Header als JSON'></textarea>
+              </div>
+            </details>
+            <div class="nw-tariff-provider-actions">
+              <button id="tariffProviderTest" type="button" class="nw-config-btn nw-config-btn--ghost">Verbindung testen</button>
+              <button id="tariffProviderCouple" type="button" class="nw-config-btn nw-config-btn--ghost">Interne Preis-DPs koppeln</button>
+              <span id="tariffProviderStatus" class="nw-config-empty">Kein Test ausgeführt.</span>
+            </div>
+          </div>
+          <div class="nw-config-empty" style="margin-bottom:8px;">Die vier folgenden Zuordnungen werden bei direktem Provider automatisch auf die internen EOS-States gekoppelt. Dafür ist kein externer Tarifadapter erforderlich. Die bestehende Tarif-, Speicher- und EVCS-Logik bleibt der alleinige Regelungs-Resolver.</div>
+          <div id="dpTariffs" class="nw-config-list"></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" data-card="pv-forecast-fallback">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">PV-Prognose – Datenpunkt-Fallback</div>
+          <div class="nw-config-card__subtitle">Optionaler externer Forecast, wenn Open-Meteo nicht genutzt wird oder im Modus „Automatisch“ ausfällt.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-empty" style="margin-bottom:8px;">Erwartet JSON-Kurven für heute und morgen, z. B. aus forecast.solar, Solcast oder einem eigenen Adapter. Fehlen beide Quellen, bleibt Zeit-Ziel über den konservativen Latest-Start-Fallback funktionsfähig.</div>
+          <div id="dpPvForecast" class="nw-config-list"></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" data-card="weather">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Wetter</div>
+          <div class="nw-config-card__subtitle">Optionale Wetterdaten für die Kunden‑UI (Temperatur/Wolken/Wind). Frei mappbar aus einem beliebigen Wetter‑Adapter.</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div id="dpWeather" class="nw-config-list"></div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" data-card="peak">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Peak-Shaving</div>
+          <div class="nw-config-card__subtitle">Lastspitzenkappung inkl. atypischer HLZF-Kappung auf Basis der Netzleistung</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-card__row" style="opacity:.9;line-height:1.35;">
+            Peak‑Shaving nutzt die Netzpunkt‑Messung aus <b>Zuordnung → Allgemein</b> (NVP) bzw. die interne Berechnung <span style="opacity:.85;">(ems.gridPowerW)</span>.
+            <br/>
+            Grenzwert = Netzanschlussleistung (Allgemein). Für atypische Lastspitzenkappung kann zusätzlich peakShaving.atypical per JSON/Backup konfiguriert werden. Ein separater Netzleistungs‑Datenpunkt ist nicht erforderlich.
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-card" data-card="expert">
+
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Experte</div>
+          <div class="nw-config-card__subtitle">Optional: JSON-Patch (wird beim Speichern zusätzlich gemerged)</div>
+        </div>
+        <div class="nw-config-card__body">
+          <textarea id="rawPatch" class="nw-config-input" rows="6" style="width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;" placeholder='{"peakShaving":{"maxImportW":12345}}'></textarea>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  </div>
+
+
+  <div id="nw-tabpanel-storageconfig" data-tabpanel="storageconfig" style="display:none;">
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Speicherregelung</h2>
+        <div class="nw-config-section__subtitle">Einzel-Speicher: Eigenverbrauchsoptimierung, Speicher-Typ und herstellerunabhängige Datenpunkte. Bei mehreren Speichern die Speicherfarm verwenden.</div>
+      </div>
+      <div class="nw-config-grid">
+      <div class="nw-config-card" data-card="storage">
+        <div class="nw-config-card__header">
+          <div class="nw-config-card__title">Speicher</div>
+          <div class="nw-config-card__subtitle">Herstellerunabhängige Zuordnung + Steuerungsart</div>
+        </div>
+        <div class="nw-config-card__body">
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Speicher-Typ</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <select id="storageCouplingMode" class="nw-config-input">
+                <option value="ac">AC-Speicher / AC-gekoppelt</option>
+                <option value="dc">DC-/Hybrid-Speicher</option>
+              </select>
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                AC: Batterie-Wechselrichter wird getrennt von der PV betrachtet. DC/Hybrid: PV-Erzeugung und Batterie können am selben Wechselrichter-/Gateway-Ausgang liegen; der zusätzliche PV-Datenpunkt hilft der Speicher- und 0‑Einspeise-Logik bei der sauberen Zuordnung.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Herstellerprofil</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <select id="storageVendorProfile" class="nw-config-input">
+                <option value="generic">Generic / Standard-Speicher</option>
+                <option value="fenecon-openems">FENECON / OpenEMS / FEMS</option>
+                <option value="sungrow-hybrid">Sungrow Hybrid ESS</option>
+                <option value="e3dc-rscp">E3/DC RSCP-Adapter</option>
+              </select>
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                Herstellerprofile ändern nur den Schreibpfad und die Schutzlogik der Einzel-Speicherregelung. Grundlogik, NVP-Messung, SoC und Budget bleiben weiterhin zentral geführt.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row" id="storageDcPvHintRow" style="display:none;">
+            <div class="nw-config-field-label">DC-/Hybrid-PV Leistung</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                Der PV-Leistungsdatenpunkt wird unten in der Speicher-Zuordnung als <b>DC-/Hybrid-PV Erzeugung (W)</b> eingetragen. Er beschreibt nur die Erzeugungsleistung, nicht den Batteriesollwert.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Steuerungsart</div>
+            <div class="nw-config-field-control">
+              <select id="storageControlMode" class="nw-config-input">
+                <option value="targetPower">targetPower</option>
+                <option value="limits">limits</option>
+                <option value="enableFlags">enableFlags</option>
+              </select>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Netzladen</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <label class="nw-config-checklabel" for="storageAllowGridCharge">
+                <input id="storageAllowGridCharge" class="nw-config-checkbox" type="checkbox" />
+                <span>Netzladen erlauben</span>
+              </label>
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                Aktiviert Tarif-, Reserve- und sonstige Netzladepfade. Bei einer aktiven §14a-Vorgabe wird ausschließlich diese Netzladung begrenzt. PV-/Eigenverbrauchsladen und die Entladung des Speichers bleiben davon unberührt. Ohne Haken lädt der Speicher nur aus eigener Erzeugung.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">Kapazität (kWh)</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <input id="storageCapacityKWh" class="nw-config-input" type="number" step="0.1" placeholder="z.B. 13.5" />
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                Optional: Wird für PV‑Forecast / Tarif‑Netzladeentscheidungen genutzt. Bei <b>Speicherfarm</b> wird die Summe der Farm‑Speicher verwendet.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row" id="storageLicensePowerRow">
+            <div class="nw-config-field-label">Lizenz &amp; Speicherleistung</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px;">
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; opacity:0.95;">
+                  Lizenz-Leistungsprofil
+                  <input id="storageLicensePowerProfile" class="nw-config-input" type="text" value="–" readonly />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; opacity:0.95;">
+                  Speicher-Nennleistung (kW)
+                  <input id="storageRatedPowerKW" class="nw-config-input" type="number" min="0" step="0.1" placeholder="z.B. 500" />
+                </label>
+              </div>
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                <b>Home</b> begrenzt den finalen Speicherbefehl auf 50&nbsp;kW. <b>Pro</b> ist lizenzseitig frei skalierbar und nutzt die Nennleistung nur zur passenden Skalierung von Rampen, Prognose und Plausibilitätsprüfung. Geräte-, SoC-, NVP- und Safety-Grenzen bleiben immer vorrangig.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row">
+            <div class="nw-config-field-label">NVP-Regelung Eigenverbrauch</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap:8px;">
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; opacity:0.95;">
+                  Zielmitte (W)
+                  <input id="storageSelfTargetGridImportW" class="nw-config-input" type="number" min="0" step="1" placeholder="50" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; opacity:0.95;">
+                  Messtoleranz (±W)
+                  <input id="storageSelfImportThresholdW" class="nw-config-input" type="number" min="0" step="1" placeholder="20" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; opacity:0.95;">
+                  Anzeige-Glättung (s)
+                  <input id="storageSelfNvpSmoothingSec" class="nw-config-input" type="number" min="0" step="1" placeholder="8" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; opacity:0.95;">
+                  Legacy RAW-Guard (W)
+                  <input id="storageSelfNvpRawGuardW" class="nw-config-input" type="number" min="50" step="10" placeholder="100" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; opacity:0.95;">
+                  Istwert halten (s)
+                  <input id="storageBalanceFeedbackHoldSec" class="nw-config-input" type="number" min="1" max="300" step="1" placeholder="45" />
+                </label>
+              </div>
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                Die <b>Messtoleranz</b> unterdrückt ausschließlich Zählerrauschen. Außerhalb dieser Toleranz regelt der Schnellregler mit jeder frischen NVP-Probe direkt zur Zielmitte. Die Anzeige-Glättung und der Legacy RAW-Guard bleiben nur zur Diagnose erhalten und verzögern den Hardware-Sollwert nicht mehr. <b>Istwert halten</b> überbrückt langsame/asynchrone Batterie-Telemetrie herstellerübergreifend. Ein wirksamer Nicht-Null-Sollwert bleibt innerhalb der Toleranz erhalten; <b>0 W bleibt ausschließlich ein Stop-Befehl</b>. Empfohlener Startwert: Zielmitte <b>50 W</b>, Messtoleranz <b>20 W</b>.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row" id="storageFeneconOptionsRow">
+            <div class="nw-config-field-label">FENECON / OpenEMS</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px; max-width:720px;">
+                FENECON-Hybrid-Regelart
+                <select id="storageFeneconControlMode" class="nw-config-input">
+                  <option value="auto">Automatisch: PV-Reglerhoheit zwischen FEMS und EOS</option>
+                  <option value="direct-ess">Direkte ESS-Leistung – 706 + ESS ActivePower 604</option>
+                  <option value="fems-grid">Kontinuierlicher FEMS-NVP-Regler – exklusiver Speicher</option>
+                </select>
+              </label>
+              <label class="nw-config-checklabel" for="storageFeneconAcMode">
+                <input id="storageFeneconAcMode" class="nw-config-checkbox" type="checkbox" disabled />
+                <span>FENECON-/OpenEMS-Profil erkannt</span>
+              </label>
+              <label class="nw-config-checklabel" for="storageFeneconDayNoWrite" style="display:none;">
+                <input id="storageFeneconDayNoWrite" class="nw-config-checkbox" type="checkbox" disabled />
+                <span>Automatik: Bei frischer oder unklarer PV keine externe Vorgabe – FEMS regelt intern</span>
+              </label>
+              <div id="storageFeneconHybridAutoSettings" style="display:none; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; width:100%;">
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px;">
+                  FEMS ab PV (W)
+                  <input id="storageFeneconPvOnThresholdW" class="nw-config-input" type="number" min="0" step="10" placeholder="500" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px;">
+                  NexoWatt unter PV (W)
+                  <input id="storageFeneconPvOffThresholdW" class="nw-config-input" type="number" min="0" step="10" placeholder="500" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px;">
+                  Übergabe EOS → FEMS (s)
+                  <input id="storageFeneconPvOnDelaySec" class="nw-config-input" type="number" min="0" max="3600" step="1" placeholder="10" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px;">
+                  Übernahme FEMS → EOS (s)
+                  <input id="storageFeneconPvOffDelaySec" class="nw-config-input" type="number" min="0" max="3600" step="10" placeholder="120" />
+                </label>
+                <label class="nw-config-help" style="display:flex; flex-direction:column; gap:4px;">
+                  FEMS API-Timeout (s)
+                  <input id="storageFeneconApiTimeoutSec" class="nw-config-input" type="number" min="5" max="300" step="1" placeholder="60" />
+                </label>
+              </div>
+              <label class="nw-config-checklabel" for="storageFeneconAssist" style="display:none;">
+                <input id="storageFeneconAssist" class="nw-config-checkbox" type="checkbox" />
+                <span>Legacy-Assist</span>
+              </label>
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                <b>Automatisch</b> gilt nur bei einem einzelnen <b>FENECON/OpenEMS-DC-/Hybridspeicher</b>: Bei frischer <b>PV &gt; 500 W</b> regelt FEMS den Eigenverbrauch selbst und EOS sendet keine zyklischen Leistungsvorgaben. Bei dauerhaft <b>PV &lt; 500 W</b> übernimmt EOS nach der eingestellten Verzögerung. Bei exakt 500 W beziehungsweise innerhalb eines optionalen Umschaltbandes bleibt die bisherige Reglerhoheit bestehen. Fehlt der PV-Wert oder ist er veraltet, bleibt die Anlage fail-safe in der FEMS-Eigenregelung. Ein echter Sicherheits-, §14a-, SoC- oder manueller <b>0-W-Stopp ist jederzeit möglich</b>. Ein nativer <code>ctrlBalancing*/SetGridActivePower</code>-DP wird nur als technischer EOS-Schreibpfad genutzt; andernfalls schreibt EOS direkt über <code>SetActivePowerEquals/706</code> mit <code>ActivePower/604</code> als Rückmeldung. Gemischte Speicherfarmen bleiben vollständig unter EOS-Koordination.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row" id="storageSungrowOptionsRow" style="display:none;">
+            <div class="nw-config-field-label">Sungrow Hybrid ESS</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                Für Sungrow SH/RS/RT/MG-Hybrid-ESS verwendet NexoWatt einen geschlossenen NVP-Regelkreis: <b>neuer Sollwert = aktuelle Speicher-Istleistung + aktuelle NVP-Differenz</b>. Direkte PV-Erzeugung und ein direkt gemessener Gebäudeverbrauch dienen nur als unabhängiger Feed-forward bzw. Plausibilitätsprüfung, damit zeitversetzte Speicherwerte nicht zu 0-W- oder Sollwertsprüngen führen. PV wird nicht zusätzlich auf die NVP-Gleichung addiert. <b>0 W bleibt ausschließlich einem echten Stop-, Warte- oder Sicherheitszustand vorbehalten.</b> Lade-/Entlade-Richtungswechsel werden direkt ohne 0-W-Zwischenrunde an den Speicher geschrieben.
+              </div>
+            </div>
+          </div>
+          <div class="nw-config-field-row" id="storageE3dcOptionsRow" style="display:none;">
+            <div class="nw-config-field-label">E3/DC RSCP</div>
+            <div class="nw-config-field-control nw-config-field-control--stack">
+              <label class="nw-config-checklabel" for="storageE3dcRscpEnabled">
+                <input id="storageE3dcRscpEnabled" class="nw-config-checkbox" type="checkbox" />
+                <span>E3/DC SET_POWER über den RSCP-Adapter verwenden</span>
+              </label>
+              <label class="nw-config-checklabel" for="storageE3dcAllowGridCharge">
+                <input id="storageE3dcAllowGridCharge" class="nw-config-checkbox" type="checkbox" />
+                <span>E3/DC-Unterfreigabe: Netzladen als GRID_CHARGE schreiben</span>
+              </label>
+              <label class="nw-config-checklabel" for="storageE3dcUsePowerLimits">
+                <input id="storageE3dcUsePowerLimits" class="nw-config-checkbox" type="checkbox" />
+                <span>PowerLimits automatisch setzen</span>
+              </label>
+              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <span class="nw-config-help" style="min-width:160px; opacity:0.85;">0-W-Vorgabe schreibt:</span>
+                <select id="storageE3dcZeroMode" class="nw-config-input" style="max-width:240px;">
+                  <option value="normal">NORMAL (interne Regelung)</option>
+                  <option value="idle">IDLE (halten/pausieren)</option>
+                </select>
+              </div>
+              <div class="nw-config-help" style="margin-top:4px; opacity:0.85;">
+                Für den E3/DC-RSCP-Adapter nutzt NexoWatt EOS <b>EMS.SET_POWER_MODE</b> und <b>EMS.SET_POWER_VALUE</b>. Positiver NexoWatt-Sollwert wird als DISCHARGE geschrieben, negativer als CHARGE bzw. bei erlaubtem Tarif-/Reserve-Netzladen als GRID_CHARGE. Diese E3/DC-Unterfreigabe wirkt nur zusammen mit dem allgemeinen Haken <b>Netzladen erlauben</b>. Die E3/DC-spezifischen Datenpunkte werden unten nur bei diesem Herstellerprofil eingeblendet.
+              </div>
+            </div>
+          </div>
+          <div id="storageTable" class="nw-config-list" style="margin-top:6px;"></div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="nw-tabpanel-storagefarm" data-tabpanel="storagefarm" style="display:none;">
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Speicherfarm</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Mehrere Speichersysteme als gemeinsamer Pool oder in Gruppen betreiben. SoC wird aggregiert, Sollleistung wird verteilt.
+      </div>
+
+      <div class="nw-config-grid">
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Modus</div>
+            <div class="nw-config-card__subtitle">Pool oder Gruppen + Aktualisierung</div>
+          </div>
+          <div class="nw-config-card__body">
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">Betriebsart</div>
+                <div class="nw-config-item__subtitle">Pool verteilt nach SoC. Gruppen beachten Min/Max‑SoC &amp; Prioritäten.</div>
+              </div>
+              <div class="nw-config-item__right">
+                <select id="storageFarmMode" class="nw-config-select"></select>
+              </div>
+            </div>
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">Netzladen erlauben</div>
+                <div class="nw-config-item__subtitle">Tarif-, Reserve- und sonstige Netzladeanforderungen der Farm freigeben. Bei aktiver §14a-Vorgabe wird nur der Netzladeanteil begrenzt; PV-Laden und Entladung bleiben verfügbar.</div>
+              </div>
+              <div class="nw-config-item__right">
+                <label class="nw-config-checklabel" for="storageFarmAllowGridCharge">
+                  <input id="storageFarmAllowGridCharge" class="nw-config-checkbox" type="checkbox" />
+                  <span>Netzladen erlauben</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">Aktualisierung (ms)</div>
+                <div class="nw-config-item__subtitle">Intervall für Status-/SoC-Aggregation (min. 500 ms).</div>
+              </div>
+              <div class="nw-config-item__right">
+                <input id="storageFarmSchedulerIntervalMs" type="number" class="nw-config-input" min="250" max="1000" step="50" placeholder="1000" />
+              </div>
+            </div>
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">NVP-Regelung Eigenverbrauch</div>
+                <div class="nw-config-item__subtitle">Eigene Zielmitte und Messtoleranz der Farm. Außerhalb der Toleranz regelt der gemeinsame Farm-Schnellregler direkt zur Zielmitte. MultiUse besitzt keine zweite NVP-Regelung.</div>
+              </div>
+              <div class="nw-config-item__right" style="gap:10px;display:flex;align-items:center;flex-wrap:wrap;">
+                <span style="opacity:.85;font-size:.78rem;">Ziel</span>
+                <input id="storageFarmSelfTargetGridImportW" type="number" class="nw-config-input" style="width:110px;" min="0" max="1000000" step="1" placeholder="0" />
+                <span style="opacity:.85;font-size:.78rem;">W</span>
+                <span style="opacity:.85;font-size:.78rem;">±</span>
+                <input id="storageFarmSelfImportThresholdW" type="number" class="nw-config-input" style="width:110px;" min="0" max="1000000" step="1" placeholder="20" />
+                <span style="opacity:.85;font-size:.78rem;">W</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="nw-config-card nw-storagefarm-master-detail-card" style="grid-column:1 / -1;">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Speicher</div>
+            <div class="nw-config-card__subtitle">Home: bis zu 2 Speicher · Pro: bis zu 10 Speicher. Ist-/Sollwerte: Signed oder getrennt. Leistungsgrenzen werden direkt je Speicher eingetragen.</div>
+          </div>
+          <div class="nw-config-card__body">
+            <p id="storageFarmLicenseLimit" class="nw-help" role="status"></p>
+            <div id="storageFarmStorages"></div>
+            <div style="margin-top:10px;">
+              <button id="storageFarmAddStorage" type="button" class="nw-config-btn">Speicher hinzufügen</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="nw-config-card" id="storageFarmGroupsCard" style="display:none;">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Gruppen</div>
+            <div class="nw-config-card__subtitle">Optional: SoC‑Zonen und Prioritäten je Gruppe.</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="storageFarmGroups"></div>
+            <div style="margin-top:10px;">
+              <button id="storageFarmAddGroup" type="button" class="nw-config-btn">Gruppe hinzufügen</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+
+  
+  <div id="nw-tabpanel-multiuse" data-tabpanel="multiuse" style="display:none;">
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">MultiUse – Speicherstrategie</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Multi‑Use bedeutet, dass ein Speichersystem mehrere Anwendungen abdeckt (z.B. Notstrom‑Reserve, Lastspitzenkappung, Eigenverbrauch) – gesteuert über SoC‑Zonen.
+      </div>
+
+      <div class="nw-config-grid">
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">SoC‑Zonen</div>
+            <div class="nw-config-card__subtitle">Reserve / LSK / Eigenverbrauch (manuell definierbar)</div>
+          </div>
+          <div class="nw-config-card__body">
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">MultiUse aktiv</div>
+                <div class="nw-config-item__subtitle">Wirkt bei aktivem MultiUse als zentrale Speicher-Policy (Priorität: Reserve → LSK → Eigenverbrauch). Die Hardware schreibt weiterhin ausschließlich die Speicherregelung.</div>
+              </div>
+              <div class="nw-config-item__right">
+                <label style="display:inline-flex;align-items:center;gap:8px;">
+                  <input id="muStorageEnabled" type="checkbox" />
+                  <span>Aktiv</span>
+                </label>
+              </div>
+            </div>
+
+            <hr style="border:0;border-top:1px solid rgba(255,255,255,.08);margin:12px 0;" />
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">Notstrom‑Reserve</div>
+                <div class="nw-config-item__subtitle">Reserve: Unterhalb „Min“ wird nicht mehr entladen. „Ziel“ kann für Reserve‑Refill genutzt werden.</div>
+              </div>
+              <div class="nw-config-item__right" style="gap:10px;display:flex;align-items:center;flex-wrap:wrap;">
+                <label style="display:inline-flex;align-items:center;gap:8px;">
+                  <input id="muReserveEnabled" type="checkbox" />
+                  <span>Aktiv</span>
+                </label>
+                <span style="opacity:.85;font-size:.78rem;">Min</span>
+                <input id="muReserveMinSoc" type="number" class="nw-config-input" style="width:90px;" min="0" max="100" step="1" placeholder="10" />
+                <span style="opacity:.85;font-size:.78rem;">%</span>
+                <span style="opacity:.85;font-size:.78rem;">Ziel</span>
+                <input id="muReserveTargetSoc" type="number" class="nw-config-input" style="width:90px;" min="0" max="100" step="1" placeholder="10" />
+                <span style="opacity:.85;font-size:.78rem;">%</span>
+              </div>
+            </div>
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">Lastspitzenkappung (Peak‑Shaving)</div>
+                <div class="nw-config-item__subtitle">LSK: Bereich „Min…Max“. LSK darf nicht unter Reserve‑Min entladen.</div>
+              </div>
+              <div class="nw-config-item__right" style="gap:10px;display:flex;align-items:center;flex-wrap:wrap;">
+                <label style="display:inline-flex;align-items:center;gap:8px;">
+                  <input id="muPeakEnabled" type="checkbox" />
+                  <span>Aktiv</span>
+                </label>
+                <span style="opacity:.85;font-size:.78rem;">Min</span>
+                <input id="muLskMinSoc" type="number" class="nw-config-input" style="width:90px;" min="0" max="100" step="1" placeholder="10" />
+                <span style="opacity:.85;font-size:.78rem;">%</span>
+                <span style="opacity:.85;font-size:.78rem;">Max</span>
+                <input id="muLskMaxSoc" type="number" class="nw-config-input" style="width:90px;" min="0" max="100" step="1" placeholder="50" />
+                <span style="opacity:.85;font-size:.78rem;">%</span>
+              </div>
+            </div>
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">Eigenverbrauchs‑Optimierung</div>
+                <div class="nw-config-item__subtitle">Eigenverbrauch: Bereich „Min…Max“. Entladung nur oberhalb Min (innerhalb der SoC‑Grenzen).</div>
+              </div>
+              <div class="nw-config-item__right" style="gap:10px;display:flex;align-items:center;flex-wrap:wrap;">
+                <label style="display:inline-flex;align-items:center;gap:8px;">
+                  <input id="muSelfEnabled" type="checkbox" />
+                  <span>Aktiv</span>
+                </label>
+                <span style="opacity:.85;font-size:.78rem;">Min</span>
+                <input id="muSelfMinSoc" type="number" class="nw-config-input" style="width:90px;" min="0" max="100" step="1" placeholder="50" />
+                <span style="opacity:.85;font-size:.78rem;">%</span>
+                <span style="opacity:.85;font-size:.78rem;">Max</span>
+                <input id="muSelfMaxSoc" type="number" class="nw-config-input" style="width:90px;" min="0" max="100" step="1" placeholder="100" />
+                <span style="opacity:.85;font-size:.78rem;">%</span>
+              </div>
+            </div>
+
+            <div class="nw-config-item">
+              <div class="nw-config-item__left">
+                <div class="nw-config-item__title">NVP‑Regelung (Eigenverbrauch)</div>
+                <div class="nw-config-item__subtitle">MultiUse besitzt keine eigene NVP-Regelung. Zielmitte und Messtoleranz werden immer direkt aus der aktiven App <b>Speicher</b> oder <b>Speicherfarm</b> übernommen.</div>
+              </div>
+              <div class="nw-config-item__right">
+                <span class="nw-config-badge nw-config-badge--idle">aktive Speichertopologie</span>
+              </div>
+            </div>
+
+            <div class="nw-config-card__row" style="margin-top:10px;opacity:.85;line-height:1.35;">
+              Beispiel: Reserve Min=10/Ziel=10, LSK 10–50, Eigenverbrauch 50–100 (alles % SoC).
+            </div>
+
+          </div>
+        </div>
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Übernommene Parameter</div>
+            <div class="nw-config-card__subtitle">Diese Werte wirken nur bei aktivem MultiUse und werden nicht in die Standalone-Speicherwerte kopiert</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="muStorageSummary" class="nw-config-list"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <div id="nw-tabpanel-meshmicrogrid" data-tabpanel="meshmicrogrid" style="display:none;">
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">EOS Mesh/Microgrid</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Gemeinsame EMS-App für Trafo-Master und Haus-Slaves: Einrichtung, NVP-Regelung, Teilnehmerübersicht und optionales Zählerarchiv. Dieser Reiter erscheint nur bei installierter App.
+      </div>
+      <div id="meshMicrogridConfigSlot"></div>
+    </section>
+
+  </div>
+
+
+
+  <div id="nw-tabpanel-netoperator" data-tabpanel="netoperator" style="display:none;">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Netzbetreiber-Schnittstelle</h2>
+      </div>
+      <div id="netOperatorConfigSlot"></div>
+    </section>
+  </div>
+
+  <div id="nw-tabpanel-strategies" data-tabpanel="strategies" style="display:none;">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Betriebsstrategien</h2>
+      </div>
+      <div id="operatingStrategiesConfigSlot"></div>
+    </section>
+  </div>
+
+<div id="nw-tabpanel-flow" data-tabpanel="flow" style="display:none;">
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Energiefluss‑Monitor</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Konfiguration für den Energiefluss‑Monitor (VIS): Messwerte, Aufteilung (Gebäude/EV/Heizung) und Anzeigeoptionen.
+        <br/>
+        Hinweis: Die Netzpunkt‑Messung (NVP) wird unter <b>Zuordnung → Allgemein</b> konfiguriert und wird hier automatisch genutzt.
+      </div>
+
+      <div class="nw-tabs nw-tabs--sub" id="nw-flow-subtabs">
+        <button type="button" class="nw-tab nw-tab--active" data-flowtab="base">Basis</button>
+        <button type="button" class="nw-tab" data-flowtab="consumers">Verbraucher</button>
+        <button type="button" class="nw-tab" data-flowtab="producers">Erzeuger</button>
+        <button type="button" class="nw-tab" data-flowtab="options">Optionen</button>
+      </div>
+
+      <div class="nw-config-grid nw-flow-grid" id="flowGrid">
+
+        <div class="nw-config-card" data-card="flowBase" data-flowpanel="base">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Messwerte (Basis)</div>
+            <div class="nw-config-card__subtitle">PV, Netz, Gebäude, EV, Speicher (für Visualisierung &amp; Algorithmen)</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="dpFlow" class="nw-config-list"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card" data-card="flowConsumers" data-flowpanel="consumers" style="display:none;">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Optionale Verbraucher (max. 10)</div>
+            <div class="nw-config-card__subtitle">Erscheinen im Energiefluss nur, wenn ein Datenpunkt gesetzt ist. Du kannst je Verbraucher einen Namen vergeben.</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="flowConsumers" class="nw-flow-slot-list"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card" data-card="flowProducers" data-flowpanel="producers" style="display:none;">
+          <div class="nw-config-card__header">
+	            <div class="nw-config-card__title">Optionale Erzeuger (max. 5)</div>
+            <div class="nw-config-card__subtitle">Zusätzliche Erzeuger (z.B. BHKW/Generator) – unabhängig von PV. Für PV bitte <b>Basis → PV Leistung</b> verwenden. Erscheinen nur, wenn ein Datenpunkt gesetzt ist.</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="flowProducers" class="nw-flow-slot-list"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card" data-card="flowSettings" data-flowpanel="options" style="display:none;">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Anzeige‑Optionen</div>
+
+            <div class="nw-config-field" style="margin-top:10px;">
+  <span class="nw-config-field-hint" style="opacity:.75;">
+    Einheit pro Datenpunkt: Neben jedem <b>Leistungs‑Datenpunkt</b> kannst du festlegen, ob der Wert in <b>W</b> oder bereits in <b>kW</b> geliefert wird (W wird intern korrekt skaliert; kW wird 1:1 übernommen).
+  </span>
+</div>
+
+            <div class="nw-config-card__subtitle">Vorzeichen &amp; Darstellung (wie in den bisherigen Instanzeinstellungen)</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div class="nw-config-field-row">
+              <label class="nw-config-field-label" for="flowSubtractEvFromBuilding">EV‑Leistung vom Gebäude‑Verbrauch abziehen</label>
+              <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+                <input id="flowSubtractEvFromBuilding" type="checkbox"/>
+                <span class="nw-config-field-hint" style="margin:0;">Wenn aktiv, wird die Ladeleistung (EV) vom Gebäude‑Verbrauch (Mitte) subtrahiert.</span>
+              </div>
+            </div>
+
+            <div class="nw-config-field-row">
+              <label class="nw-config-field-label" for="flowInvertGrid">Netz‑Vorzeichen invertieren (Bezug/Einspeisung tauschen)</label>
+              <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+                <input id="flowInvertGrid" type="checkbox"/>
+                <span class="nw-config-field-hint" style="margin:0;">Standard: Bezug positiv, Einspeisung negativ (NVP).</span>
+              </div>
+            </div>
+
+            <div class="nw-config-field-row">
+              <label class="nw-config-field-label" for="flowInvertBattery">Batterie‑Vorzeichen invertieren (Laden/Entladen tauschen)</label>
+              <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+                <input id="flowInvertBattery" type="checkbox"/>
+                <span class="nw-config-field-hint" style="margin:0;">Aktivieren, wenn das System entgegengesetzte Vorzeichen liefert.</span>
+              </div>
+            </div>
+
+            <div class="nw-config-field-row">
+              <label class="nw-config-field-label" for="flowInvertPv">PV‑Vorzeichen invertieren</label>
+              <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+                <input id="flowInvertPv" type="checkbox"/>
+                <span class="nw-config-field-hint" style="margin:0;">Standard: PV &gt; 0 (Erzeugung Richtung Gebäude).</span>
+              </div>
+            </div>
+
+            <div class="nw-config-field-row">
+              <label class="nw-config-field-label" for="flowInvertEv">Wallbox/EV‑Vorzeichen invertieren</label>
+              <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+                <input id="flowInvertEv" type="checkbox"/>
+                <span class="nw-config-field-hint" style="margin:0;">Standard: Wallbox‑Verbrauch positiv.</span>
+              </div>
+            </div>
+
+            <div class="nw-config-field-row">
+              <label class="nw-config-field-label" for="flowGridShowNet">Netz: Netto (Bezug−Einspeisung) anzeigen</label>
+              <div class="nw-config-field-control" style="display:flex;align-items:center;gap:10px;">
+                <input id="flowGridShowNet" type="checkbox"/>
+                <span class="nw-config-field-hint" style="margin:0;">Wenn aktiv, wird die dominante Richtung mit Betrag angezeigt (vereinfachte Anzeige).</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <div id="nw-tabpanel-thermal" data-tabpanel="thermal" style="display:none;">
+    <h2>Wärmepumpe &amp; Klima</h2>
+    <div class="nw-subtitle">Setpoint-/SG-Ready-Regelung für Wärmepumpe, Heizung oder Klima. Die Geräte werden über die Verbraucher-Slots im Energiefluss angebunden. Für gestufte Heizstäbe bitte die separate Heizstab-App verwenden.</div>
+
+    <div class="nw-grid">
+      <div class="nw-card">
+        <div class="nw-card__title">Thermische Geräte</div>
+        <div class="nw-card__subtitle">Aktiviere PV-Auto je Slot und setze Sollwert-/Hysterese-Parameter. Slots, die im Energiefluss als Heizstab markiert sind, werden hier nur noch als Hinweis angezeigt.</div>
+        <div class="nw-config-field-row" style="margin:12px 0 10px 0;">
+          <div class="nw-config-field-label">Manuell-Hold (Schnellsteuerung)</div>
+          <div class="nw-config-field-control">
+            <input id="thermalHoldMinutes" class="nw-config-input" type="number" min="0" step="1" style="max-width:120px;" />
+            <div class="nw-config-field-hint">Minuten – wenn in der VIS per Schnellsteuerung ein Sollwert/Switch gesetzt wird, pausiert PV-Auto für diese Zeit, damit die Automatik nicht sofort überschreibt.</div>
+          </div>
+        </div>
+        <div id="thermalDevices"></div>
+      </div>
+
+      <div class="nw-card">
+        <div class="nw-card__title">Hinweis</div>
+        <div class="nw-card__subtitle">
+          Die Thermik-Regelung nutzt bevorzugt das zentrale EMS-PV-Restbudget nach Priorität. Falls der zentrale Budget-Koordinator noch keine frischen Werte liefert, wird weiterhin Netz-Import/Export als Fallback verwendet.
+        </div>
+        <div class="nw-help">
+          Empfehlung: Verbraucher-Slots im Energiefluss mit Name + Leistung + (optional) Switch/Setpoint oder SG-Ready anbinden. Gestufte Heizstäbe bitte im Tab <b>Heizstab</b> parametrieren.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="nw-tabpanel-heatingrod" data-tabpanel="heatingrod" style="display:none;">
+    <h2>Heizstab</h2>
+    <div class="nw-subtitle">Native 1-12 Stufen Heizstab-Regelung. Die Leistungsmessung bleibt am verknüpften Verbraucher-Slot im Energiefluss; die Relais-/KNX-Datenpunkte werden direkt hier in der Heizstab-App pro Stufe zugeordnet.</div>
+
+    <div class="nw-grid">
+      <div class="nw-card">
+        <div class="nw-card__title">Heizstab-Geräte</div>
+        <div class="nw-card__subtitle">Pro Verbraucher-Slot: maximale Leistung, Stufenzahl, Write-/Read-Datenpunkte und obere/untere Schaltschwellen pro Stufe direkt hier festlegen. So bleibt der Energiefluss im Steuerungsbereich übersichtlich.</div>
+        <div id="heatingRodDevices"></div>
+      </div>
+
+      <div class="nw-card">
+        <div class="nw-card__title">Hinweis</div>
+        <div class="nw-card__subtitle">Saubere Trennung für Installateure</div>
+        <div class="nw-help">
+          Vorgehen: <b>1.</b> Verbraucher-Slot im Energiefluss anlegen, <b>2.</b> Typ auf <b>Heizstab</b> stellen, <b>3.</b> hier Stufenzahl auswählen und pro Stufe Write-/Read-DPs zuordnen, <b>4.</b> Stufenleistung und Schaltschwellen parametrieren. Die Regelung läuft danach komplett nativ ohne zusätzliches JavaScript.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="nw-tabpanel-bhkw" data-tabpanel="bhkw" style="display:none;">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">BHKW</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Start/Stop‑Regelung eines Blockheizkraftwerks (SoC‑geführt). In der VIS erscheint eine Schnellsteuerung (Auto/Manuell/Aus) inkl. Start/Stop im manuellen Modus.
+      </div>
+
+      <div class="nw-config-grid">
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">BHKW‑Geräte</div>
+            <div class="nw-config-card__subtitle">Pro Gerät: Start/Stop (Write) + Laufstatus/Leistung (Read) zuordnen. Für die Anzeige im Energiefluss reicht die Leistungs‑Messung (W).</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="bhkwDevices" class="nw-config-list"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Hinweis</div>
+            <div class="nw-config-card__subtitle">Betriebslogik &amp; Empfehlungen</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div class="nw-config-card__row" style="opacity:.9;line-height:1.35;">
+              Für die Auto‑Regelung wird der SoC aus dem Speichersystem verwendet (bei aktivierter Speicher‑Farm: aggregierter SoC).
+              <br/>
+              Tipp: Endkunden‑Bedienung kann pro Gerät gesperrt werden (nur Installateur).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+
+  
+
+  <div id="nw-tabpanel-generator" data-tabpanel="generator" style="display:none;">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Generator</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Start/Stop‑Regelung eines Generators (Notstrom/Netzparallelbetrieb, SoC‑geführt). In der VIS erscheint eine Schnellsteuerung (Auto/Manuell/Aus) inkl. Start/Stop im manuellen Modus.
+      </div>
+
+      <div class="nw-config-grid">
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Generator‑Geräte</div>
+            <div class="nw-config-card__subtitle">Pro Gerät: Start/Stop (Write) + Laufstatus/Leistung (Read) zuordnen. Für die Anzeige im Energiefluss reicht die Leistungs‑Messung (W).</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="generatorDevices" class="nw-config-list"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Hinweis</div>
+            <div class="nw-config-card__subtitle">Betriebslogik &amp; Empfehlungen</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div class="nw-config-card__row" style="opacity:.9;line-height:1.35;">
+              Für die Auto‑Regelung wird der SoC aus dem Speichersystem verwendet (bei aktivierter Speicher‑Farm: aggregierter SoC).
+              <br/>
+              Tipp: Endkunden‑Bedienung kann pro Gerät gesperrt werden (nur Installateur).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+<div id="nw-tabpanel-threshold" data-tabpanel="threshold" style="display:none;">
+    <h2>Schwellwertsteuerung</h2>
+    <div class="nw-subtitle">Erstelle Regeln nach dem Muster „Wenn X &gt; Y dann schalte/setze Z“. Optional kann der Endkunde einzelne Schwellwerte in der VIS anpassen (pro Regel steuerbar).</div>
+
+    <div class="nw-grid">
+      <div class="nw-card">
+        <div class="nw-card__title">Regeln</div>
+        <div class="nw-card__subtitle">Bis zu 10 Regeln. Jede Regel benötigt Input + Output. Ohne Mapping werden keine Schreibaktionen ausgeführt.</div>
+        <div id="thresholdRules"></div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="thresholdAddRule" class="nw-config-btn nw-config-btn--primary" type="button">Regel hinzufügen</button>
+          <button id="thresholdResetRules" class="nw-config-btn nw-config-btn--ghost" type="button">Alle Regeln leeren</button>
+        </div>
+      </div>
+
+      <div class="nw-card">
+        <div class="nw-card__title">Hinweis</div>
+        <div class="nw-card__subtitle">
+          Typische Beispiele: Heizstab, Lüftung, Pumpen, Relais, Notstrom‑Start, Generator‑Freigabe, BHKW‑Signale.
+          <br/><br/>
+          MinOn/MinOff verhindert Flattern. Hysterese verhindert Grenzwert‑„Zittern“.
+        </div>
+        <div class="nw-help">
+          Empfehlung: pro Regel eindeutiger Name + sauberer Input (W, °C, % …) und ein eindeutiger Output (Switch oder Setpoint).
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="nw-tabpanel-relay" data-tabpanel="relay" style="display:none;">
+    <h2>Relaissteuerung</h2>
+    <div class="nw-subtitle">Manuelle Relais / generische Ausgänge. Der Installateur ordnet Datenpunkte zu. Der Endkunde kann (optional) schalten/setzen – pro Ausgang steuerbar.</div>
+
+    <div class="nw-grid">
+      <div class="nw-card">
+        <div class="nw-card__title">Relais / Ausgänge</div>
+        <div class="nw-card__subtitle">Bis zu 10 Ausgänge. Jeder Ausgang kann Switch (bool) oder Wert (number) sein. Optionaler Readback‑Datenpunkt möglich.</div>
+        <div id="relayControls"></div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="relayAdd" class="nw-config-btn nw-config-btn--primary" type="button">Ausgang hinzufügen</button>
+          <button id="relayReset" class="nw-config-btn nw-config-btn--ghost" type="button">Alle Ausgänge leeren</button>
+        </div>
+      </div>
+
+      <div class="nw-card">
+        <div class="nw-card__title">Hinweis</div>
+        <div class="nw-card__subtitle">
+          Typische Beispiele: Relais für Verbraucher, Freigaben, Schütze, Generator‑Startsignal, BHKW‑Enable, Lüftung.
+          <br/><br/>
+          Sicherheits-/Netzschutz-Funktionen (z.B. Peak‑Shaving) sollten nicht über diese App bedient werden.
+        </div>
+        <div class="nw-help">
+          Empfehlung: Nutze einen eindeutigen Namen, setze Write‑ und optional Read‑Datenpunkt. Wenn Read fehlt, wird der Write‑Datenpunkt als Status verwendet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+  <div id="nw-tabpanel-grid" data-tabpanel="grid" style="display:none;">
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Netzlimits</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Netzrestriktionen, zweistufige Bezugsbegrenzung und 0‑Einspeisung. Die zentrale Zuordnung bleibt die einzige Quelle für Anschlussleistung und NVP‑Messung.
+        <br/>
+        Hinweis: <b>Zuordnung → Allgemein</b> setzt die Netzanschlussleistung als Hard‑Limit (100 %) und den signierten NVP‑Datenpunkt. Das Soft‑Limit wird automatisch mit 90 % berechnet. Netzlimits enthält keine zweite Leistungs- oder Messpunktvorgabe.
+      </div>
+
+      <div class="nw-config-grid">
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">NVP‑Messung &amp; Stale‑Timeout</div>
+            <div class="nw-config-card__subtitle">Messpunkt aus Zuordnung → Allgemein + maximales Alter</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="gridConstraintsMeter"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Importgrenzen aus Zuordnung</div>
+            <div class="nw-config-card__subtitle">Hard 100 %, Soft 90 % der zentralen Netzanschlussleistung</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="gridConstraintsImportLimits"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">RLM / 15‑Minuten‑Deckel (Import)</div>
+            <div class="nw-config-card__subtitle">Dynamisches Hard‑Limit basierend auf dem 15‑Minuten‑Durchschnitt</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="gridConstraintsRlm"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card nw-zero-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">0‑Einspeisung / Einspeisebegrenzung</div>
+            <div class="nw-config-card__subtitle">PV folgt lokalem Verbrauch und Speicheraufnahme; WR‑Abregelung erfolgt zuletzt</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="gridConstraintsZero"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+
+  <div id="nw-tabpanel-evupv" data-tabpanel="evupv" style="display:none;">
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">EVU / PV Regelung</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        EVU‑Relaisstufen und deren Wechselrichter‑Zuordnung. Wechselrichter für 0‑Einspeisung werden direkt unter <b>Netzlimits → PV-Wechselrichter zuordnen</b> eingerichtet.
+      </div>
+
+      <div class="nw-config-grid">
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">EVU‑Abregelung</div>
+            <div class="nw-config-card__subtitle">Optionale Relais‑Eingänge für 60 %, 30 % und 0 %</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="gridConstraintsEvu"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-card">
+          <div class="nw-config-card__header">
+            <div class="nw-config-card__title">Wechselrichter‑Gruppen</div>
+            <div class="nw-config-card__subtitle">Wechselrichter für EVU-Relaisstufen; die 0-Einspeise-Zuordnung liegt unter Netzlimits</div>
+          </div>
+          <div class="nw-config-card__body">
+            <div id="gridConstraintsPvCurtail"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+<div id="nw-tabpanel-para14a" data-tabpanel="para14a" data-nw-market="DE" style="display:none;">
+    <h2>§14a Steuerung</h2>
+    <div class="nw-subtitle">Konfiguration für netzseitige Leistungsbegrenzung (steuerbare Verbrauchseinrichtungen). Zugeordnete Ladepunkte, aktive Wärme-/Klimageräte, Heizstäbe sowie Speicher mit erlaubtem Netzladen werden automatisch verbunden. Diese Funktion ist Netzschutz und wird nicht durch Endkunden bedient.</div>
+
+    <div class="nw-grid">
+      <div class="nw-card">
+        <div class="nw-card__title">Grundkonfiguration</div>
+        <div class="nw-card__subtitle">Modus, Mindestleistungen und optionale Fremd-Datenpunkte (Aktiv-Signal / EMS-Setpoint).</div>
+
+        <div class="nw-config-list" id="para14aConfig">
+
+          <div class="nw-config-item">
+            <div class="nw-config-item__left">
+              <div class="nw-config-item__title">Modus</div>
+              <div class="nw-config-item__subtitle">„EMS“: externer Gesamt-Setpoint wird zentral verteilt. „Direkt“: §14a-Mindestformel wird zentral berechnet. Hardware schreibt weiterhin nur das zuständige Fachmodul.</div>
+            </div>
+            <div class="nw-config-item__right">
+              <select id="para14aMode" class="nw-config-input">
+                <option value="ems">EMS</option>
+                <option value="direct">Direkt</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="nw-config-item">
+            <div class="nw-config-item__left">
+              <div class="nw-config-item__title">Mindestleistung pro Verbraucher (W)</div>
+              <div class="nw-config-item__subtitle">Die §14a-Basis beträgt mindestens 4.200 W. Größere Wärme-/Klimagruppen werden nach der hinterlegten Sonderformel berechnet.</div>
+            </div>
+            <div class="nw-config-item__right">
+              <input id="para14aMinPerDeviceW" class="nw-config-input" type="number" min="4200" step="1" placeholder="4200"/>
+            </div>
+          </div>
+
+          <div class="nw-config-item">
+            <div class="nw-config-item__left">
+              <div class="nw-config-item__title">Maximales Alter Aktiv-Signal (s)</div>
+              <div class="nw-config-item__subtitle">Nach Ablauf begrenzt EOS lokal auf Pmin,14a; keine unbegrenzte Freigabe und kein pauschaler 0-W-Stopp.</div>
+            </div>
+            <div class="nw-config-item__right">
+              <input id="para14aSignalMaxAgeSec" class="nw-config-input" type="number" min="1" max="300" step="1" value="30"/>
+            </div>
+          </div>
+
+          <div class="nw-config-item">
+            <div class="nw-config-item__left">
+              <div class="nw-config-item__title">Verhalten bei veraltetem Signal</div>
+              <div class="nw-config-item__subtitle">Standard: lokaler Mindestleistungs-Fallback. Netz-, Stations-, Phasen- und Safety-Grenzen bleiben übergeordnet.</div>
+            </div>
+            <div class="nw-config-item__right">
+              <select id="para14aStalePolicy" class="nw-config-input">
+                <option value="local-pmin">Lokaler Pmin-Fallback (Standard)</option>
+                <option value="hold-active">Letzte aktive Begrenzung halten, sonst Pmin</option>
+                <option value="force-active">Bei stale sicher auf Pmin begrenzen</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="nw-config-item">
+            <div class="nw-config-item__left">
+              <div class="nw-config-item__title">Legacy-Direktwrites</div>
+              <div class="nw-config-item__subtitle">Nur für Altanlagen. Standardmäßig AUS: §14a veröffentlicht zentrale Constraints; EVCS, Speicher, Thermik und Heizstab bleiben alleinige Hardware-Schreiber.</div>
+            </div>
+            <div class="nw-config-item__right">
+              <label class="nw-config-checklabel"><input id="para14aLegacyDirectWritesEnabled" type="checkbox"/> Alt-Direktwrites aktivieren</label>
+            </div>
+          </div>
+
+          <div class="nw-config-item">
+            <div class="nw-config-item__left">
+              <div class="nw-config-item__title">Aktiv-Signal (optional)</div>
+              <div class="nw-config-item__subtitle">Wenn gesetzt, aktiviert ein TRUE-Signal die §14a-Deckelung.</div>
+            </div>
+            <div class="nw-config-item__right" style="min-width:360px;">
+              <div class="nw-config-dp-input-wrapper">
+                <input id="para14aActiveId" class="nw-config-input nw-config-dp-input" type="text" placeholder="Datenpunkt-ID (optional)"/>
+                <button class="nw-config-dp-button" type="button" data-browse="para14aActiveId">Auswählen…</button>
+                <span id="val_para14aActiveId" class="nw-config-badge nw-config-badge--idle">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="nw-config-item">
+            <div class="nw-config-item__left">
+              <div class="nw-config-item__title">EMS-Setpoint (W) (optional)</div>
+              <div class="nw-config-item__subtitle">Wenn gesetzt, wird ein Leistungs-Setpoint (W) eingelesen (z.B. Netzvorgabe).</div>
+            </div>
+            <div class="nw-config-item__right" style="min-width:360px;">
+              <div class="nw-config-dp-input-wrapper">
+                <input id="para14aEmsSetpointWId" class="nw-config-input nw-config-dp-input" type="text" placeholder="Datenpunkt-ID (optional)"/>
+                <button class="nw-config-dp-button" type="button" data-browse="para14aEmsSetpointWId">Auswählen…</button>
+                <span id="val_para14aEmsSetpointWId" class="nw-config-badge nw-config-badge--idle">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="nw-help" style="margin-top:10px;">
+            Hinweis: Aktivierung/Deaktivierung der App erfolgt unter „Apps“. Diese Seite konfiguriert nur die Parameter.
+          </div>
+
+        </div>
+      </div>
+
+      <div class="nw-card">
+        <div class="nw-card__title">Zusätzliche / manuelle Verbraucher</div>
+        <div class="nw-card__subtitle">Nur für weitere Verbraucher, die keinem NexoWatt-Fachmodul zugeordnet sind. Ladepunkte, aktive Wärmepumpen/Klimageräte, Heizstäbe und Speicher mit erlaubtem Netzladen werden automatisch in die zentrale §14a-Cap-Berechnung aufgenommen.</div>
+
+        <div id="para14aConsumers" class="nw-config-list"></div>
+
+        <div style="margin-top:10px;">
+          <button id="addPara14aConsumer" type="button" class="nw-config-btn nw-config-btn--ghost">+ Verbraucher hinzufügen</button>
+        </div>
+
+        <div class="nw-help" style="margin-top:10px;">
+          Tipp: Für einen zusätzlichen manuellen Verbraucher kannst du entweder einen <b>Leistungs-Setpoint (W)</b> oder ein <b>Enable/Disable</b> anbinden. Falls beides gesetzt ist, wird Setpoint bevorzugt. Automatisch angebundene Fachmodule werden ausschließlich über ihre eigene robuste Regelung beschrieben.
+        </div>
+      </div>
+
+      <div class="nw-card">
+        <div class="nw-card__title">Nachweislog / Historie</div>
+        <div class="nw-card__subtitle">Das §14a-Modul schreibt ein leichtgewichtiges Ereignis- und Verlaufslog in <code>para14a.audit.*</code> und <code>para14a.trace.*</code>. Bei erkannter Influx-History wird die Historisierung automatisch aktiviert.</div>
+
+        <div class="nw-help" style="margin-top:10px;">
+          Performance: Es wird nur bei §14a-Schalt-/Limit-Ereignissen sowie im 1-Minuten-Raster während einer aktiven Begrenzung geschrieben.
+        </div>
+        <div class="nw-help" style="margin-top:10px;">
+          Wichtig: Für die gesetzliche Aufbewahrung von 2 Jahren muss die Retention des verwendeten Influx-Buckets bzw. der Influx-Instanz auf mindestens <b>730 Tage</b> gesetzt sein. Der Adapter setzt das Ziel intern als Hinweis, ändert aber keine globale Influx-Retention automatisch.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div id="nw-tabpanel-evcs" data-tabpanel="evcs" style="display:none;">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Ladepunkte (Wallbox/EVCS)</h2>
+        <div class="nw-config-row__actions">
+          <button id="ocppAutoDetect" type="button" class="nw-config-btn nw-config-btn--ghost">Automatische Erkennung (OCPP)</button>
+          <button id="ocppMapExisting" type="button" class="nw-config-btn nw-config-btn--ghost">Suche Datenpunkte (OCPP)</button>
+        </div>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Konfiguration der Ladepunkte (herstellerunabhängig): Anzeigen/Zuordnung und (optional) Stellgrößen...
+      </div>
+
+      <div class="nw-config-list">
+        <div class="nw-config-item">
+          <div class="nw-config-item__left">
+            <div class="nw-config-item__title">Anzahl Ladepunkte</div>
+            <div class="nw-config-item__subtitle">0–50. 0 blendet Wallbox/EVCS im Kunden-Frontend vollständig aus.</div>
+          </div>
+          <div class="nw-config-item__right">
+            <input id="evcsCount" class="nw-config-input" type="number" min="0" max="50" step="1" placeholder="0"/>
+          </div>
+        </div>
+
+        <div class="nw-config-item">
+          <div class="nw-config-item__left">
+            <div class="nw-config-item__title">Nennleistung pro Ladepunkt (kW)</div>
+            <div class="nw-config-item__subtitle">Fallback pro Ladepunkt, falls dort keine eigene Maximalleistung hinterlegt ist. Das EVCS-Gesamtbudget summiert automatisch alle aktivierten, steuerbaren Ladepunkte und berücksichtigt anschließend Stations-, NVP-, Phasen- und §14a-Grenzen (Standard: 11 kW je Ladepunkt).</div>
+          </div>
+          <div class="nw-config-item__right">
+            <input id="evcsMaxPowerKw" class="nw-config-input" type="number" min="0" step="0.1" placeholder="11"/>
+          </div>
+        </div>
+
+        <div class="nw-config-item">
+          <div class="nw-config-item__left">
+            <div class="nw-config-item__title">Globaler Speicherschutz im Multi-Lademanagement</div>
+            <div class="nw-config-item__subtitle">Freigabe für einen gemeinsamen Kundenschalter auf der EVCS-Seite. Bei mehreren Ladepunkten gilt „Speicher schützen / Speicher mitnutzen“ dann einheitlich für alle aktiven Ladepunkte. Ohne Haken bleibt die Bedienung pro Ladepunkt.</div>
+          </div>
+          <div class="nw-config-item__right">
+            <label class="nw-config-switch" title="Globalen Kundenschalter für alle Ladepunkte freigeben">
+              <input id="evcsGlobalStorageAssistCustomerAllowed" type="checkbox"/>
+              <span>Global freigeben</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="nw-config-item">
+          <div class="nw-config-item__left">
+            <div class="nw-config-item__title">Ziel‑Strategie (Zeit‑Ziel Laden)</div>
+            <div class="nw-config-item__subtitle">Standard: gleichmäßige Ø‑Leistung bis zur Ziel‑Uhrzeit. Smart: nutzt Tarif‑Freigaben (wenn vorhanden) und hebt Sperren bei knappen Deadlines automatisch auf.</div>
+          </div>
+          <div class="nw-config-item__right">
+            <select id="cmGoalStrategy" class="nw-config-input" aria-label="Ziel-Strategie">
+              <option value="standard">Standard</option>
+              <option value="smart">Smart</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="nw-config-section__head" style="margin-top:14px;">
+        <h3 class="nw-config-section__title" style="font-size:0.95rem;">Stationen &amp; Ports</h3>
+      </div>
+      <div id="evcsList" class="nw-config-grid"></div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Stationsgruppen (optional)</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Für Stationen mit mehreren Ladepunkten/Ports (z.B. DC-Ladegeräte) kann eine gemeinsame Leistungsgrenze definiert werden.
+      </div>
+      <div id="stationGroups" class="nw-config-list"></div>
+      <div style="margin-top:10px;">
+        <button id="addStationGroup" type="button" class="nw-config-btn nw-config-btn--ghost">+ Gruppe hinzufügen</button>
+      </div>
+    </section>
+
+    <section class="nw-config-section nw-charging-audit" aria-labelledby="chargingAuditTitle">
+      <div class="nw-config-section__head nw-charging-audit__head">
+        <div>
+          <h2 id="chargingAuditTitle" class="nw-config-section__title">Lademanagement – Live-Diagnose &amp; Ereignislog</h2>
+          <div class="nw-config-section__subtitle" style="margin:0;opacity:.85;line-height:1.45;">
+            Zeigt pro Ladepunkt Istleistung, angeforderten Wert, finalen NexoWatt-Sollwert, Reservierung, PV-Anteil, aktive Begrenzung, Sicherungsstufe und Hardware-Write-Status. Das Log ist read-only und beeinflusst keine Regelung.
+          </div>
+        </div>
+        <div class="nw-config-row__actions nw-charging-audit__actions">
+          <button id="refreshChargingAudit" type="button" class="nw-config-btn nw-config-btn--ghost">Aktualisieren</button>
+          <button id="exportChargingAuditJson" type="button" class="nw-config-btn nw-config-btn--ghost">JSON exportieren</button>
+          <button id="exportChargingAuditCsv" type="button" class="nw-config-btn nw-config-btn--ghost">CSV exportieren</button>
+          <button id="clearChargingAudit" type="button" class="nw-config-btn nw-config-btn--ghost">Log leeren</button>
+        </div>
+      </div>
+
+      <div class="nw-charging-audit__filters">
+        <label class="nw-config-checklabel"><input id="chargingAuditAutoRefresh" type="checkbox" checked/> Automatisch aktualisieren</label>
+        <label class="nw-config-checklabel"><input id="chargingAuditOnlyProblems" type="checkbox"/> Nur Probleme / Begrenzungen</label>
+        <label class="nw-charging-audit__filter-label" for="chargingAuditFilter">Ladepunkt</label>
+        <select id="chargingAuditFilter" class="nw-config-input nw-charging-audit__filter">
+          <option value="">Alle Ladepunkte</option>
+        </select>
+        <span id="chargingAuditStatus" class="nw-config-badge nw-config-badge--idle">Noch keine Daten</span>
+      </div>
+
+      <div id="chargingAuditSummary" class="nw-charging-audit__summary" aria-live="polite"></div>
+
+      <div class="nw-charging-audit__subhead">
+        <h3>Aktuelle Verteilung je Ladepunkt</h3>
+        <span>„Anforderung“ = vor finaler Begrenzung; „NexoWatt Soll“ = tatsächlich freigegebener Hardware-Sollwert.</span>
+      </div>
+      <div id="chargingAuditWallboxes" class="nw-charging-audit__wallboxes"></div>
+
+      <div class="nw-charging-audit__subhead">
+        <h3>Ereignislog</h3>
+        <span>Nur Zustands-/Sollwertänderungen sowie periodische aktive Snapshots; maximal 240 Einträge.</span>
+      </div>
+      <div class="nw-charging-audit__table-wrap">
+        <table class="nw-charging-audit__table">
+          <thead>
+            <tr>
+              <th>Zeit</th>
+              <th>Ladepunkt</th>
+              <th>Modus</th>
+              <th>Ist</th>
+              <th>Anforderung</th>
+              <th>NexoWatt Soll</th>
+              <th>Reserve / PV</th>
+              <th>Begrenzung / Grund</th>
+              <th>Write-Status</th>
+            </tr>
+          </thead>
+          <tbody id="chargingAuditEvents"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 0.8.33: Stationsseiten/Display-Token gehören zur Ladepunktverwaltung.
+         Die TypeScript-Logik rendert hier die bestehende DC-Station-Display-Karte,
+         ohne eine zweite Konfigurationslogik aufzubauen. -->
+    <section id="chargeKioskEvcsSlot" class="nw-config-section"></section>
+  </div>
+
+  <div id="nw-tabpanel-ledger" data-tabpanel="ledger" style="display:none;">
+    <section class="nw-config-card" data-card="energyLedgerOrigin">
+      <div class="nw-config-card__header">
+        <div>
+          <div class="nw-config-card__title">Energieherkunft &amp; Ladebilanz</div>
+          <div class="nw-config-card__subtitle">Read-only 15-Minuten-Bilanz für Netz, PV, Speicherherkunft und eichrechtsrelevante Ladezähler. Die App schreibt niemals auf Speicher, Wechselrichter oder Ladepunkte.</div>
+        </div>
+        <a class="nw-btn nw-btn--small" href="/ledger/energy-origin" target="_blank" rel="noopener noreferrer">Betreiberansicht öffnen</a>
+      </div>
+
+      <div class="nw-config-grid">
+        <label class="nw-field nw-field--switch">
+          <span>15-Minuten-Bilanz aktiv</span>
+          <input id="ledgerOriginEnabled" type="checkbox" />
+        </label>
+        <label class="nw-field">
+          <span>Standort-ID</span>
+          <input id="ledgerSiteId" type="text" value="site_1" />
+        </label>
+        <label class="nw-field">
+          <span>Standortname</span>
+          <input id="ledgerSiteName" type="text" value="Standort 1" />
+        </label>
+        <label class="nw-field">
+          <span>Länderprofil für Nachweis</span>
+          <select id="ledgerCountry">
+            <option value="AUTO">Automatisch / beide prüfen</option>
+            <option value="DE">Deutschland – THG</option>
+            <option value="NL">Nederland – ERE</option>
+          </select>
+        </label>
+        <label class="nw-field">
+          <span>Bilanzierungsverfahren</span>
+          <select id="ledgerAllocationMethod">
+            <option value="proportional">Proportionale Herkunftszuordnung</option>
+            <option value="direct-load-first">Direkte Verbraucher zuerst</option>
+            <option value="conservative-evcs-last">Konservativ: EVCS zuletzt</option>
+          </select>
+        </label>
+        <label class="nw-field">
+          <span>Nachweismodus</span>
+          <select id="ledgerEvidenceMode">
+            <option value="operational">Betriebliche Herkunftsbilanz</option>
+            <option value="formal">Förmlicher Nachweiskandidat</option>
+          </select>
+        </label>
+        <label class="nw-field">
+          <span>Messwert maximal veraltet (s)</span>
+          <input id="ledgerStaleSeconds" type="number" min="30" max="86400" step="1" value="300" />
+        </label>
+      </div>
+      <div class="nw-help">Intervalllänge ist verbindlich 15 Minuten. Fehlende oder widersprüchliche Messwerte werden als nicht zuordenbar beziehungsweise nicht nachweisfähig markiert – niemals still geschätzt.</div>
+    </section>
+
+    <section class="nw-config-card">
+      <div class="nw-config-card__header"><div><div class="nw-config-card__title">Kumulierte Energiezähler</div><div class="nw-config-card__subtitle">Primäre Bilanzquelle sind fortlaufende Wh/kWh/MWh-Zähler. Momentanleistungen ersetzen diese Zähler nicht.</div></div></div>
+      <div class="nw-config-grid" id="ledgerMeterGrid">
+        <label class="nw-field"><span>Netzbezug – Energiezähler</span><input id="ledgerGridImportDp" class="nw-config-dp-input" data-dp-input="1" type="text" /><button class="nw-btn nw-btn--small" type="button" data-browse="ledgerGridImportDp">DP wählen</button></label>
+        <label class="nw-field"><span>Einheit Netzbezug</span><select id="ledgerGridImportUnit"><option>Wh</option><option selected>kWh</option><option>MWh</option></select></label>
+        <label class="nw-field"><span>Netzeinspeisung – Energiezähler</span><input id="ledgerGridExportDp" class="nw-config-dp-input" data-dp-input="1" type="text" /><button class="nw-btn nw-btn--small" type="button" data-browse="ledgerGridExportDp">DP wählen</button></label>
+        <label class="nw-field"><span>Einheit Einspeisung</span><select id="ledgerGridExportUnit"><option>Wh</option><option selected>kWh</option><option>MWh</option></select></label>
+        <label class="nw-field"><span>PV-Erzeugung – Energiezähler</span><input id="ledgerPvDp" class="nw-config-dp-input" data-dp-input="1" type="text" /><button class="nw-btn nw-btn--small" type="button" data-browse="ledgerPvDp">DP wählen</button></label>
+        <label class="nw-field"><span>Einheit PV</span><select id="ledgerPvUnit"><option>Wh</option><option selected>kWh</option><option>MWh</option></select></label>
+        <label class="nw-field"><span>Weitere erneuerbare Erzeugung</span><input id="ledgerOtherRenewableDp" class="nw-config-dp-input" data-dp-input="1" type="text" /><button class="nw-btn nw-btn--small" type="button" data-browse="ledgerOtherRenewableDp">DP wählen</button></label>
+        <label class="nw-field"><span>Einheit weitere EE</span><select id="ledgerOtherRenewableUnit"><option>Wh</option><option selected>kWh</option><option>MWh</option></select></label>
+        <label class="nw-field"><span>Gebäudeverbrauch – optional</span><input id="ledgerBuildingDp" class="nw-config-dp-input" data-dp-input="1" type="text" /><button class="nw-btn nw-btn--small" type="button" data-browse="ledgerBuildingDp">DP wählen</button></label>
+        <label class="nw-field"><span>Einheit Gebäude</span><select id="ledgerBuildingUnit"><option>Wh</option><option selected>kWh</option><option>MWh</option></select></label>
+        <label class="nw-field"><span>Speicherladung – Energiezähler</span><input id="ledgerStorageChargeDp" class="nw-config-dp-input" data-dp-input="1" type="text" /><button class="nw-btn nw-btn--small" type="button" data-browse="ledgerStorageChargeDp">DP wählen</button></label>
+        <label class="nw-field"><span>Einheit Speicherladung</span><select id="ledgerStorageChargeUnit"><option>Wh</option><option selected>kWh</option><option>MWh</option></select></label>
+        <label class="nw-field"><span>Speicherentladung – Energiezähler</span><input id="ledgerStorageDischargeDp" class="nw-config-dp-input" data-dp-input="1" type="text" /><button class="nw-btn nw-btn--small" type="button" data-browse="ledgerStorageDischargeDp">DP wählen</button></label>
+        <label class="nw-field"><span>Einheit Speicherentladung</span><select id="ledgerStorageDischargeUnit"><option>Wh</option><option selected>kWh</option><option>MWh</option></select></label>
+      </div>
+    </section>
+
+    <section class="nw-config-card">
+      <div class="nw-config-card__header"><div><div class="nw-config-card__title">Speicher-Herkunftskonto</div><div class="nw-config-card__subtitle">PV-, weitere EE-, Netz- und unbekannte Energie werden getrennt im Speicher fortgeschrieben.</div></div></div>
+      <div class="nw-config-grid">
+        <label class="nw-field"><span>Ladewirkungsgrad (%)</span><input id="ledgerStorageChargeEfficiency" type="number" min="50" max="100" step="0.1" value="95" /></label>
+        <label class="nw-field"><span>Entladewirkungsgrad (%)</span><input id="ledgerStorageDischargeEfficiency" type="number" min="50" max="100" step="0.1" value="95" /></label>
+        <label class="nw-field"><span>Initialer Speicherinhalt (kWh)</span><input id="ledgerStorageInitialKwh" type="number" min="0" step="0.001" value="0" /></label>
+        <label class="nw-field"><span>Initialer PV-Anteil (%)</span><input id="ledgerStorageInitialPvPct" type="number" min="0" max="100" step="0.1" value="0" /></label>
+        <label class="nw-field nw-field--switch"><span>Speicher wird ausschließlich erneuerbar geladen (Nachweiserklärung)</span><input id="ledgerStorageExclusiveRenewable" type="checkbox" /></label>
+      </div>
+    </section>
+
+    <section class="nw-config-card">
+      <div class="nw-config-card__header"><div><div class="nw-config-card__title">Ladepunkte und eichrechtsrelevante Zähler</div><div class="nw-config-card__subtitle">Home unterstützt bis zu drei Ladepunkte; Pro ist für größere Ladeinfrastruktur vorbereitet.</div></div><button id="ledgerAddChargePoint" class="nw-btn nw-btn--small" type="button">Ladepunkt hinzufügen</button></div>
+      <div id="ledgerChargePoints"></div>
+    </section>
+
+    <section class="nw-config-card">
+      <div class="nw-config-card__header"><div><div class="nw-config-card__title">Nachweiserklärungen Deutschland / Nederland</div><div class="nw-config-card__subtitle">Diese Angaben markieren nur einen technisch prüfbaren Nachweiskandidaten. Sie ersetzen keine behördliche Anerkennung.</div></div></div>
+      <div class="nw-config-grid">
+        <label class="nw-field nw-field--switch"><span>Gleicher Netzverknüpfungspunkt erklärt</span><input id="ledgerSameGridConnection" type="checkbox" /></label>
+        <label class="nw-field nw-field--switch"><span>Messkonzept / Eichrechtskonformität erklärt</span><input id="ledgerMeteringCompliance" type="checkbox" /></label>
+        <label class="nw-field nw-field--switch"><span>Öffentlich zugängliche Ladepunkte erklärt</span><input id="ledgerPublicCharging" type="checkbox" /></label>
+        <label class="nw-field nw-field--switch"><span>Gleiches WOZ-Objekt erklärt (NL)</span><input id="ledgerSameWoz" type="checkbox" /></label>
+        <label class="nw-field nw-field--switch"><span>Direktleitung erklärt (NL)</span><input id="ledgerDirectLine" type="checkbox" /></label>
+        <label class="nw-field nw-field--switch"><span>Keine Betriebssubvention erklärt (NL)</span><input id="ledgerNoSubsidy" type="checkbox" /></label>
+        <label class="nw-field nw-field--switch"><span>Integrierter MID-Zähler erklärt (NL)</span><input id="ledgerIntegratedMid" type="checkbox" /></label>
+        <label class="nw-field"><span>Betreibertyp (NL)</span><select id="ledgerOperatorType"><option value="business">Zakelijk / gewerblich</option><option value="private">Particulier / privat</option></select></label>
+        <label class="nw-field"><span>NL Netz-EE-Anteil (%)</span><input id="ledgerNlGridRenewableShare" type="number" min="0" max="100" step="0.1" value="50.5" /></label>
+      </div>
+      <div class="nw-help">Förmliche Nachweise werden nur aus vollständigen 15-Minuten-Intervallen und zugeordneten kumulierten Zählern gebildet. Unklare Mengen bleiben „nicht zugeordnet“.</div>
+    </section>
+  </div>
+
+  <div id="nw-tabpanel-status" data-tabpanel="status" style="display:none;">
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Status &amp; Diagnose</h2>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Live-Status der internen Regel-Module (Tick-Zeiten, Fehler). Wird automatisch aktualisiert.
+      </div>
+      <div id="emsStatus" class="nw-config-list"></div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">NVP-, Speicher- &amp; PV-Regelung</h2>
+        <div class="nw-config-row__actions">
+          <button id="refreshNvpCoordinator" type="button" class="nw-config-btn nw-config-btn--ghost">Aktualisieren</button>
+        </div>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Vollständige Regelkette für Netzverknüpfungspunkt, Speicher/Farm und verbleibende PV-Abregelung. Diese Diagnose verändert die LIVE-Energieflussdarstellung nicht.
+      </div>
+      <div id="nvpCoordinatorStatus" class="nw-config-grid"></div>
+
+      <div class="nw-config-section__head" style="margin-top:14px;">
+        <h3 class="nw-config-section__title" style="font-size:0.95rem;">Stabilitätslog</h3>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Begrenzter Ringpuffer der letzten Regelzustände. Damit lassen sich Pendeln, verzögerte Speicherreaktionen, Gates und PV-Eingriffe nachvollziehen.
+      </div>
+      <div id="nvpCoordinatorLog" class="nw-config-list"></div>
+    </section>
+
+    
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Budget &amp; Gates – Zentral EMS</h2>
+        <div class="nw-config-row__actions">
+          <button id="refreshChargingBudget" type="button" class="nw-config-btn nw-config-btn--ghost">Aktualisieren</button>
+        </div>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Zentrale Budget-/Gate-Schicht für alle flexiblen Apps. Das Lademanagement nutzt sie zuerst; Thermik, Heizstab und spätere Verbraucher folgen nach Priorität.
+      </div>
+      <div id="chargingBudget" class="nw-config-grid"></div>
+    </section>
+
+    <!-- Interne TypeScript-Migrationsdiagnosen sind ab 0.8.3 aus der Benutzeroberfläche entfernt. -->
+
+<section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Ladepunkte – Diagnose</h2>
+        <div class="nw-config-row__actions">
+          <button id="refreshChargingDiag" type="button" class="nw-config-btn nw-config-btn--ghost">Aktualisieren</button>
+        </div>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Mapping/Freshness (Messwerte), Sollwerte, Gründe und Schreib-Status pro Ladepunkt.
+      </div>
+      <div id="chargingDiag" class="nw-config-list"></div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Stationsgruppen – Diagnose</h2>
+        <div class="nw-config-row__actions">
+          <button id="refreshStationsDiag" type="button" class="nw-config-btn nw-config-btn--ghost">Aktualisieren</button>
+        </div>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Harte Stationslimits (z. B. DC‑Station mit mehreren Ladepunkten/Ports): Cap, Used/Remaining, Binding, aktive Ladepunkte.
+      </div>
+      <div id="stationsDiag" class="nw-config-list"></div>
+    </section>
+
+    <section class="nw-config-section">
+      <div class="nw-config-section__head">
+        <h2 class="nw-config-section__title">Datensicherung – Export / Import</h2>
+        <div class="nw-config-row__actions">
+          <button id="nw-backup-export" type="button" class="nw-config-btn nw-config-btn--ghost">Export</button>
+          <button id="nw-backup-import" type="button" class="nw-config-btn nw-config-btn--ghost">Import</button>
+          <button id="nw-backup-restore" type="button" class="nw-config-btn nw-config-btn--ghost">Wiederherstellen (0_userdata)</button>
+        </div>
+      </div>
+      <div class="nw-config-section__subtitle" style="margin:0 0 10px 0;opacity:.85;">
+        Exportiert/Importiert die komplette App‑Center Konfiguration (inkl. Datenpunkt‑Zuordnungen).
+        Zusätzlich wird bei jedem Speichern automatisch ein Backup in <b>0_userdata.0</b> abgelegt (überlebt Deinstallation).
+      </div>
+
+      <input id="nw-backup-file" type="file" accept="application/json" style="display:none;" />
+
+      <div class="nw-config-card">
+        <div class="nw-config-card__body">
+          <div id="nw-backup-status" class="nw-config-status" style="margin:0 0 8px 0;"></div>
+          <div id="nw-backup-info" class="nw-config-list"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Datenpunkt-Auswahl (Dialog) -->
+  <div id="dpModal" class="nw-dp-dialog-backdrop hidden" aria-hidden="true">
+    <div class="nw-dp-dialog" role="dialog" aria-modal="true" aria-label="Datenpunkt auswählen" style="width:min(980px,92vw);">
+      <div class="nw-dp-dialog__header">
+        <div class="nw-dp-dialog__title">Datenpunkt auswählen</div>
+        <button id="dpClose" class="nw-dp-dialog__close" type="button" aria-label="Schließen">Schließen</button>
+      </div>
+
+      <div class="nw-dp-dialog__body">
+        <div class="nw-dp-dialog__search" style="flex-wrap:wrap;">
+          <input id="dpSearch" class="nw-config-input" type="text" placeholder="Suchen (ID oder Name)…" />
+          <button id="dpSearchBtn" class="nw-config-btn nw-config-btn--primary" type="button">Suchen</button>
+          <button id="dpRootBtn" class="nw-config-btn nw-config-btn--ghost" type="button">Start</button>
+          <button id="dpUpBtn" class="nw-config-btn nw-config-btn--ghost" type="button">Zurück</button>
+        </div>
+
+        <div id="dpBreadcrumb" class="nw-dp-breadcrumb"></div>
+
+        <div class="nw-dp-dialog__columns">
+          <div class="nw-dp-dialog__col">
+            <div class="nw-dp-col-title">Ordner</div>
+            <div id="dpTree" class="nw-dp-dialog__results"></div>
+          </div>
+          <div class="nw-dp-dialog__col">
+            <div class="nw-dp-col-title">Suchtreffer</div>
+            <div id="dpResults" class="nw-dp-dialog__results"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-empty" style="margin-top:6px;">
+          Tipp: Ordner-Navigation ist bei sehr großen Systemen oft schneller. Suche nutzt eine Cache-Liste (limitierbar, aber ohne harte Systemgrenze).
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script src="/static/nw-shell.js"></script>
+<script src="/static/ems-apps-nvp-diagnostics.js"></script>
+<script src="/static/energy-origin-appcenter.js"></script>
+<script src="/static/netoperator-appcenter.js"></script>
+<script src="/static/operating-strategies-rule-builder.js"></script>
+<script src="/static/operating-strategies-appcenter.js"></script>
+<script src="/static/evcs-electrical-limits.js"></script>
+<script src="/static/ems-apps.js"></script>
+<script src="/static/charging-diagnostics-appcenter.js"></script>
+
+
+
+  <script src="/static/cockpit-shell.js"></script>
+
+</body>
+</html>

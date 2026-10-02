@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: UI-TEST-001 metadata declares HTTP-wide binding and default anonymous customer policy
+ok 1 - UI-TEST-001 metadata declares HTTP-wide binding and default anonymous customer policy
+  ---
+  duration_ms: 1.792076
+  type: 'test'
+  ...
+# Subtest: UI-TEST-002 anonymous request passes actual default auth gate and reaches a stubbed configured switch write
+ok 2 - UI-TEST-002 anonymous request passes actual default auth gate and reaches a stubbed configured switch write
+  ---
+  duration_ms: 6.833157
+  type: 'test'
+  ...
+# Subtest: UI-TEST-003 explicit session policy denies anonymous customer writes
+ok 3 - UI-TEST-003 explicit session policy denies anonymous customer writes
+  ---
+  duration_ms: 1.31123
+  type: 'test'
+  ...
+# Subtest: UI-TEST-004 installer and license gates remain closed even when general auth is disabled
+ok 4 - UI-TEST-004 installer and license gates remain closed even when general auth is disabled
+  ---
+  duration_ms: 2.210859
+  type: 'test'
+  ...
+# Subtest: UI-TEST-005 HTTP sockets create cookies without Secure; encrypted sockets add Secure
+ok 5 - UI-TEST-005 HTTP sockets create cookies without Secure; encrypted sockets add Secure
+  ---
+  duration_ms: 1.794151
+  type: 'test'
+  ...
+# Subtest: UI-TEST-006 removing an admin group does not revoke the existing cached admin session
+ok 6 - UI-TEST-006 removing an admin group does not revoke the existing cached admin session
+  ---
+  duration_ms: 7.816575
+  type: 'test'
+  ...
+# Subtest: UI-TEST-007 expired cached sessions are rejected
+ok 7 - UI-TEST-007 expired cached sessions are rejected
+  ---
+  duration_ms: 1.165977
+  type: 'test'
+  ...
+# Subtest: UI-TEST-008 delivered HMAC routines can generate and accept a synthetic full license locally
+ok 8 - UI-TEST-008 delivered HMAC routines can generate and accept a synthetic full license locally
+  ---
+  duration_ms: 2.043105
+  type: 'test'
+  ...
+# Subtest: UI-TEST-009 authorized save stores the supplied fixture key as plain native data
+ok 9 - UI-TEST-009 authorized save stores the supplied fixture key as plain native data
+  ---
+  duration_ms: 2.1038
+  type: 'test'
+  ...
+# Subtest: UI-TEST-010 malformed cookie raises an exception in the actual parser (server effect untested)
+ok 10 - UI-TEST-010 malformed cookie raises an exception in the actual parser (server effect untested)
+  ---
+  duration_ms: 1.374722
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 185.785805

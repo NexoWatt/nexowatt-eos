@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "node": "v24.21.0",
+  "scope": "Separately executed gates after the failed mesh timing workload, not a passing test:all",
+  "results": [
+    {
+      "command": [
+        "node",
+        "scripts/verify-mesh-coordinator-access.cjs"
+      ],
+      "startedAt": "2026-10-01T17:04:47.026360+00:00",
+      "finishedAt": "2026-10-01T17:04:47.742607+00:00",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "scripts/verify-mesh-transformer-accounting.cjs"
+      ],
+      "startedAt": "2026-10-01T17:04:47.742769+00:00",
+      "finishedAt": "2026-10-01T17:04:49.051241+00:00",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "scripts/verify-mesh-app-lifecycle.cjs"
+      ],
+      "startedAt": "2026-10-01T17:04:49.051511+00:00",
+      "finishedAt": "2026-10-01T17:04:49.144649+00:00",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "test:zero-export-pv"
+      ],
+      "startedAt": "2026-10-01T17:04:49.144722+00:00",
+      "finishedAt": "2026-10-01T17:04:53.410693+00:00",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "test:stable-1.0.18-charging"
+      ],
+      "startedAt": "2026-10-01T17:04:53.410872+00:00",
+      "finishedAt": "2026-10-01T17:04:56.423682+00:00",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "test:stable-1.0.19-grid-share"
+      ],
+      "startedAt": "2026-10-01T17:04:56.424107+00:00",
+      "finishedAt": "2026-10-01T17:05:00.312856+00:00",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "test:stable-1.0.20-storage"
+      ],
+      "startedAt": "2026-10-01T17:05:00.313249+00:00",
+      "finishedAt": "2026-10-01T17:05:07.177210+00:00",
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "test:zero-export-inverter-mapping"
+      ],
+      "startedAt": "2026-10-01T17:05:07.177549+00:00",
+      "finishedAt": "2026-10-01T17:05:07.424374+00:00",
+      "exitCode": 0
+    }
+  ]
+}

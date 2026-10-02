@@ -1,0 +1,30 @@
+NexoWatt UI 1.0.21 – OFFICIAL STABLE RELEASE
+
+Vollständiges Repository: übersichtliche Nulleinspeisung und geschützte SmartHome-Einrichtung.
+Netzlimits erhalten eine breite, gegliederte Einrichtung mit PV-Wechselrichter-Zuordnung.
+SmartHome-Einstellungen liegen wieder im SmartHome-Bereich und sind nur für
+Installateure und Administratoren zugänglich; Kunden erhalten keine DP-Zuordnung.
+Vor Aktivierung Anlage gemäß docs/NULL_EINSPEISUNG_PV_STRATEGIE_DE.md prüfen.
+Keine Prüfung echter Anlagenhardware im automatisierten Release-Test.
+Details: docs/STABLE_1_0_21_RELEASE_DE.md
+
+Das normale npm publish --tag latest bereitet alte Admin-Bundles automatisch vor:
+Sicherheitsprüfung, bestätigter aktueller Build, Sicherung unbenutzter Altdateien
+außerhalb des Projekts, danach die unverändert strengen Release-Prüfungen.
+Aktuelle Bundles, Produktquellen und Einstellungen werden nicht verändert.
+Echte Sicherheitsfunde blockieren weiterhin. Keine automatische Neuversiegelung.
+
+Lokale Vorprüfung: npm run release:prepare und npm run publish:check
+Gesamte Prüfung: npm run release:check
+Bei Git-Verwendung entfernte alte Dateien vor dem Commit mit erfassen:
+git add -u -- admin/react/assets
+Der Sicherungspfad wird ausgegeben. Keine automatische Änderung des Git-Index.
+
+Vollständigen Release übernehmen, einschließlich package.json, scripts und admin/react.
+Neue Versionsnummer erst veröffentlichen, wenn der npm-Versionsguard sie freigibt.
+Diese ZIP führt selbst keine Veröffentlichung und keine Live-Hardwaretests aus.
+
+Deutsche Quellcode-Erklärungen und Dokumentationspflege bleiben erhalten.
+Einstieg: docs/QUELLCODE_WEGWEISER_DE.md
+Bei fachlichen Änderungen Kommentare mitpflegen, danach npm run docs:build und docs:check.
+Nach Adapterupdate neu starten und Browser neu laden.

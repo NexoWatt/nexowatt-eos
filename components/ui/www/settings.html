@@ -1,0 +1,923 @@
+<!--
+  Datei: www/settings.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!doctype html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Kunden-Einstellungen: sichtbare Betreiberparameter, KI-Schalter, Wetter, Reports und RFID-Einstellungen.
+  Zusammenhänge:
+  - Werte werden über data-scope/data-key in www/app.js an /api/set gebunden.
+  - Installerfunktionen bleiben im App-Center.
+  Wartungshinweise:
+  - Nur kundenverständliche Optionen anzeigen; tiefe Regelungsparameter gehören ins App-Center.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>NexoWatt EOS – Einstellungen</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="manifest" href="./manifest.webmanifest"/>
+  <link rel="stylesheet" href="/static/styles.css"/>
+  <script src="/static/nw-i18n.js" defer></script>
+  <script src="/static/auth.js" defer></script>
+  <script src="/static/os-update-status.js" defer></script>
+</head>
+<!-- NexoWatt Detail-Kommentar (DE) -->
+<!-- Kundeneinstellungen. data-scope/data-key-Felder werden generisch von www/app.js an /api/set gebunden und in main.js als States geführt. -->
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-settings">
+<!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar">
+<script>
+/* NexoWatt: normalize base path so relative links work even if opened without trailing slash */
+(function () {
+  try {
+    var p = window.location.pathname || "";
+    if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+      window.location.replace(p + "/" + window.location.search + window.location.hash);
+    }
+  } catch (e) {}
+})();
+</script>
+
+<div class="brand"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></div>
+<button aria-label="Menu" id="menuBtn">☰</button>
+<h1>NexoWatt EOS</h1>
+<nav class="tabs">
+<button class="tab" data-tab="live" onclick="window.location.href='./'">LIVE</button>
+<button class="tab" id="historyTabBtn" onclick="window.location.href='history.html'" data-tab="history">HISTORY</button>
+<button id="tabEvcs" class="tab hidden" onclick="window.location.href='evcs.html'">EVCS</button>
+<button id="tabSmartHome" class="tab hidden" data-tab="smarthome">SMARTHOME</button>
+</nav>
+<div class="status-dot" id="liveDot" title="Live Verbindung"></div>
+<a class="topbar-gear is-active" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+<div class="menu hidden" id="menuDropdown"><a class="menu-item" href="./">Live</a><a class="menu-item" href="history.html">History</a>
+<a class="menu-item hidden" id="menuEvcsLink" href="evcs.html">EVCS</a><a class="menu-item hidden" id="menuSmartHomeLink" href="smarthome.html">SmartHome</a><a class="menu-item" href="settings.html">Einstellungen</a></div></header>
+<!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="content nw-empty-content nw-subpage nw-subpage-settings">
+  <!-- Inhalt bewusst leer: Einstellungen werden als eigener Bereich darunter gerendert -->
+</main>
+
+<script src="/static/app.js"></script>
+
+<section class="settings-wrap nw-page-shell nw-settings-page-shell" data-tab-content="settings" data-settings-page="general">
+  <section class="nw-page-hero" aria-label="Einstellungen Übersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">Settings</div>
+      <h2>Einstellungen</h2>
+      <p class="nw-page-hero__subtitle">Benachrichtigungen, Tarife, RFID und Nachweise in einer responsiven Cockpit-Struktur. EMS-, Lizenz- und Simulatorfunktionen öffnen separat über den geschützten NexoWatt EOS Admin.</p>
+    </div>
+    <div class="nw-page-hero__actions">
+      <a class="btn sm" href="./">Live öffnen</a>
+    </div>
+  </section>
+  <div class="nw-settings-layout">
+    <aside class="card nw-settings-nav-card">
+      <div class="card-header"><span>Seiten</span></div>
+      <div class="nw-settings-nav">
+        <button class="nw-settings-nav__item is-active" type="button" data-settings-page-target="general">
+          <span class="nw-settings-nav__title">Allgemein</span>
+          <small>Admin-Zugang &amp; Wetter</small>
+        </button>
+        <button class="nw-settings-nav__item" type="button" data-settings-page-target="notify">
+          <span class="nw-settings-nav__title">Benachrichtigungen</span>
+          <small>E-Mail, Überwachung, Tests</small>
+        </button>
+        <button class="nw-settings-nav__item" type="button" data-settings-page-target="tariff">
+          <span class="nw-settings-nav__title">Dynamische Zeittarife</span>
+          <small>Tarif, Netzentgelt, Saisonprofil</small>
+        </button>
+        <button class="nw-settings-nav__item" type="button" data-settings-page-target="pv-surplus">
+          <span class="nw-settings-nav__title">PV-Überschuss</span>
+          <small>Speicher und E-Mobilität priorisieren</small>
+        </button>
+        <button class="nw-settings-nav__item" type="button" data-settings-page-target="rfid">
+          <span class="nw-settings-nav__title">RFID</span>
+          <small>Whitelist, Lernen, Abrechnung</small>
+        </button>
+        <button class="nw-settings-nav__item" type="button" data-settings-page-target="log" data-nw-market="DE">
+          <span class="nw-settings-nav__title">Log / §14a</span>
+          <small>Nachweis, Historie, Ereignisse</small>
+        </button>
+      </div>
+    </aside>
+
+    <div class="nw-settings-main">
+      <section class="card nw-settings-page" data-settings-panel="general">
+        <div class="card-header"><span>Allgemein</span></div>
+        <div class="form">
+    <!-- Technische SmartHome-Einrichtung liegt ausschließlich in SmartHome.
+         Dort gibt auth.js die Einstiege nur für Installer/Admin frei; die
+         Rollenprüfung der Konfigurations- und DP-APIs erfolgt in main.ts. -->
+    <div class="row" style="align-items:center; margin-top:10px;">
+      <span>Installateur</span>
+      <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex:1 1 auto">
+        <a class="btn" id="openInstallerBtn" href="#">Admin öffnen</a>
+      </div>
+    </div>
+
+          <div class="nw-settings-note">
+            Hier liegen allgemeine Frontend-Einstellungen und die Wetter-App. Weitere Themen findest du links sauber in eigenen Seiten.
+          </div>
+
+          <section class="card" id="osUpdateStatus" data-update-health="warning" aria-labelledby="osUpdateTitle">
+            <div class="card-header"><span id="osUpdateTitle">Betriebssystem · Sicherheitsupdates</span></div>
+            <div class="form">
+              <p id="osUpdateHeadline" role="status" aria-live="polite">Updatezustand wird geprüft</p>
+              <p class="nw-settings-note" id="osUpdateDetails">Noch kein bestätigter Updatezustand.</p>
+              <div class="row"><span>Automatische Aktualisierung vorgesehen</span><span id="osUpdateAutomatic">Unbekannt</span></div>
+              <div class="row"><span>Zeitsteuerung zuletzt beobachtet</span><span id="osUpdateTimer">Unbekannt</span></div>
+              <div class="row"><span>Letzter Versuch</span><span id="osUpdateAttempt">Unbekannt</span></div>
+              <div class="row"><span>Letzter erfolgreicher Durchlauf</span><span id="osUpdateSuccess">Unbekannt</span></div>
+              <div class="row"><span>Stand der Prüfung</span><span id="osUpdateObserved">Unbekannt</span></div>
+              <div class="row"><span>Offene Sicherheitsupdates</span><span id="osUpdatePending">Unbekannt</span></div>
+              <div class="row"><span>Blockierte Sicherheitsupdates</span><span id="osUpdateBlocked">Unbekannt</span></div>
+              <div class="row"><span>Aktivierung aktualisierter Prozesse</span><span id="osUpdateActivation">Unbekannt</span></div>
+              <div class="row"><span>Systemneustart</span><span id="osUpdateReboot">Unbekannt</span></div>
+              <div class="row"><span>Quellenabdeckung</span><span id="osUpdateCoverage">Unbekannt</span></div>
+              <p class="nw-settings-note">Debian-Sicherheitsupdates gelten für die konfigurierten Paketquellen. Raspberry-Pi-Pakete können Sicherheits- und Funktionsänderungen gemeinsam enthalten. EOS, Adapter, Node.js und weitere Drittsoftware benötigen zusätzlich ihre eigene geprüfte Updatefreigabe. Paketupdates können Dienste neu starten; einen erforderlichen Systemneustart muss der Service sicher einplanen.</p>
+            </div>
+          </section>
+          <div class="nw-settings-section-title">KI‑Energieberater</div>
+          <label class="row"><span>KI‑Berater im LIVE-Dashboard</span>
+            <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_aiAdvisorEnabled">
+              <button type="button" data-value="false">Aus</button>
+              <button type="button" data-value="true">An</button>
+            </div>
+            <input type="checkbox" class="nw-toggle-hidden" id="s_aiAdvisorEnabled" data-scope="settings" data-key="aiAdvisorEnabled" checked>
+          </label>
+          <small class="muted nw-settings-help" style="display:block;margin-top:6px;color:var(--muted)">
+            Der Kunde entscheidet selbst, ob die Hinweisbox „KI‑Energieberater“ im LIVE-Dashboard aktiv ist. Die KI bleibt immer beratend und schaltet keine Geräte automatisch.
+          </small>
+
+          <div class="nw-ai-customer-grid">
+            <label class="row nw-ai-setting-row"><span>Optimierungsmodus</span>
+              <select id="s_aiAdvisorMode" data-scope="settings" data-key="aiAdvisorMode">
+                <option value="balanced">Ausgewogen</option>
+                <option value="cost">Kosten sparen</option>
+                <option value="autarky">Autarkie</option>
+                <option value="co2">CO₂‑arm</option>
+                <option value="peak">Netzanschluss schützen</option>
+              </select>
+            </label>
+            <label class="row nw-ai-setting-row"><span>EV fertig bis</span>
+              <input id="s_aiAdvisorEvReadyBy" data-scope="settings" data-key="aiAdvisorEvReadyBy" type="time" value="07:00">
+            </label>
+            <label class="row nw-ai-setting-row"><span>EV Ziel‑SoC (%)</span>
+              <input id="s_aiAdvisorEvTargetSocPct" data-scope="settings" data-key="aiAdvisorEvTargetSocPct" type="number" min="10" max="100" step="1" value="80">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Warmwasser/Heizung fertig bis</span>
+              <input id="s_aiAdvisorThermalReadyBy" data-scope="settings" data-key="aiAdvisorThermalReadyBy" type="time" value="18:00">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Komfortfenster Start</span>
+              <input id="s_aiAdvisorComfortStart" data-scope="settings" data-key="aiAdvisorComfortStart" type="time" value="06:00">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Komfortfenster Ende</span>
+              <input id="s_aiAdvisorComfortEnd" data-scope="settings" data-key="aiAdvisorComfortEnd" type="time" value="22:00">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Ruhezeit Start</span>
+              <input id="s_aiAdvisorQuietHoursStart" data-scope="settings" data-key="aiAdvisorQuietHoursStart" type="time" value="22:00">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Ruhezeit Ende</span>
+              <input id="s_aiAdvisorQuietHoursEnd" data-scope="settings" data-key="aiAdvisorQuietHoursEnd" type="time" value="06:00">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Priorität Speicher</span>
+              <input id="s_aiAdvisorPriorityStorage" data-scope="settings" data-key="aiAdvisorPriorityStorage" type="number" min="0" max="100" step="1" value="90">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Priorität Wallbox</span>
+              <input id="s_aiAdvisorPriorityEvcs" data-scope="settings" data-key="aiAdvisorPriorityEvcs" type="number" min="0" max="100" step="1" value="80">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Priorität Thermik</span>
+              <input id="s_aiAdvisorPriorityThermal" data-scope="settings" data-key="aiAdvisorPriorityThermal" type="number" min="0" max="100" step="1" value="60">
+            </label>
+            <label class="row nw-ai-setting-row"><span>Priorität Heizstab</span>
+              <input id="s_aiAdvisorPriorityHeatingRod" data-scope="settings" data-key="aiAdvisorPriorityHeatingRod" type="number" min="0" max="100" step="1" value="45">
+            </label>
+          </div>
+          <small class="muted nw-settings-help" style="display:block;margin-top:8px;color:var(--muted)">
+            Diese Kundenziele fließen in Tagesfahrplan, EV‑Zielplanung, Speicherstrategie und Peak‑Warnungen ein. Detailparameter wie Schwellwerte bleiben im Admin/App‑Center.
+          </small>
+
+          <div class="nw-settings-section-title">Wetter</div>
+      <label class="row"><span>Wetter-App</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_weather_enabled">
+          <button type="button" data-value="false">Aus</button>
+          <button type="button" data-value="true">An</button>
+        </div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_weather_enabled" data-scope="settings" data-key="weatherEnabled">
+      </label>
+
+      <div id="weather_settings_block" class="nw-weather-settings" style="display:none">
+        <div class="row" style="align-items:center">
+          <span>Nutzungsart</span>
+          <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-weather-mode" id="weatherUsageButtons" style="justify-content:flex-end;gap:8px">
+            <button type="button" data-value="private">Privat</button>
+            <button type="button" data-value="commercial">Gewerblich</button>
+          </div>
+          <input type="hidden" id="s_weather_usage" data-scope="settings" data-key="weatherUsageMode" value="private">
+        </div>
+
+        <small id="weatherHintPrivate" style="display:block;margin-top:6px;color:var(--muted)">Für private Nutzung kostenlos. Standort wird automatisch aus der Anlagen-/Systemkonfiguration übernommen.</small>
+        <small id="weatherHintCommercial" style="display:none;margin-top:6px;color:var(--muted)">Für gewerbliche/betriebliche Nutzung ist ein eigener API-Schlüssel erforderlich. Standort wird automatisch aus der Anlagen-/Systemkonfiguration übernommen. Die Verantwortung für die rechtmäßige Nutzung liegt beim Betreiber.</small>
+
+        <div id="weatherApiKeyRow" style="display:none;margin-top:10px">
+          <label class="row"><span>API-Schlüssel</span>
+            <input type="password" id="s_weather_apiKey" data-scope="settings" data-key="weatherApiKey" placeholder="API-Key">
+          </label>
+          <small id="weatherApiKeyMissing" style="display:none;margin-top:6px;color:var(--muted)">Kein API-Schlüssel gesetzt – Wetterdaten werden nicht abgefragt.</small>
+        </div>
+
+        <div id="nwForecastSettingsBlock" style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+          <div class="nw-settings-section-title" style="margin-top:0">PV‑Prognose</div>
+          <small class="muted" style="display:block;margin:-2px 0 12px;color:var(--muted)">Optional für vorausschauendes Zeit‑Ziel‑Laden. Ist Open‑Meteo aus oder nicht verfügbar, bleibt die bisherige AppCenter‑Datenpunktzuordnung nutzbar.</small>
+
+          <label class="row"><span>Prognosequelle</span>
+            <select id="s_forecastSourceMode" data-scope="settings" data-key="forecastSourceMode">
+              <option value="auto">Automatisch: Open‑Meteo, dann AppCenter</option>
+              <option value="open-meteo">Nur Open‑Meteo</option>
+              <option value="datapoint">Nur AppCenter‑Datenpunkte</option>
+              <option value="disabled">Deaktiviert</option>
+            </select>
+          </label>
+          <label class="row"><span>Open‑Meteo PV‑Prognose</span>
+            <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_openMeteoPvEnabled"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+            <input type="checkbox" class="nw-toggle-hidden" id="s_openMeteoPvEnabled" data-scope="settings" data-key="openMeteoPvEnabled">
+          </label>
+          <label class="row"><span>Bei Ausfall AppCenter‑Prognose verwenden</span>
+            <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_forecastFallbackToDatapoints"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+            <input type="checkbox" class="nw-toggle-hidden" id="s_forecastFallbackToDatapoints" data-scope="settings" data-key="forecastFallbackToDatapoints" checked>
+          </label>
+
+          <div id="nwOpenMeteoPvFields">
+            <section class="nw-pv-array-editor" aria-labelledby="nwPvArrayEditorTitle">
+              <div class="nw-pv-array-editor__header">
+                <div>
+                  <div class="nw-pv-array-editor__title" id="nwPvArrayEditorTitle">PV-Flächen</div>
+                  <small class="muted">Jede Dachausrichtung wird als eigene PV-Fläche erfasst. Die Prognose addiert alle Flächen automatisch.</small>
+                </div>
+                <button class="btn sm nw-pv-array-editor__add" id="nwPvArrayAdd" type="button">+ PV-Fläche hinzufügen</button>
+              </div>
+
+              <div class="nw-pv-array-table-wrap">
+                <table class="nw-pv-array-table" aria-describedby="nwPvArrayHelp">
+                  <thead>
+                    <tr>
+                      <th scope="col">Bezeichnung</th>
+                      <th scope="col">Leistung (kWp)</th>
+                      <th scope="col">Neigung (°)</th>
+                      <th scope="col">Ausrichtung</th>
+                      <th scope="col">Verluste (%)</th>
+                      <th scope="col">WR-Grenze (kW)</th>
+                      <th scope="col" class="nw-pv-array-action-column"><span class="sr-only">Aktion</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="nwPvArrayRows"></tbody>
+                </table>
+              </div>
+              <small class="muted" id="nwPvArrayHelp">Die Wechselrichtergrenze ist optional. 0 bedeutet: keine zusätzliche Begrenzung.</small>
+              <small class="nw-pv-array-validation hidden" id="nwPvArrayValidation" role="status" aria-live="polite"></small>
+            </section>
+
+            <!-- Kompatibilitätsfelder: werden vom einfachen Tabelleneditor automatisch gepflegt. -->
+            <div class="hidden" aria-hidden="true">
+              <input id="s_pvForecastInstalledKwp" data-scope="settings" data-key="pvForecastInstalledKwp" type="number" min="0" max="100000" step="0.01" value="0" tabindex="-1">
+              <input id="s_pvForecastTiltDeg" data-scope="settings" data-key="pvForecastTiltDeg" type="number" min="0" max="90" step="1" value="30" tabindex="-1">
+              <input id="s_pvForecastAzimuthDeg" data-scope="settings" data-key="pvForecastAzimuthDeg" type="number" min="-180" max="180" step="1" value="0" tabindex="-1">
+              <input id="s_pvForecastLossPercent" data-scope="settings" data-key="pvForecastLossPercent" type="number" min="0" max="60" step="0.1" value="14" tabindex="-1">
+              <input id="s_pvForecastInverterLimitW" data-scope="settings" data-key="pvForecastInverterLimitW" type="number" min="0" max="100000000" step="100" value="0" tabindex="-1">
+              <textarea id="s_pvForecastArrays" data-scope="settings" data-key="pvForecastArrays" rows="1" spellcheck="false" tabindex="-1">[]</textarea>
+            </div>
+
+            <details class="nw-pv-forecast-advanced">
+              <summary>Planung</summary>
+              <div class="nw-ai-customer-grid">
+                <label class="row nw-ai-setting-row"><span>Planungssicherheit (%)</span><input id="s_pvForecastPlanningSafetyPct" data-scope="settings" data-key="pvForecastPlanningSafetyPct" type="number" min="30" max="100" step="1" value="85"></label>
+                <label class="row nw-ai-setting-row"><span>Aktualisierung (Minuten)</span><input id="s_forecastUpdateIntervalMin" data-scope="settings" data-key="forecastUpdateIntervalMin" type="number" min="5" max="180" step="1" value="30"></label>
+                <label class="row nw-ai-setting-row"><span>Planungshorizont (Stunden)</span><input id="s_forecastHorizonHours" data-scope="settings" data-key="forecastHorizonHours" type="number" min="6" max="72" step="1" value="48"></label>
+              </div>
+              <small class="muted nw-pv-forecast-advanced__help">Der Anlagenstandort wird zentral aus dem EOS Admin beziehungsweise der zentralen EOS-Systemkonfiguration übernommen. Ort oder Postleitzahl werden bei Bedarf automatisch in Koordinaten aufgelöst.</small>
+            </details>
+          </div>
+
+          <div class="nw-settings-section-title" style="margin-top:18px">Prognosestatus</div>
+          <div class="nw-ai-customer-grid">
+            <div class="row nw-ai-setting-row"><span>Status</span><strong id="nwForecastStatus">Adapterdaten werden verbunden …</strong></div>
+            <div class="row nw-ai-setting-row"><span>Quelle</span><strong id="nwForecastSource">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>Standort</span><strong id="nwForecastLocation">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>Letzte erfolgreiche Prognose</span><strong id="nwForecastUpdated">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>Letzter Abrufversuch</span><strong id="nwForecastAttempt">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>Abrufmodus</span><strong id="nwForecastRequestMode">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>PV nächste 6 h</span><strong id="nwForecast6h">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>PV nächste 12 h</span><strong id="nwForecast12h">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>PV nächste 24 h</span><strong id="nwForecast24h">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>Prognosepunkte</span><strong id="nwForecastPoints">—</strong></div>
+            <div class="row nw-ai-setting-row"><span>Punkte mit erwartetem Ertrag</span><strong id="nwForecastPositivePoints">—</strong></div>
+          </div>
+          <small id="nwForecastError" class="muted hidden" style="display:block;margin-top:8px;color:#ffbd59"></small>
+        </div>
+
+        <small class="muted" style="display:block;margin-top:8px;color:var(--muted)">
+          Hinweis &amp; Informationen: Wetterdaten werden vom externen Dienst Open‑Meteo bereitgestellt. Weitere Details finden Sie unter
+          <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">open-meteo.com</a>.
+        </small>
+      </div>
+
+      <!-- Installateur-/Admin-Konfiguration erfolgt außerhalb des Endkunden-Dashboards -->
+        </div>
+      </section>
+
+      <section class="card nw-settings-page hidden" data-settings-panel="notify">
+        <div class="card-header"><span>Benachrichtigungen</span></div>
+        <div class="form">
+          <div class="nw-settings-note">
+            Absender: info@nexowatt.com. Harte Fehler werden bei Erkennung sofort gemeldet, normale Fehler gesammelt alle 30 Minuten. Hinweise, Erinnerungen an harte Fehler und Entwarnungen werden höchstens einmal täglich zusammengefasst. Der direkte Mailversand wird durch den Installateur eingerichtet.
+          </div>
+      <label class="row"><span>Benachrichtigungen</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_notify"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_notify" data-scope="settings" data-key="notifyEnabled">
+      </label>
+      <label class="row"><span>E-Mail</span>
+        <input type="email" id="s_email" data-scope="settings" data-key="email">
+      </label>
+
+      <div class="row" style="align-items:center; margin-top:6px;">
+        <span style="opacity:.85; font-size:12px;">Überwachung (Ereignisse)</span>
+        <small style="opacity:.7; text-align:right; flex:1 1 auto;">wird per E-Mail gemeldet</small>
+      </div>
+      <label class="row"><span>System / Adapter</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_notify_system"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_notify_system" data-scope="settings" data-key="notifySystem">
+      </label>
+      <label class="row"><span>Wechselrichter</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_notify_inv"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_notify_inv" data-scope="settings" data-key="notifyInverters">
+      </label>
+      <label class="row"><span>Ladestörungen / Ladeabbrüche</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_notify_charging"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_notify_charging" data-scope="settings" data-key="notifyCharging">
+      </label>
+      <label class="row"><span>Kommunikationsausfälle</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_notify_communication"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_notify_communication" data-scope="settings" data-key="notifyCommunication">
+      </label>
+      <label class="row"><span>Netzregelung: Sicherheitsbetrieb</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_notify_hard"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_notify_hard" data-scope="settings" data-key="notifyHardCurtailment">
+      </label>
+      <label class="row"><span>Entwarnungen in Tageszusammenfassung</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_notify_ok"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_notify_ok" data-scope="settings" data-key="notifyRecovery">
+      </label>
+
+      <label class="row"><span>Offline, wenn keine Daten seit (Sek.)</span>
+        <input type="number" id="s_devStaleTimeout" min="30" step="30" data-scope="settings" data-key="deviceStaleTimeoutSec">
+      </label>
+      <small style="opacity:.75; display:block; margin-top:-6px;">Wenn ein Geräte-Adapter hängt und keine Werte mehr aktualisiert, wird das Gerät nach Ablauf dieser Zeit als <b>Offline</b> behandelt.</small>
+
+      <div class="row" style="align-items:center;">
+        <span>Test</span>
+        <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex:1 1 auto">
+          <button class="btn" id="notifyTestBtn" type="button">Test-Mail senden</button>
+        </div>
+      </div>
+      <small id="notifyTestMsg" style="opacity:.75; display:block; margin-top:-6px;"></small>
+        </div>
+      </section>
+
+      <section class="card nw-settings-page hidden" data-settings-panel="tariff">
+        <div class="card-header"><span>Dynamische Zeittarife</span></div>
+        <div class="form">
+          <div class="nw-settings-note">
+            Tarif-Optimierung, zeitvariables Netzentgelt und das PV-Saisonprofil sind hier gebündelt, damit die Regelung schneller auffindbar bleibt.
+          </div>
+      <label class="row"><span>Dynamischer Zeittarif</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_dyn_toggle"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="s_dyn_toggle" data-scope="settings" data-key="dynamicTariff">
+      </label>
+<!-- Diese Einstellungen sollen nur sichtbar sein, wenn der Dynamische Tarif aktiviert ist -->
+	      <div id="dyn_settings_block">
+	        <label class="row"><span>Zeitvariables Netzentgelt (HT/NT, Quartal)</span>
+          <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_netFeeEnabled"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+          <input type="checkbox" class="nw-toggle-hidden" id="s_netFeeEnabled" data-scope="settings" data-key="netFeeEnabled">
+        </label>
+
+        <div class="nw-tabs nw-tabs--sub" id="dynTariffSubtabs" style="display:none;margin-top:8px">
+          <button type="button" class="nw-tab nw-tab--active" data-dyntab="tariff">Tarif</button>
+          <button type="button" class="nw-tab" data-dyntab="netfee">Netzentgelt</button>
+        </div>
+
+        <div id="dynTariffPanel" data-dynpanel="tariff">
+          <label class="row"><span>Speicher Leistung (W)</span>
+            <input type="number" id="s_storagePower" step="1" data-scope="settings" data-key="storagePower">
+          </label>
+          <label class="row"><span>Strompreis (€)</span>
+            <input type="number" id="s_price" step="0.01" data-scope="settings" data-key="price">
+          </label>
+
+          <div class="row"><span>Priorität (Tarif): <b id="s_priority_label">Auto</b></span>
+            <input type="range" id="s_priority" min="1" max="3" step="1" data-scope="settings" data-key="priority">
+            <small>1 = Speicher, 2 = Auto, 3 = Ladestation</small>
+          </div>
+          <div class="row"><span>Modus Tarif: <b id="s_tariffMode_label">Manuell</b></span>
+            <input type="range" id="s_tariffMode" min="1" max="2" step="1" data-scope="settings" data-key="tariffMode">
+            <small>1 = Manuell, 2 = Automatisch</small>
+          </div>
+
+          <div style="margin-top:14px;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.02)">
+            <div style="font-weight:600;margin-bottom:6px">PV Saisonprofil (Quartale) ☀️</div>
+
+            <label class="row"><span>Berücksichtige starke/schwache Quartale</span>
+              <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_tariffPvSeasonEnabled"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+              <input type="checkbox" class="nw-toggle-hidden" id="s_tariffPvSeasonEnabled" data-scope="settings" data-key="tariffPvSeasonEnabled">
+            </label>
+
+            <div id="tariffPvSeasonBlock" style="display:none;margin-top:8px">
+              <!-- KI ist immer aktiv. Manuelle Basiswerte sind optional. -->
+              <input type="checkbox" class="nw-toggle-hidden" id="s_tariffPvSeasonAiEnabled" data-scope="settings" data-key="tariffPvSeasonAiEnabled">
+
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:6px">
+                <small id="tariffPvSeasonAiHint" style="opacity:.75; display:block; margin:0">
+                  <b>KI aktiv:</b> Saisonfaktor wird automatisch aus PV-Forecast (Stärke) und Quartal abgeleitet.
+                </small>
+                <button class="btn" id="pvSeasonManualBtn" type="button" style="white-space:nowrap">Manuell (optional)</button>
+              </div>
+
+              <div id="tariffPvSeasonManualBlock" style="display:none;margin-top:8px">
+                <div class="row" style="align-items:flex-start">
+                  <span>Faktor je Quartal</span>
+                  <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                    <label style="display:flex;align-items:center;gap:6px">
+                      <span style="opacity:.8">Q1</span>
+                      <input type="number" id="s_tariffPvSeasonQ1Factor" step="0.05" min="0" max="2" data-scope="settings" data-key="tariffPvSeasonQ1Factor" style="width:90px">
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px">
+                      <span style="opacity:.8">Q2</span>
+                      <input type="number" id="s_tariffPvSeasonQ2Factor" step="0.05" min="0" max="2" data-scope="settings" data-key="tariffPvSeasonQ2Factor" style="width:90px">
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px">
+                      <span style="opacity:.8">Q3</span>
+                      <input type="number" id="s_tariffPvSeasonQ3Factor" step="0.05" min="0" max="2" data-scope="settings" data-key="tariffPvSeasonQ3Factor" style="width:90px">
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px">
+                      <span style="opacity:.8">Q4</span>
+                      <input type="number" id="s_tariffPvSeasonQ4Factor" step="0.05" min="0" max="2" data-scope="settings" data-key="tariffPvSeasonQ4Factor" style="width:90px">
+                    </label>
+                  </div>
+                </div>
+                <small style="opacity:.75; display:block; margin-top:6px">
+                  <b>Wirkung:</b> Faktor &gt; 1 = mehr PV-Reserve (mehr Headroom, weniger Netzladen). Faktor &lt; 1 = weniger PV-Reserve (mehr Netzladen).<br>
+                  Empfehlung (DE): Q2/Q3 eher &gt; 1 (Sonne stark), Q1/Q4 eher &lt; 1 (Sonne schwach). Default ist bereits passend gesetzt.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="dynNetFeePanel" data-dynpanel="netfee" style="display:none">
+          <small style="opacity:.75; display:block; margin-top:6px;">
+            <b>NT</b>: EVCS Netzladen freigegeben + Speicher darf laden.&nbsp;
+            <b>HT</b>: Speicher = Eigenverbrauchsoptimierung, EVCS Netzladen gesperrt (PV möglich).&nbsp;
+            <b>Standard (ST)</b>: keine zusätzliche Sperre/Erzwingung – dynamischer Tarif regelt wie zuvor.
+          </small>
+
+          <div class="row" style="margin-top:10px;align-items:flex-start">
+            <span>Netzentgelt-Zusatz (€/kWh)</span>
+            <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:6px">
+                <span style="opacity:.8">ST</span>
+                <input type="number" id="s_netFeePriceSt" step="0.01" min="0" data-scope="settings" data-key="netFeePriceSt" style="width:110px">
+              </label>
+              <label style="display:flex;align-items:center;gap:6px">
+                <span style="opacity:.8">NT</span>
+                <input type="number" id="s_netFeePriceNt" step="0.01" min="0" data-scope="settings" data-key="netFeePriceNt" style="width:110px">
+              </label>
+              <label style="display:flex;align-items:center;gap:6px">
+                <span style="opacity:.8">HT</span>
+                <input type="number" id="s_netFeePriceHt" step="0.01" min="0" data-scope="settings" data-key="netFeePriceHt" style="width:110px">
+              </label>
+            </div>
+          </div>
+          <small style="opacity:.75; display:block; margin-top:6px;">
+            Diese Werte werden als <b>zusätzlicher Netzentgelt-Anteil</b> zum Strompreis verwendet und im Historienbereich separat sowie als Gesamtpreis protokolliert.
+          </small>
+
+          <label class="row" style="margin-top:10px"><span>Modell</span>
+            <select id="s_netFeeModel" data-scope="settings" data-key="netFeeModel" style="min-width:260px;max-width:100%;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:#a7c400;color:#000;">
+              <option value="1">Einfach (HT/NT, ganzjährig)</option>
+              <option value="2">Quartale (NT/HT je Quartal, Rest = Standard)</option>
+            </select>
+          </label>
+
+          <!-- Modell 1: Einfach (ganzjährig) -->
+          <div id="netFeeSimpleBlock">
+            <div class="row" style="margin-top:10px;align-items:flex-start">
+              <span>NT (Niedertarif)</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px">
+                  <span style="opacity:.8">Von</span>
+                  <input type="time" id="s_netFeeNtStart" data-scope="settings" data-key="netFeeNtStart">
+                </label>
+                <label style="display:flex;align-items:center;gap:6px">
+                  <span style="opacity:.8">Bis</span>
+                  <input type="time" id="s_netFeeNtEnd" data-scope="settings" data-key="netFeeNtEnd">
+                </label>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;align-items:flex-start">
+              <span>HT (Hochtarif)</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px">
+                  <span style="opacity:.8">Von</span>
+                  <input type="time" id="s_netFeeHtStart" data-scope="settings" data-key="netFeeHtStart">
+                </label>
+                <label style="display:flex;align-items:center;gap:6px">
+                  <span style="opacity:.8">Bis</span>
+                  <input type="time" id="s_netFeeHtEnd" data-scope="settings" data-key="netFeeHtEnd">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modell 2: Quartale (NT/HT je Quartal, Rest = Standard) -->
+          <div id="netFeeQuarterBlock" style="display:none">
+            <small style="opacity:.75; display:block; margin-top:10px;">
+              Q1 = Jan–Mär, Q2 = Apr–Jun, Q3 = Jul–Sep, Q4 = Okt–Dez. Zeiten gelten täglich. Nicht definierte Zeit = <b>Standard (ST)</b>.
+              <br/>
+              Tipp: Wenn ein Quartal <b>kein</b> NT/HT hat, setze bei NT <b>Von = Bis</b> und bei HT <b>Von = Bis</b> (z.&nbsp;B. 00:00–00:00). Dann gilt 24/7 Standard.
+            </small>
+
+            <!-- Q1 -->
+            <div style="margin-top:12px;font-weight:700;opacity:.9">Quartal 1 (Jan–Mär)</div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>NT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ1NtStart" data-scope="settings" data-key="netFeeQ1NtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ1NtEnd" data-scope="settings" data-key="netFeeQ1NtEnd"></label>
+              </div>
+            </div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>HT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ1HtStart" data-scope="settings" data-key="netFeeQ1HtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ1HtEnd" data-scope="settings" data-key="netFeeQ1HtEnd"></label>
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div style="margin-top:12px;font-weight:700;opacity:.9">Quartal 2 (Apr–Jun)</div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>NT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ2NtStart" data-scope="settings" data-key="netFeeQ2NtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ2NtEnd" data-scope="settings" data-key="netFeeQ2NtEnd"></label>
+              </div>
+            </div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>HT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ2HtStart" data-scope="settings" data-key="netFeeQ2HtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ2HtEnd" data-scope="settings" data-key="netFeeQ2HtEnd"></label>
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div style="margin-top:12px;font-weight:700;opacity:.9">Quartal 3 (Jul–Sep)</div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>NT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ3NtStart" data-scope="settings" data-key="netFeeQ3NtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ3NtEnd" data-scope="settings" data-key="netFeeQ3NtEnd"></label>
+              </div>
+            </div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>HT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ3HtStart" data-scope="settings" data-key="netFeeQ3HtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ3HtEnd" data-scope="settings" data-key="netFeeQ3HtEnd"></label>
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div style="margin-top:12px;font-weight:700;opacity:.9">Quartal 4 (Okt–Dez)</div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>NT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ4NtStart" data-scope="settings" data-key="netFeeQ4NtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ4NtEnd" data-scope="settings" data-key="netFeeQ4NtEnd"></label>
+              </div>
+            </div>
+            <div class="row" style="margin-top:6px;align-items:flex-start">
+              <span>HT</span>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Von</span><input type="time" id="s_netFeeQ4HtStart" data-scope="settings" data-key="netFeeQ4HtStart"></label>
+                <label style="display:flex;align-items:center;gap:6px"><span style="opacity:.8">Bis</span><input type="time" id="s_netFeeQ4HtEnd" data-scope="settings" data-key="netFeeQ4HtEnd"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div id="energyWalletCustomerSettings" style="margin-top:14px;padding:10px;border:1px solid rgba(0,200,83,.18);border-radius:10px;background:rgba(0,200,83,.035)">
+          <div style="font-weight:600;margin-bottom:6px">Energie-Wertkonto 💶</div>
+          <small style="opacity:.75;display:block;margin-bottom:8px">
+            Diese Anzeige ist freiwillig. Der Betreiber/Endkunde kann das Energie-Wertkonto hier ein- oder ausschalten und die verständlichen Kostenannahmen pflegen.
+          </small>
+          <label class="row"><span>Energie-Wertkonto anzeigen</span>
+            <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_energyWalletEnabled"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+            <input type="checkbox" class="nw-toggle-hidden" id="s_energyWalletEnabled" data-scope="settings" data-key="energyWalletEnabled" checked>
+          </label>
+          <div id="energyWalletCustomerPriceBlock">
+            <label class="row"><span>Preisquelle in LIVE-Karte anzeigen</span>
+              <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_energyWalletShowPriceSource"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+              <input type="checkbox" class="nw-toggle-hidden" id="s_energyWalletShowPriceSource" data-scope="settings" data-key="energyWalletShowPriceSource">
+            </label>
+            <label class="row"><span>Fester Netzstrompreis (€/kWh)</span>
+              <input type="number" id="s_energyWalletFixedImportEurPerKwh" step="0.0001" min="-2" max="5" data-scope="settings" data-key="energyWalletFixedImportEurPerKwh" value="0.35">
+            </label>
+            <label class="row"><span>Einspeise-/Rücklieferwert (€/kWh)</span>
+              <input type="number" id="s_energyWalletFeedInEurPerKwh" step="0.0001" min="-2" max="5" data-scope="settings" data-key="energyWalletFeedInEurPerKwh" value="0.08">
+            </label>
+            <label class="row"><span>Solar-Ladepunktwert (€/kWh)</span>
+              <input type="number" id="s_energyWalletEvcsValueEurPerKwh" step="0.0001" min="-2" max="5" data-scope="settings" data-key="energyWalletEvcsValueEurPerKwh" value="0.35">
+            </label>
+            <small style="opacity:.75;display:block;margin-top:6px">
+              Ist der dynamische Zeittarif aktiv und liefert einen aktuellen, nicht veralteten Preis, nutzt das Energie-Wertkonto diesen Tarifpreis für vermiedenen Netzbezug. Der feste Preis bleibt Fallback. Datenpunkt-Verknüpfungen und Modulfreigaben bleiben im Installer/App-Center.
+            </small>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <section class="card nw-settings-page hidden" data-settings-panel="pv-surplus">
+        <div class="card-header"><span>PV-Überschuss</span></div>
+        <div class="form">
+          <div class="nw-settings-note">
+            Diese Priorität gilt für reines PV-Laden und den PV-Anteil im Automatikmodus. Bei PV-geführtem Auto-Laden entscheidet die tatsächlich freigegebene Phasenart mit der eingestellten Mindestleistung über den Start. Reicht der nutzbare PV-Anteil noch nicht aus oder läuft eine Phasenumschaltung, erhält der Speicher den freien Überschuss. Eine ausdrücklich freigegebene Netzladung durch Auto, Tarif oder Ladeziel bleibt möglich. Min+PV behält seine netzgestützte Mindestleistung, Boost seine bisherige Funktion. Anschluss-, Phasen-, §14a- und Stationslimits gelten weiterhin.
+          </div>
+
+          <label class="row"><span>Feste Speicher-/E-Mobilitäts-Aufteilung</span>
+            <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="s_pvSurplusAllocationEnabled"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+            <input type="checkbox" class="nw-toggle-hidden" id="s_pvSurplusAllocationEnabled" data-scope="settings" data-key="pvSurplusAllocationEnabled" checked>
+          </label>
+
+          <div id="pvSurplusFixedAllocationBlock">
+          <label class="row"><span>PV-Überschuss priorisieren</span>
+            <select id="s_pvSurplusPriority" data-scope="settings" data-key="pvSurplusPriority" style="min-width:260px;max-width:100%;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:#a7c400;color:#000;">
+              <option value="storage">Speicher zuerst</option>
+              <option value="emobility">E-Mobilität zuerst</option>
+              <option value="both" selected>Speicher &amp; E-Mobilität</option>
+            </select>
+          </label>
+
+          <label class="row" id="pvSurplusEvcsShareRow"><span>Max. Anteil E-Mobilität (%)</span>
+            <input type="number" min="0" max="100" step="5" value="50" id="s_pvSurplusEvcsSharePct" data-scope="settings" data-key="pvSurplusEvcsSharePct">
+          </label>
+          </div>
+
+          <small style="opacity:.75;display:block;margin-top:8px">
+            Ist die feste Aufteilung ausgeschaltet, reservieren aktive Verbraucher nur ihren tatsächlich fahrbaren Bedarf; der Speicher erhält im selben EMS-Zyklus den kompletten ungenutzten PV-Rest. Bei „Speicher &amp; E-Mobilität“ ist der Prozentwert nur der maximale Wallbox-Anteil. Reserviert wird ausschließlich reale Ladeleistung oder ein technisch vollständig fahrbares Startminimum. Ist kein Fahrzeug-/Ladebedarf vorhanden oder liegt der verfügbare Anteil unter der Mindestleistung, geht der komplette freie PV-Überschuss im selben EMS-Zyklus an den Speicher. Bei „E-Mobilität zuerst“ bekommt der Speicher den nach echten Wallbox-Reservierungen verbleibenden Rest.
+          </small>
+        </div>
+      </section>
+
+  <section class="card nw-settings-page hidden" data-settings-panel="rfid">
+    <div class="card-header"><span>RFID / Ladepark</span></div>
+    <div class="form">
+      <label class="row"><span>RFID-Freigabe aktiv</span>
+        <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2 nw-toggle" data-toggle-for="rfid_enabled"><button type="button" data-value="false">Aus</button><button type="button" data-value="true">An</button></div>
+        <input type="checkbox" class="nw-toggle-hidden" id="rfid_enabled" data-scope="rfid" data-key="enabled">
+      </label>
+
+      <div class="rfid-whitelist">
+        <div class="rfid-whitelist-head">
+          <div>RFID</div>
+          <div>Name</div>
+          <div>Kommentar</div>
+          <div></div>
+        </div>
+        <div id="rfidWhitelistRows" class="rfid-whitelist-rows"></div>
+
+        <div class="rfid-whitelist-actions">
+          <button class="btn" id="rfidAddRow">+ Karte</button>
+          <div class="rfid-whitelist-actions-right">
+            <button class="btn" id="rfidReloadWhitelist">Neu laden</button>
+            <button class="btn" id="rfidSaveWhitelist">Whitelist speichern</button>
+          </div>
+        </div>
+
+        <small id="rfidWhitelistMsg" style="display:block;margin-top:8px;color:var(--muted)"></small>
+      </div>
+
+      <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.08)"/>
+
+      <div class="rfid-learning">
+        <div class="row" style="align-items:center">
+          <span>Karte anlernen</span>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex:1 1 auto">
+            <button class="btn" id="rfidLearnBtn" type="button">Karte anlernen</button>
+          </div>
+        </div>
+
+        <div class="row" style="align-items:center">
+          <span>Letzte Karte</span>
+          <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:flex-end">
+            <span id="rfidLastCapturedText" class="rfid-last">--</span>
+          </div>
+        </div>
+
+        <div class="rfid-learning-add">
+          <input type="text" id="rfidLearnName" placeholder="Name / Person" />
+          <input type="text" id="rfidLearnComment" placeholder="Kommentar (optional)" />
+          <button class="btn" id="rfidLearnAdd" type="button">In Whitelist übernehmen</button>
+        </div>
+        <small id="rfidLearnMsg" style="display:block;margin-top:8px;color:var(--muted)"></small>
+      </div>
+
+      <hr style="margin:14px 0;border:0;border-top:1px solid rgba(255,255,255,.08)"/>
+
+      <div class="rfid-billing">
+        <div class="row" style="align-items:center">
+          <span>Ladekarten-Abrechnung</span>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex:1 1 auto">
+            <button class="btn" id="rfidBillingOpen" type="button">Bericht öffnen (PDF)</button>
+          </div>
+        </div>
+
+        <div class="row" style="align-items:center">
+          <span>Karte</span>
+          <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:flex-end">
+            <select id="rfidBillingCard" style="min-width:280px;max-width:100%"></select>
+          </div>
+        </div>
+
+        <div class="row" style="align-items:center">
+          <span>Zeitraum</span>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex:1 1 auto">
+            <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2" id="rfidBillingMode">
+              <button type="button" class="active" data-value="month">Monat</button>
+              <button type="button" data-value="year">Jahr</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" id="rfidBillingMonthRow" style="align-items:center">
+          <span>Monat</span>
+          <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:flex-end">
+            <input type="month" id="rfidBillingMonth" style="min-width:200px;max-width:100%" />
+          </div>
+        </div>
+
+        <div class="row hidden" id="rfidBillingYearRow" style="align-items:center">
+          <span>Jahr</span>
+          <div style="flex:1 1 auto;display:flex;align-items:center;justify-content:flex-end">
+            <input type="number" id="rfidBillingYear" min="2000" max="2100" step="1" style="min-width:120px;max-width:100%" />
+          </div>
+        </div>
+
+        <small id="rfidBillingMsg" style="display:block;margin-top:8px;color:var(--muted)"></small>
+      </div>
+    </div>
+  </section>
+
+      <section class="card nw-settings-page hidden" data-settings-panel="log" data-nw-market="DE">
+        <div class="card-header"><span>Log / Nachweis</span></div>
+        <div class="form">
+          <div class="nw-settings-note nw-settings-note--actionbar">
+            <div>
+              Hier siehst du die Frontend-Sicht auf das §14a Nachweislog. Die Langzeit-Aufbewahrung selbst läuft über die aktivierte Historie/Influx.
+            </div>
+            <div>
+              <button type="button" class="btn sm" id="settingsPara14aReportBtn">§14a Ausdruck</button>
+            </div>
+          </div>
+          <div class="nw-settings-note nw-settings-note--warn" id="settingsPara14aMissing" style="display:none">
+            §14a ist aktuell nicht aktiv oder noch nicht im System eingebunden. Sobald das Modul aktiv ist, erscheinen hier Status und Nachweisdaten.
+          </div>
+
+          <div class="nw-settings-log-grid">
+            <section class="nw-settings-log-card">
+              <div class="nw-settings-log-card__title">§14a Status</div>
+              <div class="nw-settings-log-kv">
+                <div class="nw-settings-log-row"><span>Aktiv</span><b id="settingsPara14aStatusActive">—</b></div>
+                <div class="nw-settings-log-row"><span>Modus</span><b id="settingsPara14aStatusMode">—</b></div>
+                <div class="nw-settings-log-row"><span>Quelle</span><b id="settingsPara14aStatusSource">—</b></div>
+                <div class="nw-settings-log-row"><span>Mindestleistung je Verbraucher</span><b id="settingsPara14aStatusMinPerDevice">—</b></div>
+                <div class="nw-settings-log-row"><span>Pmin,14a gesamt</span><b id="settingsPara14aStatusPmin">—</b></div>
+                <div class="nw-settings-log-row"><span>EVCS Gesamtlimit</span><b id="settingsPara14aStatusEvcsCap">—</b></div>
+                <div class="nw-settings-log-row"><span>EMS Sollwert</span><b id="settingsPara14aStatusEmsSetpoint">—</b></div>
+                <div class="nw-settings-log-row"><span>nSteuVE</span><b id="settingsPara14aStatusNSteuVE">—</b></div>
+              </div>
+            </section>
+
+            <section class="nw-settings-log-card">
+              <div class="nw-settings-log-card__title">Historisierung</div>
+              <div class="nw-settings-log-kv">
+                <div class="nw-settings-log-row"><span>Historie erkannt</span><b id="settingsPara14aHistoryEnabled">—</b></div>
+                <div class="nw-settings-log-row"><span>Historien-Instanz</span><b id="settingsPara14aHistoryInstance">—</b></div>
+                <div class="nw-settings-log-row"><span>Eigene §14a Instanz</span><b id="settingsPara14aHistoryDedicated">—</b></div>
+                <div class="nw-settings-log-row"><span>Separat bereitgestellt</span><b id="settingsPara14aHistoryAutoProvisioned">—</b></div>
+                <div class="nw-settings-log-row"><span>Bindungsstatus</span><b id="settingsPara14aHistoryProvisionState">—</b></div>
+                <div class="nw-settings-log-row"><span>Retention-Ziel</span><b id="settingsPara14aRetentionDays">—</b></div>
+                <div class="nw-settings-log-row"><span>Sitzung aktiv</span><b id="settingsPara14aSessionActive">—</b></div>
+                <div class="nw-settings-log-row"><span>Sitzungs-ID</span><b id="settingsPara14aSessionId">—</b></div>
+                <div class="nw-settings-log-row"><span>Ereignis-Sequenz</span><b id="settingsPara14aEventSeq">—</b></div>
+                <div class="nw-settings-log-row"><span>Letztes Ereignis</span><b id="settingsPara14aLastEventTs">—</b></div>
+              </div>
+              <small class="nw-settings-log-hint">§14a nutzt dieselbe Historie/Influx-Instanz wie das restliche System (standardmäßig influxdb.0). Bitte dort die 730-Tage-Retention sicherstellen.</small>
+              <small class="nw-settings-log-hint nw-settings-log-hint--warn" id="settingsPara14aHistoryProvisionError" style="display:none"></small>
+            </section>
+
+            <section class="nw-settings-log-card">
+              <div class="nw-settings-log-card__title">Letztes Ereignis</div>
+              <div class="nw-settings-log-kv">
+                <div class="nw-settings-log-row"><span>Typ</span><b id="settingsPara14aLastEventType">—</b></div>
+                <div class="nw-settings-log-row"><span>Ergebnis</span><b id="settingsPara14aLastResult">—</b></div>
+                <div class="nw-settings-log-row"><span>Grund</span><b id="settingsPara14aLastReason">—</b></div>
+                <div class="nw-settings-log-row"><span>Quelle</span><b id="settingsPara14aLastSource">—</b></div>
+                <div class="nw-settings-log-row"><span>Modus</span><b id="settingsPara14aLastMode">—</b></div>
+                <div class="nw-settings-log-row"><span>Gesamtbudget</span><b id="settingsPara14aLastBudget">—</b></div>
+                <div class="nw-settings-log-row"><span>EVCS Limit</span><b id="settingsPara14aLastCap">—</b></div>
+                <div class="nw-settings-log-row"><span>Pmin,14a</span><b id="settingsPara14aLastPmin">—</b></div>
+                <div class="nw-settings-log-row"><span>EV-Leistung</span><b id="settingsPara14aLastEvPower">—</b></div>
+                <div class="nw-settings-log-row"><span>Netzleistung</span><b id="settingsPara14aLastGridPower">—</b></div>
+                <div class="nw-settings-log-row"><span>Verbraucher angewendet</span><b id="settingsPara14aLastApplied">—</b></div>
+                <div class="nw-settings-log-row"><span>Verbraucher Fehler</span><b id="settingsPara14aLastFailed">—</b></div>
+              </div>
+            </section>
+
+            <section class="nw-settings-log-card">
+              <div class="nw-settings-log-card__title">Aktueller Trace</div>
+              <div class="nw-settings-log-kv">
+                <div class="nw-settings-log-row"><span>Trace Zeitstempel</span><b id="settingsPara14aTraceTs">—</b></div>
+                <div class="nw-settings-log-row"><span>Aktiv</span><b id="settingsPara14aTraceActive">—</b></div>
+                <div class="nw-settings-log-row"><span>Sitzung</span><b id="settingsPara14aTraceSession">—</b></div>
+                <div class="nw-settings-log-row"><span>Quelle</span><b id="settingsPara14aTraceSource">—</b></div>
+                <div class="nw-settings-log-row"><span>Modus</span><b id="settingsPara14aTraceMode">—</b></div>
+                <div class="nw-settings-log-row"><span>Budget</span><b id="settingsPara14aTraceBudget">—</b></div>
+                <div class="nw-settings-log-row"><span>EVCS Limit</span><b id="settingsPara14aTraceCap">—</b></div>
+                <div class="nw-settings-log-row"><span>Mindestleistung je Verbraucher</span><b id="settingsPara14aTraceMinPerDevice">—</b></div>
+                <div class="nw-settings-log-row"><span>Pmin,14a</span><b id="settingsPara14aTracePmin">—</b></div>
+                <div class="nw-settings-log-row"><span>EVCS Anzahl</span><b id="settingsPara14aTraceEvcsCount">—</b></div>
+                <div class="nw-settings-log-row"><span>EV-Leistung</span><b id="settingsPara14aTraceEvPower">—</b></div>
+                <div class="nw-settings-log-row"><span>Netzleistung</span><b id="settingsPara14aTraceGridPower">—</b></div>
+              </div>
+            </section>
+
+            <section class="nw-settings-log-card nw-settings-log-card--wide">
+              <div class="nw-settings-log-card__title">Letztes Ereignis (JSON)</div>
+              <pre class="nw-settings-json" id="settingsPara14aLastJson">—</pre>
+            </section>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+
+<script>
+// Installer/Admin shortcut: always open the local Admin UI on port 8081.
+// Uses the current host (dynamic DNS / reverse proxy hostnames) and replaces only the port.
+(function () {
+  try {
+    var btn = document.getElementById('openInstallerBtn');
+    if (!btn) return;
+
+    var proto = window.location.protocol || 'http:';
+    var host = window.location.hostname;
+    if (!host) {
+      var h = (window.location.host || '').split(':');
+      host = h && h[0] ? h[0] : 'localhost';
+    }
+
+    var adminUrl = proto + '//' + host + ':8081/';
+    btn.setAttribute('href', adminUrl);
+    btn.setAttribute('target', '_blank');
+    btn.setAttribute('rel', 'noopener');
+
+    // Ensure click always opens a new tab (even if some browsers ignore target on dynamically set href).
+    btn.addEventListener('click', function (e) {
+      try { e.preventDefault(); } catch (_e) {}
+      try { window.open(adminUrl, '_blank', 'noopener'); } catch (_e2) { window.location.href = adminUrl; }
+    });
+  } catch (_e) {}
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').catch(console.error);
+  });
+}
+</script>
+
+  <script src="/static/cockpit-shell.js"></script>
+<script src="/static/forecast-settings.js?v=0.8.202-rc77" defer></script>
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

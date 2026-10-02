@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-installed-platform-tree-comparison",
+  "checkedAt": "2026-10-01T17:04:16.022Z",
+  "targetCodeExecuted": false,
+  "treeHashes": {
+    "x64": "60f984f621f0a516ce24b5cf2f6b25f056127f80bb5a20b4ec951f6080118bf0",
+    "arm64": "5eaf7613aa86fa71e72ac702b7427c303bf11dec535cac4f6cf2a75fd3a958f0"
+  },
+  "treeHashAlgorithm": "SHA256(JSON.stringify(inventory)): path-keyed inventory inserted in depth-first traversal order, each directory sorted with localeCompare using the recorded host collation; file records contain kind,bytes,sha256; symlink records contain kind,target; timestamps and modes excluded.",
+  "sharedIdenticalEntries": 17846,
+  "different": [
+    {
+      "path": "node_modules/.package-lock.json",
+      "x64": {
+        "kind": "file",
+        "bytes": 207540,
+        "sha256": "6ed3dff551ecaeaa1ed374581bd5005eea0115a54c8c30448accc345151f9e46"
+      },
+      "arm64": {
+        "kind": "file",
+        "bytes": 207548,
+        "sha256": "8bbfd9cf3a5e690bd34dda0b26655f5cbd08a8d47bf3dfaeb31dff91118308be"
+      }
+    }
+  ],
+  "onlyX64": [
+    {
+      "path": "node_modules/@esbuild/linux-x64/bin/esbuild",
+      "kind": "file",
+      "bytes": 11427952,
+      "sha256": "e1698a3d5c6c0798fee4fd3b5cc816651f460c63d390a7a26ea4beb0b1884100"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-x64/package.json",
+      "kind": "file",
+      "bytes": 372,
+      "sha256": "a3924c1835c7849adeb3d82ac24525da0d4190607b60d05265dc6746bde2ddb8"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-x64/README.md",
+      "kind": "file",
+      "bytes": 141,
+      "sha256": "3b0ebdffe92e5b77c948c4ac0bf4bc4a38803b15405d0425b517705221c27a2f"
+    }
+  ],
+  "onlyArm64": [
+    {
+      "path": "node_modules/@esbuild/linux-arm64/bin/esbuild",
+      "kind": "file",
+      "bytes": 10289264,
+      "sha256": "90bd269553d258e80b19e3ccab4f98f0831f87442a2f056510ce24fd1b425fc2"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-arm64/package.json",
+      "kind": "file",
+      "bytes": 380,
+      "sha256": "0ee05403f9b919e3ac6108bf555ec0fa3e04c4dd493aede4c72ac9bf57e95b75"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-arm64/README.md",
+      "kind": "file",
+      "bytes": 145,
+      "sha256": "4fab48c3fa538df99460382c5b2d1790e558ec9d1912d4e9ace49e5a1502a168"
+    }
+  ],
+  "installedTreeLockComparison": {
+    "sameAfterRemovingTargetEsbuildEntry": true,
+    "removedEntries": [
+      "node_modules/@esbuild/linux-x64",
+      "node_modules/@esbuild/linux-arm64"
+    ]
+  },
+  "traversalCollation": {
+    "locale": "en-US",
+    "usage": "sort",
+    "sensitivity": "variant",
+    "ignorePunctuation": false,
+    "collation": "default",
+    "numeric": false,
+    "caseFirst": "false"
+  }
+}

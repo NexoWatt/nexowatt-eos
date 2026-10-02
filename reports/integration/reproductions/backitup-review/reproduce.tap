@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: observed issue: remote HTTPS Backup disables verification
+ok 1 - observed issue: remote HTTPS Backup disables verification
+  ---
+  duration_ms: 1.780757
+  type: 'test'
+  ...
+# Subtest: observed issue: remote HTTPS Restore disables verification
+ok 2 - observed issue: remote HTTPS Restore disables verification
+  ---
+  duration_ms: 0.680416
+  type: 'test'
+  ...
+# Subtest: positive control: local backup keeps token out of argv
+ok 3 - positive control: local backup keeps token out of argv
+  ---
+  duration_ms: 0.365846
+  type: 'test'
+  ...
+# Subtest: observed issue: download HTTP registers only static handler and unspecified listen host
+ok 4 - observed issue: download HTTP registers only static handler and unspecified listen host
+  ---
+  duration_ms: 3.839374
+  type: 'test'
+  ...
+# Subtest: observed issue: upload HTTP has no auth middleware, size limits or server-generated name
+ok 5 - observed issue: upload HTTP has no auth middleware, size limits or server-generated name
+  ---
+  duration_ms: 3.517845
+  type: 'test'
+  ...
+# Subtest: observed issue: HTTPS upload config has server cert but no mutual TLS
+ok 6 - observed issue: HTTPS upload config has server cert but no mutual TLS
+  ---
+  duration_ms: 1.665297
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 182.593681

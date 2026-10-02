@@ -1,0 +1,179 @@
+<!--
+  Datei: www/simulation.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: HTML-Seite des NexoWatt-Adapters.
+  Zusammenhänge:
+  - JavaScript-Logik liegt meist in einer gleichnamigen .js-Datei.
+  - Styles liegen in www/styles.css oder spezifischen CSS-Dateien.
+  Wartungshinweise:
+  - IDs und data-Attribute sind oft direkte Schnittstellen zum JS.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>NexoWatt EOS – Simulation</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link href="/static/styles.css" rel="stylesheet"/>
+  <script src="/static/admin-guard.js" data-nw-admin-page="simulation"></script>
+  <script src="/static/auth.js"></script>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+
+<body class="nw-cockpit-page nw-cockpit-skin nw-installer-page nw-page-simulation" data-nw-required-capability="simulation.open" data-nw-page-name="Simulation" data-nw-required-role="Admin oder Installer">
+  <!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar nw-cockpit-topbar">
+  <script>
+  (function () {
+    try {
+      var p = window.location.pathname || "";
+      if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+        window.location.replace(p + "/" + window.location.search + window.location.hash);
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <div class="brand"><a href="./" aria-label="NexoWatt Live"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a></div>
+  <button aria-label="Menu" id="menuBtn" data-nw-menu-fallback="1" type="button">☰</button>
+  <h1>NexoWatt Simulation</h1>
+  <nav class="tabs">
+    <button class="tab" id="liveTabBtn" type="button" onclick="window.location.href='./'">LIVE</button>
+    <button class="tab" id="historyTabBtn" type="button" onclick="window.location.href='history.html'">HISTORY</button>
+    <button class="tab" id="tabSmartHome" type="button" onclick="window.location.href='smarthome.html'">SMARTHOME</button>
+    <button class="tab hidden" id="tabStorageFarm" type="button" onclick="window.location.href='storagefarm.html'">SPEICHERFARM</button>
+    <button class="tab active" type="button" onclick="window.location.href='ems-apps.html?nwAdmin=1'">APP-CENTER</button>
+  </nav>
+  <div class="status-dot live" id="liveDot" title="Live Verbindung"></div>
+  <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+  <div class="menu hidden" id="menuDropdown">
+    <a class="menu-item" href="./">Live</a>
+    <a class="menu-item" href="history.html">History</a>
+    <a class="menu-item" href="smarthome.html" id="menuSmartHomeLink">SmartHome</a>
+    <a class="menu-item hidden" href="storagefarm.html" id="menuStorageFarmLink">Speicherfarm</a>
+    <a class="menu-item" href="ems-apps.html?nwAdmin=1">App-Center</a>
+    <a class="menu-item" href="evcs.html" id="menuEvcsLink">EVCS</a>
+    <a class="menu-item" href="settings.html">Einstellungen</a>
+  </div>
+</header>
+
+  <section class="nw-page-hero" aria-label="Seitenübersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">Testbetrieb</div>
+      <div class="nw-page-hero__title">Simulation</div>
+      <div class="nw-page-hero__subtitle">EMS-Simulation, Szenarien und automatische Datenpunkt-Zuordnung im neuen Look.</div>
+    </div>
+    <div class="nw-page-hero__right">
+      <span class="nw-page-hero__pill">Lab</span>
+    </div>
+  </section>
+
+
+  <!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="content nw-page-shell nw-simulation-page nw-subpage" style="max-width: 1100px;">
+    <div class="nw-smarthome-header" style="margin-top: 10px;">
+      <div>
+        <h1 style="margin: 0;">Simulation</h1>
+        <div class="nw-muted" style="margin-top: 6px;">
+          Startet den <b>nexowatt-sim</b> Testbetrieb und ordnet automatisch alle relevanten Datenpunkte
+          im App Center zu, damit die EMS-Logiken ohne reale Hardware getestet werden können.
+        </div>
+      </div>
+    </div>
+
+    <div class="nw-grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+      <section class="nw-config-card">
+        <div class="nw-card-header">
+          <h2>Simulation-Status</h2>
+          <button id="nw-sim-refresh" class="btn">Aktualisieren</button>
+        </div>
+        <div class="nw-card-body">
+          <div id="nw-sim-status" class="nw-status"></div>
+          <div id="nw-sim-statusline" class="nw-muted" style="margin-top: 10px;"></div>
+
+          <div style="margin-top: 14px;">
+            <label class="nw-label" for="nw-sim-instance">Simulation-Instanz</label>
+            <select id="nw-sim-instance" class="nw-config-select" style="width: 100%;"></select>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button id="nw-sim-enable" class="btn btn-primary" style="flex: 1;">Simulation aktivieren</button>
+            <button id="nw-sim-disable" class="btn btn-danger" style="flex: 1;">Simulation deaktivieren</button>
+          </div>
+
+          <div class="nw-muted" style="margin-top: 12px; line-height: 1.35;">
+            Hinweis: Beim Aktivieren wird die aktuelle App-Center Konfiguration als Backup gespeichert und bei
+            „Deaktivieren“ automatisch wiederhergestellt.
+          </div>
+        </div>
+      </section>
+
+      <section class="nw-config-card">
+        <div class="nw-card-header">
+          <h2>Was wird automatisch gemappt?</h2>
+        </div>
+        <div class="nw-card-body">
+          <ul class="nw-list" style="margin: 0; padding-left: 18px;">
+            <li>Grid: <code>gridPointPower</code> → <code>nexowatt-sim.*.grid.power_kw</code></li>
+            <li>PV: <code>pvPower</code> → <code>nexowatt-sim.*.pv.power_kw</code></li>
+            <li>Speicher: <code>batteryPower</code>/<code>storageSoc</code> + Storage-Control Setpoint → <code>nexowatt-sim.*.storage.*</code></li>
+            <li>Tarif: <code>priceCurrent</code> + 24h Preis-Kurve → <code>nexowatt-sim.*.tariff.*</code></li>
+            <li>EVCS: alle Ladepunkte inkl. <code>limit</code> + <code>enable</code> → <code>nexowatt-sim.*.evcs.*</code></li>
+          </ul>
+
+          <div class="nw-muted" style="margin-top: 12px; line-height: 1.35;">
+            Tipp: Szenarien lassen sich direkt über die States im <b>nexowatt-sim</b> Adapter steuern
+            (Tarifmodus, PV Wetterfaktor, EVCS Plug/Limit, Speicher SoC usw.).
+          </div>
+        </div>
+      </section>
+    </div>
+
+
+      <section class="nw-config-card" style="grid-column: 1 / -1;">
+        <div class="nw-card-header">
+          <h2>Szenarien (nexowatt-sim)</h2>
+          <button id="nw-sim-scen-refresh" class="btn">Aktualisieren</button>
+        </div>
+        <div class="nw-card-body">
+          <div id="nw-sim-scen-status" class="nw-status"></div>
+
+          <div class="nw-grid" style="grid-template-columns: 1.2fr 0.8fr; gap: 14px; margin-top: 12px;">
+            <div>
+              <label class="nw-label" for="nw-sim-scen-select">Szenario auswählen</label>
+              <select id="nw-sim-scen-select" class="nw-config-select" style="width: 100%;"></select>
+              <div id="nw-sim-scen-desc" class="nw-muted" style="margin-top: 10px; line-height: 1.35;"></div>
+            </div>
+
+            <div>
+              <div style="display: flex; gap: 10px;">
+                <button id="nw-sim-scen-start" class="btn btn-primary" style="flex: 1;">Start</button>
+                <button id="nw-sim-scen-stop" class="btn btn-danger" style="flex: 1;">Stop</button>
+              </div>
+              <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button id="nw-sim-scen-reset" class="btn" style="flex: 1;">Baseline</button>
+              </div>
+
+              <div class="nw-muted" style="margin-top: 12px; line-height: 1.35;">
+                Hinweis: Die Buttons schreiben auf <code>scenario.buttons.*</code> bzw. <code>scenario.ctrl.*</code> im Sim-Adapter.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  </main>
+
+  <script src="/static/nw-shell.js"></script>
+<script src="/static/simulation.js"></script>
+
+
+
+  <script src="/static/cockpit-shell.js"></script>
+
+</body>
+</html>

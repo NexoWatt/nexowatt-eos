@@ -1,0 +1,286 @@
+TAP version 13
+# Subtest: fresh ordinary setup hardened and secret/design metadata preserved
+ok 1 - fresh ordinary setup hardened and secret/design metadata preserved
+  ---
+  duration_ms: 4.173733
+  type: 'test'
+  ...
+# Subtest: complete marker idempotent validation performs no writes
+ok 2 - complete marker idempotent validation performs no writes
+  ---
+  duration_ms: 1.663967
+  type: 'test'
+  ...
+# Subtest: verify-only refuses uninitialized DB without changes
+ok 3 - verify-only refuses uninitialized DB without changes
+  ---
+  duration_ms: 1.007454
+  type: 'test'
+  ...
+# Subtest: matching pending marker resumes after interrupted write
+ok 4 - matching pending marker resumes after interrupted write
+  ---
+  duration_ms: 1.195017
+  type: 'test'
+  ...
+# Subtest: refuses existing installation content system.adapter.admin.0
+ok 5 - refuses existing installation content system.adapter.admin.0
+  ---
+  duration_ms: 0.659487
+  type: 'test'
+  ...
+# Subtest: refuses existing installation content custom.energy.value
+ok 6 - refuses existing installation content custom.energy.value
+  ---
+  duration_ms: 0.476061
+  type: 'test'
+  ...
+# Subtest: refuses existing installation content system.user.other
+ok 7 - refuses existing installation content system.user.other
+  ---
+  duration_ms: 0.467257
+  type: 'test'
+  ...
+# Subtest: running controller blocks initial mutations
+ok 8 - running controller blocks initial mutations
+  ---
+  duration_ms: 0.726189
+  type: 'test'
+  ...
+# Subtest: foreign marker refuses configuration migration
+ok 9 - foreign marker refuses configuration migration
+  ---
+  duration_ms: 2.209582
+  type: 'test'
+  ...
+# Subtest: drift diagnostics fails closed without silent repair
+ok 10 - drift diagnostics fails closed without silent repair
+  ---
+  duration_ms: 1.336961
+  type: 'test'
+  ...
+# Subtest: drift repositories fails closed without silent repair
+ok 11 - drift repositories fails closed without silent repair
+  ---
+  duration_ms: 0.810045
+  type: 'test'
+  ...
+# Subtest: drift admin activation fails closed without silent repair
+ok 12 - drift admin activation fails closed without silent repair
+  ---
+  duration_ms: 0.875163
+  type: 'test'
+  ...
+# Subtest: drift admin password fails closed without silent repair
+ok 13 - drift admin password fails closed without silent repair
+  ---
+  duration_ms: 0.869946
+  type: 'test'
+  ...
+# Subtest: drift plugin telemetry fails closed without silent repair
+ok 14 - drift plugin telemetry fails closed without silent repair
+  ---
+  duration_ms: 0.938129
+  type: 'test'
+  ...
+# Subtest: rejects runtime config TLS verification
+ok 15 - rejects runtime config TLS verification
+  ---
+  duration_ms: 0.40966
+  type: 'test'
+  ...
+# Subtest: rejects runtime config multihost
+ok 16 - rejects runtime config multihost
+  ---
+  duration_ms: 0.262507
+  type: 'test'
+  ...
+# Subtest: rejects runtime config plugin
+ok 17 - rejects runtime config plugin
+  ---
+  duration_ms: 0.231731
+  type: 'test'
+  ...
+# Subtest: rejects runtime config hostname
+ok 18 - rejects runtime config hostname
+  ---
+  duration_ms: 0.287725
+  type: 'test'
+  ...
+# Subtest: rejects runtime config remote database
+ok 19 - rejects runtime config remote database
+  ---
+  duration_ms: 0.249488
+  type: 'test'
+  ...
+# Subtest: failed final read never writes complete marker
+ok 20 - failed final read never writes complete marker
+  ---
+  duration_ms: 0.668701
+  type: 'test'
+  ...
+# Subtest: readiness proves live heartbeat, expected PID and controller version
+ok 21 - readiness proves live heartbeat, expected PID and controller version
+  ---
+  duration_ms: 0.604224
+  type: 'test'
+  ...
+# Subtest: readiness refuses stale heartbeat
+ok 22 - readiness refuses stale heartbeat
+  ---
+  duration_ms: 16.118062
+  type: 'test'
+  ...
+# Subtest: readiness refuses unacknowledged heartbeat
+ok 23 - readiness refuses unacknowledged heartbeat
+  ---
+  duration_ms: 10.958333
+  type: 'test'
+  ...
+# Subtest: readiness refuses wrong process
+ok 24 - readiness refuses wrong process
+  ---
+  duration_ms: 11.01168
+  type: 'test'
+  ...
+# Subtest: readiness refuses wrong version
+ok 25 - readiness refuses wrong version
+  ---
+  duration_ms: 11.202247
+  type: 'test'
+  ...
+# Subtest: rejects system compact=true unless strictly false
+ok 26 - rejects system compact=true unless strictly false
+  ---
+  duration_ms: 1.013022
+  type: 'test'
+  ...
+# Subtest: rejects system compact=false unless strictly false
+ok 27 - rejects system compact=false unless strictly false
+  ---
+  duration_ms: 0.494277
+  type: 'test'
+  ...
+# Subtest: rejects system compact=undefined unless strictly false
+ok 28 - rejects system compact=undefined unless strictly false
+  ---
+  duration_ms: 0.60116
+  type: 'test'
+  ...
+# Subtest: rejects system allowShellCommands=true unless strictly false
+ok 29 - rejects system allowShellCommands=true unless strictly false
+  ---
+  duration_ms: 0.633468
+  type: 'test'
+  ...
+# Subtest: rejects system allowShellCommands=false unless strictly false
+ok 30 - rejects system allowShellCommands=false unless strictly false
+  ---
+  duration_ms: 0.212982
+  type: 'test'
+  ...
+# Subtest: rejects system allowShellCommands=undefined unless strictly false
+ok 31 - rejects system allowShellCommands=undefined unless strictly false
+  ---
+  duration_ms: 0.267384
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option connectTimeout
+ok 32 - rejects unbounded database option connectTimeout
+  ---
+  duration_ms: 0.284941
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option commandTimeout
+ok 33 - rejects unbounded database option commandTimeout
+  ---
+  duration_ms: 0.578995
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option maxRetriesPerRequest
+ok 34 - rejects unbounded database option maxRetriesPerRequest
+  ---
+  duration_ms: 0.386725
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option enableOfflineQueue
+ok 35 - rejects unbounded database option enableOfflineQueue
+  ---
+  duration_ms: 0.655352
+  type: 'test'
+  ...
+# Subtest: additive signed release lock does not migrate or rewrite data policy
+ok 36 - additive signed release lock does not migrate or rewrite data policy
+  ---
+  duration_ms: 1.069718
+  type: 'test'
+  ...
+# Subtest: changed controller remains forbidden even with new release lock
+ok 37 - changed controller remains forbidden even with new release lock
+  ---
+  duration_ms: 1.107255
+  type: 'test'
+  ...
+# Subtest: rejects incompatible marker policy version
+ok 38 - rejects incompatible marker policy version
+  ---
+  duration_ms: 1.127115
+  type: 'test'
+  ...
+# Subtest: rejects incompatible marker core controller
+ok 39 - rejects incompatible marker core controller
+  ---
+  duration_ms: 1.195778
+  type: 'test'
+  ...
+# Subtest: rejects incompatible marker legacy marker
+ok 40 - rejects incompatible marker legacy marker
+  ---
+  duration_ms: 0.844527
+  type: 'test'
+  ...
+# Subtest: plugin state cleanup accepted only under verified EOS no-plugin profile
+ok 41 - plugin state cleanup accepted only under verified EOS no-plugin profile
+  ---
+  duration_ms: 1.361409
+  type: 'test'
+  ...
+# Subtest: null plugin state accepted under verified profile after controller cleanup
+ok 42 - null plugin state accepted under verified profile after controller cleanup
+  ---
+  duration_ms: 1.038581
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value true
+ok 43 - EOS profile rejects existing malformed or enabled plugin value true
+  ---
+  duration_ms: 1.094646
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value false
+ok 44 - EOS profile rejects existing malformed or enabled plugin value false
+  ---
+  duration_ms: 0.779679
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value null
+ok 45 - EOS profile rejects existing malformed or enabled plugin value null
+  ---
+  duration_ms: 0.875374
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value 0
+ok 46 - EOS profile rejects existing malformed or enabled plugin value 0
+  ---
+  duration_ms: 1.146654
+  type: 'test'
+  ...
+1..46
+# tests 46
+# suites 0
+# pass 46
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 293.884108

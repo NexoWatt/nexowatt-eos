@@ -1,0 +1,29 @@
+# NexoWatt publish cleanup
+# Erforderliche Produkt-Runtime bleibt in main.js, ems/** und www/**.
+# These folders are duplicate/staging artifacts and must not be shipped.
+.nwcore/
+build-ts/
+node_modules/
+src-admin-tab/node_modules/
+npm-debug.log
+*.tgz
+*.zip
+.DS_Store
+.cache/
+docs/reports/RC85_VALIDATION_REPORT.md
+scripts/verify-rc85-stability-contract.cjs
+
+# Secrets and installation data must never enter a published archive
+.env
+.env.*
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
+notification-mail.json*
+notification-ledger.json*
+iobroker-data/
+.githooks/

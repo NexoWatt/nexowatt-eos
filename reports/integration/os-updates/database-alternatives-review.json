@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "database-transport-alternatives-static-review",
+  "sourceVersion": "0.2.0-dev.5",
+  "reviewedAt": "2026-10-01T19:29:48.239562+00:00",
+  "userDecision": {
+    "redisPreviouslyRequired": true,
+    "supersededByAlternativeSearchAt": "2026-10-01T21:19:31+02:00",
+    "sqliteAes256QuestionAt": "2026-10-01T21:23:30+02:00",
+    "replacementSelected": false
+  },
+  "documentation": "docs/architecture/DATABASE_TRANSPORT_OPTIONS_DE.md",
+  "status": "candidates-evaluated-no-migration",
+  "implementationChanged": false,
+  "testsExecutedForAlternatives": false,
+  "hardwareTested": false,
+  "releaseApproved": false,
+  "localSourceReview": {
+    "scope": "installed x64 laboratory dependency tree; static inspection only; not user Pi",
+    "controllerVersion": "7.2.2",
+    "databasePackageVersion": "7.2.2",
+    "ioredisVersion": "4.31.0",
+    "jsonlDbVersion": "3.1.1",
+    "sourceBindings": [
+      {
+        "pathRelativeToInstalledNodeModules": "@iobroker/js-controller-common/build/cjs/lib/common/objects.js",
+        "bytes": 3652,
+        "sha256": "e1e71a7ff1138ea013c3b7a0a99298cd05a9e288a810562033e63382a1f8930e"
+      },
+      {
+        "pathRelativeToInstalledNodeModules": "@iobroker/js-controller-common/build/cjs/lib/common/states.js",
+        "bytes": 3616,
+        "sha256": "856a775d1d236f490d0051d9309fbdc079bee4232075143ce42c3a37a2d3fd99"
+      },
+      {
+        "pathRelativeToInstalledNodeModules": "@iobroker/db-objects-jsonl/build/cjs/lib/objects/objectsInMemServerRedis.js",
+        "bytes": 34018,
+        "sha256": "f5f0d77904106a628f2c929e13fb63c16714c4a1230be97c7971e4a73860929a"
+      },
+      {
+        "pathRelativeToInstalledNodeModules": "@iobroker/db-states-jsonl/build/cjs/lib/states/statesInMemServerRedis.js",
+        "bytes": 18604,
+        "sha256": "2f91f46384ab3645c7fa09309b47d3f22d022d82450f5bfd593b46024db34015"
+      },
+      {
+        "pathRelativeToInstalledNodeModules": "@iobroker/db-objects-file/build/cjs/lib/objects/objectsInMemFileDB.js",
+        "bytes": 33603,
+        "sha256": "9130ac43fcc48af39d1627078c46103dd943aab86913b6dd2e369caf4db57fe1"
+      },
+      {
+        "pathRelativeToInstalledNodeModules": "@iobroker/db-base/build/cjs/lib/redisHandler.js",
+        "bytes": 15021,
+        "sha256": "d24fc872a79bcaea0ee7dc5bcdebfd2959bfa26f5841ff60dc920cae750c4091"
+      }
+    ],
+    "rootHashVerificationPassed": true
+  },
+  "sqliteSqlcipher": {
+    "role": "candidate for encrypted local storage, not a transport or ready ioBroker backend",
+    "exactVersionSelected": false,
+    "arm64ArtifactVerified": false,
+    "cryptoDesign": "SQLCipher documented AES-256-CBC plus HMAC-SHA512; TLS1.3 separately protects network transport",
+    "openWork": [
+      "Objects/States interface compatibility",
+      "authenticated authorized event transport",
+      "per-adapter isolation",
+      "key custody, boot and recovery",
+      "WAL/temp/backup leakage",
+      "migration, concurrency, power loss and devices"
+    ]
+  },
+  "jsonl": {
+    "nativeTlsSupportedInReviewedSources": false,
+    "dynamicViewsUseEval": true,
+    "noExploitExecuted": true,
+    "conclusion": "adding TLS alone is insufficient to establish an authorized safe interface"
+  },
+  "valkey": {
+    "candidates": [
+      "8.1.10",
+      "9.1.2"
+    ],
+    "sourceAndArtifactVerificationCompleted": false,
+    "eosIntegrationTested": false,
+    "inheritance": "shares Redis implementation ancestry; no memory-safety guarantee",
+    "migrationWarning": "Do not blindly reuse Redis8 data files"
+  },
+  "releaseGate": "EOS-HOST-REDIS-20261001",
+  "sources": [
+    "https://www.sqlite.org/whentouse.html",
+    "https://www.sqlite.org/security.html",
+    "https://www.zetetic.net/sqlcipher/design/",
+    "https://www.sqlite.org/see/doc/trunk/www/readme.wiki",
+    "https://www.rfc-editor.org/rfc/rfc8446",
+    "https://valkey.io/topics/releases/",
+    "https://github.com/valkey-io/valkey/releases/tag/8.1.10",
+    "https://github.com/valkey-io/valkey/releases/tag/9.1.2",
+    "https://valkey.io/topics/migration/",
+    "https://security-tracker.debian.org/tracker/CVE-2026-56684"
+  ]
+}

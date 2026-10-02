@@ -1,0 +1,1283 @@
+{
+  "schemaVersion": "1.0.0",
+  "documentId": "EOS-SYSTEM-STRIDE",
+  "date": "2026-09-30",
+  "status": "designed",
+  "moduleIds": [
+    "os-base",
+    "eos-core",
+    "eos-admin",
+    "nexowatt-ui",
+    "nexowatt-devices",
+    "nexowatt-backitup",
+    "eebus",
+    "identity-license",
+    "secure-bus",
+    "data-store",
+    "update-agent",
+    "audit-health"
+  ],
+  "scope": "Zielarchitektur des gemeinsamen EOS-Systems. Bedrohungen sind Szenarien, keine neu bestätigten Produktlücken.",
+  "assets": [
+    {
+      "id": "EOS-ASSET-01",
+      "name": "Anlagen-/Netzgrenzen und sichere Regelverfügbarkeit"
+    },
+    {
+      "id": "EOS-ASSET-02",
+      "name": "Messwerte, Sollwerte, Einheiten und Konfiguration"
+    },
+    {
+      "id": "EOS-ASSET-03",
+      "name": "Identitäten, Schlüssel, Lizenzen und personenbezogene Daten"
+    },
+    {
+      "id": "EOS-ASSET-04",
+      "name": "Quell-/Releaseintegrität, Sicherungen und Sicherheitsnachweise"
+    }
+  ],
+  "trustBoundaries": [
+    {
+      "id": "EOS-TB-01",
+      "name": "Nicht vertrauenswürdiges Browser-/Managementnetz zu Admin/UI",
+      "crossing": "TLS, individuelle Nutzeridentität, Rolle, Sitzung; lokale gesicherte Erstzuordnung"
+    },
+    {
+      "id": "EOS-TB-02",
+      "name": "Einzelner Modulprozess zu Modulbus und Datenzugriff",
+      "crossing": "Geplante getrennte OS-Identitäten, TLS-1.3-mTLS und Autorisierung; aktueller gemeinsamer ioBroker-Benutzer ist keine Isolation"
+    },
+    {
+      "id": "EOS-TB-03",
+      "name": "Feldgerätebereich zu EOS-Regelung",
+      "crossing": "Gerätebindung, Protokollvalidierung, Frische und Leistungsgrenzen; Legacy-Protokolle begrenzt, nicht als verschlüsselt bezeichnet"
+    },
+    {
+      "id": "EOS-TB-04",
+      "name": "Liefer-/Ausstellerumgebung zu Laufzeitgerät",
+      "crossing": "Unabhängig verankerte Update-/Lizenz-Prüfschlüssel; Aussteller-Privatschlüssel bleiben außerhalb des Geräts"
+    },
+    {
+      "id": "EOS-TB-05",
+      "name": "Unprivilegierte Laufzeit zu Hostwartung",
+      "crossing": "Kleine getrennte Wartungsschnittstelle mit festgelegten Operationen, keine freie Root-Shell"
+    },
+    {
+      "id": "EOS-TB-06",
+      "name": "Sicherung/Datenträger zu aktiviertem System",
+      "crossing": "Authentisierte Verschlüsselung, Integritäts-/Versionsprüfung und autorisierte Wiederherstellung"
+    }
+  ],
+  "assumptions": [
+    "Einzelne Browser, Adapter, Feldgeräte und das Management-LAN können kompromittiert sein.",
+    "Physischer Zugriff und Datenträgerdiebstahl sind zu bewerten; vollständiger Schutz gegen kontrolliertes Root-/Hardware-Umfeld wird nicht behauptet.",
+    "EOS Admin 7 ist die aktuelle Produktbasis laut Nutzer. Die Git-Quellstände und das vom Nutzer als aktuell bestätigte UI-Archiv stehen in system/components/source-inventory.json; installierte Geräteversionen sind noch nicht bestätigt.",
+    "TLS-1.3-mTLS, neue Dienstidentitäten und unabhängige Datenrechte sind Zielanforderungen, nicht nachgewiesene aktuelle ioBroker-Eigenschaften.",
+    "Interne File-/JSONL-Server des geprüften Controllers können nicht durch erfundenes secure:true in TLS-Server umgewandelt werden.",
+    "Keine Bedrohung oder geplante Prüfung schließt automatisch einen bestehenden Befund."
+  ],
+  "unknowns": [
+    "Tatsächlich installierte und als zusammengehöriges System freizugebende Komponentenstände; Zuordnung des UI-Archivs zu einem Git-Commit ist nicht belegt",
+    "Genaue OS-/Firmware-/SSD-Ausführung der gemeldeten RPi-5-Varianten, installierter Controller, Drittadapter und vollständige Netz-/Gerätematrix",
+    "Schutzfunktionen, Latenzbudgets und sichere Fehlerzustände der konkreten Anlage",
+    "Endgültige Produktkategorie, Supportfrist und erforderliches Konformitätsverfahren"
+  ],
+  "existingFindingsPreserved": [
+    "NW-EOS-260930-01",
+    "NW-EOS-260930-02",
+    "NW-EOS-260930-03",
+    "NW-EOS-260930-04",
+    "NW-EOS-260930-05",
+    "NW-EOS-260930-06",
+    "NW-EOS-260930-07",
+    "NW-EOS-260930-08",
+    "NW-EOS-260930-09",
+    "NW-EOS-260930-10",
+    "NW-EOS-260930-11",
+    "NW-EOS-260930-12"
+  ],
+  "threats": [
+    {
+      "id": "EOS-TM-001",
+      "status": "planned",
+      "moduleIds": [
+        "os-base"
+      ],
+      "stride": [
+        "Elevation of Privilege"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-05"
+      ],
+      "attackAssumption": "Ein kompromittierter Adapter nutzt gemeinsam beschreibbare Wartungsdateien oder weitreichende Hostrechte.",
+      "impact": "Hostübernahme und Manipulation aller Produktfunktionen.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Dienstrechte trennen",
+        "Exponierung minimieren"
+      ],
+      "requirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-015"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-002-P",
+          "type": "positive",
+          "scenario": "Ein Dienst erreicht ausschließlich seine genehmigten Ressourcen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-002-N",
+          "type": "negative",
+          "scenario": "Ein kompromittierter Adapter kann keine fremden Schlüssel, Hostwartung oder fremden Modulbefehle verwenden.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-P",
+          "type": "positive",
+          "scenario": "Freigegebene Nutzerrolle erreicht genau ihre vorgesehenen Funktionen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-N",
+          "type": "negative",
+          "scenario": "Abgelaufene Sitzung, CSRF, anonyme Nutzung und niedrige Rolle können keine Verwaltungsaktion ausführen.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [
+        "NW-EOS-260930-01",
+        "NW-EOS-260930-02",
+        "NW-EOS-260930-03",
+        "NW-EOS-260930-04"
+      ],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-002",
+      "status": "planned",
+      "moduleIds": [
+        "eos-core"
+      ],
+      "stride": [
+        "Tampering",
+        "Denial of Service"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-02",
+        "EOS-TB-03"
+      ],
+      "attackAssumption": "Ein berechtigter oder kompromittierter Sender wiederholt Sollwerte oder liefert veraltete plausible Messwerte.",
+      "impact": "Unzulässige Leistungsflüsse oder Verlust der Regelverfügbarkeit.",
+      "assetIds": [
+        "EOS-ASSET-01",
+        "EOS-ASSET-02"
+      ],
+      "controls": [
+        "Schnittstellen validieren",
+        "Steuerung und Failsafe schützen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-004-P",
+          "type": "positive",
+          "scenario": "Vertragskonforme Messwerte und Befehle werden unverändert verarbeitet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-004-N",
+          "type": "negative",
+          "scenario": "Unbekannte Felder bei geschlossenen Verträgen, ungültige Typen, Übergrößen und Injection-Versuche verursachen keine Seiteneffekte.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-P",
+          "type": "positive",
+          "scenario": "Zulässige aktuelle Befehle halten definierte Anlagen- und Netzgrenzen ein.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-N",
+          "type": "negative",
+          "scenario": "Replay, veraltete Werte, Kommunikationsausfall und Neustart führen zum dokumentierten betrieblich sicheren Verhalten.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-003",
+      "status": "planned",
+      "moduleIds": [
+        "eos-admin"
+      ],
+      "stride": [
+        "Spoofing",
+        "Elevation of Privilege"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-01"
+      ],
+      "attackAssumption": "Angreifer übernimmt die Ersteinrichtung, nutzt einen Teilabschluss oder erzwingt ungeschützten Verwaltungszugang.",
+      "impact": "Unautorisierte Konfiguration oder Freischaltung.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Einrichtung abschließen",
+        "Exponierung minimieren"
+      ],
+      "requirementIds": [
+        "EOS-REQ-003",
+        "EOS-REQ-015"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-003-P",
+          "type": "positive",
+          "scenario": "Erfolgreiche lokale Einrichtung aktiviert ausschließlich lizenzierte Funktionen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-003-N",
+          "type": "negative",
+          "scenario": "Reload, Abbruch, Restore, falsche Lizenz und Zertifikatfehler umgehen den Einrichtungsstatus nicht.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-P",
+          "type": "positive",
+          "scenario": "Freigegebene Nutzerrolle erreicht genau ihre vorgesehenen Funktionen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-N",
+          "type": "negative",
+          "scenario": "Abgelaufene Sitzung, CSRF, anonyme Nutzung und niedrige Rolle können keine Verwaltungsaktion ausführen.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-004",
+      "status": "planned",
+      "moduleIds": [
+        "nexowatt-ui"
+      ],
+      "stride": [
+        "Tampering",
+        "Elevation of Privilege"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-01",
+        "EOS-TB-02"
+      ],
+      "attackAssumption": "Ein manipuliertes Browserformular umgeht nur im UI ausgeblendete Rollen- oder Lizenzgrenzen.",
+      "impact": "Unautorisierte Gerätebefehle oder Administrationsaktionen.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Schnittstellen validieren",
+        "Freischaltungen begrenzen",
+        "Exponierung minimieren"
+      ],
+      "requirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-010",
+        "EOS-REQ-015"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-004-P",
+          "type": "positive",
+          "scenario": "Vertragskonforme Messwerte und Befehle werden unverändert verarbeitet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-004-N",
+          "type": "negative",
+          "scenario": "Unbekannte Felder bei geschlossenen Verträgen, ungültige Typen, Übergrößen und Injection-Versuche verursachen keine Seiteneffekte.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-010-P",
+          "type": "positive",
+          "scenario": "Jedes Modul erhält nur die für seine Identität freigegebenen Funktionen und Grenzen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-010-N",
+          "type": "negative",
+          "scenario": "Manipulierte UI, Fremdabfrage, fehlende Lizenz und abgelaufene Berechtigungen umgehen keine Freigabe oder Anlagenschutzfunktion.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-P",
+          "type": "positive",
+          "scenario": "Freigegebene Nutzerrolle erreicht genau ihre vorgesehenen Funktionen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-N",
+          "type": "negative",
+          "scenario": "Abgelaufene Sitzung, CSRF, anonyme Nutzung und niedrige Rolle können keine Verwaltungsaktion ausführen.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-005",
+      "status": "planned",
+      "moduleIds": [
+        "nexowatt-devices"
+      ],
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-03"
+      ],
+      "attackAssumption": "Ein Teilnehmer im Gerätebereich imitiert einen Zähler oder verändert ungeschützte Protokollwerte.",
+      "impact": "Falsche Leistungsberechnung und missbräuchliche Geräteschreibzugriffe.",
+      "assetIds": [
+        "EOS-ASSET-01",
+        "EOS-ASSET-02"
+      ],
+      "controls": [
+        "Schnittstellen validieren",
+        "Steuerung und Failsafe schützen",
+        "Feldprotokolle begrenzen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-007"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-004-P",
+          "type": "positive",
+          "scenario": "Vertragskonforme Messwerte und Befehle werden unverändert verarbeitet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-004-N",
+          "type": "negative",
+          "scenario": "Unbekannte Felder bei geschlossenen Verträgen, ungültige Typen, Übergrößen und Injection-Versuche verursachen keine Seiteneffekte.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-P",
+          "type": "positive",
+          "scenario": "Zulässige aktuelle Befehle halten definierte Anlagen- und Netzgrenzen ein.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-N",
+          "type": "negative",
+          "scenario": "Replay, veraltete Werte, Kommunikationsausfall und Neustart führen zum dokumentierten betrieblich sicheren Verhalten.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-007-P",
+          "type": "positive",
+          "scenario": "Genehmigte Gerätekommunikation funktioniert über die freigegebene Verbindung.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-007-N",
+          "type": "negative",
+          "scenario": "Unbekannte Gegenstellen, nicht freigegebene Schreiboperationen und Zonenwechsel sind gesperrt.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-006",
+      "status": "planned",
+      "moduleIds": [
+        "nexowatt-backitup"
+      ],
+      "stride": [
+        "Information Disclosure",
+        "Tampering"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-06"
+      ],
+      "attackAssumption": "Ein gestohlenes oder manipuliertes Archiv offenbart Geheimnisse oder überschreibt beim Restore fremde Pfade.",
+      "impact": "Geheimnisverlust, Identitätsklone und Daten-/Systemmanipulation.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Daten schützen",
+        "Sicher wiederherstellen",
+        "Updates rückfallfähig machen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-011",
+        "EOS-REQ-012",
+        "EOS-REQ-014"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-011-P",
+          "type": "positive",
+          "scenario": "Autorisierte Prozesse verarbeiten ihre Daten und erhalten Integritätsfehler nachvollziehbar.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-011-N",
+          "type": "negative",
+          "scenario": "Fremder Dienst und manipuliertes Chiffrat erhalten weder Klartext noch Schreibrechte.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-012-P",
+          "type": "positive",
+          "scenario": "Vollständige Sicherung wird in isolierter Zielumgebung mit konsistenten Daten wiederhergestellt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-012-N",
+          "type": "negative",
+          "scenario": "Pfadtraversal, beschädigte Archive, falsche Schlüssel und fremde Geräteidentitäten werden ohne Teilüberschreiben zurückgewiesen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-014-P",
+          "type": "positive",
+          "scenario": "Freigegebenes Update und Rückfall erhalten konsistente Daten sowie die erforderliche Regelung.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-014-N",
+          "type": "negative",
+          "scenario": "Stromverlust, Teilupdate, inkompatible Migration und unerlaubtes Downgrade aktivieren keinen inkonsistenten Stand.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-007",
+      "status": "planned",
+      "moduleIds": [
+        "eebus"
+      ],
+      "stride": [
+        "Spoofing",
+        "Denial of Service"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-03"
+      ],
+      "attackAssumption": "Unberechtigtes Pairing oder Nachrichtenflut einer gekoppelten Gegenstelle beeinflusst Steuerungsfunktionen.",
+      "impact": "Fremdsteuerung oder Kommunikationsausfall.",
+      "assetIds": [
+        "EOS-ASSET-01",
+        "EOS-ASSET-02"
+      ],
+      "controls": [
+        "Schnittstellen validieren",
+        "Steuerung und Failsafe schützen",
+        "Feldprotokolle begrenzen",
+        "Exponierung minimieren"
+      ],
+      "requirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-007",
+        "EOS-REQ-015"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-004-P",
+          "type": "positive",
+          "scenario": "Vertragskonforme Messwerte und Befehle werden unverändert verarbeitet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-004-N",
+          "type": "negative",
+          "scenario": "Unbekannte Felder bei geschlossenen Verträgen, ungültige Typen, Übergrößen und Injection-Versuche verursachen keine Seiteneffekte.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-P",
+          "type": "positive",
+          "scenario": "Zulässige aktuelle Befehle halten definierte Anlagen- und Netzgrenzen ein.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-N",
+          "type": "negative",
+          "scenario": "Replay, veraltete Werte, Kommunikationsausfall und Neustart führen zum dokumentierten betrieblich sicheren Verhalten.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-007-P",
+          "type": "positive",
+          "scenario": "Genehmigte Gerätekommunikation funktioniert über die freigegebene Verbindung.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-007-N",
+          "type": "negative",
+          "scenario": "Unbekannte Gegenstellen, nicht freigegebene Schreiboperationen und Zonenwechsel sind gesperrt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-P",
+          "type": "positive",
+          "scenario": "Freigegebene Nutzerrolle erreicht genau ihre vorgesehenen Funktionen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-015-N",
+          "type": "negative",
+          "scenario": "Abgelaufene Sitzung, CSRF, anonyme Nutzung und niedrige Rolle können keine Verwaltungsaktion ausführen.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-008",
+      "status": "planned",
+      "moduleIds": [
+        "identity-license"
+      ],
+      "stride": [
+        "Tampering",
+        "Information Disclosure"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-02",
+        "EOS-TB-04"
+      ],
+      "attackAssumption": "Angreifer manipuliert eine Lizenz oder extrahiert einen gemeinsam verteilten Entschlüsselungs-/Ausstellerschlüssel.",
+      "impact": "Unberechtigte Freischaltung oder Verlust von Lizenz-/Geräteinformationen.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Identitäten verwalten",
+        "Offline-Lizenz verifizieren",
+        "Freischaltungen begrenzen",
+        "Daten schützen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-008",
+        "EOS-REQ-009",
+        "EOS-REQ-010",
+        "EOS-REQ-011"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-008-P",
+          "type": "positive",
+          "scenario": "Rotation und Wiederherstellung erhalten autorisierten Betrieb ohne gemeinsame Geheimnisse.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-008-N",
+          "type": "negative",
+          "scenario": "Alte widerrufene Identität, fremder Schlüssel und Zeitrücksprung werden gemäß dokumentierter Richtlinie behandelt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-009-P",
+          "type": "positive",
+          "scenario": "Eine gültige lokal bereitgestellte Lizenz wird ohne Cloudverbindung geprüft.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-009-N",
+          "type": "negative",
+          "scenario": "Manipulierte Lizenz, unbekannter Aussteller und unpassende Gerätebindung liefern keine Freischaltung.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-010-P",
+          "type": "positive",
+          "scenario": "Jedes Modul erhält nur die für seine Identität freigegebenen Funktionen und Grenzen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-010-N",
+          "type": "negative",
+          "scenario": "Manipulierte UI, Fremdabfrage, fehlende Lizenz und abgelaufene Berechtigungen umgehen keine Freigabe oder Anlagenschutzfunktion.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-011-P",
+          "type": "positive",
+          "scenario": "Autorisierte Prozesse verarbeiten ihre Daten und erhalten Integritätsfehler nachvollziehbar.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-011-N",
+          "type": "negative",
+          "scenario": "Fremder Dienst und manipuliertes Chiffrat erhalten weder Klartext noch Schreibrechte.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-009",
+      "status": "planned",
+      "moduleIds": [
+        "secure-bus"
+      ],
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "Information Disclosure"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-02"
+      ],
+      "attackAssumption": "Angreifer vermittelt oder verändert Modulnachrichten; ein legitimes Zertifikat wird ohne Operationsprüfung zu weit berechtigt.",
+      "impact": "Abhören, fremde Datenzugriffe und manipulierte Steuerbefehle.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Modulverbindungen schützen",
+        "Steuerung und Failsafe schützen",
+        "Identitäten verwalten"
+      ],
+      "requirementIds": [
+        "EOS-REQ-005",
+        "EOS-REQ-006",
+        "EOS-REQ-008"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-005-P",
+          "type": "positive",
+          "scenario": "Berechtigte Dienstidentität kann ihre erlaubte Operation verschlüsselt ausführen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-005-N",
+          "type": "negative",
+          "scenario": "Fremde Identität, falscher Servername, abgelaufenes Zertifikat und verweigerte Operation werden abgewiesen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-P",
+          "type": "positive",
+          "scenario": "Zulässige aktuelle Befehle halten definierte Anlagen- und Netzgrenzen ein.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-N",
+          "type": "negative",
+          "scenario": "Replay, veraltete Werte, Kommunikationsausfall und Neustart führen zum dokumentierten betrieblich sicheren Verhalten.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-008-P",
+          "type": "positive",
+          "scenario": "Rotation und Wiederherstellung erhalten autorisierten Betrieb ohne gemeinsame Geheimnisse.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-008-N",
+          "type": "negative",
+          "scenario": "Alte widerrufene Identität, fremder Schlüssel und Zeitrücksprung werden gemäß dokumentierter Richtlinie behandelt.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [
+        "NW-EOS-260930-05"
+      ],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-010",
+      "status": "planned",
+      "moduleIds": [
+        "data-store"
+      ],
+      "stride": [
+        "Information Disclosure",
+        "Tampering"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-02",
+        "EOS-TB-06"
+      ],
+      "attackAssumption": "Ein kompromittierter Dienst liest fremde Konfiguration oder verliert Sicherheitsoptionen beim Überschreiben gemeinsamer Einstellungen.",
+      "impact": "Geheimnisabfluss oder unbemerkter Verlust geschützter Kommunikation.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Dienstrechte trennen",
+        "Schnittstellen validieren",
+        "Modulverbindungen schützen",
+        "Daten schützen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-004",
+        "EOS-REQ-005",
+        "EOS-REQ-011"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-002-P",
+          "type": "positive",
+          "scenario": "Ein Dienst erreicht ausschließlich seine genehmigten Ressourcen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-002-N",
+          "type": "negative",
+          "scenario": "Ein kompromittierter Adapter kann keine fremden Schlüssel, Hostwartung oder fremden Modulbefehle verwenden.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-004-P",
+          "type": "positive",
+          "scenario": "Vertragskonforme Messwerte und Befehle werden unverändert verarbeitet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-004-N",
+          "type": "negative",
+          "scenario": "Unbekannte Felder bei geschlossenen Verträgen, ungültige Typen, Übergrößen und Injection-Versuche verursachen keine Seiteneffekte.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-005-P",
+          "type": "positive",
+          "scenario": "Berechtigte Dienstidentität kann ihre erlaubte Operation verschlüsselt ausführen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-005-N",
+          "type": "negative",
+          "scenario": "Fremde Identität, falscher Servername, abgelaufenes Zertifikat und verweigerte Operation werden abgewiesen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-011-P",
+          "type": "positive",
+          "scenario": "Autorisierte Prozesse verarbeiten ihre Daten und erhalten Integritätsfehler nachvollziehbar.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-011-N",
+          "type": "negative",
+          "scenario": "Fremder Dienst und manipuliertes Chiffrat erhalten weder Klartext noch Schreibrechte.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [
+        "NW-EOS-260930-06"
+      ],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-011",
+      "status": "planned",
+      "moduleIds": [
+        "update-agent"
+      ],
+      "stride": [
+        "Tampering",
+        "Elevation of Privilege"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-04",
+        "EOS-TB-05"
+      ],
+      "attackAssumption": "Angreifer ersetzt ein Release oder spielt eine alte verwundbare Version ein; unterbrochene Migration aktiviert inkompatible Daten.",
+      "impact": "Lieferkettenübernahme, Rückkehr bekannter Lücken oder Betriebsausfall.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Lieferumfang binden",
+        "Updates authentisieren",
+        "Updates rückfallfähig machen",
+        "SBOM und Build verbinden"
+      ],
+      "requirementIds": [
+        "EOS-REQ-001",
+        "EOS-REQ-013",
+        "EOS-REQ-014",
+        "EOS-REQ-018"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-001-P",
+          "type": "positive",
+          "scenario": "Kompletter freigegebener Bestand wird einem Build zugeordnet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-001-N",
+          "type": "negative",
+          "scenario": "Fehlende Quellversion oder Hash verhindert eine vollständige Produktfreigabe.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-013-P",
+          "type": "positive",
+          "scenario": "Ein für das Ziel freigegebenes vollständiges Release wird mit gültiger Signatur angenommen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-013-N",
+          "type": "negative",
+          "scenario": "Manipuliertes Artefakt, mutable Fremdreferenz, unbekannter Signierer oder falsches Ziel wird vor Ausführung gesperrt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-014-P",
+          "type": "positive",
+          "scenario": "Freigegebenes Update und Rückfall erhalten konsistente Daten sowie die erforderliche Regelung.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-014-N",
+          "type": "negative",
+          "scenario": "Stromverlust, Teilupdate, inkompatible Migration und unerlaubtes Downgrade aktivieren keinen inkonsistenten Stand.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-018-P",
+          "type": "positive",
+          "scenario": "Ein reproduzierbarer Build erzeugt eine validierte SBOM mit dem tatsächlichen Umfang.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-018-N",
+          "type": "negative",
+          "scenario": "Fehlende Komponenten, unbelegte Versionen oder vom Artefakt abweichende Hashes verhindern eine vollständige SBOM-Freigabe.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [
+        "NW-EOS-260930-07",
+        "NW-EOS-260930-08",
+        "NW-EOS-260930-09",
+        "NW-EOS-260930-10",
+        "NW-EOS-260930-12"
+      ],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-012",
+      "status": "planned",
+      "moduleIds": [
+        "audit-health"
+      ],
+      "stride": [
+        "Repudiation",
+        "Denial of Service"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-02"
+      ],
+      "attackAssumption": "Ein Angreifer löscht oder fälscht lokale Ereignisse oder erschöpft Ressourcen durch Log-/Anfrageflut.",
+      "impact": "Fehlende Nachvollziehbarkeit oder Ausfall der Regelung.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Dienstrechte trennen",
+        "Überwachung begrenzen",
+        "Nachweise und Freigabe trennen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-016",
+        "EOS-REQ-020"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-002-P",
+          "type": "positive",
+          "scenario": "Ein Dienst erreicht ausschließlich seine genehmigten Ressourcen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-002-N",
+          "type": "negative",
+          "scenario": "Ein kompromittierter Adapter kann keine fremden Schlüssel, Hostwartung oder fremden Modulbefehle verwenden.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-016-P",
+          "type": "positive",
+          "scenario": "Relevante Ereignisse sind mit Quelle und Zeit nachvollziehbar; Rotation hält Ressourcenbudgets ein.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-016-N",
+          "type": "negative",
+          "scenario": "Logflut, volle Platte, manipulierte Ereignisse und Überwachungsausfall überlasten die Regelung nicht; erkannte Störungen werden nachvollziehbar angezeigt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-020-P",
+          "type": "positive",
+          "scenario": "Freigabeentscheidung verweist auf überprüfbare Ergebnisse des exakten Lieferstands.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-020-N",
+          "type": "negative",
+          "scenario": "Fehlende Tests, falscher Quellstand und ungeklärte kritische Risiken können nicht als bestanden oder konform markiert werden.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-013",
+      "status": "planned",
+      "moduleIds": [
+        "secure-bus"
+      ],
+      "stride": [
+        "Spoofing",
+        "Elevation of Privilege",
+        "Information Disclosure"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-02"
+      ],
+      "attackAssumption": "Adapter teilen weiterhin denselben OS-Benutzer oder Datenbankzugang, obwohl die Architektur getrennte Modulidentitäten annimmt.",
+      "impact": "TLS schützt den Transport, verhindert jedoch weder Identitätsdiebstahl noch Querzugriffe im gemeinsamen Vertrauensbereich.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Dienstrechte trennen",
+        "Modulverbindungen schützen",
+        "Identitäten verwalten",
+        "Nachweise und Freigabe trennen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-005",
+        "EOS-REQ-008",
+        "EOS-REQ-020"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-002-P",
+          "type": "positive",
+          "scenario": "Ein Dienst erreicht ausschließlich seine genehmigten Ressourcen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-002-N",
+          "type": "negative",
+          "scenario": "Ein kompromittierter Adapter kann keine fremden Schlüssel, Hostwartung oder fremden Modulbefehle verwenden.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-005-P",
+          "type": "positive",
+          "scenario": "Berechtigte Dienstidentität kann ihre erlaubte Operation verschlüsselt ausführen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-005-N",
+          "type": "negative",
+          "scenario": "Fremde Identität, falscher Servername, abgelaufenes Zertifikat und verweigerte Operation werden abgewiesen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-008-P",
+          "type": "positive",
+          "scenario": "Rotation und Wiederherstellung erhalten autorisierten Betrieb ohne gemeinsame Geheimnisse.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-008-N",
+          "type": "negative",
+          "scenario": "Alte widerrufene Identität, fremder Schlüssel und Zeitrücksprung werden gemäß dokumentierter Richtlinie behandelt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-020-P",
+          "type": "positive",
+          "scenario": "Freigabeentscheidung verweist auf überprüfbare Ergebnisse des exakten Lieferstands.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-020-N",
+          "type": "negative",
+          "scenario": "Fehlende Tests, falscher Quellstand und ungeklärte kritische Risiken können nicht als bestanden oder konform markiert werden.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [
+        "NW-EOS-260930-01"
+      ],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-014",
+      "status": "planned",
+      "moduleIds": [
+        "eos-core"
+      ],
+      "stride": [
+        "Tampering",
+        "Denial of Service"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-02",
+        "EOS-TB-06"
+      ],
+      "attackAssumption": "Migration oder Lizenzzustandswechsel verändert bestehende Datenpunkte, Einheiten, Regelprioritäten oder nötige Schutzfunktionen.",
+      "impact": "Unbeabsichtigte Gerätesteuerung trotz technisch gültigem Paket.",
+      "assetIds": [
+        "EOS-ASSET-01",
+        "EOS-ASSET-02"
+      ],
+      "controls": [
+        "Steuerung und Failsafe schützen",
+        "Freischaltungen begrenzen",
+        "Sicher wiederherstellen",
+        "Updates rückfallfähig machen",
+        "Kompatibilität belegen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-006",
+        "EOS-REQ-010",
+        "EOS-REQ-012",
+        "EOS-REQ-014",
+        "EOS-REQ-017"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-006-P",
+          "type": "positive",
+          "scenario": "Zulässige aktuelle Befehle halten definierte Anlagen- und Netzgrenzen ein.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-006-N",
+          "type": "negative",
+          "scenario": "Replay, veraltete Werte, Kommunikationsausfall und Neustart führen zum dokumentierten betrieblich sicheren Verhalten.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-010-P",
+          "type": "positive",
+          "scenario": "Jedes Modul erhält nur die für seine Identität freigegebenen Funktionen und Grenzen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-010-N",
+          "type": "negative",
+          "scenario": "Manipulierte UI, Fremdabfrage, fehlende Lizenz und abgelaufene Berechtigungen umgehen keine Freigabe oder Anlagenschutzfunktion.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-012-P",
+          "type": "positive",
+          "scenario": "Vollständige Sicherung wird in isolierter Zielumgebung mit konsistenten Daten wiederhergestellt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-012-N",
+          "type": "negative",
+          "scenario": "Pfadtraversal, beschädigte Archive, falsche Schlüssel und fremde Geräteidentitäten werden ohne Teilüberschreiben zurückgewiesen.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-014-P",
+          "type": "positive",
+          "scenario": "Freigegebenes Update und Rückfall erhalten konsistente Daten sowie die erforderliche Regelung.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-014-N",
+          "type": "negative",
+          "scenario": "Stromverlust, Teilupdate, inkompatible Migration und unerlaubtes Downgrade aktivieren keinen inkonsistenten Stand.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-017-P",
+          "type": "positive",
+          "scenario": "Die gleichen fachlichen Abläufe, Gerätewerte und UI-Funktionen bleiben im freigegebenen Referenzumfang erhalten.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-017-N",
+          "type": "negative",
+          "scenario": "Abweichende Datenpunkte, Einheiten, Regelprioritäten oder verlorene Konfiguration verhindern die Freigabe.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    },
+    {
+      "id": "EOS-TM-015",
+      "status": "planned",
+      "moduleIds": [
+        "update-agent"
+      ],
+      "stride": [
+        "Tampering",
+        "Repudiation"
+      ],
+      "trustBoundaryIds": [
+        "EOS-TB-04"
+      ],
+      "attackAssumption": "Unvollständiger Komponentenbestand oder fehlender Melde-/Supportprozess lässt eine relevante Schwachstelle unbearbeitet.",
+      "impact": "Nicht nachvollziehbare Auslieferung und verlängerte Exposition.",
+      "assetIds": [
+        "EOS-ASSET-03",
+        "EOS-ASSET-04"
+      ],
+      "controls": [
+        "Lieferumfang binden",
+        "SBOM und Build verbinden",
+        "Lebenszyklus betreiben",
+        "Nachweise und Freigabe trennen"
+      ],
+      "requirementIds": [
+        "EOS-REQ-001",
+        "EOS-REQ-018",
+        "EOS-REQ-019",
+        "EOS-REQ-020"
+      ],
+      "plannedTests": [
+        {
+          "id": "EOS-TEST-001-P",
+          "type": "positive",
+          "scenario": "Kompletter freigegebener Bestand wird einem Build zugeordnet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-001-N",
+          "type": "negative",
+          "scenario": "Fehlende Quellversion oder Hash verhindert eine vollständige Produktfreigabe.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-018-P",
+          "type": "positive",
+          "scenario": "Ein reproduzierbarer Build erzeugt eine validierte SBOM mit dem tatsächlichen Umfang.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-018-N",
+          "type": "negative",
+          "scenario": "Fehlende Komponenten, unbelegte Versionen oder vom Artefakt abweichende Hashes verhindern eine vollständige SBOM-Freigabe.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-019-P",
+          "type": "positive",
+          "scenario": "Eine Testmeldung wird über dokumentierte Zuständigkeiten bis Abhilfe und Nachprüfung verfolgt.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-019-N",
+          "type": "negative",
+          "scenario": "Ausfall des Meldekanals, nicht erreichbare Verantwortliche und verspätete Eskalation werden erkannt und bearbeitet.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-020-P",
+          "type": "positive",
+          "scenario": "Freigabeentscheidung verweist auf überprüfbare Ergebnisse des exakten Lieferstands.",
+          "status": "planned"
+        },
+        {
+          "id": "EOS-TEST-020-N",
+          "type": "negative",
+          "scenario": "Fehlende Tests, falscher Quellstand und ungeklärte kritische Risiken können nicht als bestanden oder konform markiert werden.",
+          "status": "planned"
+        }
+      ],
+      "existingFindingIds": [
+        "NW-EOS-260930-11"
+      ],
+      "residualRisk": "Wirksamkeit bis Implementierung und Prüfung am konkreten Liefer-/Gerätestand offen.",
+      "ownerRole": "EOS Hersteller / verantwortliche Entwicklung",
+      "riskAssessmentStatus": "qualitative_design_only; likelihood_and_severity_require_deployment_context"
+    }
+  ],
+  "evaluation": {
+    "runtimeTestsExecuted": false,
+    "productSecurityValidated": false,
+    "CRAConformityClaimed": false,
+    "IECConformityClaimed": false
+  }
+}

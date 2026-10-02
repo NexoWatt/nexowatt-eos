@@ -1,0 +1,1113 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-stabilization-test-pi-delivery",
+  "productVersion": "0.2.0-dev.3",
+  "releaseVersion": "0.2.0-test.1",
+  "createdAt": "2026-10-01T17:21:36.270136+00:00",
+  "baseCommit": "c211f1a48ee0b667fcc739ee9134616af43b6076",
+  "finalCommitLocation": "outer full-repository delivery.json",
+  "releaseId": "a687feab64ffb230694b8af5342082dafcce771b2e76885445754e7c35025c88",
+  "status": "isolated-test-installation-candidate-with-open-product-gates",
+  "productionReleaseApproved": false,
+  "targetHardwareAccepted": false,
+  "craConformityEstablished": false,
+  "iecConformityEstablished": false,
+  "independentPenetrationTestPerformed": false,
+  "installed": [
+    "iobroker.js-controller@7.2.2",
+    "iobroker.eos-admin@7.10.11",
+    "iobroker.nexowatt-ui@1.0.21"
+  ],
+  "sourceOnlyAdapters": [
+    "devices",
+    "eebus",
+    "ocpp21",
+    "backitup"
+  ],
+  "runtime": {
+    "node": "24.21.0",
+    "buildNpm": "11.19.0",
+    "hostPlatform": "linux-x64",
+    "deliveryPlatform": "linux-arm64",
+    "redisTestOnly": "7.2.10"
+  },
+  "tests": [
+    {
+      "name": "system-and-integration-regression",
+      "tests": 406,
+      "pass": 406,
+      "fail": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "reports/integration/stabilization/system-final-tests.json",
+        "size": 1874,
+        "sha256": "e9015d85398d5dcf5e97796b05819185bab75e5e59286db1c71d9c453397cff2"
+      },
+      "raw": {
+        "path": "reports/integration/stabilization/raw/system-final-node24.21.tap",
+        "size": 80325,
+        "sha256": "20f749c32b7824d99b2ed67421375e6b1140d63a897f3b34517c15361f900194"
+      }
+    },
+    {
+      "name": "actual-controller-admin-ui-browser",
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "reports/integration/stabilization/ui-controller.json",
+        "size": 545,
+        "sha256": "c8e52aef1f3ea589cf7b8aa753a0c040745e8a38beb94b94088965546262f3d0"
+      },
+      "raw": {
+        "path": "reports/integration/stabilization/raw/ui-controller-node24.21.tap",
+        "size": 6599,
+        "sha256": "169b65d4e0c2f5296ce9e33d1ed6f0c587c8c18e8d0ecadb086fd8f658bc03f3"
+      }
+    },
+    {
+      "name": "build-loader-offline",
+      "tests": 27,
+      "pass": 27,
+      "fail": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "reports/integration/stabilization/build-loader-tests.json",
+        "size": 601,
+        "sha256": "a2d9838dd38c22b9bc9525567592f1b5aa7f09f21898252c4f4d15dec0c4f58f"
+      },
+      "raw": {
+        "path": "reports/integration/stabilization/raw/build-loader-final.tap",
+        "size": 5826,
+        "sha256": "d8a7364b43941357cbf2fb869a83e078b8e4869fec476c671daced94ad55131d"
+      }
+    }
+  ],
+  "testCountsOverlap": true,
+  "certificateAccountRegression": {
+    "path": "reports/integration/certificate-account-v2/verification-summary.json",
+    "size": 7823,
+    "sha256": "33a15fca09e1b4dafe795250cac9fbf19b7073f18ca024a611a7c2103ba59653"
+  },
+  "mesh": {
+    "finding": "UI-MESH-PERF-20261001",
+    "status": "open",
+    "fullUiSuitePassed": false,
+    "requestBudgetMs": 200,
+    "observedFailedAttemptMs": 545.3,
+    "leaseMs": 3000,
+    "timingThresholdsRelaxed": false,
+    "rootCauseEstablished": false,
+    "previewLifecycleAndMutationBoundaryTested": true
+  },
+  "dependencyAudit": {
+    "fullCurrentPrivateTreeRemoteAudit": "not-performed-automatic-approval-review-rejected-private-metadata-disclosure",
+    "publicLoaderProbeAuditVulnerabilities": 0,
+    "knownEsbuildChainFixedAndLoaderTested": true,
+    "noWholeProductZeroVulnerabilityClaim": true
+  },
+  "sbom": {
+    "runtimeDocuments": 2,
+    "installedNpmPackagesPerPlatform": 466,
+    "uniqueNpmIdentitiesPerPlatform": 426,
+    "embeddedDirectoriesPerPlatform": 3,
+    "uniqueEmbeddedIdentities": 2,
+    "schemaValidatedDocuments": 4,
+    "missingScope": [
+      "target OS/Redis/firmware/bootloader",
+      "Node embedded library breakdown",
+      "complete frontend bundle provenance"
+    ],
+    "dependencyGraphValidation": "reference integrity only"
+  },
+  "bundle": {
+    "signedPayloadFiles": 17877,
+    "archiveFileCount": 17879,
+    "sourceFilesCompared": 34,
+    "signatureVerified": true,
+    "wrongPlatformRejected": "BUNDLE_PLATFORM",
+    "testPublicKeySha256": "e4e2465af8ae947574804f42c5ed17072ada8831b9839876f188c0e7c4c08cbe",
+    "privateReleaseKeyDelivered": false
+  },
+  "remaining": [
+    "identify spare Pi and storage without wiping",
+    "fresh actual Debian/Raspberry Pi OS12 arm64 installation",
+    "manufacturer public license-trust export and device-bound test license",
+    "systemd/unprivileged target operation, restart and endurance",
+    "Tailscale access rules and IPv6/network/discovery acceptance",
+    "Mesh timing resolution and independent security review",
+    "individual adapter identities/isolation and physical protocol/failsafe tests",
+    "additional adapter activation profile, full backup/restore and update/rollback acceptance"
+  ],
+  "sourceBindings": [
+    {
+      "path": ".gitattributes",
+      "size": 1368,
+      "sha256": "e6863a4891622d368da702ef069f2e3ac860bee33ff70c7a5d0a5d6fb3a3c6f5"
+    },
+    {
+      "path": "README.md",
+      "size": 4973,
+      "sha256": "e535af2cfc6c0a8590f3a24a1ed8dfb2545762e494c4a249b5469232a86fd00f"
+    },
+    {
+      "path": "components/ui/docs/MICROGRID_MASTER_SLAVE_DE.md",
+      "size": 23156,
+      "sha256": "76b4c981becba47b329d838d8838c6acc3c30336ae75122f977c121818ebee27"
+    },
+    {
+      "path": "components/ui/docs/code-documentation-manifest.json",
+      "size": 100194,
+      "sha256": "e6f3ab7c9236176e2f722eecdb6670774721ab41161433f2fe555c30e236cb9e"
+    },
+    {
+      "path": "components/ui/docs/quellcode/src-ts/runtime-executables/lib/mesh-coordinator-protocol.md",
+      "size": 4735,
+      "sha256": "5324b499448bc0ae2bc85a7dd3ae3c1a6e098a0c947b60181eb63f591894fbb8"
+    },
+    {
+      "path": "components/ui/docs/quellcode/src-ts/runtime-executables/lib/mesh-coordinator.md",
+      "size": 9123,
+      "sha256": "a1a17999cb72c6c27f5668295795326bff1270068f1d85179839d37a92fd9a00"
+    },
+    {
+      "path": "components/ui/docs/security/EOS_UI_MESH_STABILIZATION_2026-10-01_DE.md",
+      "size": 8161,
+      "sha256": "a41eb1fe93104eb9c374dd0df7520e336c5a7b299965428b72935ab680156914"
+    },
+    {
+      "path": "components/ui/lib/mesh-coordinator-protocol.js",
+      "size": 19882,
+      "sha256": "ac4acbf4764f9c8eccce582158332795ebe3445f6f1142a221374e6bfc783ea3"
+    },
+    {
+      "path": "components/ui/lib/mesh-coordinator.js",
+      "size": 36102,
+      "sha256": "17966cf0e6f8d334ceffa9e6ec3dcae85dd468d6ff456d9e6d7a556f84fb33de"
+    },
+    {
+      "path": "components/ui/package.json",
+      "size": 72824,
+      "sha256": "3bc2e7f6fddcf271567a336b45011da94740f9dd5a288a252367ef9fbe40f10c"
+    },
+    {
+      "path": "components/ui/scripts/benchmark-mesh-degraded-plan.cjs",
+      "size": 1888,
+      "sha256": "745abf97c0ab844fd42e312dd76d75f54d4b752a8958b3cc86932f95cd17361b"
+    },
+    {
+      "path": "components/ui/scripts/diagnose-mesh-timing.cjs",
+      "size": 3196,
+      "sha256": "56822816fab46b67ddb713c1338add47fef935615f7d613267d750023e30ce85"
+    },
+    {
+      "path": "components/ui/scripts/release-artifact-manifest.json",
+      "size": 68170,
+      "sha256": "13af71779827ea86b92bbf2ab99911d87dfe542ac2076b7f427a29f7b3ecd26f"
+    },
+    {
+      "path": "components/ui/scripts/verify-eos-integrated.cjs",
+      "size": 13422,
+      "sha256": "60078503c6d4bf382e31edd03bafdf4c8d86ed3b16bae9d22d306a17adb4ebb4"
+    },
+    {
+      "path": "components/ui/scripts/verify-mesh-coordinator.cjs",
+      "size": 17710,
+      "sha256": "f35210701c355763dbd407a565573a48e5d097c9adcfb1a7aed76dc77713a6c3"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/mesh-coordinator-protocol.ts",
+      "size": 19177,
+      "sha256": "7f1637405d11bd619b7945dccfc10d03f38fe8fc4c11f0bc4447b30d8e0b08de"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/mesh-coordinator.ts",
+      "size": 35415,
+      "sha256": "04f63d9b5e822e818cc7762889a29b0993f9f864abbc78876d400ffff4c2c2f7"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/lib/mesh-coordinator-protocol.ts",
+      "size": 23846,
+      "sha256": "c9bcf527519a2eda405093db32411e2d1c2ac84772850f6def98ab5fed9024e0"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/lib/mesh-coordinator.ts",
+      "size": 38782,
+      "sha256": "1c7134df9ca15a4bc33c2198fc2953d534bb987d687dfc21fd41c276a9819e33"
+    },
+    {
+      "path": "components/ui/test/eos-mesh-timing.test.cjs",
+      "size": 10504,
+      "sha256": "714592afe29a0a523804277d08a9864718e1fbdb33b9d969eacc062bb7a222e6"
+    },
+    {
+      "path": "components/ui/test/fixtures/mesh-plan-c211f1a.cjs",
+      "size": 6682,
+      "sha256": "3103e0a00576cde08637ddab0844f86301987ab90cc02ae676a46fddb8c25550"
+    },
+    {
+      "path": "docs/architecture/INTEGRATED_SYSTEM.md",
+      "size": 23368,
+      "sha256": "56c3f8d611a8ead4e9a0d6391090acbfd86af97d65a7b97d537a1e25b0c8a7e3"
+    },
+    {
+      "path": "docs/cra/INTEGRATED_TEST_REQUIREMENTS.md",
+      "size": 24332,
+      "sha256": "624b9518c298ea168f247ca224f9e73408b32425f3fd700361938d7f5ebd23b5"
+    },
+    {
+      "path": "docs/development/EOS_SOURCE_WORKFLOW_DE.md",
+      "size": 8597,
+      "sha256": "c8560023da38dcc9d067569565cb9fe97fce1961d96abddd386ad8efff974275"
+    },
+    {
+      "path": "docs/operations/CERTIFICATE_LIFECYCLE.md",
+      "size": 11605,
+      "sha256": "f482beca45d344422c572bf5594eaa6866e7f20f92689ba0dbcf38e74454fa35"
+    },
+    {
+      "path": "docs/operations/TEST_PI_INSTALLATION_DE.md",
+      "size": 22271,
+      "sha256": "d947947d4cb49d7d6401f8a23bf43be1d842d7d128c800aabee58124e3d429e7"
+    },
+    {
+      "path": "docs/security/STABILIZATION_DE.md",
+      "size": 6602,
+      "sha256": "ae45571fb43f9039401bfeafb8a82adfe2a9182f33401bcb5756063cf2a9d990"
+    },
+    {
+      "path": "docs/security/TEST_PI_STABILIZATION_THREAT_MODEL_DE.md",
+      "size": 5701,
+      "sha256": "a412a9d850e5342869345806c970142e911043038756ab2f66ed04b6ee7fc70c"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "size": 9372,
+      "sha256": "92c862cb7476b32ea5153d61d2008acd38ce98c594e88bd63a76ba25988c438f"
+    },
+    {
+      "path": "system/integration/components.json",
+      "size": 7464,
+      "sha256": "a4e25928e910a70d1c89dee30619d6851ff06f866b78153723c5c4f3bfa89d97"
+    },
+    {
+      "path": "system/product.json",
+      "size": 1260,
+      "sha256": "3b86884757c3207c90bee9b5ff962cce9f03b96731bff53532de9977db738152"
+    },
+    {
+      "path": "tests/integration/build-offline.integration.cjs",
+      "size": 1917,
+      "sha256": "6b3b7fbd0540bb5684c6df6d07734c4c28fb3abe3ba6f8fbdc0f99cf75ef1ab5"
+    },
+    {
+      "path": "tests/integration/build-runtime.test.cjs",
+      "size": 4801,
+      "sha256": "a83a316923f3d3e6165de132fab69e26ea60c3fcce01b4884c2376fbf4eeb90a"
+    },
+    {
+      "path": "tests/integration/esbuild-loader.integration.cjs",
+      "size": 5325,
+      "sha256": "ad9cf43f5cf57aa8a87b9b5c8c9ef56726c1713afdf8647362657e0502aaf432"
+    },
+    {
+      "path": "tests/integration/runtime-architecture.test.cjs",
+      "size": 11122,
+      "sha256": "c388e7e14af1fcd819bc9a99a037cadfe5f629fdead5fffc6a2e0e655f251ebe"
+    },
+    {
+      "path": "tests/integration/runtime-dependency-policy.test.cjs",
+      "size": 5276,
+      "sha256": "87e99e8bbdd7f9534de7f3633a67a9c0cbdf0d519b99a4b5733184dbafab4084"
+    },
+    {
+      "path": "tests/integration/ui-controller.integration.cjs",
+      "size": 36648,
+      "sha256": "77a0b55575fa4d6191d294a2c817da1a73de02a7c2934ebaa228db4f5b02e5c1"
+    },
+    {
+      "path": "tests/system/certificate-host.test.cjs",
+      "size": 15727,
+      "sha256": "8646606da40f95f47e087ebe9e44a056fd788476016b11a0c7e09b9cdb05437c"
+    },
+    {
+      "path": "tests/system/certificate-redis.integration.cjs",
+      "size": 7642,
+      "sha256": "2824f64a98228a936924f8c3145a8ccde27a5c36a74d37bc0e4f175730f86d03"
+    },
+    {
+      "path": "tests/system/fixtures/certificate-accounts.cjs",
+      "size": 2453,
+      "sha256": "9f61774b34f66e7e1a788205f1e5f1e9d07496d3a2b62f1ced3d6a1d84654789"
+    },
+    {
+      "path": "tests/system/fixtures/installation-bundle.cjs",
+      "size": 7918,
+      "sha256": "147813a23e728654f9afcb632a0b40caea179eea7bfe1ba0670f129a389bb64b"
+    },
+    {
+      "path": "tests/system/fixtures/sbom-transform.cjs",
+      "size": 970,
+      "sha256": "b5fcd424aef6c1765f57efa8c9ef2f80aea76cf2058e38d9dc558a35c2a99159"
+    },
+    {
+      "path": "tests/system/host.test.cjs",
+      "size": 21076,
+      "sha256": "c9efaf0d16624e940dbace165d0a04b0b2e7ac5130c4bf3e245759ade8d5fed4"
+    },
+    {
+      "path": "tests/system/preflight-installation.test.cjs",
+      "size": 8952,
+      "sha256": "c624537cb9d351dd923265639d25225e07a92c363313cad0e0bc6bb22a24596c"
+    },
+    {
+      "path": "tests/system/release-cli.test.cjs",
+      "size": 10323,
+      "sha256": "95e2e28b18c712589199eb040205f87f12f7465b73c929e3e5e930d0e60a079c"
+    },
+    {
+      "path": "tests/system/sbom-binding.test.cjs",
+      "size": 9636,
+      "sha256": "aea016428e1723f42602b7b374ecd67180bd44aff511a1a82314f479eef0ce0a"
+    },
+    {
+      "path": "tests/system/sbom-test-base.test.py",
+      "size": 18121,
+      "sha256": "287c7a40fa57a7fded68d554b14655e92fd53b6b814bf561835aadae9cf47c02"
+    },
+    {
+      "path": "tools/integration/README.md",
+      "size": 7228,
+      "sha256": "c71b7dd3f40172d45037ab006e1b3aa3bd6a926079930ababeacc22118540a92"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "size": 10243,
+      "sha256": "bcb2c95905fe9e70c8ea8b7e88e1a75e262921fdfe8428fed3bf6344b9a2456c"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "size": 19040,
+      "sha256": "18c2976a406f0f581e1d9acb1f98507b9f8624b354f98ac6315ba785fa312b40"
+    },
+    {
+      "path": "tools/integration/runtime-dependency-policy.cjs",
+      "size": 5069,
+      "sha256": "926e103accb60a9fa5df7ee769965cfc7be857505dc3e3b3610ca3b3b9208519"
+    },
+    {
+      "path": "tools/integration/source-inventory.py",
+      "size": 5766,
+      "sha256": "b250bc43b4dfec4fd0eb195c0c503d6d79eee058cd258d77fd2c104935f485aa"
+    },
+    {
+      "path": "tools/sbom/test_base.py",
+      "size": 18152,
+      "sha256": "375ef88f9548d342b38755aeb98d1d1187e9b48fd3990d915d4c934eecd32e01"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "size": 9202,
+      "sha256": "3d250adf110cdb5faad946a85342b568cb14c07590202903705a741cc369505d"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "size": 9105,
+      "sha256": "ccdfd6ae229ee5124472e0d3c8bbd0b041db1b59f27d1c16c016b06ff41d8c73"
+    },
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "size": 10367,
+      "sha256": "036c428f70e1c12005313fe70a14b2bde61a39e56edf1c3c3c8da42b5f9b940b"
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "size": 12884,
+      "sha256": "3ff3a33f1a270ceda249ab6143ecdf4c34de5c3011c76785b483b158418d54f2"
+    },
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "size": 14095,
+      "sha256": "8a25f9ab34ae22aed267696875fe58db6c9399cbd756f5493693a00178c365bf"
+    },
+    {
+      "path": "tools/system/preflight-installation.cjs",
+      "size": 5273,
+      "sha256": "8ea0305a327fc72f5f244f62665ab10524593e7c2b408138747a9adaf3335ae7"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "size": 16918,
+      "sha256": "f3628d305105ba6513bd0ac64594996abad0f93282675599ad14072fbe08ebe9"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "reports/integration/stabilization/architecture/README.md",
+      "size": 13974,
+      "sha256": "f5de732cc8c1a378884ab17853c27b1612e81919d27764e390e7b04d520654b4"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/platform-tree-comparison.json",
+      "size": 2737,
+      "sha256": "9ac7b87dc9d78110b60429c026c8c3e9a6f3e08bc46214cfbb095ea3449974b9"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/r2-linux-arm64.json",
+      "size": 19967,
+      "sha256": "ec897a97d781b2e9cb1b11f9e38b5a88719843abd4099bdbe83e412bb1238067"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/r2-linux-x64.json",
+      "size": 19963,
+      "sha256": "ae127a432100d721a1ff9a1ace5937ae2d7a85d655a6514f1ab868101aafb31f"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/unit-tests.tap",
+      "size": 4115,
+      "sha256": "0a7ffa825d140942a17989d626c5a205d9073fcfb610ddf96290e7cf9034b750"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/verification.json",
+      "size": 5848,
+      "sha256": "6fa1e38b9ed9ea2ddb5d05afdf0ff5de5791e964fb9d65d470341cebb8013b64"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/x64-as-arm64-negative.json",
+      "size": 20866,
+      "sha256": "bb528982e7c7fb3838614d50d878efed96b2dcac0cd0fc4ec51e81b041c0bdd4"
+    },
+    {
+      "path": "reports/integration/stabilization/archive-verification.json",
+      "size": 5395,
+      "sha256": "ac6a8705820ea093142130db4eee9b6925d94c6d2ab58fe788e963278e766d9c"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/architecture-binding.json",
+      "size": 2471,
+      "sha256": "d746ab52886ae9ea3ad3e28416b8e551cf97c1d01a0775458222cca95d95eecd"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/architecture.json",
+      "size": 20545,
+      "sha256": "ecc35037324f2d3adab70daf9acdf8ade4f3a138d06cd44376ea586bc4e98a85"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/bind.log",
+      "size": 86,
+      "sha256": "5101557bf2022d8777120efecc1f6b641e35148eb505411591d2dadd5c06397d"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/build-evidence.json",
+      "size": 1976,
+      "sha256": "9eff9f858ccc01eb505d1f08ddd5780db5bf06aa04264d3a824b5a427139de3e"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/catalog.json",
+      "size": 2584,
+      "sha256": "6574f28fb665d232611df592db4104a97812c8dc7e7a3cc3808a1f354e029715"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/controller-profile.json",
+      "size": 2214,
+      "sha256": "46decd57998f3e98e441bd16ef07ffb258692e73c461b31665230e01bb1452b0"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/controller-transform.json",
+      "size": 2733,
+      "sha256": "be7cb0fffa1ebdca5a1427c39a0fbe18ce7ad6f495268c5f91e6eea47538c6e9"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/package-lock.json",
+      "size": 219995,
+      "sha256": "81477e727e4abb676b6a5b1af4bb51a3502d443a93b74cbefce9e1c093fd9073"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/package.json",
+      "size": 480,
+      "sha256": "63f641f823408fe2161211cb247b114801baf8d47541f02efd90e1842fd456d2"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/release-metadata.json",
+      "size": 196,
+      "sha256": "7cb098da4ff7f848a60f55dbfe6108dc1679c6c2db96cb884453f4dfd63c72c1"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/replay-ci.log",
+      "size": 534,
+      "sha256": "724eddf9987aa71b5d81189018fc9715c056ce519b2dde2c7f52d7938188588e"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/replay-command.json",
+      "size": 398,
+      "sha256": "9394bd3ffb0edab51948f019aa9ad7f646de13939accb8d5403da9005e1696c2"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/runtime.cdx.json",
+      "size": 501870,
+      "sha256": "ea856a733a65f2b5ddd3cb2459045ecc083c7f73fae0bfba019ca3237ff2bd27"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/runtime.coverage.json",
+      "size": 273256,
+      "sha256": "2584286c997578436d2635952375aae2c169c2660026a208097afa5d827db9bd"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/runtime.npm.cdx.json",
+      "size": 493391,
+      "sha256": "1b5fb41c53a3541e7bdc5fc94a717ebfaf7a63215e2f1762bc359f3fc045044b"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/sbom-command.json",
+      "size": 207,
+      "sha256": "9963a5e22eaa8de0db79e8602b0c0aae19587428671b703eceea8c4d615167a9"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/sbom.stderr.log",
+      "size": 150,
+      "sha256": "9aac3da9a7039a99c345545c32f286aa65c358d571bfce7e00d94625d095c829"
+    },
+    {
+      "path": "reports/integration/stabilization/build-loader-tests.json",
+      "size": 601,
+      "sha256": "a2d9838dd38c22b9bc9525567592f1b5aa7f09f21898252c4f4d15dec0c4f58f"
+    },
+    {
+      "path": "reports/integration/stabilization/bundle-build.json",
+      "size": 1056,
+      "sha256": "800914b9f83de8f953641ecfcd5aa842cd4e7636daa688cd07b6c9c9ba069001"
+    },
+    {
+      "path": "reports/integration/stabilization/bundle-verification.json",
+      "size": 2142,
+      "sha256": "7aa23da846647bab3a12bca047b420050e1b146d8b986ee5ddda463cef0b47ce"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/REMEDIATION_DE.md",
+      "size": 4653,
+      "sha256": "972195b6f5c5b24aa9e1a2f9f1849a7dffa38d7a3fa3d1a7dc5c7a87365317e8"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/approval-blocks.json",
+      "size": 1231,
+      "sha256": "eaf71d407c64e52f91cc4732e7d85ba311bdc9450b4d5fe6f0112eb77505e498"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/installed-policy.json",
+      "size": 704,
+      "sha256": "a400b2e682ac1e416d245732d7097e66036c9563eafbc9376f14efb45305b43d"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/lock-change-review.json",
+      "size": 8405,
+      "sha256": "ff8d5532eccc5611daa4746088f1d4be569f9cf75aa662bfe8a37b5902815430"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/patched-package-lock.json",
+      "size": 219995,
+      "sha256": "775bacf8b225eab7fbfa16665381b979c5c78cfef8bd20f528e13e91b44ac4a2"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/patched-package.json",
+      "size": 480,
+      "sha256": "18c8a2e4da01ead8e32ef5f60fba7b83450e47cb46fb804fdb2634ff01d0b24b"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/probe-package-lock.json",
+      "size": 14744,
+      "sha256": "e4bb6f504cec973f8483bab9217d66dc30d97f957e6f2c44cac4041de0a8155c"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/probe-package.json",
+      "size": 262,
+      "sha256": "96385c282a18aa434a9f153fe88bb6ecc85e31a864e0a72a6342a99377f08db8"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/public-loader-probe-audit.json",
+      "size": 1066,
+      "sha256": "95896c6f7812e2168a00efeb0579e031d72384206b0b382e2ccea7a01f0a39b1"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/raw/controller-loader.tap",
+      "size": 1455,
+      "sha256": "07004b9b735a4bdea714c80407d51b2bf02c46fec2c4db9dc2bb31a1fb6cca15"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/raw/offline-cache.tap",
+      "size": 338,
+      "sha256": "75f68589b6119ddf56419088bcf3d5cff93ff106206cbc3d3d8c47134ece70a9"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/raw/policy-and-builder.tap",
+      "size": 3836,
+      "sha256": "94ff31b6296f7d5d9d9661e6cb09093ff6c448c63e3944db591bb62cc6231fb4"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/reachability.json",
+      "size": 4058,
+      "sha256": "a5e3e34b5b90445ad9718f5c113def097d5e84830ab0a748fd52e6d283b6e794"
+    },
+    {
+      "path": "reports/integration/stabilization/dependencies/verification.json",
+      "size": 4460,
+      "sha256": "33d3904e962211dc52b38deb1c4c67d266747f914551ba56ac7ee6866cda62bc"
+    },
+    {
+      "path": "reports/integration/stabilization/lock-version-delta.json",
+      "size": 3083,
+      "sha256": "1b26374673f615264241fabcda6d308b99b8d27e51a8c93dd070ef3c62ffd7f6"
+    },
+    {
+      "path": "reports/integration/stabilization/node-inputs.json",
+      "size": 833,
+      "sha256": "fbc7cd0953d469cb23ff981bea3600da6e162e35d2454bef7179046a9f933a57"
+    },
+    {
+      "path": "reports/integration/stabilization/packaging-pattern-review.json",
+      "size": 4115,
+      "sha256": "c168f7336b9d5fc06c62f197e839ed97dce8a83f3d0ca5ed1c68d6d385df0c1a"
+    },
+    {
+      "path": "reports/integration/stabilization/platform-inputs.cdx.json",
+      "size": 1348,
+      "sha256": "02259e72aa17bf12843f59b828fed2a4cc8c82155ce80f83c2f9ebe1946f2326"
+    },
+    {
+      "path": "reports/integration/stabilization/raw/build-loader-final.tap",
+      "size": 5826,
+      "sha256": "d8a7364b43941357cbf2fb869a83e078b8e4869fec476c671daced94ad55131d"
+    },
+    {
+      "path": "reports/integration/stabilization/raw/bundle-build.log",
+      "size": 118,
+      "sha256": "43f491a5f3ea818d3a65df6db9a8455d3573bba3348a372cadc1fa8c49cb0fb7"
+    },
+    {
+      "path": "reports/integration/stabilization/raw/system-final-node24.21.tap",
+      "size": 80325,
+      "sha256": "20f749c32b7824d99b2ed67421375e6b1140d63a897f3b34517c15361f900194"
+    },
+    {
+      "path": "reports/integration/stabilization/raw/system-node24.21.tap",
+      "size": 77800,
+      "sha256": "a74c36ffb42d69e0eda704f960e086c7c307e4f8468dd8b5a7d75a0b44d55f5c"
+    },
+    {
+      "path": "reports/integration/stabilization/raw/ui-controller-node24.21.tap",
+      "size": 6599,
+      "sha256": "169b65d4e0c2f5296ce9e33d1ed6f0c587c8c18e8d0ecadb086fd8f658bc03f3"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/REVIEW_DE.md",
+      "size": 3498,
+      "sha256": "3a8dea989e2e4b241530a1201ac4fd2494434bc24d04d6cbc9d0edf776f3ff7d"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/raw/embedded-binding.txt",
+      "size": 104,
+      "sha256": "e9dbc1a31936475165af55356b566005547a03914ab93e4739e4aa9949799201"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/raw/python-binding.txt",
+      "size": 128,
+      "sha256": "182a54b42c34ada64a55f10e03dee24ec35c56d725c8404e853fa9dd6d84401b"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/raw/release-binding.tap",
+      "size": 6859,
+      "sha256": "5c41089d75b1f99721b4dc8c054d129a3c75e8ae1e45368e37ff499ba391e410"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/verification.json",
+      "size": 3005,
+      "sha256": "e5696f9a48c852fb1e9e7feda6856a23d18a5915b13fa4c8c7bbf43ce0ed2591"
+    },
+    {
+      "path": "reports/integration/stabilization/schema-validation.json",
+      "size": 1258,
+      "sha256": "782b51970475a87a20eb9c35934a3e3643c29cc57f4dba9fca896b186e2055e6"
+    },
+    {
+      "path": "reports/integration/stabilization/schema-validation.log",
+      "size": 28,
+      "sha256": "55d80b63ae07e533a2ed956060084438ebc1d5bc62a9fdf602d3bfc4ddf39e12"
+    },
+    {
+      "path": "reports/integration/stabilization/source-inventory.log",
+      "size": 75,
+      "sha256": "620ef2290d2762245fab69657cd878169c8ad7ab3e3f759fe196f376731b155a"
+    },
+    {
+      "path": "reports/integration/stabilization/source-lock-inventory.cdx.json",
+      "size": 3509431,
+      "sha256": "4ad6a3747e720fc83ca2d5f9688d2a84e4f976a0d318f7994799115066fa9586"
+    },
+    {
+      "path": "reports/integration/stabilization/system-final-tests.json",
+      "size": 1874,
+      "sha256": "e9015d85398d5dcf5e97796b05819185bab75e5e59286db1c71d9c453397cff2"
+    },
+    {
+      "path": "reports/integration/stabilization/system-tests.json",
+      "size": 1868,
+      "sha256": "214b54d873bb818c36131f86678d9e45f0dd93461c1dc171b55167b29cbe4692"
+    },
+    {
+      "path": "reports/integration/stabilization/ui-controller.json",
+      "size": 545,
+      "sha256": "c8e52aef1f3ea589cf7b8aa753a0c040745e8a38beb94b94088965546262f3d0"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/architecture-binding.json",
+      "size": 2467,
+      "sha256": "8e45f3bbb2d2a76ccaa38f337809519895b95c377b6adb8ace1af956a6006ab3"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/architecture.json",
+      "size": 20530,
+      "sha256": "cb36c6454dc866319171d9d7ecc8baed5f20db0b44188d7070aa303825d86fc6"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/bind.log",
+      "size": 86,
+      "sha256": "5101557bf2022d8777120efecc1f6b641e35148eb505411591d2dadd5c06397d"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/build-evidence.json",
+      "size": 1974,
+      "sha256": "7efe725ef26e8b12b6efd0aacf67ba9cbaedeeea64c4959284e303dea26feed0"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/controller-profile.json",
+      "size": 2214,
+      "sha256": "46decd57998f3e98e441bd16ef07ffb258692e73c461b31665230e01bb1452b0"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/controller-transform.json",
+      "size": 2733,
+      "sha256": "be7cb0fffa1ebdca5a1427c39a0fbe18ce7ad6f495268c5f91e6eea47538c6e9"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/package-lock.json",
+      "size": 219995,
+      "sha256": "81477e727e4abb676b6a5b1af4bb51a3502d443a93b74cbefce9e1c093fd9073"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/package.json",
+      "size": 480,
+      "sha256": "63f641f823408fe2161211cb247b114801baf8d47541f02efd90e1842fd456d2"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/replay-ci.log",
+      "size": 535,
+      "sha256": "01a904161e9ac7faf40f0cb93f17881bad16bc0c568c3adb91bcb2b2235636b1"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/replay-command.json",
+      "size": 396,
+      "sha256": "2ea555d0429c85832dc5cb010faff0a4ada52b78f80c8389b69be8179fddd254"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/runtime.cdx.json",
+      "size": 501842,
+      "sha256": "7b80294c3522f3da4e241c37fc7f42d4f62af1f6f07175e4f3bae38372f7bf2e"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/runtime.coverage.json",
+      "size": 273252,
+      "sha256": "d2083d540ba3bf52b6f25afd520f6fe6261f3b9785d0e8e5600cfdcb0f6b2753"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/runtime.npm.cdx.json",
+      "size": 493369,
+      "sha256": "80035ded19c7bc6675c0c6db23fd96063b5b62d0a73cd3cfb1c13832a46defcc"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/sbom-command.json",
+      "size": 207,
+      "sha256": "7e5b7fdd149cd89e9d1461c966a890926312f5bdeebf646cade8a238f8c77190"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/sbom.stderr.log",
+      "size": 150,
+      "sha256": "9aac3da9a7039a99c345545c32f286aa65c358d571bfce7e00d94625d095c829"
+    },
+    {
+      "path": "reports/integration/installation-preflight/README.md",
+      "size": 2368,
+      "sha256": "7e2f2bfc584aeedec77589b78297f8acfe914c563d6e1f773b0d6e49a1aeb1cf"
+    },
+    {
+      "path": "reports/integration/installation-preflight/raw/node24.21.0-final.tap",
+      "size": 15298,
+      "sha256": "1245ee588b1131f82002331f342a1ddcc35742d55c04db5385df2dd61a5fbb1e"
+    },
+    {
+      "path": "reports/integration/certificate-account-v2/raw/node24.21.0-lifecycle.tap",
+      "size": 10541,
+      "sha256": "c1eea5759baa588d853ee38a577bfb3a5d5342eb1294f91367e44548bffe9666"
+    },
+    {
+      "path": "reports/integration/certificate-account-v2/raw/node24.21.0-redis-tls.tap",
+      "size": 368,
+      "sha256": "8842ae00bd7b8f60635be93c0f4d3aae2ef7adb4512d8f0fcdeb7da46aab7939"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/CPU.20261001.183956.7.0.001.cpuprofile",
+      "size": 342579,
+      "sha256": "06fb9b126b51311fdb831a911f6038436fffe27f38d0366b75238e3603578810"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/CPU.20261001.185502.5.0.001.cpuprofile",
+      "size": 353739,
+      "sha256": "74a1cd002f6544e6e94b18852fbb91075ddfc590a18cb1797467f3a03d96cd22"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/baseline-diagnostic-1.log",
+      "size": 2818,
+      "sha256": "b0044dc12733aed906bb492b08a6700cf8a2483402936276d9b128cd9404897a"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/baseline-diagnostic-2.log",
+      "size": 2822,
+      "sha256": "87ff4266c453efe3cdb5e17d80d09180bffc3fbf84d9c52936f8489525154f0f"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/baseline-diagnostic-3.log",
+      "size": 2823,
+      "sha256": "3fe0b1f8a1eb1adbc2c9dcc5803b642099edc9368536b223fdafabf3bf55d4b8"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/baseline-diagnostic-4.log",
+      "size": 2817,
+      "sha256": "4ada627e2ad876f0cb4fc3b0fc2e9c59588d4fa4d0b2dba8502fc54ebeec85a1"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/baseline-diagnostic-5.log",
+      "size": 2824,
+      "sha256": "65289b71733330e690092d81638cf04fa208c3d996033cf6703979017cd55feb"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/baseline-diagnostic-series.json",
+      "size": 567,
+      "sha256": "6eba24e31ec6aaa972a17b0e88c61495409f24c12ad27cbf0e8ad6014f2102b9"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/build-node2421.log",
+      "size": 9037,
+      "sha256": "4b8f823ce708649a287320873d579a72d32f4c531b89a0b6b372fc28118f0fff"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/degraded-plan-cpu.json",
+      "size": 1411,
+      "sha256": "8b0f271cfde6b7afbd56115d43fd912a4af477097847f9b2500c0ab88bffd560"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/deterministic-tests-first.tap",
+      "size": 7894,
+      "sha256": "9f2dba89cc14820540a26354dd5a465e454cd8200c1609b0eccfd2e3ad3d0fb6"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/deterministic-tests-second.tap",
+      "size": 1758,
+      "sha256": "d733b29e12c283cccc56dee129781a542e5d41b6a374eb91891804a0226390bf"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/diagnostic-node2421-final.log",
+      "size": 15997,
+      "sha256": "403b64cdcd2086044ccd9ab0119474cb5d5fa4495f7e2d03b21235802fafe867"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/docs-build-final.log",
+      "size": 309,
+      "sha256": "c278eb6a86b4609199fc6d8ed373e5317490e83e22130a601bd7dcdb12d530f1"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/docs-build-node2421.log",
+      "size": 309,
+      "sha256": "c278eb6a86b4609199fc6d8ed373e5317490e83e22130a601bd7dcdb12d530f1"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/docs-check-final.log",
+      "size": 321,
+      "sha256": "8fff1c54b54583d173c73344dd3d18239504857b45cb80cecdb681512961e9d3"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/docs-check-node2421.log",
+      "size": 321,
+      "sha256": "8fff1c54b54583d173c73344dd3d18239504857b45cb80cecdb681512961e9d3"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/final-verification.json",
+      "size": 17300,
+      "sha256": "d1a10bf3bec1dec5cd477dc10503072c43fd3fabc9a72e92c6c0d01692e86569"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/frozen-hashes.json",
+      "size": 2085,
+      "sha256": "0cb6caa977cef93610d08fb360084961f4b42069035e8fe7b8f31cb0535d9b50"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/mesh-gate-final.log",
+      "size": 7481,
+      "sha256": "8d0c77396c1b277af822229babe32d6dbbda5020e53fea63ebb1e57c4ca7bc24"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/mesh-gate-node2421.log",
+      "size": 19166,
+      "sha256": "1bb7de24c375f6b6125d9e3a5154f3ea22a355c90397d2be644920034fffd8ee"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/mirrors-node2421.log",
+      "size": 338,
+      "sha256": "384b68783e8d3986481692cba0795d25ca860719ec1cc7778baace28261ef79b"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/pack-dry-run-node2421.json",
+      "size": 46480,
+      "sha256": "b6b5389098344bbdcafe123b79ae0616ce1e03860826a70aad6230f82a5ed3d8"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/pack-dry-run-node2421.stderr",
+      "size": 150,
+      "sha256": "9aac3da9a7039a99c345545c32f286aa65c358d571bfce7e00d94625d095c829"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/preview-mesh-boundary-node2421.tap",
+      "size": 1536,
+      "sha256": "86ae0455a1730478bcbceeb17af241d96195001c65baab89cd0ae80c56b07f61"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/publish-node2421.log",
+      "size": 575,
+      "sha256": "852a32006e87e3ea781fd602e35904de1a52cc0fba22a1412d4e8bbf4d5c8bee"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/publish-post-suite-node2421.log",
+      "size": 575,
+      "sha256": "1bc8e47d05fcaf759c44f462944aad8616d32b7c361d3dd418e8c0de72792acd"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/remaining-gates-node2421.json",
+      "size": 2089,
+      "sha256": "5b091bf93e383d0b9751a8b24f13fde92501cd33f903db9c9e2c5a0cf4bb2326"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/remaining-gates-node2421.log",
+      "size": 10789,
+      "sha256": "b60b2a2a38d75b415065addbcdb7c5d0dbbd5c3fa1937fe38ffcafa58f88adbd"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/runtime-sync-final.log",
+      "size": 318,
+      "sha256": "f5ce1682f8ba04bea78a32a04ded4332262b5bcbf04e47fb506228907d783324"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/runtime-sync.log",
+      "size": 318,
+      "sha256": "f5ce1682f8ba04bea78a32a04ded4332262b5bcbf04e47fb506228907d783324"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/seal-node2421.log",
+      "size": 331,
+      "sha256": "29668365f5634e362d5451222f473ad5bea6eeb2775efd050ed7f47278f69e3f"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/test-all-node2421.json",
+      "size": 412,
+      "sha256": "1ddb66bbc6a414a388289afde176361546d53fcd69ed2ed43647c9895a02ad90"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/test-all-node2421.log",
+      "size": 85427,
+      "sha256": "53d2d6d95f8fcbe905e7a1c27041488d5fc2c126f78a2111b411c0920870bde3"
+    },
+    {
+      "path": "components/ui/reports/security/stabilization-20261001/workload-after-first.log",
+      "size": 2816,
+      "sha256": "b923eedf198303c73a4eda4df286403b334c65035219587962eb61a40fcf6ba5"
+    },
+    {
+      "path": "reports/integration/installation-preflight/verification-summary.json",
+      "size": 9860,
+      "sha256": "b9c4005fb120436b3c18940e5dce5675f20a14ef399f3b0f127ce5b9bdb12b37"
+    },
+    {
+      "path": "reports/integration/certificate-account-v2/verification-summary.json",
+      "size": 7823,
+      "sha256": "33a15fca09e1b4dafe795250cac9fbf19b7073f18ca024a611a7c2103ba59653"
+    }
+  ],
+  "artifactBindings": [
+    {
+      "path": "delivery/test-pi-0.2.0-test.1/README_DE.md",
+      "size": 2274,
+      "sha256": "ac4eb2525e4e72a2cb7e5acf38a50beda1c102659419f13833a125b22f718efb"
+    },
+    {
+      "path": "delivery/test-pi-0.2.0-test.1/bundle.sha256",
+      "size": 286,
+      "sha256": "c0cbaa7d84e8abffe62c83f7b61b3d9a70004cb07528935e91e710424910d24d"
+    },
+    {
+      "path": "delivery/test-pi-0.2.0-test.1/delivery.json",
+      "size": 872,
+      "sha256": "d8538f4c5e31c95a31b550e7b51c985f97e55af735863fb7dd335fec4ff86a8a"
+    },
+    {
+      "path": "delivery/test-pi-0.2.0-test.1/eos-0.2.0-test.1-linux-arm64.tar.gz",
+      "size": 79265375,
+      "sha256": "d199d37b3a4d70cd4a186c8d01239a8e1fe2aa67e3fb7d041b0d86f3fc2e394f"
+    },
+    {
+      "path": "delivery/test-pi-0.2.0-test.1/node-v24.21.0-linux-arm64.tar.xz",
+      "size": 30843004,
+      "sha256": "6ad1325edbdb5649c379b75a237147a666c95d4f9ae8d340fef2d1575d289ad2"
+    },
+    {
+      "path": "delivery/test-pi-0.2.0-test.1/release-public.pem",
+      "size": 113,
+      "sha256": "e4e2465af8ae947574804f42c5ed17072ada8831b9839876f188c0e7c4c08cbe"
+    },
+    {
+      "path": "delivery/reproducible-stabilization-lab/README_DE.md",
+      "size": 1725,
+      "sha256": "57e2efc8ce0f55d032522151c305100d995c9facfde65739d85ae298d9e8ac0b"
+    },
+    {
+      "path": "delivery/reproducible-stabilization-lab/app/package-lock.json",
+      "size": 219995,
+      "sha256": "81477e727e4abb676b6a5b1af4bb51a3502d443a93b74cbefce9e1c093fd9073"
+    },
+    {
+      "path": "delivery/reproducible-stabilization-lab/app/package.json",
+      "size": 480,
+      "sha256": "63f641f823408fe2161211cb247b114801baf8d47541f02efd90e1842fd456d2"
+    },
+    {
+      "path": "delivery/reproducible-stabilization-lab/inputs.json",
+      "size": 627,
+      "sha256": "c3675dcc5cddb46270d711dd15921c8bda4c13a1104ac00ff0a4397bc36111ee"
+    },
+    {
+      "path": "delivery/reproducible-stabilization-lab/packages/iobroker.eos-admin-7.10.11.tgz",
+      "size": 39902188,
+      "sha256": "54b81623b4851ad17f8d0a0ab8cc49c52a1b49b9f43621bb4f788d3c27c548bb"
+    },
+    {
+      "path": "delivery/reproducible-stabilization-lab/packages/iobroker.nexowatt-ui-1.0.21.tgz",
+      "size": 8235205,
+      "sha256": "481d63067f5206b4e4d31379ce0e2d7b67b4067017e97b42e5e16bfcd9aff8df"
+    }
+  ],
+  "secretPatternReview": {
+    "scannedFiles": 33493,
+    "scannedBytes": 1100962396,
+    "archives": 8,
+    "patternHits": 1,
+    "reviewedPublicDocumentationPlaceholders": 1,
+    "unresolvedMatches": 0,
+    "absenceOfAllPossibleSecretsClaimed": false
+  }
+}

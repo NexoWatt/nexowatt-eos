@@ -1,0 +1,318 @@
+<!--
+  Datei: www/history.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Historie-Seite: Zeitbereich, Toolbar, Chart, KPI-Karten und Report-Links.
+  Zusammenhänge:
+  - Logik in www/history.js, Daten aus /api/history.
+  - Reports nutzen eigene HTML/JS-Dateien.
+  Wartungshinweise:
+  - Mobile Toolbar und EVCS-/Farm-Sichtbarkeit beachten.
+-->
+<html lang="de">
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0c0f12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NexoWatt EOS">
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>NexoWatt EOS – Historie</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="stylesheet" href="/static/styles.css"/>
+  <style>
+    .hist-wrap{ width: min(100%, calc(100vw - 20px)); max-width: none; margin: 0 auto; padding: clamp(10px, 1.25vw, 18px); }
+
+    /* chart container */
+    #chart{
+      width: 100%;
+      height: clamp(420px, 55vh, 640px);
+      background: rgba(2, 6, 23, 0.62);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 18px;
+      /* RC92: Vertikale Smartphone-Gesten gehören dem Browser. Nur eine klar
+         horizontale Geste wird von history.js als Tages-Zoom übernommen. */
+      touch-action: pan-y pinch-zoom;
+      user-select: none;
+      -webkit-user-select: none;
+      margin-bottom: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+    .legend{ display:flex; flex-wrap:wrap; gap:12px; margin:12px 0 12px; color:#c8d1d9; position:relative; z-index:2; }
+    .lg{ display:flex; align-items:center; gap:6px; cursor:pointer; padding:6px 10px; border-radius:999px; border:1px solid rgba(148, 163, 184, 0.12); background: rgba(2, 6, 23, 0.18); transition: opacity .12s ease, border-color .12s ease, background .12s ease, transform .06s ease; }
+    .lg:hover{ border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.10); }
+    .lg:active{ transform: translateY(1px); }
+    .lg.inactive{ opacity:.38; border-color: rgba(148, 163, 184, 0.08); background: rgba(2, 6, 23, 0.08); }
+    .lg.inactive span{ text-decoration: line-through; }
+    .lg .sw{ width:12px; height:3px; background:#7aa; }
+    .lg .sw.pv{ background:#f1c40f; } .lg .sw.load{ background:#9b59b6; }
+    .lg .sw.buy{ background:#e74c3c; } .lg .sw.sell{ background:#3498db; } .lg .sw.evcs{ background:#ff6bd6; }
+    .lg .sw.chg{ background:#27ae60; } .lg .sw.dchg{ background:#e67e22; }
+    .lg .sw.soc{ background:#95a5a6; height:2px; border-bottom:2px dashed #95a5a6; }
+    .toolbar{ display:flex; gap:10px; margin:10px 0 12px; align-items:center; flex-wrap:wrap; }
+    .toolbar .range{ display:flex; gap:8px; flex-wrap:wrap; }
+
+    /* Buttons in History shall match the new chip/button look */
+    .hist-wrap .btn{
+      background: rgba(2, 6, 23, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: #e5e7eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: transform .06s ease, border-color .15s ease, background .15s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    }
+    .hist-wrap .btn:hover{ border-color: rgba(16, 185, 129, 0.45); }
+    .hist-wrap .btn:active{ transform: translateY(1px); }
+    .hist-wrap .btn.sm{ padding: 5px 10px; font-size: 12px; }
+    .hist-wrap .btn.active{
+      background: rgba(16, 185, 129, 0.14);
+      border-color: rgba(16, 185, 129, 0.55);
+      color: #eafff6;
+    }
+
+    #loadBtn{
+      background: rgba(16, 185, 129, 0.16);
+      border-color: rgba(16, 185, 129, 0.55);
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .toolbar input{
+      background: rgba(2, 6, 23, 0.55);
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 12px;
+      padding: 6px 10px;
+    }
+    .toolbar input:focus{
+      outline: none;
+      border-color: rgba(16, 185, 129, 0.55);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.16);
+    }
+
+    .cards{ display:grid; grid-template-columns: repeat(4,minmax(180px,1fr)); gap:10px; margin-top:10px; position:relative; z-index:1; }
+    .cards .card{
+      background: linear-gradient(135deg, #111827, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 18px;
+      /* KPI-Karten besitzen keine eigene Wischgeste und dürfen das Scrollen
+         der Historienseite deshalb niemals blockieren. */
+      touch-action: auto;
+      user-select: none;
+      -webkit-user-select: none;
+      padding: 12px;
+      color: #e5e7eb;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+    .cards small{ color:#9aa4ad; display:block; }
+
+    .pricing-section{ margin-top: 20px; }
+    .pricing-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin: 4px 0 10px; flex-wrap:wrap; }
+    .pricing-head h3{ margin:0; font-size:18px; color:#e5e7eb; }
+    .pricing-head small{ color:#9aa4ad; display:block; max-width:840px; }
+    #priceChart{
+      width: 100%;
+      height: clamp(280px, 38vh, 440px);
+      background: rgba(2, 6, 23, 0.62);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 18px;
+      /* Preiswerte lassen sich antippen; vertikales Scrollen und Pinch-Zoom
+         bleiben auf Touch-Geräten trotzdem native Browserfunktionen. */
+      touch-action: pan-y pinch-zoom;
+      user-select: none;
+      -webkit-user-select: none;
+      margin-bottom: 14px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+    .price-legend{ margin-top: 0; }
+    .price-legend .sw.total{ background:#f59e0b; }
+    .price-legend .sw.base{ background:#cbd5e1; }
+    .price-legend .sw.netfee{ background:#10b981; }
+    .price-legend .sw.import{ background:#3498db; height:8px; border-radius:3px; }
+    .price-legend .sw.cost{ background:#ef4444; }
+    #priceCards{ margin-top: 6px; }
+
+    /* RC92: Tooltip-Basis. Das Wertefenster wird am Viewport statt am langen
+       <main>-Container ausgerichtet und kann nach dem Scrollen nicht mehr
+       oberhalb des sichtbaren Smartphone-Bereichs landen. */
+    .nx-tip{
+      position: fixed;
+      z-index: 10000;
+      pointer-events: none;
+      box-sizing: border-box;
+      width: max-content;
+      max-width: min(320px, calc(100vw - 20px));
+    }
+    @media (max-width: 640px), (pointer: coarse){
+      .nx-tip.nx-tip--mobile{
+        left: 12px !important;
+        right: 12px !important;
+        top: auto !important;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+        width: auto !important;
+        max-width: none !important;
+        max-height: min(52vh, 420px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        pointer-events: auto;
+        padding: 11px 12px !important;
+        border-radius: 14px !important;
+        font-size: 13px !important;
+        line-height: 1.45;
+        box-shadow: 0 16px 42px rgba(0,0,0,.58) !important;
+      }
+    }
+
+    /* Topbar Styling kommt zentral aus styles.css (fixiert/responsiv). */
+  
+    /* responsive tweaks for history */
+    @media (max-width: 1024px){
+      #chart{ height: 360px; }
+      #priceChart{ height: 240px; }
+      .cards{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 640px){
+      #chart{ height: 280px; }
+      #priceChart{ height: 220px; }
+      .cards{ grid-template-columns: 1fr; }
+      .toolbar{ flex-wrap: wrap; }
+    }
+
+  </style>
+<!-- NexoWatt PWA / Icons -->
+    <link rel="manifest" href="./manifest.webmanifest">
+    <meta name="theme-color" content="#0c0f12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="NexoWatt EOS">
+<!-- NexoWatt iOS Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/nexowatt-180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./assets/icons/nexowatt-152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="./assets/icons/nexowatt-120.png">
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<!-- NexoWatt Detail-Kommentar (DE) -->
+<!-- History-Seite. Canvas-/Button-IDs werden von www/history.js verwendet; Report-Buttons hängen an Backend-History-APIs. -->
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-history">
+  <!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar">
+<script>
+/* NexoWatt: normalize base path so relative links work even if opened without trailing slash */
+(function () {
+  try {
+    var p = window.location.pathname || "";
+    if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+      window.location.replace(p + "/" + window.location.search + window.location.hash);
+    }
+  } catch (e) {}
+})();
+</script>
+
+<div class="brand"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></div>
+<button aria-label="Menu" id="menuBtn">☰</button>
+<h1>NexoWatt EOS</h1>
+<nav class="tabs">
+<button class="tab" id="liveTabBtn" data-tab="live" onclick="window.location.href='./'">LIVE</button>
+<button class="tab active" id="historyTabBtn" data-tab="history" onclick="window.location.href='history.html'">HISTORY</button>
+<button id="tabStorageFarm" class="tab hidden" onclick="window.location.href='storagefarm.html'">SPEICHERFARM</button>
+<button id="tabEvcs" class="tab hidden" onclick="window.location.href='evcs.html'">EVCS</button>
+<button id="tabSmartHome" class="tab hidden" onclick="window.location.href='smarthome.html'">SMARTHOME</button>
+</nav>
+<div class="status-dot" id="liveDot" title="Live Verbindung"></div>
+<a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+<div class="menu hidden" id="menuDropdown"><a class="menu-item" href="./">Live</a><a class="menu-item" href="history.html">History</a>
+<a class="menu-item hidden" id="menuEvcsLink" href="evcs.html">EVCS</a><a class="menu-item hidden" id="menuSmartHomeLink" href="smarthome.html">SmartHome</a><a class="menu-item hidden" id="menuStorageFarmLink" href="storagefarm.html">Speicherfarm</a><a class="menu-item" href="settings.html">Einstellungen</a></div></header>
+  <!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="hist-wrap nw-page-shell nw-history-page">
+    <section class="nw-page-hero" aria-label="Historie Übersicht">
+      <div>
+        <div class="nw-page-hero__eyebrow">History</div>
+        <h2>Historie &amp; Auswertung</h2>
+        <p class="nw-page-hero__subtitle">Energieflüsse, Speicher, Netzbezug, E‑Mobilität und Tarifkosten im Cockpit-Design analysieren.</p>
+      </div>
+      <div class="nw-page-hero__actions">
+        <button id="tariffReportHeroBtn" class="btn sm" type="button" onclick="document.getElementById('tariffReportBtn')?.click()">Tarifnachweis</button>
+        <button class="btn sm" type="button" onclick="window.location.href='year-report.html'">Jahresreport</button>
+      </div>
+    </section>
+    <div class="toolbar history-toolbar">
+      <div class="range history-toolbar__range" aria-label="Zeitraum">
+        <button class="btn sm range-btn active" data-range="day">Tag</button>
+        <button class="btn sm range-btn" data-range="week">Woche</button>
+        <button class="btn sm range-btn" data-range="month">Monat</button>
+        <button class="btn sm range-btn" data-range="year">Jahr</button>
+      </div>
+      <div class="history-toolbar__date">
+        <button id="navPrev" class="btn sm" title="Zurück" aria-label="Vorheriger Zeitraum">◀</button>
+        <label><span>Datum</span><input type="date" id="day"></label>
+        <button id="navNext" class="btn sm" title="Weiter" aria-label="Nächster Zeitraum">▶</button>
+      </div>
+      <div class="history-toolbar__actions" aria-label="Aktionen">
+        <button id="resetZoomBtn" class="btn sm hidden" title="Zoom zurücksetzen">Zoom zurück</button>
+        <button id="stackToggle" class="btn sm active" title="Stapel/Fläche an/aus">Stapel</button>
+        <!-- Zeitfilter bleiben intern erhalten (für Zoom/Reset), werden aber nicht mehr im UI gezeigt -->
+        <label class="hidden">Von: <input type="datetime-local" id="from"></label>
+        <label class="hidden">Bis: <input type="datetime-local" id="to"></label>
+        <button id="loadBtn" class="btn sm">Laden</button>
+        <button id="evcsReportBtn" class="btn sm hidden" data-feature="evcs">EVCS PDF</button>
+        <button id="yearReportBtn" class="btn sm">Jahresreport</button>
+      </div>
+    </div>
+    <canvas id="chart"></canvas>
+    <div class="legend" id="mainLegend">
+      <div class="lg" data-series="pv" data-label="Erzeugung"><div class="sw pv"></div><span>Erzeugung</span></div>
+      <div class="lg" data-series="chg" data-label="Beladung"><div class="sw chg"></div><span>Beladung</span></div>
+      <div class="lg" data-series="dchg" data-label="Entladung"><div class="sw dchg"></div><span>Entladung</span></div>
+      <div class="lg" data-series="sell" data-label="Einspeisung"><div class="sw sell"></div><span>Einspeisung</span></div>
+      <div class="lg" data-series="buy" data-label="Bezug"><div class="sw buy"></div><span>Bezug</span></div>
+      <div class="lg hidden" data-feature="evcs" data-series="evcs" data-label="E‑Mobilität"><div class="sw evcs"></div><span>E‑Mobilität</span></div>
+      <div class="lg" data-series="load" data-label="Verbrauch"><div class="sw load"></div><span>Verbrauch</span></div>
+      <div class="lg" data-series="soc" data-label="Ladezustand"><div class="sw soc"></div><span>Ladezustand</span></div>
+    </div>
+    <div class="cards" id="cards"></div>
+
+    <section id="pricingSection" class="pricing-section hidden">
+      <div class="pricing-head">
+        <div>
+          <h3>Preis / Bezug / Kosten</h3>
+          <small id="pricingNotice">Wenn dynamische Tarife oder ein variables Netzentgelt aktiv sind, erscheint hier der Preisverlauf inklusive Bezug und Kosten zur Gegenprüfung der Abrechnung.</small>
+        </div>
+        <div>
+          <button id="tariffReportBtn" class="btn sm" type="button">Druck / Nachweis</button>
+        </div>
+      </div>
+      <canvas id="priceChart"></canvas>
+      <div class="legend price-legend" id="priceLegend">
+        <div class="lg" data-series="total" data-label="Gesamtpreis"><div class="sw total"></div><span>Gesamtpreis</span></div>
+        <div class="lg" data-series="base" data-label="Basispreis"><div class="sw base"></div><span>Basispreis</span></div>
+        <div class="lg" data-series="netfee" data-label="Netzentgelt"><div class="sw netfee"></div><span>Netzentgelt</span></div>
+        <div class="lg" data-series="import" data-label="Bezug"><div class="sw import"></div><span>Bezug</span></div>
+        <div class="lg" data-series="cost" data-label="Kosten"><div class="sw cost"></div><span>Kosten</span></div>
+      </div>
+      <div class="cards" id="priceCards"></div>
+    </section>
+  </main>
+<script src="/static/history.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./sw.js').catch(console.error);
+    });
+}
+</script>
+
+  <script src="/static/cockpit-shell.js"></script>
+
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

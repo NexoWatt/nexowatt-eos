@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "changeId": "EOS-PG-STATES-20261001",
+  "generatedAt": "2026-10-01T20:09:42.692691+00:00",
+  "component": "@iobroker/db-states-postgresql",
+  "version": "0.1.0-dev.1",
+  "status": "unit-contracts-passed-real-postgresql-not-executed",
+  "environment": {
+    "node": "v24.21.0",
+    "nodeBinary": {
+      "path": "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+      "bytes": 126595440,
+      "sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c"
+    },
+    "platform": "Linux x64 isolated workspace"
+  },
+  "command": "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node --test --test-reporter=tap tests/postgresql/states.test.cjs",
+  "tests": {
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0,
+    "store": "Explicit in-process FakeStore, not a PostgreSQL server"
+  },
+  "sourceBindings": [
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/package.json",
+      "bytes": 379,
+      "sha256": "c8d14bac134a29f0197abd76aef74cfac3104f3fb411ca58301bcbb144448eac"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/index.cjs",
+      "bytes": 20869,
+      "sha256": "28038ebfe48b6d76446c70906a2ae60026a92856bdfd78bbf14742fa78987b83"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/README.md",
+      "bytes": 6196,
+      "sha256": "ff2ad45f1ad778f0521d69abff7f8cd257115a388e1c1d712fc2d28efe5efb51"
+    },
+    {
+      "path": "tests/postgresql/states.test.cjs",
+      "bytes": 21588,
+      "sha256": "5ef33b4593c2f51c7da852555a7acb8bde0ecf5768bae5fb8d338f61708306a1"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "reports/integration/postgresql/raw/states-contract.tap",
+      "bytes": 6622,
+      "sha256": "6c0d17950ef470f8b28d57cf174005c174a8516177f2497fc2b30abe01b6c76e"
+    }
+  ],
+  "comparisonSource": {
+    "package": "@iobroker/db-states-redis",
+    "version": "7.2.2",
+    "binding": {
+      "path": "/workspace/scratch/6383b3161c96/eos-stabilization-x64/app/node_modules/@iobroker/db-states-redis/build/cjs/lib/states/statesInRedisClient.js",
+      "bytes": 43304,
+      "sha256": "9ae4a1a8ad569f59857731d7dc0331662bc1bc87638ee42b1ddb45e208bcaf32"
+    },
+    "kind": "Read-only implementation/API inspection, not an executed upstream differential suite"
+  },
+  "coverage": [
+    "native Client export and inspected 7.2.2 method surface",
+    "state metadata normalization and ordered reads",
+    "atomic-update seam; concurrency against serialized fake",
+    "system/user glob subscriptions and unsubscribe",
+    "TTL null-events; session TTL and observed callback convention",
+    "ephemeral messages/logs; Buffer compatibility",
+    "protocol mismatch and connection failure",
+    "invalid input, JSON and UTF-8",
+    "callback, payload and subscription bounds",
+    "stale queued event rejection across disconnect",
+    "state-only namespace deletion"
+  ],
+  "limitations": [
+    "No real PostgreSQL server transaction, RLS or TLS test executed.",
+    "No target Pi, full controller boot, adapter acceptance or migration test executed.",
+    "FakeStore transaction serialization validates the client seam only.",
+    "No claim of CRA/IEC conformity, independent penetration test or production release.",
+    "Objects/States SQL domain roles are not per-adapter authorization.",
+    "Existing installer unchanged; new PostgreSQL backend remains an experimental candidate."
+  ],
+  "initialRuns": [
+    {
+      "passed": 21,
+      "kind": "Initial development run; tool output only"
+    },
+    {
+      "passed": 25,
+      "kind": "After bounded queue and strict UTF-8 improvements; tool output only"
+    },
+    {
+      "passed": 27,
+      "kind": "Before UTF-8 byte-glob compatibility test; initial raw TAP superseded by final 28-case run"
+    }
+  ],
+  "reviewCorrection": {
+    "finding": "Aggregate glob matching across many complex subscriptions could consume excessive synchronous work",
+    "reviewer": "pg_store_review",
+    "fix": "Literal/prefix fast paths and a per-event matching budget; budget exhaustion disconnects the client",
+    "test": "aggregate complex-glob work is bounded per incoming event"
+  },
+  "additionalPeerReview": {
+    "reviewer": "pg_objects_contract",
+    "finding": "Malformed subscribed events were skipped without marking the connection unavailable",
+    "fix": "Invalid event parsing now disconnects and invalidates queued callbacks; regression asserts further writes fail closed",
+    "inputMetadataScope": "ack/q/user types remain ioBroker7.2.2-compatible; strict JSON and numeric finiteness enforced, full field-type strengthening needs compatibility review"
+  }
+}

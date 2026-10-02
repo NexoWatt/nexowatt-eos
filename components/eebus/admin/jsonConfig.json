@@ -1,0 +1,303 @@
+{
+  "type": "panel",
+  "i18n": true,
+  "label": "NexoWatt EOS - EEBUS",
+  "items": {
+    "generalHeader": {
+      "type": "header",
+      "text": "General"
+    },
+    "discoveryEnabled": {
+      "type": "checkbox",
+      "label": "Enable EEBUS mDNS discovery",
+      "default": true,
+      "help": "Browses local _ship._tcp and _shippairing._tcp services."
+    },
+    "autoConnectEnabled": {
+      "type": "checkbox",
+      "label": "Auto-connect discovered SHIP devices",
+      "default": true,
+      "help": "Opens a field-test SHIP WebSocket session to discovered devices where possible."
+    },
+    "measurementIntervalSec": {
+      "type": "number",
+      "label": "Measurement polling interval",
+      "min": 5,
+      "max": 3600,
+      "sm": 6,
+      "default": 10,
+      "unit": "s"
+    },
+    "metadataIntervalSec": {
+      "type": "number",
+      "label": "Metadata polling interval",
+      "min": 30,
+      "max": 86400,
+      "sm": 6,
+      "default": 60,
+      "unit": "s"
+    },
+    "shipHeader": {
+      "type": "header",
+      "text": "Local SHIP endpoint"
+    },
+    "shipServerEnabled": {
+      "type": "checkbox",
+      "label": "Enable local TLS/WebSocket SHIP endpoint",
+      "default": true,
+      "help": "Starts a local /ship/ endpoint so wallboxes and other devices can pair with NexoWatt EOS."
+    },
+    "announceShipService": {
+      "type": "checkbox",
+      "label": "Announce local SHIP service via mDNS",
+      "default": true,
+      "help": "Required when wallboxes or other EEBUS devices should discover EOS as local HEMS automatically via _ship._tcp. In EnergyManagementSystem mode this is enforced by the adapter."
+    },
+    "shipHandshakeEnabled": {
+      "type": "checkbox",
+      "label": "Enable SHIP handshake state machine",
+      "default": true,
+      "help": "Enables CMI, Hello, protocol handshake and PIN-state handling for field tests."
+    },
+    "spineDiscoveryEnabled": {
+      "type": "checkbox",
+      "label": "Request SPINE NodeManagement discovery",
+      "default": true,
+      "help": "After SHIP data exchange is ready, the adapter sends a read-only NodeManagement detailed discovery request. This is not blocked by command dry run."
+    },
+    "shipPort": {
+      "type": "number",
+      "label": "Local SHIP port",
+      "min": 1024,
+      "max": 65535,
+      "default": 4712,
+      "sm": 6
+    },
+    "shipPath": {
+      "type": "text",
+      "label": "SHIP WebSocket path",
+      "default": "/ship/",
+      "sm": 6
+    },
+    "serviceName": {
+      "type": "text",
+      "label": "Pairing name visible on the device",
+      "default": "NexoWatt EOS",
+      "sm": 12,
+      "help": "This is the name shown by wallboxes, heat pumps and other EEBUS devices during HEMS pairing. Keep the default NexoWatt EOS unless multiple EOS systems share one network."
+    },
+    "identityHeader": {
+      "type": "header",
+      "text": "NexoWatt EOS EEBUS identity"
+    },
+    "brand": {
+      "type": "text",
+      "label": "Brand",
+      "default": "NexoWatt",
+      "sm": 6,
+      "readOnly": true,
+      "help": "Fixed EEBUS brand identity: NexoWatt."
+    },
+    "model": {
+      "type": "text",
+      "label": "Model",
+      "default": "EOS",
+      "sm": 6,
+      "help": "Fixed EEBUS product model: EOS. Legacy values such as EEBUS Adapter are migrated automatically.",
+      "readOnly": true
+    },
+    "deviceType": {
+      "type": "text",
+      "label": "Device type",
+      "default": "EnergyManagementSystem",
+      "sm": 6,
+      "readOnly": true,
+      "help": "Fixed protocol-facing device type: EnergyManagementSystem. This identifies NexoWatt EOS as the local HEMS."
+    },
+    "deviceCategories": {
+      "type": "text",
+      "label": "SHIP device categories",
+      "default": "2",
+      "sm": 6,
+      "help": "Fixed EEBUS installation category 2 = Energy Management System (EMS).",
+      "readOnly": true
+    },
+    "ianaPen": {
+      "type": "text",
+      "label": "IANA PEN for NexoWatt",
+      "default": "999999",
+      "sm": 6,
+      "help": "The value 999999 is only a field-test placeholder. Enter the officially assigned NexoWatt IANA PEN before a new production SHIP identity is generated. Changing this field does not replace an already generated SHIP ID."
+    },
+    "shipId": {
+      "type": "text",
+      "label": "Generated SHIP ID",
+      "readOnly": true,
+      "sm": 12,
+      "help": "Stable identifier of this EOS SHIP node. Do not delete or replace it after pairing devices."
+    },
+    "localSki": {
+      "type": "text",
+      "label": "Generated local SKI",
+      "readOnly": true,
+      "sm": 12,
+      "help": "Stable Subject Key Identifier derived from the local TLS certificate. This is the key shown or entered during EEBUS pairing."
+    },
+    "certificateFingerprint": {
+      "type": "text",
+      "label": "Certificate fingerprint SHA-256",
+      "readOnly": true,
+      "sm": 12,
+      "help": "SHA-256 fingerprint of the local TLS certificate for diagnostics and verification."
+    },
+    "secretsHeader": {
+      "type": "header",
+      "text": "Secrets / advanced identity"
+    },
+    "pairingPin": {
+      "type": "password",
+      "label": "Optional pairing PIN",
+      "sm": 6
+    },
+    "certificate": {
+      "type": "textarea",
+      "label": "Certificate PEM",
+      "rows": 6,
+      "sm": 12,
+      "help": "Leave empty to generate a local certificate on first start."
+    },
+    "privateKey": {
+      "type": "textarea",
+      "label": "Private key PEM",
+      "rows": 6,
+      "sm": 12,
+      "help": "Protected/encrypted. Leave empty to generate a local private key on first start."
+    },
+    "pairingHeader": {
+      "type": "header",
+      "text": "Pairing / field tests"
+    },
+    "autoAcceptNewDevices": {
+      "type": "checkbox",
+      "label": "Auto accept new devices for field testing",
+      "default": false,
+      "help": "Only for controlled lab tests. New SHIP peers are trusted automatically and Hello continues immediately."
+    },
+    "directApiHeader": {
+      "type": "header",
+      "text": "Direct NexoWatt EOS §14a connection"
+    },
+    "nexowattBridgeEnabled": {
+      "type": "checkbox",
+      "label": "Enable direct §14a API to NexoWatt EOS",
+      "default": true,
+      "help": "Forwards EEBUS LPC commands directly to the EOS controller without manual data-point mapping."
+    },
+    "nexowattUiInstance": {
+      "type": "text",
+      "label": "NexoWatt UI instance",
+      "default": "auto",
+      "sm": 6,
+      "help": "Use auto for automatic instance detection. A fixed value such as nexowatt-ui.0 is only needed for multiple EOS instances."
+    },
+    "autoApplyClsLimits": {
+      "type": "checkbox",
+      "label": "Apply CLS power limits automatically",
+      "default": true,
+      "help": "When enabled, accepted LPC limits immediately trigger a full EOS control cycle."
+    },
+    "sendImplementationResultToCls": {
+      "type": "checkbox",
+      "label": "Send effective EOS controller readback to the CLS box",
+      "default": true,
+      "help": "The final correlated write result is always sent after the full EOS control cycle. This option additionally sends the effective LoadControl readback when the cycle succeeds."
+    },
+    "nexowattBridgeHeartbeatSec": {
+      "type": "number",
+      "label": "Direct API health-check interval",
+      "min": 5,
+      "max": 300,
+      "default": 5,
+      "unit": "s",
+      "sm": 6
+    },
+    "nexowattBridgeRequestTimeoutMs": {
+      "type": "number",
+      "label": "Maximum API acceptance wait",
+      "min": 100,
+      "max": 5000,
+      "default": 2000,
+      "unit": "ms",
+      "sm": 6,
+      "help": "The regulation command is rejected when EOS does not accept it within this interval."
+    },
+    "nexowattAcceptanceTargetMs": {
+      "type": "number",
+      "label": "Acceptance timing target",
+      "min": 50,
+      "max": 5000,
+      "default": 250,
+      "unit": "ms",
+      "sm": 4
+    },
+    "nexowattControlTargetMs": {
+      "type": "number",
+      "label": "Controller timing target",
+      "min": 100,
+      "max": 10000,
+      "default": 1000,
+      "unit": "ms",
+      "sm": 4
+    },
+    "nexowattFeedbackTargetMs": {
+      "type": "number",
+      "label": "Feedback timing target",
+      "min": 200,
+      "max": 15000,
+      "default": 1500,
+      "unit": "ms",
+      "sm": 4
+    },
+    "nexowattImplementationTimeoutMs": {
+      "type": "number",
+      "label": "Maximum implementation feedback wait",
+      "min": 1000,
+      "max": 30000,
+      "default": 5000,
+      "unit": "ms",
+      "sm": 6
+    },
+    "clsHeartbeatTimeoutSec": {
+      "type": "number",
+      "label": "Fallback CLS heartbeat timeout",
+      "min": 5,
+      "max": 3600,
+      "default": 120,
+      "unit": "s",
+      "sm": 6,
+      "help": "Used only when the CLS peer does not provide a heartbeat timeout. LPC heartbeats are supervised independently of diagnostic polling."
+    },
+    "commandsHeader": {
+      "type": "header",
+      "text": "Commands"
+    },
+    "allowCommandsToUntrustedDevices": {
+      "type": "checkbox",
+      "label": "Allow commands to untrusted devices",
+      "default": false,
+      "help": "Default is off. Commands to untrusted or unknown devices are recorded but not sent."
+    },
+    "commandDryRun": {
+      "type": "checkbox",
+      "label": "Command dry run",
+      "default": true,
+      "help": "Records field-test SPINE command payloads without sending them. Disable only after pairing/data exchange was verified."
+    },
+    "debugRawMessages": {
+      "type": "checkbox",
+      "label": "Store raw diagnostic messages",
+      "default": false,
+      "help": "May create large states. Enable only for troubleshooting."
+    }
+  }
+}

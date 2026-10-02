@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-reported-existing-eos-service-identity-and-redis-decision",
+  "userMessageAt": "2026-10-01T18:49:26Z",
+  "sourceCommit": "c18ae242efa69a7e8c79c81d1ce3dc074904aea6",
+  "observed": {
+    "service": "nexowatt-eos.service",
+    "mainPid": 1022,
+    "workingDirectory": "/opt/nexowatt-eos",
+    "user": "nexowatt",
+    "group": "nexowatt",
+    "fragmentPath": "/etc/systemd/system/nexowatt-eos.service"
+  },
+  "userDecision": {
+    "retainExternalRedisForTls": true,
+    "replaceOperationalDatabaseWithInfluxDb": false
+  },
+  "interpretation": {
+    "sameNamedLoginAndServiceAccount": true,
+    "effectiveSudoOrCapabilitiesKnown": false,
+    "serviceSandboxKnown": false,
+    "installedSoftwareVersionKnown": false,
+    "existingServiceMatchesNewBundleLayout": false,
+    "redisInstallationOrUseProven": false,
+    "targetExploitOrCompromiseProven": false,
+    "newInstallationApproved": false,
+    "installationHold": "EOS-HOST-REDIS-20261001"
+  },
+  "changesPerformedOnTarget": false,
+  "softwareChangedByThisObservation": false,
+  "newTestsExecutedByThisObservation": false
+}

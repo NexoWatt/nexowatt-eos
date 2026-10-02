@@ -1,0 +1,29 @@
+{
+  "observedAt": "2026-10-01T20:03:30.002218+00:00",
+  "uid": 0,
+  "uidMap": "0          0          1",
+  "gidMap": "0          0          1",
+  "initdbCommand": [
+    "/workspace/scratch/6383b3161c96/postgresql-test-tooling/17.11/bin/initdb",
+    "-D",
+    "/workspace/scratch/6383b3161c96/postgresql-test-tooling/root-block-check",
+    "--no-locale",
+    "--encoding=UTF8"
+  ],
+  "initdbExitCode": 1,
+  "initdbStderr": "initdb: error: cannot be run as root\ninitdb: hint: Please log in (using, e.g., \"su\") as the (unprivileged) user that will own the server process.\n",
+  "dataDirectoryCreated": false,
+  "earlierObservedFailures": [
+    {
+      "operation": "os.chown(private_lab_dir,65534,65534)",
+      "error": "OSError [Errno 22] Invalid argument"
+    },
+    {
+      "operation": "unshare --user --map-user=1000 --map-group=1000 id",
+      "exitCode": 1,
+      "stderr": "unshare: write failed /proc/self/uid_map: Operation not permitted\n"
+    }
+  ],
+  "postgresRootChecksBypassed": false,
+  "namespaceChecksBypassed": false
+}

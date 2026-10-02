@@ -1,0 +1,11 @@
+[Unit]
+Description=NexoWatt EOS daily PostgreSQL test certificate health
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1d
+RandomizedDelaySec=15min
+Unit=nexowatt-eos-pg-certificates.service
+
+[Install]
+WantedBy=timers.target

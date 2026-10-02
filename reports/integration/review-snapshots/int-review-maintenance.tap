@@ -1,0 +1,190 @@
+TAP version 13
+# Subtest: normal start, incomplete maintenance blocked, live trial and cleanup
+ok 1 - normal start, incomplete maintenance blocked, live trial and cleanup
+  ---
+  duration_ms: 6.238474
+  type: 'test'
+  ...
+# Subtest: exited coordinator cannot grant later reboot/start through its old permit
+ok 2 - exited coordinator cannot grant later reboot/start through its old permit
+  ---
+  duration_ms: 163.392721
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit startTicks
+ok 3 - stale or invalid permit startTicks
+  ---
+  duration_ms: 3.671883
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit bootId
+ok 4 - stale or invalid permit bootId
+  ---
+  duration_ms: 5.591271
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit operation
+ok 5 - stale or invalid permit operation
+  ---
+  duration_ms: 2.068538
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit version
+ok 6 - stale or invalid permit version
+  ---
+  duration_ms: 2.813004
+  type: 'test'
+  ...
+# Subtest: orphan permit cannot bypass absent lock
+ok 7 - orphan permit cannot bypass absent lock
+  ---
+  duration_ms: 3.814153
+  type: 'test'
+  ...
+# Subtest: writable lock and symlinked permit rejected
+ok 8 - writable lock and symlinked permit rejected
+  ---
+  duration_ms: 1.562383
+  type: 'test'
+  ...
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 9 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 2.010831
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 10 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 4.523612
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 11 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 201.476475
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 12 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 1.328529
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 13 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 0.699107
+  type: 'test'
+  ...
+# Subtest: OS parser never evaluates shell substitutions or accepts malformed assignments
+ok 14 - OS parser never evaluates shell substitutions or accepts malformed assignments
+  ---
+  duration_ms: 1.901686
+  type: 'test'
+  ...
+# Subtest: fresh supported fixture with exact Node matches read-only prerequisites
+ok 15 - fresh supported fixture with exact Node matches read-only prerequisites
+  ---
+  duration_ms: 4.069715
+  type: 'test'
+  ...
+# Subtest: preflight rejects wrong OS and exact Node drift
+ok 16 - preflight rejects wrong OS and exact Node drift
+  ---
+  duration_ms: 2.542034
+  type: 'test'
+  ...
+# Subtest: preflight rejects privileged Node, existing identity and occupied database ports
+ok 17 - preflight rejects privileged Node, existing identity and occupied database ports
+  ---
+  duration_ms: 2.421462
+  type: 'test'
+  ...
+# Subtest: fresh-path check catches a dangling symlink instead of overwriting it
+ok 18 - fresh-path check catches a dangling symlink instead of overwriting it
+  ---
+  duration_ms: 3.5608
+  type: 'test'
+  ...
+# Subtest: merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+ok 19 - merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+  ---
+  duration_ms: 0.772499
+  type: 'test'
+  ...
+# Subtest: generated host config passes real transport and bootstrap validators
+ok 20 - generated host config passes real transport and bootstrap validators
+  ---
+  duration_ms: 159.52101
+  type: 'test'
+  ...
+# Subtest: private writes reject replacement and symlink targets
+ok 21 - private writes reject replacement and symlink targets
+  ---
+  duration_ms: 0.942556
+  type: 'test'
+  ...
+# Subtest: installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+ok 22 - installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+  ---
+  duration_ms: 3.323877
+  type: 'test'
+  ...
+# Subtest: disabled install writes restricted config and units but never enables or starts services
+ok 23 - disabled install writes restricted config and units but never enables or starts services
+  ---
+  duration_ms: 8.135083
+  type: 'test'
+  ...
+# Subtest: pinned release state write failure prevents every service start or enable
+ok 24 - pinned release state write failure prevents every service start or enable
+  ---
+  duration_ms: 5.714332
+  type: 'test'
+  ...
+# Subtest: privileged group detected after identity creation stops before provisioning
+ok 25 - privileged group detected after identity creation stops before provisioning
+  ---
+  duration_ms: 3.112588
+  type: 'test'
+  ...
+# Subtest: start follows TLS databases then init then controller and writes root marker
+ok 26 - start follows TLS databases then init then controller and writes root marker
+  ---
+  duration_ms: 5.243751
+  type: 'test'
+  ...
+# Subtest: initialization failure stops and disables units without starting controller
+ok 27 - initialization failure stops and disables units without starting controller
+  ---
+  duration_ms: 3.896923
+  type: 'test'
+  ...
+# Subtest: cleanup failure is reported rather than claimed as a stopped installation
+ok 28 - cleanup failure is reported rather than claimed as a stopped installation
+  ---
+  duration_ms: 5.330101
+  type: 'test'
+  ...
+# Subtest: unit security boundaries and network compatibility remain explicit
+ok 29 - unit security boundaries and network compatibility remain explicit
+  ---
+  duration_ms: 0.677003
+  type: 'test'
+  ...
+# Subtest: systemd-analyze accepts complete unit grammar in isolated root fixture
+ok 30 - systemd-analyze accepts complete unit grammar in isolated root fixture
+  ---
+  duration_ms: 19.765572
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 422.120404

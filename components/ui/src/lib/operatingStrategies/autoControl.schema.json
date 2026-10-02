@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nexowatt://operating-strategies/auto-control.schema.json",
+  "title": "NexoWatt EOS operating-strategy Auto control",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "stage": {
+      "enum": [
+        "shadow",
+        "commissioning",
+        "active"
+      ],
+      "default": "shadow"
+    },
+    "defaultAutoSource": {
+      "enum": [
+        "standard",
+        "strategy"
+      ],
+      "default": "standard"
+    },
+    "requirePerResourceOptIn": {
+      "type": "boolean",
+      "const": true,
+      "default": true
+    },
+    "requireCommissioningConfirmation": {
+      "type": "boolean",
+      "const": true,
+      "default": true
+    },
+    "requestTtlSeconds": {
+      "type": "integer",
+      "minimum": 3,
+      "maximum": 60,
+      "default": 15
+    },
+    "fallback": {
+      "enum": [
+        "standardAuto",
+        "pause"
+      ],
+      "default": "standardAuto"
+    }
+  },
+  "required": [
+    "enabled",
+    "stage",
+    "defaultAutoSource",
+    "requirePerResourceOptIn",
+    "requireCommissioningConfirmation",
+    "requestTtlSeconds",
+    "fallback"
+  ]
+}

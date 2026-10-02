@@ -1,0 +1,203 @@
+{
+  "eos-admin": {
+    "name": "eos-admin",
+    "version": "7.9.33",
+    "title": "NexoWatt EOS Admin",
+    "titleLang": {
+      "en": "NexoWatt EOS Admin",
+      "de": "NexoWatt EOS Admin",
+      "ru": "NexoWatt EOS Admin",
+      "pt": "NexoWatt EOS Admin",
+      "pl": "NexoWatt EOS Admin",
+      "fr": "NexoWatt EOS Admin",
+      "nl": "NexoWatt EOS Admin",
+      "it": "NexoWatt EOS Admin",
+      "es": "NexoWatt EOS Admin",
+      "uk": "NexoWatt EOS Admin",
+      "zh-cn": "NexoWatt EOS Admin"
+    },
+    "desc": {
+      "en": "Standalone NexoWatt EOS administration interface with role-based visibility, legacy admin lock and protected system adapters for Energy Operation System installations.",
+      "de": "Eigenständige NexoWatt EOS Administrationsoberfläche mit rollenbasierter Sichtbarkeit, Legacy-Admin-Sperre und geschützten Systemadaptern für Energy Operation System Installationen."
+    },
+    "news": {
+      "7.9.31": {
+        "en": "UI cleanup: fixes EOS Security German text encoding, removes the logout tile next to the compact navigation arrow, and expands EOS Assist with AI-ready multi-path setup guidance.",
+        "de": "UI-Feinschliff: korrigiert deutsche EOS-Sicherheitsbeschriftungen, entfernt die Abmelden-Kachel neben dem Kompaktpfeil und erweitert EOS Assist um KI-bereite Mehrwege-Einrichtungshilfe."
+      },
+      "7.9.30": {
+        "en": "UI polish: moves the compact navigation button further left, improves the black NexoWatt logo badge, fixes EOS Assist opening and hides EOS Security from non-admin users.",
+        "de": "UI-Feinschliff: Kompakt-Navigationspfeil weiter nach links gesetzt, schwarzes NexoWatt-Logo verbessert, EOS Assist Öffnen repariert und EOS Security für Nicht-Administratoren ausgeblendet."
+      },
+      "7.9.29": {
+        "en": "Self-update hardening: EOS Admin now uses its own webserver upgrade path, update-all skips the running EOS shell, and object-level delete locks are cleared so updates stay possible.",
+        "de": "Self-Update gehärtet: EOS Admin nutzt nun den eigenen Webserver-Updatepfad, Update-Alle überspringt die laufende EOS-Oberfläche und objektbasierte Löschsperren werden entfernt, damit Updates möglich bleiben."
+      },
+      "7.9.27": {
+        "en": "Header/navigation polish: black logo background, non-destructive compact navigation toggle and EOS Assist setup helper preview.",
+        "de": "Header-/Navigations-Feinschliff: schwarzer Logo-Hintergrund, nicht-destruktive Kompakt-Navigation per Pfeil und EOS-Assist-Einrichtungshelfer als Vorschau."
+      },
+      "7.9.25": {
+        "en": "EOS visibility guard: the legacy admin adapter is hidden for non-administrators and protected system components stay updateable.",
+        "de": "EOS-Sichtbarkeitsschutz: der alte Admin-Adapter wird für Nicht-Administratoren ausgeblendet und geschützte Systemkomponenten bleiben updatefähig."
+      },
+      "7.9.24": {
+        "en": "EOS security guard added: legacy admin.0 is kept disabled, selected adapters are protected from deletion while updates remain possible.",
+        "de": "EOS-Sicherheitswächter ergänzt: legacy admin.0 bleibt deaktiviert, ausgewählte Adapter werden gegen Löschen geschützt und bleiben updatefähig."
+      },
+      "7.9.23": {
+        "en": "Standalone EOS Admin adapter: uses eos-admin as technical adapter name to avoid replacement conflicts with the official admin adapter.",
+        "de": "Eigenständiger EOS-Admin-Adapter: nutzt eos-admin als technischen Adapternamen, um Ersatz-/Update-Konflikte mit dem offiziellen admin-Adapter zu vermeiden."
+      },
+      "7.9.22": {
+        "en": "NexoWatt repository warning removed: the active nexowatt repository is treated as the official EOS repository.",
+        "de": "NexoWatt-Repository-Hinweis entfernt: Das aktive Repository nexowatt wird als offizielles EOS-Repository behandelt."
+      },
+      "7.9.21": {
+        "en": "Repository update fix: documents packetName vendor mapping and keeps EOS branding cache-busting current.",
+        "de": "Repository-Update-Fix: dokumentiert das packetName-Vendor-Mapping und aktualisiert das EOS Cache-Busting."
+      },
+      "7.9.20": {
+        "en": "Hardened Admin settings save handling: sanitizes login timeout and keeps MCP disabled unless explicitly configured.",
+        "de": "Speichern der Admin-Einstellungen gehärtet: Login-Timeout wird bereinigt und MCP bleibt deaktiviert, sofern nicht ausdrücklich konfiguriert."
+      },
+      "7.9.19": {
+        "en": "Repository update workflow fixed: vendor packetName entry and npm alias fallback documented for NexoWatt EOS Admin.",
+        "de": "Repository-Update-Workflow korrigiert: Vendor-packetName-Eintrag und npm-Alias-Fallback für NexoWatt EOS Admin dokumentiert."
+      },
+      "7.9.18": {
+        "en": "NexoWatt repository update hardening: version bump, cache busting and repository entry helper for EOS Admin distribution.",
+        "de": "NexoWatt Repository-Update-Härtung: Versionssprung, Cache-Busting und Repository-Eintragshelfer für die EOS-Admin-Auslieferung.",
+        "ru": "Улучшена поставка через репозиторий NexoWatt: обновление версии, cache busting и помощник для записи репозитория."
+      },
+      "7.9.17": {
+        "en": "README and package documentation updated for NexoWatt EOS Admin public npm distribution with proprietary license notice",
+        "de": "README und Paketdokumentation für NexoWatt EOS Admin mit öffentlicher npm-Bereitstellung und proprietärem Lizenzhinweis aktualisiert"
+      },
+      "7.9.2": {
+        "en": "AI must be enabled first in the settings to be used in the admin interface",
+        "de": "AI muss zuerst in den Einstellungen aktiviert werden, die in der Admin-Schnittstelle verwendet werden sollen",
+        "ru": "ИИ должен быть включен первым в настройках, которые будут использоваться в интерфейсе администратора",
+        "pt": "AI deve ser ativado primeiro nas configurações a serem usadas na interface de administração",
+        "nl": "AI moet eerst ingeschakeld zijn in de instellingen die gebruikt moeten worden in de admin interface",
+        "fr": "L'IA doit être activée d'abord dans les paramètres à utiliser dans l'interface admin",
+        "it": "L'intelligenza artificiale deve essere abilitata prima nelle impostazioni da utilizzare nell'interfaccia di amministrazione",
+        "es": "AI debe ser habilitado primero en los ajustes a utilizar en la interfaz de administración",
+        "pl": "AI musi być włączona najpierw w ustawieniach używanych w interfejsie admin",
+        "uk": "AI повинен бути включений спочатку в налаштуваннях для використання в інтерфейсі адміністратора",
+        "zh-cn": "在管理界面中使用的设置中必须首先启用AI"
+      },
+      "7.9.1": {
+        "en": "Added AI assistant to the admin interface",
+        "de": "AI-Assistent zur Admin-Schnittstelle hinzugefügt",
+        "ru": "Добавлен помощник AI в интерфейс администратора",
+        "pt": "Adicionado assistente de IA para a interface de administração",
+        "nl": "Toegevoegd AI assistent aan de admin interface",
+        "fr": "Ajout de l'assistant AI à l'interface d'administration",
+        "it": "Aggiunto AI assistente all'interfaccia di amministrazione",
+        "es": "Agregado asistente de inteligencia artificial a la interfaz de administración",
+        "pl": "Dodano asystenta AI do interfejsu admin",
+        "uk": "Доданий помічник AI в інтерфейсі адміністратора",
+        "zh-cn": "添加到管理界面的 AI 助手"
+      },
+      "7.9.0": {
+        "en": "Added the central credentials manager \nAdded the possibility of installation of packages on specific hosts",
+        "de": "Hinzufügen des zentralen Anmeldedatenmanagers\nHinzufügen der Möglichkeit der Installation von Paketen auf bestimmten Hosts",
+        "ru": "Добавлен менеджер центральных учетных данных\nДобавлена возможность установки пакетов на конкретных хостах",
+        "pt": "Adicionado o gerenciador central de credenciais\nAdicionada a possibilidade de instalação de pacotes em hosts específicos",
+        "nl": "De hoofdgegevensbeheerder toegevoegd\nToegevoegd de mogelijkheid van installatie van pakketten op specifieke hosts",
+        "fr": "Ajouté le gestionnaire central des références\nAjout de la possibilité d'installation de paquets sur des hôtes spécifiques",
+        "it": "Aggiunto il direttore delle credenziali centrali\nAggiunta la possibilità di installazione di pacchetti su host specifici",
+        "es": "Añadido el administrador central de credenciales\nSe agregó la posibilidad de instalar paquetes en hosts específicos",
+        "pl": "Dodano centralnego menedżera mandatów\nDodano możliwość instalacji pakietów na poszczególnych hostach",
+        "uk": "Додано центральний менеджер облікових записів\nДодано можливість установки пакетів на конкретні господарі",
+        "zh-cn": "增加了中央证书管理员\n添加在特定主机上安装包的可能性"
+      },
+      "7.8.29": {
+        "en": "Corrected JSON config for the select component with grouped options",
+        "de": "JSON config für die ausgewählte Komponente mit gruppierten Optionen korrigiert",
+        "ru": "Исправленная конфигурация JSON для выбранного компонента с сгруппированными опциями",
+        "pt": "Configuração do JSON corrigida para o componente seleccionado com opções agrupadas",
+        "nl": "Gecorrigeerde JSON configuratie voor het geselecteerde component met gegroepeerde opties",
+        "fr": "Configuration JSON corrigée pour le composant sélectionné avec options groupées",
+        "it": "Configurazione JSON corretta per il componente selezionato con opzioni raggruppate",
+        "es": "Ajuste JSON corregido para el componente selecto con opciones agrupadas",
+        "pl": "Skorygowana konfiguracja JSON dla wybranego komponentu z pogrupowanymi opcjami",
+        "uk": "Виправлено налаштування JSON для вибраного компонента з позначеними опціями",
+        "zh-cn": "更正了带有分组选项的选定组件的 JSON 配置"
+      },
+      "7.8.28": {
+        "en": "Corrected JSON config for the select component with grouped options",
+        "de": "JSON config für die ausgewählte Komponente mit gruppierten Optionen korrigiert",
+        "ru": "Исправленная конфигурация JSON для выбранного компонента с сгруппированными опциями",
+        "pt": "Configuração do JSON corrigida para o componente seleccionado com opções agrupadas",
+        "nl": "Gecorrigeerde JSON configuratie voor het geselecteerde component met gegroepeerde opties",
+        "fr": "Configuration JSON corrigée pour le composant sélectionné avec options groupées",
+        "it": "Configurazione JSON corretta per il componente selezionato con opzioni raggruppate",
+        "es": "Ajuste JSON corregido para el componente selecto con opciones agrupadas",
+        "pl": "Skorygowana konfiguracja JSON dla wybranego komponentu z pogrupowanymi opcjami",
+        "uk": "Виправлено налаштування JSON для вибраного компонента з позначеними опціями",
+        "zh-cn": "更正了带有分组选项的选定组件的 JSON 配置"
+      },
+      "7.8.27": {
+        "en": "Updated packages",
+        "de": "Aktualisierte Pakete",
+        "ru": "Обновленные пакеты",
+        "pt": "Pacotes atualizados",
+        "nl": "Bijgewerkte pakketten",
+        "fr": "Paquets mis à jour",
+        "it": "Pacchetti aggiornati",
+        "es": "Paquetes actualizados",
+        "pl": "Aktualizacja pakietów",
+        "uk": "Оновлені пакети",
+        "zh-cn": "更新软件包"
+      },
+      "7.8.25": {
+        "en": "Extended JSON config for frigate adapter",
+        "de": "Erweiterte JSON config für frigate Adapter",
+        "ru": "Расширенный конфигуратор JSON для фрегата",
+        "pt": "Configuração estendida do JSON para adaptador fragata",
+        "nl": "Uitgebreide JSON-configuratie voor fregatadapter",
+        "fr": "Config JSON étendue pour adaptateur de frégate",
+        "it": "Configurazione estesa di JSON per l'adattatore di fregata",
+        "es": "Configuración JSON ampliada para adaptador de fragata",
+        "pl": "Rozszerzony plik konfiguracyjny JSON do adaptera fregata",
+        "uk": "Розширений налаштування JSON для адаптера фригату",
+        "zh-cn": "JSON 护卫舰适配器扩展配置"
+      },
+      "7.9.33": {
+        "en": "Moved the EOS Assist launcher left so it no longer covers the page settings pencil or bottom-right slider controls.",
+        "de": "EOS Assist weiter nach links verschoben, damit Seiten-Einstellstift und Slider unten rechts nicht mehr verdeckt werden."
+      }
+    },
+    "meta": "https://unpkg.com/iobroker.eos-admin@7.9.33/io-package.json",
+    "icon": "https://unpkg.com/iobroker.eos-admin@7.9.33/admin/admin.png",
+    "extIcon": "https://unpkg.com/iobroker.eos-admin@7.9.33/admin/admin.svg",
+    "type": "general",
+    "mode": "daemon",
+    "platform": "Javascript/Node.js",
+    "connectionType": "local",
+    "dataSource": "push",
+    "adminUI": {
+      "config": "json"
+    },
+    "license": "NexoWatt Proprietary",
+    "licenseInformation": {
+      "license": "NexoWatt Proprietary",
+      "type": "paid",
+      "link": "/adapter/eos-admin/LICENSE-NEXOWATT.md"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "stopBeforeUpdate": false,
+    "dontDelete": false,
+    "nondeletable": false,
+    "readme": "https://unpkg.com/iobroker.eos-admin@7.9.33/README.md",
+    "npmPackage": "iobroker.eos-admin",
+    "allowAdapterUpdate": true,
+    "allowAdapterDelete": false
+  }
+}

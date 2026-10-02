@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "test": "shipped-admin-branding-browser-fixture",
+  "testedAt": "2026-10-01T15:14:48.686Z",
+  "passed": true,
+  "browser": "HeadlessChrome/153.0.8010.0",
+  "node": "v24.19.0",
+  "environment": "Linux x86_64 fixture; no real controller/accounts/devices",
+  "externalRequests": "blocked",
+  "checks": [
+    "real login visible and branded at 1280px and 390px",
+    "logo decodes without upstream asset",
+    "installer/enduser portal does not bootstrap raw Admin React",
+    "installer scoped settings/account dialogs remain accessible above portal",
+    "enduser has no installer controls",
+    "mandatory password setup precedes the portal",
+    "service own-password view sends long passphrase to scoped HTTP endpoint with correct header",
+    "failed security context remains closed and visible",
+    "exact product labels and late DOM content use EOS",
+    "technical identifiers and legal/code attribution remain unchanged"
+  ],
+  "screenshots": [
+    {
+      "file": "admin-login-1280.png",
+      "sha256": "4c26484d11904d24a995b9557dc1af3b3fad809f6a5749cc8fcf3bbfd1332ace"
+    },
+    {
+      "file": "admin-login-390.png",
+      "sha256": "5a996c432dbfb149e53cb8ed44f1afb4f70262c8ed50883c7b379e449bfe4a06"
+    },
+    {
+      "file": "admin-portal-installer-390.png",
+      "sha256": "15d7ae30cb353e205fc859efee033dfa703565eadd9d9e47f0435dd2bbbfd437"
+    },
+    {
+      "file": "admin-portal-enduser-390.png",
+      "sha256": "3f93916c16bcd0f7fae4e40f9db1120db894e643816a873fb721c0579ddd005c"
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+TAP version 13
+# Subtest: UI-TLS: real shipped server TLS1.3, CA identity verification and Secure cookie
+ok 1 - UI-TLS: real shipped server TLS1.3, CA identity verification and Secure cookie
+  ---
+  duration_ms: 115.287174
+  type: 'test'
+  ...
+# Subtest: UI-TLS: fixed product paths and key-file protection
+ok 2 - UI-TLS: fixed product paths and key-file protection
+  ---
+  duration_ms: 4.226622
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE: central numeric limits, no secrets/UUID returned and no local license storage
+ok 3 - UI-LICENSE: central numeric limits, no secrets/UUID returned and no local license storage
+  ---
+  duration_ms: 19.094819
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE denies nonce
+ok 4 - UI-LICENSE denies nonce
+  ---
+  duration_ms: 9.73952
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE denies secret-in-response
+ok 5 - UI-LICENSE denies secret-in-response
+  ---
+  duration_ms: 7.843943
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE denies home-pro-feature
+ok 6 - UI-LICENSE denies home-pro-feature
+  ---
+  duration_ms: 12.712732
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE denies oversized-lease
+ok 7 - UI-LICENSE denies oversized-lease
+  ---
+  duration_ms: 11.688438
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE denies count-type
+ok 8 - UI-LICENSE denies count-type
+  ---
+  duration_ms: 14.779608
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE denies stale
+ok 9 - UI-LICENSE denies stale
+  ---
+  duration_ms: 17.39682
+  type: 'test'
+  ...
+# Subtest: UI-LICENSE: lease expiry invalidates UI/cache and closes SSE without device writes
+not ok 10 - UI-LICENSE: lease expiry invalidates UI/cache and closes SSE without device writes
+  ---
+  duration_ms: 118.134496
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-eos-integrated.cjs:89:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    403 !== 200
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 200
+  actual: 403
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-eos-integrated.cjs:98:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: UI-PREVIEW: foreign writes, object changes, other adapter commands and EMS init blocked
+ok 11 - UI-PREVIEW: foreign writes, object changes, other adapter commands and EMS init blocked
+  ---
+  duration_ms: 23.465509
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: configured trusted headers cannot bypass real sessions
+ok 12 - UI-AUTH: configured trusted headers cannot bypass real sessions
+  ---
+  duration_ms: 10.333909
+  type: 'test'
+  ...
+# Subtest: UI-SUPPLY: vendored client is byte-identical to Admin reviewed source
+ok 13 - UI-SUPPLY: vendored client is byte-identical to Admin reviewed source
+  ---
+  duration_ms: 0.59498
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 12
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 811.086571

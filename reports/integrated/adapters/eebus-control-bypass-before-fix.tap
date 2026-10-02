@@ -1,0 +1,541 @@
+TAP version 13
+# Subtest: data before completed handshake never reaches message/CLS handlers
+ok 1 - data before completed handshake never reaches message/CLS handlers
+  ---
+  duration_ms: 3.899357
+  type: 'test'
+  ...
+# Subtest: unsolicited PIN state and input cannot skip trusted hello and protocol selection
+ok 2 - unsolicited PIN state and input cannot skip trusted hello and protocol selection
+  ---
+  duration_ms: 0.961354
+  type: 'test'
+  ...
+# Subtest: protocol selection is rejected before mutual hello
+ok 3 - protocol selection is rejected before mutual hello
+  ---
+  duration_ms: 0.357671
+  type: 'test'
+  ...
+# Subtest: complete trusted hello and protocol selection permit data
+ok 4 - complete trusted hello and protocol selection permit data
+  ---
+  duration_ms: 0.621921
+  type: 'test'
+  ...
+# Subtest: trust revocation blocks the next data frame and outbound reuse
+ok 5 - trust revocation blocks the next data frame and outbound reuse
+  ---
+  duration_ms: 0.776715
+  type: 'test'
+  ...
+# Subtest: local revoke/disconnect immediately removes outbound permission
+ok 6 - local revoke/disconnect immediately removes outbound permission
+  ---
+  duration_ms: 0.788853
+  type: 'test'
+  ...
+# Subtest: second peer session cannot replace the existing one
+ok 7 - second peer session cannot replace the existing one
+  ---
+  duration_ms: 0.861793
+  type: 'test'
+  ...
+# Subtest: peer certificate is mandatory before an incoming session is registered
+ok 8 - peer certificate is mandatory before an incoming session is registered
+  ---
+  duration_ms: 0.776935
+  type: 'test'
+  ...
+# Subtest: frame queue is bounded during asynchronous trust checks
+ok 9 - frame queue is bounded during asynchronous trust checks
+  ---
+  duration_ms: 16.394845
+  type: 'test'
+  ...
+# Subtest: TLS public key identity matches OpenSSL SKI and cannot be replaced by discovery values
+ok 10 - TLS public key identity matches OpenSSL SKI and cannot be replaced by discovery values
+  ---
+  duration_ms: 26.466086
+  type: 'test'
+  ...
+# Subtest: untrusted control and bare JSON cannot tunnel a valid SPINE command into the CLS parser
+not ok 11 - untrusted control and bare JSON cannot tunnel a valid SPINE command into the CLS parser
+  ---
+  duration_ms: 8.154878
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:135:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    control crossed the SHIP/CLS trust boundary
+    + actual - expected
+    
+    + [
+    +   {
+    +     active: true,
+    +     apiVersion: 1,
+    +     commandId: 'eebus-peer-1-00b3d0b2033709ce',
+    +     correlation: {
+    +       ackRequest: false,
+    +       cmdClassifier: 'write',
+    +       destinationAddress: null,
+    +       functionName: 'loadControlLimitListData',
+    +       limitIds: [
+    +         1
+    +       ],
+    +       msgCounter: 1,
+    +       sourceAddress: null,
+    +       specificationVersion: '1.3.0'
+    +     },
+    +     effectiveFromMs: 1790856739257,
+    +     expiresAtMs: null,
+    +     failsafeDurationMs: null,
+    +     failsafeLimitW: null,
+    +     heartbeatAtMs: null,
+    +     heartbeatTimeoutMs: null,
+    +     limitW: 4200,
+    +     operation: 'limitConsumption',
+    +     protocol: 'nexowatt-eebus-para14a',
+    +     rawSummary: {
+    +       active: true,
+    +       candidateCount: 1,
+    +       limitIds: [
+    +         1
+    +       ],
+    +       selectedLimitW: 4200
+    +     },
+    +     receivedAtMs: 1790856739257,
+    +     sourceDeviceId: 'peer',
+    +     sourceSki: ''
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      apiVersion: 1
+      protocol: 'nexowatt-eebus-para14a'
+      commandId: 'eebus-peer-1-00b3d0b2033709ce'
+      operation: 'limitConsumption'
+      active: true
+      limitW: 4200
+      failsafeLimitW: ~
+      failsafeDurationMs: ~
+      heartbeatTimeoutMs: ~
+      heartbeatAtMs: ~
+      receivedAtMs: 1790856739257
+      effectiveFromMs: 1790856739257
+      expiresAtMs: ~
+      sourceDeviceId: 'peer'
+      sourceSki: ''
+      correlation:
+        specificationVersion: '1.3.0'
+        msgCounter: 1
+        ackRequest: false
+        cmdClassifier: 'write'
+        functionName: 'loadControlLimitListData'
+        sourceAddress: ~
+        destinationAddress: ~
+        limitIds:
+          0: 1
+      rawSummary:
+        selectedLimitW: 4200
+        active: true
+        candidateCount: 1
+        limitIds: <Circular>
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:145:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: trusted-but-unfinished control and JSON frames cannot tunnel a CLS command either
+not ok 12 - trusted-but-unfinished control and JSON frames cannot tunnel a CLS command either
+  ---
+  duration_ms: 1.784049
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:151:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     unhandledControl: {
+    +       datagram: {
+    +         header: {
+    +           cmdClassifier: 'write',
+    +           msgCounter: 1,
+    +           specificationVersion: '1.3.0'
+    +         },
+    +         payload: {
+    +           cmd: [
+    +             {
+    +               loadControlLimitListData: {
+    +                 loadControlLimitData: [
+    +                   {
+    +                     isLimitActive: true,
+    +                     limitId: 1,
+    +                     limitType: 'consumptionActivePower',
+    +                     value: {
+    +                       number: 4200,
+    +                       scale: 0
+    +                     }
+    +                   }
+    +                 ]
+    +               }
+    +             }
+    +           ]
+    +         }
+    +       }
+    +     }
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      unhandledControl:
+        datagram:
+          header:
+            specificationVersion: '1.3.0'
+            msgCounter: 1
+            cmdClassifier: 'write'
+          payload:
+            cmd:
+              0:
+                loadControlLimitListData:
+                  loadControlLimitData:
+                    0:
+                      limitId: 1
+                      limitType: 'consumptionActivePower'
+                      isLimitActive: true
+                      value:
+                        number: 4200
+                        scale: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:156:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: even a completed trusted session accepts SPINE only through the data channel
+not ok 13 - even a completed trusted session accepts SPINE only through the data channel
+  ---
+  duration_ms: 1.371624
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:161:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     unhandledControl: {
+    +       datagram: {
+    +         header: {
+    +           cmdClassifier: 'write',
+    +           msgCounter: 1,
+    +           specificationVersion: '1.3.0'
+    +         },
+    +         payload: {
+    +           cmd: [
+    +             {
+    +               loadControlLimitListData: {
+    +                 loadControlLimitData: [
+    +                   {
+    +                     isLimitActive: true,
+    +                     limitId: 1,
+    +                     limitType: 'consumptionActivePower',
+    +                     value: {
+    +                       number: 4200,
+    +                       scale: 0
+    +                     }
+    +                   }
+    +                 ]
+    +               }
+    +             }
+    +           ]
+    +         }
+    +       }
+    +     }
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      unhandledControl:
+        datagram:
+          header:
+            specificationVersion: '1.3.0'
+            msgCounter: 1
+            cmdClassifier: 'write'
+          payload:
+            cmd:
+              0:
+                loadControlLimitListData:
+                  loadControlLimitData:
+                    0:
+                      limitId: 1
+                      limitType: 'consumptionActivePower'
+                      isLimitActive: true
+                      value:
+                        number: 4200
+                        scale: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:166:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: PIN requests cannot disclose configured PIN before trusted completed protocol selection
+not ok 14 - PIN requests cannot disclose configured PIN before trusted completed protocol selection
+  ---
+  duration_ms: 1.165903
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:176:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    PIN was sent before the trusted protocol boundary (false/required)
+    + actual - expected
+    
+    + [
+    +   Buffer(42) [Uint8Array] [
+    +     1,
+    +     123,
+    +     34,
+    +     99,
+    +     111,
+    +     110,
+    +     110,
+    +     101,
+    +     99,
+    +     116,
+    +     105,
+    +     111,
+    +     110,
+    +     80,
+    +     105,
+    +     110,
+    +     73,
+    +     110,
+    +     112,
+    +     117,
+    +     116,
+    +     34,
+    +     58,
+    +     123,
+    +     34,
+    +     112,
+    +     105,
+    +     110,
+    +     34,
+    +     58,
+    +     34,
+    +     84,
+    +     69,
+    +     83,
+    +     84,
+    +     45,
+    +     80,
+    +     73,
+    +     78,
+    +     34,
+    +     125,
+    +     125
+    +   ]
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      0: 1
+      1: 123
+      2: 34
+      3: 99
+      4: 111
+      5: 110
+      6: 110
+      7: 101
+      8: 99
+      9: 116
+      10: 105
+      11: 111
+      12: 110
+      13: 80
+      14: 105
+      15: 110
+      16: 73
+      17: 110
+      18: 112
+      19: 117
+      20: 116
+      21: 34
+      22: 58
+      23: 123
+      24: 34
+      25: 112
+      26: 105
+      27: 110
+      28: 34
+      29: 58
+      30: 34
+      31: 84
+      32: 69
+      33: 83
+      34: 84
+      35: 45
+      36: 80
+      37: 73
+      38: 78
+      39: 34
+      40: 125
+      41: 125
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:181:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: legitimate PIN request after trusted hello and protocol selection retains pairing flow
+ok 15 - legitimate PIN request after trusted hello and protocol selection retains pairing flow
+  ---
+  duration_ms: 1.100164
+  type: 'test'
+  ...
+# Subtest: revoked session cannot request PIN after previously completed protocol selection
+not ok 16 - revoked session cannot request PIN after previously completed protocol selection
+  ---
+  duration_ms: 0.786569
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:199:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   Buffer(42) [Uint8Array] [
+    +     1,
+    +     123,
+    +     34,
+    +     99,
+    +     111,
+    +     110,
+    +     110,
+    +     101,
+    +     99,
+    +     116,
+    +     105,
+    +     111,
+    +     110,
+    +     80,
+    +     105,
+    +     110,
+    +     73,
+    +     110,
+    +     112,
+    +     117,
+    +     116,
+    +     34,
+    +     58,
+    +     123,
+    +     34,
+    +     112,
+    +     105,
+    +     110,
+    +     34,
+    +     58,
+    +     34,
+    +     84,
+    +     69,
+    +     83,
+    +     84,
+    +     45,
+    +     80,
+    +     73,
+    +     78,
+    +     34,
+    +     125,
+    +     125
+    +   ]
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      0: 1
+      1: 123
+      2: 34
+      3: 99
+      4: 111
+      5: 110
+      6: 110
+      7: 101
+      8: 99
+      9: 116
+      10: 105
+      11: 111
+      12: 110
+      13: 80
+      14: 105
+      15: 110
+      16: 73
+      17: 110
+      18: 112
+      19: 117
+      20: 116
+      21: 34
+      22: 58
+      23: 123
+      24: 34
+      25: 112
+      26: 105
+      27: 110
+      28: 34
+      29: 58
+      30: 34
+      31: 84
+      32: 69
+      33: 83
+      34: 84
+      35: 45
+      36: 80
+      37: 73
+      38: 78
+      39: 34
+      40: 125
+      41: 125
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/eebus/test/ship-security.test.cjs:205:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 11
+# fail 5
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 248.987902

@@ -1,0 +1,86 @@
+# Changelog for Node.js Updater Script
+
+## 2026-09-30
+* Store updater and npm diagnostics in private temporary directories without privileged log mutation or runtime-log cleanup.
+## 2026-09-30
+* Check for wrong paths. The nodejs binairies live in /usr/bin and not elsewhere in $PATH 
+* Added logging - Log can be retrieved in /opt/iobroker/log/ 
+
+## 2026-09-27
+* GPG key check is now more robust
+* get_accepted_node_majors function fixed
+
+## 2026-09-25
+* VERSIONS_URL can be overridden, so the CI can test a versions.json before it is merged
+
+## 2026-09-23
+* Install Node.js 24 instead of 22 when no version is given, following nodeJsRecommended
+
+## 2026-09-06
+* Added package database consistency check
+* Added hint to rerun the command if key verification fails
+* Package database check now uses the detected package manager and prints its output on failure
+* Fixed the up-to-date check which never matched and forced a full reinstall on every run
+* Warn the user when versions.json cannot be read and the built-in default Node.js version is used
+* Accepted Node.js versions are now read from versions.json instead of a hardcoded minimum of 18
+* Dropped Node.js 18 and 20 from the offline fallback list, iobroker.admin requires Node.js 22 or newer
+
+## 2026-06-21
+* Complete code rewrite
+* BREAKING CHANGE: 32bit support has been revoked due to nodesource upstream only supporting 64bit versions
+* Added Options --help and --dry-run 
+
+## 2026-03-05
+* Make sure any previously installed nodejs is removed, including dfsg version
+
+## 2026-03-02
+* Use deb822 format for sources in accordance with nodesource installer script
+* Replace hardcoded Node.js version with dynamic lookup from `versions.json`
+
+## 2026-01-31
+* Fixed finding repo signature keys
+* Removed deprecated dependency
+* Minor fixes
+
+## 2026-01-26
+* Adjustments due to new package signature keys
+* General fixes
+* Fixing endless stop loop when iob was not even running
+* Removed check for corepack
+* Remove any exiting nodesource source files 
+
+## 2025-08-14
+* Avoid having two pinning files and bumping the pin priority to 1001 
+
+## 2025-08-09
+* nodejs@22 is the default installation target when no other option set
+* Added basic compatibility check - Only --dry-run, no changes
+* Progressbar is shown only as long as the ioBroker shutdown takes
+* Fixed finding the nodesource repo keys
+* Code cleanup
+
+## 2025-05-31
+* Added basic compatibility check
+
+## 2025-02-23
+* Check for illegal version option 
+
+## 2024-10-10
+* Fix buster / Debian 10 detection
+
+## 2024-09-29
+* Fixed buster&nodejs18 detection
+
+## 2024-06-20
+* Prevent nodejs-update on Buster, except installing nodejs@18
+* Added removal of dfsg-nodejs version
+* Suppressed some error messages
+
+## 2024-05-23
+* Added nodejs20 as the default version
+
+## 2023-10-13
+* Also allow to run as root but display informative message
+
+## 2023-10-10
+* Initial release with new Nodesource script and Node.js 18 as recommended version

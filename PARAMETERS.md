@@ -1,0 +1,43 @@
+# NexoWatt EOS review profile — parameters
+
+This branch prepares host hardening; it is **not a completed product release**. See [acceptance gates](docs/security/ACCEPTANCE.md). The previous upstream installation commands fetch upstream ioBroker and do not apply these changes.
+
+## Build and source execution
+
+From a reviewed, administrator-controlled checkout outside `/opt/iobroker` and the service account home:
+
+```sh
+node tasks --create
+bash dist/install.sh --silent --no-autostart
+```
+
+The shell profile requires 64-bit Linux, systemd, the fixed `/opt/iobroker` runtime location, and root-owned OS tools under `/usr/bin`. It rejects existing runtime trees; use the maintenance procedure for those. Installer defaults always leave the service **stopped and disabled**. `--no-autostart` remains accepted. `--silent` keeps existing non-interactive installation behavior. No flag bypasses the security/provisioning gates.
+
+`--redis` is rejected before host changes: it used to provision plaintext connections and overwrite configuration. `IOB_FORCE_INITD` is rejected. Windows, macOS and FreeBSD are outside this profile. The upstream NPX entry points remain separate and are not a way to install this hardened profile.
+
+## Existing installation maintenance
+
+Back up and verify recovery first. Stop ioBroker and every service-account process using a separate OS administrator. Then run the **reviewed local** `dist/fix.sh` or `fix_installation.sh`. The maintenance script disables old autostart before changing policy. It aborts for unknown/custom sudo policy and capabilities. It does not compress databases, install latest npm tools, upgrade the OS, or migrate JSONL to Redis. `--no-update` remains harmless because updates are never automatic here.
+
+The script installs a protected CLI and a service with a static TLS configuration check. Read [host privilege migration](docs/security/HOST_PRIVILEGES.md) before execution. Failure may leave a partially applied, stopped migration; recover from the documented backup and review the error. Never automatically restore the old broad sudo policy.
+
+## CLI and local tools
+
+`iob start`, `iob stop`, `iob restart` require an OS administrator's existing authorization. Other CLI calls run as `iobroker`, including calls issued by root. `--allow-root` cannot turn the protected wrapper into a root runtime.
+
+The `iob fix`, `iob diag`, and `iob nodejs-update` remote download shortcuts are disabled. Execute reviewed local scripts instead; e.g. `bash /trusted/review/diag.sh --de --summary`, or `bash /trusted/review/node-update.sh --dry-run`. Diagnostics may include confidential data with `--unmask`. The updater still has its own Debian/non-root/Docker restrictions; its new log behavior does not certify its entire update chain.
+
+## Verification and deployment
+
+```sh
+node security/verify-runtime-tls.cjs /path/to/iobroker.json
+node --test tests/security/*.test.cjs
+python3 tests/security/host-policy.test.py
+python3 tests/security/wrapper.test.py
+python3 tests/security/node-update-log.test.py
+python3 tests/security/profile.test.py
+```
+
+The TLS command validates configuration only. It does not provision certificates/Redis, test a connection, migrate data, secure Admin, or prove adapter isolation.
+
+`node tasks --create` needs no deployment secrets. SFTP additionally requires `SFTP_HOST`, `SFTP_PORT`, `SFTP_USER`, `SFTP_PASS`, and an independently verified `SFTP_HOST_KEY_SHA256`. See [SFTP deployment](docs/security/SFTP_DEPLOYMENT.md). Do not publish this branch as a secure product until acceptance is complete.

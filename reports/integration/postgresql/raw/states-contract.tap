@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: plugin exports native backend identity and complete inspected 7.2.2 API
+ok 1 - plugin exports native backend identity and complete inspected 7.2.2 API
+  ---
+  duration_ms: 5.625399
+  type: 'test'
+  ...
+# Subtest: setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input
+ok 2 - setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input
+  ---
+  duration_ms: 3.220562
+  type: 'test'
+  ...
+# Subtest: primitive values, explicit lc/q and Async aliases preserve contract
+ok 3 - primitive values, explicit lc/q and Async aliases preserve contract
+  ---
+  duration_ms: 1.680502
+  type: 'test'
+  ...
+# Subtest: ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound
+ok 4 - ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound
+  ---
+  duration_ms: 4.015804
+  type: 'test'
+  ...
+# Subtest: raw restore keeps exact JSON and emits no event
+ok 5 - raw restore keeps exact JSON and emits no event
+  ---
+  duration_ms: 10.739756
+  type: 'test'
+  ...
+# Subtest: system/user subscription isolation, wildcards and unsubscribe
+ok 6 - system/user subscription isolation, wildcards and unsubscribe
+  ---
+  duration_ms: 3.511422
+  type: 'test'
+  ...
+# Subtest: escaped glob literals and negated classes do not become regular-expression expressions
+ok 7 - escaped glob literals and negated classes do not become regular-expression expressions
+  ---
+  duration_ms: 4.1708
+  type: 'test'
+  ...
+# Subtest: state deletion and TTL expiration emit null; reads exclude expired values
+ok 8 - state deletion and TTL expiration emit null; reads exclude expired values
+  ---
+  duration_ms: 2.562632
+  type: 'test'
+  ...
+# Subtest: sessions expire, can be destroyed, and retain upstream one-argument success callback
+ok 9 - sessions expire, can be destroyed, and retain upstream one-argument success callback
+  ---
+  duration_ms: 2.032739
+  type: 'test'
+  ...
+# Subtest: messages/logs preserve prefixed channels and event buffers, without storing/replaying commands
+ok 10 - messages/logs preserve prefixed channels and event buffers, without storing/replaying commands
+  ---
+  duration_ms: 1.845943
+  type: 'test'
+  ...
+# Subtest: Buffer state read matches upstream JSON shape while change event revives Buffer
+ok 11 - Buffer state read matches upstream JSON shape while change event revives Buffer
+  ---
+  duration_ms: 0.948485
+  type: 'test'
+  ...
+# Subtest: callbacks are asynchronous and return id/error in their existing slots
+ok 12 - callbacks are asynchronous and return id/error in their existing slots
+  ---
+  duration_ms: 1.023348
+  type: 'test'
+  ...
+# Subtest: destroyDB is limited to state namespace and leaves sessions/protocol intact
+ok 13 - destroyDB is limited to state namespace and leaves sessions/protocol intact
+  ---
+  duration_ms: 0.78666
+  type: 'test'
+  ...
+# Subtest: disconnect fails writes closed and reconnect resumes live subscriptions without replay
+ok 14 - disconnect fails writes closed and reconnect resumes live subscriptions without replay
+  ---
+  duration_ms: 2.025384
+  type: 'test'
+  ...
+# Subtest: unexpected protocol version disconnects and prevents writes
+ok 15 - unexpected protocol version disconnects and prevents writes
+  ---
+  duration_ms: 0.894773
+  type: 'test'
+  ...
+# Subtest: autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error
+ok 16 - autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error
+  ---
+  duration_ms: 1.258413
+  type: 'test'
+  ...
+# Subtest: invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing
+ok 17 - invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing
+  ---
+  duration_ms: 1.068617
+  type: 'test'
+  ...
+# Subtest: bounded events reject oversized writes and preserve previous value
+ok 18 - bounded events reject oversized writes and preserve previous value
+  ---
+  duration_ms: 36.72027
+  type: 'test'
+  ...
+# Subtest: malformed stored JSON and malformed buffer event fail closed without raw diagnostics
+ok 19 - malformed stored JSON and malformed buffer event fail closed without raw diagnostics
+  ---
+  duration_ms: 2.843316
+  type: 'test'
+  ...
+# Subtest: simultaneous updates preserve latest value when later metadata-only write follows
+ok 20 - simultaneous updates preserve latest value when later metadata-only write follows
+  ---
+  duration_ms: 0.907052
+  type: 'test'
+  ...
+# Subtest: closed client cannot reopen, read, publish or write
+ok 21 - closed client cannot reopen, read, publish or write
+  ---
+  duration_ms: 0.354536
+  type: 'test'
+  ...
+# Subtest: overlapping subscriptions preserve normal duplicate delivery but expiry delivers once
+ok 22 - overlapping subscriptions preserve normal duplicate delivery but expiry delivers once
+  ---
+  duration_ms: 1.269991
+  type: 'test'
+  ...
+# Subtest: queued events are discarded across disconnect rather than executing stale commands
+ok 23 - queued events are discarded across disconnect rather than executing stale commands
+  ---
+  duration_ms: 0.863496
+  type: 'test'
+  ...
+# Subtest: event fanout and subscription count are bounded and overload disconnects visibly
+ok 24 - event fanout and subscription count are bounded and overload disconnects visibly
+  ---
+  duration_ms: 89.744878
+  type: 'test'
+  ...
+# Subtest: malformed UTF-8 stored data is rejected rather than normalized silently
+ok 25 - malformed UTF-8 stored data is rejected rather than normalized silently
+  ---
+  duration_ms: 0.688041
+  type: 'test'
+  ...
+# Subtest: namespace globs and overlapping domains are rejected before opening a store
+ok 26 - namespace globs and overlapping domains are rejected before opening a store
+  ---
+  duration_ms: 0.342989
+  type: 'test'
+  ...
+# Subtest: quote-shaped state ids remain literal data at the Store boundary
+ok 27 - quote-shaped state ids remain literal data at the Store boundary
+  ---
+  duration_ms: 0.407576
+  type: 'test'
+  ...
+# Subtest: non-ASCII ids and Redis byte-wise question-mark globs remain compatible
+ok 28 - non-ASCII ids and Redis byte-wise question-mark globs remain compatible
+  ---
+  duration_ms: 1.547651
+  type: 'test'
+  ...
+# Subtest: aggregate complex-glob work is bounded per incoming event
+ok 29 - aggregate complex-glob work is bounded per incoming event
+  ---
+  duration_ms: 1.839062
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 340.734636

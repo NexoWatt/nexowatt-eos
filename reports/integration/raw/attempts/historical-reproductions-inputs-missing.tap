@@ -1,0 +1,534 @@
+TAP version 13
+# Subtest: ADM7-R01: distributed defaults enable authentication but HTTP on all IPv4 interfaces
+ok 1 - ADM7-R01: distributed defaults enable authentication but HTTP on all IPv4 interfaces
+  ---
+  duration_ms: 2.453831
+  type: 'test'
+  ...
+# Subtest: ADM7-R02: clean bootstrap assigns a shared initial credential to three enabled accounts
+ok 2 - ADM7-R02: clean bootstrap assigns a shared initial credential to three enabled accounts
+  ---
+  duration_ms: 1.642705
+  type: 'test'
+  ...
+# Subtest: ADM7-R03: restart preserves a personal password but clears the forced-change state
+ok 3 - ADM7-R03: restart preserves a personal password but clears the forced-change state
+  ---
+  duration_ms: 0.960062
+  type: 'test'
+  ...
+# Subtest: ADM7-R04: installer command guard accepts a source URL without delegating original denial
+ok 4 - ADM7-R04: installer command guard accepts a source URL without delegating original denial
+  ---
+  duration_ms: 0.957097
+  type: 'test'
+  ...
+# Subtest: ADM7-R05: installer command guard still rejects protected module upgrade
+ok 5 - ADM7-R05: installer command guard still rejects protected module upgrade
+  ---
+  duration_ms: 0.434778
+  type: 'test'
+  ...
+# Subtest: exact root normalization preserves archive integrity and local provenance
+ok 6 - exact root normalization preserves archive integrity and local provenance
+  ---
+  duration_ms: 4.799499
+  type: 'test'
+  ...
+# Subtest: normalization rejects mismatched actual installed identity
+ok 7 - normalization rejects mismatched actual installed identity
+  ---
+  duration_ms: 2.280829
+  type: 'test'
+  ...
+# Subtest: normalization rejects missing artifact integrity
+ok 8 - normalization rejects missing artifact integrity
+  ---
+  duration_ms: 2.235661
+  type: 'test'
+  ...
+# Subtest: normalization rejects traversal archive references
+ok 9 - normalization rejects traversal archive references
+  ---
+  duration_ms: 2.528424
+  type: 'test'
+  ...
+# Subtest: source snapshot skips execution dependencies and rejects links
+ok 10 - source snapshot skips execution dependencies and rejects links
+  ---
+  duration_ms: 2.806194
+  type: 'test'
+  ...
+# Subtest: existing output directories and duplicate components rejected before npm
+ok 11 - existing output directories and duplicate components rejected before npm
+  ---
+  duration_ms: 1.264142
+  type: 'test'
+  ...
+# Subtest: aggregate root preserves compatible component overrides
+ok 12 - aggregate root preserves compatible component overrides
+  ---
+  duration_ms: 0.419955
+  type: 'test'
+  ...
+# Subtest: conflicting or prototype-mutating component overrides fail before installation
+ok 13 - conflicting or prototype-mutating component overrides fail before installation
+  ---
+  duration_ms: 3.540675
+  type: 'test'
+  ...
+# /workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/devices-source-review.test.cjs:12
+# if (!root) throw new Error('EOS_DEVICES_SOURCE is required; use the reviewed source snapshot');
+#            ^
+# Error: EOS_DEVICES_SOURCE is required; use the reviewed source snapshot
+#     at Object.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/devices-source-review.test.cjs:12:18)
+#     at Module._compile (node:internal/modules/cjs/loader:1872:14)
+#     at Object..js (node:internal/modules/cjs/loader:2003:10)
+#     at Module.load (node:internal/modules/cjs/loader:1594:32)
+#     at Module._load (node:internal/modules/cjs/loader:1396:12)
+#     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+#     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+#     at node:internal/main/run_main_module:33:47
+# Node.js v24.19.0
+# Subtest: tests/integration/devices-source-review.test.cjs
+not ok 3 - tests/integration/devices-source-review.test.cjs
+  ---
+  duration_ms: 122.440006
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/devices-source-review.test.cjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: initial enrollment stores only hash and disabled fixed instances; verifies without writes
+ok 15 - initial enrollment stores only hash and disabled fixed instances; verifies without writes
+  ---
+  duration_ms: 2511.878263
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:0
+ok 16 - password rejects bounded invalid input string:0
+  ---
+  duration_ms: 0.436621
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:5
+ok 17 - password rejects bounded invalid input string:5
+  ---
+  duration_ms: 0.137979
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:129
+ok 18 - password rejects bounded invalid input string:129
+  ---
+  duration_ms: 0.527628
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:14
+ok 19 - password rejects bounded invalid input string:14
+  ---
+  duration_ms: 0.312663
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:21
+ok 20 - password rejects bounded invalid input string:21
+  ---
+  duration_ms: 0.332503
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 21 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.1587
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 22 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.133492
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:200
+ok 23 - password rejects bounded invalid input string:200
+  ---
+  duration_ms: 0.206382
+  type: 'test'
+  ...
+# Subtest: password allows long unicode passphrase without composition tricks
+ok 24 - password allows long unicode passphrase without composition tricks
+  ---
+  duration_ms: 0.195055
+  type: 'test'
+  ...
+# Subtest: rejects marker pending without repair
+ok 25 - rejects marker pending without repair
+  ---
+  duration_ms: 1.063218
+  type: 'test'
+  ...
+# Subtest: rejects config changed without repair
+ok 26 - rejects config changed without repair
+  ---
+  duration_ms: 0.768102
+  type: 'test'
+  ...
+# Subtest: rejects physical enabled without repair
+ok 27 - rejects physical enabled without repair
+  ---
+  duration_ms: 0.956817
+  type: 'test'
+  ...
+# Subtest: rejects core binding without repair
+ok 28 - rejects core binding without repair
+  ---
+  duration_ms: 0.58825
+  type: 'test'
+  ...
+# Subtest: rejects remote repo without repair
+ok 29 - rejects remote repo without repair
+  ---
+  duration_ms: 0.613358
+  type: 'test'
+  ...
+# Subtest: rejects automatic updates without repair
+ok 30 - rejects automatic updates without repair
+  ---
+  duration_ms: 0.554879
+  type: 'test'
+  ...
+# Subtest: rejects disabled admin without repair
+ok 31 - rejects disabled admin without repair
+  ---
+  duration_ms: 0.509151
+  type: 'test'
+  ...
+# Subtest: rejects weak password without repair
+ok 32 - rejects weak password without repair
+  ---
+  duration_ms: 0.602832
+  type: 'test'
+  ...
+# Subtest: rejects extra executable without repair
+ok 33 - rejects extra executable without repair
+  ---
+  duration_ms: 0.898039
+  type: 'test'
+  ...
+# Subtest: rejects node arguments without repair
+ok 34 - rejects node arguments without repair
+  ---
+  duration_ms: 0.921324
+  type: 'test'
+  ...
+# Subtest: rejects remote host without repair
+ok 35 - rejects remote host without repair
+  ---
+  duration_ms: 1.954566
+  type: 'test'
+  ...
+# Subtest: rejects admin plaintext without repair
+ok 36 - rejects admin plaintext without repair
+  ---
+  duration_ms: 0.48878
+  type: 'test'
+  ...
+# Subtest: rejects UI no auth without repair
+ok 37 - rejects UI no auth without repair
+  ---
+  duration_ms: 0.466276
+  type: 'test'
+  ...
+# Subtest: rejects UI trusted header without repair
+ok 38 - rejects UI trusted header without repair
+  ---
+  duration_ms: 0.471013
+  type: 'test'
+  ...
+# Subtest: rejects UI path without repair
+ok 39 - rejects UI path without repair
+  ---
+  duration_ms: 0.611605
+  type: 'test'
+  ...
+# Subtest: controller alive blocks first mutation
+ok 40 - controller alive blocks first mutation
+  ---
+  duration_ms: 2.640484
+  type: 'test'
+  ...
+# Subtest: failed enrollment retains pending gate and never enables partially written instances
+ok 41 - failed enrollment retains pending gate and never enables partially written instances
+  ---
+  duration_ms: 782.423839
+  type: 'test'
+  ...
+# Subtest: normal start, incomplete maintenance blocked, live trial and cleanup
+ok 42 - normal start, incomplete maintenance blocked, live trial and cleanup
+  ---
+  duration_ms: 7.113728
+  type: 'test'
+  ...
+# Subtest: exited coordinator cannot grant later reboot/start through its old permit
+ok 43 - exited coordinator cannot grant later reboot/start through its old permit
+  ---
+  duration_ms: 100.379857
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit startTicks
+ok 44 - stale or invalid permit startTicks
+  ---
+  duration_ms: 1.822006
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit bootId
+ok 45 - stale or invalid permit bootId
+  ---
+  duration_ms: 1.777138
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit operation
+ok 46 - stale or invalid permit operation
+  ---
+  duration_ms: 3.672445
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit version
+ok 47 - stale or invalid permit version
+  ---
+  duration_ms: 2.982302
+  type: 'test'
+  ...
+# Subtest: orphan permit cannot bypass absent lock
+ok 48 - orphan permit cannot bypass absent lock
+  ---
+  duration_ms: 1.549233
+  type: 'test'
+  ...
+# Subtest: writable lock and symlinked permit rejected
+ok 49 - writable lock and symlinked permit rejected
+  ---
+  duration_ms: 1.024429
+  type: 'test'
+  ...
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 50 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 1.867024
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 51 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 3.910464
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 52 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 201.203998
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 53 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 1.103179
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 54 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 0.847767
+  type: 'test'
+  ...
+# Subtest: onboarding public trust and secret modes survive restrictive inherited umask
+ok 55 - onboarding public trust and secret modes survive restrictive inherited umask
+  ---
+  duration_ms: 81.340189
+  type: 'test'
+  ...
+# Subtest: failure to revoke the trial permit still attempts to stop the controller
+ok 56 - failure to revoke the trial permit still attempts to stop the controller
+  ---
+  duration_ms: 0.556552
+  type: 'test'
+  ...
+# Subtest: failed revocation and failed stop report the more specific stop failure
+ok 57 - failed revocation and failed stop report the more specific stop failure
+  ---
+  duration_ms: 0.374447
+  type: 'test'
+  ...
+# Subtest: readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+ok 58 - readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+  ---
+  duration_ms: 2.136792
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected success
+ok 59 - readiness rejects admin unexpected success
+  ---
+  duration_ms: 0.477102
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unrelated forbidden response
+ok 60 - readiness rejects admin unrelated forbidden response
+  ---
+  duration_ms: 0.46277
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous writes
+ok 61 - readiness rejects UI anonymous writes
+  ---
+  duration_ms: 0.424182
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous admin
+ok 62 - readiness rejects UI anonymous admin
+  ---
+  duration_ms: 0.472856
+  type: 'test'
+  ...
+# Subtest: readiness rejects unverified peer
+ok 63 - readiness rejects unverified peer
+  ---
+  duration_ms: 0.420947
+  type: 'test'
+  ...
+# Subtest: readiness rejects old TLS version
+ok 64 - readiness rejects old TLS version
+  ---
+  duration_ms: 0.341196
+  type: 'test'
+  ...
+# Subtest: readiness rejects oversized body
+ok 65 - readiness rejects oversized body
+  ---
+  duration_ms: 0.511093
+  type: 'test'
+  ...
+# Subtest: readiness rejects invalid JSON
+ok 66 - readiness rejects invalid JSON
+  ---
+  duration_ms: 0.41612
+  type: 'test'
+  ...
+# /workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-source-reproduction.test.cjs:14
+# if (!sourceRoot) throw new Error('EOS_UI_SOURCE must point to the reviewed UI 1.0.21 extraction.');
+#                  ^
+# Error: EOS_UI_SOURCE must point to the reviewed UI 1.0.21 extraction.
+#     at Object.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-source-reproduction.test.cjs:14:24)
+#     at Module._compile (node:internal/modules/cjs/loader:1872:14)
+#     at Object..js (node:internal/modules/cjs/loader:2003:10)
+#     at Module.load (node:internal/modules/cjs/loader:1594:32)
+#     at Module._load (node:internal/modules/cjs/loader:1396:12)
+#     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+#     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+#     at node:internal/main/run_main_module:33:47
+# Node.js v24.19.0
+# Subtest: tests/integration/ui-source-reproduction.test.cjs
+not ok 7 - tests/integration/ui-source-reproduction.test.cjs
+  ---
+  duration_ms: 142.726717
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-source-reproduction.test.cjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: unique local CA and distinct per-listener keys verify SANs
+ok 68 - unique local CA and distinct per-listener keys verify SANs
+  ---
+  duration_ms: 3.226852
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input []
+ok 69 - rejects invalid SAN input []
+  ---
+  duration_ms: 0.456911
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["a\\nDNS:evil"]
+ok 70 - rejects invalid SAN input ["a\\nDNS:evil"]
+  ---
+  duration_ms: 0.144268
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["*.example.com"]
+ok 71 - rejects invalid SAN input ["*.example.com"]
+  ---
+  duration_ms: 0.150708
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["bad/name"]
+ok 72 - rejects invalid SAN input ["bad/name"]
+  ---
+  duration_ms: 0.124188
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["-evil"]
+ok 73 - rejects invalid SAN input ["-evil"]
+  ---
+  duration_ms: 0.146762
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["xxxxxxxxxxxxxxxxxxxxxx
+ok 74 - rejects invalid SAN input ["xxxxxxxxxxxxxxxxxxxxxx
+  ---
+  duration_ms: 0.128364
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["eos.test","eos.test","
+ok 75 - rejects invalid SAN input ["eos.test","eos.test","
+  ---
+  duration_ms: 0.149556
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["  host"]
+ok 76 - rejects invalid SAN input ["  host"]
+  ---
+  duration_ms: 0.162616
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input [null]
+ok 77 - rejects invalid SAN input [null]
+  ---
+  duration_ms: 0.188655
+  type: 'test'
+  ...
+# Subtest: never overwrites an existing certificate installation
+ok 78 - never overwrites an existing certificate installation
+  ---
+  duration_ms: 0.344561
+  type: 'test'
+  ...
+# Subtest: warning before expiry and rejection after expiry
+ok 79 - warning before expiry and rejection after expiry
+  ---
+  duration_ms: 3.734879
+  type: 'test'
+  ...
+# Subtest: TLS1.3 with trusted SAN succeeds; TLS1.2 rejected over real socket
+ok 80 - TLS1.3 with trusted SAN succeeds; TLS1.2 rejected over real socket
+  ---
+  duration_ms: 26.513908
+  type: 'test'
+  ...
+# Subtest: world-readable private leaf key rejected
+ok 81 - world-readable private leaf key rejected
+  ---
+  duration_ms: 2.213178
+  type: 'test'
+  ...
+1..81
+# tests 81
+# suites 0
+# pass 79
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3443.922441

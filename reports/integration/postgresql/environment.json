@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-01T20:03:30.013381+00:00",
+  "scope": "PostgreSQL replacement development laboratory preparation; no product/runtime installation",
+  "status": "toolchain-built-real-postgresql-tests-blocked-by-nonroot-environment",
+  "environment": {
+    "os": "Ubuntu24.04.3LTS",
+    "architecture": "x86_64",
+    "euid": 0,
+    "uidMapping": "only namespaceuid0 mapped",
+    "gcc": "13.3.0",
+    "systemOpenSSL": "3.0.13",
+    "node": "24.21.0",
+    "targetDebian13Arm64Tested": false
+  },
+  "postgresql": {
+    "version": "postgres (PostgreSQL) 17.11",
+    "sourceUrl": "https://ftp.postgresql.org/pub/source/v17.11/postgresql-17.11.tar.bz2",
+    "checksumUrl": "https://ftp.postgresql.org/pub/source/v17.11/postgresql-17.11.tar.bz2.sha256",
+    "source": {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/downloads/postgresql-17.11.tar.bz2",
+      "bytes": 21787224,
+      "sha256": "dd27f2b3c59e73ed14aa3324901242bf69a032a6347805f274e6260322d42979"
+    },
+    "checksumMatches": true,
+    "detachedSignatureVerified": false,
+    "configure": "'--prefix=/workspace/scratch/6383b3161c96/postgresql-test-tooling/17.11' '--with-ssl=openssl' '--without-readline' '--without-icu'",
+    "buildCommand": "make -j4",
+    "installCommand": "make install (prefix in scratch only)",
+    "binary": {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/17.11/bin/postgres",
+      "bytes": 11052144,
+      "sha256": "267cbc5f33f9ed86c8626844b8b670487037d51e01c01ee0ebcf8b140371fbe8"
+    },
+    "clientBinary": {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/17.11/bin/psql",
+      "bytes": 607536,
+      "sha256": "38e8155fee19e55e71b070a340e3d4e994245c6cd44028f980b154011f2bb7b3"
+    },
+    "initdbBinary": {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/17.11/bin/initdb",
+      "bytes": 218424,
+      "sha256": "b84aaa68d818c20263a39219e6bbaaa1f39b9ee1c9662007960b02cd48ee9553"
+    },
+    "buildSucceeded": true,
+    "realClusterStarted": false,
+    "hostPackageInstallation": false,
+    "hostServiceMutation": false,
+    "productionArtifact": false
+  },
+  "buildOnlyPrerequisites": [
+    {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/downloads/bison_3.8.2+dfsg-1+b1_amd64.deb",
+      "bytes": 1174528,
+      "sha256": "a414afd7519c53bfa33415ba5b951bc8b4906877004c49723ffda50a6033c3e8"
+    },
+    {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/downloads/flex_2.6.4-8.2_amd64.deb",
+      "bytes": 421580,
+      "sha256": "da3fd55dbb6aff4f7b3187580813e0ef707d0c596402e37c8fd144df60003636"
+    },
+    {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/downloads/m4_1.4.19-3_amd64.deb",
+      "bytes": 286836,
+      "sha256": "b2dd7bfca426712416e651bb5ff6dabe7d05e4caebbac61d714dbe261b31e4c3"
+    }
+  ],
+  "buildPrerequisiteValidation": "SHA256 compared against official packages.debian.org HTTPS pages; dpkg-deb --extract to scratch only; no package install/maintainer scripts; no independent signed APT-index verification",
+  "nodeClient": {
+    "name": "pg",
+    "version": "8.23.1",
+    "installedCount": 13,
+    "scriptsExecuted": false,
+    "privateTreeDisclosed": false,
+    "npmInstallFlags": [
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund",
+      "--omit=optional"
+    ],
+    "registry": "https://registry.npmjs.org",
+    "advisoryReview": "publisher advisory API returned[]; complete transitive vulnerability review remains open"
+  },
+  "fixture": {
+    "source": {
+      "path": "tests/postgresql/fixtures/lab-cluster.cjs",
+      "bytes": 8803,
+      "sha256": "b7f1b15d70698789bb114bfa221d617bc152345d1cce0133e4bf252a177a8bfd"
+    },
+    "syntaxCheck": "pass",
+    "rootRefusal": "pass",
+    "nonrootStartup": "not-executed",
+    "tlsPositiveNegativeTests": "not-executed",
+    "controllerIntegration": "not-executed",
+    "osServicesModified": false,
+    "keysIncludedInReports": false,
+    "automatedTests": {
+      "source": {
+        "path": "tests/postgresql/tls-lab.test.cjs",
+        "bytes": 4745,
+        "sha256": "f0749ea69d36c2fb9097f536d0803fec47fd2a66d81145a8ee24ed626cc8d14d"
+      },
+      "passedRootGuard": 1,
+      "skippedRealTlsBlock": 1,
+      "realTlsCasesExecuted": 0,
+      "evidence": {
+        "path": "reports/integration/postgresql/raw/tls-lab.tap",
+        "bytes": 514,
+        "sha256": "5970761a50ce7f844deb212d4d919b065c661b1da59073fbd79f674de5324676"
+      }
+    },
+    "negativePeerNameCase": "Uses standard tls.checkServerIdentity with an explicitly unmatched expected name against the actual handshake peer certificate; not executed in root-only environment"
+  },
+  "openGates": [
+    "Run real PostgreSQL17.11 TLS1.3/mTLS positive and negative cases under permitted nonroot account",
+    "Run schema/RLS and multi-client concurrency, reconnect/recovery tests against the real server",
+    "Run actual js-controller+adapter compatibility, migration/backup/restore and PiARM64 load/power-failure tests",
+    "Qualify Debian13 signed package provenance and OpenSSL3.5 target configuration",
+    "Complete vulnerability review and build SBOM before release; official current-list absence is not security proof",
+    "Plan PostgreSQL major upgrades before upstream17 EOL2029-11-08"
+  ],
+  "references": [
+    {
+      "url": "https://packages.debian.org/trixie/postgresql-17",
+      "observation": "17.11-0+deb13u1; amd64 and arm64 published"
+    },
+    {
+      "url": "https://security-tracker.debian.org/tracker/source-package/postgresql-17",
+      "observation": "Current page lists resolved issues; not a guarantee of unknown-vulnerability absence"
+    },
+    {
+      "url": "https://www.postgresql.org/support/versioning/",
+      "observation": "PostgreSQL17 upstream final release2029-11-08; product support lifecycle requires planned major upgrades"
+    },
+    {
+      "url": "https://www.postgresql.org/support/security/17/",
+      "observation": "Security fixes and known advisories"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/17/runtime-config-connection.html",
+      "observation": "TLS1.3 minimum in postgresql.conf; ssl_ciphers does not control TLS1.3 cipher selection"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/17/auth-pg-hba-conf.html",
+      "observation": "hostssl certificate authentication and non-TLS reject rules"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/17/ssl-tcp.html",
+      "observation": "mTLS certificate identity and lifecycle"
+    },
+    {
+      "url": "https://node-postgres.com/features/ssl",
+      "observation": "Explicit SSL options; connectionString SSL options can replace SSL object"
+    },
+    {
+      "url": "https://api.github.com/repos/brianc/node-postgres/security-advisories",
+      "observation": "Returned empty published repository advisory list; insufficient for complete dependency security clearance"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "reports/integration/postgresql/raw/configure-initial-missing-bison.log",
+      "bytes": 4540,
+      "sha256": "0c1f5a9214452b759b9ed6c60430b2c8edc8591ac0517115ee04d7e7f0fb2ae3"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/configure.log",
+      "bytes": 15471,
+      "sha256": "cafe597b2357fe33cbee6cadf7f005529094d023ba507e9b55d974fb9665965e"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/lab-fixture-root-refusal.stderr.log",
+      "bytes": 115,
+      "sha256": "df8ab0747ef7084f7406c550c29ca863337af5c10291df5dd1ab720d08eea10d"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/lab-fixture-root-refusal.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/make-install.log",
+      "bytes": 144175,
+      "sha256": "d241b988eeb73ddcadca82e76a07300256ec20248d33a90f777479373d8e7b7b"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/make.log",
+      "bytes": 833624,
+      "sha256": "3c6569c1200b68c78be1dc9256db1684e00ed99c0be84faa7646a72fcfa02cd0"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/npm-install.log",
+      "bytes": 176,
+      "sha256": "8633ab754980e297ec7a71be44d7eabbce22759b17076fbabee4f845c26cb68c"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pg-advisories.json",
+      "bytes": 5,
+      "sha256": "2ba33ca0557f1bb5b7ba88d67f9d0093c7185a36ec51fe2b7bd9372d3e001d6d"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pg-dependency-tree.json",
+      "bytes": 2904,
+      "sha256": "4e0f13bc7adb6aeb7ec9f47cceaf076ffb2ff159440d5264eda265356975fc39"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pg-installed-inventory.json",
+      "bytes": 5115,
+      "sha256": "60cf39956f397c0f93b0aad5b3c5760ca964ceac581c169b655ad9d7219ad5b8"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pg-package-lock.json",
+      "bytes": 5644,
+      "sha256": "14be123455221a016f33ad20abf98a2f40caf5827b998969a6616226e19753c4"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pg-package.json",
+      "bytes": 93,
+      "sha256": "1197c3c11cf837eea6bd8677ae720109cde3833e6f2c1938a9a9d1ae47674524"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pglite-install.log",
+      "bytes": 173,
+      "sha256": "274c23fe475b2f1ec9c9ee38138417d457fc106a4846c5d6957b8d4b8c80cc6f"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pglite-package-lock.json",
+      "bytes": 604,
+      "sha256": "9c8aeef8cb3622c7516a9641c4bcca0b6192443628bd880d522fdea7ba07139a"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pglite-package.json",
+      "bytes": 147,
+      "sha256": "0c151c9408f94e4a2fded1d2a4e21b69f00e8fe1e630feb5707577a6156f5dff"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/root-environment-check.json",
+      "bytes": 1039,
+      "sha256": "a1f43e4966d987cbccf91c43b29a7b1a51fa889083761cb179e8f95c3597af1f"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm-initial-role-fixture.log",
+      "bytes": 2060,
+      "sha256": "d8fb68b1da7df726c850b4ef12c29a5e2b9e469e8538f8165947b8b71b15ae34"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm-initial-role-fixture.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm.tap",
+      "bytes": 2605,
+      "sha256": "f43ce31b7aae9c3cf9578b6e6f97e4e34228d1949d0e5d494c150fb4b6d097b6"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/tls-lab.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/tls-lab.tap",
+      "bytes": 514,
+      "sha256": "5970761a50ce7f844deb212d4d919b065c661b1da59073fbd79f674de5324676"
+    }
+  ],
+  "wasmSqlOnlyEvidence": {
+    "path": "reports/integration/postgresql/schema-wasm.json",
+    "bytes": 4664,
+    "sha256": "94ef4d0021002235d40376dbe3b08b072d0b76b7d754966837f487e67e7e02c2"
+  }
+}

@@ -1,0 +1,258 @@
+TAP version 13
+# Subtest: valid profile is only a static match with open release gates
+ok 1 - valid profile is only a static match with open release gates
+  ---
+  duration_ms: 11.938507
+  type: 'test'
+  ...
+# Subtest: null, arrays and primitive roots are rejected without throwing
+ok 2 - null, arrays and primitive roots are rejected without throwing
+  ---
+  duration_ms: 0.470542
+  type: 'test'
+  ...
+# Subtest: both database sections and nested objects are required
+ok 3 - both database sections and nested objects are required
+  ---
+  duration_ms: 2.567904
+  type: 'test'
+  ...
+# Subtest: JSONL, file and missing backends cannot pass as encrypted Redis
+ok 4 - JSONL, file and missing backends cannot pass as encrypted Redis
+  ---
+  duration_ms: 0.845509
+  type: 'test'
+  ...
+# Subtest: single TCP endpoint required; sentinel, URLs and unix sockets rejected
+ok 5 - single TCP endpoint required; sentinel, URLs and unix sockets rejected
+  ---
+  duration_ms: 2.543647
+  type: 'test'
+  ...
+# Subtest: TLS 1.3 and explicit certificate verification cannot be weakened
+ok 6 - TLS 1.3 and explicit certificate verification cannot be weakened
+  ---
+  duration_ms: 1.359582
+  type: 'test'
+  ...
+# Subtest: explicit DNS server identity and valid current CA required
+ok 7 - explicit DNS server identity and valid current CA required
+  ---
+  duration_ms: 5.580044
+  type: 'test'
+  ...
+# Subtest: short or malformed auth_pass and legacy password fallback rejected
+ok 8 - short or malformed auth_pass and legacy password fallback rejected
+  ---
+  duration_ms: 2.47931
+  type: 'test'
+  ...
+# Subtest: TLS client private keys and transport overrides forbidden
+ok 9 - TLS client private keys and transport overrides forbidden
+  ---
+  duration_ms: 3.800087
+  type: 'test'
+  ...
+# Subtest: client options with invalid types cannot disguise their runtime semantics
+ok 10 - client options with invalid types cannot disguise their runtime semantics
+  ---
+  duration_ms: 1.813894
+  type: 'test'
+  ...
+# Subtest: Admin 8.0.14-style options reconstruction is caught after saving
+ok 11 - Admin 8.0.14-style options reconstruction is caught after saving
+  ---
+  duration_ms: 1.177772
+  type: 'test'
+  ...
+# Subtest: CLI reads explicit file without modifying it and emits no credential or CA
+ok 12 - CLI reads explicit file without modifying it and emits no credential or CA
+  ---
+  duration_ms: 310.605522
+  type: 'test'
+  ...
+# Subtest: CLI rejects invalid JSON, unreadable path and unsafe profile without leaking input
+ok 13 - CLI rejects invalid JSON, unreadable path and unsafe profile without leaking input
+  ---
+  duration_ms: 441.244728
+  type: 'test'
+  ...
+# Subtest: reader bounds file size and rejects final symlinks where supported
+ok 14 - reader bounds file size and rejects final symlinks where supported
+  ---
+  duration_ms: 4.054081
+  type: 'test'
+  ...
+# Subtest: matching host key permits all four simulated uploads and closes connections
+ok 15 - matching host key permits all four simulated uploads and closes connections
+  ---
+  duration_ms: 9.242168
+  type: 'test'
+  ...
+# Subtest: missing pin fails before ssh2 load or any connection
+ok 16 - missing pin fails before ssh2 load or any connection
+  ---
+  duration_ms: 4.764842
+  type: 'test'
+  ...
+# Subtest: malformed and noncanonical pins fail before network access
+    # Subtest: invalid fingerprint case 0
+    ok 1 - invalid fingerprint case 0
+      ---
+      duration_ms: 4.347826
+      type: 'test'
+      ...
+    # Subtest: invalid fingerprint case 8
+    ok 2 - invalid fingerprint case 8
+      ---
+      duration_ms: 3.666645
+      type: 'test'
+      ...
+    # Subtest: invalid fingerprint case 12
+    ok 3 - invalid fingerprint case 12
+      ---
+      duration_ms: 9.188677
+      type: 'test'
+      ...
+    # Subtest: invalid fingerprint case 51
+    ok 4 - invalid fingerprint case 51
+      ---
+      duration_ms: 6.79034
+      type: 'test'
+      ...
+    # Subtest: invalid fingerprint case 51
+    ok 5 - invalid fingerprint case 51
+      ---
+      duration_ms: 5.416296
+      type: 'test'
+      ...
+    # Subtest: invalid fingerprint case 51
+    ok 6 - invalid fingerprint case 51
+      ---
+      duration_ms: 4.066982
+      type: 'test'
+      ...
+    # Subtest: invalid fingerprint case 50
+    ok 7 - invalid fingerprint case 50
+      ---
+      duration_ms: 4.653258
+      type: 'test'
+      ...
+    # Subtest: invalid fingerprint case 50
+    ok 8 - invalid fingerprint case 50
+      ---
+      duration_ms: 4.714681
+      type: 'test'
+      ...
+    1..8
+ok 17 - malformed and noncanonical pins fail before network access
+  ---
+  duration_ms: 45.938415
+  type: 'test'
+  ...
+# Subtest: different server key aborts before authentication or SFTP access
+ok 18 - different server key aborts before authentication or SFTP access
+  ---
+  duration_ms: 2.200027
+  type: 'test'
+  ...
+# Subtest: host key rotation requires an explicit verified pin update
+ok 19 - host key rotation requires an explicit verified pin update
+  ---
+  duration_ms: 2.952646
+  type: 'test'
+  ...
+# Subtest: host verifier rejects invalid callback input instead of throwing
+ok 20 - host verifier rejects invalid callback input instead of throwing
+  ---
+  duration_ms: 1.328299
+  type: 'test'
+  ...
+# Subtest: invalid port and missing credentials fail before any connection
+    # Subtest: invalid port case "22extra"
+    ok 1 - invalid port case "22extra"
+      ---
+      duration_ms: 1.315039
+      type: 'test'
+      ...
+    # Subtest: invalid port case "0"
+    ok 2 - invalid port case "0"
+      ---
+      duration_ms: 2.229833
+      type: 'test'
+      ...
+    # Subtest: invalid port case "65536"
+    ok 3 - invalid port case "65536"
+      ---
+      duration_ms: 1.397604
+      type: 'test'
+      ...
+    # Subtest: invalid port case "-22"
+    ok 4 - invalid port case "-22"
+      ---
+      duration_ms: 1.434119
+      type: 'test'
+      ...
+    # Subtest: invalid port case " 22"
+    ok 5 - invalid port case " 22"
+      ---
+      duration_ms: 1.430543
+      type: 'test'
+      ...
+    # Subtest: invalid port case "22\\n"
+    ok 6 - invalid port case "22\\n"
+      ---
+      duration_ms: 1.201527
+      type: 'test'
+      ...
+    # Subtest: missing SFTP_HOST
+    ok 7 - missing SFTP_HOST
+      ---
+      duration_ms: 1.993485
+      type: 'test'
+      ...
+    # Subtest: missing SFTP_PORT
+    ok 8 - missing SFTP_PORT
+      ---
+      duration_ms: 1.42816
+      type: 'test'
+      ...
+    # Subtest: missing SFTP_USER
+    ok 9 - missing SFTP_USER
+      ---
+      duration_ms: 3.884275
+      type: 'test'
+      ...
+    # Subtest: missing SFTP_PASS
+    ok 10 - missing SFTP_PASS
+      ---
+      duration_ms: 1.351003
+      type: 'test'
+      ...
+    1..10
+ok 21 - invalid port and missing credentials fail before any connection
+  ---
+  duration_ms: 18.662016
+  type: 'test'
+  ...
+# Subtest: connection errors are sanitized for asynchronous and synchronous failures
+ok 22 - connection errors are sanitized for asynchronous and synchronous failures
+  ---
+  duration_ms: 2.656117
+  type: 'test'
+  ...
+# Subtest: --create works with no deployment settings and never loads ssh2
+ok 23 - --create works with no deployment settings and never loads ssh2
+  ---
+  duration_ms: 1.642525
+  type: 'test'
+  ...
+1..23
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1193.618124

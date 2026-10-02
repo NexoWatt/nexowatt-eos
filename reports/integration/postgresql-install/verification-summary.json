@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-postgresql-test-installation-verification",
+  "sourceVersion": "0.2.0-dev.7",
+  "runtimeVersion": "0.2.0-test.2",
+  "generatedAt": "2026-10-02T04:37:55.198Z",
+  "environment": {
+    "node": "24.21.0",
+    "platform": "linux",
+    "arch": "x64",
+    "uid": 0,
+    "uidMap": "0          0          1"
+  },
+  "tests": [
+    {
+      "id": "system-installer",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/node-v24.21.0-linux-x64/bin/node",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/activation.test.cjs",
+        "tests/system/bootstrap.test.cjs",
+        "tests/system/bundle.test.cjs",
+        "tests/system/certificate-host.test.cjs",
+        "tests/system/certificate-lifecycle.test.cjs",
+        "tests/system/cms-backup-feasibility.test.cjs",
+        "tests/system/controller-profile.test.cjs",
+        "tests/system/host.test.cjs",
+        "tests/system/os-updates-cross-contract.test.cjs",
+        "tests/system/os-updates-host-contract.test.cjs",
+        "tests/system/policy-admission.test.cjs",
+        "tests/system/preflight-installation.test.cjs",
+        "tests/system/release-cli.test.cjs",
+        "tests/system/sbom-binding.test.cjs",
+        "tests/system/transport.test.cjs",
+        "tests/system/web-renewal.test.cjs",
+        "tests/system/websocket-bound.test.cjs",
+        "tests/integration/onboard-ui.test.cjs",
+        "tests/postgresql/host-install.test.cjs",
+        "tests/postgresql/acceptance.test.cjs"
+      ],
+      "scope": "Unit/contract/command doubles, actual crypto; not systemd installation",
+      "startedAt": "2026-10-02T04:37:41.556Z",
+      "finishedAt": "2026-10-02T04:37:45.301Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 323,
+        "pass": 323,
+        "fail": 0,
+        "skipped": 0
+      },
+      "raw": "raw/system-installer.log",
+      "rawSha256": "a116ec4c49ccf493cf39df8316e701ac1f36534ec0384e5f4191d8639a6a5af7"
+    },
+    {
+      "id": "pg-contracts",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/node-v24.21.0-linux-x64/bin/node",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/postgresql/store.test.cjs",
+        "tests/postgresql/store-review.test.cjs",
+        "tests/postgresql/objects.test.cjs",
+        "tests/postgresql/states.test.cjs",
+        "tests/postgresql/controller-profile.test.cjs",
+        "tests/postgresql/tls-lab.test.cjs"
+      ],
+      "scope": "Contract doubles plus actual upstream Objects/pg code; native TLS lab explicitly skipped in root-only environment",
+      "startedAt": "2026-10-02T04:37:45.302Z",
+      "finishedAt": "2026-10-02T04:37:50.464Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 99,
+        "pass": 98,
+        "fail": 0,
+        "skipped": 1
+      },
+      "raw": "raw/pg-contracts.log",
+      "rawSha256": "f05a79c5ca67d27e4049db69168bc3693ed25c99f6d1037706ad34f97b27e5a5"
+    },
+    {
+      "id": "sql-wasm",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/node-v24.21.0-linux-x64/bin/node",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/postgresql/schema-wasm.test.cjs"
+      ],
+      "scope": "PGlite PostgreSQL WASM SQL/RLS; not native target17 or network TLS",
+      "startedAt": "2026-10-02T04:37:50.464Z",
+      "finishedAt": "2026-10-02T04:37:52.204Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 11,
+        "pass": 11,
+        "fail": 0,
+        "skipped": 0
+      },
+      "raw": "raw/sql-wasm.log",
+      "rawSha256": "3a6b54e006cbfe79a01ee4017ea786f3420beef31b3c6288818cb02bc5da9315"
+    },
+    {
+      "id": "ui-regressions",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/node-v24.21.0-linux-x64/bin/node",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "components/ui/test/eos-os-update-status.test.cjs",
+        "components/ui/test/eos-account-roles.test.cjs",
+        "components/ui/test/eos-sse-authorization.test.cjs",
+        "components/ui/test/eos-service-worker-auth.test.cjs"
+      ],
+      "scope": "Selected affected UI unit regressions; not complete browser/device run",
+      "startedAt": "2026-10-02T04:37:52.204Z",
+      "finishedAt": "2026-10-02T04:37:54.711Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 60,
+        "pass": 60,
+        "fail": 0,
+        "skipped": 0
+      },
+      "raw": "raw/ui-regressions.log",
+      "rawSha256": "e4eaca274054ebddd6dcf5d6d75cf9ff04833edc1c0fea9fd9fb116b0a013133"
+    },
+    {
+      "id": "python-1",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/sbom-venv/bin/python",
+      "args": [
+        "tests/postgresql/prepare-inputs.test.py"
+      ],
+      "scope": "Local policy/input/SBOM tests; no target package transaction",
+      "startedAt": "2026-10-02T04:37:54.711Z",
+      "finishedAt": "2026-10-02T04:37:54.751Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 3
+      },
+      "raw": "raw/python-1.log",
+      "rawSha256": "921b60a7fd52e978fbb551cacd29df2d6708879400278e1fcc70fceeb0c6f8e0"
+    },
+    {
+      "id": "python-2",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/sbom-venv/bin/python",
+      "args": [
+        "tests/system/os-updates.test.py"
+      ],
+      "scope": "Local policy/input/SBOM tests; no target package transaction",
+      "startedAt": "2026-10-02T04:37:54.751Z",
+      "finishedAt": "2026-10-02T04:37:54.885Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 22
+      },
+      "raw": "raw/python-2.log",
+      "rawSha256": "00e19fc919e848ef853f937858075c03b7c9bf14548b824596e9f101d795966d"
+    },
+    {
+      "id": "python-3",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/sbom-venv/bin/python",
+      "args": [
+        "tests/system/sbom-test-base.test.py"
+      ],
+      "scope": "Local policy/input/SBOM tests; no target package transaction",
+      "startedAt": "2026-10-02T04:37:54.885Z",
+      "finishedAt": "2026-10-02T04:37:55.127Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 29
+      },
+      "raw": "raw/python-3.log",
+      "rawSha256": "543668c42c538ed331ac52ebe64009ac0b19b5d8c007131098ef310f66439679"
+    },
+    {
+      "id": "python-4",
+      "binary": "/workspace/scratch/6383b3161c96/eos-pg-install-build/sbom-venv/bin/python",
+      "args": [
+        "tests/integration/embedded-sbom.test.py"
+      ],
+      "scope": "Local policy/input/SBOM tests; no target package transaction",
+      "startedAt": "2026-10-02T04:37:55.127Z",
+      "finishedAt": "2026-10-02T04:37:55.181Z",
+      "exitCode": 0,
+      "error": null,
+      "passed": true,
+      "counts": {
+        "tests": 6
+      },
+      "raw": "raw/python-4.log",
+      "rawSha256": "37d8a0769d6c800296764c21f8e08feca52d770d400afabe65713604062cf749"
+    }
+  ],
+  "automatedAvailableChecksPassed": true,
+  "sources": [
+    {
+      "path": "runtime/bootstrap/accounts.cjs",
+      "sha256": "0e9bfb4a13ffa963a6d3f8d2f590f595e8c2fac3feb35815b240f28dfddaffad"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "58d0f8ef241fe21226677ce7928a9ce816b9ad2425aef3757e9f8ac81391bbcd"
+    },
+    {
+      "path": "runtime/bootstrap/initialize.cjs",
+      "sha256": "68940009090a94e1502b802a20363c3ca3b048a6eb9d91c2bee56f2cd351ec30"
+    },
+    {
+      "path": "runtime/controller-profile/guard.cjs",
+      "sha256": "7538f4727376c40b9f6e0e65b4aa848363166b0e95e8edf45c0e6ab63dd42a44"
+    },
+    {
+      "path": "runtime/controller-profile/pinned-build.json",
+      "sha256": "baa4d41eac1988c517e186ae9b3c822b0f4193d771a2ca77125b11bf30eb95f6"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "79ea05d3b31b550d68be8b7232b088269cccf2590289121b7867e1bc882830a1"
+    },
+    {
+      "path": "runtime/controller-profile/websocket-bound.cjs",
+      "sha256": "ae518d7b8d0f822cf54882159f73dfa70be93cbfc96c35b2972be0e7af5ba032"
+    },
+    {
+      "path": "runtime/os-updates/README.md",
+      "sha256": "45c790ff0e339b18799ca43ce4a5e7f42224277c954eea17341fe2cab6d564ef"
+    },
+    {
+      "path": "runtime/os-updates/policy.schema.json",
+      "sha256": "cd4559a5e1a5ffcc7e457c50859a74117e85897609e8200b886dbda86b0f8856"
+    },
+    {
+      "path": "runtime/os-updates/runner.py",
+      "sha256": "42b5f07f06a0abd9a29127108ad0666963c44a60080a400a3e6b4815dcc741f6"
+    },
+    {
+      "path": "runtime/os-updates/status.schema.json",
+      "sha256": "caefb670fa093f11d2c05b102eada87aa23abaaea184fb612aabf56e24f1d149"
+    },
+    {
+      "path": "runtime/policy/admission.cjs",
+      "sha256": "685bf232ac7e7aa41ce2c68c813318ac1858b91fcb3089bcc403985f6089c075"
+    },
+    {
+      "path": "runtime/policy/cli.cjs",
+      "sha256": "5dedd4bd791c6dba096a39d3e67c6ca9de93b4851c6cc487fe56893a363b8bb5"
+    },
+    {
+      "path": "runtime/postgresql/README.md",
+      "sha256": "5d34480fdf095a23126b3b950d78f7f31f3bc2c35f3c8f16735a525ed80c37d2"
+    },
+    {
+      "path": "runtime/postgresql/acceptance.cjs",
+      "sha256": "aee3d3be8f41cedc3d8026972781e636d225989dd95d1422c9ec1448fe77455c"
+    },
+    {
+      "path": "runtime/postgresql/host.cjs",
+      "sha256": "79f516330be65c7c86a05b1fde8a8e11a4131541a5b9ace18b01aca0bdf6a505"
+    },
+    {
+      "path": "runtime/postgresql/integration.cjs",
+      "sha256": "a535a2925da3bc5cb7a0969839704bf0177775f12539d929bceeab12eebe78ec"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/README.md",
+      "sha256": "e45f55c77ac6905137651f4f368cac70fbe6c8695a82af13ae9ed3541eebd659"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/auth.cjs",
+      "sha256": "acd7e7fad0f3fb974df7df5c989b9b157ea04dcb1d6443225bdb1af580b6056b"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/facade.cjs",
+      "sha256": "c5af1ed63dc25d0f2d3655c1ecfbdb7a98ab9418330c79689dac0ba84a2aa26a"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/index.cjs",
+      "sha256": "2943b0bfa077fe17d64538d909a3a8c248657cbd64162f2a5023a401b4106c52"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/package.json",
+      "sha256": "379da5f2faab0b83847824989bb7c5490ab87fccdce528c800a2d3f02c50ac45"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/views.cjs",
+      "sha256": "53c339eff8692c167c41a71356d74d5b18ccd2de27a871c7705b33e572919881"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/README.md",
+      "sha256": "ff2ad45f1ad778f0521d69abff7f8cd257115a388e1c1d712fc2d28efe5efb51"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/index.cjs",
+      "sha256": "28038ebfe48b6d76446c70906a2ae60026a92856bdfd78bbf14742fa78987b83"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/package.json",
+      "sha256": "c8d14bac134a29f0197abd76aef74cfac3104f3fb411ca58301bcbb144448eac"
+    },
+    {
+      "path": "runtime/postgresql/packages/store/index.cjs",
+      "sha256": "2d6080ad4e728a2316c493eff56d501503ba34faee25ea5c5600c8115eab1f3e"
+    },
+    {
+      "path": "runtime/postgresql/packages/store/package.json",
+      "sha256": "78916852b87e304bbef8780b999f2d8cfcb66b79f1e7ff7e40a7dc427c6a3448"
+    },
+    {
+      "path": "runtime/postgresql/schema.sql",
+      "sha256": "19fd184544f6d87f12ef254181d0a3d0b743636c367861e7a4b5a6f9557ae33d"
+    },
+    {
+      "path": "runtime/release/bundle.cjs",
+      "sha256": "9c3c8f38672d84d7adbb6b05eb4b13e3c35483ced63a427697370aeb7c5c2e3b"
+    },
+    {
+      "path": "runtime/release/installed-check.cjs",
+      "sha256": "34ba7b7215ff0f73aa312aa3f985be406dd710e44f68bd1d66210ada9f1bcaa5"
+    },
+    {
+      "path": "runtime/release/maintenance.cjs",
+      "sha256": "0a189e8fd4247dd9031b3d8bc5bd70d3461bb49a7cb6dd6a66fb1a998e76083d"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "92c862cb7476b32ea5153d61d2008acd38ce98c594e88bd63a76ba25988c438f"
+    },
+    {
+      "path": "runtime/transport/certificate-lifecycle.cjs",
+      "sha256": "5946b30c81a7e4bcd237874f45a40de99e44aeca6f60cb25b39a62d351f7f73d"
+    },
+    {
+      "path": "runtime/transport/databases.cjs",
+      "sha256": "17514f80be1a0a6406d3c5fbc65c7203c6cb594491e33071a511ee7a08816353"
+    },
+    {
+      "path": "runtime/transport/redis-tls.cjs",
+      "sha256": "9bae14822a1c49243aaf1bf479df4cd9a8fb23f0a9047474d78d4a6d9172803e"
+    },
+    {
+      "path": "runtime/transport/web-certificates.cjs",
+      "sha256": "85b5bd01b14937015a64026ad22ab58b60b54475f6d3627fc517b09c3f9a4bd1"
+    },
+    {
+      "path": "runtime/transport/web-renewal.cjs",
+      "sha256": "daf88c06cb21c357ebfb52f2ce71bd750e1d584c3543084e1e8719323e55b6ce"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-controller.service",
+      "sha256": "749c16f23ed96cdd272d53c3172c4d07c9676ae4adae576e9ec2e485d9d5785c"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-initialize.service",
+      "sha256": "dbff424d17a90d4cb0be755506344737bdaf74e423b1a982ff38f1b9332fd3c2"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "d7de6e00051469b69f71eef5dd2326ae92744d9e9dd91404141e0d9454bb7065"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.timer",
+      "sha256": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-pg-certificates.service",
+      "sha256": "fc909da911c8a3f350074dbde30e0ea6d297008212319545e54ac3183a546306"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-pg-certificates.timer",
+      "sha256": "a9ea138bd87d313efb328676c44d2a623266eb37f5919d031d86fb80be345b61"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-postgresql.service",
+      "sha256": "75bca060ad7114e8fc93d6cf7d6b1010ae673ad7fbc3118269dcccf002c25e72"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-upload.service",
+      "sha256": "8685af43580ec39a0bcdd12ec566345a8cafb1bae507a2792b1359882b342547"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos.target",
+      "sha256": "06553f2eedbaeaeb2528d012219ffd9a4dc2f9841c5445e891c0e3b15ba0e346"
+    },
+    {
+      "path": "tests/postgresql/acceptance.test.cjs",
+      "sha256": "e51d952de3e53590c4b71f4dda5e24da51aeb91aaf40bbd1d2aacf854a1fc2c3"
+    },
+    {
+      "path": "tests/postgresql/controller-profile.test.cjs",
+      "sha256": "d7c1f121074310d3558c5d307288ca13945cd0192dccba34bdb84ea5ada762c5"
+    },
+    {
+      "path": "tests/postgresql/controller.integration.cjs",
+      "sha256": "e55814a6b06bba4b8b3e8d7e9725c477615627233143ef394ab941ebfd9aa356"
+    },
+    {
+      "path": "tests/postgresql/fixtures/README.md",
+      "sha256": "f0ebe3c4870f1eac821151d0acabdab4100d8a4158307f05db85415495931511"
+    },
+    {
+      "path": "tests/postgresql/fixtures/lab-cluster.cjs",
+      "sha256": "b7f1b15d70698789bb114bfa221d617bc152345d1cce0133e4bf252a177a8bfd"
+    },
+    {
+      "path": "tests/postgresql/host-install.test.cjs",
+      "sha256": "ded8eb83c5ace1396c3112a8282e1867292a85eebca85c0905f4354540cb0f5e"
+    },
+    {
+      "path": "tests/postgresql/objects.test.cjs",
+      "sha256": "ec5488dea7d3ac4222f6e6c0e365d22d9ad31a4a9ce8850026e35974786e00ee"
+    },
+    {
+      "path": "tests/postgresql/prepare-inputs.test.py",
+      "sha256": "ea84758d46cad68340e374441874f5985094973fd8de40ca020c7d278248978b"
+    },
+    {
+      "path": "tests/postgresql/schema-wasm.test.cjs",
+      "sha256": "1ceb01d7737c9fbe412b8ae51ebdb3cf96d874251ddafd9bd60ee3638ab4cb85"
+    },
+    {
+      "path": "tests/postgresql/states.test.cjs",
+      "sha256": "5ef33b4593c2f51c7da852555a7acb8bde0ecf5768bae5fb8d338f61708306a1"
+    },
+    {
+      "path": "tests/postgresql/store-review.test.cjs",
+      "sha256": "56b0aabb44cf942f76e31ffb1a297e21dc4ae342ab4972ef560c28472bc6ee6b"
+    },
+    {
+      "path": "tests/postgresql/store.test.cjs",
+      "sha256": "554a3a553da5ad4cd8bd64f675a21be31766fcb7f2030f178479d2c62628b132"
+    },
+    {
+      "path": "tests/postgresql/tls-lab.test.cjs",
+      "sha256": "f0749ea69d36c2fb9097f536d0803fec47fd2a66d81145a8ee24ed626cc8d14d"
+    },
+    {
+      "path": "tools/integration/assemble-postgresql-test.cjs",
+      "sha256": "b4aa37ebfac0ae1ab76ddf6a4d9648d6e0ac1e0a04f0f34e2560274fe254c237"
+    },
+    {
+      "path": "tools/integration/capture-postgresql-install-evidence.cjs",
+      "sha256": "7eb92b5a12833919041342703b561d237c4e0a99575ef79112faedd50141d6d1"
+    },
+    {
+      "path": "tools/integration/package-postgresql-test.cjs",
+      "sha256": "0804a5ada61cb7a577c299b8e13f38672e8e35908dd8054072e7705cd69d45f3"
+    },
+    {
+      "path": "tools/system/activate-release.cjs",
+      "sha256": "8726a089874257bc71359f9bf619e9de51869cfaaeafa7aa27c269f0638a499d"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "539ebba1e8ea919e665c802be6b2bd37affb70bf3811286f43930e8c6d32bd95"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "5c5167da4716bdbe1c4dd34eab2d37c2d772ea22d324302bbf90cb84497f789e"
+    },
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "sha256": "94ffc7b010ba9bd071877f7a94a4a55ac7c55bbc356f3b712a13f7f963ba3d29"
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "sha256": "68dcc07578c701d6f5a499b3ef5a626667bf43286a97bf69e34bb4ec4f8ade13"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "sha256": "e7afb06f7c8142e545bd0289d0a0eacdacb0f19333ab86562464f2f91fc2eaff"
+    },
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "sha256": "8da02f876a9ebe377898a123ac537553edb5be0c8ce5f49bc38e9cf2473b13e8"
+    },
+    {
+      "path": "tools/system/postgresql-host-preflight.cjs",
+      "sha256": "4f08b4e79946a5ab2e7548bdf910d6b566bcd1c246698468e436223e8ab9af80"
+    },
+    {
+      "path": "tools/system/preflight-installation.cjs",
+      "sha256": "a3ae7d211fd5a0bb701d77d2b098a73477c919fce6bdb05e70aa4bc2f8193023"
+    },
+    {
+      "path": "tools/system/prepare-catalog.cjs",
+      "sha256": "b34e518cdb8910909cb223e067dca264348ed60a210564c94b04d8380981c924"
+    },
+    {
+      "path": "tools/system/prepare-inputs.py",
+      "sha256": "ed51af9a4fef3b0d9ea78c811ce20a945341d370bf90423ee7e059afeb122397"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "f3628d305105ba6513bd0ac64594996abad0f93282675599ad14072fbe08ebe9"
+    }
+  ],
+  "nativePostgresqlServerTested": false,
+  "nativeTlsHandshakeTested": false,
+  "systemdHostInstalledHere": false,
+  "targetHardwareAccepted": false,
+  "independentPenetrationTestPerformed": false,
+  "craConformityEstablished": false,
+  "iecConformityEstablished": false,
+  "productionReleaseApproved": false,
+  "nativeBlocker": "Only UID/GID0 mapped; native PostgreSQL root refusal respected. Run signed target acceptance on fresh Pi.",
+  "recoveredBaseline": {
+    "originalCommit": "96a0854321a02a3afe6abef3e97ef8d6b5b970ab",
+    "fullZipSha256": "bac0a3f9ee205326c72cb24a0a48d6d6ab51a1515a6b2c5ad0e18f0e27085f3e",
+    "originalGitHistoryPresent": false
+  },
+  "openFindings": [
+    "EOS-PG-INTEGRATION-20261001",
+    "EOS-PG-ISOLATION-20261002",
+    "EOS-PG-LIFECYCLE-20261002",
+    "EOS-PG-RECOVERY-20261002",
+    "EOS-PG-ADAPTERS-20261002",
+    "EOS-PG-ASSESSMENT-20261002",
+    "EOS-OS-UPDATES-RUNTIME-PIN-20261001"
+  ]
+}

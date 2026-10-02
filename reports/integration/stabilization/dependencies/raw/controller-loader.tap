@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: actual controller resolves reviewed loader and native esbuild without install hooks
+ok 1 - actual controller resolves reviewed loader and native esbuild without install hooks
+  ---
+  duration_ms: 2.58515
+  type: 'test'
+  ...
+# Subtest: controller require hook compiles TS interface/enum/CommonJS with native stripping disabled
+ok 2 - controller require hook compiles TS interface/enum/CommonJS with native stripping disabled
+  ---
+  duration_ms: 239.411986
+  type: 'test'
+  ...
+# Subtest: JSX and TSX tsconfig factory still execute through actual loader
+ok 3 - JSX and TSX tsconfig factory still execute through actual loader
+  ---
+  duration_ms: 475.863125
+  type: 'test'
+  ...
+# Subtest: invalid TypeScript is rejected instead of being silently executed
+ok 4 - invalid TypeScript is rejected instead of being silently executed
+  ---
+  duration_ms: 245.607683
+  type: 'test'
+  ...
+# Subtest: source-map support keeps original TypeScript source location
+ok 5 - source-map support keeps original TypeScript source location
+  ---
+  duration_ms: 282.129208
+  type: 'test'
+  ...
+# Subtest: patched development server does not grant arbitrary web origins and rejects unknown Host
+ok 6 - patched development server does not grant arbitrary web origins and rejects unknown Host
+  ---
+  duration_ms: 123.620963
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1940.115684

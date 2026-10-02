@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: baseline manifests agree on version and do not declare per-adapter secret fields
+ok 1 - baseline manifests agree on version and do not declare per-adapter secret fields
+  ---
+  duration_ms: 2.361233
+  type: 'test'
+  ...
+# Subtest: HTTP default preserves TLS verification settings
+ok 2 - HTTP default preserves TLS verification settings
+  ---
+  duration_ms: 3.329864
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-001: HTTP config can disable peer verification
+ok 3 - REPRO DEV-001: HTTP config can disable peer verification
+  ---
+  duration_ms: 1.400655
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-001: HTTP accepts cleartext with Basic credentials
+ok 4 - REPRO DEV-001: HTTP accepts cleartext with Basic credentials
+  ---
+  duration_ms: 1.259442
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-002: HTTP timeout defaults to 8s and is not capped to 5s
+ok 5 - REPRO DEV-002: HTTP timeout defaults to 8s and is not capped to 5s
+  ---
+  duration_ms: 2.114603
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-002: request supplies no explicit body/redirect/abort limits
+ok 6 - REPRO DEV-002: request supplies no explicit body/redirect/abort limits
+  ---
+  duration_ms: 5.606954
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-003: HTTP error log retains synthetic query credential
+ok 7 - REPRO DEV-003: HTTP error log retains synthetic query credential
+  ---
+  duration_ms: 3.014284
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-004: HTTP numeric datapoint can return object/null before runtime processing
+ok 8 - REPRO DEV-004: HTTP numeric datapoint can return object/null before runtime processing
+  ---
+  duration_ms: 1.395327
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-005: MQTT plaintext transport passes configuration unchanged
+ok 9 - REPRO DEV-005: MQTT plaintext transport passes configuration unchanged
+  ---
+  duration_ms: 3.655422
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-005: MQTT permits TLS peer verification to be disabled
+ok 10 - REPRO DEV-005: MQTT permits TLS peer verification to be disabled
+  ---
+  duration_ms: 1.882461
+  type: 'test'
+  ...
+# Subtest: MQTT secure URL preserves explicit peer verification
+ok 11 - MQTT secure URL preserves explicit peer verification
+  ---
+  duration_ms: 1.900276
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-006: incoming topic diagnostic retains all 200 distinct topics
+ok 12 - REPRO DEV-006: incoming topic diagnostic retains all 200 distinct topics
+  ---
+  duration_ms: 18.187321
+  type: 'test'
+  ...
+# Subtest: REPRO DEV-007: startup migration changes an unrelated adapter object
+ok 13 - REPRO DEV-007: startup migration changes an unrelated adapter object
+  ---
+  duration_ms: 2.480044
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 212.166622

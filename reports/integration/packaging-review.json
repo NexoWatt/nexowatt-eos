@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "kind": "bounded-content-review",
+  "recordedAt": "2026-10-01T12:33:55.490753+00:00",
+  "scope": "repository root, components, reports; before final runtime tgz delivery copy",
+  "reviewedFiles": 5551,
+  "reviewedBytes": 238860623,
+  "maximumContentScanFileBytes": 33554432,
+  "filesAboveLimit": 0,
+  "excluded": [
+    ".git",
+    "node_modules",
+    "caches"
+  ],
+  "checks": [
+    "complete private PEM",
+    "GitHub/AWS credential patterns",
+    "JWT-shaped token",
+    "NWL2 license token",
+    "credential-bearing URL candidates",
+    "long credential assignment candidates",
+    "escaping symlinks"
+  ],
+  "result": "no actual runtime secret identified in reviewed snapshot; test literals and documented examples classified separately",
+  "exceptions": [
+    {
+      "path": "components/admin/CHANGELOG_OLD.md",
+      "classification": "historical private-PEM header/type marker without key body"
+    },
+    {
+      "paths": [
+        "tests/architecture",
+        "components/ui/tools",
+        "components/admin/test",
+        "components/devices/test"
+      ],
+      "classification": "credential URL negative fixtures and placeholders; not operational credentials"
+    }
+  ],
+  "packagingAction": "407 ignored source build/lock artifacts identified; final Git/ZIP inventory must explicitly include needed emitted builds and lockfiles",
+  "limitations": [
+    "bounded pattern review, not a proof that every possible secret format is absent",
+    "final tgz files require separate artifact content check",
+    "later changes bound by final file manifest"
+  ],
+  "publication": "no public publication performed",
+  "completeStagedWhitespaceReview": {
+    "exitCode": 2,
+    "diagnosticFileCount": 183,
+    "diagnosticsByArea": {
+      "components/admin": 898,
+      "components/backitup": 14,
+      "components/devices": 7,
+      "components/eebus": 1,
+      "components/ui": 192,
+      "reports/integrated": 12,
+      "reports/integration": 6,
+      "system/test-base": 1
+    },
+    "interpretation": "Imported pre-existing source/build formatting and verbatim raw failed-test logs are retained. Full staged diff check is not claimed clean. Core narrowed check only reports a terminal blank line in hash-bound certificate service; no source semantics changed for formatting.",
+    "bytePreservation": "Explicit -text attributes preserve imported component, evidence and runtime archive input bytes; final Git/index-to-file manifest comparison follows."
+  }
+}

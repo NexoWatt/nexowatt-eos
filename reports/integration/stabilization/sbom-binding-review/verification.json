@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-sbom-transform-binding-verification",
+  "checkedAt": "2026-10-01T17:06:33.332025+00:00",
+  "scope": "isolated fixture release gates and Python-to-JavaScript SBOM transform digest parity",
+  "nodeVersion": "24.21.0",
+  "tests": {
+    "javascript": 30,
+    "pythonBinding": 29,
+    "embeddedBinding": 6,
+    "passed": 65,
+    "failed": 0
+  },
+  "sourceBindings": [
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "bytes": 9372,
+      "sha256": "92c862cb7476b32ea5153d61d2008acd38ce98c594e88bd63a76ba25988c438f"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "bytes": 9202,
+      "sha256": "3d250adf110cdb5faad946a85342b568cb14c07590202903705a741cc369505d"
+    },
+    {
+      "path": "tools/sbom/test_base.py",
+      "bytes": 18152,
+      "sha256": "375ef88f9548d342b38755aeb98d1d1187e9b48fd3990d915d4c934eecd32e01"
+    },
+    {
+      "path": "tools/integration/bind-sbom.py",
+      "bytes": 6687,
+      "sha256": "cd334328d1c098c4cde94b18695d0e54aa11a58d5087010d4e60b6aee9f93513"
+    },
+    {
+      "path": "tests/system/sbom-binding.test.cjs",
+      "bytes": 9636,
+      "sha256": "aea016428e1723f42602b7b374ecd67180bd44aff511a1a82314f479eef0ce0a"
+    },
+    {
+      "path": "tests/system/release-cli.test.cjs",
+      "bytes": 10323,
+      "sha256": "95e2e28b18c712589199eb040205f87f12f7465b73c929e3e5e930d0e60a079c"
+    },
+    {
+      "path": "tests/system/fixtures/installation-bundle.cjs",
+      "bytes": 7918,
+      "sha256": "147813a23e728654f9afcb632a0b40caea179eea7bfe1ba0670f129a389bb64b"
+    },
+    {
+      "path": "tests/system/fixtures/sbom-transform.cjs",
+      "bytes": 970,
+      "sha256": "b5fcd424aef6c1765f57efa8c9ef2f80aea76cf2058e38d9dc558a35c2a99159"
+    },
+    {
+      "path": "tests/system/sbom-test-base.test.py",
+      "bytes": 18121,
+      "sha256": "287c7a40fa57a7fded68d554b14655e92fd53b6b814bf561835aadae9cf47c02"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/REVIEW_DE.md",
+      "bytes": 3498,
+      "sha256": "3a8dea989e2e4b241530a1201ac4fd2494434bc24d04d6cbc9d0edf776f3ff7d"
+    }
+  ],
+  "testEvidence": [
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/raw/release-binding.tap",
+      "bytes": 6859,
+      "sha256": "5c41089d75b1f99721b4dc8c054d129a3c75e8ae1e45368e37ff499ba391e410"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/raw/python-binding.txt",
+      "bytes": 128,
+      "sha256": "182a54b42c34ada64a55f10e03dee24ec35c56d725c8404e853fa9dd6d84401b"
+    },
+    {
+      "path": "reports/integration/stabilization/sbom-binding-review/raw/embedded-binding.txt",
+      "bytes": 104,
+      "sha256": "e9dbc1a31936475165af55356b566005547a03914ab93e4739e4aa9949799201"
+    }
+  ],
+  "productTreesModified": false,
+  "onlineAuditPerformed": false,
+  "dependencyGraphValidation": "reference-integrity-only; edge completeness not claimed",
+  "hardwareQualified": false,
+  "productReleaseApproved": false
+}

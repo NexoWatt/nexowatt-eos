@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-01",
+  "status": "development-not-production-approved",
+  "baseline": {
+    "package": "iobroker.nexowatt-ui",
+    "version": "1.0.21",
+    "originalZipSha256": "90db619ecd754cab335dae92fdc123a48f62ceffb505a2a2b832e119d885eefe",
+    "upstreamGitCommit": null
+  },
+  "effectivePolicy": {
+    "customerWritePolicy": "session",
+    "authEnabled": true,
+    "protectWrites": true,
+    "bindAddressDefault": "0.0.0.0",
+    "ipAllowlistAdded": false,
+    "tailscaleServiceIntent": "preserved; authenticated service from any reachable network",
+    "realTailnetTested": false
+  },
+  "findings": [
+    {
+      "id": "NW-UI-260930-02",
+      "status": "code-corrected-http-fixture-tested"
+    },
+    {
+      "id": "NW-UI-260930-05",
+      "status": "code-corrected-http-fixture-tested",
+      "boundary": "UI cookie sessions; explicit user role assignments and trusted proxy assertions are separate grants"
+    },
+    {
+      "id": "NW-UI-260930-06",
+      "status": "code-corrected-http-fixture-tested"
+    },
+    {
+      "id": "NW-UI-260930-01",
+      "status": "open"
+    },
+    {
+      "id": "NW-UI-260930-03",
+      "status": "open"
+    },
+    {
+      "id": "NW-UI-260930-04",
+      "status": "open"
+    }
+  ],
+  "sbom": {
+    "format": "CycloneDX",
+    "specVersion": "1.5",
+    "packageLockSha256": "4d983f650b2b1e51e37703ed5ea89f55585be827201b20f001a02e2648c75301",
+    "runtime": "ui-runtime.cdx.json",
+    "buildAndRuntime": "ui-build-and-runtime.cdx.json",
+    "coverage": "UI npm dependency lockfile only; not the full EOS appliance"
+  },
+  "conformityClaim": false,
+  "productionInstallationPerformed": false,
+  "remotePublicationPerformed": false,
+  "releaseBlockers": [
+    "TLS/certificate and internal transport integration",
+    "asymmetric license and encrypted native migration",
+    "RPi5/Linux/controller/Tailscale and plant acceptance tests",
+    "full EOS release processes, dependency inventory and regulatory evaluation"
+  ]
+}

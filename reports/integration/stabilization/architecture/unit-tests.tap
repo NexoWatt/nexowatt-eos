@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: architecture-independent tree has no executed target code or included Node claim
+ok 1 - architecture-independent tree has no executed target code or included Node claim
+  ---
+  duration_ms: 16.827734
+  type: 'test'
+  ...
+# Subtest: separate matching ARM64 and x64 esbuild trees pass static header checks
+ok 2 - separate matching ARM64 and x64 esbuild trees pass static header checks
+  ---
+  duration_ms: 18.625836
+  type: 'test'
+  ...
+# Subtest: x64 optional package cannot be relabeled as an ARM64 delivery
+ok 3 - x64 optional package cannot be relabeled as an ARM64 delivery
+  ---
+  duration_ms: 6.782417
+  type: 'test'
+  ...
+# Subtest: ARM64 package with a mislabeled x64 binary fails
+ok 4 - ARM64 package with a mislabeled x64 binary fails
+  ---
+  duration_ms: 10.599346
+  type: 'test'
+  ...
+# Subtest: native allow rules require exact package paths and explicit esbuild platform metadata
+ok 5 - native allow rules require exact package paths and explicit esbuild platform metadata
+  ---
+  duration_ms: 20.374283
+  type: 'test'
+  ...
+# Subtest: wrong ELF width or big-endian content fails even with matching manifest
+ok 6 - wrong ELF width or big-endian content fails even with matching manifest
+  ---
+  duration_ms: 6.344345
+  type: 'test'
+  ...
+# Subtest: missing or version-mismatched optional target esbuild cannot silently pass
+ok 7 - missing or version-mismatched optional target esbuild cannot silently pass
+  ---
+  duration_ms: 9.097532
+  type: 'test'
+  ...
+# Subtest: dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+ok 8 - dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+  ---
+  duration_ms: 7.520635
+  type: 'test'
+  ...
+# Subtest: unknown native executable and Node ABI add-on fail closed
+ok 9 - unknown native executable and Node ABI add-on fail closed
+  ---
+  duration_ms: 2.436198
+  type: 'test'
+  ...
+# Subtest: native suffix with unrecognized or truncated bytes fails
+ok 10 - native suffix with unrecognized or truncated bytes fails
+  ---
+  duration_ms: 2.309507
+  type: 'test'
+  ...
+# Subtest: reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+ok 11 - reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+  ---
+  duration_ms: 2.399612
+  type: 'test'
+  ...
+# Subtest: Bare path/header mismatch or unreviewed version is rejected
+ok 12 - Bare path/header mismatch or unreviewed version is rejected
+  ---
+  duration_ms: 5.239371
+  type: 'test'
+  ...
+# Subtest: ELF program-header and interpreter offsets are bounded before reads
+ok 13 - ELF program-header and interpreter offsets are bounded before reads
+  ---
+  duration_ms: 0.433867
+  type: 'test'
+  ...
+# Subtest: known PE and Mach-O headers are classified but not accepted as Linux esbuild
+ok 14 - known PE and Mach-O headers are classified but not accepted as Linux esbuild
+  ---
+  duration_ms: 2.758205
+  type: 'test'
+  ...
+# Subtest: npm platform constraints honor deny lists, any, libc and malformed metadata
+ok 15 - npm platform constraints honor deny lists, any, libc and malformed metadata
+  ---
+  duration_ms: 1.827878
+  type: 'test'
+  ...
+# Subtest: unreviewed gyp build dependency and changed diskusage loader are blocked
+ok 16 - unreviewed gyp build dependency and changed diskusage loader are blocked
+  ---
+  duration_ms: 3.971182
+  type: 'test'
+  ...
+# Subtest: lock drift is rejected for an actual installed package
+ok 17 - lock drift is rejected for an actual installed package
+  ---
+  duration_ms: 21.157389
+  type: 'test'
+  ...
+# Subtest: internal npm file links are accepted; external, cyclic and directory links fail
+ok 18 - internal npm file links are accepted; external, cyclic and directory links fail
+  ---
+  duration_ms: 5.543733
+  type: 'test'
+  ...
+# Subtest: target, metadata, file-size and depth limits fail before execution
+ok 19 - target, metadata, file-size and depth limits fail before execution
+  ---
+  duration_ms: 13.785148
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 321.609912

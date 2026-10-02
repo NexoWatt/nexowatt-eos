@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01T11:59:38.888526+00:00",
+  "sourceInventory": "source-inventory.json",
+  "environment": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "node": "v24.19.0",
+    "effectiveUid": "0",
+    "typescriptBuildTool": "5.8.3",
+    "axiosTransportTool": "1.20.0",
+    "ocppRpcTransportTool": "2.2.1",
+    "wsTransportTool": "8.22.0",
+    "dependencyTree": "integrated-assessment-build/app/node_modules; tool dependency tree, not full shipped appliance acceptance"
+  },
+  "tests": [
+    {
+      "name": "devices-full-manifest",
+      "command": "NODE_PATH=<assessment-node_modules> node components/devices/scripts/run-tests.cjs",
+      "passed": 270,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "devices-full-suite.log"
+    },
+    {
+      "name": "devices-http-security-targeted",
+      "command": "NODE_PATH=<installed-axios-node_modules> node --test components/devices/test/httpSecurity.test.js",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "devices-http-security.tap",
+      "includedInFullDevicesSuite": true
+    },
+    {
+      "name": "devices-can-validation-targeted",
+      "command": "node --test components/devices/test/canSecurity.test.js",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "devices-can-security.tap",
+      "includedInFullDevicesSuite": true
+    },
+    {
+      "name": "eebus-build",
+      "command": "node <typescript-5.8.3>/lib/tsc.js -p components/eebus/tsconfig.json --noEmitOnError",
+      "exitCode": 0,
+      "raw": "eebus-build.log"
+    },
+    {
+      "name": "eebus-security",
+      "command": "node --test components/eebus/test/ship-security.test.cjs",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "eebus-ship-security.tap"
+    },
+    {
+      "name": "eebus-existing-regression-scripts",
+      "commands": [
+        "node test/config.js",
+        "node test/cls-control-parser.js",
+        "node test/nexowatt-bridge.js",
+        "node test/implementation-result-order.js"
+      ],
+      "cwd": "components/eebus",
+      "scriptPasses": 4,
+      "raw": "eebus-regression.log"
+    },
+    {
+      "name": "ocpp-core",
+      "command": "node --test components/ocpp21/test/core.test.js",
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "ocpp-core.tap"
+    },
+    {
+      "name": "ocpp-tls13-mtls",
+      "command": "NODE_PATH=<assessment-node_modules> node --test components/ocpp21/test/secure-transport.test.js",
+      "reportedPasses": 13,
+      "behavioralSubtests": 11,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "ocpp-mtls.tap"
+    }
+  ],
+  "retainedAttempt": {
+    "raw": "devices-first-attempt.log",
+    "passed": 262,
+    "failed": 1,
+    "skipped": 7,
+    "reason": "HTTP diagnostic redaction intentionally changes raw error identity; assertion updated to fixed code and no target leak; transport dependencies supplied for final run"
+  },
+  "notExecuted": [
+    "physical device/charging station/EEBUS interoperability",
+    "Debian12/RPi5 service UID filesystem and systemd grants",
+    "full SHIP PIN/SPINE conformance",
+    "adapter central-license lifecycle transition",
+    "encrypted backup/restore acceptance",
+    "complete production dependency audit",
+    "manufacturer CRA/IEC conformity assessment"
+  ]
+}

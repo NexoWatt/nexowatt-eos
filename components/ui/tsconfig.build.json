@@ -1,0 +1,39 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/types",
+    "removeComments": false,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/contracts/**/*.ts",
+    "src-ts/utils/**/*.ts",
+    "src-ts/resolvers/**/*.ts",
+    "src-ts/ems/**/*.ts",
+    "src-ts/scripts/**/*.ts",
+    "src-ts/shared/**/*.ts",
+    "src-ts/backend/**/*.ts",
+    "src-ts/frontend/**/*.ts",
+    "src-ts/index.ts",
+    "src-ts/adapter/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-types",
+    "build-ts",
+    "src-ts/tests/**/*",
+    "src-ts/quality/**/*",
+    "src-ts/test-fixtures/**/*"
+  ]
+}

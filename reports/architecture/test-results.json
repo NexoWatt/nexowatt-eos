@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "kind": "local-architecture-tool-verification",
+  "startedAtUtc": "2026-09-30T19:59:14.695176+00:00",
+  "finishedAtUtc": "2026-09-30T19:59:20.457144+00:00",
+  "sourceBaseCommit": "1e6d0377d2cb184714f0d7f6f03066a2c1a150ac",
+  "sourceBinding": "sha256 of listed changed/new inputs; baseCommit is prior local hardening, not a runtime release",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux",
+    "machine": "x86_64",
+    "execution": "isolated fixtures on development container; no systemd/product/device integration"
+  },
+  "results": [
+    {
+      "id": "blueprint",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tests/architecture/blueprint.test.py"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:14.696778+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:15.181283+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/blueprint.log",
+      "rawEvidenceSha256": "d86eba483c82056fb9ec47a766fb6409fe9495d37a15db0e5fed09c1d0008c69",
+      "testCount": 30
+    },
+    {
+      "id": "contracts",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tests/architecture/contracts.test.py"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:15.181762+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:17.765158+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/contracts.log",
+      "rawEvidenceSha256": "bf6b248addcb1de306e6e29052dea21c2252b6b356da06bfb1b0d00996af7e67",
+      "testCount": 31
+    },
+    {
+      "id": "sbom",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tests/architecture/sbom.test.py"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:17.766859+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:19.258468+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/sbom.log",
+      "rawEvidenceSha256": "b544d0a1e4aabf1b1dd3460a0f5ddf4cb64fba8c3dc4b5f09664ad79bc38fb4f",
+      "testCount": 21
+    },
+    {
+      "id": "blueprint-validation",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/architecture/check-blueprint.py"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:19.258686+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:19.313424+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/blueprint-validation.log",
+      "rawEvidenceSha256": "1928e25e801a93ff0b98a79b249defcf3c38027c8d9264beefc77a5452995d5e"
+    },
+    {
+      "id": "contract-examples",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/architecture/validate-contracts.py",
+        "--examples"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:19.313567+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:19.581547+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/contract-examples.log",
+      "rawEvidenceSha256": "2931972ff517d40fa83e6086dba904f99bc3024f293bb9976c7fae5a143bc5d8"
+    },
+    {
+      "id": "sbom-snapshot-validation",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/sbom/source_sbom.py",
+        "--validate",
+        "sbom/eos-installer-source.cdx.json"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:19.581685+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:19.760888+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/sbom-snapshot-validation.log",
+      "rawEvidenceSha256": "359fbb9781a7bb5ce0e3f2145d0e3f0facd35b8fd49f9f5f3402c4f69700387c"
+    },
+    {
+      "id": "sbom-generation",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/sbom/source_sbom.py",
+        "--repo",
+        ".",
+        "--output",
+        "/tmp/eos-sbom-verification-dfmv1sq2/source.cdx.json",
+        "--coverage",
+        "/tmp/eos-sbom-verification-dfmv1sq2/source.coverage.json"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:19.761531+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:19.936057+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/sbom-generation.log",
+      "rawEvidenceSha256": "a7bef915565be344f112513ca5144bb5ff4529ce3188118f58cd638432129bd7"
+    },
+    {
+      "id": "sbom-generated-validation",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/sbom/source_sbom.py",
+        "--validate",
+        "/tmp/eos-sbom-verification-dfmv1sq2/source.cdx.json"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:19.936185+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:20.091809+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/sbom-generated-validation.log",
+      "rawEvidenceSha256": "359fbb9781a7bb5ce0e3f2145d0e3f0facd35b8fd49f9f5f3402c4f69700387c"
+    },
+    {
+      "id": "dependency-consistency",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:20.092156+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:20.448689+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/dependency-consistency.log",
+      "rawEvidenceSha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "id": "whitespace-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "startedAtUtc": "2026-09-30T19:59:20.448829+00:00",
+      "finishedAtUtc": "2026-09-30T19:59:20.454193+00:00",
+      "exitCode": 0,
+      "status": "passed",
+      "rawEvidence": "reports/architecture/whitespace-check.log",
+      "rawEvidenceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "automatedTestsPassed": 82,
+  "testSuites": 3,
+  "runtimeTestsExecuted": false,
+  "functionalBaselineVerified": false,
+  "githubWorkflowExecuted": false,
+  "craConformityDeclared": false,
+  "iecConformityDeclared": false,
+  "notPerformed": [
+    "full EOS build",
+    "installation",
+    "runtime mTLS and identities",
+    "license cryptography",
+    "update signatures and recovery",
+    "UI/functional regression",
+    "device and hardware tests",
+    "independent penetration test",
+    "full dependency/vulnerability inventory"
+  ],
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "166c0453a1db7b33c3a7a2f72a159cdd94f912e7c1f1767604d90623a8ed8f8e"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "4a4f700f148d046f1714310e634fea6bc2911a2b610952d954626363fd8fcc80"
+    },
+    {
+      "path": "README.md",
+      "sha256": "df6814a3a4bdab139aacc76677619fad6c36cc93e9eaea501c727aaa7e2c9198"
+    },
+    {
+      "path": "docs/architecture/IMPLEMENTATION_STATUS.md",
+      "sha256": "46ed7a8949de9f545053d6be86b1278ef07d6afe6706e45b5524a2d6da37b0f2"
+    },
+    {
+      "path": "docs/architecture/INTERFACE_CONTRACTS.md",
+      "sha256": "7b070e91e7c486a1cd6100337132adb0e09d66aa44aaf4cdff442037f27d4b7a"
+    },
+    {
+      "path": "docs/architecture/SYSTEM_OVERVIEW.md",
+      "sha256": "93f014b18b7c3dc2d570301acdf826b6b29fb69fb61d841f1fb5e1b4c015a121"
+    },
+    {
+      "path": "docs/cra/SYSTEM_REQUIREMENTS.md",
+      "sha256": "b856bcc1834b9722fa850a5f9a721761088997bd8c5899e42fb99d95046b4c96"
+    },
+    {
+      "path": "docs/operations/COMPATIBILITY_PLAN.md",
+      "sha256": "875a3a29cafc269d2957d91972c8055e9752d1ddf3294af1316f1c87962cf310"
+    },
+    {
+      "path": "docs/security/SBOM_PIPELINE.md",
+      "sha256": "f449a05fc0f17c8bdb0ac4e715617898a6695d8a4b7be9887dc6869064423c88"
+    },
+    {
+      "path": "docs/security/THREAT_MODEL_SYSTEM.md",
+      "sha256": "4847ceb10788030268d7fa39591813cf4d36972eebf7c33ad40257343a97340c"
+    },
+    {
+      "path": "sbom/README.md",
+      "sha256": "fd3d3d62c2f613f74872ba3b82defde451c963cba21aab59efa623664f34cc59"
+    },
+    {
+      "path": "sbom/eos-installer-source.cdx.json",
+      "sha256": "7a0beec4813128bf22ff25f8f4d8836f3870003cdbd7ed5f1d20eb8a7ab2ead6"
+    },
+    {
+      "path": "sbom/eos-installer-source.coverage.json",
+      "sha256": "7fcfa5b0a36f1c6a4958635f5cfe13b98aaf014e26721eb70cd00b0b2f940e0f"
+    },
+    {
+      "path": "system/contracts/entitlement-response.schema.json",
+      "sha256": "353a67e5fc72a93fe22988b217744547934736b8f1da3e17d6c4033f85e69967"
+    },
+    {
+      "path": "system/contracts/examples/entitlement-response.json",
+      "sha256": "a3e7c74c3af38993c84c42282a6c8319f76c278b51fecc15c05df93f14ae8d8f"
+    },
+    {
+      "path": "system/contracts/examples/service-command.json",
+      "sha256": "b04ff4c2378617a93c0c92f9fd2d11f73f445c8cba5a1bbeb1315297f04d74b2"
+    },
+    {
+      "path": "system/contracts/examples/update-manifest.json",
+      "sha256": "de5228a8c79c48a8206c282dd1f1f66cf17c6fa3eb53b9ead6ce387970f18d62"
+    },
+    {
+      "path": "system/contracts/service-command.schema.json",
+      "sha256": "3b8ef2cff530a32ebdf84372b4d42682a2c1dcf49134835e8820415579d6ba12"
+    },
+    {
+      "path": "system/contracts/update-manifest.schema.json",
+      "sha256": "485d368000d340679e212973ef79cb7c38c752640fd4dad08a24b93b14b497d9"
+    },
+    {
+      "path": "system/product-plan.json",
+      "sha256": "9178050efda4638874b2421a494d37e7f4515d84e3d58243c9bdc3d4d297d0a8"
+    },
+    {
+      "path": "system/security/requirements.json",
+      "sha256": "fee8feda7b144fd5fcf373b7c02c39a7287631de03107275196fd18fcafa7b8b"
+    },
+    {
+      "path": "system/security/threat-model.json",
+      "sha256": "be34c9d71d60b0d10df109fd7148703c52219d179240fcdc8a6bb1ab984f350d"
+    },
+    {
+      "path": "tests/architecture/blueprint.test.py",
+      "sha256": "3a0b6c9a2401ef2ff7c9ada8bb7cf03cb817e7bc0ad5044e29beeef2024c5c3d"
+    },
+    {
+      "path": "tests/architecture/contracts.test.py",
+      "sha256": "8a2842a010c459d94fc15918c458761f626c92c4cfb3c416cb4d2143c3e47e26"
+    },
+    {
+      "path": "tests/architecture/sbom.test.py",
+      "sha256": "4a3b225562e742453588ba4dbf8143024af66d5b48fc658436917855c8d4707e"
+    },
+    {
+      "path": "tools/architecture/check-blueprint.py",
+      "sha256": "36bd92004e32f1e59ca56f19ffa86b9a71167eb0fbf4e5dfc1e0a5b4043282ff"
+    },
+    {
+      "path": "tools/architecture/requirements-linux-x86_64-py312.txt",
+      "sha256": "ba9d6dbb6bef23da78e65655b2ace799f728a63bd3132c0884836f930bf851d9"
+    },
+    {
+      "path": "tools/architecture/validate-contracts.py",
+      "sha256": "3629073df690b0bd2c9645d600dd52dfb427789c1c22c548b4ba0090c65b18db"
+    },
+    {
+      "path": "tools/sbom/source_sbom.py",
+      "sha256": "6d1bb1d52f83f3c1a1dd4cc75986874595143727ad0238ccba554fe70779a36b"
+    },
+    {
+      "path": "tools/sbom/vendor/cyclonedx-1.7/LICENSE",
+      "sha256": "6c29f22a4a7385285c6f579ec9f33c5e989f00739d6b257243a0b082ec9447ae"
+    },
+    {
+      "path": "tools/sbom/vendor/cyclonedx-1.7/PROVENANCE.json",
+      "sha256": "1a7f0fc13e67a0e620aa48720c7c82d59c2d7cf69ee60590db4233f24bb827c5"
+    },
+    {
+      "path": "tools/sbom/vendor/cyclonedx-1.7/bom-1.7.schema.json",
+      "sha256": "df472ef4aaf593904c479293723a1a5c191d6672715c93b3c0b5c318f3914221"
+    },
+    {
+      "path": "tools/sbom/vendor/cyclonedx-1.7/cryptography-defs.schema.json",
+      "sha256": "018ea7f78b5208ec647cfd10f669cc9c26aba6aceb79c4da7f9c0ef4c99b60de"
+    },
+    {
+      "path": "tools/sbom/vendor/cyclonedx-1.7/jsf-0.82.schema.json",
+      "sha256": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+    },
+    {
+      "path": "tools/sbom/vendor/cyclonedx-1.7/spdx.schema.json",
+      "sha256": "54a6288292bc6c90b0d3952f5f939f17436fa76704ffe68a46e5b78539c7cc1b"
+    }
+  ],
+  "additionalReview": {
+    "ciStaticCheck": {
+      "status": "passed",
+      "performedAtUtc": "2026-09-30T20:00:35.269751+00:00",
+      "rawEvidence": "reports/architecture/ci-static-validation.log",
+      "sha256": "e51993a217eeefa603b1178eaca77834e1fd1c2942adf9df52be3705dc516dce"
+    },
+    "hashLockedDependencies": {
+      "status": "installed-and-pip-check-passed",
+      "method": "fresh CPython 3.12 venv; pip --no-index --find-links local downloaded wheels --require-hashes --only-binary=:all: --no-deps",
+      "vulnerabilityAssessment": "not-performed"
+    },
+    "priorInstallerRegression": {
+      "newExecution": false,
+      "reason": "No installer/runtime code changed in this architecture stage; prior evidence retained in docs/security/TEST_REPORT.md."
+    }
+  }
+}

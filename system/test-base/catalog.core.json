@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-adapter-admission",
+  "catalogRevision": 1,
+  "entries": [
+    {
+      "id": "js-controller",
+      "package": "iobroker.js-controller",
+      "version": "7.2.2",
+      "sha256": "a57a0fbb5f9ecdd16c51997afdd20ab652e4ea9f31ec4fd98ed4097920dcd31f",
+      "digestKind": "tree-sha256-v1",
+      "kind": "core",
+      "required": true,
+      "review": {
+        "status": "approved-test",
+        "evidenceId": "eos-base-core-lab-20261001"
+      },
+      "permissions": {
+        "capabilities": [
+          "state.read",
+          "state.write",
+          "process.fixed"
+        ],
+        "protocols": [
+          "eos-redis-tls13-v1"
+        ],
+        "network": "declared-endpoints-and-discovery",
+        "shellExec": false,
+        "additionalNpmModules": [],
+        "arbitraryCode": false
+      },
+      "communication": "eos-redis-tls13-v1"
+    }
+  ]
+}

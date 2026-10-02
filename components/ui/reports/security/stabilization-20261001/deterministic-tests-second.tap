@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+ok 1 - differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+  ---
+  duration_ms: 192.233327
+  type: 'test'
+  ...
+# Subtest: differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+ok 2 - differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+  ---
+  duration_ms: 142.33895
+  type: 'test'
+  ...
+# Subtest: idle degraded target inspections are independent of repeated messages; budgets remain reserved
+ok 3 - idle degraded target inspections are independent of repeated messages; budgets remain reserved
+  ---
+  duration_ms: 134.180672
+  type: 'test'
+  ...
+# Subtest: current failed duration is reported independently of the previous successful RTT
+ok 4 - current failed duration is reported independently of the previous successful RTT
+  ---
+  duration_ms: 4.410784
+  type: 'test'
+  ...
+# Subtest: 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease
+ok 5 - 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease
+  ---
+  duration_ms: 1.305985
+  type: 'test'
+  ...
+# Subtest: bounded current attempt identifies transport rejection and retains failsafe
+ok 6 - bounded current attempt identifies transport rejection and retains failsafe
+  ---
+  duration_ms: 0.940062
+  type: 'test'
+  ...
+# Subtest: bounded current attempt identifies signature rejection and retains failsafe
+ok 7 - bounded current attempt identifies signature rejection and retains failsafe
+  ---
+  duration_ms: 1.056699
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 656.94694

@@ -1,0 +1,44 @@
+[Unit]
+Description=NexoWatt EOS TLS database (%i)
+PartOf=nexowatt-eos.target
+Before=nexowatt-eos-initialize.service nexowatt-eos-controller.service
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=exec
+User=eos-redis-%i
+Group=eos-redis-%i
+UnsetEnvironment=SSLKEYLOGFILE OPENSSL_CONF OPENSSL_MODULES LD_PRELOAD LD_LIBRARY_PATH
+ExecStart=/usr/bin/redis-server /etc/nexowatt-eos/transport/redis/%i.conf
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=30
+TimeoutStopSec=30
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/nexowatt-eos/redis/%i
+InaccessiblePaths=-/etc/nexowatt-eos/iobroker.json -/etc/nexowatt-eos/transport/credentials
+MemoryMax=1G
+TasksMax=64
+LimitNOFILE=4096
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nexowatt-eos-redis-%i

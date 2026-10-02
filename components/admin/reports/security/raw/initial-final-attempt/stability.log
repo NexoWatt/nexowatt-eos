@@ -1,0 +1,217 @@
+UTC: 2026-09-30T17:33:45.291989+00:00
+COMMAND: ["npm", "run", "check:eos-stability"]
+EXIT: 1
+
+
+> iobroker.eos-admin@7.10.10 precheck:eos-stability
+> npm run sync:eos-version && npm run prepare:eos-release-defaults && npm run clean:eos-runtime
+
+
+> iobroker.eos-admin@7.10.10 sync:eos-version
+> node tools/nexowatt-sync-release-version.cjs
+
+[NexoWatt EOS version sync] OK (7.10.10; all release files match)
+
+> iobroker.eos-admin@7.10.10 prepare:eos-release-defaults
+> node tools/nexowatt-ensure-release-defaults.cjs
+
+[NexoWatt EOS release defaults] OK (canonical sales defaults already present)
+
+> iobroker.eos-admin@7.10.10 clean:eos-runtime
+> node tools/nexowatt-clean-legacy-runtime.cjs
+
+[NexoWatt EOS runtime cleanup] OK (runtime v84, shell v7109, removed 0 legacy files)
+
+> iobroker.eos-admin@7.10.10 check:eos-stability
+> node tools/nexowatt-stability-check.cjs && node tools/nexowatt-esm-syntax-selftest.cjs && node tools/nexowatt-backend-runtime-selftest.cjs && node tools/nexowatt-prebuilt-release-selftest.cjs && node tools/nexowatt-import-integrity-selftest.cjs && node tools/nexowatt-entrypoint-smoke-selftest.cjs && node tools/nexowatt-frontend-graph-check.cjs && node tools/nexowatt-policy-selftest.cjs && node tools/nexowatt-publish-channel-selftest.cjs && node tools/nexowatt-release-defaults-selftest.cjs && node tools/nexowatt-role-access-selftest.cjs && node tools/nexowatt-internal-reserve-selftest.cjs && node tools/nexowatt-modern-ui-selftest.cjs && node tools/nexowatt-login-layout-selftest.cjs && node tools/nexowatt-branding-selftest.cjs && node tools/nexowatt-default-port-selftest.cjs && node tools/nexowatt-module-popup-selftest.cjs && node tools/nexowatt-datapoint-selftest.cjs && node tools/nexowatt-update-selftest.cjs && node tools/nexowatt-datapoint-interaction-selftest.cjs && node tools/nexowatt-manual-write-policy-selftest.cjs && node tools/nexowatt-value-column-selftest.cjs && node tools/nexowatt-native-shell-selftest.cjs && node tools/nexowatt-assistant-separation-selftest.cjs && node tools/nexowatt-runtime-cleanup-selftest.cjs && node tools/nexowatt-version-sync-selftest.cjs && node tools/nexowatt-merge-update-selftest.cjs && node tools/nexowatt-password-write-selftest.cjs && node tools/nexowatt-account-password-flow-selftest.cjs && npm run check:eos-stable-v7103 && node tools/nexowatt-ems-overview-selftest.cjs && node tools/nexowatt-ui-overview-runtime-selftest.cjs && node tools/nexowatt-auto-update-selftest.cjs && node tools/nexowatt-auto-update-placement-selftest.cjs && node tools/nexowatt-role-security-selftest.cjs && node tools/nexowatt-user-area-selftest.cjs && node tools/nexowatt-installer-ems-selftest.cjs && node tools/nexowatt-v7109-clean-core-selftest.cjs && npm run test:eos-licensing && npm run test:eos-security-boundaries
+
+[NexoWatt EOS stability] OK
+[NexoWatt EOS ESM syntax] OK
+[NexoWatt EOS backend runtime] OK (17 local runtime files resolve, parse and are declared by the npm files whitelist; dependency-free on Windows)
+[NexoWatt EOS prebuilt release] OK (1424 sealed source/runtime files; 17 backend runtime files; no tsc/tsx required for npm publish)
+[NexoWatt EOS import integrity] OK
+[NexoWatt EOS entrypoint smoke] OK (16 scripts + role-bootstrapped app entry, runtime v84)
+[NexoWatt EOS frontend graph] OK (208 reachable JS files, one HTML5 backend)
+[NexoWatt EOS policy self-test] OK
+[NexoWatt EOS publish channel selftest] OK
+[NexoWatt EOS release defaults selftest] OK
+[NexoWatt EOS role access] OK (Admin full authority, Installer EMS access, restricted account administration, End User read-only datapoints)
+[NexoWatt EOS internal reserve] OK
+[NexoWatt EOS modern UI] OK
+[NexoWatt EOS login layout] OK
+[NexoWatt EOS branding] OK
+
+STDERR:
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+node:assert:152
+  throw new AssertionError(obj);
+  ^
+
+AssertionError [ERR_ASSERTION]: README must contain only the unchanged LICENSE text
++ actual - expected
+
++ '> **Sicherheits- und Lizenz-Teststand 7.10.10 (30.09.2026):** Zentrale Home-/Pro-Lizenzprüfung und verschlüsselte Ablage sind neu. Die bestehende Keygen-Anbindung, weitere Verbraucheradapter, normaler Vollbuild und reale Anlage müssen noch geprüft werden. Keine Serienfreigabe oder IEC-/CRA-Konformitätsbescheinigung. Konten mit altem gemeinsamem Startkennwort werden gesperrt; individueller Adminzugang ist vor dem Update erforderlich.\n' +
++   '>\n' +
++   '> Einstieg: [Prüfbericht](reports/security/RELEASE_REVIEW_7.10.10.md), [Installation und Rückfall](docs/operations/SECURITY_LICENSING_TEST_7.10.10.md), [Adapter-Anbindung](docs/licensing/ADAPTER_INTEGRATION.md), [Keygen und Ablage](docs/licensing/ISSUER_AND_STORAGE.md), [CRA-/IEC-Arbeitsliste](docs/cra/CRA_IEC_GAP_ANALYSIS_2026-09-30.md).\n' +
+- '# NexoWatt EOS – Proprietary License Notice\n' +
+    '\n' +
++   '# NexoWatt EOS – Proprietary License Notice\n' +
++   '\n' +
+    'Copyright (c) 2026 NexoWatt. Alle Rechte vorbehalten.\n' +
+    '\n' +
+    'Diese NexoWatt EOS Administrationsoberfläche, einschließlich der NexoWatt/EOS-spezifischen Branding-Dateien, Logos, Stylesheets, Layout-Anpassungen, UI-Overlays, Grafiken, Texte und sonstigen NexoWatt-spezifischen Erweiterungen, ist proprietär.\n' +
+    '\n' +
+    'Die Nutzung, Installation, Vervielfältigung, Veröffentlichung, Weitergabe, Unterlizenzierung, Vermietung, der Verkauf oder die Bereitstellung an Dritte ist ohne vorherige schriftliche Zustimmung von NexoWatt nicht gestattet.\n' +
+
+    at Object.<anonymous> (/workspace/scratch/c16def314bc5/source/eos-admin/tools/nexowatt-default-port-selftest.cjs:17:8)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '> **Sicherheits- und Lizenz-Teststand 7.10.10 (30.09.2026):** Zentrale Home-/Pro-Lizenzprüfung und verschlüsselte Ablage sind neu. Die bestehende Keygen-Anbindung, weitere Verbraucheradapter, normaler Vollbuild und reale Anlage müssen noch geprüft werden. Keine Serienfreigabe oder IEC-/CRA-Konformitätsbescheinigung. Konten mit altem gemeinsamem Startkennwort werden gesperrt; individueller Adminzugang ist vor dem Update erforderlich.\n' +
+    '>\n' +
+    '> Einstieg: [Prüfbericht](reports/security/RELEASE_REVIEW_7.10.10.md), [Installation und Rückfall](docs/operations/SECURITY_LICENSING_TEST_7.10.10.md), [Adapter-Anbindung](docs/licensing/ADAPTER_INTEGRATION.md), [Keygen und Ablage](docs/licensing/ISSUER_AND_STORAGE.md), [CRA-/IEC-Arbeitsliste](docs/cra/CRA_IEC_GAP_ANALYSIS_2026-09-30.md).\n' +
+    '\n' +
+    '# NexoWatt EOS – Proprietary License Notice\n' +
+    '\n' +
+    'Copyright (c) 2026 NexoWatt. Alle Rechte vorbehalten.\n' +
+    '\n' +
+    'Diese NexoWatt EOS Administrationsoberfläche, einschließlich der NexoWatt/EOS-spezifischen Branding-Dateien, Logos, Stylesheets, Layout-Anpassungen, UI-Overlays, Grafiken, Texte und sonstigen NexoWatt-spezifischen Erweiterungen, ist proprietär.\n' +
+    '\n' +
+    'Die Nutzung, Installation, Vervielfältigung, Veröffentlichung, Weitergabe, Unterlizenzierung, Vermietung, der Verkauf oder die Bereitstellung an Dritte ist ohne vorherige schriftliche Zustimmung von NexoWatt nicht gestattet.\n' +
+    '\n' +
+    'Der Adapter ist ausschließlich für Systeme und Installationen bestimmt, die von NexoWatt betrieben, geliefert, autorisiert oder ausdrücklich lizenziert wurden.\n' +
+    '\n' +
+    'Sofern dieser Adapter auf Open-Source-Komponenten basiert oder solche enthält, gelten für diese Bestandteile zusätzlich die jeweiligen Drittanbieter-Lizenzen. Die in diesem Repository enthaltenen Hinweise zu Drittanbieter-Lizenzen bleiben unberührt. Diese proprietäre NexoWatt-Lizenz beschränkt insbesondere die NexoWatt-spezifischen Änderungen, das sichtbare EOS-Design, das Branding und die damit verbundenen Assets.\n' +
+    '\n' +
+    'DIE NEXOWATT-SPEZIFISCHEN BESTANDTEILE WERDEN, SOWEIT GESETZLICH ZULÄSSIG, OHNE AUSDRÜCKLICHE ODER KONKLUDENTE GEWÄHRLEISTUNG BEREITGESTELLT.\n' +
+    '\n' +
+    '## Hinweis zur öffentlichen npm-Bereitstellung\n' +
+    '\n' +
+    'Eine öffentliche technische Bereitstellung dieses Pakets in einem npm-Registry, Git-Repository, Download-Archiv oder einem NexoWatt-Repository stellt keine Open-Source-Lizenz und keine allgemeine Nutzungserlaubnis dar. Die Nutzung, Installation und Weitergabe bleibt ausschließlich autorisierten NexoWatt-Systemen und ausdrücklich durch NexoWatt lizenzierten Nutzern vorbehalten.\n' +
+    '\n' +
+    '---\n' +
+    '\n' +
+    '# NexoWatt EOS – Proprietary License Notice\n' +
+    '\n' +
+    'Copyright (c) 2026 NexoWatt. All rights reserved.\n' +
+    '\n' +
+    'This NexoWatt EOS administration interface, including all NexoWatt/EOS-specific branding files, logos, stylesheets, layout modifications, UI overlays, graphics, texts and other NexoWatt-specific additions, is proprietary.\n' +
+    '\n' +
+    'Use, installation, copying, publication, redistribution, sublicensing, rental, sale or provision to third parties is not permitted without prior written permission from NexoWatt.\n' +
+    '\n' +
+    'This adapter is intended exclusively for systems and installations operated, delivered, authorized or expressly licensed by NexoWatt.\n' +
+    '\n' +
+    'Where this adapter is based on or includes open-source components, the respective third-party licenses continue to apply to those components. Third-party license notices contained in this repository remain unaffected. This proprietary NexoWatt notice applies in particular to the NexoWatt-specific modifications, the visible EOS design, branding and related assets.\n' +
+    '\n' +
+    'THE NEXOWATT-SPECIFIC PARTS ARE PROVIDED, TO THE MAXIMUM EXTENT PERMITTED BY LAW, WITHOUT EXPRESS OR IMPLIED WARRANTY.\n' +
+    '\n' +
+    '## Public npm availability notice\n' +
+    '\n' +
+    'Technical availability of this package through a public npm registry, Git repository, download archive or NexoWatt repository does not constitute an open-source license or a general permission to use. Use, installation and redistribution remain limited to authorized NexoWatt systems and users expressly licensed by NexoWatt.\n' +
+    '\n' +
+    '---\n' +
+    '\n' +
+    '# Third-party / upstream notice\n' +
+    '\n' +
+    'Portions of this adapter are based on the upstream ioBroker.admin project and remain subject to the following MIT license notice:\n' +
+    '\n' +
+    'The MIT License (MIT)\n' +
+    '\n' +
+    'Copyright (c) 2014-2026 bluefox <dogafox@gmail.com>\n' +
+    '\n' +
+    'Permission is hereby granted, free of charge, to any person obtaining a copy\n' +
+    'of this software and associated documentation files (the "Software"), to deal\n' +
+    'in the Software without restriction, including without limitation the rights\n' +
+    'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n' +
+    'copies of the Software, and to permit persons to whom the Software is\n' +
+    'furnished to do so, subject to the following conditions:\n' +
+    '\n' +
+    'The above copyright notice and this permission notice shall be included in\n' +
+    'all copies or substantial portions of the Software.\n' +
+    '\n' +
+    'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n' +
+    'IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n' +
+    'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n' +
+    'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n' +
+    'LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n' +
+    'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n' +
+    'THE SOFTWARE.\n',
+  expected: '# NexoWatt EOS – Proprietary License Notice\n' +
+    '\n' +
+    'Copyright (c) 2026 NexoWatt. Alle Rechte vorbehalten.\n' +
+    '\n' +
+    'Diese NexoWatt EOS Administrationsoberfläche, einschließlich der NexoWatt/EOS-spezifischen Branding-Dateien, Logos, Stylesheets, Layout-Anpassungen, UI-Overlays, Grafiken, Texte und sonstigen NexoWatt-spezifischen Erweiterungen, ist proprietär.\n' +
+    '\n' +
+    'Die Nutzung, Installation, Vervielfältigung, Veröffentlichung, Weitergabe, Unterlizenzierung, Vermietung, der Verkauf oder die Bereitstellung an Dritte ist ohne vorherige schriftliche Zustimmung von NexoWatt nicht gestattet.\n' +
+    '\n' +
+    'Der Adapter ist ausschließlich für Systeme und Installationen bestimmt, die von NexoWatt betrieben, geliefert, autorisiert oder ausdrücklich lizenziert wurden.\n' +
+    '\n' +
+    'Sofern dieser Adapter auf Open-Source-Komponenten basiert oder solche enthält, gelten für diese Bestandteile zusätzlich die jeweiligen Drittanbieter-Lizenzen. Die in diesem Repository enthaltenen Hinweise zu Drittanbieter-Lizenzen bleiben unberührt. Diese proprietäre NexoWatt-Lizenz beschränkt insbesondere die NexoWatt-spezifischen Änderungen, das sichtbare EOS-Design, das Branding und die damit verbundenen Assets.\n' +
+    '\n' +
+    'DIE NEXOWATT-SPEZIFISCHEN BESTANDTEILE WERDEN, SOWEIT GESETZLICH ZULÄSSIG, OHNE AUSDRÜCKLICHE ODER KONKLUDENTE GEWÄHRLEISTUNG BEREITGESTELLT.\n' +
+    '\n' +
+    '## Hinweis zur öffentlichen npm-Bereitstellung\n' +
+    '\n' +
+    'Eine öffentliche technische Bereitstellung dieses Pakets in einem npm-Registry, Git-Repository, Download-Archiv oder einem NexoWatt-Repository stellt keine Open-Source-Lizenz und keine allgemeine Nutzungserlaubnis dar. Die Nutzung, Installation und Weitergabe bleibt ausschließlich autorisierten NexoWatt-Systemen und ausdrücklich durch NexoWatt lizenzierten Nutzern vorbehalten.\n' +
+    '\n' +
+    '---\n' +
+    '\n' +
+    '# NexoWatt EOS – Proprietary License Notice\n' +
+    '\n' +
+    'Copyright (c) 2026 NexoWatt. All rights reserved.\n' +
+    '\n' +
+    'This NexoWatt EOS administration interface, including all NexoWatt/EOS-specific branding files, logos, stylesheets, layout modifications, UI overlays, graphics, texts and other NexoWatt-specific additions, is proprietary.\n' +
+    '\n' +
+    'Use, installation, copying, publication, redistribution, sublicensing, rental, sale or provision to third parties is not permitted without prior written permission from NexoWatt.\n' +
+    '\n' +
+    'This adapter is intended exclusively for systems and installations operated, delivered, authorized or expressly licensed by NexoWatt.\n' +
+    '\n' +
+    'Where this adapter is based on or includes open-source components, the respective third-party licenses continue to apply to those components. Third-party license notices contained in this repository remain unaffected. This proprietary NexoWatt notice applies in particular to the NexoWatt-specific modifications, the visible EOS design, branding and related assets.\n' +
+    '\n' +
+    'THE NEXOWATT-SPECIFIC PARTS ARE PROVIDED, TO THE MAXIMUM EXTENT PERMITTED BY LAW, WITHOUT EXPRESS OR IMPLIED WARRANTY.\n' +
+    '\n' +
+    '## Public npm availability notice\n' +
+    '\n' +
+    'Technical availability of this package through a public npm registry, Git repository, download archive or NexoWatt repository does not constitute an open-source license or a general permission to use. Use, installation and redistribution remain limited to authorized NexoWatt systems and users expressly licensed by NexoWatt.\n' +
+    '\n' +
+    '---\n' +
+    '\n' +
+    '# Third-party / upstream notice\n' +
+    '\n' +
+    'Portions of this adapter are based on the upstream ioBroker.admin project and remain subject to the following MIT license notice:\n' +
+    '\n' +
+    'The MIT License (MIT)\n' +
+    '\n' +
+    'Copyright (c) 2014-2026 bluefox <dogafox@gmail.com>\n' +
+    '\n' +
+    'Permission is hereby granted, free of charge, to any person obtaining a copy\n' +
+    'of this software and associated documentation files (the "Software"), to deal\n' +
+    'in the Software without restriction, including without limitation the rights\n' +
+    'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n' +
+    'copies of the Software, and to permit persons to whom the Software is\n' +
+    'furnished to do so, subject to the following conditions:\n' +
+    '\n' +
+    'The above copyright notice and this permission notice shall be included in\n' +
+    'all copies or substantial portions of the Software.\n' +
+    '\n' +
+    'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n' +
+    'IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n' +
+    'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n' +
+    'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n' +
+    'LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n' +
+    'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n' +
+    'THE SOFTWARE.\n',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

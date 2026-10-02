@@ -1,0 +1,25 @@
+DIAG_SOURCE {"sourceSha256":"4091eb57112c36c7976850a5efeeab5dff8ecde03374e46bdbb214e3002eb4d0","instrumentation":"in-memory prototype timing wrappers; no runtime changes; bounded diagnostics; no payload/secrets"}
+OK 99 Slaves; 100., doppelte ID und unsichere Rückfallsumme abgewiesen
+OK HTTP nur im Tailnet/Loopback; HMAC erkennt Manipulation
+OK Wiederanlauf erst nach bestätigtem Rückfall; 99 Teilnehmer innerhalb Budget
+OK Ein fehlender Slave: übrige Teilnehmer erhalten Rückfall, Altbudget bleibt reserviert
+OK Wiederverbindung mit begrenztem Wiederanlauf
+OK Hauptzähler-Ausfall setzt Wiederanlauf zurück; keine sofortige Freigabe
+DIAG_ACCEPT {"code":"stale_or_invalid_lease","node":"house_0","elapsedMs":801,"timeoutMs":800,"leaseMs":3000,"remainingMs":2199,"sequenceMatch":true,"requestMatch":true,"bindingMatch":true,"epochMatch":true,"commandSequence":9,"previousCommandSequence":9,"sameCommandContents":true}
+DIAG_ACCEPT {"code":"stale_or_invalid_lease","node":"house_0","elapsedMs":0,"timeoutMs":800,"leaseMs":3000,"remainingMs":3000,"sequenceMatch":true,"requestMatch":true,"bindingMatch":true,"epochMatch":true,"commandSequence":9,"previousCommandSequence":9,"sameCommandContents":true}
+OK Replay, fremder Boot, alte Revision und verspätete Antwort verlängern keine Lease
+OK Master-Neustart reserviert Maxima und verlangt neue Synchronisation
+OK Strangreserve und Phasen begrenzen zusätzlich; Null bleibt Null
+OK Finale Sicherheitsprüfung begrenzt Boost und addierte Ladepunkte; Ablauf erzwingt Null
+OK Finaler PV-/Speicher-Writer prüft aktuelle Nullgrenzen und Exportbudget
+OK Speicher-Freigabe nutzt kanonisches storage.controlMode und sperrt Farm/Sondermodi
+OK Schnelle Publish-Syntaxprüfung führt Code nicht aus und erkennt Fehler
+OK Microgrid-Meldung: Diagnose still, Anlauf normal, Betriebsausfall kritisch, ein Ereignis
+OK echte parallele HTTP-Kommunikation: 99 Slaves, Handshake + Freigabe in 223 ms (Loopback, kein Feldnachweis)
+OK 99 warme HTTP-Kanäle im 250-ms-Takt mit Archiv-fsync: 792 Antworten, P95 84 ms, Maximum 91 ms (Loopback)
+OK unerreichbarer Slave-Kanal blockiert andere 98 Kanäle nicht
+OK verschlüsselte Konfiguration und Neustart
+OK fehlende aktive Konfiguration bleibt durch Marker verriegelt
+OK beschädigte persistierte Konfiguration verriegelt
+Mesh coordinator: 20 Prüfgruppen bestanden.
+DIAG_SUMMARY {"cycle":{"count":1089,"total":68253.79792199994,"p50":56.4347130000001,"p95":110.21706299999994,"max":133.06468000000007},"failures":[{"elapsedMs":33.064328999999816,"error":"connect ECONNREFUSED 127.0.0.1:1"}],"receive":{"count":1088,"total":145.50766199999975,"p50":0.10782400000016423,"p95":0.30084999999985484,"max":1.3386470000000372},"eventLoopLag":{"count":171,"total":1493.605589999999,"p50":0.21170400000028167,"p95":39.737343999999894,"max":859.760016}}

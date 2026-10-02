@@ -1,0 +1,872 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title class="translate">nexowatt-devices</title>
+
+  <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+  <link rel="stylesheet" type="text/css" href="../../css/adapter.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="../../js/translate.js"></script>
+  <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+  <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+  <script type="text/javascript" src="words.js"></script>
+
+  <script type="text/javascript" src="index_m.js"></script>
+</head>
+
+<body>
+<div class="m adapter-container">
+
+  <!-- Header -->
+  <div class="row">
+    <div class="col s12">
+      <div class="card nexo-header">
+        <div class="card-content">
+          <div class="nexo-header-row">
+            <span class="card-title nexo-title translate">Nexowatt Devices</span>
+            <span class="nexo-badge">nexowatt-devices</span>
+          </div>
+          <p class="nexo-subtitle translate">Standalone multi-protocol device adapter with categories and driver templates (Modbus TCP/RTU/ASCII, M-Bus, MQTT, HTTP, UDP, Speedwire, 1-Wire).</p>
+          <p class="nexo-meta">
+            <span class="translate">Treiber geladen:</span>
+            <span id="tplCount">…</span>
+          </p>
+          <p class="nexo-hint">
+            <span class="translate">Hinweis: Änderungen an Geräten werden erst nach dem Speichern (oben) und anschließendem Neustart der Instanz aktiv.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Tabs -->
+  <div class="row">
+    <div class="col s12">
+      <ul id="nexoTabs" class="tabs nexo-tabs">
+        <li class="tab"><a href="#tabGeneral" class="active translate">Allgemein</a></li>
+        <li class="tab"><a href="#tabDevices" class="translate">Geräte</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="tabGeneral">
+
+  <!-- Global settings -->
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title translate">Globale Einstellungen</span>
+
+          <div class="row">
+            <div class="input-field col s12 m4">
+              <input class="value" id="pollIntervalMs" type="number" min="250" step="50"/>
+              <label for="pollIntervalMs" class="translate">Polling Intervall (ms)</label>
+            </div>
+
+            <div class="input-field col s12 m4">
+              <input class="value" id="modbusTimeoutMs" type="number" min="250" step="50"/>
+              <label for="modbusTimeoutMs" class="translate">Modbus Timeout (ms)</label>
+            </div>
+
+            <div class="input-field col s12 m4">
+              <input class="value" id="registerAddressOffset" type="number" step="1"/>
+              <label for="registerAddressOffset" class="translate">Register Address Offset (z.B. -1 für 1-basierte Geräte)</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s12">
+              <textarea class="value" id="devicesJson" style="display:none;"></textarea>
+              <p class="grey-text text-darken-1">
+                <span class="translate">Die Geräte-Konfiguration wird intern als JSON gespeichert.</span>
+                <a href="#!" id="btnShowJson" class="translate">JSON anzeigen</a>
+              </p>
+              <pre id="jsonPreview" class="nexo-json-preview" style="display:none;"></pre>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div id="tabDevices">
+  <!-- Devices -->
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          
+          <div class="nexo-devices-header">
+            <span class="card-title translate">Geräteliste</span>
+            <div class="nexo-devices-actions">
+              <a class="waves-effect waves-light btn" id="btnAddDevice" href="#!">
+                <span class="nexo-icon">+</span>
+                <span class="translate">Gerät hinzufügen</span>
+              </a>
+              <a class="waves-effect waves-light btn nexo-outline" id="btnImportDevices" href="#!">
+                <span class="translate">JSON importieren</span>
+              </a>
+              <a class="waves-effect waves-light btn nexo-outline" id="btnExportDevices" href="#!">
+                <span class="translate">JSON exportieren</span>
+              </a>
+              <input type="file" id="importJsonFile" accept="application/json,.json" style="display:none;" />
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col s12">
+              <table class="highlight responsive-table nexo-table" id="devicesTable">
+                <thead>
+                  <tr>
+                    <th class="translate">Aktiv</th>
+                    <th class="translate">Geräte-ID</th>
+                    <th class="translate">Name</th>
+                    <th class="translate">Kategorie</th>
+                    <th class="translate">Hersteller</th>
+                    <th class="translate">Template</th>
+                    <th class="translate">Protokoll</th>
+                    <th class="translate">Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <p class="grey-text text-darken-1" id="noDevicesHint" style="display:none;">
+                <span class="translate">Noch keine Geräte konfiguriert.</span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Modal backdrop for fallback mode (only used if Materialize JS is not available) -->
+  <div id="nexoBackdrop" class="nexo-backdrop" style="display:none;"></div>
+
+  <!-- Modal: Add/Edit device -->
+  <div id="modalDevice" class="modal modal-fixed-footer nexo-modal">
+    <div class="modal-content">
+      <h5 id="modalTitle" class="translate">Gerät</h5>
+
+      <div class="row">
+        <div class="input-field col s12 m4">
+          <input id="dev_id" type="text" />
+          <label for="dev_id" class="translate">Geräte-ID (eindeutig, z.B. evcs1)</label>
+        </div>
+        <div class="input-field col s12 m8">
+          <input id="dev_name" type="text" />
+          <label for="dev_name" class="translate">Name (frei wählbar)</label>
+        </div>
+      </div>
+
+      <div class="row nexo-select-row">
+        <div class="col s12 m4 nexo-select-group">
+          <label for="dev_category" class="translate">Kategorie</label>
+          <select id="dev_category" class="browser-default"></select>
+        </div>
+        <div class="col s12 m4 nexo-select-group">
+          <label for="dev_manufacturer" class="translate">Hersteller</label>
+          <select id="dev_manufacturer" class="browser-default"></select>
+        </div>
+        <div class="col s12 m4 nexo-select-group">
+          <label for="dev_template" class="translate">Treiber/Template</label>
+          <select id="dev_template" class="browser-default"></select>
+        </div>
+      </div>
+
+      <div class="row nexo-select-row">
+        <div class="col s12 m4 nexo-select-group">
+          <label for="dev_protocol" class="translate">Protokoll</label>
+          <select id="dev_protocol" class="browser-default"></select>
+        </div>
+        <div class="input-field col s12 m4">
+          <input id="dev_poll" type="number" min="250" step="50" />
+          <label for="dev_poll" class="translate">Polling Intervall (ms, optional)</label>
+        </div>
+        <div class="input-field col s12 m4">
+          <div class="switch">
+            <label>
+              <span class="translate">Inaktiv</span>
+              <input id="dev_enabled" type="checkbox" checked>
+              <span class="lever"></span>
+              <span class="translate">Aktiv</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-field col s12 m4">
+          <input id="dev_hbTimeout" type="number" min="1000" step="500" />
+          <label for="dev_hbTimeout" class="translate">Heartbeat Timeout (ms, optional)</label>
+        </div>
+        <div class="col s12 m8 nexo-muted" style="margin-top: 16px; font-size: 0.9em;">
+          <span class="translate">Wenn innerhalb dieses Zeitfensters keine neuen Daten empfangen werden, wird aliases.r.online automatisch auf false gesetzt (Sicherheits-Logik).</span>
+        </div>
+      </div>
+
+      <div id="deye_settings" style="display:none;" class="card-panel">
+        <strong>DEYE Hybrid – Modbus RTU, vorläufige Familienprofile</strong>
+        <p>Voreingestellt: 9600 Baud, 8N1, Offset 0. RS485-Port und tatsächliche Geräteadresse wählen; Unit-ID 1 ist nur ein Vorschlag. Registerreihenfolge ist im Profil festgelegt. Die Bestätigung der Modell-/Firmware-Abdeckung durch DEYE steht aus.</p>
+        <p><label><input id="deye_allow_config_writes" type="checkbox" /><span>Vier Konfigurationsgrenzen ausdrücklich zum Schreiben freigeben</span></label><br />Maximaler Lade-/Entladestrom, Netz-Ladestrom und maximale Einspeiseleistung. Diese Grenzen sind keine aktiven Lade-/Entladebefehle. Jeder Schreibzugriff wird zurückgelesen; Remote-Leistungssteuerung bleibt gesperrt.</p>
+        <p class="deye_three_phase"><label><input id="deye_read_remote" type="checkbox" /><span>Remote-Register zusätzlich lesen (keine Steuerung)</span></label></p>
+        <p>Nur nach Abgleich mit Herstellerangaben oder verlässlichen Referenzmessungen auswählen. Bei unbestätigten Einstellungen bleibt der betreffende EOS-Leistungsalias unbekannt. Mehrere Batterieeingänge werden vorerst nicht zu einer Gesamtleistung oder einem Gesamt-SOC zusammengefasst.</p>
+        <label for="deye_battery_sign">Bestätigte Batterie-Leistungsrichtung</label>
+        <select id="deye_battery_sign" class="browser-default"><option value="unconfirmed">Unbestätigt</option><option value="positiveDischarge">Positiv = Entladen</option><option value="positiveCharge">Positiv = Laden</option></select>
+        <div class="deye_three_phase">
+          <label for="deye_battery_scale">Bestätigte Skalierung von Register 590</label>
+          <select id="deye_battery_scale" class="browser-default"><option value="unconfirmed">Unbestätigt</option><option value="1">1 W je Schritt</option><option value="10">10 W je Schritt</option></select>
+          <label for="deye_grid_sign">Bestätigte Netz-Leistungsrichtung</label>
+          <select id="deye_grid_sign" class="browser-default"><option value="unconfirmed">Unbestätigt</option><option value="positiveImport">Positiv = Bezug</option><option value="positiveExport">Positiv = Einspeisung</option></select>
+        </div>
+      </div>
+
+      <div id="varta_settings" style="display:none;" class="card-panel">
+        <strong>VARTA – Modbus TCP, erweiterte Tabelle 14</strong>
+        <p>Messwerte und Steuerregister je Modell. Empfohlen: Port 502, Unit-ID 255, Offset 0. Pextra gibt zusätzliche Leistung vor. Die absolute Frequenzregelung benötigt eine Freischaltung durch VARTA.</p>
+        <p id="varta_pacing_note"></p>
+        <p><label><input id="varta_extended_enabled" type="checkbox" checked /><span>Erweiterte Register lesen</span></label></p>
+        <p><label><input id="varta_allow_control_writes" type="checkbox" /><span>Dokumentierte Steuerregister zum Schreiben freigeben</span></label></p>
+        <div class="varta-section">
+          <label for="varta_limit_class">Von VARTA bestätigte Leistungsklasse für UG/OG</label>
+          <select id="varta_limit_class" class="browser-default">
+            <option value="">Unbestätigt – nur 0 W</option>
+            <option value="residential">Haushalt – ab 500 W</option>
+            <option value="commercial">Gewerbe – ab 5000 W</option>
+          </select>
+        </div>
+        <div id="varta_token_option" class="varta-section">
+          <label><input id="varta_legacy_token" type="checkbox" /><span>Token-Kompatibilität für ältere Linux-EMS</span></label>
+          <p class="varta-help">Führende Hex-Null weglassen. Nur bei bestätigtem Firmwarefehler einschalten.</p>
+        </div>
+        <div id="varta_frequency_option" class="varta-section">
+          <label><input id="varta_frequency_enabled" type="checkbox" /><span>Frequenzregelungsregister wurden von VARTA freigeschaltet</span></label>
+          <p class="varta-help">Ermöglicht Zugriff auf 1300–1306 und die zugehörigen SF-Register. Kein automatisches Aktivieren oder Alive-Signal; dessen Zeitvorgaben müssen mit VARTA geklärt werden.</p>
+        </div>
+        <div id="varta_sf_option" class="varta-section">
+          <label><input id="varta_allow_sf_writes" type="checkbox" />
+            <span>SF-Konfiguration ausdrücklich freigeben (Expertenoption)</span>
+          </label>
+          <p class="varta-help">Keine Leistungssteuerung. Nur pulse neo / flex storage: SF-Register verändern die Darstellung von Messwerten und Steuerwerten. Standardmäßig gesperrt. Jeder Schreibzugriff wird geprüft und zurückgelesen; kein automatisches Schreiben beim Start.</p>
+        </div>
+        <div class="varta-section">
+          <p><strong>Pextra-Freigabe: 120 Sekunden.</strong> Es gibt keine automatische Verlängerung alter Befehle.</p>
+          <p class="varta-help">Nicht darstellbare Sollwerte und nicht bestätigte Rücklesewerte führen zu einem Schreibfehler. Verschlüsselte Entladeenergie wird ohne Hersteller-Schlüssel nicht als Wh angezeigt.</p>
+        </div>
+      </div>
+
+      <div id="depower_settings" style="display:none;" class="card-panel">
+        <strong>DEPower – Energiezähler</strong>
+        <p>Die Protokolltabelle nennt 100 Wh je Zählschritt. Bei abweichender Firmware Sitzungs- und Gesamtzähler getrennt mit der Stationsanzeige abgleichen. Leistung und Sollwert bleiben in W.</p>
+        <div class="row">
+          <div class="col s12 m6 nexo-select-group">
+            <label for="depower_session_wh">Sitzungsenergie: Wh je Zählschritt</label>
+            <select id="depower_session_wh" class="browser-default">
+              <option value="100">100 Wh – Protokollstandard (0,1 kWh)</option>
+              <option value="10">10 Wh (0,01 kWh)</option>
+              <option value="1">1 Wh (0,001 kWh)</option>
+              <option value="0.1">0,1 Wh</option>
+              <option value="1000">1000 Wh (1 kWh)</option>
+            </select>
+          </div>
+          <div class="col s12 m6 nexo-select-group">
+            <label for="depower_total_wh">Gesamtenergie: Wh je Zählschritt</label>
+            <select id="depower_total_wh" class="browser-default">
+              <option value="100">100 Wh – Protokollstandard (0,1 kWh)</option>
+              <option value="10">10 Wh (0,01 kWh)</option>
+              <option value="1">1 Wh (0,001 kWh)</option>
+              <option value="0.1">0,1 Wh</option>
+              <option value="1000">1000 Wh (1 kWh)</option>
+            </select>
+          </div>
+        </div>
+        <p>Rohzähler: eNERGY_SESSION_RAW und mETER_ENERGY_TOTAL_RAW. Nach einer Änderung müssen Tagesbasis und historische Auswertungen in EOS zum neuen Maßstab passen.</p>
+      </div>
+
+      <!-- Connection blocks -->
+      <div id="conn_modbusTcp" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">Modbus TCP Verbindung</h6>
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input id="mb_host" type="text" />
+            <label for="mb_host" class="translate">Host/IP</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_port" type="number" min="1" max="65535" />
+            <label for="mb_port" class="translate">Port</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_unitId" type="number" min="1" max="255" />
+            <label for="mb_unitId" class="translate">Unit-ID</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_timeout" type="number" min="250" step="50" />
+            <label for="mb_timeout" class="translate">Timeout (ms)</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_addrOffset" type="number" step="1" />
+            <label for="mb_addrOffset" class="translate">Addr-Offset</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m3 nexo-select-group">
+            <label for="mb_wordOrder" class="translate">Word Order</label>
+            <select id="mb_wordOrder" class="browser-default">
+              <option value="be">BE</option>
+              <option value="le">LE</option>
+            </select>
+          </div>
+          <div class="col s12 m3 nexo-select-group">
+            <label for="mb_byteOrder" class="translate">Byte Order</label>
+            <select id="mb_byteOrder" class="browser-default">
+              <option value="be">BE</option>
+              <option value="le">LE</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input id="mb_writePass" type="password" />
+            <label for="mb_writePass" class="translate">Schreibpasswort (optional)</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_kostalTcp" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">Kostal TCP Verbindung</h6>
+
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input id="ko_host" type="text"/>
+            <label for="ko_host" class="translate">Host/IP</label>
+          </div>
+
+          <div class="input-field col s12 m2">
+            <input id="ko_port" type="number" min="1" max="65535"/>
+            <label for="ko_port" class="translate">Port</label>
+          </div>
+
+          <div class="input-field col s12 m2">
+            <input id="ko_unitId" type="number" min="1" max="247"/>
+            <label for="ko_unitId" class="translate">Unit-ID</label>
+          </div>
+
+          <div class="input-field col s12 m2">
+            <input id="ko_timeout" type="number" min="50" step="10"/>
+            <label for="ko_timeout" class="translate">Timeout (ms)</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12">
+            <small class="translate">
+              Hinweis: Standard-Port ist 81. Unit-ID entspricht der Geräte-/Bus-Adresse (z. B. RS485-Adresse) des Wechselrichters.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_modbusRtu" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">Modbus RTU Verbindung</h6>
+        <div class="row">
+          <div class="col s12 m4 nexo-select-group">
+            <label for="mb_path" class="translate">Serial Port (z.B. /dev/ttyUSB0 oder /dev/com2)</label>
+            <select id="mb_path" class="browser-default"></select>
+            <div class="nexo-port-tools">
+              <a href="javascript:void(0)" class="btnRefreshSerialPorts translate">Ports aktualisieren</a>
+              <span class="serialPortsStatus"></span>
+            </div>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_baud" type="number" min="1200" step="300" />
+            <label for="mb_baud" class="translate">Baudrate</label>
+          </div>
+          <div class="col s12 m2 nexo-select-group">
+            <label for="mb_parity" class="translate">Parity</label>
+            <select id="mb_parity" class="browser-default">
+              <option value="none">none</option>
+              <option value="even">even</option>
+              <option value="odd">odd</option>
+            </select>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_databits" type="number" min="5" max="8" />
+            <label for="mb_databits" class="translate">DataBits</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_stopbits" type="number" min="1" max="2" />
+            <label for="mb_stopbits" class="translate">StopBits</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m2">
+            <input id="mb_unitId_rtu" type="number" min="1" max="247" />
+            <label for="mb_unitId_rtu" class="translate">Unit-ID</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_timeout_rtu" type="number" min="250" step="50" />
+            <label for="mb_timeout_rtu" class="translate">Timeout (ms)</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mb_addrOffset_rtu" type="number" step="1" />
+            <label for="mb_addrOffset_rtu" class="translate">Addr-Offset</label>
+          </div>
+          <div class="col s12 m3 nexo-select-group">
+            <label for="mb_wordOrder_rtu" class="translate">Word Order</label>
+            <select id="mb_wordOrder_rtu" class="browser-default">
+              <option value="be">BE</option>
+              <option value="le">LE</option>
+            </select>
+          </div>
+          <div class="col s12 m3 nexo-select-group">
+            <label for="mb_byteOrder_rtu" class="translate">Byte Order</label>
+            <select id="mb_byteOrder_rtu" class="browser-default">
+              <option value="be">BE</option>
+              <option value="le">LE</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input id="mb_writePass_rtu" type="password" />
+            <label for="mb_writePass_rtu" class="translate">Schreibpasswort (optional)</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_mbus" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">M-Bus (wired) Verbindung</h6>
+        <div class="row">
+          <div class="col s12 m4 nexo-select-group">
+            <label for="mbus_path" class="translate">Serial Port (z.B. /dev/ttyUSB0)</label>
+            <select id="mbus_path" class="browser-default"></select>
+            <div class="nexo-port-tools">
+              <a href="javascript:void(0)" class="btnRefreshSerialPorts translate">Ports aktualisieren</a>
+              <span class="serialPortsStatus"></span>
+            </div>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mbus_baud" type="number" min="300" step="300" />
+            <label for="mbus_baud" class="translate">Baudrate</label>
+          </div>
+          <div class="col s12 m2 nexo-select-group">
+            <label for="mbus_parity" class="translate">Parity</label>
+            <select id="mbus_parity" class="browser-default">
+              <option value="even">even</option>
+              <option value="none">none</option>
+              <option value="odd">odd</option>
+            </select>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mbus_databits" type="number" min="5" max="8" />
+            <label for="mbus_databits" class="translate">DataBits</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="mbus_stopbits" type="number" min="1" max="2" />
+            <label for="mbus_stopbits" class="translate">StopBits</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m3">
+            <input id="mbus_unitId" type="number" min="0" max="250" />
+            <label for="mbus_unitId" class="translate">Primary Address (0..250)</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="mbus_timeout" type="number" min="250" step="50" />
+            <label for="mbus_timeout" class="translate">Timeout (ms)</label>
+          </div>
+          <div class="input-field col s12 m6" style="margin-top: 12px;">
+            <label>
+              <input type="checkbox" id="mbus_sendNke" />
+              <span class="translate">SND_NKE (Link reset) vor jedem Poll senden</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 nexo-muted" style="margin-top: 2px; font-size: 0.9em;">
+            <span class="translate">Hinweis</span>: <span class="translate">Typische Einstellungen sind 2400 Baud, 8E1. Primary Address entspricht der M-Bus Primäradresse.</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_mqtt" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">MQTT Verbindung</h6>
+        <div class="row">
+          <div class="col s12 m3 nexo-select-group">
+            <label for="mqtt_transport" class="translate">MQTT Transport</label>
+            <select id="mqtt_transport" class="browser-default">
+              <option value="mqtts">TLS-verschlüsselt (mqtts://)</option>
+              <option value="mqtt">Ohne TLS (mqtt://)</option>
+              <option value="wss">WebSocket TLS (wss://)</option>
+              <option value="ws">WebSocket ohne TLS (ws://)</option>
+            </select>
+          </div>
+          <div class="input-field col s12 m6">
+            <input id="mqtt_url" type="text" />
+            <label for="mqtt_url" class="translate">Broker URL oder Host/IP</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="mqtt_port" type="number" min="1" max="65535" />
+            <label for="mqtt_port" class="translate">MQTT Port</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="mqtt_clientId" type="text" autocomplete="off" />
+            <label for="mqtt_clientId" class="translate">Feste MQTT Client-ID</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="mqtt_user" type="text" />
+            <label for="mqtt_user" class="translate">Username</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="mqtt_pass" type="password" />
+            <label for="mqtt_pass" class="translate">Password</label>
+          </div>
+        </div>
+
+        <div id="mqtt_tls_fields">
+          <div class="row">
+            <div class="input-field col s12 m4" style="margin-top: 12px;">
+              <label>
+                <input type="checkbox" id="mqtt_verifyTls" />
+                <span class="translate">TLS-Zertifikat prüfen</span>
+              </label>
+            </div>
+            <div class="input-field col s12 m4">
+              <input id="mqtt_servername" type="text" />
+              <label for="mqtt_servername" class="translate">TLS Servername / SNI (optional)</label>
+            </div>
+            <div class="input-field col s12 m4">
+              <input id="mqtt_caFile" type="text" />
+              <label for="mqtt_caFile" class="translate">TLS CA-Datei auf dem Controller (optional)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field col s12 m3">
+            <input id="mqtt_connectTimeout" type="number" min="1000" max="120000" />
+            <label for="mqtt_connectTimeout" class="translate">CONNACK Timeout (ms)</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="mqtt_reconnectPeriod" type="number" min="0" max="120000" />
+            <label for="mqtt_reconnectPeriod" class="translate">Reconnect Intervall (ms)</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="mqtt_keepalive" type="number" min="5" max="3600" />
+            <label for="mqtt_keepalive" class="translate">MQTT Keepalive (s)</label>
+          </div>
+          <div class="input-field col s12 m3" style="margin-top: 12px;">
+            <label>
+              <input type="checkbox" id="mqtt_cleanSession" />
+              <span class="translate">Clean Session</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="mqtt_tesvolt_settings" style="display:none;">
+          <h6 class="translate">TESVOLT IoT Gateway Regelung</h6>
+          <div class="row">
+            <div class="input-field col s12 m6">
+              <select id="mqtt_tesvoltTopicMode">
+                <option value="auto" class="translate">Automatisch erkennen (nur Lesen)</option>
+                <option value="ems">EMS/... (ohne V2)</option>
+                <option value="v2">EMS/V2/...</option>
+              </select>
+              <label for="mqtt_tesvoltTopicMode" class="translate">TESVOLT Topic-Format</label>
+            </div>
+            <div class="col s12 m6" style="padding-top: 24px;">
+              <label><input id="mqtt_tesvoltControlEnabled" type="checkbox" />
+                <span class="translate">Leistungssteuerung durch NexoWatt EOS aktivieren</span>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12 m3">
+              <input id="mqtt_tesvoltSetpointInterval" type="number" min="1000" max="20000" />
+              <label for="mqtt_tesvoltSetpointInterval" class="translate">Sollwert-Wiederholung (ms)</label>
+            </div>
+            <div class="input-field col s12 m3">
+              <input id="mqtt_tesvoltCommandTimeout" type="number" min="5000" max="120000" />
+              <label for="mqtt_tesvoltCommandTimeout" class="translate">EOS-Sollwert Timeout (ms)</label>
+            </div>
+            <div class="input-field col s12 m3">
+              <input id="mqtt_tesvoltTelemetryStale" type="number" min="1000" max="120000" />
+              <label for="mqtt_tesvoltTelemetryStale" class="translate">Telemetrie veraltet nach (ms)</label>
+            </div>
+            <div class="input-field col s12 m3">
+              <input id="mqtt_tesvoltTrackingDelay" type="number" min="500" max="30000" />
+              <label for="mqtt_tesvoltTrackingDelay" class="translate">Sollwert-Tracking Verzögerung (ms)</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12 nexo-muted" style="margin-top: 2px; font-size: 0.9em;">
+              <span class="translate">TESVOLT Hinweis</span>: <span class="translate">Port 1884 ohne TLS (mqtt://), Zugangsdaten und eine eigene eindeutige Client-ID verwenden. Für paralleles Lesen mit TEM bleibt die Leistungssteuerung aus. Lesen benötigt EMS/# oder die passenden Einzel-Topics. Steuerung benötigt ein festes Topic-Format, Schreibrechte und eine abgestimmte Übergabe vom TEM; Batterie- und Gerätefreigaben bleiben erforderlich.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 nexo-muted" style="margin-top: 2px; font-size: 0.9em;">
+            <span class="translate">Hinweis</span>: <span class="translate">Benutzername und Passwort authentifizieren den Client; nur mqtts:// oder wss:// verschlüsseln den Transport.</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_canbus" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">CANbus Verbindung (SocketCAN / can-utils)</h6>
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input id="can_iface" type="text" value="can0" />
+            <label for="can_iface" class="translate">Interface (z.B. can0)</label>
+          </div>
+          <div class="input-field col s12 m4">
+            <input id="can_candumpArgs" type="text" />
+            <label for="can_candumpArgs" class="translate">candump Args (optional)</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="can_candumpPath" type="text" value="candump" />
+            <label for="can_candumpPath" class="translate">candump Pfad</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="can_cansendPath" type="text" value="cansend" />
+            <label for="can_cansendPath" class="translate">cansend Pfad</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 nexo-muted" style="margin-top: 2px; font-size: 0.9em;">
+            <span class="translate">Hinweis</span>: <span class="translate">Benötigt Linux SocketCAN + can-utils (candump/cansend). Beispiel: sudo apt install can-utils</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_onewire" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">1-Wire Verbindung</h6>
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="ow_basePath" type="text" value="/sys/bus/w1/devices" />
+            <label for="ow_basePath" class="translate">1-Wire Base-Path</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <input id="ow_sensorId" type="text" placeholder="28-00000abcdef" />
+            <label for="ow_sensorId" class="translate">Sensor-ID (z.B. 28-...)</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="ow_file" type="text" value="w1_slave" />
+            <label for="ow_file" class="translate">Datei (default: w1_slave)</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <label for="ow_parser" class="translate">Parser</label>
+            <select id="ow_parser" class="browser-default">
+              <option value="ds18b20">ds18b20 (w1_slave t=...)</option>
+              <option value="float">float (Plain number)</option>
+              <option value="raw">raw (Text)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_http" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">HTTP/JSON Verbindung</h6>
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="http_baseUrl" type="text" />
+            <label for="http_baseUrl" class="translate">Base URL (http://host)</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="http_user" type="text" />
+            <label for="http_user" class="translate">Username</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="http_pass" type="password" />
+            <label for="http_pass" class="translate">Password</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="http_meterId" type="text" />
+            <label for="http_meterId" class="translate">http_meterId</label>
+          </div>
+          <div class="col s12 m6">
+            <p style="margin-top: 20px;">
+              <label>
+                <input type="checkbox" class="filled-in" id="http_insecureTls" />
+                <span class="translate">http_insecureTls</span>
+              </label>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_taCmi" class="nexo-conn-block" style="display:none;">
+        <h6>Technische Alternative CMI / CMI-S</h6>
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="cmi_baseUrl" type="text" placeholder="http://192.168.1.50" />
+            <label for="cmi_baseUrl">CMI Base URL</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="cmi_user" type="text" />
+            <label for="cmi_user">Experten-Benutzer</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="cmi_pass" type="password" />
+            <label for="cmi_pass">Passwort</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 m3">
+            <input id="cmi_nodes" type="text" placeholder="1-62 oder 1,3,7" />
+            <label for="cmi_nodes">CAN-Knoten</label>
+          </div>
+          <div class="input-field col s12 m5">
+            <input id="cmi_groups" type="text" placeholder="leer = automatisch" />
+            <label for="cmi_groups">API-Gruppen (optional)</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="cmi_timeout" type="number" min="500" step="100" />
+            <label for="cmi_timeout">HTTP Timeout (ms)</label>
+          </div>
+          <div class="col s12 m2" style="padding-top:18px;">
+            <label><input type="checkbox" class="filled-in" id="cmi_includeDesignations" /><span>Bezeichnungen</span></label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 m3">
+            <label><input type="checkbox" class="filled-in" id="cmi_insecureTls" /><span>Unsicheres TLS erlauben</span></label>
+          </div>
+          <div class="col s12 m3">
+            <label><input type="checkbox" class="filled-in" id="cmi_bridgeEnabled" /><span>Modbus-Brücke aktiv</span></label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="cmi_bridgeHost" type="text" />
+            <label for="cmi_bridgeHost">Bridge Bind-Adresse</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="cmi_bridgePort" type="number" min="1" max="65535" />
+            <label for="cmi_bridgePort">Bridge Port</label>
+          </div>
+          <div class="input-field col s12 m1">
+            <input id="cmi_bridgeUnitId" type="number" min="1" max="247" />
+            <label for="cmi_bridgeUnitId">Unit-ID</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <textarea id="cmi_bridgeMapJson" class="materialize-textarea" placeholder='[{"direction":"toCmi","type":"analog","channel":1,"name":"Vorlauf Soll","unit":"°C","scale":0.1,"alias":"ctrl.flowSetpointC"}]'></textarea>
+            <label for="cmi_bridgeMapJson">Bridge-Kanaldefinitionen (JSON, optional)</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 nexo-muted" style="font-size:0.9em;">
+            <strong>JSON API:</strong> liest alle unterstützten Werte dynamisch, offiziell maximal eine Anfrage pro Minute.
+            <strong>Bidirektionale Steuerung:</strong> Das CMI arbeitet als Modbus-Master und verbindet sich mit dieser NexoWatt-Bridge.
+            Standard: Holding 0–63 / Coils 0–63 NexoWatt→CMI; Holding 100–163 / Coils 100–163 CMI→NexoWatt.
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_udp" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">UDP Verbindung</h6>
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <input id="udp_host" type="text" />
+            <label for="udp_host" class="translate">Host/IP</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="udp_port" type="number" min="1" max="65535" />
+            <label for="udp_port" class="translate">Port</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="udp_timeout" type="number" min="100" step="50" />
+            <label for="udp_timeout" class="translate">Timeout (ms)</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="udp_pause" type="number" min="0" step="10" />
+            <label for="udp_pause" class="translate">Cmd Pause (ms)</label>
+          </div>
+        </div>
+      </div>
+
+      <div id="conn_speedwire" class="nexo-conn-block" style="display:none;">
+        <h6 class="translate">Speedwire (UDP Multicast)</h6>
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input id="sw_filterHost" type="text" />
+            <label for="sw_filterHost" class="translate">Gerät-IP (Filter, optional)</label>
+          </div>
+          <div class="input-field col s12 m4">
+            <input id="sw_multicastGroup" type="text" />
+            <label for="sw_multicastGroup" class="translate">Multicast Gruppe</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="sw_port" type="number" min="1" max="65535" />
+            <label for="sw_port" class="translate">Port</label>
+          </div>
+          <div class="input-field col s12 m2">
+            <input id="sw_stale" type="number" min="0" step="100" />
+            <label for="sw_stale" class="translate">Stale Timeout (ms)</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input id="sw_interface" type="text" />
+            <label for="sw_interface" class="translate">Interface IP (optional)</label>
+          </div>
+          <div class="col s12 m8 nexo-muted" style="margin-top: 12px; font-size: 0.9em;">
+            <span class="translate">Hinweis</span>: <span class="translate">Speedwire nutzt UDP Multicast. In VLAN/WiFi/Virtualisierung muss Multicast (IGMP) durchgelassen werden.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datapoints preview -->
+      <div class="row">
+        <div class="col s12">
+          <h6 class="translate">Datenpunkte</h6>
+          <table class="striped dp-table">
+            <thead>
+              <tr>
+                <th class="translate">ID</th>
+                <th class="translate">Name</th>
+                <th class="translate">Typ</th>
+                <th class="translate">R/W</th>
+                <th class="translate">Quelle</th>
+              </tr>
+            </thead>
+            <tbody id="dpBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="waves-effect waves-light btn-flat" id="btnCancelDevice"><span class="translate">Abbrechen</span></a>
+      <a href="#!" class="waves-effect waves-light btn" id="btnSaveDevice"><span class="translate">Speichern</span></a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

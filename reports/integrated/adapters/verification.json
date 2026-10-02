@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01T12:31:49.008993+00:00",
+  "sourceInventory": "source-inventory.json",
+  "environment": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "node": "v24.19.0",
+    "effectiveUid": "0",
+    "typescriptBuildTool": "5.9.3",
+    "axiosTransportTool": "1.20.0",
+    "ocppRpcTransportTool": "2.2.1",
+    "wsTransportTool": "8.22.0",
+    "dependencyTree": "integrated-assessment-build/app/node_modules; tool dependency tree, not full shipped appliance acceptance",
+    "eebusFinalBuildEnvironment": "isolated npm ci tree from final exact source lock; clean output identical to tested artifact and repository"
+  },
+  "tests": [
+    {
+      "name": "devices-full-manifest",
+      "command": "NODE_PATH=<assessment-node_modules> node components/devices/scripts/run-tests.cjs",
+      "passed": 270,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "devices-full-suite.log"
+    },
+    {
+      "name": "devices-http-security-targeted",
+      "command": "NODE_PATH=<installed-axios-node_modules> node --test components/devices/test/httpSecurity.test.js",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "devices-http-security.tap",
+      "includedInFullDevicesSuite": true
+    },
+    {
+      "name": "devices-can-validation-targeted",
+      "command": "node --test components/devices/test/canSecurity.test.js",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "devices-can-security.tap",
+      "includedInFullDevicesSuite": true
+    },
+    {
+      "name": "ocpp-core",
+      "command": "node --test components/ocpp21/test/core.test.js",
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "ocpp-core.tap"
+    },
+    {
+      "name": "ocpp-tls13-mtls",
+      "command": "NODE_PATH=<assessment-node_modules> node --test components/ocpp21/test/secure-transport.test.js",
+      "reportedPasses": 13,
+      "behavioralSubtests": 11,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "ocpp-mtls.tap"
+    },
+    {
+      "name": "eebus-final-build",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.json"
+      ],
+      "exitCode": 0,
+      "compilerVersion": "5.9.3",
+      "raw": "../../integration/sbom/eebus-final-build-verification.json",
+      "sha256": "4b07ac0141dd93d59868e955dce0703a0cfe95a71d659d1131918734970b8188",
+      "emittedFiles": 68,
+      "cleanOutputMatchesRepository": true
+    },
+    {
+      "name": "eebus-final-security-and-resources",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/ship-security.test.cjs",
+        "test/ship-resource.integration.test.cjs"
+      ],
+      "cwd": "isolated final EEBUS npm ci tree",
+      "tests": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "../../integration/sbom/eebus-final-security.tap",
+      "sha256": "21c411a05901efd2497e012f3d8d991e9698ac89e474c25dd88bb95b4f84d642",
+      "countingNote": "16 frame/PIN/security cases plus5 resource cases; not additive to earlier10/16/21 checkpoints",
+      "scope": "Fixtures plus actual OpenSSL identity and actual local TLS/WebSocket malformed-frame registration case; not SHIP device conformance"
+    },
+    {
+      "name": "eebus-final-existing-regression-scripts",
+      "commands": [
+        "node test/config.js",
+        "node test/cls-control-parser.js",
+        "node test/nexowatt-bridge.js",
+        "node test/implementation-result-order.js"
+      ],
+      "scriptPasses": 4,
+      "raw": "../../integration/sbom/eebus-final-legacy.log",
+      "sha256": "91d34f8310887d7e94e9851ed408cc5e9084f867ab5d164a4271eefe10ef5f77",
+      "exitEvidence": "../../integration/sbom/eebus-final-regression-exits.json",
+      "exitEvidenceSha256": "df52ef210e0a89ad7ed1604beb153d96f232ecbe80e0df87137a7332a4ae6dbe"
+    }
+  ],
+  "retainedAttempt": {
+    "raw": "devices-first-attempt.log",
+    "passed": 262,
+    "failed": 1,
+    "skipped": 7,
+    "reason": "HTTP diagnostic redaction intentionally changes raw error identity; assertion updated to fixed code and no target leak; transport dependencies supplied for final run"
+  },
+  "notExecuted": [
+    "physical device/charging station/EEBUS interoperability",
+    "Debian12/RPi5 service UID filesystem and systemd grants",
+    "full SHIP PIN/SPINE conformance",
+    "adapter central-license lifecycle transition",
+    "encrypted backup/restore acceptance",
+    "complete product OS/firmware/frontend inventory and advisory reachability; separate npm assessment exists",
+    "manufacturer CRA/IEC conformity assessment"
+  ],
+  "sourceInventorySha256": "6812a90b0fc2f77eab39c59588f0bbcd44735a3369ca89d0b1c2d89446aabd11",
+  "historicalEebusEvidence": {
+    "initialVerificationSnapshot": "reports/integration/review-snapshots/adapter-component-review-20261001-verification.json",
+    "initialSourceInventorySnapshot": "reports/integration/review-snapshots/adapter-component-review-20261001-source-inventory.json",
+    "initialSecurityReportedPasses": 10,
+    "initialCompiler": "5.8.3",
+    "initialRawLogStatus": "Original eebus-ship-security.tap was replaced by expanded 16-case run; original ten-count report preserved, no reconstructed original raw log claimed",
+    "expandedSecurity": {
+      "raw": "eebus-ship-security.tap",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "4ec6dba3f98ba83a6bec0fbd2ac598cffdaa1a02d2e65efba79ef5950ee88f0a",
+      "scope": "intermediate correction, before final resource cleanup and compiler verification"
+    },
+    "preResourceCompilerUpdate": {
+      "raw": "eebus-final-regression.tap",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "6d786be98ec9883e730916067bcf0cd17ae6bf2140fecb05fa99729fe949b2fa",
+      "scope": "root resource follow-up before final TypeScript5.9.3 validation"
+    }
+  },
+  "retainedEebusFailure": {
+    "raw": "eebus-control-bypass-before-fix.tap",
+    "sha256": "378fe244a97235d562b6d016c60c4de589a42524c25665e42672144153415c9a",
+    "tests": 16,
+    "passed": 11,
+    "failed": 5,
+    "skipped": 0,
+    "findingIds": [
+      "NW-EOS-ADP-261001-09",
+      "NW-EOS-ADP-261001-10"
+    ],
+    "scope": "Synthetic PIN and actual CLS parser entry; no physical untrusted write demonstrated"
+  },
+  "followupFindingStatus": {
+    "NW-EOS-ADP-261001-09": {
+      "status": "remediated_scoped_verification",
+      "evidence": "eebus-final-security-and-resources",
+      "physicalApproval": false
+    },
+    "NW-EOS-ADP-261001-10": {
+      "status": "remediated_scoped_verification",
+      "evidence": "eebus-final-security-and-resources",
+      "physicalApproval": false
+    }
+  },
+  "resourceFollowup": {
+    "requirementIds": [
+      "EOS-INT-REQ-011",
+      "EOS-INT-REQ-017"
+    ],
+    "threatIds": [
+      "EOS-INT-TM-011",
+      "EOS-INT-TM-015"
+    ],
+    "controls": [
+      "5s TLS/WebSocket handshake",
+      "120s total pairing lifetime",
+      "64 connections including pending/registration",
+      "32 queued frames and256KiB payload",
+      "outbound deduplication and forced shutdown cleanup",
+      "early WebSocket error listener during asynchronous registration",
+      "socket-owned close/error cleanup preserves replacement session"
+    ],
+    "testEvidence": "eebus-final-security-and-resources",
+    "residualRisk": "No physical peer interoperability or sustained production DoS/load acceptance"
+  }
+}

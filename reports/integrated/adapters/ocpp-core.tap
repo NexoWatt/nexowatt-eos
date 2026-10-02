@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: station identities are deterministic and safe for ioBroker object IDs
+ok 1 - station identities are deterministic and safe for ioBroker object IDs
+  ---
+  duration_ms: 1.848726
+  type: 'test'
+  ...
+# Subtest: heartbeat timeout applies a bounded safety factor
+ok 2 - heartbeat timeout applies a bounded safety factor
+  ---
+  duration_ms: 0.194364
+  type: 'test'
+  ...
+# Subtest: socket, OCPP activity and heartbeat health remain independent
+ok 3 - socket, OCPP activity and heartbeat health remain independent
+  ---
+  duration_ms: 0.896336
+  type: 'test'
+  ...
+# Subtest: OCPP command timeout uses seconds and remains bounded
+ok 4 - OCPP command timeout uses seconds and remains bounded
+  ---
+  duration_ms: 0.146671
+  type: 'test'
+  ...
+# Subtest: TriggerMessage payloads are protocol-correct
+ok 5 - TriggerMessage payloads are protocol-correct
+  ---
+  duration_ms: 0.262687
+  type: 'test'
+  ...
+# Subtest: compact measurement names replace protocol-direction names and vendor typos
+ok 6 - compact measurement names replace protocol-direction names and vendor typos
+  ---
+  duration_ms: 0.617715
+  type: 'test'
+  ...
+# Subtest: zero and sub-minimum charging limits cannot accidentally interrupt charging
+ok 7 - zero and sub-minimum charging limits cannot accidentally interrupt charging
+  ---
+  duration_ms: 0.71436
+  type: 'test'
+  ...
+# Subtest: safe-zero rules only match states with no energy transfer
+ok 8 - safe-zero rules only match states with no energy transfer
+  ---
+  duration_ms: 0.603222
+  type: 'test'
+  ...
+# Subtest: EOS freshness requires canonical active-import power or a safe zero
+ok 9 - EOS freshness requires canonical active-import power or a safe zero
+  ---
+  duration_ms: 0.162115
+  type: 'test'
+  ...
+# Subtest: cached telemetry is republished per datapoint and never by unrelated freshness
+ok 10 - cached telemetry is republished per datapoint and never by unrelated freshness
+  ---
+  duration_ms: 0.38301
+  type: 'test'
+  ...
+# Subtest: republish and connector limits rotate fairly instead of starving later entries
+ok 11 - republish and connector limits rotate fairly instead of starving later entries
+  ---
+  duration_ms: 0.544133
+  type: 'test'
+  ...
+# Subtest: Device Model values are parsed strictly
+ok 12 - Device Model values are parsed strictly
+  ---
+  duration_ms: 1.332255
+  type: 'test'
+  ...
+# Subtest: meter values stay fresh, aggregate phases across messages and mirror Wh to kWh
+ok 13 - meter values stay fresh, aggregate phases across messages and mirror Wh to kWh
+  ---
+  duration_ms: 3.384418
+  type: 'test'
+  ...
+# Subtest: empty or malformed MeterValues do not falsely mark telemetry as fresh
+ok 14 - empty or malformed MeterValues do not falsely mark telemetry as fresh
+  ---
+  duration_ms: 0.181004
+  type: 'test'
+  ...
+# Subtest: current or reactive power cannot falsely mark EOS active-import power as fresh
+ok 15 - current or reactive power cannot falsely mark EOS active-import power as fresh
+  ---
+  duration_ms: 0.324972
+  type: 'test'
+  ...
+# Subtest: OCPP SampledValue defaults are mapped to energyWh and energyKWh in all versions
+ok 16 - OCPP SampledValue defaults are mapped to energyWh and energyKWh in all versions
+  ---
+  duration_ms: 0.591765
+  type: 'test'
+  ...
+# Subtest: explicit power and current measurands infer the correct unit when the station omits it
+ok 17 - explicit power and current measurands infer the correct unit when the station omits it
+  ---
+  duration_ms: 0.433966
+  type: 'test'
+  ...
+# Subtest: phase current is the limiting phase value while phase power is summed
+ok 18 - phase current is the limiting phase value while phase power is summed
+  ---
+  duration_ms: 0.104688
+  type: 'test'
+  ...
+# Subtest: connector detail folders can be disabled without losing station measurements
+ok 19 - connector detail folders can be disabled without losing station measurements
+  ---
+  duration_ms: 0.229897
+  type: 'test'
+  ...
+# Subtest: schema fallback responses fail closed instead of reporting unsupported work as accepted
+ok 20 - schema fallback responses fail closed instead of reporting unsupported work as accepted
+  ---
+  duration_ms: 13.283387
+  type: 'test'
+  ...
+# Subtest: all supported protocol versions register critical telemetry handlers and a catch-all
+ok 21 - all supported protocol versions register critical telemetry handlers and a catch-all
+  ---
+  duration_ms: 2.890491
+  type: 'test'
+  ...
+# Subtest: OCPP acknowledgements are returned before datapoint processing runs
+ok 22 - OCPP acknowledgements are returned before datapoint processing runs
+  ---
+  duration_ms: 1.012661
+  type: 'test'
+  ...
+# Subtest: OCPP 1.6 keeps concurrent transactions mapped to their original connector
+ok 23 - OCPP 1.6 keeps concurrent transactions mapped to their original connector
+  ---
+  duration_ms: 0.988244
+  type: 'test'
+  ...
+# Subtest: status side effects run in order and are awaited inside the deferred task
+ok 24 - status side effects run in order and are awaited inside the deferred task
+  ---
+  duration_ms: 16.997989
+  type: 'test'
+  ...
+# Subtest: NotifyEVChargingNeeds maps DC SoC into the compact vehicle and measurement tree
+ok 25 - NotifyEVChargingNeeds maps DC SoC into the compact vehicle and measurement tree
+  ---
+  duration_ms: 1.512217
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 187.554474

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "kind": "database-transport-static-feasibility-assessment",
+  "createdAt": "2026-10-01T19:39:22.874594+00:00",
+  "sourceVersion": "0.2.0-dev.5",
+  "userDecision": {
+    "redisNoLongerFixed": true,
+    "alternativeSearchRequestedAt": "2026-10-01T21:19:31+02:00",
+    "sqliteAes256QuestionAt": "2026-10-01T21:23:30+02:00",
+    "postgresqlQuestionAt": "2026-10-01T21:38:11+02:00"
+  },
+  "versions": {
+    "iobroker.js-controller": "7.2.2",
+    "@iobroker/db-*": "7.2.2",
+    "ioredis": "4.31.0",
+    "@alcalzone/jsonl-db": "3.1.1"
+  },
+  "method": "Official documentation and static review of actual installed lab dependency tree; file hashes independently verified by root",
+  "implemented": false,
+  "migrated": false,
+  "compatibilityTestsExecuted": false,
+  "hardwareTestsExecuted": false,
+  "exploitExecuted": false,
+  "candidateArtifactSecurityClearance": false,
+  "sourceScope": "Existing x64 lab runtime dependency tree; not the uninspected user Pi installation",
+  "sourceBindings": [
+    {
+      "pathRelativeToInstalledNodeModules": "@iobroker/js-controller-common/build/cjs/lib/common/objects.js",
+      "sha256": "e1e71a7ff1138ea013c3b7a0a99298cd05a9e288a810562033e63382a1f8930e",
+      "bytes": 3652
+    },
+    {
+      "pathRelativeToInstalledNodeModules": "@iobroker/js-controller-common/build/cjs/lib/common/states.js",
+      "sha256": "856a775d1d236f490d0051d9309fbdc079bee4232075143ce42c3a37a2d3fd99",
+      "bytes": 3616
+    },
+    {
+      "pathRelativeToInstalledNodeModules": "@iobroker/db-objects-jsonl/build/cjs/lib/objects/objectsInMemServerRedis.js",
+      "sha256": "f5f0d77904106a628f2c929e13fb63c16714c4a1230be97c7971e4a73860929a",
+      "bytes": 34018
+    },
+    {
+      "pathRelativeToInstalledNodeModules": "@iobroker/db-states-jsonl/build/cjs/lib/states/statesInMemServerRedis.js",
+      "sha256": "2f91f46384ab3645c7fa09309b47d3f22d022d82450f5bfd593b46024db34015",
+      "bytes": 18604
+    },
+    {
+      "pathRelativeToInstalledNodeModules": "@iobroker/db-objects-file/build/cjs/lib/objects/objectsInMemFileDB.js",
+      "sha256": "9130ac43fcc48af39d1627078c46103dd943aab86913b6dd2e369caf4db57fe1",
+      "bytes": 33603
+    },
+    {
+      "pathRelativeToInstalledNodeModules": "@iobroker/db-base/build/cjs/lib/redisHandler.js",
+      "sha256": "d24fc872a79bcaea0ee7dc5bcdebfd2959bfa26f5841ff60dc920cae750c4091",
+      "bytes": 15021
+    }
+  ],
+  "findings": [
+    {
+      "id": "EOS-BACKEND-CONTRACT-20261001",
+      "status": "open-design-work",
+      "observation": "Controller dynamically loads db-objects/states by type; Client/Server/interview contracts enable custom backends but Redis semantics are not fulfilled by SQL storage alone."
+    },
+    {
+      "id": "EOS-JSONL-TRANSPORT-20261001",
+      "status": "static-source-observation",
+      "observation": "JSONL secure option rejected, net.createServer used; no AUTH handler found in reviewed JSONL servers/RedisHandler. No running-system exploit proven."
+    },
+    {
+      "id": "EOS-JSONL-VIEW-20261001",
+      "status": "static-source-observation",
+      "observation": "Objects JSONL SCRIPT LOAD/view handling reaches inherited eval of view map; encrypted transport alone does not establish safe authorization of this intended powerful interface."
+    },
+    {
+      "id": "EOS-SQL-STORAGE-20261001",
+      "status": "candidate-not-selected",
+      "observation": "SQLCipher AES256 at-rest protection and PostgreSQL TLS are different from implementing controller object/state/event contracts."
+    }
+  ],
+  "documentation": "docs/architecture/DATABASE_TRANSPORT_OPTIONS_DE.md",
+  "sbom": "No new installed component; no candidate versions added to actual-build SBOM. A real alternative build must include native dependencies and cryptography provider."
+}

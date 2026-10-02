@@ -1,0 +1,258 @@
+<!--
+  Datei: www/logic.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: HTML-Seite des NexoWatt-Adapters.
+  Zusammenhänge:
+  - JavaScript-Logik liegt meist in einer gleichnamigen .js-Datei.
+  - Styles liegen in www/styles.css oder spezifischen CSS-Dateien.
+  Wartungshinweise:
+  - IDs und data-Attribute sind oft direkte Schnittstellen zum JS.
+-->
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NexoWatt EOS – NexoLogic</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script>
+    // Ensure the app works also when served from sub-paths (reverse proxy)
+    (function(){
+      try {
+        const base = document.querySelector('base');
+        if (!base) {
+          const b = document.createElement('base');
+          b.href = '/';
+          document.head.appendChild(b);
+        }
+      } catch(_e){}
+    })();
+  </script>
+  <script src="/static/auth.js"></script>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+
+<body data-nw-required-capability="nexologic.configure" data-nw-required-role="Installer oder Admin" data-nw-page-name="NexoLogic-Einrichtung" class="nw-cockpit-page nw-cockpit-skin nw-page-logic">
+  <!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar">
+  <div class="brand">
+    <a href="/" aria-label="NexoWatt Live"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a>
+  </div>
+  <button aria-label="Menü" id="menuBtn">☰</button>
+  <h1>NexoLogic</h1>
+  <nav class="tabs" aria-label="Hauptnavigation">
+    <a class="tab" href="/">LIVE</a>
+    <a class="tab" href="/history.html">HISTORY</a>
+    <a class="tab hidden" id="tabSmartHome" href="/smarthome.html">SMARTHOME</a>
+    <a class="tab hidden" id="tabStorageFarm" href="/storagefarm.html">SPEICHERFARM</a>
+    <a class="tab active" href="/logic.html">NEXOLOGIC</a>
+  </nav>
+  <a class="topbar-gear" href="/settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+  <div class="menu hidden" id="menuDropdown">
+    <a class="menu-item" href="/">Live</a>
+    <a class="menu-item" href="/history.html">History</a>
+    <a class="menu-item hidden" id="menuStorageFarmLink" href="/storagefarm.html">Speicherfarm</a>
+    <a class="menu-item hidden" id="menuSmartHomeLink" href="/smarthome.html">SmartHome</a>
+    <a class="menu-item hidden" id="menuEvcsLink" href="/evcs.html">EVCS</a>
+    <a class="menu-item" href="/smarthome-config.html">SmartHome Config</a>
+    <a class="menu-item" href="/logic.html">NexoLogic</a>
+    <a class="menu-item" href="/settings.html">Einstellungen</a>
+  </div>
+</header>
+
+  <!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="container nw-page-shell nw-logic-page nw-subpage nw-subpage-logic">
+    <div class="nw-card nw-le-toolbar">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div style="font-weight:700;">Logik‑Editor</div>
+        <div class="muted" style="font-size:0.85rem;">Bausteine platzieren und über Ein-/Ausgänge verbinden.</div>
+        <button id="nw-le-btn-overview" class="nw-config-btn nw-config-btn--ghost" type="button" title="Zurück zur Übersicht">← Übersicht</button>
+        <div style="flex:1;"></div>
+        <button id="nw-le-btn-new" class="nw-config-btn nw-config-btn--ghost" type="button">Neu</button>
+        <button id="nw-le-btn-save" class="nw-config-btn" type="button">Speichern</button>
+        <button id="nw-le-btn-undo" class="nw-config-btn nw-config-btn--ghost" type="button" title="Rückgängig (Strg+Z)" disabled>↶</button>
+        <button id="nw-le-btn-redo" class="nw-config-btn nw-config-btn--ghost" type="button" title="Wiederholen (Strg+Y)" disabled>↷</button>
+        <button id="nw-le-btn-layout" class="nw-config-btn nw-config-btn--ghost" type="button" title="Eingänge links, Logik mittig und Ausgänge rechts anordnen">Auto-Anordnung</button>
+        <button id="nw-le-btn-sim" class="nw-config-btn nw-config-btn--ghost" type="button" title="Schreibfreien NexoLogic-Testmodus öffnen (F9)">Simulation</button>
+        <button id="nw-le-btn-export" class="nw-config-btn nw-config-btn--ghost" type="button">Export</button>
+        <button id="nw-le-btn-import" class="nw-config-btn nw-config-btn--ghost" type="button">Import</button>
+        <button id="nw-le-btn-smarthomecfg" class="nw-config-btn nw-config-btn--ghost" type="button" title="Zur SmartHome‑Konfiguration wechseln">SmartHome‑Config</button>
+        <span id="nw-le-status" class="muted" style="font-size:0.8rem;">—</span>
+        <span id="nw-le-draft-status" class="nw-le-draft-status" aria-live="polite"></span>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;">
+        <div class="muted" style="font-size:0.85rem;">Seite</div>
+        <select id="nw-le-graph-select" class="nw-config-input" style="min-width:220px;"></select>
+
+        <div class="muted" style="font-size:0.85rem;">Aktiv</div>
+        <label class="switch" title="Logikseite aktivieren/deaktivieren">
+          <input id="nw-le-graph-enabled" type="checkbox"><span></span>
+        </label>
+
+        <button id="nw-le-graph-add" class="nw-config-btn nw-config-btn--ghost" type="button">+ Seite</button>
+        <button id="nw-le-graph-dup" class="nw-config-btn nw-config-btn--ghost" type="button">Duplizieren</button>
+        <button id="nw-le-graph-rename" class="nw-config-btn nw-config-btn--ghost" type="button">Umbenennen</button>
+        <button id="nw-le-graph-del" class="nw-config-btn nw-config-btn--ghost" type="button">Löschen</button>
+
+        <div style="flex:1;"></div>
+
+        <div class="muted" style="font-size:0.85rem;">Zoom</div>
+        <button id="nw-le-zoom-out" class="nw-config-btn nw-config-btn--ghost" type="button" title="Verkleinern">−</button>
+        <button id="nw-le-zoom-reset" class="nw-config-btn nw-config-btn--ghost" type="button" title="100%">100%</button>
+        <button id="nw-le-zoom-in" class="nw-config-btn nw-config-btn--ghost" type="button" title="Vergrößern">+</button>
+        <button id="nw-le-zoom-fit" class="nw-config-btn nw-config-btn--ghost" type="button" title="An Fenster anpassen">Anpassen</button>
+        <span id="nw-le-zoom-label" class="muted" style="font-size:0.8rem;min-width:44px;text-align:right;">100%</span>
+      </div>
+    </div>
+
+    <div class="nw-le" style="margin-top: 14px;">
+      <aside class="nw-le__palette">
+        <div class="nw-le__palette-title">Bausteine</div>
+        <div id="nw-le-palette"></div>
+        <div class="muted" style="font-size:0.8rem;margin-top:10px;line-height:1.35;">
+          Tipp: Klick erstellt einen Baustein im sichtbaren Bereich. Alternativ: Baustein per Drag &amp; Drop direkt an die gewünschte Position ziehen. <br/>
+          Verbindung: Ausgang (rechts) anklicken oder ziehen und danach den passenden Eingang (links) auswählen. Rechtsklick auf Leitung oder Eingang trennt die Verbindung.
+        </div>
+      </aside>
+
+      <section class="nw-le__workspace" aria-label="Arbeitsbereich">
+        <div id="nw-le-board-wrap" class="nw-le__board-wrap">
+          <div id="nw-le-board-scale" class="nw-le__board-scale">
+            <div id="nw-le-board" class="nw-le__board">
+              <div class="nw-le__lanes" aria-hidden="true">
+                <div class="nw-le__lane nw-le__lane--input" data-lane="input"><span>EINGÄNGE</span></div>
+                <div class="nw-le__lane nw-le__lane--logic" data-lane="logic"><span>LOGIK / FUNKTION</span></div>
+                <div class="nw-le__lane nw-le__lane--output" data-lane="output"><span>AUSGÄNGE</span></div>
+              </div>
+              <svg id="nw-le-wires" class="nw-le__wires"></svg>
+              <!-- Nodes are injected by JS -->
+            </div>
+          </div>
+        </div>
+
+        <section id="nw-le-sim-panel" class="nw-le-sim hidden" aria-hidden="true" aria-label="NexoLogic Simulation">
+          <div class="nw-le-sim__header">
+            <div>
+              <div class="nw-le-sim__title">NexoLogic-Testmodus</div>
+              <div class="nw-le-sim__notice">Reine Browser-Simulation: keine Hardware-Schreibzugriffe. Eine bereits gespeicherte aktive Logik läuft separat weiter.</div>
+            </div>
+            <div class="nw-le-sim__controls">
+              <span id="nw-le-sim-status" class="nw-le-sim__status">bereit</span>
+              <button id="nw-le-sim-run" class="nw-config-btn" type="button">Start</button>
+              <button id="nw-le-sim-step" class="nw-config-btn nw-config-btn--ghost" type="button">Schritt</button>
+              <button id="nw-le-sim-plus-1s" class="nw-config-btn nw-config-btn--ghost" type="button">+1 s</button>
+              <button id="nw-le-sim-plus-1m" class="nw-config-btn nw-config-btn--ghost" type="button">+1 min</button>
+              <button id="nw-le-sim-reset" class="nw-config-btn nw-config-btn--ghost" type="button">Reset</button>
+              <button id="nw-le-sim-close" class="nw-config-btn nw-config-btn--ghost" type="button" aria-label="Simulation schließen">✕</button>
+            </div>
+          </div>
+          <div class="nw-le-sim__meta">Simulationszeit: <strong id="nw-le-sim-clock">—</strong></div>
+          <div class="nw-le-sim__grid">
+            <div class="nw-le-sim__section">
+              <div class="nw-le-sim__section-head">Test-Eingänge</div>
+              <div id="nw-le-sim-inputs" class="nw-le-sim__inputs"></div>
+            </div>
+            <div class="nw-le-sim__section">
+              <div class="nw-le-sim__section-head"><span>Trace / Auswertung</span><button id="nw-le-sim-clear-trace" class="nw-config-btn nw-config-btn--ghost" type="button">Leeren</button></div>
+              <div id="nw-le-sim-trace" class="nw-le-sim__trace"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <aside class="nw-le__inspector" aria-label="Eigenschaften">
+        <div class="nw-le__inspector-title">Eigenschaften</div>
+        <div id="nw-le-inspector" class="nw-le__inspector-body"></div>
+      </aside>
+    </div>
+  </main>
+
+
+  <!-- DP Picker Modal -->
+  <div id="nw-le-dp-modal" class="nw-dp-dialog-backdrop hidden" aria-hidden="true">
+    <div class="nw-dp-dialog" role="dialog" aria-modal="true" aria-label="Datenpunkt auswählen" style="width:min(980px,92vw);">
+      <div class="nw-dp-dialog__header">
+        <div class="nw-dp-dialog__title">Datenpunkt auswählen</div>
+        <button id="nw-le-dp-close" class="nw-dp-dialog__close" type="button" aria-label="Schließen">Schließen</button>
+      </div>
+
+      <div class="nw-dp-dialog__body">
+        <div class="nw-dp-dialog__search" style="flex-wrap:wrap;">
+          <input id="nw-le-dp-q" class="nw-config-input" type="text" placeholder="Suchen (ID oder Name)…" />
+          <button id="nw-le-dp-search" class="nw-config-btn nw-config-btn--primary" type="button">Suchen</button>
+          <button id="nw-le-dp-root" class="nw-config-btn nw-config-btn--ghost" type="button">Start</button>
+          <button id="nw-le-dp-up" class="nw-config-btn nw-config-btn--ghost" type="button">Zurück</button>
+        </div>
+
+        <div id="nw-le-dp-breadcrumb" class="nw-dp-breadcrumb"></div>
+
+        <div class="nw-dp-dialog__columns">
+          <div class="nw-dp-dialog__col">
+            <div class="nw-dp-col-title">Ordner</div>
+            <div id="nw-le-dp-tree" class="nw-dp-dialog__results"></div>
+          </div>
+          <div class="nw-dp-dialog__col">
+            <div class="nw-dp-col-title">Suchtreffer</div>
+            <div id="nw-le-dp-results" class="nw-dp-dialog__results"></div>
+          </div>
+        </div>
+
+        <div class="nw-config-empty" style="margin-top:6px;">
+          Tipp: Du kannst durch die NexoWatt-EOS-Datenpunktordner browsen oder gezielt nach Datenpunkt-ID beziehungsweise Name suchen.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Import Modal -->
+  <div id="nw-le-import-modal" class="modal hidden" aria-hidden="true">
+    <div class="dialog">
+      <div class="dialog-header">
+        <div style="font-weight:700;">Import</div>
+        <button id="nw-le-import-close" class="btn small" type="button">✕</button>
+      </div>
+      <div class="muted" style="font-size:0.85rem;margin-bottom:10px;">
+        JSON einfügen (Export‑Format).
+      </div>
+      <textarea id="nw-le-import-text" class="nw-config-input" style="width:100%;min-height:240px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;"></textarea>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px;">
+        <button id="nw-le-import-cancel" class="nw-config-btn nw-config-btn--ghost" type="button">Abbrechen</button>
+        <button id="nw-le-import-apply" class="nw-config-btn" type="button">Importieren</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Export Modal -->
+  <div id="nw-le-export-modal" class="modal hidden" aria-hidden="true">
+    <div class="dialog">
+      <div class="dialog-header">
+        <div style="font-weight:700;">Export</div>
+        <button id="nw-le-export-close" class="btn small" type="button">✕</button>
+      </div>
+      <div class="muted" style="font-size:0.85rem;margin-bottom:10px;">
+        Diese JSON kannst du für Rollout/Support speichern.
+      </div>
+      <textarea id="nw-le-export-text" class="nw-config-input" readonly style="width:100%;min-height:240px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;"></textarea>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px;">
+        <button id="nw-le-export-download" class="nw-config-btn" type="button">Download</button>
+        <button id="nw-le-export-ok" class="nw-config-btn nw-config-btn--ghost" type="button">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/logic.js"></script>
+
+  <script src="/static/cockpit-shell.js"></script>
+
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

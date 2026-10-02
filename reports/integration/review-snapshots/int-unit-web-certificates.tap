@@ -1,0 +1,22 @@
+✔ unique local CA and distinct per-listener keys verify SANs (3.576249ms)
+✔ rejects invalid SAN input [] (0.509811ms)
+✔ rejects invalid SAN input ["a\nDNS:evil"] (0.165661ms)
+✔ rejects invalid SAN input ["*.example.com"] (0.356529ms)
+✔ rejects invalid SAN input ["bad/name"] (0.152791ms)
+✔ rejects invalid SAN input ["-evil"] (0.15878ms)
+✔ rejects invalid SAN input ["xxxxxxxxxxxxxxxxxxxxxx (0.173112ms)
+✔ rejects invalid SAN input ["eos.test","eos.test"," (0.170398ms)
+✔ rejects invalid SAN input ["  host"] (0.221575ms)
+✔ rejects invalid SAN input [null] (0.234815ms)
+✔ never overwrites an existing certificate installation (0.328347ms)
+✔ warning before expiry and rejection after expiry (3.016533ms)
+✔ TLS1.3 with trusted SAN succeeds; TLS1.2 rejected over real socket (28.34544ms)
+✔ world-readable private leaf key rejected (1.629635ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 374.662232

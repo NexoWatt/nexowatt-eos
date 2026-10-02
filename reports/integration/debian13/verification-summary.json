@@ -1,0 +1,301 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-debian13-host-diagnosis-and-installation-hold",
+  "productVersion": "0.2.0-dev.4",
+  "createdAt": "2026-10-01T18:18:10.459140+00:00",
+  "baseCommit": "cbaac141d6b447c8ba26cb9548f2af40f858542a",
+  "finalCommitLocation": "outer full-repository delivery.json",
+  "status": "new-installation-blocked-pending-reviewed-redis-artifact",
+  "newInstallationApproved": false,
+  "newSignedRuntimeBundleProduced": false,
+  "productionReleaseApproved": false,
+  "targetHardwareAccepted": false,
+  "independentPenetrationTestPerformed": false,
+  "craConformityEstablished": false,
+  "iecConformityEstablished": false,
+  "finding": {
+    "id": "EOS-HOST-REDIS-20261001",
+    "status": "open",
+    "knownOfferedTrixieSourceVersion": "5:8.0.2-3+deb13u2",
+    "advisory": "CVE-2026-81934",
+    "severityForAdmission": "blocker",
+    "advisoryReproducedByExploit": false,
+    "actualTargetRedisPackageUnknown": true,
+    "disposition": "TLS remains required; new installation denied by current tools before persistent changes",
+    "source": "https://security-tracker.debian.org/tracker/CVE-2026-81934",
+    "additionalTriage": [
+      "CVE-2026-82631",
+      "CVE-2026-82677",
+      "CVE-2026-23479"
+    ],
+    "modulePathExploitabilityInEosEstablished": false
+  },
+  "historicalRuntime": {
+    "sourceVersion": "0.2.0-dev.3",
+    "releaseVersion": "0.2.0-test.1",
+    "status": "withdrawn-for-new-installations",
+    "bytesAndSignaturesUnchanged": true,
+    "oldOfflineToolsTechnicallyRevoked": false,
+    "existingUpdatePathsChanged": false,
+    "reference": {
+      "path": "reports/integration/stabilization/verification-summary.json",
+      "size": 42120,
+      "sha256": "44bda21dfecf7daa98b423533d92cdee5cb20518b4dd0473c20f0c42860f68ef"
+    }
+  },
+  "tests": [
+    {
+      "name": "host-preflight-release-contract-regression",
+      "counts": {
+        "tests": 64,
+        "pass": 64,
+        "fail": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "reports/integration/debian13/host-tests.json",
+        "size": 594,
+        "sha256": "a5bbce68575cb834d6cf4135533874f895d4e8342d71077592a54b74762eea00"
+      },
+      "realTargetInstallation": false
+    },
+    {
+      "name": "Redis8-local-source-build-process-browser-and-certificate-rotation",
+      "counts": [
+        {
+          "tests": 16,
+          "pass": 16,
+          "fail": 0,
+          "skipped": 0,
+          "parentTestsIncluded": 1
+        },
+        {
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        }
+      ],
+      "evidence": {
+        "path": "reports/integration/debian13/redis8-compatibility/verification-summary.json",
+        "size": 9369,
+        "sha256": "16de53bb50196aae2a5fc1b8226dfee82ee07f65400bebeedee6601fbbbdf09a"
+      },
+      "scope": "Ubuntu x64, root, explicit interface fixture; not Debian package/ARM64/systemd; compatibility only"
+    }
+  ],
+  "testCountsNotAddedTogether": true,
+  "sbom": {
+    "applicationTreeUnchanged": true,
+    "npmSbom": {
+      "path": "reports/integration/stabilization/arm64/runtime.cdx.json",
+      "size": 501870,
+      "sha256": "ea856a733a65f2b5ddd3cb2459045ecc083c7f73fae0bfba019ca3237ff2bd27"
+    },
+    "historicalApplicationVersion": "0.2.0-dev.3",
+    "redisLabOnlyInventory": {
+      "path": "reports/integration/debian13/redis8-compatibility/test-tool.cdx.json",
+      "size": 2423,
+      "sha256": "b0d13c725ae74f46660e35068deec091ca7dfe4a6191b0d8c211463d982f1c35"
+    },
+    "targetOsFirmwareRedisInventory": "pending-actual-target-packages"
+  },
+  "openInheritedFindings": [
+    "UI-MESH-PERF-20261001",
+    "actual ARM64/systemd acceptance",
+    "separate adapter identity and process isolation",
+    "device activation and physical fail-safe behavior",
+    "backup/restore and update rollback",
+    "Tailscale access tests",
+    "independent security assessment"
+  ],
+  "targetObservation": {
+    "path": "reports/integration/debian13/target-observation.json",
+    "size": 860,
+    "sha256": "6cf4e68988da4cf88dd66aa024fca9e2a760925dd570f622b34b5ae0bfe5ee65"
+  },
+  "sourceBindings": [
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "size": 12364,
+      "sha256": "6441d13c3c337998b19f8ee39dc874948151706be07e0c533c8b38e67e16d650"
+    },
+    {
+      "path": "tests/system/host.test.cjs",
+      "size": 25129,
+      "sha256": "b27865ac1532773d4402b23aceae20157a8f997e19f51f38424c94d43ebefa49"
+    },
+    {
+      "path": "tests/system/preflight-installation.test.cjs",
+      "size": 10971,
+      "sha256": "c7fd175882cf1fe455bd532b8d1c31f5fef60d65fe88ede975e342fa8e70b92a"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "size": 9105,
+      "sha256": "ccdfd6ae229ee5124472e0d3c8bbd0b041db1b59f27d1c16c016b06ff41d8c73"
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "size": 12884,
+      "sha256": "3ff3a33f1a270ceda249ab6143ecdf4c34de5c3011c76785b483b158418d54f2"
+    },
+    {
+      "path": "tools/system/preflight-installation.cjs",
+      "size": 5273,
+      "sha256": "8ea0305a327fc72f5f244f62665ab10524593e7c2b408138747a9adaf3335ae7"
+    },
+    {
+      "path": "runtime/transport/redis-tls.cjs",
+      "size": 12856,
+      "sha256": "9bae14822a1c49243aaf1bf479df4cd9a8fb23f0a9047474d78d4a6d9172803e"
+    },
+    {
+      "path": "tests/integration/ui-controller.integration.cjs",
+      "size": 36648,
+      "sha256": "77a0b55575fa4d6191d294a2c817da1a73de02a7c2934ebaa228db4f5b02e5c1"
+    },
+    {
+      "path": "tests/system/certificate-redis.integration.cjs",
+      "size": 7642,
+      "sha256": "2824f64a98228a936924f8c3145a8ccde27a5c36a74d37bc0e4f175730f86d03"
+    },
+    {
+      "path": "system/product.json",
+      "size": 1417,
+      "sha256": "dd4e1f16fa3b5458933a815409360cfd5f2f4a2b7f3c394efe6a7318ff3cf937"
+    },
+    {
+      "path": "system/integration/components.json",
+      "size": 7464,
+      "sha256": "5a768fa9f14e34352ae9fac978e6469ee1dc43f79b7cd375762bf246c63aea58"
+    },
+    {
+      "path": "docs/operations/TEST_PI_INSTALLATION_DE.md",
+      "size": 4271,
+      "sha256": "7969aa62c8a14567f718cef4ccd359fa5b2a0182e3c36cdb1cf0e119728f1eff"
+    },
+    {
+      "path": "docs/security/DEBIAN13_TEST_HOST_DE.md",
+      "size": 6889,
+      "sha256": "62dd9a06b669f5150ca3c1488b2e8b483e447993a63f5a358679cc2195e8f1fb"
+    },
+    {
+      "path": "docs/security/TEST_PI_STABILIZATION_THREAT_MODEL_DE.md",
+      "size": 7008,
+      "sha256": "d01108946a5d996c172e330694566533aad93ba13d402d94d9a93d9e2fcd6eae"
+    },
+    {
+      "path": "docs/architecture/INTEGRATED_SYSTEM.md",
+      "size": 24163,
+      "sha256": "308bb267af519e5c179a6fac8dfa47ed36249dc6fa17f30b115377b81f44308c"
+    },
+    {
+      "path": "docs/cra/INTEGRATED_TEST_REQUIREMENTS.md",
+      "size": 25127,
+      "sha256": "334350c08f735e9cbc90964d76203ec176289e0d72a16cd0b865a94860258431"
+    },
+    {
+      "path": "delivery/INSTALLATION_HOLD_DE.md",
+      "size": 757,
+      "sha256": "795502aaa9066b9e6b22a75ea8b04291d022e26d70062827cf21ce14fcc8146b"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "reports/integration/debian13/document-artifact-checks.json",
+      "size": 3050,
+      "sha256": "8ab68f6d3123126f770d191615850e03fc18ceb9f10b17cca44aeda16f39de6a"
+    },
+    {
+      "path": "reports/integration/debian13/host-tests.json",
+      "size": 594,
+      "sha256": "a5bbce68575cb834d6cf4135533874f895d4e8342d71077592a54b74762eea00"
+    },
+    {
+      "path": "reports/integration/debian13/raw/host-preflight.tap",
+      "size": 10024,
+      "sha256": "ac6be034bd94722b4e99dea8754e00791c72f45c93214c3bdaff1f14269fd947"
+    },
+    {
+      "path": "reports/integration/debian13/raw/host-release-regression.tap",
+      "size": 14467,
+      "sha256": "9e5abbf6f3da2e0f1237d899ef02761455e881292862d053c9c73434cfe29ec3"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/README_DE.md",
+      "size": 2758,
+      "sha256": "3a9627006feb56aa3605e5160b6cdde5fb210f1b5011c9f456fbc7901cdcc39b"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/raw/CVE-2026-81934.debian.html",
+      "size": 4576,
+      "sha256": "ee762c888319ff1d60fb44eb7fa44f725c96d7c6a68f70c33d61638809deb8c9"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/raw/build.log",
+      "size": 18631,
+      "sha256": "7564ebbe2b8da2f470466202f1a80e447953cb89c3dcf98ed7b84bf66d9f38ee"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/raw/certificate-redis8.tap",
+      "size": 367,
+      "sha256": "0f8e3f19016a8cfcef41462cb7818fdf979c7b9090cc72c1cb662890ec1e05da"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/raw/dpkg-source.log",
+      "size": 1141,
+      "sha256": "cc0e657e43481bdf11122323798db61ad39a9b71b28dc2dddf4221c7d3151313"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/raw/ui-controller-redis8.tap",
+      "size": 6598,
+      "sha256": "3420167e457e0fe2646c49556e89fe5ff6561deabddb7b1f690748c7ca279717"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/redis-source.dsc",
+      "size": 1915,
+      "sha256": "10ace3c9e2aaae8f4920906c0869820cac71bc5d83984b4febe114cb52879101"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/security-blocker.json",
+      "size": 1046,
+      "sha256": "ff42459cd33cdf3095b45cb9554cdb95681cb93cd42a7932d800942b03f6d514"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/source-verification.json",
+      "size": 812,
+      "sha256": "7500e182ececce962ec31bcf0df42e40d905780d905f56cb0b034114ba70c382"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/summary-wrapper-error.json",
+      "size": 574,
+      "sha256": "b52eac4e03b29bf2b818872a5ff49d2978c7af54f64b78891ee1f525fcbee21d"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/test-results.json",
+      "size": 1928,
+      "sha256": "ba52ddb89e7dcbee7be5af1108649f1b24954ed4a847a0dc93eb12cf6214150d"
+    },
+    {
+      "path": "reports/integration/debian13/redis8-compatibility/test-tool.cdx.json",
+      "size": 2423,
+      "sha256": "b0d13c725ae74f46660e35068deec091ca7dfe4a6191b0d8c211463d982f1c35"
+    },
+    {
+      "path": "reports/integration/debian13/schema-validation.json",
+      "size": 344,
+      "sha256": "d60520c7a7d47cc2570f91e475ca1a56c0e4353d4b2352f0a8b826bb80d886d8"
+    },
+    {
+      "path": "reports/integration/debian13/target-observation.json",
+      "size": 860,
+      "sha256": "6cf4e68988da4cf88dd66aa024fca9e2a760925dd570f622b34b5ae0bfe5ee65"
+    }
+  ],
+  "packagingReview": {
+    "path": "reports/integration/debian13/packaging-pattern-review.json",
+    "size": 4098,
+    "sha256": "cbdeadfcbe5c07adcf4949a568ebeb71c2f0523468460cd0afd49ca64d2bf2f8"
+  }
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexoWatt EOS · Lizenzverwaltung</title>
+  <style>
+    :root{font-family:Arial,sans-serif;color:#e9f4ee;background:#101b19;color-scheme:dark}
+    body{margin:0;padding:32px 20px}main{max-width:850px;margin:auto}a{color:#8ef0ac}
+    header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:28px;margin:12px 0}
+    h2{font-size:19px;margin-top:0}.card{padding:24px;margin:22px 0;border:1px solid #365047;border-radius:12px;background:#192924}
+    p{line-height:1.55;color:#c8d7cf}.status{font-size:21px;font-weight:700;color:#9ee9b1}.error{color:#ffb0a6}
+    dl{display:grid;grid-template-columns:160px 1fr;gap:12px}dt{color:#9bb4a8}dd{margin:0;overflow-wrap:anywhere}
+    label{display:block;font-weight:bold;margin:16px 0 10px}textarea{box-sizing:border-box;resize:vertical;width:100%;min-height:120px;padding:12px;border:1px solid #5f7f70;border-radius:6px;background:#0e1b16;color:#fff;font:14px monospace}
+    button{padding:12px 18px;border:0;border-radius:6px;background:#98e7a9;color:#0e2718;font-weight:700;cursor:pointer;margin:12px 10px 0 0}button.secondary{background:#304b3e;color:white}button:disabled{opacity:.5;cursor:wait}
+    small{color:#a3b9ae}#message{min-height:24px;white-space:pre-wrap}code{font-size:13px}.note{border-left:3px solid #8cdda3;padding-left:14px}
+    @media(max-width:600px){header{display:block}dl{grid-template-columns:1fr;gap:6px}dd{margin-bottom:10px}.card{padding:18px}}
+  </style>
+  <script defer src="/nexowatt/license/app.js"></script>
+</head>
+<body><main>
+  <header><div><small>NEXOWATT EOS</small><h1>Lizenzverwaltung</h1></div><a href="/">Zurück zum Admin</a></header>
+  <p>Home und Pro zentral für dieses EOS-System verwalten. Nur freigegebene Adapter mit eingebauter Lizenzprüfung erhalten eine Betriebsfreigabe.</p>
+  <section class="card" aria-labelledby="statusTitle"><h2 id="statusTitle">Aktueller Status</h2>
+    <p id="status" class="status" aria-live="polite">Wird geprüft …</p>
+    <dl><dt>System-UUID</dt><dd id="uuid">–</dd><dt>Edition</dt><dd id="edition">–</dd><dt>Gültig bis</dt><dd id="expiry">–</dd><dt>Ladepunkte / Speicher</dt><dd id="limits">–</dd><dt>Funktionen</dt><dd id="features">–</dd></dl>
+    <button id="refresh" class="secondary">Status aktualisieren</button>
+  </section>
+  <section class="card"><h2>Lizenz aktivieren</h2><p>Den für diese UUID ausgestellten Lizenzcode aus dem NexoWatt Key-Generator einfügen. Die Lizenz wird geprüft und verschlüsselt auf dem Gerät gespeichert.</p>
+    <p class="note">Dieser Teststand erwartet das signierte Format NWL2. Der bisherige Key-Generator muss dafür noch angebunden und gemeinsam geprüft werden. Alte NW1-Schlüssel werden nicht automatisch übernommen.</p>
+    <label for="token">Neuer Lizenzcode</label><textarea id="token" spellcheck="false" autocomplete="off" placeholder="NWL2.…" maxlength="16384"></textarea>
+    <button id="activate">Prüfen und aktivieren</button><button id="remove" class="secondary">Lizenz entfernen</button>
+    <p id="message" role="status" aria-live="polite"></p>
+    <small>Der gespeicherte Code wird nicht zurück angezeigt. Ein ungültiger Import ersetzt keine gültige Lizenz.</small>
+  </section>
+  <p>Ohne gültige Lizenz bleiben Lizenzverwaltung, Diagnose und Sicherheitswartung erreichbar. Die Betriebsfreigabe der angebundenen Adapter endet spätestens nach 15 Sekunden. Schutzfunktionen benötigen den im jeweiligen Adapter festgelegten sicheren Zustand.</p>
+</main></body></html>

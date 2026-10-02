@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-reported-existing-eos-service-and-architecture-clarification",
+  "userMessageAt": "2026-10-01T18:32:28Z",
+  "recordedAt": "2026-10-01T18:34:28.669452+00:00",
+  "observed": {
+    "nodeExecutable": "/usr/bin/node",
+    "redisExecutablesListed": false,
+    "service": {
+      "name": "nexowatt-eos.service",
+      "load": "loaded",
+      "active": "active",
+      "sub": "running",
+      "enabled": true
+    },
+    "eosCurrentReleaseLinkPresent": false,
+    "topLevelPaths": {
+      "/etc/nexowatt-eos": "0755 nexowatt:nexowatt",
+      "/etc/nexowatt-eos/eos.config.json": "0644 nexowatt:nexowatt",
+      "/etc/nexowatt-eos/eos.env": "0640 root:nexowatt",
+      "/var/lib/nexowatt-eos": "0755 nexowatt:nexowatt",
+      "/var/lib/nexowatt-eos/auth-users.json": "0644 nexowatt:nexowatt",
+      "/var/lib/nexowatt-eos/license.json": "0644 nexowatt:nexowatt",
+      "/var/lib/nexowatt-eos/eos.sqlite": "0644 nexowatt:nexowatt",
+      "/var/lib/nexowatt-eos/eos.sqlite-journal": "0644 nexowatt:nexowatt"
+    },
+    "otherFilesObserved": [
+      "objects.json",
+      "states.json",
+      "devices.json",
+      "adapter-instances.json",
+      "system-identity.json"
+    ]
+  },
+  "interpretation": {
+    "existingServiceRunning": true,
+    "existingProgramVersionKnown": false,
+    "existingServiceMatchesNewBundleLayout": false,
+    "fileContentsRead": false,
+    "plaintextPasswordsProven": false,
+    "existingRedisUseExcluded": false,
+    "permissionReviewNeeded": true,
+    "newInstallationApproved": false
+  },
+  "userSteering": {
+    "preferredOs": "headless Lite",
+    "askedSupportForDebian12And13": true,
+    "historian": "InfluxDB2 user states used; installed version not observed",
+    "externalRedisPreference": "user considers unnecessary because InfluxDB2; architecture roles require clarification"
+  },
+  "architectureReview": {
+    "currentIntegratedProfile": "external Redis for operational Objects/States; InfluxDB is separate time-series historian",
+    "upstreamJsonlPossibleWithoutRedisDaemon": true,
+    "installedJsonlNativeTlsSupported": false,
+    "transportReplacementImplemented": false,
+    "sourceBindings": [
+      {
+        "path": "@iobroker/db-objects-jsonl/build/cjs/lib/objects/objectsInMemServerRedis.js",
+        "sha256": "f5f0d77904106a628f2c929e13fb63c16714c4a1230be97c7971e4a73860929a"
+      },
+      {
+        "path": "@iobroker/db-states-jsonl/build/cjs/lib/states/statesInMemServerRedis.js",
+        "sha256": "2f91f46384ab3645c7fa09309b47d3f22d022d82450f5bfd593b46024db34015"
+      },
+      {
+        "path": "iobroker.js-controller/conf/iobroker-dist.json",
+        "sha256": "7bb270ba7c2d0863635baab18eced1f49ca747f733a8ac6aaa87efeb6354fc37"
+      }
+    ],
+    "raspberryPiReference": "https://www.raspberrypi.com/software/operating-systems/",
+    "influxAdapterReference": "https://github.com/ioBroker/ioBroker.influxdb"
+  },
+  "changesPerformedOnTarget": false,
+  "softwareChanged": false,
+  "newTestsExecuted": false
+}

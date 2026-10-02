@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>NexoWatt EOS – Netzbetreiber</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="stylesheet" href="/static/styles.css">
+  <style>
+    body{margin:0;background:#06110e;color:#eefaf2;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.netop-shell{max-width:1540px;margin:0 auto;padding:20px}.netop-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.netop-head h1{margin:0}.netop-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.netop-card{background:rgba(8,18,15,.96);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:16px;box-shadow:0 16px 40px rgba(0,0,0,.22)}.netop-card small{display:block;color:#91ad9e;margin-bottom:7px}.netop-card b{font-size:20px}.netop-banner{padding:14px 16px;border-radius:14px;margin:16px 0;font-weight:700}.netop-banner--normal{background:rgba(0,200,83,.09);border:1px solid rgba(0,200,83,.35);color:#a2f6bd}.netop-banner--binding{background:rgba(255,193,7,.10);border:1px solid rgba(255,193,7,.45);color:#ffe38c}.netop-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.netop-actions button,.netop-actions a{background:rgba(0,200,83,.12);border:1px solid rgba(0,200,83,.35);color:#eefaf2;border-radius:12px;padding:10px 13px;text-decoration:none;cursor:pointer}.table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:16px}table{width:100%;border-collapse:collapse;min-width:900px}th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;font-size:13px}th{color:#8ff7b0;background:rgba(0,200,83,.08)}.muted{color:#91ad9e}pre{overflow:auto;max-height:480px;white-space:pre-wrap}@media(max-width:1050px){.netop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.netop-grid{grid-template-columns:1fr}.netop-shell{padding:12px}}
+  </style>
+  <script src="/static/nw-i18n.js" defer></script>
+  <script src="/static/netoperator.js" defer></script>
+</head>
+<body>
+<main class="netop-shell">
+  <header class="netop-head"><div><h1>Netzbetreiber-Schnittstelle</h1><div class="muted">EOS liest den zertifizierten EZA-/Parkregler read-only. Ist die App operativ freigegeben, führt dessen gültige Einspeisegrenze den bestehenden EOS Export Guard.</div></div><span id="netopStatus" class="netop-card">lade …</span></header>
+  <div id="netopBindingBanner" class="netop-banner netop-banner--normal">lade …</div>
+  <section class="netop-grid">
+    <div class="netop-card"><small>Modus</small><b id="netopMode">--</b></div><div class="netop-card"><small>Treiber</small><b id="netopDriver">--</b></div><div class="netop-card"><small>Quelle</small><b id="netopSource">--</b></div><div class="netop-card"><small>Kommunikation</small><b id="netopComm">--</b></div>
+    <div class="netop-card"><small>Wirksame Führungsquelle</small><b id="netopControlSource">--</b></div><div class="netop-card"><small>Standardisierte Einspeisegrenze</small><b id="netopAllowedExport">--</b></div><div class="netop-card"><small>Vorgabe gültig bis</small><b id="netopValidUntil">--</b></div><div class="netop-card"><small>Fail-Safe</small><b id="netopFailSafe">--</b></div>
+    <div class="netop-card"><small>Letztes empfangenes Telegramm</small><b id="netopLastTelegram">--</b></div><div class="netop-card"><small>Letztes gültiges Telegramm</small><b id="netopLastValidTelegram">--</b></div><div class="netop-card"><small>Aktive Vorgabe</small><b id="netopCommand">--</b></div><div class="netop-card"><small>Bindung</small><b id="netopBinding">--</b></div><div class="netop-card"><small>Controllerstatus</small><b id="netopControllerStatus">--</b></div>
+    <div class="netop-card"><small>Externe Vorgaben</small><b id="netopEnable">--</b></div><div class="netop-card"><small>Freigabe</small><b id="netopRelease">--</b></div><div class="netop-card"><small>Trip</small><b id="netopTrip">--</b></div><div class="netop-card"><small>Fehlercode</small><b id="netopFault">--</b></div>
+    <div class="netop-card"><small>P-Limit</small><b id="netopPLimit">--</b></div><div class="netop-card"><small>P-Sollwert</small><b id="netopPTarget">--</b></div><div class="netop-card"><small>P-Sollwert</small><b id="netopPTargetPct">--</b></div><div class="netop-card"><small>Q-Sollwert</small><b id="netopQTarget">--</b></div>
+    <div class="netop-card"><small>cos phi</small><b id="netopCosPhi">--</b></div><div class="netop-card"><small>P-Ist am NAP</small><b id="netopPActual">--</b></div><div class="netop-card"><small>Q-Ist am NAP</small><b id="netopQActual">--</b></div><div class="netop-card"><small>Spannung am NAP</small><b id="netopUActual">--</b></div>
+  </section>
+  <nav class="netop-actions"><button id="netopRefresh" type="button">Aktualisieren</button><button id="netopRawBtn" type="button">Service-/Rohwerte (Installer)</button><a href="/ems-apps#netoperator">AppCenter öffnen</a></nav>
+  <section class="netop-card"><h2>Ereignisprotokoll</h2><div class="table-wrap"><table><thead><tr><th>Zeit</th><th>Quelle</th><th>Vorgabe</th><th>Grund</th><th>Ergebnis</th></tr></thead><tbody id="netopAuditRows"><tr><td colspan="5" class="muted">lade …</td></tr></tbody></table></div></section>
+  <pre id="netopRaw" class="netop-card" style="display:none"></pre>
+</main>
+</body>
+</html>

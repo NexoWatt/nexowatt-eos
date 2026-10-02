@@ -1,0 +1,845 @@
+{
+  "common": {
+    "name": "nexowatt-backup",
+    "version": "1.0.10",
+    "news": {
+      "1.0.10": {
+        "en": "Check SD permissions on the backup subdirectory; read-only listing and restore do not require write access to the mount root.",
+        "de": "SD-Rechte am Sicherungsunterordner prüfen; Backup-Liste und Lesefunktionen verlangen keine Schreibrechte am Einhängepunkt."
+      },
+      "1.0.9": {
+        "en": "Fixed SD-card backup failures caused by calling an unsupported logger method. SD-card validation and the three-generation InfluxDB rotation now use the logger methods actually provided by the backup runtime. Added a publish-time regression test for the logger contract.",
+        "de": "SD-Karten-Sicherungsfehler durch den Aufruf einer nicht unterstützten Logger-Methode behoben. Die SD-Karten-Prüfung und die InfluxDB-Rotation mit drei Generationen verwenden jetzt ausschließlich die vom Sicherungslauf bereitgestellten Logger-Methoden. Eine Veröffentlichungsprüfung verhindert diesen Fehler künftig.",
+        "nl": "Fouten bij SD-kaartback-ups door een niet-ondersteunde loggermethode zijn opgelost. De SD-kaartcontrole en de InfluxDB-rotatie met drie generaties gebruiken nu alleen de loggermethoden van de back-upruntime. Een publicatietest voorkomt regressie.",
+        "fr": "Correction des échecs de sauvegarde sur carte SD causés par une méthode de journalisation non prise en charge. La validation SD et la rotation InfluxDB utilisent désormais uniquement les méthodes fournies par le moteur de sauvegarde.",
+        "it": "Risolti gli errori di backup su scheda SD causati da un metodo di logging non supportato. La convalida SD e la rotazione InfluxDB usano ora solo i metodi forniti dal runtime di backup.",
+        "es": "Corregidos los fallos de copia en tarjeta SD causados por un método de registro no compatible. La validación SD y la rotación de InfluxDB usan ahora solo los métodos disponibles en el motor de copia.",
+        "pl": "Naprawiono błędy kopii na karcie SD spowodowane nieobsługiwaną metodą loggera. Walidacja SD i rotacja InfluxDB używają teraz wyłącznie metod dostępnych w środowisku kopii.",
+        "pt": "Corrigidas falhas de backup no cartão SD causadas por um método de log não suportado. A validação do cartão e a rotação do InfluxDB usam agora apenas os métodos disponíveis no runtime de backup.",
+        "ru": "Исправлены сбои резервного копирования на SD-карту из-за неподдерживаемого метода журналирования. Проверка SD-карты и ротация InfluxDB теперь используют только методы, предоставляемые средой резервного копирования.",
+        "uk": "Виправлено збої резервного копіювання на SD-карту через непідтримуваний метод журналювання. Перевірка SD-карти та ротація InfluxDB тепер використовують лише методи середовища резервного копіювання.",
+        "zh-cn": "修复了因调用不受支持的日志方法而导致的 SD 卡备份失败。SD 卡校验和 InfluxDB 三代轮换现在仅使用备份运行时实际提供的日志方法。"
+      },
+      "1.0.8": {
+        "en": "InfluxDB backup reliability: the CLI field is now clearly identified and invalid relative values such as bucket or directory names safely fall back to the standard influx/influxd executable. InfluxDB 2 tokens remain encrypted, no longer block saving after reopening the settings, and are passed via INFLUX_TOKEN instead of the command line. Backup and restore now provide clearer CLI errors.",
+        "de": "Zuverlässigere InfluxDB-Sicherung: Das CLI-Feld ist jetzt eindeutig bezeichnet. Ungültige relative Werte wie Bucket- oder Verzeichnisnamen fallen sicher auf die Standarddatei influx/influxd zurück. InfluxDB-2-Token bleiben verschlüsselt gespeichert, blockieren nach dem erneuten Öffnen nicht mehr das Speichern und werden über INFLUX_TOKEN statt über die Befehlszeile übergeben. Sicherung und Wiederherstellung melden verständlichere CLI-Fehler.",
+        "nl": "Betrouwbaardere InfluxDB-back-up: het CLI-veld is nu duidelijk benoemd. Ongeldige relatieve waarden zoals bucket- of mapnamen vallen veilig terug op het standaardprogramma influx/influxd. InfluxDB 2-tokens blijven versleuteld opgeslagen, blokkeren opslaan na heropenen niet meer en worden via INFLUX_TOKEN doorgegeven in plaats van via de opdrachtregel.",
+        "fr": "Fiabilité des sauvegardes InfluxDB améliorée : le champ CLI est clairement identifié, les valeurs relatives invalides reviennent à influx/influxd, les jetons restent chiffrés et sont transmis via INFLUX_TOKEN.",
+        "it": "Maggiore affidabilità del backup InfluxDB: il campo CLI è chiaramente identificato, i valori relativi non validi usano influx/influxd, i token restano cifrati e vengono passati tramite INFLUX_TOKEN.",
+        "es": "Mayor fiabilidad de la copia InfluxDB: el campo CLI está claramente identificado, los valores relativos no válidos usan influx/influxd, los tokens permanecen cifrados y se pasan mediante INFLUX_TOKEN.",
+        "pl": "Większa niezawodność kopii InfluxDB: pole CLI jest jednoznacznie opisane, nieprawidłowe wartości względne używają influx/influxd, tokeny pozostają zaszyfrowane i są przekazywane przez INFLUX_TOKEN.",
+        "pt": "Maior fiabilidade do backup InfluxDB: o campo CLI está claramente identificado, valores relativos inválidos usam influx/influxd, os tokens permanecem cifrados e são passados por INFLUX_TOKEN.",
+        "ru": "Повышена надежность резервного копирования InfluxDB: поле CLI ясно обозначено, недопустимые относительные значения используют influx/influxd, токены остаются зашифрованными и передаются через INFLUX_TOKEN.",
+        "uk": "Підвищено надійність резервного копіювання InfluxDB: поле CLI чітко позначене, неправильні відносні значення використовують influx/influxd, токени залишаються зашифрованими й передаються через INFLUX_TOKEN.",
+        "zh-cn": "提高 InfluxDB 备份可靠性：CLI 字段已明确标识，无效的相对值会安全回退到 influx/influxd；令牌保持加密，并通过 INFLUX_TOKEN 而不是命令行传递。"
+      },
+      "1.0.7": {
+        "en": "Windows publish compatibility: SD-card tests now use Linux/POSIX path semantics on every development host, while Linux-only archive and permission tests are skipped on non-Linux systems. This fixes npm publish from Windows without changing the SD-card backup or InfluxDB retention runtime.",
+        "de": "Windows-Publish-Kompatibilität: Die SD-Karten-Tests verwenden jetzt auf jedem Entwicklungsrechner konsequent Linux-/POSIX-Pfade. Linux-spezifische Archiv- und Rechteprüfungen werden auf Nicht-Linux-Systemen übersprungen. Dadurch funktioniert npm publish unter Windows, ohne die SD-Karten-Sicherung oder die InfluxDB-Aufbewahrung zu verändern.",
+        "nl": "Windows-publicatiecompatibiliteit: SD-kaarttests gebruiken nu op elk ontwikkelsysteem Linux/POSIX-paden. Linux-specifieke archief- en rechtencontroles worden buiten Linux overgeslagen. Hierdoor werkt npm publish onder Windows zonder wijzigingen aan de back-uplogica.",
+        "fr": "Compatibilité de publication sous Windows : les tests de carte SD utilisent désormais des chemins Linux/POSIX sur tous les postes de développement. Les tests d’archives et de droits propres à Linux sont ignorés hors Linux.",
+        "it": "Compatibilità di pubblicazione su Windows: i test della scheda SD usano ora percorsi Linux/POSIX su ogni sistema di sviluppo. I test di archivi e permessi specifici di Linux vengono saltati fuori da Linux.",
+        "es": "Compatibilidad de publicación en Windows: las pruebas de tarjeta SD usan ahora rutas Linux/POSIX en todos los equipos de desarrollo. Las pruebas de archivos y permisos específicas de Linux se omiten fuera de Linux.",
+        "pl": "Zgodność publikowania w Windows: testy karty SD używają teraz ścieżek Linux/POSIX na każdym komputerze deweloperskim. Testy archiwów i uprawnień specyficzne dla Linux są pomijane poza Linux.",
+        "pt": "Compatibilidade de publicação no Windows: os testes do cartão SD usam agora caminhos Linux/POSIX em qualquer sistema de desenvolvimento. Os testes de arquivo e permissões específicos do Linux são ignorados fora do Linux.",
+        "ru": "Совместимость публикации в Windows: тесты SD-карты теперь используют семантику путей Linux/POSIX на любом компьютере разработчика. Linux-специфичные проверки архивов и прав пропускаются вне Linux.",
+        "uk": "Сумісність публікації у Windows: тести SD-карти тепер використовують семантику шляхів Linux/POSIX на будь-якому комп’ютері розробника. Linux-специфічні перевірки архівів і прав пропускаються поза Linux.",
+        "zh-cn": "Windows 发布兼容性：SD 卡测试现在在所有开发主机上统一使用 Linux/POSIX 路径语义；仅适用于 Linux 的归档和权限测试会在非 Linux 系统上跳过。"
+      },
+      "1.0.6": {
+        "en": "SD-card backup target: mounted writable SD cards can now be selected directly. The SSD/eMMC system disk is excluded and a missing card aborts the run without fallback. InfluxDB archives on the SD card use rolling retention and keep the newest three generations per configured InfluxDB target.",
+        "de": "SD-Karte als Sicherungsziel: Eingebundene und beschreibbare SD-Karten können jetzt direkt ausgewählt werden. Der SSD-/eMMC-Systemdatenträger ist ausgeschlossen; fehlt die Karte, wird der Lauf ohne Fallback abgebrochen. InfluxDB-Archive auf der SD-Karte werden rollierend auf die neuesten drei Generationen je konfiguriertem InfluxDB-Ziel begrenzt.",
+        "nl": "SD-kaart als back-updoel: gekoppelde beschrijfbare SD-kaarten kunnen direct worden geselecteerd. De SSD/eMMC-systeemschijf is uitgesloten en een ontbrekende kaart stopt de back-up zonder terugval. Op de SD-kaart blijven per InfluxDB-doel de nieuwste drie generaties bewaard.",
+        "fr": "Cible de sauvegarde sur carte SD : les cartes SD montées et inscriptibles peuvent être sélectionnées directement. Le disque système SSD/eMMC est exclu et une carte absente interrompt la sauvegarde sans repli. Les trois dernières sauvegardes InfluxDB par cible sont conservées.",
+        "it": "Destinazione di backup su scheda SD: è possibile selezionare direttamente le schede SD montate e scrivibili. Il disco di sistema SSD/eMMC è escluso e una scheda assente interrompe il backup senza fallback. Vengono mantenute le tre generazioni InfluxDB più recenti per destinazione.",
+        "es": "Destino de copia en tarjeta SD: se pueden seleccionar directamente tarjetas SD montadas y escribibles. El disco del sistema SSD/eMMC queda excluido y la ausencia de la tarjeta cancela la copia sin alternativa. Se conservan las tres generaciones InfluxDB más recientes por destino.",
+        "pl": "Karta SD jako cel kopii: można bezpośrednio wybrać zamontowane i zapisywalne karty SD. Dysk systemowy SSD/eMMC jest wykluczony, a brak karty przerywa kopię bez przełączenia awaryjnego. Zachowywane są trzy najnowsze kopie InfluxDB na cel.",
+        "pt": "Destino de backup em cartão SD: cartões SD montados e graváveis podem ser selecionados diretamente. O disco de sistema SSD/eMMC é excluído e a ausência do cartão interrompe o backup sem fallback. São mantidas as três gerações InfluxDB mais recentes por destino.",
+        "ru": "Резервное копирование на SD-карту: можно напрямую выбрать смонтированные карты с правом записи. Системный SSD/eMMC исключён, отсутствие карты прерывает резервное копирование без перехода на системный диск. Для каждой цели InfluxDB сохраняются три последних поколения.",
+        "uk": "Резервне копіювання на SD-карту: можна безпосередньо вибрати змонтовані карти з правом запису. Системний SSD/eMMC виключено, відсутність карти перериває копіювання без переходу на системний диск. Для кожної цілі InfluxDB зберігаються три останні покоління.",
+        "zh-cn": "新增 SD 卡备份目标：可直接选择已挂载且可写的 SD 卡。SSD/eMMC 系统盘会被排除；卡缺失时备份会中止且不会回退到系统盘。每个 InfluxDB 目标在 SD 卡上保留最新三代备份。"
+      },
+      "1.0.5": {
+        "en": "NexoWatt EOS design release: the backup dashboard now uses the native dark navy, green and teal EOS palette throughout headers, cards, buttons, focus states and loading indicators. Backup and restore logic is unchanged.",
+        "de": "NexoWatt-EOS-Designfreigabe: Das Sicherungsdashboard verwendet jetzt durchgängig die native dunkelblaue, grüne und türkise EOS-Farbwelt für Kopfbereich, Karten, Schaltflächen, Fokuszustände und Ladeanzeigen. Die Sicherungs- und Wiederherstellungslogik bleibt unverändert.",
+        "nl": "NexoWatt EOS-designrelease: het back-updashboard gebruikt nu overal het donkerblauwe, groene en turquoise EOS-kleurenschema. De back-up- en herstelfuncties zijn ongewijzigd.",
+        "fr": "Version graphique NexoWatt EOS : le tableau de sauvegarde utilise désormais la palette bleu nuit, verte et turquoise EOS. La logique de sauvegarde et de restauration reste inchangée.",
+        "it": "Release grafica NexoWatt EOS: il dashboard di backup usa ora la palette EOS blu scuro, verde e turchese. La logica di backup e ripristino non cambia.",
+        "es": "Versión de diseño NexoWatt EOS: el panel de copias usa ahora la paleta EOS azul oscuro, verde y turquesa. La lógica de copia y restauración no cambia.",
+        "pl": "Wydanie stylistyczne NexoWatt EOS: panel kopii zapasowych korzysta teraz z granatowej, zielonej i turkusowej palety EOS. Logika kopii i odtwarzania pozostaje bez zmian.",
+        "pt": "Versão visual NexoWatt EOS: o painel de backup utiliza agora a paleta EOS azul-escura, verde e turquesa. A lógica de backup e restauro não foi alterada.",
+        "ru": "Визуальный выпуск NexoWatt EOS: панель резервного копирования теперь использует темно-синюю, зеленую и бирюзовую палитру EOS. Логика резервного копирования и восстановления не изменена.",
+        "uk": "Візуальний випуск NexoWatt EOS: панель резервного копіювання тепер використовує темно-синю, зелену й бірюзову палітру EOS. Логіку резервного копіювання та відновлення не змінено.",
+        "zh-cn": "NexoWatt EOS 视觉版本：备份面板现全面采用 EOS 深蓝、绿色和青绿色配色。备份与恢复逻辑保持不变。"
+      },
+      "1.0.1": {
+        "en": "Compatibility fix: NexoWatt EOS Admin 7 is supported again. The minimum global Admin dependency was corrected from 8.0.0 to 7.0.0; backup and restore logic is unchanged.",
+        "de": "Kompatibilitätskorrektur: NexoWatt EOS Admin 7 wird wieder unterstützt. Die globale Mindestanforderung wurde von Admin 8.0.0 auf 7.0.0 korrigiert; die Sicherungs- und Wiederherstellungslogik bleibt unverändert.",
+        "ru": "Compatibility fix: NexoWatt EOS Admin 7 is supported again.",
+        "pt": "Compatibility fix: NexoWatt EOS Admin 7 is supported again.",
+        "nl": "Compatibiliteitscorrectie: NexoWatt EOS Admin 7 wordt weer ondersteund.",
+        "fr": "Correction de compatibilité : NexoWatt EOS Admin 7 est de nouveau pris en charge.",
+        "it": "Correzione di compatibilità: NexoWatt EOS Admin 7 è nuovamente supportato.",
+        "es": "Corrección de compatibilidad: NexoWatt EOS Admin 7 vuelve a ser compatible.",
+        "pl": "Poprawka zgodności: NexoWatt EOS Admin 7 jest ponownie obsługiwany.",
+        "uk": "Виправлення сумісності: NexoWatt EOS Admin 7 знову підтримується.",
+        "zh-cn": "兼容性修复：重新支持 NexoWatt EOS Admin 7。"
+      },
+      "1.0.0": {
+        "en": "Initial NexoWatt EOS release based on NexoWatt EOS.backitup 4.0.1. Adds EOS system profile, SHA-256 integrity data, NexoWatt branding and secure vendor-file handling.",
+        "de": "Erste NexoWatt-EOS-Version auf Basis von NexoWatt EOS.backitup 4.0.1. Ergänzt EOS-Systemprofil, SHA-256-Integritätsdaten, NexoWatt-Branding und eine sichere Behandlung der Vendor-Dateien.",
+        "ru": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "pt": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "nl": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "fr": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "it": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "es": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "pl": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "uk": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data.",
+        "zh-cn": "Initial NexoWatt EOS release with system profile and SHA-256 integrity data."
+      },
+      "1.0.2": {
+        "en": "Admin 7 UI fix: all ES-module custom components now declare bundlerType module. Visible NexoWatt EOS product labels and the system-backup tab were changed to NexoWatt EOS.",
+        "de": "Admin-7-Oberflächenkorrektur: Alle ES-Modul-Custom-Components deklarieren jetzt bundlerType module. Sichtbare NexoWatt EOS-Produktbezeichnungen und der Systemsicherungs-Reiter wurden auf NexoWatt EOS umgestellt.",
+        "nl": "Admin 7-interfacefix: modulecomponenten worden correct geladen en zichtbare productnamen zijn gewijzigd in NexoWatt EOS.",
+        "fr": "Correction de l’interface Admin 7 : chargement correct des composants modules et renommage visible en NexoWatt EOS.",
+        "it": "Correzione interfaccia Admin 7: caricamento corretto dei componenti modulo e denominazione visibile NexoWatt EOS.",
+        "es": "Corrección de interfaz Admin 7: carga correcta de componentes de módulo y denominación visible NexoWatt EOS.",
+        "pl": "Poprawka interfejsu Admin 7: prawidłowe ładowanie komponentów modułowych i widoczne nazwy NexoWatt EOS.",
+        "pt": "Correção da interface Admin 7: carregamento correto de componentes de módulo e nomes visíveis NexoWatt EOS.",
+        "ru": "Исправление интерфейса Admin 7: корректная загрузка модульных компонентов и брендинг NexoWatt EOS.",
+        "uk": "Виправлення інтерфейсу Admin 7: коректне завантаження модульних компонентів і брендинг NexoWatt EOS.",
+        "zh-cn": "Admin 7 界面修复：正确加载模块组件，并将可见产品名称改为 NexoWatt EOS。"
+      },
+      "1.0.3": {
+        "en": "Stable Admin 7/8 UI: all instance settings now use native JSONConfig controls, eliminating mixed React runtimes. NexoWatt EOS replaces the previous platform boot logo and visible system-backup branding.",
+        "de": "Stabile Admin-7/8-Oberfläche: Alle Instanzeinstellungen verwenden jetzt native JSONConfig-Steuerelemente. Dadurch entfallen gemischte React-Laufzeiten. Das NexoWatt-EOS-Logo ersetzt das bisherige Plattform-Startlogo und die sichtbare Systemsicherungskennzeichnung.",
+        "nl": "Stabiele Admin 7/8-interface: alle instellingen gebruiken native JSONConfig-componenten. Het NexoWatt EOS-logo vervangt het vorige startlogo en de zichtbare systeemback-upbranding.",
+        "fr": "Interface Admin 7/8 stable avec des contrôles JSONConfig natifs et un démarrage entièrement aux couleurs de NexoWatt EOS.",
+        "it": "Interfaccia stabile per Admin 7/8 con controlli JSONConfig nativi e avvio completamente brandizzato NexoWatt EOS.",
+        "es": "Interfaz estable para Admin 7/8 con controles JSONConfig nativos e inicio totalmente personalizado para NexoWatt EOS.",
+        "pl": "Stabilny interfejs Admin 7/8 z natywnymi kontrolkami JSONConfig i pełnym brandingiem NexoWatt EOS.",
+        "pt": "Interface estável para Admin 7/8 com controles JSONConfig nativos e inicialização totalmente personalizada para NexoWatt EOS.",
+        "ru": "Стабильный интерфейс Admin 7/8 с нативными элементами JSONConfig и полным оформлением NexoWatt EOS.",
+        "uk": "Стабільний інтерфейс Admin 7/8 із нативними елементами JSONConfig та повним оформленням NexoWatt EOS.",
+        "zh-cn": "稳定的 Admin 7/8 界面，使用原生 JSONConfig 控件并采用完整的 NexoWatt EOS 品牌启动界面。"
+      },
+      "1.0.4": {
+        "en": "Publish workflow hardening: stale files from older releases are removed automatically before validation and NPM packaging. The Publish ZIP can now be copied over an existing development folder without leaking obsolete Admin UI assets.",
+        "de": "Robuster Veröffentlichungsablauf: Veraltete Dateien früherer Releases werden vor Prüfung und NPM-Paketierung automatisch entfernt. Die Publish-ZIP kann damit auch über einen vorhandenen Entwicklungsordner kopiert werden, ohne alte Admin-Oberflächendateien mitzuveröffentlichen.",
+        "nl": "Robuuste publicatieworkflow: verouderde releasebestanden worden vóór controle en NPM-packaging automatisch verwijderd.",
+        "fr": "Publication fiabilisée : les anciens fichiers de versions précédentes sont supprimés automatiquement avant la validation et l’empaquetage NPM.",
+        "it": "Flusso di pubblicazione più robusto: i file obsoleti delle versioni precedenti vengono rimossi automaticamente prima della verifica e del pacchetto NPM.",
+        "es": "Flujo de publicación reforzado: los archivos obsoletos de versiones anteriores se eliminan automáticamente antes de validar y empaquetar en NPM.",
+        "pl": "Wzmocniony proces publikacji: stare pliki poprzednich wydań są automatycznie usuwane przed walidacją i pakowaniem NPM.",
+        "pt": "Fluxo de publicação reforçado: arquivos antigos de versões anteriores são removidos automaticamente antes da validação e do empacotamento NPM.",
+        "ru": "Усилен процесс публикации: устаревшие файлы прежних версий автоматически удаляются перед проверкой и упаковкой NPM.",
+        "uk": "Посилено процес публікації: застарілі файли попередніх версій автоматично видаляються перед перевіркою та пакуванням NPM.",
+        "zh-cn": "发布流程加固：验证和 NPM 打包前会自动删除旧版本遗留文件。"
+      }
+    },
+    "titleLang": {
+      "en": "NexoWatt EOS Backup",
+      "de": "NexoWatt EOS Backup",
+      "ru": "NexoWatt EOS Backup",
+      "pt": "NexoWatt EOS Backup",
+      "nl": "NexoWatt EOS Backup",
+      "fr": "NexoWatt EOS Backup",
+      "it": "NexoWatt EOS Backup",
+      "es": "NexoWatt EOS Backup",
+      "pl": "NexoWatt EOS Backup",
+      "uk": "NexoWatt EOS Backup",
+      "zh-cn": "NexoWatt EOS Backup"
+    },
+    "desc": {
+      "en": "Backup and restore for NexoWatt EOS, including databases, external storage targets and an integrity-checked EOS system profile.",
+      "de": "Sicherung und Wiederherstellung für NexoWatt EOS einschließlich Datenbanken, externen Speicherzielen und einem integritätsgeprüften EOS-Systemprofil.",
+      "nl": "Back-up en herstel voor NexoWatt EOS, inclusief databases, externe opslagdoelen en een EOS-systeemprofiel met integriteitscontrole.",
+      "fr": "Sauvegarde et restauration pour NexoWatt EOS avec bases de données, cibles externes et profil système vérifié.",
+      "it": "Backup e ripristino per NexoWatt EOS con database, destinazioni esterne e profilo di sistema verificato.",
+      "es": "Copia de seguridad y restauración para NexoWatt EOS con bases de datos, destinos externos y perfil del sistema verificado.",
+      "pl": "Kopia zapasowa i przywracanie NexoWatt EOS z bazami danych, zewnętrznymi celami i zweryfikowanym profilem systemu.",
+      "pt": "Backup e restauração do NexoWatt EOS com bancos de dados, destinos externos e perfil de sistema verificado.",
+      "ru": "Резервное копирование и восстановление NexoWatt EOS с базами данных, внешними хранилищами и проверенным профилем системы.",
+      "uk": "Резервне копіювання та відновлення NexoWatt EOS із базами даних, зовнішніми сховищами та перевіреним профілем системи.",
+      "zh-cn": "NexoWatt EOS 备份与恢复，包含数据库、外部存储目标和完整性校验的 EOS 系统配置文件。"
+    },
+    "authors": [
+      "NexoWatt <info@nexowatt.com>",
+      "simatec <backitup@simateccloud.de>",
+      "bluefox <dogafox@gmail.com>"
+    ],
+    "osDependencies": {
+      "linux": [
+        "cifs-utils",
+        "nfs-common"
+      ]
+    },
+    "docs": {
+      "en": "docs/en/nexowatt-backup.md",
+      "de": "docs/de/nexowatt-backup.md"
+    },
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "compact": true,
+    "icon": "nexowatt-backup.png",
+    "messagebox": true,
+    "stopBeforeUpdate": true,
+    "connectionType": "local",
+    "dataSource": "assumption",
+    "nogit": true,
+    "tier": 2,
+    "adminTab": {
+      "name": {
+        "en": "Backup",
+        "de": "Sicherung",
+        "ru": "Резервная копия",
+        "pt": "Backup",
+        "nl": "Back-up",
+        "fr": "Sauvegarde",
+        "it": "Backup",
+        "es": "Copia de seguridad",
+        "pl": "Kopia zapasowa",
+        "uk": "Резервна копія",
+        "zh-cn": "备份"
+      },
+      "ignoreConfigUpdate": true,
+      "singleton": false
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=7.0.7"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.0.0"
+      }
+    ],
+    "adminUI": {
+      "config": "json",
+      "tab": "materialize"
+    },
+    "enabled": true,
+    "keywords": [
+      "NexoWatt",
+      "EOS",
+      "Backup",
+      "Restore",
+      "InfluxDB",
+      "Redis",
+      "CIFS",
+      "NFS",
+      "FTP",
+      "WebDAV"
+    ],
+    "loglevel": "info",
+    "type": "general",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    }
+  },
+  "notifications": [
+    {
+      "scope": "nexowatt-backup",
+      "name": {
+        "en": "NexoWatt EOS Backup",
+        "de": "NexoWatt EOS Backup",
+        "ru": "NexoWatt EOS Backup",
+        "pt": "NexoWatt EOS Backup",
+        "nl": "NexoWatt EOS Backup",
+        "fr": "NexoWatt EOS Backup",
+        "it": "NexoWatt EOS Backup",
+        "es": "NexoWatt EOS Backup",
+        "pl": "NexoWatt EOS Backup",
+        "uk": "NexoWatt EOS Backup",
+        "zh-cn": "NexoWatt EOS Backup"
+      },
+      "description": {
+        "en": "Reports errors while creating or transferring NexoWatt EOS backups.",
+        "de": "Meldet Fehler beim Erstellen oder Übertragen von NexoWatt-EOS-Sicherungen.",
+        "ru": "Reports errors while creating NexoWatt EOS backups.",
+        "pt": "Reports errors while creating NexoWatt EOS backups.",
+        "nl": "Reports errors while creating NexoWatt EOS backups.",
+        "fr": "Reports errors while creating NexoWatt EOS backups.",
+        "it": "Reports errors while creating NexoWatt EOS backups.",
+        "es": "Reports errors while creating NexoWatt EOS backups.",
+        "pl": "Reports errors while creating NexoWatt EOS backups.",
+        "uk": "Reports errors while creating NexoWatt EOS backups.",
+        "zh-cn": "Reports errors while creating NexoWatt EOS backups."
+      },
+      "categories": [
+        {
+          "category": "backupError",
+          "name": {
+            "en": "Error during backup creation",
+            "de": "Fehler bei der Backup-Erstellung",
+            "ru": "Ошибка при создании резервного копирования",
+            "pt": "Erro durante a criação de backup",
+            "nl": "Fout tijdens aanmaken van reservekopie",
+            "fr": "Erreur lors de la création de sauvegarde",
+            "it": "Errore durante la creazione di backup",
+            "es": "Error durante la creación de respaldo",
+            "pl": "Błąd podczas tworzenia kopii zapasowej",
+            "uk": "Помилка при створенні резервних копій",
+            "zh-cn": "备份创建时出错"
+          },
+          "severity": "alert",
+          "description": {
+            "en": "NexoWatt EOS Backup has problems with the creation of backups. Please check the configuration and the debug log of the NexoWatt EOS Backup Adapter",
+            "de": "NexoWatt EOS Backup hat Probleme mit der Erstellung von Backups. Bitte überprüfen Sie die Konfiguration und das Debug-Log des NexoWatt EOS Backup Adapters",
+            "ru": "NexoWatt EOS Backup имеет проблемы с созданием резервных копий. Пожалуйста, проверьте конфигурацию и журнал отладки адаптера резервного копирования",
+            "pt": "NexoWatt EOS Backup tem problemas com a criação de backups. Por favor, verifique a configuração e o log de depuração do Adaptador NexoWatt EOS Backup",
+            "nl": "NexoWatt EOS Backup heeft problemen met het creëren van back-ups. Controleer de configuratie en het debuglog van de NexoWatt EOS Backup-adapter",
+            "fr": "NexoWatt EOS Backup a des problèmes avec la création de sauvegardes. Veuillez vérifier la configuration et le journal de débogage de l'adaptateur de sauvegarde",
+            "it": "NexoWatt EOS Backup ha problemi con la creazione di backup. Si prega di controllare la configurazione e il registro debug dell'adattatore NexoWatt EOS Backup",
+            "es": "El respaldo tiene problemas con la creación de copias de seguridad. Por favor, compruebe la configuración y el registro de depuración del adaptador de copia de seguridad",
+            "pl": "Kopiowanie ma problemy z tworzeniem kopii zapasowych. Proszę sprawdzić konfigurację i dziennik debugowania adaptera NexoWatt EOS Backup",
+            "uk": "NexoWatt EOS Backup має проблеми з створенням резервних копій. Будь ласка, перевірте конфігурацію та дебюговий журнал адаптера NexoWatt EOS Backup",
+            "zh-cn": "备份在创建备份方面有问题. 请检查备份适配器的配置和调试日志"
+          },
+          "regex": [],
+          "limit": 1
+        },
+        {
+          "category": "onedriveWarn",
+          "name": {
+            "en": "Error when creating the RefreshToken",
+            "de": "Fehler beim Erstellen des RefreshToken",
+            "ru": "Ошибка при создании RefreshToken",
+            "pt": "Erro ao criar o RefreshToken",
+            "nl": "Fout bij het aanmaken van de RefreshToken",
+            "fr": "Erreur lors de la création du RefreshToken",
+            "it": "Errore durante la creazione di RefreshToken",
+            "es": "Error al crear el RefreshToken",
+            "pl": "Błąd podczas tworzenia RefreshToken",
+            "uk": "Помилка при створенні RefreshToken",
+            "zh-cn": "创建刷新工具时出错"
+          },
+          "severity": "alert",
+          "description": {
+            "en": "The OneDrive RefreshToken could not be updated. Please try to refresh the token manually.",
+            "de": "Der OneDrive RefreshToken konnte nicht aktualisiert werden. Bitte versuchen Sie, den Token manuell zu aktualisieren.",
+            "ru": "OneDrive RefreshToken не мог быть обновлен. Пожалуйста, попробуйте обновить токен вручную.",
+            "pt": "O OneDrive RefreshToken não pode ser atualizado. Por favor, tente atualizar o token manualmente.",
+            "nl": "De OneDrive RefreshToken kon niet worden bijgewerkt. Probeer het token handmatig te vernieuwen.",
+            "fr": "Le OneDrive RefreshToken n'a pas pu être mis à jour. Veuillez essayer de rafraîchir le jeton manuellement.",
+            "it": "Il OneDrive RefreshToken non poteva essere aggiornato. Si prega di cercare di aggiornare manualmente il token.",
+            "es": "El OneDrive RefreshToken no puede ser actualizado. Por favor, intenta refrescar la ficha manualmente.",
+            "pl": "Nie można było zaktualizować OneDrive RefreshToken. Proszę spróbować odświeżać token ręcznie.",
+            "uk": "OneDrive RefreshToken не може бути оновлено. Будь ласка, спробуйте оновити токени вручну.",
+            "zh-cn": "无法更新 OneDrive 刷新托肯 。 请尝试手动刷新符号 ."
+          },
+          "regex": [],
+          "limit": 1
+        }
+      ]
+    }
+  ],
+  "native": {
+    "advancedDelete": false,
+    "cacheLoose": false,
+    "ccuCron": false,
+    "ccuCronJob": "00 36 01 */3 * *",
+    "ccuDeleteAfter": 10,
+    "ccuEnabled": false,
+    "ccuEvents": [],
+    "ccuEveryXDays": 3,
+    "ccuHost": "",
+    "ccuMulti": false,
+    "ccuNameSuffix": "",
+    "ccuPassword": "",
+    "ccuSignedCertificates": true,
+    "ccuTime": "01:36",
+    "ccuUsehttps": false,
+    "ccuUser": "Admin",
+    "cifsCcuDir": "sharename/backupDir",
+    "cifsDeleteOldBackup": false,
+    "cifsDir": "sharename/backupDir",
+    "cifsDomain": "",
+    "cifsEnabled": false,
+    "cifsMinimalDir": "sharename/backupDir",
+    "cifsMount": "",
+    "cifsOwnDir": false,
+    "cifsPassword": "",
+    "cifsUser": "",
+    "connectType": "NFS",
+    "sdCardMountPath": "",
+    "sdCardBackupSubDir": "nexowatt-eos-backups",
+    "sdCardInfluxRetention": 3,
+    "debugLevel": false,
+    "deleteOldDataBase": false,
+    "discordInstance": "discord.0",
+    "discordNoticeType": "longDiscordNotice",
+    "discordOnlyError": false,
+    "discordTarget": "",
+    "discordWaitToSend": 0,
+    "dropboxAccessJson": "",
+    "dropboxAccessToken": "",
+    "dropboxCcuDir": "/backupDir/ccu",
+    "dropboxCodeChallenge": "",
+    "dropboxDeleteAfter": 10,
+    "dropboxDeleteOldBackup": false,
+    "dropboxDir": "/backupDir",
+    "dropboxEnabled": false,
+    "dropboxMinimalDir": "/backupDir/iobroker",
+    "dropboxOwnDir": false,
+    "dropboxTokenType": "custom",
+    "emailInstance": "email.0",
+    "emailNoticeType": "longEmailNotice",
+    "emailOnlyError": false,
+    "emailReceiver": "xxx@xxx.com",
+    "emailSender": "xxx@xxx.com",
+    "emailWaitToSend": 0,
+    "esphomeEnabled": false,
+    "expertMount": "sudo mount -t cifs -o username=<username>,password=\"<password>\",noserverino,cache=loose,rw,forceuid,uid=iobroker,forcegid,gid=iobroker,file_mode=0777,dir_mode=0777,vers=3.1.1 //192.168.0.1/NAS/BACKUP /opt/iobroker/backups",
+    "fileSizeError": 512,
+    "fileSizeWarning": 1024,
+    "ftpCcuDir": "/backupDir/ccu",
+    "ftpDeleteAfter": 10,
+    "ftpDeleteOldBackup": false,
+    "ftpDir": "/backupDir",
+    "ftpEnabled": false,
+    "ftpHost": "",
+    "ftpMinimalDir": "/backupDir/iobroker",
+    "ftpOwnDir": false,
+    "ftpPassword": "",
+    "ftpPort": 21,
+    "ftpSecure": false,
+    "ftpSignedCertificates": true,
+    "ftpUser": "",
+    "googledriveAccessTokens": "",
+    "googledriveCcuDir": "/backupDir/ccu",
+    "googledriveDeleteAfter": 10,
+    "googledriveDeleteOldBackup": false,
+    "googledriveDir": "/backupDir",
+    "googledriveEnabled": false,
+    "googledriveMinimalDir": "/backupDir/iobroker",
+    "googledriveOwnDir": false,
+    "gotifyInstance": "gotify.0",
+    "gotifyNoticeType": "longGotifyNotice",
+    "gotifyOnlyError": false,
+    "gotifyWaitToSend": 0,
+    "grafanaApiKey": "",
+    "grafanaEnabled": false,
+    "grafanaHost": "",
+    "grafanaPort": "3000",
+    "grafanaProtocol": "http",
+    "grafanaSignedCertificates": true,
+    "historyEnabled": false,
+    "historyEntriesNumber": 30,
+    "historyPath": "/opt/iobroker/iobroker-data/history",
+    "hostType": "Single",
+    "ignoreErrors": false,
+    "influxDBDeleteAfter": 5,
+    "influxDBDumpExe": "",
+    "influxDBEnabled": false,
+    "influxDBEvents": [],
+    "influxDBHost": "localhost",
+    "influxDBMulti": false,
+    "influxDBName": "iobroker",
+    "influxDBPort": "8088",
+    "influxDBProtocol": "http",
+    "influxDBToken": "",
+    "influxDBType": "local",
+    "influxDBVersion": "1.x",
+    "iobrokerCron": false,
+    "iobrokerCronJob": "00 30 02 */1 * *",
+    "jarvisEnabled": false,
+    "javascriptsEnabled": false,
+    "macAd": "20:DE:20:DE:20:DE",
+    "matrixInstance": "matrix-org.0",
+    "matrixNoticeType": "longMatrixNotice",
+    "matrixOnlyError": false,
+    "matrixWaitToSend": 0,
+    "minimalDeleteAfter": 30,
+    "minimalEnabled": true,
+    "minimalEveryXDays": 1,
+    "minimalNameSuffix": "nexowatt-eos",
+    "minimalTime": "02:30",
+    "mySqlDeleteAfter": 5,
+    "mySqlDumpExe": "",
+    "mySqlEnabled": false,
+    "mySqlEvents": [],
+    "mySqlHost": "localhost",
+    "mysqlMinimalEnabled": false,
+    "mySqlMulti": false,
+    "mySqlName": "iobroker",
+    "mySqlPassword": "",
+    "mySqlPort": "3306",
+    "mysqlQuick": false,
+    "mysqlSingleTransaction": false,
+    "mysqlSkipSSL": false,
+    "mySqlUser": "",
+    "noderedEnabled": false,
+    "noserverino": false,
+    "notificationEnabled": false,
+    "notificationsType": "Telegram",
+    "onedriveAccessJson": "",
+    "onedriveCcuDir": "backupDir/ccu",
+    "onedriveDeleteAfter": 10,
+    "onedriveDeleteOldBackup": false,
+    "onedriveDir": "backupDir",
+    "onedriveEnabled": false,
+    "onedriveLastTokenRenew": "",
+    "onedriveMinimalDir": "backupDir/iobroker",
+    "onedriveOwnDir": false,
+    "pgSqlDeleteAfter": 5,
+    "pgSqlDumpExe": "",
+    "pgSqlEnabled": false,
+    "pgSqlEvents": [],
+    "pgSqlHost": "",
+    "pgSqlMulti": false,
+    "pgSqlName": "",
+    "pgSqlPassword": "",
+    "pgSqlPort": "5432",
+    "pgSqlUser": "",
+    "pushoverDeviceID": "",
+    "pushoverInstance": "pushover.0",
+    "pushoverNoticeType": "longPushoverNotice",
+    "pushoverOnlyError": false,
+    "pushoverSilentNotice": false,
+    "pushoverWaitToSend": 0,
+    "redisAOFactive": false,
+    "redisEnabled": false,
+    "redisHost": "",
+    "redisMinimalEnabled": false,
+    "redisPassword": "",
+    "redisPath": "/var/lib/redis",
+    "redisPort": 6379,
+    "redisType": "local",
+    "redisUser": "default",
+    "restoreSource": "local",
+    "restoreTab": true,
+    "signalInstance": "signal-cmb.0",
+    "signalNoticeType": "longSignalNotice",
+    "signalOnlyError": false,
+    "signalWaitToSend": 0,
+    "slaveInstance": "nexowatt-backup.1",
+    "slaveNameSuffix": "",
+    "smbType": "vers=3.1.1",
+    "sqliteDumpExe": "",
+    "sqliteEnabled": false,
+    "sqlitePath": "/opt/sqlite/data.db",
+    "startAllRestore": false,
+    "stopSlaveAfter": false,
+    "sudoMount": true,
+    "telegramInstance": "telegram.0",
+    "telegramNoticeType": "longTelegramNotice",
+    "telegramOnlyError": false,
+    "telegramSilentNotice": false,
+    "telegramUser": "allTelegramUsers",
+    "telegramWaitToSend": 0,
+    "wakeOnLAN": false,
+    "webdavCcuDir": "/backupDir/ccu",
+    "webdavDeleteAfter": 10,
+    "webdavDeleteOldBackup": false,
+    "webdavDir": "/backupDir",
+    "webdavEnabled": false,
+    "webdavMinimalDir": "/backupDir/iobroker",
+    "webdavOwnDir": false,
+    "webdavPassword": "",
+    "webdavSignedCertificates": true,
+    "webdavURL": "https://<example.com>/remote.php/dav/files/<username>/",
+    "webdavUsername": "username",
+    "whatsappInstance": "whatsapp-cmb.0",
+    "whatsappNoticeType": "longWhatsappNotice",
+    "whatsappOnlyError": false,
+    "whatsappWaitToSend": 0,
+    "wolExtra": false,
+    "wolPort": 9,
+    "wolWait": 25,
+    "yahkaEnabled": false,
+    "zigbee2mqttAuth": false,
+    "zigbee2mqttBaseTopic": "zigbee2mqtt",
+    "zigbee2mqttEnabled": false,
+    "zigbee2mqttHost": "localhost",
+    "zigbee2mqttPath": "/opt/zigbee2mqtt/data",
+    "zigbee2mqttPassword": "",
+    "zigbee2mqttPort": 1885,
+    "zigbee2mqttType": "local",
+    "zigbee2mqttUser": "",
+    "zigbeeEnabled": false,
+    "eosProfileEnabled": true,
+    "eosIncludeVendorFile": true,
+    "eosIncludeVendorSecret": false
+  },
+  "encryptedNative": [
+    "cifsPassword",
+    "dropboxAccessToken",
+    "grafanaApiKey",
+    "influxDBToken",
+    "mySqlPassword",
+    "ccuPassword",
+    "ftpPassword",
+    "pgSqlPassword",
+    "redisPassword",
+    "webdavPassword",
+    "zigbee2mqttPassword"
+  ],
+  "protectedNative": [
+    "cifsPassword",
+    "dropboxAccessToken",
+    "grafanaApiKey",
+    "influxDBToken",
+    "mySqlPassword",
+    "ccuPassword",
+    "ftpPassword",
+    "pgSqlPassword",
+    "redisPassword",
+    "webdavPassword",
+    "zigbee2mqttPassword"
+  ],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.dropboxTokens",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "DropBox access tokens",
+        "type": "json",
+        "read": true,
+        "write": false,
+        "expert": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.latestBackup",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "Latest backup found by start",
+        "type": "json",
+        "read": true,
+        "write": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.eosProfile",
+      "type": "state",
+      "common": {
+        "role": "json",
+        "name": {
+          "en": "Latest NexoWatt EOS system profile manifest",
+          "de": "Manifest des letzten NexoWatt-EOS-Systemprofils"
+        },
+        "type": "json",
+        "read": true,
+        "write": false,
+        "def": "{}"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.eosProfileLastTime",
+      "type": "state",
+      "common": {
+        "role": "date",
+        "name": {
+          "en": "Last EOS system profile backup",
+          "de": "Letzte Sicherung des EOS-Systemprofils"
+        },
+        "type": "number",
+        "read": true,
+        "write": false,
+        "def": 0
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.eosProfileSha256",
+      "type": "state",
+      "common": {
+        "role": "text",
+        "name": {
+          "en": "SHA-256 of the latest EOS system profile archive",
+          "de": "SHA-256 des letzten EOS-Systemprofil-Archivs"
+        },
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.ccuNextTime",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "Next CCU backup",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": "none"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.iobrokerNextTime",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "Next iobroker backup",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": "none"
+      },
+      "native": {}
+    },
+    {
+      "_id": "history",
+      "type": "channel",
+      "common": {
+        "name": "History Logs"
+      },
+      "native": {}
+    },
+    {
+      "_id": "history.html",
+      "type": "state",
+      "common": {
+        "role": "html",
+        "name": "History-Log of executed backups",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": "No backups yet"
+      },
+      "native": {}
+    },
+    {
+      "_id": "history.json",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "History-Log of executed backups",
+        "type": "json",
+        "read": true,
+        "write": false,
+        "def": "[]"
+      },
+      "native": {}
+    },
+    {
+      "_id": "history.ccuLastTime",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "Last CCU backup",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": "No backups yet"
+      },
+      "native": {}
+    },
+    {
+      "_id": "history.iobrokerLastTime",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "Last iobroker backup",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": "No backups yet"
+      },
+      "native": {}
+    },
+    {
+      "_id": "history.ccuSuccess",
+      "type": "state",
+      "common": {
+        "role": "switch",
+        "name": "Last ccu backup Success",
+        "type": "boolean",
+        "read": true,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "history.iobrokerSuccess",
+      "type": "state",
+      "common": {
+        "role": "switch",
+        "name": "Last iobroker backup Success",
+        "type": "boolean",
+        "read": true,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "oneClick",
+      "type": "channel",
+      "common": {
+        "name": "OneClick Buttons"
+      },
+      "native": {}
+    },
+    {
+      "_id": "oneClick.ccu",
+      "type": "state",
+      "common": {
+        "role": "switch",
+        "name": "Execute CCU backup",
+        "type": "boolean",
+        "read": true,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "oneClick.iobroker",
+      "type": "state",
+      "common": {
+        "role": "switch",
+        "name": "Execute iobroker backup",
+        "type": "boolean",
+        "read": true,
+        "write": true,
+        "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "output",
+      "type": "channel",
+      "common": {
+        "name": "Output states"
+      },
+      "native": {}
+    },
+    {
+      "_id": "output.line",
+      "type": "state",
+      "common": {
+        "role": "state",
+        "name": "Used for debug outputs",
+        "type": "string",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    }
+  ],
+  "objects": []
+}

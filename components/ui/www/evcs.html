@@ -1,0 +1,119 @@
+<!--
+  Datei: www/evcs.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: EVCS-Kundenansicht: Ladepunkte, Modi, Ladeleistung, RFID/Session-Informationen.
+  Zusammenhänge:
+  - Logik in www/evcs.js und chargingManagement.* States.
+  - Feature-Sichtbarkeit kommt aus Installer-Konfiguration.
+  Wartungshinweise:
+  - Bei Anlagen ohne Wallbox ausblenden.
+-->
+<html lang="de">
+<head>
+<script>
+/* NexoWatt: normalize base path so relative links work even if opened without trailing slash */
+(function () {
+  try {
+    var p = window.location.pathname || "";
+    if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+      window.location.replace(p + "/" + window.location.search + window.location.hash);
+    }
+  } catch (e) {}
+})();
+</script>
+
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>NexoWatt EOS – EVCS</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link href="/static/styles.css" rel="stylesheet"/>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-evcs">
+<!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar">
+  <div class="brand">
+    <a href="/"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a>
+  </div>
+  <button aria-label="Menu" id="menuBtn">☰</button>
+  <h1>EVCS</h1>
+
+  <nav class="tabs">
+    <button class="tab" onclick="window.location.href='./'">LIVE</button>
+    <button class="tab" onclick="window.location.href='history.html'">HISTORY</button>
+    <button id="tabEvcs" class="tab active" onclick="window.location.href='evcs.html'">EVCS</button>
+    <button id="tabSmartHome" class="tab hidden" onclick="window.location.href='smarthome.html'">SMARTHOME</button>
+  </nav>
+
+  <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+<div class="menu hidden" id="menuDropdown">
+    <a class="menu-item" href="./">Live</a>
+    <a class="menu-item" href="history.html">History</a>
+    <a class="menu-item hidden" id="menuEvcsLink" href="evcs.html">EVCS</a>
+        <a class="menu-item hidden" id="menuSmartHomeLink" href="smarthome.html">SmartHome</a>
+<a class="menu-item" href="settings.html">Einstellungen</a>
+  </div>
+</header>
+
+<!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="content nw-page-shell nw-evcs-page nw-subpage" style="grid-template-columns: 1fr;">
+  <section class="nw-page-hero" aria-label="EVCS Übersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">EVCS</div>
+      <h2>Lademanagement</h2>
+      <p class="nw-page-hero__subtitle">Ladepunkte, RFID-Sessions und Schnellsteuerung im neuen NexoWatt Design – auch touchfreundlich auf Smartphone und Tablet.</p>
+    </div>
+    <div class="nw-page-hero__actions" style="display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+      <div id="evcsGlobalStorageAssist" class="hidden" style="min-width:min(100%,360px);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:10px 12px;background:rgba(255,255,255,.05);">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+          <div>
+            <strong>Speicher für E-Mobilität</strong>
+            <div id="evcsGlobalStorageAssistHint" class="muted" style="font-size:12px;margin-top:2px;">Gilt für alle aktiven Ladepunkte</div>
+          </div>
+          <div class="nw-evcs-mode-buttons nw-evcs-mode-buttons-2" role="group" aria-label="Globaler Speicherschutz">
+            <button type="button" data-global-storage-assist="false">Schützen</button>
+            <button type="button" data-global-storage-assist="true">Mitnutzen</button>
+          </div>
+        </div>
+      </div>
+      <a class="btn sm" href="evcs-report.html">EVCS Bericht</a>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-header">
+      <div class="legend-color"></div>
+      <span>Ladepunkte</span>
+    </div>
+    <div id="evcsList" class="nw-tiles-grid" style="padding:12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"></div>
+  </section>
+</main>
+
+
+<!-- EVCS Ladepunkt-Dialog (Tooltip/Modal) -->
+<div id="evcsModal" class="modal hidden" aria-hidden="true">
+  <div class="dialog" style="max-height:92vh; overflow:auto;" role="dialog" aria-modal="true" aria-labelledby="evcsModalTitle">
+    <div class="dialog-header">
+      <div style="display:flex; flex-direction:column; gap:2px;">
+        <strong id="evcsModalTitle">Ladepunkt</strong>
+        <span id="evcsModalSubTitle" class="muted" style="font-size:12px; opacity:.85;"></span>
+      </div>
+      <button class="btn small" id="evcsModalClose" type="button" aria-label="Schließen">✕</button>
+    </div>
+    <div id="evcsModalBody"></div>
+  </div>
+</div>
+
+<script src="/static/evcs.js"></script>
+
+  <script src="/static/cockpit-shell.js"></script>
+
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

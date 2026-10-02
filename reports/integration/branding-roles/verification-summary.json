@@ -1,0 +1,1544 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-branding-roles-verification-summary",
+  "productVersion": "0.2.0-dev.2",
+  "recordedAt": "2026-10-01T15:54:24.035423+00:00",
+  "sourceBaseCommit": "2db4418871e9882ccee2a523e0035a0e3eae6c29",
+  "sourceState": "working-tree-development-candidate",
+  "reportStatus": "final-development-evidence-with-open-release-gates",
+  "releaseApproved": false,
+  "productionInstallationApproved": false,
+  "nativeTargetAcceptance": false,
+  "independentCertification": false,
+  "candidateSelection": {
+    "selected": "r2",
+    "status": "selected-tested-development-candidate",
+    "previousTested": "r1",
+    "previousResult": "Retained preliminary exact-candidate evidence; r2 independently rerun.",
+    "actualIntegration": {
+      "stages": 14,
+      "tapCasesIncludingParent": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 87449.826973
+    },
+    "doesNotOverrideRequiredUiSuiteFailure": true
+  },
+  "profile": {
+    "name": "eos-integrated-ui-lab-v1",
+    "mainSystem": "NexoWatt EOS consolidated source on ioBroker basis",
+    "ownKernel": false,
+    "ownJavaScriptRuntime": false,
+    "controller": "iobroker.js-controller@7.2.2",
+    "activeAdapterScope": [
+      "iobroker.eos-admin@7.10.11",
+      "iobroker.nexowatt-ui@1.0.21"
+    ],
+    "otherAdapterScope": "Other requested EOS adapters are present in source/inventory only for this active lab profile; no automatic runtime admission, activation or physical acceptance.",
+    "physicalControlEnabled": false,
+    "productionReleaseApproved": false
+  },
+  "implementedScope": [
+    "NexoWatt product branding on principal login, portal and UI assets; technical identifiers, upstream provenance and license attribution retained.",
+    "Host enrollment validates a bounded root-owned accounts input, unique identities and initial credentials, canonical membership and private account/group ACLs.",
+    "Service/Admin is reserved to the root-provisioned administrator role; installer and end-user accounts choose their own password and cannot promote roles through browser APIs.",
+    "Admin and UI enforce exactly one active canonical role, current account/session revision and mandatory first password before product access.",
+    "Protected UI reads require authentication; scoped own-password handlers reject target/role injection; password KDF work is bounded and authorization is rechecked.",
+    "SSE authorization is checked for each frame; revoked/logout sessions close their own streams; protected data has no service-worker cache fallback.",
+    "Actual WebSocket dispatch denies non-Service raw object/state/file subscriptions and administration; exact reviewed transport transformation bounds inbound frames to 1 MiB.",
+    "Root-owned signed admission/profile gates remain the intended route for additional adapters; arbitrary browser package/code installation is not enabled.",
+    "Architecture, account contracts, threat documentation, build provenance and runtime/source CycloneDX inventories accompany the development stand."
+  ],
+  "roles": {
+    "service": {
+      "group": "system.group.administrator",
+      "technicalAccount": "system.user.admin",
+      "sharedDefaultPassword": false
+    },
+    "installer": {
+      "group": "system.group.installateur",
+      "ownPasswordRequired": true
+    },
+    "enduser": {
+      "group": "system.group.endkunde",
+      "ownPasswordRequired": true
+    },
+    "authority": "Exactly one canonical active membership; user/group ownership remains with host enrollment. Generic controller ACL privileges are denied to non-Service roles."
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "os": "Ubuntu 24.04 development execution environment",
+    "architecture": "x86_64",
+    "target": "Raspberry Pi 5, Debian 12 Lite and SSD not accepted in this run",
+    "actualProcesses": "js-controller, Admin, UI and two authenticated TLS 1.3 Redis stores in disposable lab fixtures",
+    "browser": "Chromium 153.0.8010.0; web security enabled, browser sandbox disabled in isolated UID 0 environment",
+    "interfaceFixture": "Explicit interface fixture in disposable adapter-library copies; native interface enumeration and target networking remain open.",
+    "systemdTested": false,
+    "tailscaleAcceptance": false,
+    "physicalDevicesTested": false
+  },
+  "overlapWarning": "Counts refer to individual commands and evidence sets. Source/build replays, focused tests, integration parent cases and reused behavioral suites overlap. No grand total or count of uniquely satisfied security requirements is claimed.",
+  "completedEvidence": [
+    {
+      "id": "ROOT-SYSTEM",
+      "status": "passed",
+      "scope": "Root system-security regression suite",
+      "counts": {
+        "tests": 270,
+        "pass": 270,
+        "fail": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "reports/integration/branding-roles/raw/system-security.tap",
+        "scope": "TAP raw root system tests",
+        "sha256": "94e899fca0f9032a9bbcf55f477c9fda62288f3ef2a534332b2f76f4d1105551",
+        "bytes": 54246,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    {
+      "id": "ROOT-ACCOUNTS",
+      "status": "passed",
+      "scope": "Account/enrollment/onboarding regression suite",
+      "counts": {
+        "tests": 89,
+        "pass": 89,
+        "fail": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "reports/integration/branding-roles/raw/accounts-enrollment.tap",
+        "scope": "TAP raw accounts and onboarding tests",
+        "sha256": "2b5389d45102d3d3a753895cb271bbe3791c02a37c752f278537cfd3c891e9f4",
+        "bytes": 15067,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    {
+      "id": "ADMIN-COMPONENT",
+      "status": "passed-component-scope",
+      "scope": "Compiled methods and database fixtures; actual upstream dispatchers tested separately",
+      "counts": {
+        "sourceTests": 57,
+        "builtTests": 57,
+        "actualDispatcher234": 6,
+        "actualDispatcher260": 6
+      },
+      "evidence": {
+        "path": "components/admin/reports/security/branding-roles/verification.json",
+        "scope": "Admin component report with source and raw bindings",
+        "sha256": "16177d2ace4a2835253c5ab180ebf3544637829a780dd8b3a409bd11a25f3548",
+        "bytes": 6792,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    {
+      "id": "UI-FOCUSED",
+      "status": "passed-component-snapshot",
+      "scope": "69 focused auth/TLS/SSE/SW tests and own-password browser fixture; package-list/doc changes bound separately by final-verification and frozen-package-hashes. Complete final suite failed the open mesh timing gate.",
+      "counts": {
+        "focusedPassed": 69,
+        "focusedFailed": 0
+      },
+      "evidence": {
+        "path": "components/ui/reports/security/roles-20261001/verification-summary.json",
+        "scope": "Historical focused component snapshot; not final package proof",
+        "sha256": "50e2986adb456d83d8e8bde043f4e3573fe8d912581f0f14edd85d20ecbc2990",
+        "bytes": 11388,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    {
+      "id": "BRANDING",
+      "status": "passed-fixture-scope",
+      "scope": "Static product contracts and Chromium role portal/password fixtures",
+      "counts": {
+        "staticTests": 4,
+        "browserChecks": 10,
+        "firstLoginBehavioralTests": 26
+      },
+      "evidence": {
+        "path": "reports/integration/branding/verification.json",
+        "scope": "Branding aggregate; overlaps Admin behavioral tests",
+        "sha256": "5ae3bd4442d381eefa04354a1297bcc920e847f8666cdfd63442b2cb4b5a4325",
+        "bytes": 20076,
+        "bindingStatus": "bound-current-file"
+      },
+      "browserEvidence": {
+        "path": "reports/integration/branding/browser-verification.json",
+        "scope": "Browser fixture with no real controller",
+        "sha256": "cbea6bae653718a5be59bf77d79227b79cff9285a617eb96443b6b9ae11a565f",
+        "bytes": 1536,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    {
+      "id": "REVIEW",
+      "status": "completed-in-stated-scope",
+      "scope": "Separate-agent review within same development session; SW authored/self-tested by reviewer, no external certification",
+      "counts": {
+        "actualSocket260FixtureChecks": 19,
+        "serviceWorkerSourceSelfTests": 18,
+        "serviceWorkerGeneratedSelfTests": 18
+      },
+      "evidence": {
+        "path": "reports/integration/branding-roles-review.json",
+        "scope": "Review snapshot with explicit limitations",
+        "sha256": "1fd7aa9b80ad99e034b50fb553b87af6fb166a1ae09ed8c21c8c627c68e9577c",
+        "bytes": 11701,
+        "bindingStatus": "bound-current-file"
+      },
+      "socketEvidence": {
+        "path": "reports/integration/branding-roles-review-socket.json",
+        "scope": "Actual 2.6.0 read/subscription/publication fixture",
+        "sha256": "b2ee624148c2312826af130169a47aa2d17f12045ec76793f111d54c9d660b23",
+        "bytes": 5333,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    {
+      "id": "REAL-PROCESSES-R1",
+      "status": "passed-preliminary-candidate-only",
+      "candidate": "r1",
+      "counts": {
+        "stages": 14,
+        "tapCasesIncludingParent": 15,
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "reports/integration/branding-roles/ui-controller-r1-summary.json",
+        "scope": "Actual r1 controller/HTTPS/browser/WebSocket lab",
+        "sha256": "e1598f54e317e52c1b9ce6e6d6fc7a4fbd1cd708466c94c55b32a3b5ccedd1e7",
+        "bytes": 8683,
+        "bindingStatus": "bound-current-file"
+      },
+      "observations": [
+        "Own initial password and subsequent own password change, both role portals and cross-port session invalidation.",
+        "Non-Service raw admin/account/group writes denied on authenticated actual WebSocket.",
+        "1,048,577-byte inbound frame closes with WebSocket code 1009 and Admin continues serving.",
+        "Central signed fixture license traverses real encrypted messagebox; anonymous license API denied.",
+        "Physical controls remain denied even under a valid fixture license."
+      ]
+    },
+    {
+      "id": "REAL-PROCESSES-R2",
+      "status": "passed-selected-development-candidate",
+      "candidate": "r2",
+      "counts": {
+        "stages": 14,
+        "tapCasesIncludingParent": 15,
+        "passed": 15,
+        "failed": 0,
+        "skipped": 0
+      },
+      "durationMs": 87449.826973,
+      "evidence": {
+        "path": "reports/integration/branding-roles/ui-controller-summary.json",
+        "scope": "Selected r2 actual controller/HTTPS/browser/WebSocket lab",
+        "sha256": "47465d91bccbfc6deefba336d1eb0782b7fe658e72d9b1510adebb3d6e0eab2e",
+        "bytes": 10733,
+        "bindingStatus": "bound-current-file"
+      },
+      "rawEvidence": {
+        "path": "reports/integration/branding-roles/raw/ui-controller-attempt-04-r2.tap",
+        "scope": "Exact r2 TAP",
+        "sha256": "c85279e45037efbed8c3d89814e59c34230590af31bc26ac224ad7e84dd9f4a3",
+        "bytes": 6319,
+        "bindingStatus": "bound-current-file"
+      },
+      "limit": "No physical, native target, systemd, production or conformity acceptance."
+    },
+    {
+      "id": "PACKAGE-SOURCE-COMPARISON",
+      "status": "passed",
+      "candidate": "r2",
+      "counts": {
+        "adminFilesCompared": 1211,
+        "uiFilesCompared": 403,
+        "mismatches": 0
+      },
+      "uiCountExplanation": "402 sealed package file entries plus the package manifest file = 403 archive members.",
+      "evidence": {
+        "path": "reports/integration/branding-roles/package-source-comparison.json",
+        "scope": "Every actual TGZ regular-file member compared with current source bytes",
+        "sha256": "cb85965f4123e9cdb18b154cb846f64c8b7a6fcb180a4ae6cb7e14c868872e81",
+        "bytes": 699,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    {
+      "id": "SBOM-AND-REPLAY-R2",
+      "status": "passed-in-stated-scope",
+      "candidate": "r2",
+      "counts": {
+        "toolTestsPassed": 46,
+        "toolTestsFailed": 0,
+        "schemaFilesValid": 3,
+        "installedManifestsCompared": 465,
+        "localArchiveSriMatches": 2,
+        "transformedFilesCompared": 10
+      },
+      "evidence": {
+        "path": "reports/integration/sbom/branding-roles/verification.json",
+        "scope": "Selected r2 SBOM/build/replay aggregate",
+        "sha256": "9f278ad2d527d1d8ec227f7f6b3b861ac305be78bb050313c1478799543652a5",
+        "bytes": 12583,
+        "bindingStatus": "bound-current-file"
+      },
+      "limit": "No whole-runtime byte identity, complete appliance inventory, zero-vulnerability or risk-acceptance claim."
+    },
+    {
+      "id": "ROOT-BOUNDED-SECRET-ARCHIVE",
+      "status": "passed-bounded-pattern-scope",
+      "counts": {
+        "filesRead": 9054,
+        "bytesRead": 507690828,
+        "archivesRead": 4,
+        "hits": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "reports/integration/branding-roles/packaging-pattern-review.json",
+        "scope": "Root bounded marker scan and complete TGZ member reading",
+        "sha256": "b17e6253aef17dbfa4165ceac85a5004a895c1d2145e9060bee04fd004e716f3",
+        "bytes": 1898,
+        "bindingStatus": "bound-current-file"
+      },
+      "limit": "No completeness claim for arbitrary credentials or vulnerabilities; final ZIP/Git integrity is a separate root operation."
+    }
+  ],
+  "pendingEvidence": [
+    {
+      "id": "UI-MESH-PERF-20261001",
+      "status": "failed-open-release-gate",
+      "required": "Controlled root-cause/performance investigation and meaningful final acceptance; isolated passing test does not replace the failed required full suite."
+    }
+  ],
+  "sbom": {
+    "format": "CycloneDX JSON",
+    "schemaVersion": "1.5",
+    "finalStatus": "r2-build-sbom-replay-verified-with-open-findings-and-coverage-gaps",
+    "previousObservedRuntime": {
+      "candidate": "r1",
+      "installedNpmPackagePaths": 465,
+      "uniqueNpmNameVersionIdentities": 425,
+      "embeddedDirectoryInstances": 3,
+      "uniqueEmbeddedNameVersionIdentities": 2,
+      "notes": "Admin and UI each carry an eos-license-client copy; each copy retains its own path and actual parent. Modified controller/CLI/ws-server hashes are attributed to derivative evidence; upstream archive hashes remain ancestry."
+    },
+    "previousSchemaValidation": "Three observed r1 SBOM files passed offline CycloneDX 1.5 schema validation; this is structure validation, not vulnerability/completeness approval.",
+    "currentEvidenceDirectory": "reports/integration/sbom/branding-roles",
+    "r1SnapshotDirectory": "reports/integration/sbom/branding-roles/review-snapshots/r1",
+    "previousAudit": {
+      "candidate": "r1",
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 3,
+        "high": 0,
+        "critical": 0,
+        "total": 3
+      },
+      "affectedNodes": [
+        "esbuild",
+        "@alcalzone/esbuild-register",
+        "iobroker.js-controller"
+      ],
+      "disposition": "under_investigation; no risk acceptance or zero-vulnerability claim",
+      "countMeaning": "Dependency nodes in one chain, not three independent CVEs; applies only to installed Admin/UI/controller npm tree.",
+      "evidence": "reports/integration/sbom/branding-roles/review-snapshots/r1/runtime.audit.json"
+    },
+    "missingScope": [
+      "OS packages",
+      "Node and Redis executable provenance",
+      "firmware",
+      "observed target-device configuration",
+      "separately installed additional adapters",
+      "complete bundled frontend dependency attribution beyond explicitly inventoried embedded directories"
+    ],
+    "sourceInventoryLimit": "Source/lock inventory includes supported component and development/build dependencies; it does not prove all are installed, active, approved or included in a final appliance.",
+    "currentRuntime": {
+      "candidate": "r2",
+      "installedNpmPackagePaths": 465,
+      "uniqueNpmNameVersionIdentities": 425,
+      "embeddedDirectoryInstances": 3,
+      "uniqueEmbeddedNameVersionIdentities": 2,
+      "sourceComponents": 6,
+      "sourceLockEntriesIncludingBuildFrontend": 4313,
+      "sourceSbomComponents": 4319
+    },
+    "currentSchemaValidation": {
+      "files": 3,
+      "allValid": true,
+      "offline": true,
+      "meaning": "Exact-file CycloneDX 1.5 structure validation, not security/completeness approval."
+    },
+    "currentAudit": {
+      "candidate": "r2",
+      "counts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 3,
+        "high": 0,
+        "critical": 0,
+        "total": 3
+      },
+      "affectedNodes": [
+        "esbuild",
+        "@alcalzone/esbuild-register",
+        "iobroker.js-controller"
+      ],
+      "disposition": "under_investigation",
+      "acceptanceGranted": false,
+      "countMeaning": "Affected package nodes in dependency chain, not independent CVEs. Installed Admin/UI/controller npm tree only.",
+      "evidence": {
+        "path": "reports/integration/sbom/branding-roles/dependency-disposition.json",
+        "scope": "Current audit disposition; no automated acceptance",
+        "sha256": "232db494d676bd796b102ac1c38b85991cd8e0c3c10c65f488ec36e03d620f7e",
+        "bytes": 2812,
+        "bindingStatus": "bound-current-file"
+      }
+    },
+    "evidence": {
+      "path": "reports/integration/sbom/branding-roles/verification.json",
+      "scope": "Final selected r2 SBOM report",
+      "sha256": "9f278ad2d527d1d8ec227f7f6b3b861ac305be78bb050313c1478799543652a5",
+      "bytes": 12583,
+      "bindingStatus": "bound-current-file"
+    },
+    "runtimeSbom": {
+      "path": "reports/integration/sbom/branding-roles/runtime.cdx.json",
+      "scope": "Installed npm tree plus explicit embedded instances",
+      "sha256": "bd973b8b95cb90e387290d185e8a591e273751991ecdbba3cf6fe0456650af3a",
+      "bytes": 499552,
+      "bindingStatus": "bound-current-file"
+    },
+    "replayEvidence": {
+      "path": "reports/integration/sbom/branding-roles/replay-verification.json",
+      "scope": "Lock/manifest/SRI/transform replay, not whole-filesystem comparison",
+      "sha256": "7a7832dcc124b6d42954c883722fd3f0c1a311cdf45e273471f4cf6b95e71307",
+      "bytes": 1195,
+      "bindingStatus": "bound-current-file"
+    }
+  },
+  "openReleaseGates": [
+    {
+      "id": "UI-MESH-PERF-20261001",
+      "status": "failed-required-full-suite-release-gate-open",
+      "owner": "UI/system validation",
+      "detail": "Final test:all exited 1 at 99-peer 250-ms lease timing assertion (round 4 stale_or_invalid_lease). Exactly one separate final mesh invocation passed at P95 92/max121 ms for 792 responses. No deadline relaxed, no test bypass, no established cause; this diagnostic does not close the failed required-suite gate. Controlled investigation and target performance acceptance remain required."
+    },
+    {
+      "id": "PASSWORD-CAS",
+      "status": "open",
+      "owner": "architecture/security",
+      "detail": "Controller object APIs provide no cross-adapter atomic compare-and-swap for simultaneous password resets. Rechecks and narrow writes reduce races; operational coordination remains required."
+    },
+    {
+      "id": "ADAPTER-ISOLATION",
+      "status": "open",
+      "owner": "architecture/security",
+      "detail": "Shared process/database authority remains. TLS and root-owned code do not isolate a compromised adapter; per-adapter identities and least-privilege separation need their own acceptance."
+    },
+    {
+      "id": "TARGET-OS-HARDWARE",
+      "status": "not-executed",
+      "owner": "system validation",
+      "detail": "Debian 12 Lite, systemd without root, VMware and Raspberry Pi 5 with 8/16 GB and SSD require installation/reboot/recovery/performance and networking validation."
+    },
+    {
+      "id": "SERVICE-NETWORK",
+      "status": "not-executed",
+      "owner": "system validation",
+      "detail": "Tailscale enrollment, ACLs, MFA/service access, revocation and required LAN/VLAN reachability need a concrete target network test; accepting every network is not an authorization policy."
+    },
+    {
+      "id": "FIELD-ADAPTERS",
+      "status": "open",
+      "owner": "adapter owners",
+      "detail": "Devices, EEBUS, OCPP and Backup activation, encrypted protocol configuration, safe failure/recovery and physical functions remain outside this two-adapter lab acceptance. Existing findings in those components are not closed by this work. Mesh exchange/energy currently require the product login boundary; unattended M2M remains blocked and no machine-identity implementation is claimed."
+    },
+    {
+      "id": "SUPPLY-CHAIN",
+      "status": "open",
+      "owner": "release/security",
+      "detail": "Final npm findings require disposition; OS/runtime/firmware and frontend attribution gaps remain. Full support/lifecycle, signed update and recovery processes require their own product evidence."
+    },
+    {
+      "id": "SSE-SOCKET-REVOCATION",
+      "status": "documented-limit",
+      "owner": "architecture/security",
+      "detail": "Ordinary account/group events revoke synchronously before socket publication; missed events also rely on a five-second watchdog. No instantaneous distributed revocation or rollback of already running commands is claimed."
+    },
+    {
+      "id": "CRA-IEC",
+      "status": "not-assessed-for-conformity",
+      "owner": "manufacturer",
+      "detail": "This engineering evidence does not establish CRA conformity, CE authorization, IEC 62443 certification or a safety certification. Product scope, applicable requirements/standards, manufacturer risk assessment, lifecycle/support, vulnerability process, technical file and conformity procedure remain manufacturer responsibilities requiring separately validated evidence."
+    },
+    {
+      "id": "INDEPENDENT-ASSESSMENT",
+      "status": "not-executed",
+      "owner": "manufacturer/security",
+      "detail": "No external independent penetration test or certification; source review by cooperating AI agents is identified as such."
+    }
+  ],
+  "documentation": [
+    "docs/architecture/INTEGRATED_SYSTEM.md",
+    "docs/security/BRANDING_ROLES_DE.md",
+    "docs/security/INTEGRATED_REPORT_DE.md",
+    "docs/operations/INTEGRATED_UI_LAB_DE.md",
+    "docs/cra/INTEGRATED_TEST_REQUIREMENTS.md",
+    "system/product.json",
+    "system/integration/accounts.schema.json"
+  ],
+  "finalRuntimeInputs": {
+    "candidate": "r2",
+    "candidatePath": "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/app",
+    "packageLockSha256": "b0db18741ac1aefbfb3ac15dfc74826aa551a84d327a6e0aae0be20178135ab6",
+    "actualCandidateFileHashesVerifiedOnDisk": true,
+    "candidateFilesSha256": {
+      "package-lock.json": "b0db18741ac1aefbfb3ac15dfc74826aa551a84d327a6e0aae0be20178135ab6",
+      "node_modules/iobroker.js-controller/eos-test-profile.json": "5c936a625beda84b7a6b61828c6469df8bea369558cfbd1b317a6ee6eccbabf8",
+      "node_modules/iobroker.eos-admin/build/main.js": "327e7038782f316e25570ccc02d9dd3769bd4a07458aba5788c6dc92f1b3b959",
+      "node_modules/iobroker.eos-admin/build/lib/web.js": "11227efff01c9c6265095d90269239dbd8a06126813e2395bfbfc0f8b2118696",
+      "node_modules/iobroker.eos-admin/adminWww/js/eos-role-bootstrap.js": "0804f7a98c25bbddb588f84c9408a88be31687211afc84c68d705109d3303548",
+      "node_modules/iobroker.nexowatt-ui/main.js": "47a51c3f8338271a5fbb586ae654d80921a89abdf1751c879bc23fb979a8ea9f",
+      "node_modules/iobroker.nexowatt-ui/lib/eos-integrated.js": "c62c8e0e3ae0be4255e1d2dee7e49920dd566fc5f967fe1a7c71b7d49d6330a0",
+      "node_modules/iobroker.nexowatt-ui/www/auth.js": "1bed25157f6206b63d37dd859fc0352282734eb77f7a9f4f80201ede8097e5a0",
+      "node_modules/@iobroker/ws-server/build/index.js": "f88d1bcf2344c1c3e404b47abc8f03fceffc8b236ca97f008bd2bbac635ba9e0"
+    },
+    "componentArchives": {
+      "iobroker.eos-admin": {
+        "filename": "iobroker.eos-admin-7.10.11.tgz",
+        "sha256": "54b81623b4851ad17f8d0a0ab8cc49c52a1b49b9f43621bb4f788d3c27c548bb"
+      },
+      "iobroker.nexowatt-ui": {
+        "filename": "iobroker.nexowatt-ui-1.0.21.tgz",
+        "sha256": "cef7b490d3c0e756e5526ab502d8a54843d263b4448042c942dffff56f028593"
+      }
+    },
+    "reproductionInputs": {
+      "path": "delivery/reproducible-roles-lab/inputs.sha256.json",
+      "scope": "Reproducible local archive/manifest/lock inputs; not a signed production image",
+      "sha256": "8850b5291a327f6a210efddfcdd835727b9b999e4c85daab451c71dcd6c244dd",
+      "bytes": 945,
+      "bindingStatus": "bound-current-file"
+    },
+    "includesNodeModules": false,
+    "signedRuntimePackage": false
+  },
+  "sourceFiles": [
+    {
+      "path": "components/admin/adminWww/js/eos-role-bootstrap.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "0804f7a98c25bbddb588f84c9408a88be31687211afc84c68d705109d3303548",
+      "bytes": 50881,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/lib/eosApplianceProfile.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "a682a5bbecfe5a1973d19201c25be23668c7d5a353a69fa489cf164d9c59f3cc",
+      "bytes": 16736,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/lib/eosApplianceProfile.js.map",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "7d162b5b202e11c57861e939120f1b02746bc172644905b3706acc223364481e",
+      "bytes": 15800,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/lib/eosSessionSecurity.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "4820cd5d32aa825623fc8f434d9fc27d00275cca97dd65ef7ba32e93ac09f185",
+      "bytes": 13381,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/lib/eosSessionSecurity.js.map",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "f7f6fabfec888a4118fd5fa834ed42c7e763853cfcb23cef1a22fa664527a0f6",
+      "bytes": 14038,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/lib/web.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "11227efff01c9c6265095d90269239dbd8a06126813e2395bfbfc0f8b2118696",
+      "bytes": 126274,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/lib/web.js.map",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "6cc05516518b83a3902cdd7729ed07aaa783a50a76336f668533bf5fba88924b",
+      "bytes": 109382,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/main.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "327e7038782f316e25570ccc02d9dd3769bd4a07458aba5788c6dc92f1b3b959",
+      "bytes": 138879,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/build/main.js.map",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "deea6826f6fcbe3da3f31f5e80e734933f851e2e5bd6b8c84c455a48f02d04e9",
+      "bytes": 106286,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/reports/security/branding-roles/CHANGE_AND_THREATS_DE.md",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "9c98233b64e13d7fa19d08c8a9b2333e13b9498cfc154d31f0e3a2eaab1e9f1a",
+      "bytes": 5835,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/src/lib/eosApplianceProfile.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "1812e15fd0992ad6e6f8582bfe3a235e2a7a04ddd694ec3fdc79267581dad6f6",
+      "bytes": 15981,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/src/lib/eosSessionSecurity.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "81c27a33278a20d6b410ea39cdb4060fce4f533f27847487078253c184181f3e",
+      "bytes": 12430,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/src/lib/web.ts",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "06e75789d94f9e8c5047ac9741bdb6bae92cb82c6b19f7bc95c826b6a66b0121",
+      "bytes": 135899,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/src/main.ts",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "58e6b641d0dea07d91d75aa776f8d1a534ceaa735278c94ff6a9db128c32bb2d",
+      "bytes": 151472,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/test/eos-appliance-profile.test.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "2bab3bfdb8439a0182540247d044efad4e924ab14a3a15dff42fc35d5d906da6",
+      "bytes": 11571,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/test/eos-appliance-socket.integration.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "b0cdb23556e1c2c482d6e23581b2314bf9fe1a22a5a02ab95ecdc9da6a8b02ed",
+      "bytes": 6891,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/test/eos-roles-account.test.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "2c07380babf377d5df62c355bafb28cdd320956c234475ee8bd96da6e73e7aa9",
+      "bytes": 18918,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/test/eos-session-security.test.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "08126817fdae9d709b4a112b721a1437c01b1f0633c2d39595a718beb9eb7177",
+      "bytes": 12957,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/admin/tools/nexowatt-security-boundaries-selftest.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "7920062923bfc71b601d9b7f99746185dc6f575f9f75576d99013edeb1d0342f",
+      "bytes": 38751,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/main.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "47a51c3f8338271a5fbb586ae654d80921a89abdf1751c879bc23fb979a8ea9f",
+      "bytes": 1729033,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/www/auth.js",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "1bed25157f6206b63d37dd859fc0352282734eb77f7a9f4f80201ede8097e5a0",
+      "bytes": 42011,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "runtime/bootstrap/accounts.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "0e9bfb4a13ffa963a6d3f8d2f590f595e8c2fac3feb35815b240f28dfddaffad",
+      "bytes": 7829,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "58d0f8ef241fe21226677ce7928a9ce816b9ad2425aef3757e9f8ac81391bbcd",
+      "bytes": 11562,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "runtime/controller-profile/guard.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "7538f4727376c40b9f6e0e65b4aa848363166b0e95e8edf45c0e6ab63dd42a44",
+      "bytes": 6848,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "79ea05d3b31b550d68be8b7232b088269cccf2590289121b7867e1bc882830a1",
+      "bytes": 16622,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "runtime/controller-profile/websocket-bound.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "ae518d7b8d0f822cf54882159f73dfa70be93cbfc96c35b2972be0e7af5ba032",
+      "bytes": 1891,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "system/product.json",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "e26296ccfbbcaa9d3db6a9972b0a2235cb4732917cb56e5586681e9ea4042235",
+      "bytes": 1209,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tests/integration/ui-browser-smoke.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "180a157154e7a97f4ea39aa83e5d6606983553e7a752098bc7d034457fc728b2",
+      "bytes": 8078,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tests/integration/ui-controller.integration.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "3470ba3abb2f272a78ddad28f18fe523c10f0b7f5e5e7f87cc3700de86e8e636",
+      "bytes": 35027,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/integration/bind-sbom.py",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "cd334328d1c098c4cde94b18695d0e54aa11a58d5087010d4e60b6aee9f93513",
+      "bytes": 6687,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/sbom/test_base.py",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "1ddbb7656e913190c7d85319c9b9cf7d321c761568cb2b60f7d4d3c0b8effda8",
+      "bytes": 17530,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "scope": "Current frozen source/runtime/test input",
+      "sha256": "b98b3442a342a010d15cd51c6c528274871844672577d7c6536291af4763ca32",
+      "bytes": 13823,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/scripts/release-artifact-manifest.json",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "a8cb9259395ae9a01265f9f02c7758ebb7dd9d451c5823bfc53c1e7994054c38",
+      "bytes": 68170,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/package.json",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "6fb85c2b6a57749a66802d43d9cf874d895ceb819a9973fcee4953f3142d4da4",
+      "bytes": 72689,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/lib/eos-integrated.js",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "c62c8e0e3ae0be4255e1d2dee7e49920dd566fc5f967fe1a7c71b7d49d6330a0",
+      "bytes": 12846,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/lib/sse-runtime-guard.js",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "127149ef992192fc953e574ec8ec79f98504c80311e136a7d4d4977f88a6a6af",
+      "bytes": 19627,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/www/sw.js",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "9e74296d13d8b2afd3b933538157224388dc12989703870e59f0363b9aad39d2",
+      "bytes": 5257,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/scripts/verify-stable-1.0.8-storage-licenses.cjs",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "03b227f15374f2d491c81154a1b9212fc31b4a5cd31c4a65f2d86324d9233543",
+      "bytes": 10938,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/scripts/verify-mesh-coordinator-access.cjs",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "5e1a3ac63e45a98bfd6e5d2f010f375e9e990601bdb53b2c105421d7220d0de6",
+      "bytes": 12228,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/scripts/eos-tls-fixture.cjs",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "6129b63a5864090676e90ae6dc4086054f4862dad2e0dd0586757015f5fc1531",
+      "bytes": 2647,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/docs/security/EOS_UI_ROLES_2026-10-01_DE.md",
+      "scope": "Final UI frozen package source/runtime/documentation input",
+      "sha256": "6bbb56516ea29c530b44b9b95aedcf31ccc1b985d95541f4ff0bfd314428ba4b",
+      "bytes": 5968,
+      "bindingStatus": "bound-current-file"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "components/admin/reports/security/branding-roles/verification.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "16177d2ace4a2835253c5ab180ebf3544637829a780dd8b3a409bd11a25f3548",
+      "bytes": 6792,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-acceptance.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "bb15c2b5a3ca081da7fc39fb96c595e59c2cdad81805ed41eea1c68923d13652",
+      "bytes": 340,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/final-build.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "cff139f10862c89abf73e6a4575f94d86ceef6ac4c48db61f1dc0e3103e93026",
+      "bytes": 158,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/final-build.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "f76ada70ea231453773d950f862c5f9c2cf2c62f4541e55819c8c3daebf9d4ee",
+      "bytes": 8275,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/final-buildcache-cleanup.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "b63d3958c6cf56ff57a6c1f4b961e4a24fc31be5b68cd0ddba54f740d47949db",
+      "bytes": 276,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/final-verification.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "bda8fff18179545647c29a79219be5d0da21a31e711df524dbab3e28ce22511c",
+      "bytes": 7920,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/frozen-package-hashes.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "72f7a9a64d08768ef952e9d7dd55dbc8b0a3bef62a4f65938aa642de847812ca",
+      "bytes": 1729,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/mesh-isolated-final.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "8b497832039c38e74ee0a8368b335159dc1d773e01c2f738df4e18a3baf2ff4f",
+      "bytes": 310,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/mesh-isolated-final.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "71a1fa47c05e9afa5af01c7ae991a178393fb5de28183500b9b88bdb5dbf7d2e",
+      "bytes": 3805,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/publish-check-final-r2.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "1aae9de344132aa953cd26af49b8204e1196d051f0ac02f1cf95780c4df2ac6e",
+      "bytes": 524,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/publish-overlay-fixture-fix.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "ed630667901f5cb4e584c20c128ff89e92a09fecec4a0776305d7067aac6838a",
+      "bytes": 1706,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/required-suite-continuation-r6.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "54b9b3cd2828d4ad2c90a3aeff604c9ec0fa116acd38b9be099153884d318fed",
+      "bytes": 592,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/required-suite-continuation-r6.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "9eb3bd555cc6b801fb5c63c0d4071295efb3750f35d34f42b015eeca3c8be287",
+      "bytes": 8493,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/roles-auth-tls-sse-sw.tap",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "946a2dfda7f8ab71acf83d2ad9a968c7213154cbe327ed1bed71d0e5a6399bd9",
+      "bytes": 14871,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/test-all-final-r2.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "a31f4faeb2edf3c7fe3d687164faf1142f5ae1e400c36a5606ff0fe5ec36dac5",
+      "bytes": 368,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/test-all-final-r2.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "39df00b9b81a7b6c4dfe5e676426e36ecbe2392ae1a58146f0175a4e4b83d914",
+      "bytes": 72585,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/test-all-final.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "c452f1ffa349416fba49806191cc7a3bc49f919ff3ef36dd3cd6f142f9ff5f85",
+      "bytes": 73007,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/test-all.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "e4743995feaa76bab81b403303277ce55c42fce155afa5b610833e5b4031ac4f",
+      "bytes": 30717,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/test-gate-migration.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "8aa8c4d9a45bb847f0539cff2a1a3a4fc264b775c373af971b7b15f097e99f75",
+      "bytes": 5276,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/ui-own-password-390.png",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "6f53c9d959b2c5d3443843a0b912e9b8ae12ab25d9a842687e9b22a5475ef9da",
+      "bytes": 59710,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "delivery/reproducible-roles-lab/inputs.sha256.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "8850b5291a327f6a210efddfcdd835727b9b999e4c85daab451c71dcd6c244dd",
+      "bytes": 945,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding-roles/package-source-comparison.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "cb85965f4123e9cdb18b154cb846f64c8b7a6fcb180a4ae6cb7e14c868872e81",
+      "bytes": 699,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding-roles/raw/accounts-enrollment.tap",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "2b5389d45102d3d3a753895cb271bbe3791c02a37c752f278537cfd3c891e9f4",
+      "bytes": 15067,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding-roles/raw/system-security.tap",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "94e899fca0f9032a9bbcf55f477c9fda62288f3ef2a534332b2f76f4d1105551",
+      "bytes": 54246,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding-roles/raw/ui-controller-attempt-04-r2.tap",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "c85279e45037efbed8c3d89814e59c34230590af31bc26ac224ad7e84dd9f4a3",
+      "bytes": 6319,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding-roles/ui-controller-summary.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "47465d91bccbfc6deefba336d1eb0782b7fe658e72d9b1510adebb3d6e0eab2e",
+      "bytes": 10733,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding/browser-verification.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "cbea6bae653718a5be59bf77d79227b79cff9285a617eb96443b6b9ae11a565f",
+      "bytes": 1536,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding/verification.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "5ae3bd4442d381eefa04354a1297bcc920e847f8666cdfd63442b2cb4b5a4325",
+      "bytes": 20076,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/README_DE.md",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "3e9adae0a5a20dbc0e95c4091a4121845f861ea56800a7863a4f9407e9135d4a",
+      "bytes": 4160,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/bind.stdout.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "8c7d661ca5396aea412530b3f6c3bef41c10677e99642921f4ae6c15a92ab5aa",
+      "bytes": 86,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/binding-tests.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "9217833d6248b596553ad4b8017269fc4e88e9caacc1846f6405bd7bcbce8edd",
+      "bytes": 127,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/build-tool-tests.tap",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "ba6195bec3f027b9a3822d9fd5359d23fceb6f38eb9cd2acdf32dc9e3c63ce44",
+      "bytes": 754,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/build.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "5816c5cae72396e8d191e519a3fd20b938b8d018446348bb9bc99f911ff45f11",
+      "bytes": 1092,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/commands.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "335c6239a59e99b0278801734c09891ff6f55fa073294b745511b0b3e18c944e",
+      "bytes": 5445,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/controller-profile.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "46decd57998f3e98e441bd16ef07ffb258692e73c461b31665230e01bb1452b0",
+      "bytes": 2214,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/controller-transform.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "be7cb0fffa1ebdca5a1427c39a0fbe18ce7ad6f495268c5f91e6eea47538c6e9",
+      "bytes": 2733,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/dependency-disposition.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "232db494d676bd796b102ac1c38b85991cd8e0c3c10c65f488ec36e03d620f7e",
+      "bytes": 2812,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/embedded-binding-tests.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "32d26914b54c8d87a0a4dc9642670e3454750b7670c5d10ff190fd9e648991c0",
+      "bytes": 104,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/npm-audit.stderr.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "7125f194612fcff2f454c05d848e7cb71facc1967b4d5017e25b34fdee3ba74f",
+      "bytes": 99,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/npm-sbom.stderr.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "7125f194612fcff2f454c05d848e7cb71facc1967b4d5017e25b34fdee3ba74f",
+      "bytes": 99,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/package-lock.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "b0db18741ac1aefbfb3ac15dfc74826aa551a84d327a6e0aae0be20178135ab6",
+      "bytes": 206663,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/package.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "428e99cc3b043fe94dcd1070496b44e247c31f8288f3d34ebb583deb0c209ec3",
+      "bytes": 360,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/replay-controller-profile.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "46decd57998f3e98e441bd16ef07ffb258692e73c461b31665230e01bb1452b0",
+      "bytes": 2214,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/replay-controller-transform.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "be7cb0fffa1ebdca5a1427c39a0fbe18ce7ad6f495268c5f91e6eea47538c6e9",
+      "bytes": 2733,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/replay-npm-ci.stderr.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "dd9953efdb3861206f1c8230e9e4307c7b5ef18500795c8af845af88d27236cb",
+      "bytes": 457,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/replay-npm-ci.stdout.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "7634f07143a6fafc68d0444d2c36f3af504f7e67618909f69deb0411f5b1c5e6",
+      "bytes": 27,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/replay-transform.stdout.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "c88cb71324170f379512966e5117705225d03b248903ae15f42c2c603f7f1393",
+      "bytes": 23,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/replay-verification.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "7a7832dcc124b6d42954c883722fd3f0c1a311cdf45e273471f4cf6b95e71307",
+      "bytes": 1195,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/runtime.audit.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "b073d54c5a9339a690a06dbd753efa5078dafbedee9f540cfbd1f59f30fb5566",
+      "bytes": 2255,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/runtime.cdx.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "bd973b8b95cb90e387290d185e8a591e273751991ecdbba3cf6fe0456650af3a",
+      "bytes": 499552,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/runtime.coverage.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "e8ab5126269c37c05b3c14f1f4daa09406d49c52c8532fbeb4c4fff870469472",
+      "bytes": 271627,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/runtime.npm.cdx.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "cd08c638adb7a3e276588e3ae8aebf2b7464f24eb5e947349b5998b9d7c1360c",
+      "bytes": 491553,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/schema-validation.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "2ae64706b9447f0c21f915825e6897e45858ae6eb256dcf1a269309bcd3b4d5f",
+      "bytes": 956,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/schema-validation.stdout.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "77b5f289c910793e30c53b6d2490c2bd08e84f6ab8f094634f7c8c2fc4fc7bd4",
+      "bytes": 28,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/source-components.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "dde89fbdc42a703fb73c3a438d5b3c5109afa6552c533f18faf3474ba92f022d",
+      "bytes": 7464,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/source-input-recheck.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "eeae43f773181de4f06488736333b727f9a9427cb1a9d944afca7fcd3aca7665",
+      "bytes": 2531,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/source-inventory-tests.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "7a559f5f3b288fe7710f7d08453f712cd2e9ce60025f248acc51ca1c2ff5db00",
+      "bytes": 102,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/source-inventory.stdout.log",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "620ef2290d2762245fab69657cd878169c8ad7ab3e3f759fe196f376731b155a",
+      "bytes": 75,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/source-lock-inventory.cdx.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "40faa491257c94259ec150e44862aeec144a04c958ffa0c08cd684f7b64f4e93",
+      "bytes": 3509431,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/sbom/branding-roles/verification.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "9f278ad2d527d1d8ec227f7f6b3b861ac305be78bb050313c1478799543652a5",
+      "bytes": 12583,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "79ea05d3b31b550d68be8b7232b088269cccf2590289121b7867e1bc882830a1",
+      "bytes": 16622,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "runtime/controller-profile/websocket-bound.cjs",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "ae518d7b8d0f822cf54882159f73dfa70be93cbfc96c35b2972be0e7af5ba032",
+      "bytes": 1891,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "system/integration/components.json",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "dde89fbdc42a703fb73c3a438d5b3c5109afa6552c533f18faf3474ba92f022d",
+      "bytes": 7464,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tests/system/sbom-test-base.test.py",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "fffec0987ebb74cc9923a1b12cde53d9bca3a7134c5ebc89c3d01632623bff76",
+      "bytes": 16346,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/integration/bind-sbom.py",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "cd334328d1c098c4cde94b18695d0e54aa11a58d5087010d4e60b6aee9f93513",
+      "bytes": 6687,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "fbf9ccf27b1992e9be930fbfbcbf5dd15a57eb5b7a7d039bfedba83ad9034537",
+      "bytes": 8758,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/integration/source-inventory.py",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "22f3bc4237b6c82bd54c01984aa532950e5991b8f66f56304822eb663462078f",
+      "bytes": 5766,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/integration/validate-sbom.py",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "1909b182616e8c69abd0c383e377bda244bea8bf6bc5598a9d046627e64d3674",
+      "bytes": 1769,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/sbom/test_base.py",
+      "scope": "Bound supporting evidence; scope remains as stated in each report",
+      "sha256": "1ddbb7656e913190c7d85319c9b9cf7d321c761568cb2b60f7d4d3c0b8effda8",
+      "bytes": 17530,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "reports/integration/branding-roles/packaging-pattern-review.json",
+      "scope": "Root bounded secret/expanded-archive review",
+      "sha256": "b17e6253aef17dbfa4165ceac85a5004a895c1d2145e9060bee04fd004e716f3",
+      "bytes": 1898,
+      "bindingStatus": "bound-current-file"
+    }
+  ],
+  "bindingStatus": "selected-r2-development-source-evidence-and-documentation-bound",
+  "finalizationRule": "Final r2 integration, current UI outcome (required full suite failed), SBOM/replay, package/source comparison and bounded secret evidence are linked to exact files. Earlier r1/component snapshots remain historical. Source Git/outer ZIP checks are separate root evidence. No production release follows from this report.",
+  "testGateMigrationReview": {
+    "reviewedAt": "2026-10-01T15:41:44.595347+00:00",
+    "status": "read-only-review-complete-no-new-blocker-in-described-diff",
+    "executionClaim": "Source/diff inspection plus git diff --check. The final npm run test:all subsequently failed at the unchanged 99-peer mesh timing gate; migration review does not convert it into a pass.",
+    "scope": [
+      {
+        "path": "components/ui/scripts/verify-ts-main-runtime-helpers.js",
+        "assessment": "Existing TS source/import/runtime helper assertions retained; main-runtime contract now requires central client and eos-admin management while rejecting retired local secret/evaluator/expected-key paths."
+      },
+      {
+        "path": "components/ui/scripts/verify-rc66-station-display-stable.js",
+        "assessment": "Logo/layout/runtime checks retained. The obsolete protected-page/pre-cache assumption is replaced by executing the actual SW public-asset predicate: public logo allowed, display HTML and API JSON denied."
+      },
+      {
+        "path": "components/ui/scripts/verify-rc67-license-bootstrap-access.js",
+        "assessment": "Bootstrap helper cases retained; source gates require prior login, exact account-recovery list, central lease, license.manage protection, local-save HTTP409, no browser key persistence and continued preview control lock."
+      },
+      {
+        "path": "components/ui/scripts/verify-stable-1.0.8-storage-licenses.cjs",
+        "assessment": "Only the issuer fixture migrates to central getStatus/isAllowed. Existing signed/split, pool/group allocation, stale status, downgrade, disabled-slot, configuration migration and API save/import limit assertions retained; new negative checks deny forged retired local flags."
+      },
+      {
+        "path": "components/ui/package.json",
+        "assessment": "The existing ephemeral scripts/eos-tls-fixture.cjs helper is now included for the shipped access test; no new product dependency or runtime entrypoint is introduced by that addition. Focused account/SSE/SW suite is added to test:all."
+      },
+      {
+        "path": "components/ui/scripts/eos-tls-fixture.cjs",
+        "assessment": "Read to verify helper scope: creates temporary local EC test certificate/key, bounds HTTPS response size/deadline/redirects and cleans temporary directory on exit; no embedded private key and no product runtime import observed in reviewed call sites."
+      },
+      {
+        "path": "components/ui/scripts/verify-mesh-coordinator-access.cjs",
+        "assessment": "Read-only diff/full-script review: canonical initialized account harness and real login provide installer session; central Pro lease fixture replaces retired local flags. Anonymous/stale customer sessions remain HTTP401 for exchange/energy before and after activation, with legacy authEnabled true and false. After valid installer login the existing app lifecycle HTTP404/423/409, invalid HMAC HTTP403, 70k/170k body HTTP413, key-redaction, pairing, accounting and active deinstallation/save protections remain asserted. No HMAC/size/lifecycle assertion removed, no product runtime edit."
+      }
+    ],
+    "limits": [
+      "Static source assertions supplement, but do not replace, actual authentication/lease/preview tests.",
+      "No product runtime implementation edits were made during this review.",
+      "Package/helper closure and final suite must be bound to the final candidate; historical component report package hash is not silently reused.",
+      "Mesh protocol checks with a browser-session fixture are not an unattended M2M acceptance or production design. The current preview blocks unattended exchange/energy access; future machine identities require separate authorization/encryption work."
+    ],
+    "reference": "components/ui/reports/security/roles-20261001/test-gate-migration.json",
+    "additionalMeshReviewAt": "2026-10-01T15:44:55.518674+00:00"
+  },
+  "uiRequiredSuite": {
+    "status": "FAILED_RELEASE_GATE_OPEN",
+    "command": "npm run test:all",
+    "exitCode": 1,
+    "gate": "UI-MESH-PERF-20261001",
+    "failure": "99-peer 250-ms workload failed stale_or_invalid_lease validity assertion in round 4. Root cause remains unestablished.",
+    "evidence": {
+      "path": "components/ui/reports/security/roles-20261001/final-verification.json",
+      "scope": "Final UI component result including full-suite failure and separate diagnostics",
+      "sha256": "bda8fff18179545647c29a79219be5d0da21a31e711df524dbab3e28ce22511c",
+      "bytes": 7920,
+      "bindingStatus": "bound-current-file"
+    },
+    "fullSuiteRaw": {
+      "path": "components/ui/reports/security/roles-20261001/test-all-final-r2.log",
+      "scope": "Failed final full suite",
+      "sha256": "39df00b9b81a7b6c4dfe5e676426e36ecbe2392ae1a58146f0175a4e4b83d914",
+      "bytes": 72585,
+      "bindingStatus": "bound-current-file"
+    },
+    "isolatedMesh": {
+      "status": "passed-single-separate-invocation",
+      "responses": 792,
+      "p95Ms": 92,
+      "maximumMs": 121,
+      "doesNotOverrideFullSuiteFailure": true,
+      "noThresholdChange": true,
+      "scope": "Shared x86_64 sandbox, not target Pi5 and not proof of failure cause."
+    },
+    "downstreamSeparateChecks": {
+      "count": 5,
+      "allExitCodeZero": true,
+      "doesNotCompleteFullSuite": true
+    },
+    "build": {
+      "command": "npm run build:ts",
+      "exitCode": 0
+    },
+    "publishCheck": {
+      "exitCode": 0,
+      "manifestEntriesVerified": 402,
+      "codeDocumentationModules": 235
+    },
+    "focusedTests": {
+      "passed": 69,
+      "failed": 0
+    },
+    "packageDriftFromFreeze": [],
+    "historicalSnapshot": {
+      "report": "components/ui/reports/security/roles-20261001/verification-summary.json",
+      "subsequentlyChanged": [
+        "components/ui/package.json",
+        "components/ui/docs/security/EOS_UI_ROLES_2026-10-01_DE.md"
+      ],
+      "finalBinding": "components/ui/reports/security/roles-20261001/frozen-package-hashes.json"
+    }
+  },
+  "bindingChecks": {
+    "integrationCandidateFiles": 9,
+    "integrationSourceFiles": 12,
+    "adminDeclaredFiles": 18,
+    "brandingDeclaredSourceArtifacts": 63,
+    "sbomReportEvidenceFiles": 41,
+    "uiFinalReportEvidenceFiles": 18,
+    "allMatched": true,
+    "uiFrozenPackageFiles": 11,
+    "secretReviewArchives": 4,
+    "documentationFiles": 11
+  },
+  "secretAndArchiveReview": {
+    "status": "completed-bounded-pattern-scope",
+    "evidence": {
+      "path": "reports/integration/branding-roles/packaging-pattern-review.json",
+      "scope": "Root source/evidence and expanded npm-archive pattern review",
+      "sha256": "b17e6253aef17dbfa4165ceac85a5004a895c1d2145e9060bee04fd004e716f3",
+      "bytes": 1898,
+      "bindingStatus": "bound-current-file"
+    },
+    "filesRead": 9054,
+    "bytesRead": 507690828,
+    "archivesRead": 4,
+    "hits": 0,
+    "skipped": 0,
+    "archivePathsAndTypesChecked": true,
+    "patternCategories": [
+      "complete_private_pem",
+      "github_token",
+      "aws_access_key",
+      "license_token",
+      "jwt_token"
+    ],
+    "limits": [
+      "Pattern coverage is deliberately bounded; this is not proof of absence of every possible credential.",
+      "Package members are read without extraction. Final ZIP and Git index integrity are checked separately."
+    ],
+    "noGeneralSecretAbsenceClaim": true
+  },
+  "documentationBindings": [
+    {
+      "path": "README.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "780c23463c803555267f40c1bbd3bda89f7a3c2d4c94debdd732de43fea0b01f",
+      "bytes": 4624,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "docs/architecture/INTEGRATED_SYSTEM.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "97db0708905dce229cbbc453af8981319135ed8cf31020cd213635cfe87b1bdb",
+      "bytes": 21988,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "docs/operations/INTEGRATED_UI_LAB_DE.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "831c0afd9ef1804b3cd155b5d7ff6db473e42cfbf263b2bb0465015daba52884",
+      "bytes": 13435,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "docs/security/INTEGRATED_REPORT_DE.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "01f6e64e9bf4e05daf4a5530e99fe5d5b6bb6047c92bbee9f472d20b4b5fc264",
+      "bytes": 15550,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "docs/security/BRANDING_ROLES_DE.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "4e57ad9fff77c57885d57328c3f3a6fbe8acd2a11bf9604a76d81d2f8a7053c3",
+      "bytes": 15332,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "docs/cra/INTEGRATED_TEST_REQUIREMENTS.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "960432bd1e656a57e7b8b192e4f916fd6e78be73de5ec71dec84294c08028f2e",
+      "bytes": 23673,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "docs/history/UPSTREAM_README.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "de03b91932138c40efebf2cc0c3472372a6051165ba1365edbe08fcf3ead7452",
+      "bytes": 8325,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "docs/history/SECURITY_REPORT_0.2.0-dev.1.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "6a8b22b4788ad7e369f3da1c674fbf0dd1870bd6ac0228efa545c21f24ccadd3",
+      "bytes": 10197,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "tools/integration/README.md",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "8cc764051ab1cc002ca1b467d001f27f743b4663b8d9ef20b60256b9ba58ca67",
+      "bytes": 6421,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "system/integration/accounts.schema.json",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "908ff4529984ee08bef233b1f63506116b4385590c492249015d5a3a5778b5d2",
+      "bytes": 2940,
+      "bindingStatus": "bound-current-file"
+    },
+    {
+      "path": "system/integration/requirements.json",
+      "scope": "Final documentation/schema text confirmed frozen by documentation author",
+      "sha256": "3a592e82e302be49fa44a8e33ecebcccf86a71c9d6c65ac2ae60c2701d472721",
+      "bytes": 158850,
+      "bindingStatus": "bound-current-file"
+    }
+  ],
+  "sourceDeliveryVerification": {
+    "scope": "Final source Git index/file manifest and outer delivery ZIP integrity",
+    "handledBy": "root packaging evidence separately",
+    "includedInThisReport": false,
+    "productReleaseApprovalImplied": false,
+    "note": "Outer source packaging verification is separate from the bound r2 application evidence and is not represented as an unresolved application code gate."
+  }
+}

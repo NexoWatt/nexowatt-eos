@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible problem with the NexoWatt EEBUS adapter
+title: '[Bug]: '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please include debug logs and anonymized EEBUS/SHIP/SPINE payloads if available.
+  - type: input
+    id: adapter-version
+    attributes:
+      label: Adapter version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: js-controller
+    attributes:
+      label: js-controller version
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      render: shell

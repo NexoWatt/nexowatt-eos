@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-integrated-development-build-sbom-verification",
+  "recordedAt": "2026-10-01T12:45:14.528870+00:00",
+  "productVersion": "0.2.0-dev.1",
+  "candidateRevision": "r4",
+  "developmentOnly": true,
+  "productReleaseApproved": false,
+  "authoritativeRuntimeSbom": "reports/integration/sbom/candidate-final-tree.cdx.json",
+  "packageLockSha256": "0bcb60b6684f7e35820d9ccc70da354154e19909ba260a841c429bf98a73a4c8",
+  "installedRuntime": {
+    "installedNpmPackageDirectories": 465,
+    "uniqueNpmComponentIdentities": 425,
+    "explicitEmbeddedPackages": 2,
+    "modifiedControllerFilesVerified": 9,
+    "osPackagesAndBinariesInventoried": false,
+    "bundledFrontendDependencyAttributionComplete": false
+  },
+  "sourceInventory": {
+    "firstPartyComponentSources": 6,
+    "declaredLockEntriesIncludingBuildAndFrontend": 4313,
+    "totalSbomComponents": 4319,
+    "installedRuntimeClaim": false
+  },
+  "audit": {
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 3,
+      "high": 0,
+      "critical": 0,
+      "total": 3
+    },
+    "scope": "Final installed Admin/UI/controller dependency tree; package-node counts, not independent CVEs. Three moderate nodes belong to the controller/esbuild dependency chain.",
+    "allSixComponentsApproved": false
+  },
+  "replay": {
+    "evidence": "reports/integration/sbom/candidate-final-replay.json",
+    "installedManifestsCompared": 465,
+    "allInstalledManifestsEqual": true,
+    "packageLockUnchanged": true,
+    "localArchivesSriVerified": 2,
+    "controllerTransformRequiredAfterNpmCi": true,
+    "byteIdenticalWholeRuntimeClaim": false
+  },
+  "reproduction": {
+    "deliveryPath": "delivery/reproducible-ui-lab",
+    "sourcePath": "/workspace/scratch/6383b3161c96/integrated-ui-candidate-r4/reproduction",
+    "inputManifestSha256": "130bb26fa27dbedc3f41042a85ba0604187729fb7e752b2e28e5c14c43e0b023",
+    "inputFilesVerified": 5,
+    "includesNodeModules": false,
+    "signedRuntimePackage": false
+  },
+  "automatedToolTests": {
+    "totalPassed": 34,
+    "totalFailed": 0,
+    "suites": [
+      {
+        "path": "tests/integration/build-runtime.test.cjs",
+        "passed": 8
+      },
+      {
+        "path": "tests/integration/source-inventory.test.py",
+        "passed": 4
+      },
+      {
+        "path": "tests/integration/embedded-sbom.test.py",
+        "passed": 4
+      },
+      {
+        "path": "tests/system/sbom-test-base.test.py",
+        "passed": 18
+      }
+    ]
+  },
+  "schemaValidation": {
+    "files": 5,
+    "allValid": true,
+    "offline": true,
+    "evidence": "reports/integration/sbom/schema-validation.json",
+    "coverageFieldExplanation": "The binding report itself does not perform full JSON-schema validation (fullJsonSchemaValidated=false); the separate schema-validation.json binds the subsequently validated files by exact SHA256."
+  },
+  "eebusBuild": {
+    "evidence": "reports/integration/sbom/eebus-final-build-verification.json",
+    "compilerVersion": "5.9.3",
+    "declaredCompilerRange": "^5.9.2",
+    "cleanBuildEmittedFiles": 68,
+    "byteIdenticalToRepositoryBuild": true,
+    "securityTestsPassed": 21,
+    "legacyScriptsPassed": 4,
+    "targetHardwareTested": false
+  },
+  "actualIntegration": {
+    "evidence": "reports/integration/raw/ui-controller-summary.json",
+    "status": "PASSED_LAB_WITH_OS_INTERFACE_FIXTURE",
+    "passedStages": 7,
+    "passedTapNodes": 8,
+    "testOnlyOsInterfaceFixture": true,
+    "nativeFullIntegrationPassed": false,
+    "targetSystemdOrHardwarePassed": false
+  },
+  "limitations": [
+    "No CRA or IEC conformity declaration or production approval.",
+    "The integrated enrollment profile currently allows exactly Admin and UI. Adding and activating additional adapters requires profile/migration/admission work.",
+    "Native OS integration without the explicit sandbox-only interface fixture remains open; Debian12/RPi5, VMware, unprivileged systemd and Tailscale acceptance were not performed.",
+    "Device adapters and physical control remain inactive; no physical failsafe acceptance is claimed.",
+    "Runtime npm SBOM excludes OS packages, firmware, Node/Redis executable provenance and complete bundled-frontend attribution.",
+    "Historical all-six assessments preserve known critical Backup dependency findings and precede later component source corrections; they are not final-release approval.",
+    "Source and lock inventory includes build/development dependencies and is not installed or bundled component proof."
+  ],
+  "evidence": [
+    {
+      "path": "docs/architecture/INTEGRATED_SYSTEM.md",
+      "sha256": "09cdb30e9c02fd66eeabb911b6cbdb835a64885b6e335caaeba6675830e0131c"
+    },
+    {
+      "path": "system/integration/components.json",
+      "sha256": "56ce6c4114ec66095063593aa3573fe26304c4d436c65f3fdb288e106bde8ebc"
+    },
+    {
+      "path": "reports/integration/raw/ui-controller-summary.json",
+      "sha256": "22cefe28167dbb79e34da0d0ebc56c50bac2db185499fd47f64c2a8d239575c0"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-build.json",
+      "sha256": "f75b7d085d7673e20fd2a80fa2629b635dbe07e77e6895aadb7699498011fdc7"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-controller-profile.json",
+      "sha256": "d0bd8317650fa4cbc4a2a4de59a0d2d8f9741c50a344887447681833bb1cbc68"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-controller-transform.json",
+      "sha256": "09b2974fde7a4f7798fa3e0967a1089140bcc43894a651fb57a0f2272826971a"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-package.json",
+      "sha256": "1e452031867e9ee080af81c1fc2386133b751cebe41a57fe03d5a3c51995ba87"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-package-lock.json",
+      "sha256": "0bcb60b6684f7e35820d9ccc70da354154e19909ba260a841c429bf98a73a4c8"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-replay.json",
+      "sha256": "f88c6582baaa5de2f84c9002fb79967846e8344495033891307d52d2fb43eb7b"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-tree.cdx.json",
+      "sha256": "eddfb70cb2bb5d405750611ec4e7ddddf041990c1469d5748127e58e95b5de72"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-tree.coverage.json",
+      "sha256": "d29dd987bb93c294f77aae14675036cd005602d299c8cc9b459c12a35c7b8c7e"
+    },
+    {
+      "path": "reports/integration/sbom/candidate-final-tree.audit.json",
+      "sha256": "b073d54c5a9339a690a06dbd753efa5078dafbedee9f540cfbd1f59f30fb5566"
+    },
+    {
+      "path": "reports/integration/sbom/source-lock-inventory.cdx.json",
+      "sha256": "a3a7da1866f8a7bdafce49a70e62c6de82973fd5f5e5492905832999b48631e7"
+    },
+    {
+      "path": "reports/integration/sbom/schema-validation.json",
+      "sha256": "d1c65b126e18f049bcb3f151839e95bb69ea51d65e836de6b47b9283932e6908"
+    },
+    {
+      "path": "reports/integration/sbom/build-tool-tests.tap",
+      "sha256": "f3f6be47b78aec582048bcd41152e66eda5a2cc282282f7eec945e2180cedf87"
+    },
+    {
+      "path": "reports/integration/sbom/source-inventory-tests.log",
+      "sha256": "b2300d1aafe0595c9c54a615ef485e8d42fbb732d33a076b213da446a6aafe8f"
+    },
+    {
+      "path": "reports/integration/sbom/embedded-binding-tests.log",
+      "sha256": "08cfe753dea342833ec59beb905243853f9c393973961852ed25ee316be39537"
+    },
+    {
+      "path": "reports/integration/sbom/binding-tests.log",
+      "sha256": "5cce876fde49c766e584f628fa4c7165c4861450f6178fb5d94286a1b504c4b0"
+    },
+    {
+      "path": "reports/integration/sbom/eebus-final-build-verification.json",
+      "sha256": "4b07ac0141dd93d59868e955dce0703a0cfe95a71d659d1131918734970b8188"
+    },
+    {
+      "path": "reports/integration/sbom/eebus-final-security.tap",
+      "sha256": "21c411a05901efd2497e012f3d8d991e9698ac89e474c25dd88bb95b4f84d642"
+    },
+    {
+      "path": "reports/integration/sbom/eebus-final-legacy.log",
+      "sha256": "91d34f8310887d7e94e9851ed408cc5e9084f867ab5d164a4271eefe10ef5f77"
+    },
+    {
+      "path": "reports/integration/sbom/eebus-final-regression-exits.json",
+      "sha256": "df52ef210e0a89ad7ed1604beb153d96f232ecbe80e0df87137a7332a4ae6dbe"
+    }
+  ]
+}

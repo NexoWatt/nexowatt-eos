@@ -1,0 +1,20 @@
+.git
+.idea
+node_modules
+nbproject
+admin/i18n/flat.txt
+admin/i18n/*/flat.txt
+# The compiled backend. Built from src/ by `npm run build`, which CI and `prepublishOnly` run,
+# so nothing in here belongs in the repository - including the runtime artefacts the adapter
+# writes next to it (.bat/.log/.sh, restore.json). The npm tarball still ships it: `files` in
+# package.json lists build/ and takes precedence over this file.
+/build/
+
+.commitinfo
+.mount
+.DS_Store
+
+
+# ioBroker dev-server
+.dev-server/
+/src-admin/.__mf__temp

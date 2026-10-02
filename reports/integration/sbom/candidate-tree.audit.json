@@ -1,0 +1,96 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@alcalzone/esbuild-register": {
+      "name": "@alcalzone/esbuild-register",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "esbuild"
+      ],
+      "effects": [
+        "iobroker.js-controller"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@alcalzone/esbuild-register"
+      ],
+      "fixAvailable": {
+        "name": "iobroker.js-controller",
+        "version": "3.3.10",
+        "isSemVerMajor": true
+      }
+    },
+    "esbuild": {
+      "name": "esbuild",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1102341,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild enables any website to send any requests to the development server and read the response",
+          "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-346"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=0.24.2"
+        }
+      ],
+      "effects": [
+        "@alcalzone/esbuild-register"
+      ],
+      "range": "<=0.24.2",
+      "nodes": [
+        "node_modules/esbuild"
+      ],
+      "fixAvailable": {
+        "name": "iobroker.js-controller",
+        "version": "3.3.10",
+        "isSemVerMajor": true
+      }
+    },
+    "iobroker.js-controller": {
+      "name": "iobroker.js-controller",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@alcalzone/esbuild-register"
+      ],
+      "effects": [],
+      "range": ">=3.3.11",
+      "nodes": [
+        "node_modules/iobroker.js-controller"
+      ],
+      "fixAvailable": {
+        "name": "iobroker.js-controller",
+        "version": "3.3.10",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 3,
+      "high": 0,
+      "critical": 0,
+      "total": 3
+    },
+    "dependencies": {
+      "prod": 451,
+      "dev": 0,
+      "optional": 14,
+      "peer": 2,
+      "peerOptional": 0,
+      "total": 466
+    }
+  }
+}

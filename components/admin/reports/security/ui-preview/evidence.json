@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-09-30T17:33:59.360Z",
+  "browser": "153.0.8010.0",
+  "sourceHashes": {
+    "public/nexowatt-license.html": "4801f834546361afaef500d455a298dff24b18a09d86f88f086acaeedbe80609",
+    "public/nexowatt-license.js": "efa7a0d1604e6c108b326ba396b4f5bb3529bb11d2af352f2b34ce412991719a"
+  },
+  "scope": "Mocked UI preview using intercepted responses; not an ioBroker, authorization middleware, encryption or hardware integration test.",
+  "viewport": [
+    "1440x1100",
+    "360x780"
+  ],
+  "results": [
+    {
+      "name": "Home status, limits, localized functions and desktop screenshot",
+      "result": "passed"
+    },
+    {
+      "name": "Activation success clears synthetic code and displays Pro; request POST/header asserted",
+      "result": "passed"
+    },
+    {
+      "name": "Activation failure clears synthetic code, displays sanitized error, preserves previous edition details and restores controls",
+      "result": "passed"
+    },
+    {
+      "name": "HTTP 401 marks previously valid status unconfirmed/error, renders administrator-required message and releases busy buttons",
+      "result": "passed"
+    },
+    {
+      "name": "HTTP 403 marks previously valid status unconfirmed/error, renders administrator-required message and releases busy buttons",
+      "result": "passed"
+    },
+    {
+      "name": "Status code, UUID and function HTML payload remain literal text; no injected DOM or script execution",
+      "result": "passed"
+    },
+    {
+      "name": "Missing-license status clears edition/limits; 360px mobile viewport has no horizontal overflow",
+      "result": "passed"
+    },
+    {
+      "name": "No browser pageerror during mocked scenarios",
+      "result": "passed"
+    }
+  ],
+  "issues": [],
+  "closedFindings": [
+    {
+      "id": "UI-PREVIEW-01",
+      "firstObserved": "2026-09-30T17:32:24.839Z",
+      "originalFinding": "Refresh HTTP403 preserved the previous green valid status beside an error message.",
+      "fix": "The request error handler now marks the status unconfirmed with the error style.",
+      "retest": "Passed actual Playwright assertions for HTTP401 and HTTP403 starting from a valid Pro status."
+    }
+  ]
+}

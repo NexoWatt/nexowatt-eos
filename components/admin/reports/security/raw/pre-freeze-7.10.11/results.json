@@ -1,0 +1,136 @@
+[
+  {
+    "name": "package",
+    "command": [
+      "npm",
+      "run",
+      "check:eos-package"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:20.636839+00:00",
+    "durationSeconds": 1.523,
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "stability",
+    "command": [
+      "npm",
+      "run",
+      "check:eos-stability"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:22.159802+00:00",
+    "durationSeconds": 7.58,
+    "exitCode": 1,
+    "expectedExitCode": 0,
+    "status": "FAIL"
+  },
+  {
+    "name": "license-tap",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "/workspace/scratch/c16def314bc5/source/eos-admin/test/eos-license-client.test.cjs",
+      "/workspace/scratch/c16def314bc5/source/eos-admin/test/eos-license-core.test.cjs",
+      "/workspace/scratch/c16def314bc5/source/eos-admin/test/eos-license-http.test.cjs",
+      "/workspace/scratch/c16def314bc5/source/eos-admin/test/eos-license-service.test.cjs",
+      "/workspace/scratch/c16def314bc5/source/eos-admin/test/eos-license-trust.test.cjs"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:29.739980+00:00",
+    "durationSeconds": 1.002,
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "session-tap",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/eos-session-security.test.cjs"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:30.742695+00:00",
+    "durationSeconds": 5.732,
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "web-runtime-tap",
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/eos-web-resources.test.cjs"
+    ],
+    "environmentOverrides": {
+      "EOS_TEST_RUNTIME": "build"
+    },
+    "startUTC": "2026-09-30T18:08:36.475134+00:00",
+    "durationSeconds": 0.959,
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "inventory-selftest",
+    "command": [
+      "node",
+      "tools/nexowatt-security-inventory-selftest.cjs"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:37.434944+00:00",
+    "durationSeconds": 0.161,
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "fallback-selftest",
+    "command": [
+      "node",
+      "tools/nexowatt-transpile-security-backend-selftest.cjs"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:37.597142+00:00",
+    "durationSeconds": 0.586,
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "pack-dry-run",
+    "command": [
+      "npm",
+      "pack",
+      "--dry-run",
+      "--ignore-scripts",
+      "--json"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:38.183968+00:00",
+    "durationSeconds": 11.631,
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "lock-provenance",
+    "command": [
+      "node",
+      "tools/nexowatt-lock-provenance-check.cjs"
+    ],
+    "environmentOverrides": {},
+    "startUTC": "2026-09-30T18:08:49.815552+00:00",
+    "durationSeconds": 0.135,
+    "exitCode": 1,
+    "expectedExitCode": 1,
+    "status": "BLOCKED_EXPECTED"
+  }
+]

@@ -1,0 +1,165 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/master/schemas/io-package.json",
+  "common": {
+    "name": "eebus",
+    "version": "0.3.0",
+    "titleLang": {
+      "en": "NexoWatt EOS EEBUS Adapter",
+      "de": "NexoWatt EOS EEBUS Adapter",
+      "ru": "NexoWatt EOS EEBUS Adapter",
+      "pt": "Adaptador EEBUS NexoWatt EOS",
+      "nl": "NexoWatt EOS EEBUS Adapter",
+      "fr": "Adaptateur EEBUS NexoWatt EOS",
+      "it": "Adattatore EEBUS NexoWatt EOS",
+      "es": "Adaptador EEBUS NexoWatt EOS",
+      "pl": "Adapter EEBUS NexoWatt EOS",
+      "uk": "Адаптер NexoWatt EOS EEBUS",
+      "zh-cn": "NexoWatt EOS EEBUS 适配器"
+    },
+    "desc": {
+      "en": "Connects EEBUS SHIP/SPINE devices, exposes NexoWatt EOS as HEMS and forwards trusted IF_CLS_CTRL/LPC §14a limits directly to the central EOS controller without manual CLS datapoint mapping.",
+      "de": "Verbindet EEBUS-SHIP/SPINE-Geräte, stellt NexoWatt EOS als HEMS bereit und übergibt vertrauenswürdige IF_CLS_CTRL-/LPC-§14a-Grenzen ohne manuelle CLS-Datenpunktzuordnung direkt an den zentralen EOS-Regler.",
+      "ru": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC.",
+      "pt": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC.",
+      "nl": "Verbindt EEBUS SHIP/SPINE-apparaten, presenteert NexoWatt EOS als HEMS en stuurt vertrouwde IF_CLS_CTRL-/LPC-§14a-limieten zonder handmatige CLS-datapunttoewijzing direct naar de centrale EOS-regelaar.",
+      "fr": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC.",
+      "it": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC.",
+      "es": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC.",
+      "pl": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC.",
+      "uk": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC.",
+      "zh-cn": "Connect local EEBUS SHIP/SPINE devices and expose NexoWatt EOS as HEMS with SHIP pairing, SPINE discovery and field-test mappings for wallboxes, CLS boxes, smart meters, PV, batteries and HVAC."
+    },
+    "authors": [
+      "NexoWatt <info@nexowatt.de>"
+    ],
+    "keywords": [
+      "climate",
+      "cls",
+      "cls-box",
+      "control-box",
+      "eebus",
+      "energy",
+      "heat-pump",
+      "hems",
+      "hvac",
+      "inverter",
+      "nexowatt",
+      "ship",
+      "smart-meter",
+      "spine",
+      "wallbox"
+    ],
+    "licenseInformation": {
+      "type": "limited",
+      "license": "NexoWatt Proprietary License",
+      "link": "https://raw.githubusercontent.com/NexoWatt/ioBroker.eebus/main/LICENSE"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "eebus.svg",
+    "enabled": false,
+    "extIcon": "https://raw.githubusercontent.com/NexoWatt/ioBroker.eebus/main/admin/eebus.svg",
+    "readme": "https://github.com/NexoWatt/ioBroker.eebus/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "energy",
+    "tier": 2,
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "adminUI": {
+      "config": "json"
+    },
+    "dataFolder": "eebus.%INSTANCE%",
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.7.22"
+      }
+    ],
+    "protectedNative": [
+      "certificate",
+      "privateKey",
+      "pairingPin"
+    ],
+    "encryptedNative": [
+      "privateKey",
+      "pairingPin"
+    ],
+    "messagebox": true,
+    "news": {
+      "0.3.0": {
+        "en": "Direct IF_CLS_CTRL/LPC bridge to NexoWatt EOS without manual CLS datapoint mapping. Commands use an in-memory fast path and immediate EOS control cycle; final correlated SPINE result and effective readback are sent only after the central cycle succeeds. Heartbeat/failsafe supervision and configurable timing diagnostics are included.",
+        "de": "Direkte IF_CLS_CTRL-/LPC-Anbindung an NexoWatt EOS ohne manuelle CLS-Datenpunktzuordnung. Befehle nutzen einen schnellen Arbeitsspeicherpfad und starten sofort den EOS-Regelzyklus; das finale korrelierte SPINE-Ergebnis und der effektive Readback werden erst nach erfolgreichem zentralem Regelzyklus gesendet. Heartbeat-/Failsafe-Überwachung und konfigurierbare Zeitdiagnosen sind enthalten.",
+        "nl": "Directe IF_CLS_CTRL-/LPC-koppeling met NexoWatt EOS zonder handmatige CLS-datapunten. Commando’s gebruiken een snel geheugenpad en starten direct de EOS-regelcyclus; het definitieve gecorreleerde SPINE-resultaat en de effectieve readback worden pas na een succesvolle centrale regelcyclus verzonden. Heartbeat-/failsafe-bewaking en configureerbare timingdiagnostiek zijn inbegrepen."
+      },
+      "0.2.2": {
+        "en": "Fixed the NexoWatt EOS HEMS identity and migrated legacy names.",
+        "de": "NexoWatt-EOS-HEMS-Identität korrigiert und alte Bezeichnungen migriert.",
+        "nl": "NexoWatt EOS HEMS-identiteit gecorrigeerd en oude namen gemigreerd."
+      }
+    }
+  },
+  "native": {
+    "discoveryEnabled": true,
+    "measurementIntervalSec": 10,
+    "metadataIntervalSec": 60,
+    "shipServerEnabled": true,
+    "announceShipService": true,
+    "shipPort": 4712,
+    "shipPath": "/ship/",
+    "brand": "NexoWatt",
+    "model": "EOS",
+    "deviceType": "EnergyManagementSystem",
+    "deviceCategories": "2",
+    "ianaPen": "999999",
+    "pairingPin": "",
+    "certificate": "",
+    "privateKey": "",
+    "shipId": "",
+    "localSki": "",
+    "certificateFingerprint": "",
+    "allowCommandsToUntrustedDevices": false,
+    "commandDryRun": true,
+    "debugRawMessages": false,
+    "serviceName": "NexoWatt EOS",
+    "autoConnectEnabled": true,
+    "shipHandshakeEnabled": true,
+    "spineDiscoveryEnabled": true,
+    "autoAcceptNewDevices": false,
+    "nexowattBridgeEnabled": true,
+    "nexowattUiInstance": "auto",
+    "nexowattBridgeHeartbeatSec": 5,
+    "nexowattBridgeRequestTimeoutMs": 2000,
+    "nexowattAcceptanceTargetMs": 250,
+    "nexowattControlTargetMs": 1000,
+    "nexowattFeedbackTargetMs": 1500,
+    "nexowattImplementationTimeoutMs": 5000,
+    "clsHeartbeatTimeoutSec": 120,
+    "autoApplyClsLimits": true,
+    "sendImplementationResultToCls": true
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": {
+          "en": "Connection",
+          "de": "Verbindung"
+        },
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ],
+  "version": null
+}

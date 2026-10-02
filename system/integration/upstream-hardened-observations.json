@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-01",
+  "kind": "upstream-maintainer-response-source-verification",
+  "reviewBaseCommit": "188fd83bf6f4ca6650ded87daeba910c6ac7cfd0",
+  "upstream": {
+    "repository": "https://github.com/ioBroker/ioBroker",
+    "pullRequest": 760,
+    "commit": "2fd87093573971810cf7f7d2076354197f2bd956",
+    "commitTimestampUtc": "2026-09-30T21:23:31Z",
+    "files": [
+      {
+        "path": "installer_library.sh",
+        "gitBlobSha": "9e9d51b97bbba94f3607d67db92ff7626c2512cd",
+        "sha256": "ae08d35e8c69bcfcebef31baecb4429fc424bb06bb6860920a8ac865863e3853",
+        "bytes": 40280
+      },
+      {
+        "path": "PARAMETERS.md",
+        "gitBlobSha": "aea4bf651653545c57dd073c99c6985fd5be2276",
+        "sha256": "b276e67e05a6431854d60611da89411d4524f1915627ba7c272c833acd10c4cc",
+        "bytes": 10187
+      },
+      {
+        "path": "installer.sh",
+        "gitBlobSha": "d5413898354ec9ab583ebf2fafb06314efa61aea",
+        "sha256": "0b3693c52d3597ca2deb7a5dbd6091ca79e949de8b094b6226cac584cb5f324a",
+        "bytes": 25593
+      },
+      {
+        "path": "fix_installation.sh",
+        "gitBlobSha": "22bcda81c7979485cbd9438e53d90572c5c928be",
+        "sha256": "ad65499a9bb38e24751ae663a85dfeb389ecbcb44538548f04678dbdef2a06a0",
+        "bytes": 21002
+      },
+      {
+        "path": "node-update.sh",
+        "gitBlobSha": "b0e85672b54696c814d746921dd6631249f92b95",
+        "sha256": "f3854ba4030fb31fd13acf7b93c822d338323b4b6ad73657257a0a6b1f1adadf",
+        "bytes": 25149
+      }
+    ],
+    "sourcesRetrievedVia": "GitHub connector",
+    "fileGitBlobHashesVerified": true,
+    "hostedInstallAndFixScriptsVerified": false,
+    "hostedFetchFailure": "Proxy CONNECT timeout; source files were never executed as installers."
+  },
+  "priorFindingAssessment": [
+    {
+      "findingId": "NW-EOS-260930-01",
+      "assessment": "upstream-mitigation-available-eos-integration-and-host-verification-open",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-02",
+      "assessment": "upstream-mitigation-available-eos-integration-and-host-verification-open",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-03",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-04",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-05",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-06",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-07",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-08",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-09",
+      "assessment": "outside-current-linux-profile-unresolved-for-windows",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-10",
+      "assessment": "outside-current-linux-profile-unresolved-for-windows",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-11",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    },
+    {
+      "findingId": "NW-EOS-260930-12",
+      "assessment": "not-closed-by-upstream-hardened-option",
+      "productClosureVerified": false
+    }
+  ],
+  "additionalObservations": [
+    {
+      "id": "UPH-001",
+      "title": "Global Node network capabilities remain in installer path",
+      "evidence": "static-source-only",
+      "source": "installer_library.sh:311-326",
+      "requirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-015"
+      ],
+      "runtimeImpactVerified": false
+    },
+    {
+      "id": "UPH-002",
+      "title": "Docker group removal failure is not reliably propagated",
+      "evidence": "isolated-source-group-loop-stubs",
+      "source": "installer_library.sh:776-783",
+      "requirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-014",
+        "EOS-REQ-017"
+      ],
+      "runtimeImpactVerified": false
+    },
+    {
+      "id": "UPH-003",
+      "title": "Marker read failure is treated like marker absence",
+      "evidence": "isolated-source-policy-generation-stubs",
+      "source": "installer_library.sh:684-687,704-739",
+      "requirementIds": [
+        "EOS-REQ-003",
+        "EOS-REQ-014",
+        "EOS-REQ-017"
+      ],
+      "runtimeImpactVerified": false
+    }
+  ],
+  "tests": {
+    "count": 7,
+    "passed": 7,
+    "failedInFinalRun": 0,
+    "script": "tests/integration/upstream-hardened-source.test.py",
+    "scriptSha256": "1da0d61f6b97f48201fc5bf75239a6be7b163517af3fba9f766b36bdcb2a9b2c",
+    "rawLog": "reports/upstream-hardened-20261001/source-tests.log",
+    "rawLogSha256": "030dafea947f08530432cd6c279b55c6ba7e88d6723efd54b334c08a4581fabd",
+    "runTimestampUtcNotCaptured": true,
+    "logFileTimestampUtc": "2026-10-01T04:13:58.838795+00:00",
+    "command": "EOS_UPSTREAM_INSTALLER_SOURCE=<pinned-source-folder> PYTHONDONTWRITEBYTECODE=1 python3 tests/integration/upstream-hardened-source.test.py",
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "syntaxChecksPassed": 4,
+    "initialHarnessFailurePreserved": "reports/upstream-hardened-20261001/initial-harness-error.log",
+    "countMeaning": "Seven distinct source-fragment/control tests; repeated executions not added; tests also reproduce open weaknesses."
+  },
+  "testToolThreatModel": {
+    "Spoofing": "SHA-256 pin rejects other source versions; no proof of installed artifact identity.",
+    "Tampering": "Only reviewed source fragments extracted; no full library sourcing; trusted test code and local development workspace required.",
+    "Repudiation": "Source Git blobs, SHA-256, script and output hashes recorded; exact first final-run start timestamp was not captured.",
+    "Information Disclosure": "Synthetic roles/paths and no production credentials; child receives minimal environment.",
+    "Denial of Service": "Each bash subprocess has five-second timeout; no network I/O.",
+    "Elevation of Privilege": "Privileged calls replaced with inert shell functions; no real sudo, group writes, setcap or installation."
+  },
+  "reviewDocument": "docs/security/UPSTREAM_HARDENED_REVIEW_2026-10-01.md",
+  "actualHostPrivilegeVerificationPerformed": false,
+  "runtimeProductSourcesChanged": false,
+  "upstreamCodeMergedIntoEos": false,
+  "productReleaseApproved": false,
+  "craConformityDeclared": false,
+  "iecConformityDeclared": false
+}

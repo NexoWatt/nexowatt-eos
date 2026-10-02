@@ -1,0 +1,442 @@
+TAP version 13
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 1 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 5.371161
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 2 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 3.904261
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 3 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 201.213327
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 4 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 3.423603
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 5 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 2.186771
+  type: 'test'
+  ...
+# Subtest: onboarding public trust and secret modes survive restrictive inherited umask
+ok 6 - onboarding public trust and secret modes survive restrictive inherited umask
+  ---
+  duration_ms: 111.303426
+  type: 'test'
+  ...
+# Subtest: failure to revoke the trial permit still attempts to stop the controller
+ok 7 - failure to revoke the trial permit still attempts to stop the controller
+  ---
+  duration_ms: 0.268226
+  type: 'test'
+  ...
+# Subtest: failed revocation and failed stop report the more specific stop failure
+ok 8 - failed revocation and failed stop report the more specific stop failure
+  ---
+  duration_ms: 0.239523
+  type: 'test'
+  ...
+# Subtest: concurrent release change is rejected after acquiring the maintenance lock
+ok 9 - concurrent release change is rejected after acquiring the maintenance lock
+  ---
+  duration_ms: 5.13574
+  type: 'test'
+  ...
+# Subtest: readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+ok 10 - readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+  ---
+  duration_ms: 2.399202
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected success
+ok 11 - readiness rejects admin unexpected success
+  ---
+  duration_ms: 0.566488
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unrelated forbidden response
+ok 12 - readiness rejects admin unrelated forbidden response
+  ---
+  duration_ms: 0.613068
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin external redirect
+ok 13 - readiness rejects admin external redirect
+  ---
+  duration_ms: 1.404287
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin protocol relative redirect
+ok 14 - readiness rejects admin protocol relative redirect
+  ---
+  duration_ms: 0.560469
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected local redirect
+ok 15 - readiness rejects admin unexpected local redirect
+  ---
+  duration_ms: 0.43547
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin extra redirect parameters
+ok 16 - readiness rejects admin extra redirect parameters
+  ---
+  duration_ms: 0.798379
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous writes
+ok 17 - readiness rejects UI anonymous writes
+  ---
+  duration_ms: 1.005408
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous admin
+ok 18 - readiness rejects UI anonymous admin
+  ---
+  duration_ms: 0.770076
+  type: 'test'
+  ...
+# Subtest: readiness rejects unverified peer
+ok 19 - readiness rejects unverified peer
+  ---
+  duration_ms: 0.353986
+  type: 'test'
+  ...
+# Subtest: readiness rejects old TLS version
+ok 20 - readiness rejects old TLS version
+  ---
+  duration_ms: 0.522431
+  type: 'test'
+  ...
+# Subtest: readiness rejects oversized body
+ok 21 - readiness rejects oversized body
+  ---
+  duration_ms: 0.345283
+  type: 'test'
+  ...
+# Subtest: readiness rejects invalid UI JSON
+ok 22 - readiness rejects invalid UI JSON
+  ---
+  duration_ms: 0.345884
+  type: 'test'
+  ...
+# Subtest: OS parser never evaluates shell substitutions or accepts malformed assignments
+ok 23 - OS parser never evaluates shell substitutions or accepts malformed assignments
+  ---
+  duration_ms: 2.542609
+  type: 'test'
+  ...
+# Subtest: fresh supported fixture with exact Node matches read-only prerequisites
+ok 24 - fresh supported fixture with exact Node matches read-only prerequisites
+  ---
+  duration_ms: 7.892829
+  type: 'test'
+  ...
+# Subtest: preflight rejects wrong OS and exact Node drift
+ok 25 - preflight rejects wrong OS and exact Node drift
+  ---
+  duration_ms: 7.691395
+  type: 'test'
+  ...
+# Subtest: preflight rejects privileged Node, existing identity and occupied database ports
+ok 26 - preflight rejects privileged Node, existing identity and occupied database ports
+  ---
+  duration_ms: 4.366991
+  type: 'test'
+  ...
+# Subtest: fresh-path check catches a dangling symlink instead of overwriting it
+ok 27 - fresh-path check catches a dangling symlink instead of overwriting it
+  ---
+  duration_ms: 5.041613
+  type: 'test'
+  ...
+# Subtest: merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+ok 28 - merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+  ---
+  duration_ms: 0.589723
+  type: 'test'
+  ...
+# Subtest: generated host config passes real transport and bootstrap validators
+ok 29 - generated host config passes real transport and bootstrap validators
+  ---
+  duration_ms: 149.764454
+  type: 'test'
+  ...
+# Subtest: private writes reject replacement and symlink targets
+ok 30 - private writes reject replacement and symlink targets
+  ---
+  duration_ms: 0.781704
+  type: 'test'
+  ...
+# Subtest: installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+ok 31 - installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+  ---
+  duration_ms: 5.048273
+  type: 'test'
+  ...
+# Subtest: installer repeats the verified integrated port profile before persistent changes
+ok 32 - installer repeats the verified integrated port profile before persistent changes
+  ---
+  duration_ms: 4.309845
+  type: 'test'
+  ...
+# Subtest: verified catalog selects web port checks without changing core-only prerequisites
+ok 33 - verified catalog selects web port checks without changing core-only prerequisites
+  ---
+  duration_ms: 0.375278
+  type: 'test'
+  ...
+# Subtest: disabled install writes restricted config and units but never enables or starts services
+ok 34 - disabled install writes restricted config and units but never enables or starts services
+  ---
+  duration_ms: 7.71498
+  type: 'test'
+  ...
+# Subtest: pinned release state write failure prevents every service start or enable
+ok 35 - pinned release state write failure prevents every service start or enable
+  ---
+  duration_ms: 8.95981
+  type: 'test'
+  ...
+# Subtest: privileged group detected after identity creation stops before provisioning
+ok 36 - privileged group detected after identity creation stops before provisioning
+  ---
+  duration_ms: 3.799762
+  type: 'test'
+  ...
+# Subtest: start follows TLS databases then init then controller and writes root marker
+ok 37 - start follows TLS databases then init then controller and writes root marker
+  ---
+  duration_ms: 10.948857
+  type: 'test'
+  ...
+# Subtest: initialization failure stops and disables units without starting controller
+ok 38 - initialization failure stops and disables units without starting controller
+  ---
+  duration_ms: 5.958141
+  type: 'test'
+  ...
+# Subtest: cleanup failure is reported rather than claimed as a stopped installation
+ok 39 - cleanup failure is reported rather than claimed as a stopped installation
+  ---
+  duration_ms: 3.914897
+  type: 'test'
+  ...
+# Subtest: unit security boundaries and network compatibility remain explicit
+ok 40 - unit security boundaries and network compatibility remain explicit
+  ---
+  duration_ms: 0.605477
+  type: 'test'
+  ...
+# Subtest: systemd-analyze accepts complete unit grammar in isolated root fixture
+ok 41 - systemd-analyze accepts complete unit grammar in isolated root fixture
+  ---
+  duration_ms: 21.848167
+  type: 'test'
+  ...
+# Subtest: web listeners are reserved only for the verified integrated profile, including IPv6
+ok 42 - web listeners are reserved only for the verified integrated profile, including IPv6
+  ---
+  duration_ms: 14.367272
+  type: 'test'
+  ...
+# Subtest: malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+ok 43 - malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+  ---
+  duration_ms: 3.421581
+  type: 'test'
+  ...
+# Subtest: untrusted or non-executable tools are rejected before executing their bytes
+ok 44 - untrusted or non-executable tools are rejected before executing their bytes
+  ---
+  duration_ms: 2.187852
+  type: 'test'
+  ...
+# Subtest: protected distribution symlink is allowed, writable target and private runtime traversal are denied
+ok 45 - protected distribution symlink is allowed, writable target and private runtime traversal are denied
+  ---
+  duration_ms: 3.863909
+  type: 'test'
+  ...
+# Subtest: nonregular executable path, unavailable manager and invalid hostname fail before installation
+ok 46 - nonregular executable path, unavailable manager and invalid hostname fail before installation
+  ---
+  duration_ms: 1.914599
+  type: 'test'
+  ...
+# Subtest: setuid or setgid runtime executables are never executed by the prerequisite checker
+ok 47 - setuid or setgid runtime executables are never executed by the prerequisite checker
+  ---
+  duration_ms: 3.827525
+  type: 'test'
+  ...
+# Subtest: execution errors cannot be accepted through otherwise plausible output and exit status
+ok 48 - execution errors cannot be accepted through otherwise plausible output and exit status
+  ---
+  duration_ms: 3.999895
+  type: 'test'
+  ...
+# Subtest: signed integrated bundle, protected inputs and simulated Debian host pass without host mutation or secret output
+ok 49 - signed integrated bundle, protected inputs and simulated Debian host pass without host mutation or secret output
+  ---
+  duration_ms: 186.766921
+  type: 'test'
+  ...
+# Subtest: tampered signed payload and wrong signer fail before target commands or credential validation
+ok 50 - tampered signed payload and wrong signer fail before target commands or credential validation
+  ---
+  duration_ms: 80.417219
+  type: 'test'
+  ...
+# Subtest: wrong signing public key is rejected even when all host prerequisites are ready
+ok 51 - wrong signing public key is rejected even when all host prerequisites are ready
+  ---
+  duration_ms: 84.741777
+  type: 'test'
+  ...
+# Subtest: a valid signature never promotes a pending catalog entry
+ok 52 - a valid signature never promotes a pending catalog entry
+  ---
+  duration_ms: 163.099148
+  type: 'test'
+  ...
+# Subtest: current release must declare the observed target architecture and exact Node version
+ok 53 - current release must declare the observed target architecture and exact Node version
+  ---
+  duration_ms: 85.705536
+  type: 'test'
+  ...
+# Subtest: duplicate service and installer credentials or browser-selected admin role fail before target commands
+ok 54 - duplicate service and installer credentials or browser-selected admin role fail before target commands
+  ---
+  duration_ms: 77.93419
+  type: 'test'
+  ...
+# Subtest: secret modes, symlinks and invalid certificate hosts are rejected before target commands
+ok 55 - secret modes, symlinks and invalid certificate hosts are rejected before target commands
+  ---
+  duration_ms: 125.098876
+  type: 'test'
+  ...
+# Subtest: occupied integrated UI port yields a non-mutating rejected report
+ok 56 - occupied integrated UI port yields a non-mutating rejected report
+  ---
+  duration_ms: 62.648488
+  type: 'test'
+  ...
+# Subtest: CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+ok 57 - CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+  ---
+  duration_ms: 173.776864
+  type: 'test'
+  ...
+# Subtest: direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+ok 58 - direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+  ---
+  duration_ms: 62.282073
+  type: 'test'
+  ...
+# Subtest: verified installer forwards the same catalog port profile to the privileged host recheck
+ok 59 - verified installer forwards the same catalog port profile to the privileged host recheck
+  ---
+  duration_ms: 63.070292
+  type: 'test'
+  ...
+# Subtest: key generator refuses overwrite and protects private material
+ok 60 - key generator refuses overwrite and protects private material
+  ---
+  duration_ms: 85.995784
+  type: 'test'
+  ...
+# Subtest: verify checks signed package identity, digest, policy and exact runtime
+ok 61 - verify checks signed package identity, digest, policy and exact runtime
+  ---
+  duration_ms: 139.464615
+  type: 'test'
+  ...
+# Subtest: inventory generation never turns installed code into an approved adapter
+ok 62 - inventory generation never turns installed code into an approved adapter
+  ---
+  duration_ms: 73.650971
+  type: 'test'
+  ...
+# Subtest: changed package tree and pending catalog do not become approved by signing
+ok 63 - changed package tree and pending catalog do not become approved by signing
+  ---
+  duration_ms: 110.542508
+  type: 'test'
+  ...
+# Subtest: URL/range root dependencies and lifecycle scripts are rejected
+ok 64 - URL/range root dependencies and lifecycle scripts are rejected
+  ---
+  duration_ms: 67.064219
+  type: 'test'
+  ...
+# Subtest: installed check validates retained signature and detects changed release bytes
+ok 65 - installed check validates retained signature and detects changed release bytes
+  ---
+  duration_ms: 82.92092
+  type: 'test'
+  ...
+# Subtest: bundle preparation removes npm executable links and rejects other symlinks
+ok 66 - bundle preparation removes npm executable links and rejects other symlinks
+  ---
+  duration_ms: 51.950782
+  type: 'test'
+  ...
+# Subtest: CLI rejects duplicate, missing and extra options before work
+ok 67 - CLI rejects duplicate, missing and extra options before work
+  ---
+  duration_ms: 0.421007
+  type: 'test'
+  ...
+# Subtest: actual aliased installed tree and omitted optional package bind
+ok 68 - actual aliased installed tree and omitted optional package bind
+  ---
+  duration_ms: 13.740261
+  type: 'test'
+  ...
+# Subtest: stale or conflicting root digest is refused
+ok 69 - stale or conflicting root digest is refused
+  ---
+  duration_ms: 8.585019
+  type: 'test'
+  ...
+# Subtest: changed installed identity and unlisted package are refused
+ok 70 - changed installed identity and unlisted package are refused
+  ---
+  duration_ms: 9.85874
+  type: 'test'
+  ...
+# Subtest: missing required package, phantom component and dangling dependency are refused
+ok 71 - missing required package, phantom component and dangling dependency are refused
+  ---
+  duration_ms: 6.7575
+  type: 'test'
+  ...
+# Subtest: known vendored files must be present and bound by exact tree hash
+ok 72 - known vendored files must be present and bound by exact tree hash
+  ---
+  duration_ms: 16.065057
+  type: 'test'
+  ...
+1..72
+# tests 72
+# suites 0
+# pass 72
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1403.546854

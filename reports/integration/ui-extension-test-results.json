@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "kind": "ui-extension-development-tool-verification",
+  "sourceBaseCommit": "0e34142a49d96945100bd2721d2fd025d09d0a59",
+  "results": [
+    {
+      "id": "blueprint.test.py",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tests/architecture/blueprint.test.py"
+      ],
+      "startedAtUtc": "2026-09-30T20:45:14.753029+00:00",
+      "finishedAtUtc": "2026-09-30T20:45:14.998240+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/blueprint.test.py.log",
+      "sha256": "c54e2ba08f9e6bab3c2a64adf8c245a24f9bc86ae6319d36930e0db1df27dae8",
+      "testCount": 31
+    },
+    {
+      "id": "component-sources.test.py",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tests/architecture/component-sources.test.py"
+      ],
+      "startedAtUtc": "2026-09-30T20:49:31.260165+00:00",
+      "finishedAtUtc": "2026-09-30T20:49:33.107091+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/component-sources.test.py.v021.log",
+      "sha256": "0674346ee8c3b73905d4b86876551cde6975b841ab876a80b2ca5f50b73dc28b",
+      "testCount": 29
+    },
+    {
+      "id": "contracts.test.py",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tests/architecture/contracts.test.py"
+      ],
+      "startedAtUtc": "2026-09-30T20:45:16.748254+00:00",
+      "finishedAtUtc": "2026-09-30T20:45:19.080341+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/contracts.test.py.log",
+      "sha256": "39ef5cec132b7be55561e3ae00486d2336c4870642ac2cf330b3d98d4973acb2",
+      "testCount": 31
+    },
+    {
+      "id": "sbom.test.py",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tests/architecture/sbom.test.py"
+      ],
+      "startedAtUtc": "2026-09-30T20:45:19.080641+00:00",
+      "finishedAtUtc": "2026-09-30T20:45:20.275440+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/sbom.test.py.log",
+      "sha256": "5112e7d68e1e7b3a9d09866d912cfc2a54cf930b31e0077e055d60adedbb925b",
+      "testCount": 21
+    },
+    {
+      "id": "blueprint",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/architecture/check-blueprint.py"
+      ],
+      "startedAtUtc": "2026-09-30T20:45:20.275716+00:00",
+      "finishedAtUtc": "2026-09-30T20:45:20.330599+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/blueprint.log",
+      "sha256": "1928e25e801a93ff0b98a79b249defcf3c38027c8d9264beefc77a5452995d5e"
+    },
+    {
+      "id": "contracts",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/architecture/validate-contracts.py",
+        "--examples"
+      ],
+      "startedAtUtc": "2026-09-30T20:45:20.330859+00:00",
+      "finishedAtUtc": "2026-09-30T20:45:20.525655+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/contracts.log",
+      "sha256": "2931972ff517d40fa83e6086dba904f99bc3024f293bb9976c7fae5a143bc5d8"
+    },
+    {
+      "id": "component-source-inventory",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/sbom/component_sources.py",
+        "--inventory",
+        "system/components/source-inventory.json",
+        "--check-only"
+      ],
+      "startedAtUtc": "2026-09-30T20:49:33.108228+00:00",
+      "finishedAtUtc": "2026-09-30T20:49:33.245781+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/component-source-inventory.v021.log",
+      "sha256": "e647937c5a4dada2ed3c6e9c8436c615e6184893d8a768aa667faa2daa2d8c93"
+    },
+    {
+      "id": "component-sbom-generation",
+      "command": [
+        "/workspace/scratch/6383b3161c96/architecture-lock-venv/bin/python",
+        "tools/sbom/component_sources.py",
+        "--inventory",
+        "system/components/source-inventory.json",
+        "--output",
+        "/workspace/scratch/6383b3161c96/audit/eos-component-sources-ui-v021.cdx.json"
+      ],
+      "startedAtUtc": "2026-09-30T20:49:33.246138+00:00",
+      "finishedAtUtc": "2026-09-30T20:49:33.406169+00:00",
+      "exitCode": 0,
+      "rawEvidence": "reports/integration/ui-extension-checks/component-sbom-generation.v021.log",
+      "sha256": "9e69a2ddd983ee843068295a7e80128e6473df45b35159eac7784874ffbbd257"
+    }
+  ],
+  "automatedToolTestsPassed": 112,
+  "productReleaseApproved": false,
+  "runtimeIntegrated": false,
+  "verificationNote": "Final component generator v0.2.1 rechecked after provenance review; v0.2.0 logs retained as superseded history, not added to counts."
+}

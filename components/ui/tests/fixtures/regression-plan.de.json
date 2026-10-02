@@ -1,0 +1,45 @@
+{
+  "hinweis": "Plan fuer spaetere Regressionstests. Diese Datei wird in 0.7.58 noch nicht gegen die Runtime ausgefuehrt.",
+  "kritische_bereiche": [
+    {
+      "id": "storage-split-zero-valid",
+      "bereich": "storage-flow",
+      "beschreibung": "Getrennte Speicher-DPs mit 0 W Laden/Entladen sind gueltige Werte und duerfen nicht als fehlend gelten."
+    },
+    {
+      "id": "storage-signed-discharge",
+      "bereich": "storage-flow",
+      "beschreibung": "Signed Speicher-DP mit positivem Wert muss als Entladung interpretiert werden."
+    },
+    {
+      "id": "storage-signed-charge",
+      "bereich": "storage-flow",
+      "beschreibung": "Signed Speicher-DP mit negativem Wert muss als Ladung interpretiert werden."
+    },
+    {
+      "id": "storage-no-dp-calculated-only-with-real-balance",
+      "bereich": "storage-flow",
+      "beschreibung": "Rechenfallback fuer Speicher darf nur greifen, wenn kein echter Speicher-DP vorhanden und die Bilanz belastbar ist."
+    },
+    {
+      "id": "evcs-hidden-without-real-wallbox",
+      "bereich": "feature-visibility",
+      "beschreibung": "EVCS darf im Kundenfrontend nur sichtbar sein, wenn echte Ladepunkte konfiguriert sind."
+    },
+    {
+      "id": "storagefarm-hidden-without-real-farm",
+      "bereich": "feature-visibility",
+      "beschreibung": "Speicherfarm darf nur sichtbar sein, wenn Farm aktiv und echte Farm-Speicher konfiguriert sind."
+    },
+    {
+      "id": "license-masked-key-not-stored",
+      "bereich": "license",
+      "beschreibung": "Maskierte Lizenzwerte wie ******** duerfen niemals als echter Lizenzschluessel gespeichert werden."
+    },
+    {
+      "id": "info-connection-server-lifecycle",
+      "bereich": "connection",
+      "beschreibung": "info.connection wird true bei laufendem Webserver und false bei unload/server error."
+    }
+  ]
+}

@@ -1,0 +1,587 @@
+{
+    "i18n": true,
+    "type": "panel",
+    "label": "Notifications",
+    "items": {
+        "_header": {
+            "type": "header",
+            "size": 2,
+            "text": "Notifications",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "notificationsType": {
+            "type": "select",
+            "label": "Notifications type",
+            "xs": 12,
+            "sm": 12,
+            "md": 8,
+            "lg": 4,
+            "xl": 4,
+            "options": [
+                {
+                    "label": "E-Mail",
+                    "value": "E-Mail"
+                },
+                {
+                    "label": "Discord",
+                    "value": "Discord"
+                },
+                {
+                    "label": "Gotify",
+                    "value": "Gotify"
+                },
+                {
+                    "label": "Matrix",
+                    "value": "Matrix"
+                },
+                {
+                    "label": "Pushover",
+                    "value": "Pushover"
+                },
+                {
+                    "label": "Signal",
+                    "value": "Signal"
+                },
+                {
+                    "label": "Telegram",
+                    "value": "Telegram"
+                },
+                {
+                    "label": "WhatsApp",
+                    "value": "WhatsApp"
+                }
+            ],
+            "newLine": true
+        },
+        "_helpLine1": {
+            "newLine": true,
+            "type": "divider",
+            "color": "primary"
+        },
+        "telegramInstance": {
+            "hidden": "data.notificationsType !== 'Telegram'",
+            "xs": 12,
+            "sm": 12,
+            "md": 8,
+            "lg": 8,
+            "xl": 8,
+            "type": "instance",
+            "label": "Telegram instance",
+            "newLine": true,
+            "adapter": "telegram",
+            "onlyEnabled": false
+        },
+        "telegramNoticeType": {
+            "hidden": "data.notificationsType !== 'Telegram'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longTelegramNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortTelegramNotice"
+                }
+            ],
+            "newLine": true
+        },
+        "telegramWaitToSend": {
+            "hidden": "data.notificationsType !== 'Telegram'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds"
+        },
+        "telegramSilentNotice": {
+            "hidden": "data.notificationsType !== 'Telegram'",
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Silent notice",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "telegramOnlyError": {
+            "hidden": "data.notificationsType !== 'Telegram'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "whatsappInstance": {
+            "hidden": "data.notificationsType !== 'WhatsApp'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "instance",
+            "label": "WhatsApp instance",
+            "newLine": true,
+            "adapter": "whatsapp-cmb",
+            "onlyEnabled": false
+        },
+        "whatsappNoticeType": {
+            "hidden": "data.notificationsType !== 'WhatsApp'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longWhatsappNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortWhatsappNotice"
+                }
+            ]
+        },
+        "whatsappWaitToSend": {
+            "hidden": "data.notificationsType !== 'WhatsApp'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds",
+            "newLine": true
+        },
+        "whatsappOnlyError": {
+            "hidden": "data.notificationsType !== 'WhatsApp'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        },
+        "gotifyInstance": {
+            "hidden": "data.notificationsType !== 'Gotify'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "instance",
+            "label": "Gotify instance",
+            "newLine": true,
+            "adapter": "gotify",
+            "onlyEnabled": false
+        },
+        "gotifyNoticeType": {
+            "hidden": "data.notificationsType !== 'Gotify'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "help": "Notification style",
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longGotifyNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortGotifyNotice"
+                }
+            ]
+        },
+        "gotifyWaitToSend": {
+            "hidden": "data.notificationsType !== 'Gotify'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds",
+            "newLine": true
+        },
+        "gotifyOnlyError": {
+            "hidden": "data.notificationsType !== 'Gotify'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        },
+        "signalInstance": {
+            "hidden": "data.notificationsType !== 'Signal'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "instance",
+            "label": "Signal instance",
+            "newLine": true,
+            "adapter": "signal-cmb",
+            "onlyEnabled": false
+        },
+        "signalNoticeType": {
+            "hidden": "data.notificationsType !== 'Signal'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "help": "Notification style",
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longSignalNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortSignalNotice"
+                }
+            ]
+        },
+        "signalWaitToSend": {
+            "hidden": "data.notificationsType !== 'Signal'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds",
+            "newLine": true
+        },
+        "signalOnlyError": {
+            "hidden": "data.notificationsType !== 'Signal'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        },
+        "matrixInstance": {
+            "hidden": "data.notificationsType !== 'Matrix'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "instance",
+            "label": "Matrix instance",
+            "newLine": true,
+            "adapter": "matrix-org",
+            "onlyEnabled": false
+        },
+        "matrixNoticeType": {
+            "hidden": "data.notificationsType !== 'Matrix'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "help": "Notification style",
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longMatrixNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortMatrixNotice"
+                }
+            ]
+        },
+        "matrixWaitToSend": {
+            "hidden": "data.notificationsType !== 'Matrix'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds",
+            "newLine": true
+        },
+        "matrixOnlyError": {
+            "hidden": "data.notificationsType !== 'Matrix'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        },
+        "pushoverInstance": {
+            "hidden": "data.notificationsType !== 'Pushover'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "instance",
+            "label": "Pushover instance",
+            "newLine": true,
+            "adapter": "pushover",
+            "onlyEnabled": false
+        },
+        "pushoverNoticeType": {
+            "hidden": "data.notificationsType !== 'Pushover'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "help": "Notification style",
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longPushoverNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortPushoverNotice"
+                }
+            ]
+        },
+        "pushoverWaitToSend": {
+            "hidden": "data.notificationsType !== 'Pushover'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds",
+            "newLine": true
+        },
+        "pushoverDeviceID": {
+            "hidden": "data.notificationsType !== 'Pushover'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "text",
+            "label": "Device ID",
+            "help": "optional"
+        },
+        "pushoverSilentNotice": {
+            "hidden": "data.notificationsType !== 'Pushover'",
+            "type": "checkbox",
+            "label": "Silent notice",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        },
+        "pushoverOnlyError": {
+            "hidden": "data.notificationsType !== 'Pushover'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "emailReceiver": {
+            "hidden": "data.notificationsType !== 'E-Mail'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "text",
+            "label": "Email receiver",
+            "newLine": true
+        },
+        "emailSender": {
+            "hidden": "data.notificationsType !== 'E-Mail'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "text",
+            "label": "Email sender"
+        },
+        "emailInstance": {
+            "hidden": "data.notificationsType !== 'E-Mail'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "instance",
+            "label": "Email instance",
+            "newLine": true,
+            "adapter": "email",
+            "onlyEnabled": false
+        },
+        "emailNoticeType": {
+            "hidden": "data.notificationsType !== 'E-Mail'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longEmailNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortEmailNotice"
+                }
+            ]
+        },
+        "emailWaitToSend": {
+            "hidden": "data.notificationsType !== 'E-Mail'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds",
+            "newLine": true
+        },
+        "emailOnlyError": {
+            "hidden": "data.notificationsType !== 'E-Mail'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        },
+        "discordInstance": {
+            "hidden": "data.notificationsType !== 'Discord'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "instance",
+            "label": "Discord instance",
+            "newLine": true,
+            "adapter": "discord",
+            "onlyEnabled": false
+        },
+        "discordNoticeType": {
+            "hidden": "data.notificationsType !== 'Discord'",
+            "type": "select",
+            "label": "Notification style",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "help": "Notification style",
+            "options": [
+                {
+                    "label": "Long notifications",
+                    "value": "longDiscordNotice"
+                },
+                {
+                    "label": "Short notifications",
+                    "value": "shortDiscordNotice"
+                }
+            ]
+        },
+        "discordWaitToSend": {
+            "hidden": "data.notificationsType !== 'Discord'",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 0,
+            "max": 20,
+            "type": "number",
+            "label": "Waiting for the send (seconds)",
+            "help": "seconds",
+            "newLine": true
+        },
+        "discordOnlyError": {
+            "hidden": "data.notificationsType !== 'Discord'",
+            "type": "checkbox",
+            "label": "Notification only on errors",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        }
+    }
+}

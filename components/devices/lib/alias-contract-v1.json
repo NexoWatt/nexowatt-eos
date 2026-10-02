@@ -1,0 +1,1247 @@
+{
+  "contractId": "nexowatt-device-alias-contract",
+  "schemaVersion": 1,
+  "status": "stable",
+  "namespace": "v1",
+  "metadataPath": "aliases.meta",
+  "standardPath": "aliases.v1",
+  "legacyPath": "aliases",
+  "legacyAliasesPreserved": true,
+  "canonicalUnits": {
+    "power": "W",
+    "energy": "Wh",
+    "current": "A",
+    "voltage": "V",
+    "temperature": "°C",
+    "duration": "s",
+    "percentage": "%",
+    "frequency": "Hz",
+    "timestamp": "ms"
+  },
+  "signConventions": {
+    "meter.r.power": "positive=grid import, negative=grid export",
+    "storage.r.power": "positive=discharge, negative=charge",
+    "evCharger.r.power": "positive=vehicle charging consumption",
+    "pvInverter.r.power": "positive=PV generation",
+    "solarCharger.r.power": "positive=DC/PV charging output"
+  },
+  "categoryToDeviceClass": {
+    "EVCS": "evCharger",
+    "EVSE": "evCharger",
+    "METER": "meter",
+    "PV_INVERTER": "pvInverter",
+    "ESS": "storageSystem",
+    "BATTERY": "battery",
+    "BATTERY_INVERTER": "batteryInverter",
+    "HEAT": "heat",
+    "IO": "io",
+    "CHARGER": "solarCharger",
+    "DC_CHARGER": "solarCharger",
+    "GENERIC": "generic"
+  },
+  "common": {
+    "required": {
+      "comm.connected": {
+        "type": "boolean",
+        "role": "indicator.connected",
+        "capability": "read.comm.connected"
+      },
+      "comm.lastError": {
+        "type": "string",
+        "role": "text",
+        "capability": "read.comm.lastError"
+      },
+      "alarm.offline": {
+        "type": "boolean",
+        "role": "indicator.alarm",
+        "capability": "read.alarm.offline"
+      },
+      "r.online": {
+        "type": "boolean",
+        "role": "indicator.connected",
+        "capability": "read.online"
+      },
+      "r.heartbeat": {
+        "type": "number",
+        "role": "value",
+        "capability": "read.heartbeat"
+      },
+      "r.lastSeenMs": {
+        "type": "number",
+        "role": "value.time",
+        "unit": "ms",
+        "capability": "read.lastSeenMs"
+      }
+    },
+    "optional": {
+      "alarm.fault": {
+        "type": "boolean",
+        "role": "indicator.alarm",
+        "capability": "read.alarm.fault"
+      },
+      "alarm.warning": {
+        "type": "boolean",
+        "role": "indicator.alarm",
+        "capability": "read.alarm.warning"
+      }
+    }
+  },
+  "deviceClasses": {
+    "evCharger": {
+      "required": {
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        }
+      },
+      "optional": {
+        "r.statusText": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.statusText"
+        },
+        "r.available": {
+          "type": "boolean",
+          "role": "indicator.available",
+          "capability": "read.available"
+        },
+        "r.vehicleConnected": {
+          "type": "boolean",
+          "role": "indicator.connected",
+          "capability": "read.vehicleConnected"
+        },
+        "r.charging": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.charging"
+        },
+        "r.chargingReleased": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.chargingReleased"
+        },
+        "r.waitingForCurrent": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.waitingForCurrent"
+        },
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.energySession": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energySession"
+        },
+        "r.energyTotal": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyTotal"
+        },
+        "r.soc": {
+          "type": "number",
+          "role": "value.battery",
+          "unit": "%",
+          "capability": "read.soc"
+        },
+        "r.currentA": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentA"
+        },
+        "r.currentL1": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentL1"
+        },
+        "r.currentL2": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentL2"
+        },
+        "r.currentL3": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentL3"
+        },
+        "r.currentLimitA": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentLimitA"
+        },
+        "r.voltageL1": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltageL1"
+        },
+        "r.voltageL2": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltageL2"
+        },
+        "r.voltageL3": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltageL3"
+        },
+        "ctrl.run": {
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.run"
+        },
+        "ctrl.currentLimitA": {
+          "type": "number",
+          "role": "level.current",
+          "unit": "A",
+          "capability": "write.currentLimitA"
+        },
+        "ctrl.powerLimitW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerLimitW"
+        },
+        "ctrl.phaseMode": {
+          "type": "number",
+          "role": "level",
+          "unit": "phases",
+          "capability": "write.phaseMode"
+        },
+        "ctrl.unlockPlug": {
+          "type": "boolean",
+          "role": "button",
+          "capability": "write.unlockPlug"
+        },
+        "r.errorCode": {
+          "type": "number",
+          "role": "indicator",
+          "capability": "read.errorCode"
+        },
+        "r.currentLimitPct": {
+          "type": "number",
+          "role": "value",
+          "unit": "%",
+          "capability": "read.currentLimitPct"
+        },
+        "r.currentLimitValidTimeS": {
+          "type": "number",
+          "role": "value.interval",
+          "unit": "s",
+          "capability": "read.currentLimitValidTimeS"
+        },
+        "r.currentPhaseSumA": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentPhaseSumA"
+        },
+        "r.safeCurrentA": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.safeCurrentA"
+        },
+        "r.failsafeCurrentA": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.failsafeCurrentA"
+        },
+        "r.failsafeTimeoutS": {
+          "type": "number",
+          "role": "value.interval",
+          "unit": "s",
+          "capability": "read.failsafeTimeoutS"
+        },
+        "r.maxSupportedCurrentA": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.maxSupportedCurrentA"
+        },
+        "r.phaseMode": {
+          "type": "number",
+          "role": "value",
+          "unit": "phases",
+          "capability": "read.phaseMode"
+        },
+        "r.powerLimitW": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerLimitW"
+        },
+        "r.powerEstimated": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerEstimated"
+        },
+        "r.powerFactor": {
+          "type": "number",
+          "role": "value",
+          "unit": "%",
+          "capability": "read.powerFactor"
+        },
+        "r.sessionTimeS": {
+          "type": "number",
+          "role": "value.interval",
+          "unit": "s",
+          "capability": "read.sessionTimeS"
+        },
+        "r.proximityCurrentA": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.proximityCurrentA"
+        },
+        "r.cableState": {
+          "type": "number",
+          "role": "indicator",
+          "capability": "read.cableState"
+        },
+        "r.mode3Code": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.mode3Code"
+        },
+        "r.mode3State": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.mode3State"
+        },
+        "r.evState": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.evState"
+        },
+        "r.controlAccepted": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.controlAccepted"
+        },
+        "r.setpointAccountedFor": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.setpointAccountedFor"
+        },
+        "r.socketSetpointAccountedFor": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.socketSetpointAccountedFor"
+        },
+        "r.scnMaxCurrentEnabled": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.scnMaxCurrentEnabled"
+        },
+        "r.hemsReadWriteEnabled": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.hemsReadWriteEnabled"
+        },
+        "r.hemsCommunicationTimeout": {
+          "type": "boolean",
+          "role": "indicator.alarm",
+          "capability": "read.hemsCommunicationTimeout"
+        },
+        "r.fastCharging": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.fastCharging"
+        },
+        "r.firmwareVersion": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.firmwareVersion"
+        },
+        "r.rfidCardUid": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.rfidCardUid"
+        },
+        "r.modbusBaudRate": {
+          "type": "number",
+          "role": "value",
+          "unit": "Bd",
+          "capability": "read.modbusBaudRate"
+        },
+        "r.modbusParity": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.modbusParity"
+        },
+        "r.modbusSettingsRaw": {
+          "type": "number",
+          "role": "value",
+          "capability": "read.modbusSettingsRaw"
+        },
+        "r.modbusSettingsText": {
+          "type": "string",
+          "role": "text",
+          "capability": "read.modbusSettingsText"
+        },
+        "r.modbusStopBits": {
+          "type": "number",
+          "role": "value",
+          "capability": "read.modbusStopBits"
+        },
+        "ctrl.currentLimitPct": {
+          "type": "number",
+          "role": "level",
+          "unit": "%",
+          "capability": "write.currentLimitPct"
+        },
+        "ctrl.safeCurrentA": {
+          "type": "number",
+          "role": "level.current",
+          "unit": "A",
+          "capability": "write.safeCurrentA"
+        },
+        "ctrl.failsafeCurrentA": {
+          "type": "number",
+          "role": "level.current",
+          "unit": "A",
+          "capability": "write.failsafeCurrentA"
+        },
+        "ctrl.failsafeTimeoutS": {
+          "type": "number",
+          "role": "level.timer",
+          "unit": "s",
+          "capability": "write.failsafeTimeoutS"
+        },
+        "ctrl.communicationTimeoutS": {
+          "type": "number",
+          "role": "level.timer",
+          "unit": "s",
+          "capability": "write.communicationTimeoutS"
+        },
+        "ctrl.networkCurrentLimitA": {
+          "type": "number",
+          "role": "level.current",
+          "unit": "A",
+          "capability": "write.networkCurrentLimitA"
+        },
+        "ctrl.fastCharge": {
+          "type": "boolean",
+          "role": "button",
+          "capability": "write.fastCharge"
+        },
+        "ctrl.rfidReaderEnabled": {
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.rfidReaderEnabled"
+        }
+      }
+    },
+    "meter": {
+      "required": {},
+      "optional": {
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.powerImport": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerImport"
+        },
+        "r.powerExport": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerExport"
+        },
+        "r.energyImport": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyImport"
+        },
+        "r.energyExport": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyExport"
+        },
+        "r.voltageL1": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltageL1"
+        },
+        "r.voltageL2": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltageL2"
+        },
+        "r.voltageL3": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltageL3"
+        },
+        "r.currentL1": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentL1"
+        },
+        "r.currentL2": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentL2"
+        },
+        "r.currentL3": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.currentL3"
+        },
+        "r.frequency": {
+          "type": "number",
+          "role": "value.frequency",
+          "unit": "Hz",
+          "capability": "read.frequency"
+        }
+      }
+    },
+    "pvInverter": {
+      "required": {
+        "r.gridConnected": {
+          "type": "boolean",
+          "role": "indicator.connected",
+          "capability": "read.gridConnected"
+        }
+      },
+      "optional": {
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.energyTotal": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyTotal"
+        },
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        },
+        "ctrl.run": {
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.run"
+        },
+        "ctrl.powerLimitPct": {
+          "type": "number",
+          "role": "level",
+          "unit": "%",
+          "capability": "write.powerLimitPct"
+        },
+        "ctrl.powerLimitW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerLimitW"
+        },
+        "ctrl.powerLimitEnable": {
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.powerLimitEnable"
+        },
+        "r.gridConnectionState": {
+          "type": "number",
+          "role": "indicator",
+          "capability": "read.gridConnectionState"
+        }
+      }
+    },
+    "storageSystem": {
+      "required": {
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.powerCharge": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerCharge"
+        },
+        "r.powerDischarge": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerDischarge"
+        },
+        "alarm.fault": {
+          "type": "boolean",
+          "role": "indicator.alarm",
+          "capability": "read.alarm.fault"
+        }
+      },
+      "optional": {
+        "r.soc": {
+          "type": "number",
+          "role": "value.battery",
+          "unit": "%",
+          "capability": "read.soc"
+        },
+        "r.soh": {
+          "type": "number",
+          "role": "value",
+          "unit": "%",
+          "capability": "read.soh"
+        },
+        "r.gridPower": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.gridPower"
+        },
+        "r.pvPower": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.pvPower"
+        },
+        "r.voltage": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltage"
+        },
+        "r.current": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.current"
+        },
+        "r.temperature": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.temperature"
+        },
+        "r.energyCharge": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyCharge"
+        },
+        "r.energyDischarge": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyDischarge"
+        },
+        "ctrl.run": {
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.run"
+        },
+        "ctrl.powerSetpointW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerSetpointW"
+        },
+        "ctrl.chargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.chargePowerW"
+        },
+        "ctrl.dischargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.dischargePowerW"
+        },
+        "ctrl.maxChargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.maxChargePowerW"
+        },
+        "ctrl.maxDischargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.maxDischargePowerW"
+        },
+        "ctrl.chargeEnable": {
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.chargeEnable"
+        },
+        "ctrl.gridSetpointW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.gridSetpointW"
+        },
+        "ctrl.powerLimitPct": {
+          "type": "number",
+          "role": "level",
+          "unit": "%",
+          "capability": "write.powerLimitPct"
+        },
+        "ctrl.powerLimitW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerLimitW"
+        },
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        },
+        "r.errorCode": {
+          "type": "number",
+          "role": "indicator",
+          "capability": "read.errorCode"
+        },
+        "r.allowedChargePower": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.allowedChargePower"
+        },
+        "r.allowedDischargePower": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.allowedDischargePower"
+        },
+        "r.allowCharge": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.allowCharge"
+        },
+        "r.allowDischarge": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.allowDischarge"
+        },
+        "r.powerAc": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerAc"
+        },
+        "r.powerBalance": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerBalance"
+        },
+        "ctrl.controlMode": {
+          "type": "number",
+          "role": "level",
+          "capability": "write.controlMode"
+        },
+        "ctrl.exportLimitW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.exportLimitW"
+        },
+        "ctrl.exportLimitPct": {
+          "type": "number",
+          "role": "level",
+          "unit": "%",
+          "capability": "write.exportLimitPct"
+        },
+        "ctrl.pvPowerLimitW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.pvPowerLimitW"
+        },
+        "ctrl.powerSetpointL1": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerSetpointL1"
+        },
+        "ctrl.powerSetpointL2": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerSetpointL2"
+        },
+        "ctrl.powerSetpointL3": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerSetpointL3"
+        },
+        "ctrl.napSetpointW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.napSetpointW"
+        }
+      }
+    },
+    "battery": {
+      "required": {
+        "r.soc": {
+          "type": "number",
+          "role": "value.battery",
+          "unit": "%",
+          "capability": "read.soc"
+        },
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.powerCharge": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerCharge"
+        },
+        "r.powerDischarge": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerDischarge"
+        },
+        "r.voltage": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltage"
+        },
+        "alarm.fault": {
+          "type": "boolean",
+          "role": "indicator.alarm",
+          "capability": "read.alarm.fault"
+        }
+      },
+      "optional": {
+        "r.soh": {
+          "type": "number",
+          "role": "value",
+          "unit": "%",
+          "capability": "read.soh"
+        },
+        "r.current": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.current"
+        },
+        "r.temperature": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.temperature"
+        },
+        "r.allowCharge": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.allowCharge"
+        },
+        "r.allowDischarge": {
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.allowDischarge"
+        },
+        "r.energyCharge": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyCharge"
+        },
+        "r.energyDischarge": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyDischarge"
+        },
+        "ctrl.powerSetpointW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerSetpointW"
+        },
+        "ctrl.chargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.chargePowerW"
+        },
+        "ctrl.dischargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.dischargePowerW"
+        },
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        },
+        "r.errorCode": {
+          "type": "number",
+          "role": "indicator",
+          "capability": "read.errorCode"
+        },
+        "ctrl.controlMode": {
+          "type": "number",
+          "role": "level",
+          "capability": "write.controlMode"
+        }
+      }
+    },
+    "batteryInverter": {
+      "required": {
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.powerCharge": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerCharge"
+        },
+        "r.powerDischarge": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.powerDischarge"
+        }
+      },
+      "optional": {
+        "r.soc": {
+          "type": "number",
+          "role": "value.battery",
+          "unit": "%",
+          "capability": "read.soc"
+        },
+        "r.voltage": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltage"
+        },
+        "r.current": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.current"
+        },
+        "r.gridPower": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.gridPower"
+        },
+        "r.pvPower": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.pvPower"
+        },
+        "r.energyCharge": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyCharge"
+        },
+        "r.energyDischarge": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyDischarge"
+        },
+        "ctrl.powerSetpointW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.powerSetpointW"
+        },
+        "ctrl.chargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.chargePowerW"
+        },
+        "ctrl.dischargePowerW": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.dischargePowerW"
+        },
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        },
+        "r.errorCode": {
+          "type": "number",
+          "role": "indicator",
+          "capability": "read.errorCode"
+        },
+        "r.allowedDischargePower": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.allowedDischargePower"
+        }
+      }
+    },
+    "heat": {
+      "required": {},
+      "optional": {
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        },
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.energyTotal": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyTotal"
+        },
+        "r.ambientTemp": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.ambientTemp"
+        },
+        "r.flowTemp": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.flowTemp"
+        },
+        "r.returnTemp": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.returnTemp"
+        },
+        "r.roomTemp": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.roomTemp"
+        },
+        "r.bufferTemp": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.bufferTemp"
+        },
+        "ctrl.run": {
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.run"
+        },
+        "ctrl.operatingMode": {
+          "type": "number",
+          "role": "level",
+          "capability": "write.operatingMode"
+        },
+        "ctrl.flowSetpoint": {
+          "type": "number",
+          "role": "level.temperature",
+          "unit": "°C",
+          "capability": "write.flowSetpoint"
+        },
+        "ctrl.roomSetpointHeating": {
+          "type": "number",
+          "role": "level.temperature",
+          "unit": "°C",
+          "capability": "write.roomSetpointHeating"
+        },
+        "ctrl.roomSetpointCooling": {
+          "type": "number",
+          "role": "level.temperature",
+          "unit": "°C",
+          "capability": "write.roomSetpointCooling"
+        },
+        "ctrl.requestHeatingCapacity": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.requestHeatingCapacity"
+        },
+        "ctrl.externalPower": {
+          "type": "number",
+          "role": "level.power",
+          "unit": "W",
+          "capability": "write.externalPower"
+        }
+      }
+    },
+    "io": {
+      "required": {},
+      "optional": {
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.energyTotal": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyTotal"
+        }
+      },
+      "patterns": [
+        {
+          "pattern": "^r\\.inputs\\.in\\d+$",
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.inputs"
+        },
+        {
+          "pattern": "^r\\.outputs\\.out\\d+$",
+          "type": "boolean",
+          "role": "indicator",
+          "capability": "read.outputs"
+        },
+        {
+          "pattern": "^ctrl\\.outputs\\.out\\d+$",
+          "type": "boolean",
+          "role": "switch",
+          "capability": "write.outputs"
+        },
+        {
+          "pattern": "^r\\.counters\\.count\\d+$",
+          "type": "number",
+          "role": "value",
+          "capability": "read.counters"
+        }
+      ]
+    },
+    "solarCharger": {
+      "required": {},
+      "optional": {
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.energyTotal": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyTotal"
+        },
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        },
+        "r.errorCode": {
+          "type": "number",
+          "role": "indicator",
+          "capability": "read.errorCode"
+        },
+        "r.voltage": {
+          "type": "number",
+          "role": "value.voltage",
+          "unit": "V",
+          "capability": "read.voltage"
+        },
+        "r.current": {
+          "type": "number",
+          "role": "value.current",
+          "unit": "A",
+          "capability": "read.current"
+        },
+        "r.temperature": {
+          "type": "number",
+          "role": "value.temperature",
+          "unit": "°C",
+          "capability": "read.temperature"
+        }
+      }
+    },
+    "generic": {
+      "required": {},
+      "optional": {
+        "r.power": {
+          "type": "number",
+          "role": "value.power",
+          "unit": "W",
+          "capability": "read.power"
+        },
+        "r.energyTotal": {
+          "type": "number",
+          "role": "value.energy",
+          "unit": "Wh",
+          "capability": "read.energyTotal"
+        },
+        "r.statusCode": {
+          "type": "number",
+          "role": "indicator.status",
+          "capability": "read.statusCode"
+        }
+      }
+    }
+  },
+  "pathAliases": {
+    "evCharger": {
+      "ctrl.chargeEnable": "ctrl.run",
+      "ctrl.stationEnable": "ctrl.run",
+      "r.appliedCurrentLimitA": "r.currentLimitA",
+      "r.currentTotalA": "r.currentA",
+      "r.status": "r.statusText",
+      "r.vehicleStateText": "r.statusText"
+    },
+    "heat": {
+      "ctrl.heatingEnable": "ctrl.run",
+      "ctrl.flowSetpointC": "ctrl.flowSetpoint",
+      "r.flowTemperatureC": "r.flowTemp"
+    }
+  }
+}

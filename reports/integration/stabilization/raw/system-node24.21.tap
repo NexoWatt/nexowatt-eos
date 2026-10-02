@@ -1,0 +1,2381 @@
+TAP version 13
+# Subtest: strict input accepts two individual roles and emits nonsecret inventory
+ok 1 - strict input accepts two individual roles and emits nonsecret inventory
+  ---
+  duration_ms: 14.965315
+  type: 'test'
+  ...
+# Subtest: reject unknown root key
+ok 2 - reject unknown root key
+  ---
+  duration_ms: 0.75288
+  type: 'test'
+  ...
+# Subtest: reject unknown account key
+ok 3 - reject unknown account key
+  ---
+  duration_ms: 0.573728
+  type: 'test'
+  ...
+# Subtest: reject admin role
+ok 4 - reject admin role
+  ---
+  duration_ms: 0.430222
+  type: 'test'
+  ...
+# Subtest: reject reserved admin username
+ok 5 - reject reserved admin username
+  ---
+  duration_ms: 0.27057
+  type: 'test'
+  ...
+# Subtest: reject foreign identifier
+ok 6 - reject foreign identifier
+  ---
+  duration_ms: 0.30389
+  type: 'test'
+  ...
+# Subtest: reject mixed case identifier
+ok 7 - reject mixed case identifier
+  ---
+  duration_ms: 0.296398
+  type: 'test'
+  ...
+# Subtest: reject duplicate identity
+ok 8 - reject duplicate identity
+  ---
+  duration_ms: 0.387707
+  type: 'test'
+  ...
+# Subtest: reject only installer
+ok 9 - reject only installer
+  ---
+  duration_ms: 0.863497
+  type: 'test'
+  ...
+# Subtest: reject only one account
+ok 10 - reject only one account
+  ---
+  duration_ms: 0.38318
+  type: 'test'
+  ...
+# Subtest: reject too many accounts
+ok 11 - reject too many accounts
+  ---
+  duration_ms: 2.493835
+  type: 'test'
+  ...
+# Subtest: reject service credential reused
+ok 12 - reject service credential reused
+  ---
+  duration_ms: 1.832313
+  type: 'test'
+  ...
+# Subtest: reject temporary credential reused
+ok 13 - reject temporary credential reused
+  ---
+  duration_ms: 1.812855
+  type: 'test'
+  ...
+# Subtest: reject weak password
+ok 14 - reject weak password
+  ---
+  duration_ms: 0.281676
+  type: 'test'
+  ...
+# Subtest: reject control character
+ok 15 - reject control character
+  ---
+  duration_ms: 0.207715
+  type: 'test'
+  ...
+# Subtest: canonical group IDs work despite untrusted view display name
+ok 16 - canonical group IDs work despite untrusted view display name
+  ---
+  duration_ms: 1.792143
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects service membership escalation
+ok 17 - read-only enrollment check detects service membership escalation
+  ---
+  duration_ms: 0.566347
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects legacy inheritance
+ok 18 - read-only enrollment check detects legacy inheritance
+  ---
+  duration_ms: 0.885841
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects new admin alias
+ok 19 - read-only enrollment check detects new admin alias
+  ---
+  duration_ms: 0.787673
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects raw state write permission
+ok 20 - read-only enrollment check detects raw state write permission
+  ---
+  duration_ms: 0.489682
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects disabled role
+ok 21 - read-only enrollment check detects disabled role
+  ---
+  duration_ms: 0.378963
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects world readable password
+ok 22 - read-only enrollment check detects world readable password
+  ---
+  duration_ms: 0.289698
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects unmanaged identity
+ok 23 - read-only enrollment check detects unmanaged identity
+  ---
+  duration_ms: 0.326825
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects passwordless account
+ok 24 - read-only enrollment check detects passwordless account
+  ---
+  duration_ms: 0.302208
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects unrecorded account
+ok 25 - read-only enrollment check detects unrecorded account
+  ---
+  duration_ms: 0.520949
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects missing role group
+ok 26 - read-only enrollment check detects missing role group
+  ---
+  duration_ms: 0.400135
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects missing group policy
+ok 27 - read-only enrollment check detects missing group policy
+  ---
+  duration_ms: 0.417683
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects inconsistent first-login state
+ok 28 - read-only enrollment check detects inconsistent first-login state
+  ---
+  duration_ms: 0.331702
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects inconsistent account marker
+ok 29 - read-only enrollment check detects inconsistent account marker
+  ---
+  duration_ms: 0.327075
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects malformed marker ID
+ok 30 - read-only enrollment check detects malformed marker ID
+  ---
+  duration_ms: 0.26471
+  type: 'test'
+  ...
+# Subtest: legitimate password initialization or account disable does not mutate role enrollment
+ok 31 - legitimate password initialization or account disable does not mutate role enrollment
+  ---
+  duration_ms: 0.768604
+  type: 'test'
+  ...
+# Subtest: target package selection is explicit and rejects unsupported platforms
+ok 32 - target package selection is explicit and rejects unsupported platforms
+  ---
+  duration_ms: 2.49703
+  type: 'test'
+  ...
+# Subtest: exact root normalization preserves archive integrity and local provenance
+ok 33 - exact root normalization preserves archive integrity and local provenance
+  ---
+  duration_ms: 3.650567
+  type: 'test'
+  ...
+# Subtest: normalization rejects mismatched actual installed identity
+ok 34 - normalization rejects mismatched actual installed identity
+  ---
+  duration_ms: 1.807617
+  type: 'test'
+  ...
+# Subtest: normalization rejects missing artifact integrity
+ok 35 - normalization rejects missing artifact integrity
+  ---
+  duration_ms: 3.793463
+  type: 'test'
+  ...
+# Subtest: normalization rejects traversal archive references
+ok 36 - normalization rejects traversal archive references
+  ---
+  duration_ms: 1.825879
+  type: 'test'
+  ...
+# Subtest: source snapshot skips execution dependencies and rejects links
+ok 37 - source snapshot skips execution dependencies and rejects links
+  ---
+  duration_ms: 3.376697
+  type: 'test'
+  ...
+# Subtest: existing output directories and duplicate components rejected before npm
+ok 38 - existing output directories and duplicate components rejected before npm
+  ---
+  duration_ms: 1.259656
+  type: 'test'
+  ...
+# Subtest: aggregate root preserves compatible component overrides
+ok 39 - aggregate root preserves compatible component overrides
+  ---
+  duration_ms: 0.548531
+  type: 'test'
+  ...
+# Subtest: conflicting or prototype-mutating component overrides fail before installation
+ok 40 - conflicting or prototype-mutating component overrides fail before installation
+  ---
+  duration_ms: 0.95796
+  type: 'test'
+  ...
+# Subtest: initial enrollment stores only hash and disabled fixed instances; verifies without writes
+ok 41 - initial enrollment stores only hash and disabled fixed instances; verifies without writes
+  ---
+  duration_ms: 5504.662309
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:0
+ok 42 - password rejects bounded invalid input string:0
+  ---
+  duration_ms: 0.401207
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:5
+ok 43 - password rejects bounded invalid input string:5
+  ---
+  duration_ms: 0.12551
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:129
+ok 44 - password rejects bounded invalid input string:129
+  ---
+  duration_ms: 0.142466
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:14
+ok 45 - password rejects bounded invalid input string:14
+  ---
+  duration_ms: 0.114994
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:21
+ok 46 - password rejects bounded invalid input string:21
+  ---
+  duration_ms: 0.109175
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 47 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.12607
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 48 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.132601
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:200
+ok 49 - password rejects bounded invalid input string:200
+  ---
+  duration_ms: 0.176667
+  type: 'test'
+  ...
+# Subtest: password allows long unicode passphrase without composition tricks
+ok 50 - password allows long unicode passphrase without composition tricks
+  ---
+  duration_ms: 0.288847
+  type: 'test'
+  ...
+# Subtest: rejects marker pending without repair
+ok 51 - rejects marker pending without repair
+  ---
+  duration_ms: 1.078143
+  type: 'test'
+  ...
+# Subtest: rejects config changed without repair
+ok 52 - rejects config changed without repair
+  ---
+  duration_ms: 0.791208
+  type: 'test'
+  ...
+# Subtest: rejects physical enabled without repair
+ok 53 - rejects physical enabled without repair
+  ---
+  duration_ms: 0.569472
+  type: 'test'
+  ...
+# Subtest: rejects core binding without repair
+ok 54 - rejects core binding without repair
+  ---
+  duration_ms: 0.615382
+  type: 'test'
+  ...
+# Subtest: rejects remote repo without repair
+ok 55 - rejects remote repo without repair
+  ---
+  duration_ms: 0.79266
+  type: 'test'
+  ...
+# Subtest: rejects automatic updates without repair
+ok 56 - rejects automatic updates without repair
+  ---
+  duration_ms: 0.686679
+  type: 'test'
+  ...
+# Subtest: rejects disabled admin without repair
+ok 57 - rejects disabled admin without repair
+  ---
+  duration_ms: 3.496343
+  type: 'test'
+  ...
+# Subtest: rejects world-readable service hash without repair
+ok 58 - rejects world-readable service hash without repair
+  ---
+  duration_ms: 0.691436
+  type: 'test'
+  ...
+# Subtest: rejects weak password without repair
+ok 59 - rejects weak password without repair
+  ---
+  duration_ms: 0.959433
+  type: 'test'
+  ...
+# Subtest: rejects extra executable without repair
+ok 60 - rejects extra executable without repair
+  ---
+  duration_ms: 0.908785
+  type: 'test'
+  ...
+# Subtest: rejects node arguments without repair
+ok 61 - rejects node arguments without repair
+  ---
+  duration_ms: 0.877208
+  type: 'test'
+  ...
+# Subtest: rejects remote host without repair
+ok 62 - rejects remote host without repair
+  ---
+  duration_ms: 1.304826
+  type: 'test'
+  ...
+# Subtest: rejects admin plaintext without repair
+ok 63 - rejects admin plaintext without repair
+  ---
+  duration_ms: 0.640309
+  type: 'test'
+  ...
+# Subtest: rejects UI no auth without repair
+ok 64 - rejects UI no auth without repair
+  ---
+  duration_ms: 0.520838
+  type: 'test'
+  ...
+# Subtest: rejects UI trusted header without repair
+ok 65 - rejects UI trusted header without repair
+  ---
+  duration_ms: 2.407024
+  type: 'test'
+  ...
+# Subtest: rejects UI path without repair
+ok 66 - rejects UI path without repair
+  ---
+  duration_ms: 0.698958
+  type: 'test'
+  ...
+# Subtest: controller alive blocks first mutation
+ok 67 - controller alive blocks first mutation
+  ---
+  duration_ms: 0.503442
+  type: 'test'
+  ...
+# Subtest: failed enrollment retains pending gate and never enables partially written instances
+ok 68 - failed enrollment retains pending gate and never enables partially written instances
+  ---
+  duration_ms: 2953.816194
+  type: 'test'
+  ...
+# Subtest: normal start, incomplete maintenance blocked, live trial and cleanup
+ok 69 - normal start, incomplete maintenance blocked, live trial and cleanup
+  ---
+  duration_ms: 4.96705
+  type: 'test'
+  ...
+# Subtest: exited coordinator cannot grant later reboot/start through its old permit
+ok 70 - exited coordinator cannot grant later reboot/start through its old permit
+  ---
+  duration_ms: 135.662346
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit startTicks
+ok 71 - stale or invalid permit startTicks
+  ---
+  duration_ms: 4.429005
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit bootId
+ok 72 - stale or invalid permit bootId
+  ---
+  duration_ms: 2.056463
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit operation
+ok 73 - stale or invalid permit operation
+  ---
+  duration_ms: 4.978236
+  type: 'test'
+  ...
+# Subtest: stale or invalid permit version
+ok 74 - stale or invalid permit version
+  ---
+  duration_ms: 8.976259
+  type: 'test'
+  ...
+# Subtest: orphan permit cannot bypass absent lock
+ok 75 - orphan permit cannot bypass absent lock
+  ---
+  duration_ms: 1.569826
+  type: 'test'
+  ...
+# Subtest: writable lock and symlinked permit rejected
+ok 76 - writable lock and symlinked permit rejected
+  ---
+  duration_ms: 6.535239
+  type: 'test'
+  ...
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 77 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 2.032577
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 78 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 5.566217
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 79 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 202.903201
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 80 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 1.347209
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 81 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 0.799571
+  type: 'test'
+  ...
+# Subtest: onboarding public trust and secret modes survive restrictive inherited umask
+ok 82 - onboarding public trust and secret modes survive restrictive inherited umask
+  ---
+  duration_ms: 132.355509
+  type: 'test'
+  ...
+# Subtest: failure to revoke the trial permit still attempts to stop the controller
+ok 83 - failure to revoke the trial permit still attempts to stop the controller
+  ---
+  duration_ms: 1.049929
+  type: 'test'
+  ...
+# Subtest: failed revocation and failed stop report the more specific stop failure
+ok 84 - failed revocation and failed stop report the more specific stop failure
+  ---
+  duration_ms: 0.382179
+  type: 'test'
+  ...
+# Subtest: concurrent release change is rejected after acquiring the maintenance lock
+ok 85 - concurrent release change is rejected after acquiring the maintenance lock
+  ---
+  duration_ms: 5.688812
+  type: 'test'
+  ...
+# Subtest: readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+ok 86 - readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+  ---
+  duration_ms: 2.705195
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected success
+ok 87 - readiness rejects admin unexpected success
+  ---
+  duration_ms: 0.751738
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unrelated forbidden response
+ok 88 - readiness rejects admin unrelated forbidden response
+  ---
+  duration_ms: 0.386755
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin external redirect
+ok 89 - readiness rejects admin external redirect
+  ---
+  duration_ms: 2.808301
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin protocol relative redirect
+ok 90 - readiness rejects admin protocol relative redirect
+  ---
+  duration_ms: 0.347696
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected local redirect
+ok 91 - readiness rejects admin unexpected local redirect
+  ---
+  duration_ms: 0.318762
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin extra redirect parameters
+ok 92 - readiness rejects admin extra redirect parameters
+  ---
+  duration_ms: 0.324011
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous writes
+ok 93 - readiness rejects UI anonymous writes
+  ---
+  duration_ms: 1.917513
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous admin
+ok 94 - readiness rejects UI anonymous admin
+  ---
+  duration_ms: 0.956107
+  type: 'test'
+  ...
+# Subtest: readiness rejects unverified peer
+ok 95 - readiness rejects unverified peer
+  ---
+  duration_ms: 2.833099
+  type: 'test'
+  ...
+# Subtest: readiness rejects old TLS version
+ok 96 - readiness rejects old TLS version
+  ---
+  duration_ms: 0.394528
+  type: 'test'
+  ...
+# Subtest: readiness rejects oversized body
+ok 97 - readiness rejects oversized body
+  ---
+  duration_ms: 0.345543
+  type: 'test'
+  ...
+# Subtest: readiness rejects invalid UI JSON
+ok 98 - readiness rejects invalid UI JSON
+  ---
+  duration_ms: 0.479767
+  type: 'test'
+  ...
+# Subtest: architecture-independent tree has no executed target code or included Node claim
+ok 99 - architecture-independent tree has no executed target code or included Node claim
+  ---
+  duration_ms: 24.263958
+  type: 'test'
+  ...
+# Subtest: separate matching ARM64 and x64 esbuild trees pass static header checks
+ok 100 - separate matching ARM64 and x64 esbuild trees pass static header checks
+  ---
+  duration_ms: 38.845022
+  type: 'test'
+  ...
+# Subtest: x64 optional package cannot be relabeled as an ARM64 delivery
+ok 101 - x64 optional package cannot be relabeled as an ARM64 delivery
+  ---
+  duration_ms: 6.385847
+  type: 'test'
+  ...
+# Subtest: ARM64 package with a mislabeled x64 binary fails
+ok 102 - ARM64 package with a mislabeled x64 binary fails
+  ---
+  duration_ms: 4.6239
+  type: 'test'
+  ...
+# Subtest: native allow rules require exact package paths and explicit esbuild platform metadata
+ok 103 - native allow rules require exact package paths and explicit esbuild platform metadata
+  ---
+  duration_ms: 8.3889
+  type: 'test'
+  ...
+# Subtest: wrong ELF width or big-endian content fails even with matching manifest
+ok 104 - wrong ELF width or big-endian content fails even with matching manifest
+  ---
+  duration_ms: 3.227366
+  type: 'test'
+  ...
+# Subtest: missing or version-mismatched optional target esbuild cannot silently pass
+ok 105 - missing or version-mismatched optional target esbuild cannot silently pass
+  ---
+  duration_ms: 19.803925
+  type: 'test'
+  ...
+# Subtest: dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+ok 106 - dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+  ---
+  duration_ms: 27.048984
+  type: 'test'
+  ...
+# Subtest: unknown native executable and Node ABI add-on fail closed
+ok 107 - unknown native executable and Node ABI add-on fail closed
+  ---
+  duration_ms: 5.22486
+  type: 'test'
+  ...
+# Subtest: native suffix with unrecognized or truncated bytes fails
+ok 108 - native suffix with unrecognized or truncated bytes fails
+  ---
+  duration_ms: 1.748627
+  type: 'test'
+  ...
+# Subtest: reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+ok 109 - reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+  ---
+  duration_ms: 1.638971
+  type: 'test'
+  ...
+# Subtest: Bare path/header mismatch or unreviewed version is rejected
+ok 110 - Bare path/header mismatch or unreviewed version is rejected
+  ---
+  duration_ms: 3.179503
+  type: 'test'
+  ...
+# Subtest: ELF program-header and interpreter offsets are bounded before reads
+ok 111 - ELF program-header and interpreter offsets are bounded before reads
+  ---
+  duration_ms: 0.786581
+  type: 'test'
+  ...
+# Subtest: known PE and Mach-O headers are classified but not accepted as Linux esbuild
+ok 112 - known PE and Mach-O headers are classified but not accepted as Linux esbuild
+  ---
+  duration_ms: 2.66892
+  type: 'test'
+  ...
+# Subtest: npm platform constraints honor deny lists, any, libc and malformed metadata
+ok 113 - npm platform constraints honor deny lists, any, libc and malformed metadata
+  ---
+  duration_ms: 1.710159
+  type: 'test'
+  ...
+# Subtest: unreviewed gyp build dependency and changed diskusage loader are blocked
+ok 114 - unreviewed gyp build dependency and changed diskusage loader are blocked
+  ---
+  duration_ms: 2.209485
+  type: 'test'
+  ...
+# Subtest: lock drift is rejected for an actual installed package
+ok 115 - lock drift is rejected for an actual installed package
+  ---
+  duration_ms: 5.411963
+  type: 'test'
+  ...
+# Subtest: internal npm file links are accepted; external, cyclic and directory links fail
+ok 116 - internal npm file links are accepted; external, cyclic and directory links fail
+  ---
+  duration_ms: 2.258218
+  type: 'test'
+  ...
+# Subtest: target, metadata, file-size and depth limits fail before execution
+ok 117 - target, metadata, file-size and depth limits fail before execution
+  ---
+  duration_ms: 12.787238
+  type: 'test'
+  ...
+# Subtest: one approved leaf override merges without dropping source OAuth override
+ok 118 - one approved leaf override merges without dropping source OAuth override
+  ---
+  duration_ms: 1.890792
+  type: 'test'
+  ...
+# Subtest: conflicting component override fails before npm is invoked
+ok 119 - conflicting component override fails before npm is invoked
+  ---
+  duration_ms: 0.703375
+  type: 'test'
+  ...
+# Subtest: actual resolution, approved identities and lock binding all verified
+ok 120 - actual resolution, approved identities and lock binding all verified
+  ---
+  duration_ms: 9.235592
+  type: 'test'
+  ...
+# Subtest: missing root override rejected even when tree happens to contain fixed esbuild
+ok 121 - missing root override rejected even when tree happens to contain fixed esbuild
+  ---
+  duration_ms: 10.535845
+  type: 'test'
+  ...
+# Subtest: unreviewed controller or loader versions fail closed
+ok 122 - unreviewed controller or loader versions fail closed
+  ---
+  duration_ms: 12.270116
+  type: 'test'
+  ...
+# Subtest: old esbuild reached by actual loader cannot hide behind approved root declaration
+ok 123 - old esbuild reached by actual loader cannot hide behind approved root declaration
+  ---
+  duration_ms: 7.113479
+  type: 'test'
+  ...
+# Subtest: installed version differing from lock fails even if version is patched
+ok 124 - installed version differing from lock fails even if version is patched
+  ---
+  duration_ms: 4.201961
+  type: 'test'
+  ...
+# Subtest: another vulnerable esbuild copy in the installed lock cannot escape leaf verification
+ok 125 - another vulnerable esbuild copy in the installed lock cannot escape leaf verification
+  ---
+  duration_ms: 5.655131
+  type: 'test'
+  ...
+# Subtest: CJS module-type markers do not mask the actual controller package identity
+ok 126 - CJS module-type markers do not mask the actual controller package identity
+  ---
+  duration_ms: 4.722629
+  type: 'test'
+  ...
+# Subtest: advisory range distinguishes patched versions and rejects ambiguous prereleases
+ok 127 - advisory range distinguishes patched versions and rejects ambiguous prereleases
+  ---
+  duration_ms: 0.579968
+  type: 'test'
+  ...
+# Subtest: unique local CA and distinct per-listener keys verify SANs
+ok 128 - unique local CA and distinct per-listener keys verify SANs
+  ---
+  duration_ms: 8.885862
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input []
+ok 129 - rejects invalid SAN input []
+  ---
+  duration_ms: 0.67366
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["a\\nDNS:evil"]
+ok 130 - rejects invalid SAN input ["a\\nDNS:evil"]
+  ---
+  duration_ms: 0.174945
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["*.example.com"]
+ok 131 - rejects invalid SAN input ["*.example.com"]
+  ---
+  duration_ms: 0.179852
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["bad/name"]
+ok 132 - rejects invalid SAN input ["bad/name"]
+  ---
+  duration_ms: 0.181094
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["-evil"]
+ok 133 - rejects invalid SAN input ["-evil"]
+  ---
+  duration_ms: 0.675283
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["xxxxxxxxxxxxxxxxxxxxxx
+ok 134 - rejects invalid SAN input ["xxxxxxxxxxxxxxxxxxxxxx
+  ---
+  duration_ms: 0.182065
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["eos.test","eos.test","
+ok 135 - rejects invalid SAN input ["eos.test","eos.test","
+  ---
+  duration_ms: 0.17815
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input ["  host"]
+ok 136 - rejects invalid SAN input ["  host"]
+  ---
+  duration_ms: 0.327676
+  type: 'test'
+  ...
+# Subtest: rejects invalid SAN input [null]
+ok 137 - rejects invalid SAN input [null]
+  ---
+  duration_ms: 0.505936
+  type: 'test'
+  ...
+# Subtest: never overwrites an existing certificate installation
+ok 138 - never overwrites an existing certificate installation
+  ---
+  duration_ms: 0.421929
+  type: 'test'
+  ...
+# Subtest: warning before expiry and rejection after expiry
+ok 139 - warning before expiry and rejection after expiry
+  ---
+  duration_ms: 9.065604
+  type: 'test'
+  ...
+# Subtest: TLS1.3 with trusted SAN succeeds; TLS1.2 rejected over real socket
+ok 140 - TLS1.3 with trusted SAN succeeds; TLS1.2 rejected over real socket
+  ---
+  duration_ms: 73.895218
+  type: 'test'
+  ...
+# Subtest: world-readable private leaf key rejected
+ok 141 - world-readable private leaf key rejected
+  ---
+  duration_ms: 4.367797
+  type: 'test'
+  ...
+# Subtest: additive validation admits exact new adapter and profile only
+ok 142 - additive validation admits exact new adapter and profile only
+  ---
+  duration_ms: 7.96
+  type: 'test'
+  ...
+# Subtest: rejects sequence downgrade before service operations
+ok 143 - rejects sequence downgrade before service operations
+  ---
+  duration_ms: 1.020445
+  type: 'test'
+  ...
+# Subtest: rejects Node change before service operations
+ok 144 - rejects Node change before service operations
+  ---
+  duration_ms: 0.361217
+  type: 'test'
+  ...
+# Subtest: rejects core version change before service operations
+ok 145 - rejects core version change before service operations
+  ---
+  duration_ms: 0.360626
+  type: 'test'
+  ...
+# Subtest: rejects dependency version change before service operations
+ok 146 - rejects dependency version change before service operations
+  ---
+  duration_ms: 5.975411
+  type: 'test'
+  ...
+# Subtest: rejects controller code change before service operations
+ok 147 - rejects controller code change before service operations
+  ---
+  duration_ms: 0.675804
+  type: 'test'
+  ...
+# Subtest: rejects missing old file before service operations
+ok 148 - rejects missing old file before service operations
+  ---
+  duration_ms: 0.696774
+  type: 'test'
+  ...
+# Subtest: rejects extra core file before service operations
+ok 149 - rejects extra core file before service operations
+  ---
+  duration_ms: 0.42952
+  type: 'test'
+  ...
+# Subtest: rejects service code replacement before service operations
+ok 150 - rejects service code replacement before service operations
+  ---
+  duration_ms: 0.909607
+  type: 'test'
+  ...
+# Subtest: rejects unadmitted profile entry before service operations
+ok 151 - rejects unadmitted profile entry before service operations
+  ---
+  duration_ms: 1.278576
+  type: 'test'
+  ...
+# Subtest: existing admitted adapter bytes, version and permissions cannot change
+ok 152 - existing admitted adapter bytes, version and permissions cannot change
+  ---
+  duration_ms: 0.751438
+  type: 'test'
+  ...
+# Subtest: successful transaction verifies both releases, starts through systemd and commits pointer/state
+ok 153 - successful transaction verifies both releases, starts through systemd and commits pointer/state
+  ---
+  duration_ms: 8.812046
+  type: 'test'
+  ...
+# Subtest: new startup failure restores old pointer, verifies old startup and keeps original sequence
+ok 154 - new startup failure restores old pointer, verifies old startup and keeps original sequence
+  ---
+  duration_ms: 4.11575
+  type: 'test'
+  ...
+# Subtest: failed recovery keeps operation lock and reports manual recovery required
+ok 155 - failed recovery keeps operation lock and reports manual recovery required
+  ---
+  duration_ms: 5.988656
+  type: 'test'
+  ...
+# Subtest: concurrent or interrupted operation lock rejects new activation without commands
+ok 156 - concurrent or interrupted operation lock rejects new activation without commands
+  ---
+  duration_ms: 1.667724
+  type: 'test'
+  ...
+# Subtest: wrong signing identity and state/pointer mismatch reject before stop
+ok 157 - wrong signing identity and state/pointer mismatch reject before stop
+  ---
+  duration_ms: 1.667214
+  type: 'test'
+  ...
+# Subtest: unprivileged activation and arbitrary stage paths are refused
+ok 158 - unprivileged activation and arbitrary stage paths are refused
+  ---
+  duration_ms: 1.38742
+  type: 'test'
+  ...
+# Subtest: state commit failure triggers verified rollback rather than accepting split state
+ok 159 - state commit failure triggers verified rollback rather than accepting split state
+  ---
+  duration_ms: 5.072239
+  type: 'test'
+  ...
+# Subtest: rate limited controller is reset specifically before trial and recovery starts
+ok 160 - rate limited controller is reset specifically before trial and recovery starts
+  ---
+  duration_ms: 8.992874
+  type: 'test'
+  ...
+# Subtest: persistent journal write failure cannot block old pointer and controller restoration
+ok 161 - persistent journal write failure cannot block old pointer and controller restoration
+  ---
+  duration_ms: 3.139272
+  type: 'test'
+  ...
+# Subtest: permit revocation I/O failure still restores the previous release and retains a stopped maintenance gate
+ok 162 - permit revocation I/O failure still restores the previous release and retains a stopped maintenance gate
+  ---
+  duration_ms: 4.627425
+  type: 'test'
+  ...
+# Subtest: successful trial with failed final gate cleanup is stopped and cannot report success
+ok 163 - successful trial with failed final gate cleanup is stopped and cannot report success
+  ---
+  duration_ms: 3.121025
+  type: 'test'
+  ...
+# Subtest: fresh ordinary setup hardened and secret/design metadata preserved
+ok 164 - fresh ordinary setup hardened and secret/design metadata preserved
+  ---
+  duration_ms: 4.787027
+  type: 'test'
+  ...
+# Subtest: complete marker idempotent validation performs no writes
+ok 165 - complete marker idempotent validation performs no writes
+  ---
+  duration_ms: 4.18106
+  type: 'test'
+  ...
+# Subtest: verify-only refuses uninitialized DB without changes
+ok 166 - verify-only refuses uninitialized DB without changes
+  ---
+  duration_ms: 4.010522
+  type: 'test'
+  ...
+# Subtest: matching pending marker resumes after interrupted write
+ok 167 - matching pending marker resumes after interrupted write
+  ---
+  duration_ms: 2.041861
+  type: 'test'
+  ...
+# Subtest: refuses existing installation content system.adapter.admin.0
+ok 168 - refuses existing installation content system.adapter.admin.0
+  ---
+  duration_ms: 1.526731
+  type: 'test'
+  ...
+# Subtest: refuses existing installation content custom.energy.value
+ok 169 - refuses existing installation content custom.energy.value
+  ---
+  duration_ms: 0.666959
+  type: 'test'
+  ...
+# Subtest: refuses existing installation content system.user.other
+ok 170 - refuses existing installation content system.user.other
+  ---
+  duration_ms: 1.754536
+  type: 'test'
+  ...
+# Subtest: running controller blocks initial mutations
+ok 171 - running controller blocks initial mutations
+  ---
+  duration_ms: 1.068287
+  type: 'test'
+  ...
+# Subtest: foreign marker refuses configuration migration
+ok 172 - foreign marker refuses configuration migration
+  ---
+  duration_ms: 3.346947
+  type: 'test'
+  ...
+# Subtest: drift diagnostics fails closed without silent repair
+ok 173 - drift diagnostics fails closed without silent repair
+  ---
+  duration_ms: 5.825169
+  type: 'test'
+  ...
+# Subtest: drift repositories fails closed without silent repair
+ok 174 - drift repositories fails closed without silent repair
+  ---
+  duration_ms: 1.352327
+  type: 'test'
+  ...
+# Subtest: drift admin activation fails closed without silent repair
+ok 175 - drift admin activation fails closed without silent repair
+  ---
+  duration_ms: 0.956798
+  type: 'test'
+  ...
+# Subtest: drift admin password fails closed without silent repair
+ok 176 - drift admin password fails closed without silent repair
+  ---
+  duration_ms: 1.028757
+  type: 'test'
+  ...
+# Subtest: drift plugin telemetry fails closed without silent repair
+ok 177 - drift plugin telemetry fails closed without silent repair
+  ---
+  duration_ms: 1.117462
+  type: 'test'
+  ...
+# Subtest: rejects runtime config TLS verification
+ok 178 - rejects runtime config TLS verification
+  ---
+  duration_ms: 0.461119
+  type: 'test'
+  ...
+# Subtest: rejects runtime config multihost
+ok 179 - rejects runtime config multihost
+  ---
+  duration_ms: 0.295637
+  type: 'test'
+  ...
+# Subtest: rejects runtime config plugin
+ok 180 - rejects runtime config plugin
+  ---
+  duration_ms: 0.285823
+  type: 'test'
+  ...
+# Subtest: rejects runtime config hostname
+ok 181 - rejects runtime config hostname
+  ---
+  duration_ms: 0.358392
+  type: 'test'
+  ...
+# Subtest: rejects runtime config remote database
+ok 182 - rejects runtime config remote database
+  ---
+  duration_ms: 0.419014
+  type: 'test'
+  ...
+# Subtest: failed final read never writes complete marker
+ok 183 - failed final read never writes complete marker
+  ---
+  duration_ms: 0.765809
+  type: 'test'
+  ...
+# Subtest: readiness proves live heartbeat, expected PID and controller version
+ok 184 - readiness proves live heartbeat, expected PID and controller version
+  ---
+  duration_ms: 0.553228
+  type: 'test'
+  ...
+# Subtest: readiness refuses stale heartbeat
+ok 185 - readiness refuses stale heartbeat
+  ---
+  duration_ms: 15.642169
+  type: 'test'
+  ...
+# Subtest: readiness refuses unacknowledged heartbeat
+ok 186 - readiness refuses unacknowledged heartbeat
+  ---
+  duration_ms: 10.911309
+  type: 'test'
+  ...
+# Subtest: readiness refuses wrong process
+ok 187 - readiness refuses wrong process
+  ---
+  duration_ms: 9.861009
+  type: 'test'
+  ...
+# Subtest: readiness refuses wrong version
+ok 188 - readiness refuses wrong version
+  ---
+  duration_ms: 10.55571
+  type: 'test'
+  ...
+# Subtest: rejects system compact=true unless strictly false
+ok 189 - rejects system compact=true unless strictly false
+  ---
+  duration_ms: 0.77286
+  type: 'test'
+  ...
+# Subtest: rejects system compact=false unless strictly false
+ok 190 - rejects system compact=false unless strictly false
+  ---
+  duration_ms: 0.370661
+  type: 'test'
+  ...
+# Subtest: rejects system compact=undefined unless strictly false
+ok 191 - rejects system compact=undefined unless strictly false
+  ---
+  duration_ms: 0.317882
+  type: 'test'
+  ...
+# Subtest: rejects system allowShellCommands=true unless strictly false
+ok 192 - rejects system allowShellCommands=true unless strictly false
+  ---
+  duration_ms: 0.326284
+  type: 'test'
+  ...
+# Subtest: rejects system allowShellCommands=false unless strictly false
+ok 193 - rejects system allowShellCommands=false unless strictly false
+  ---
+  duration_ms: 3.44129
+  type: 'test'
+  ...
+# Subtest: rejects system allowShellCommands=undefined unless strictly false
+ok 194 - rejects system allowShellCommands=undefined unless strictly false
+  ---
+  duration_ms: 0.676815
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option connectTimeout
+ok 195 - rejects unbounded database option connectTimeout
+  ---
+  duration_ms: 0.943979
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option commandTimeout
+ok 196 - rejects unbounded database option commandTimeout
+  ---
+  duration_ms: 0.471563
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option maxRetriesPerRequest
+ok 197 - rejects unbounded database option maxRetriesPerRequest
+  ---
+  duration_ms: 0.362298
+  type: 'test'
+  ...
+# Subtest: rejects unbounded database option enableOfflineQueue
+ok 198 - rejects unbounded database option enableOfflineQueue
+  ---
+  duration_ms: 0.469601
+  type: 'test'
+  ...
+# Subtest: additive signed release lock does not migrate or rewrite data policy
+ok 199 - additive signed release lock does not migrate or rewrite data policy
+  ---
+  duration_ms: 1.121939
+  type: 'test'
+  ...
+# Subtest: changed controller remains forbidden even with new release lock
+ok 200 - changed controller remains forbidden even with new release lock
+  ---
+  duration_ms: 1.008957
+  type: 'test'
+  ...
+# Subtest: rejects incompatible marker policy version
+ok 201 - rejects incompatible marker policy version
+  ---
+  duration_ms: 1.119635
+  type: 'test'
+  ...
+# Subtest: rejects incompatible marker core controller
+ok 202 - rejects incompatible marker core controller
+  ---
+  duration_ms: 1.427791
+  type: 'test'
+  ...
+# Subtest: rejects incompatible marker legacy marker
+ok 203 - rejects incompatible marker legacy marker
+  ---
+  duration_ms: 0.985663
+  type: 'test'
+  ...
+# Subtest: plugin state cleanup accepted only under verified EOS no-plugin profile
+ok 204 - plugin state cleanup accepted only under verified EOS no-plugin profile
+  ---
+  duration_ms: 1.418918
+  type: 'test'
+  ...
+# Subtest: null plugin state accepted under verified profile after controller cleanup
+ok 205 - null plugin state accepted under verified profile after controller cleanup
+  ---
+  duration_ms: 1.292217
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value true
+ok 206 - EOS profile rejects existing malformed or enabled plugin value true
+  ---
+  duration_ms: 1.054857
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value false
+ok 207 - EOS profile rejects existing malformed or enabled plugin value false
+  ---
+  duration_ms: 0.980334
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value null
+ok 208 - EOS profile rejects existing malformed or enabled plugin value null
+  ---
+  duration_ms: 1.115879
+  type: 'test'
+  ...
+# Subtest: EOS profile rejects existing malformed or enabled plugin value 0
+ok 209 - EOS profile rejects existing malformed or enabled plugin value 0
+  ---
+  duration_ms: 1.091883
+  type: 'test'
+  ...
+# Subtest: signed offline bundle verifies and stages exactly the authenticated files
+ok 210 - signed offline bundle verifies and stages exactly the authenticated files
+  ---
+  duration_ms: 16.477134
+  type: 'test'
+  ...
+# Subtest: wrong signer and modified signed manifest are rejected
+ok 211 - wrong signer and modified signed manifest are rejected
+  ---
+  duration_ms: 5.570623
+  type: 'test'
+  ...
+# Subtest: private signing key cannot be supplied as the public installation trust anchor
+ok 212 - private signing key cannot be supplied as the public installation trust anchor
+  ---
+  duration_ms: 2.378611
+  type: 'test'
+  ...
+# Subtest: tampered payload cannot be staged
+ok 213 - tampered payload cannot be staged
+  ---
+  duration_ms: 7.707649
+  type: 'test'
+  ...
+# Subtest: unlisted payload, missing file, and unexpected bundle file are rejected
+ok 214 - unlisted payload, missing file, and unexpected bundle file are rejected
+  ---
+  duration_ms: 6.44692
+  type: 'test'
+  ...
+# Subtest: downgrade/replay, wrong platform and untested node are rejected
+ok 215 - downgrade/replay, wrong platform and untested node are rejected
+  ---
+  duration_ms: 11.190962
+  type: 'test'
+  ...
+# Subtest: source and payload symlinks and hardlinks cannot introduce outside bytes
+ok 216 - source and payload symlinks and hardlinks cannot introduce outside bytes
+  ---
+  duration_ms: 13.013065
+  type: 'test'
+  ...
+# Subtest: symlinked parent and setuid files are rejected
+ok 217 - symlinked parent and setuid files are rejected
+  ---
+  duration_ms: 2.638294
+  type: 'test'
+  ...
+# Subtest: path traversal, absolute/control/ambiguous paths are rejected
+ok 218 - path traversal, absolute/control/ambiguous paths are rejected
+  ---
+  duration_ms: 0.35025
+  type: 'test'
+  ...
+# Subtest: manifest validates strict types, duplicate paths and finite bounds
+ok 219 - manifest validates strict types, duplicate paths and finite bounds
+  ---
+  duration_ms: 7.516579
+  type: 'test'
+  ...
+# Subtest: staging refuses a group/world writable release destination
+ok 220 - staging refuses a group/world writable release destination
+  ---
+  duration_ms: 3.931161
+  type: 'test'
+  ...
+# Subtest: signing never overwrites an earlier release or allows output inside source
+ok 221 - signing never overwrites an earlier release or allows output inside source
+  ---
+  duration_ms: 3.120774
+  type: 'test'
+  ...
+# Subtest: RSA signing keys are not silently accepted as Ed25519
+ok 222 - RSA signing keys are not silently accepted as Ed25519
+  ---
+  duration_ms: 119.62392
+  type: 'test'
+  ...
+# Subtest: host status uses no service actions and releases common maintenance lock
+ok 223 - host status uses no service actions and releases common maintenance lock
+  ---
+  duration_ms: 171.499504
+  type: 'test'
+  ...
+# Subtest: explicit host rotation uses only fixed bounded stop/start operations and resets start limits
+ok 224 - explicit host rotation uses only fixed bounded stop/start operations and resets start limits
+  ---
+  duration_ms: 300.099292
+  type: 'test'
+  ...
+# Subtest: root privilege and installed release verification precede service actions
+ok 225 - root privilege and installed release verification precede service actions
+  ---
+  duration_ms: 201.70772
+  type: 'test'
+  ...
+# Subtest: release activation/enrollment lock blocks certificate maintenance
+ok 226 - release activation/enrollment lock blocks certificate maintenance
+  ---
+  duration_ms: 148.152945
+  type: 'test'
+  ...
+# Subtest: live certificate process lock is not stolen by recovery
+ok 227 - live certificate process lock is not stolen by recovery
+  ---
+  duration_ms: 126.467647
+  type: 'test'
+  ...
+# Subtest: explicit recovery can reclaim dead certificate operation and preserve old generation
+ok 228 - explicit recovery can reclaim dead certificate operation and preserve old generation
+  ---
+  duration_ms: 264.733444
+  type: 'test'
+  ...
+# Subtest: a controller still running after stop prevents swap and retains recovery evidence
+ok 229 - a controller still running after stop prevents swap and retains recovery evidence
+  ---
+  duration_ms: 336.918423
+  type: 'test'
+  ...
+# Subtest: both marker hashes update; unrelated fields remain exact
+ok 230 - both marker hashes update; unrelated fields remain exact
+  ---
+  duration_ms: 316.490391
+  type: 'test'
+  ...
+# Subtest: invalid optional enrollment marker blocks both writes
+ok 231 - invalid optional enrollment marker blocks both writes
+  ---
+  duration_ms: 231.031839
+  type: 'test'
+  ...
+# Subtest: partial marker update can be reversed without accepting unrelated hashes
+ok 232 - partial marker update can be reversed without accepting unrelated hashes
+  ---
+  duration_ms: 529.294736
+  type: 'test'
+  ...
+# Subtest: status timer performs no rotation and systemd parses both units
+ok 233 - status timer performs no rotation and systemd parses both units
+  ---
+  duration_ms: 128.814475
+  type: 'test'
+  ...
+# Subtest: status includes HTTPS expiry and rejects exposed CA signing key
+ok 234 - status includes HTTPS expiry and rejects exposed CA signing key
+  ---
+  duration_ms: 594.099438
+  type: 'test'
+  ...
+# Subtest: explicit HTTPS renewal restarts controller and leaves Redis running
+ok 235 - explicit HTTPS renewal restarts controller and leaves Redis running
+  ---
+  duration_ms: 525.936228
+  type: 'test'
+  ...
+# Subtest: permit cleanup failure still attempts physical stop of controller and both Redis stores
+ok 236 - permit cleanup failure still attempts physical stop of controller and both Redis stores
+  ---
+  duration_ms: 227.696339
+  type: 'test'
+  ...
+# Subtest: actual generated certificates: status contains fingerprints and dates but no credentials or private material
+ok 237 - actual generated certificates: status contains fingerprints and dates but no credentials or private material
+  ---
+  duration_ms: 172.046256
+  type: 'test'
+  ...
+# Subtest: pre-expiry, expired and not-yet-valid statuses use certificate validity rather than manifest lifetime
+ok 238 - pre-expiry, expired and not-yet-valid statuses use certificate validity rather than manifest lifetime
+  ---
+  duration_ms: 154.906049
+  type: 'test'
+  ...
+# Subtest: wrong certificate key and broadened permissions are rejected
+ok 239 - wrong certificate key and broadened permissions are rejected
+  ---
+  duration_ms: 107.133147
+  type: 'test'
+  ...
+# Subtest: symlink and duplicate unsafe Redis TLS directive are rejected
+ok 240 - symlink and duplicate unsafe Redis TLS directive are rejected
+  ---
+  duration_ms: 157.517527
+  type: 'test'
+  ...
+# Subtest: CA or credential configuration drift is rejected before preparation
+ok 241 - CA or credential configuration drift is rejected before preparation
+  ---
+  duration_ms: 138.909817
+  type: 'test'
+  ...
+# Subtest: prepare is exclusive, preserves live bytes and credentials and generates independent trust
+ok 242 - prepare is exclusive, preserves live bytes and credentials and generates independent trust
+  ---
+  duration_ms: 309.534988
+  type: 'test'
+  ...
+# Subtest: activation preserves config, ACL, key permissions and data; rebinds only config hash
+ok 243 - activation preserves config, ACL, key permissions and data; rebinds only config hash
+  ---
+  duration_ms: 328.491054
+  type: 'test'
+  ...
+# Subtest: actual TLS 1.3 handshake: new trust succeeds and old CA cannot authenticate new server
+ok 244 - actual TLS 1.3 handshake: new trust succeeds and old CA cannot authenticate new server
+  ---
+  duration_ms: 337.422185
+  type: 'test'
+  ...
+# Subtest: changed staged file is rejected before any service stop
+ok 245 - changed staged file is rejected before any service stop
+  ---
+  duration_ms: 411.627878
+  type: 'test'
+  ...
+# Subtest: failed controller trial restores old files, old trust and old marker then restarts
+ok 246 - failed controller trial restores old files, old trust and old marker then restarts
+  ---
+  duration_ms: 553.555485
+  type: 'test'
+  ...
+# Subtest: interrupted prepared transaction is recoverable with retained journal
+ok 247 - interrupted prepared transaction is recoverable with retained journal
+  ---
+  duration_ms: 558.010046
+  type: 'test'
+  ...
+# Subtest: interrupted old-renamed transaction is recoverable with retained journal
+ok 248 - interrupted old-renamed transaction is recoverable with retained journal
+  ---
+  duration_ms: 332.829296
+  type: 'test'
+  ...
+# Subtest: interrupted new-renamed transaction is recoverable with retained journal
+ok 249 - interrupted new-renamed transaction is recoverable with retained journal
+  ---
+  duration_ms: 301.995962
+  type: 'test'
+  ...
+# Subtest: interrupted config-switched transaction is recoverable with retained journal
+ok 250 - interrupted config-switched transaction is recoverable with retained journal
+  ---
+  duration_ms: 244.354212
+  type: 'test'
+  ...
+# Subtest: expired rollback leaves all services stopped and transaction evidence retained
+ok 251 - expired rollback leaves all services stopped and transaction evidence retained
+  ---
+  duration_ms: 298.328355
+  type: 'test'
+  ...
+# Subtest: crash after committed rotation keeps new generation instead of restoring old trust
+ok 252 - crash after committed rotation keeps new generation instead of restoring old trust
+  ---
+  duration_ms: 226.029934
+  type: 'test'
+  ...
+# Subtest: marker rebind refuses pending marker or unrelated config mutation and is idempotent for recovery
+ok 253 - marker rebind refuses pending marker or unrelated config mutation and is idempotent for recovery
+  ---
+  duration_ms: 136.749977
+  type: 'test'
+  ...
+# Subtest: CLI status emits valid JSON; invalid options never expose filesystem or secret details
+ok 254 - CLI status emits valid JSON; invalid options never expose filesystem or secret details
+  ---
+  duration_ms: 558.264857
+  type: 'test'
+  ...
+# Subtest: CMS encrypted and signed offline container: primitive feasibility only
+    # Subtest: AES-256-GCM and ECDH roundtrip
+    ok 1 - AES-256-GCM and ECDH roundtrip
+      ---
+      duration_ms: 11.029267
+      type: 'test'
+      ...
+    # Subtest: separately pinned ECDSA signer roundtrip
+    ok 2 - separately pinned ECDSA signer roundtrip
+      ---
+      duration_ms: 9.319423
+      type: 'test'
+      ...
+    # Subtest: GCM tampering rejected; failure output stays private and is never parsed
+    ok 3 - GCM tampering rejected; failure output stays private and is never parsed
+      ---
+      duration_ms: 13.299734
+      type: 'test'
+      ...
+    # Subtest: untrusted backup signer rejected
+    ok 4 - untrusted backup signer rejected
+      ---
+      duration_ms: 6.928249
+      type: 'test'
+      ...
+    # Subtest: wrong offline recipient key rejected
+    ok 5 - wrong offline recipient key rejected
+      ---
+      duration_ms: 27.161538
+      type: 'test'
+      ...
+    1..5
+ok 255 - CMS encrypted and signed offline container: primitive feasibility only
+  ---
+  duration_ms: 155.592031
+  type: 'test'
+  ...
+# Subtest: Node version transition never grants executable capabilities (cjs)
+ok 256 - Node version transition never grants executable capabilities (cjs)
+  ---
+  duration_ms: 23.391732
+  type: 'test'
+  ...
+# Subtest: Node version transition never grants executable capabilities (esm)
+ok 257 - Node version transition never grants executable capabilities (esm)
+  ---
+  duration_ms: 10.219822
+  type: 'test'
+  ...
+# Subtest: Node version transition never grants executable capabilities (source)
+ok 258 - Node version transition never grants executable capabilities (source)
+  ---
+  duration_ms: 11.670627
+  type: 'test'
+  ...
+# Subtest: core-only default refuses adapter activation and admits no arbitrary package
+ok 259 - core-only default refuses adapter activation and admits no arbitrary package
+  ---
+  duration_ms: 1.747706
+  type: 'test'
+  ...
+# Subtest: immutable admitted package/version and main must match current instance
+ok 260 - immutable admitted package/version and main must match current instance
+  ---
+  duration_ms: 1.065233
+  type: 'test'
+  ...
+# Subtest: Node injection flags are forbidden regardless of test profile environment switches
+ok 261 - Node injection flags are forbidden regardless of test profile environment switches
+  ---
+  duration_ms: 0.626188
+  type: 'test'
+  ...
+# Subtest: dynamic modules, exec, compact and extension starts are blocked
+ok 262 - dynamic modules, exec, compact and extension starts are blocked
+  ---
+  duration_ms: 0.852551
+  type: 'test'
+  ...
+# Subtest: host environment and configuration cannot enable preload/shell/compact/plugins
+ok 263 - host environment and configuration cannot enable preload/shell/compact/plugins
+  ---
+  duration_ms: 5.41677
+  type: 'test'
+  ...
+# Subtest: profile rejects JavaScript adapter, duplicates, unknown fields and escaped main paths
+ok 264 - profile rejects JavaScript adapter, duplicates, unknown fields and escaped main paths
+  ---
+  duration_ms: 0.538605
+  type: 'test'
+  ...
+# Subtest: entry check accepts real admitted file and rejects symlink/entry/package-version substitutions
+ok 265 - entry check accepts real admitted file and rejects symlink/entry/package-version substitutions
+  ---
+  duration_ms: 3.533679
+  type: 'test'
+  ...
+# Subtest: all six original executable inputs and three source mirrors are bound to actual SHA256
+ok 266 - all six original executable inputs and three source mirrors are bound to actual SHA256
+  ---
+  duration_ms: 76.641636
+  type: 'test'
+  ...
+# Subtest: all transformed executable variants pass the real Node parser
+ok 267 - all transformed executable variants pass the real Node parser
+  ---
+  duration_ms: 828.676615
+  type: 'test'
+  ...
+# Subtest: mandatory build gate rejects unpatched artifacts, modified helper and missing profile
+ok 268 - mandatory build gate rejects unpatched artifacts, modified helper and missing profile
+  ---
+  duration_ms: 116.902661
+  type: 'test'
+  ...
+# Subtest: mandatory gate rejects controller version drift, extra profile packages and bad UTF8
+ok 269 - mandatory gate rejects controller version drift, extra profile packages and bad UTF8
+  ---
+  duration_ms: 187.724156
+  type: 'test'
+  ...
+# Subtest: mandatory gate rejects symlink code/profile and unexpected catalogue fields
+ok 270 - mandatory gate rejects symlink code/profile and unexpected catalogue fields
+  ---
+  duration_ms: 69.095642
+  type: 'test'
+  ...
+# Subtest: cjs: real patched processMessage denies privileged actions before their original bodies
+ok 271 - cjs: real patched processMessage denies privileged actions before their original bodies
+  ---
+  duration_ms: 25.326822
+  type: 'test'
+  ...
+# Subtest: cjs: ordinary getInterfaces still passes original command route
+ok 272 - cjs: ordinary getInterfaces still passes original command route
+  ---
+  duration_ms: 24.227648
+  type: 'test'
+  ...
+# Subtest: cjs: real normal start denies Node preload before adapter lookup or fork
+ok 273 - cjs: real normal start denies Node preload before adapter lookup or fork
+  ---
+  duration_ms: 12.450318
+  type: 'test'
+  ...
+# Subtest: cjs: real scheduled start rechecks altered instance before fork
+ok 274 - cjs: real scheduled start rechecks altered instance before fork
+  ---
+  duration_ms: 6.973737
+  type: 'test'
+  ...
+# Subtest: cjs: real automatic install/upgrade functions produce no installer action
+ok 275 - cjs: real automatic install/upgrade functions produce no installer action
+  ---
+  duration_ms: 24.481372
+  type: 'test'
+  ...
+# Subtest: cjs: real CLI dispatch denies aliases and installation commands before DB/installer access
+ok 276 - cjs: real CLI dispatch denies aliases and installation commands before DB/installer access
+  ---
+  duration_ms: 4.05591
+  type: 'test'
+  ...
+# Subtest: cjs: real Install._npmInstall method rejects directly invoked package install
+ok 277 - cjs: real Install._npmInstall method rejects directly invoked package install
+  ---
+  duration_ms: 2.22586
+  type: 'test'
+  ...
+# Subtest: esm: real patched processMessage denies privileged actions before their original bodies
+ok 278 - esm: real patched processMessage denies privileged actions before their original bodies
+  ---
+  duration_ms: 13.311031
+  type: 'test'
+  ...
+# Subtest: esm: ordinary getInterfaces still passes original command route
+ok 279 - esm: ordinary getInterfaces still passes original command route
+  ---
+  duration_ms: 14.262863
+  type: 'test'
+  ...
+# Subtest: esm: real normal start denies Node preload before adapter lookup or fork
+ok 280 - esm: real normal start denies Node preload before adapter lookup or fork
+  ---
+  duration_ms: 14.09613
+  type: 'test'
+  ...
+# Subtest: esm: real scheduled start rechecks altered instance before fork
+ok 281 - esm: real scheduled start rechecks altered instance before fork
+  ---
+  duration_ms: 11.872003
+  type: 'test'
+  ...
+# Subtest: esm: real automatic install/upgrade functions produce no installer action
+ok 282 - esm: real automatic install/upgrade functions produce no installer action
+  ---
+  duration_ms: 30.355424
+  type: 'test'
+  ...
+# Subtest: esm: real CLI dispatch denies aliases and installation commands before DB/installer access
+ok 283 - esm: real CLI dispatch denies aliases and installation commands before DB/installer access
+  ---
+  duration_ms: 3.657457
+  type: 'test'
+  ...
+# Subtest: esm: real Install._npmInstall method rejects directly invoked package install
+ok 284 - esm: real Install._npmInstall method rejects directly invoked package install
+  ---
+  duration_ms: 5.671205
+  type: 'test'
+  ...
+# Subtest: OS parser never evaluates shell substitutions or accepts malformed assignments
+ok 285 - OS parser never evaluates shell substitutions or accepts malformed assignments
+  ---
+  duration_ms: 3.662735
+  type: 'test'
+  ...
+# Subtest: fresh supported fixture with exact Node matches read-only prerequisites
+ok 286 - fresh supported fixture with exact Node matches read-only prerequisites
+  ---
+  duration_ms: 12.463609
+  type: 'test'
+  ...
+# Subtest: preflight rejects wrong OS and exact Node drift
+ok 287 - preflight rejects wrong OS and exact Node drift
+  ---
+  duration_ms: 14.478429
+  type: 'test'
+  ...
+# Subtest: preflight rejects privileged Node, existing identity and occupied database ports
+ok 288 - preflight rejects privileged Node, existing identity and occupied database ports
+  ---
+  duration_ms: 3.66685
+  type: 'test'
+  ...
+# Subtest: fresh-path check catches a dangling symlink instead of overwriting it
+ok 289 - fresh-path check catches a dangling symlink instead of overwriting it
+  ---
+  duration_ms: 3.499659
+  type: 'test'
+  ...
+# Subtest: merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+ok 290 - merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+  ---
+  duration_ms: 0.879822
+  type: 'test'
+  ...
+# Subtest: generated host config passes real transport and bootstrap validators
+ok 291 - generated host config passes real transport and bootstrap validators
+  ---
+  duration_ms: 151.162536
+  type: 'test'
+  ...
+# Subtest: private writes reject replacement and symlink targets
+ok 292 - private writes reject replacement and symlink targets
+  ---
+  duration_ms: 1.577659
+  type: 'test'
+  ...
+# Subtest: installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+ok 293 - installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+  ---
+  duration_ms: 5.35013
+  type: 'test'
+  ...
+# Subtest: installer repeats the verified integrated port profile before persistent changes
+ok 294 - installer repeats the verified integrated port profile before persistent changes
+  ---
+  duration_ms: 5.21887
+  type: 'test'
+  ...
+# Subtest: verified catalog selects web port checks without changing core-only prerequisites
+ok 295 - verified catalog selects web port checks without changing core-only prerequisites
+  ---
+  duration_ms: 0.311983
+  type: 'test'
+  ...
+# Subtest: disabled install writes restricted config and units but never enables or starts services
+ok 296 - disabled install writes restricted config and units but never enables or starts services
+  ---
+  duration_ms: 83.51391
+  type: 'test'
+  ...
+# Subtest: pinned release state write failure prevents every service start or enable
+ok 297 - pinned release state write failure prevents every service start or enable
+  ---
+  duration_ms: 31.424973
+  type: 'test'
+  ...
+# Subtest: privileged group detected after identity creation stops before provisioning
+ok 298 - privileged group detected after identity creation stops before provisioning
+  ---
+  duration_ms: 13.575982
+  type: 'test'
+  ...
+# Subtest: start follows TLS databases then init then controller and writes root marker
+ok 299 - start follows TLS databases then init then controller and writes root marker
+  ---
+  duration_ms: 32.281024
+  type: 'test'
+  ...
+# Subtest: initialization failure stops and disables units without starting controller
+ok 300 - initialization failure stops and disables units without starting controller
+  ---
+  duration_ms: 13.40266
+  type: 'test'
+  ...
+# Subtest: cleanup failure is reported rather than claimed as a stopped installation
+ok 301 - cleanup failure is reported rather than claimed as a stopped installation
+  ---
+  duration_ms: 10.752442
+  type: 'test'
+  ...
+# Subtest: unit security boundaries and network compatibility remain explicit
+ok 302 - unit security boundaries and network compatibility remain explicit
+  ---
+  duration_ms: 0.675182
+  type: 'test'
+  ...
+# Subtest: systemd-analyze accepts complete unit grammar in isolated root fixture
+ok 303 - systemd-analyze accepts complete unit grammar in isolated root fixture
+  ---
+  duration_ms: 21.651949
+  type: 'test'
+  ...
+# Subtest: web listeners are reserved only for the verified integrated profile, including IPv6
+ok 304 - web listeners are reserved only for the verified integrated profile, including IPv6
+  ---
+  duration_ms: 13.206062
+  type: 'test'
+  ...
+# Subtest: malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+ok 305 - malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+  ---
+  duration_ms: 5.335037
+  type: 'test'
+  ...
+# Subtest: untrusted or non-executable tools are rejected before executing their bytes
+ok 306 - untrusted or non-executable tools are rejected before executing their bytes
+  ---
+  duration_ms: 4.4124
+  type: 'test'
+  ...
+# Subtest: protected distribution symlink is allowed, writable target and private runtime traversal are denied
+ok 307 - protected distribution symlink is allowed, writable target and private runtime traversal are denied
+  ---
+  duration_ms: 13.53796
+  type: 'test'
+  ...
+# Subtest: nonregular executable path, unavailable manager and invalid hostname fail before installation
+ok 308 - nonregular executable path, unavailable manager and invalid hostname fail before installation
+  ---
+  duration_ms: 6.036228
+  type: 'test'
+  ...
+# Subtest: setuid or setgid runtime executables are never executed by the prerequisite checker
+ok 309 - setuid or setgid runtime executables are never executed by the prerequisite checker
+  ---
+  duration_ms: 19.178794
+  type: 'test'
+  ...
+# Subtest: execution errors cannot be accepted through otherwise plausible output and exit status
+ok 310 - execution errors cannot be accepted through otherwise plausible output and exit status
+  ---
+  duration_ms: 4.938977
+  type: 'test'
+  ...
+# Subtest: approved required core is selected; optional is not installed implicitly
+ok 311 - approved required core is selected; optional is not installed implicitly
+  ---
+  duration_ms: 6.801777
+  type: 'test'
+  ...
+# Subtest: optional exact version follows requested -> installed -> active without confusing states
+ok 312 - optional exact version follows requested -> installed -> active without confusing states
+  ---
+  duration_ms: 2.114932
+  type: 'test'
+  ...
+# Subtest: catalogue approval does not fabricate package bytes or installed status
+ok 313 - catalogue approval does not fabricate package bytes or installed status
+  ---
+  duration_ms: 2.432463
+  type: 'test'
+  ...
+# Subtest: unselected/unknown installed items are quarantined, never automatically activated
+ok 314 - unselected/unknown installed items are quarantined, never automatically activated
+  ---
+  duration_ms: 11.878673
+  type: 'test'
+  ...
+# Subtest: production profile rejects test review; test profile accepts production review
+ok 315 - production profile rejects test review; test profile accepts production review
+  ---
+  duration_ms: 7.152033
+  type: 'test'
+  ...
+# Subtest: pending and rejected optional entries can be inventoried but never selected or active
+ok 316 - pending and rejected optional entries can be inventoried but never selected or active
+  ---
+  duration_ms: 8.222082
+  type: 'test'
+  ...
+# Subtest: a pending required component blocks the whole requested baseline
+ok 317 - a pending required component blocks the whole requested baseline
+  ---
+  duration_ms: 1.189381
+  type: 'test'
+  ...
+# Subtest: catalogue URL/tags/ranges and request version aliases are rejected
+ok 318 - catalogue URL/tags/ranges and request version aliases are rejected
+  ---
+  duration_ms: 7.948603
+  type: 'test'
+  ...
+# Subtest: valid exact prereleases are allowed only under explicit review
+ok 319 - valid exact prereleases are allowed only under explicit review
+  ---
+  duration_ms: 1.523076
+  type: 'test'
+  ...
+# Subtest: a different exact version is not treated as implicitly upgradeable
+ok 320 - a different exact version is not treated as implicitly upgradeable
+  ---
+  duration_ms: 0.554409
+  type: 'test'
+  ...
+# Subtest: unsigned approval metadata is a declaration, not release approval
+ok 321 - unsigned approval metadata is a declaration, not release approval
+  ---
+  duration_ms: 0.607811
+  type: 'test'
+  ...
+# Subtest: unknown fields at every trust boundary are rejected
+ok 322 - unknown fields at every trust boundary are rejected
+  ---
+  duration_ms: 4.07536
+  type: 'test'
+  ...
+# Subtest: package URL and path injection have no accepted catalogue representation
+ok 323 - package URL and path injection have no accepted catalogue representation
+  ---
+  duration_ms: 1.735037
+  type: 'test'
+  ...
+# Subtest: additional modules, shell exec and arbitrary javascript cannot be approved
+ok 324 - additional modules, shell exec and arbitrary javascript cannot be approved
+  ---
+  duration_ms: 0.466957
+  type: 'test'
+  ...
+# Subtest: internal plaintext is blocked; field Modbus legacy is explicitly declared
+ok 325 - internal plaintext is blocked; field Modbus legacy is explicitly declared
+  ---
+  duration_ms: 0.563924
+  type: 'test'
+  ...
+# Subtest: network claims cannot contradict declared TCP/discovery operations
+ok 326 - network claims cannot contradict declared TCP/discovery operations
+  ---
+  duration_ms: 0.212331
+  type: 'test'
+  ...
+# Subtest: duplicate IDs/packages/references/protocols are rejected
+ok 327 - duplicate IDs/packages/references/protocols are rejected
+  ---
+  duration_ms: 0.822986
+  type: 'test'
+  ...
+# Subtest: duplicate JSON keys including escaped spelling cannot change review
+ok 328 - duplicate JSON keys including escaped spelling cannot change review
+  ---
+  duration_ms: 0.35667
+  type: 'test'
+  ...
+# Subtest: prototype pollution keys and inherited objects are rejected without mutation
+ok 329 - prototype pollution keys and inherited objects are rejected without mutation
+  ---
+  duration_ms: 0.551355
+  type: 'test'
+  ...
+# Subtest: object API does not call getters, toJSON, or accept hidden/symbol fields
+ok 330 - object API does not call getters, toJSON, or accept hidden/symbol fields
+  ---
+  duration_ms: 0.395458
+  type: 'test'
+  ...
+# Subtest: parser rejects invalid syntax, Unicode, unsafe numbers and excessive nesting/bytes
+ok 331 - parser rejects invalid syntax, Unicode, unsafe numbers and excessive nesting/bytes
+  ---
+  duration_ms: 1.134198
+  type: 'test'
+  ...
+# Subtest: cyclic and sparse arrays are rejected; valid parsed output is deeply immutable
+ok 332 - cyclic and sparse arrays are rejected; valid parsed output is deeply immutable
+  ---
+  duration_ms: 1.358897
+  type: 'test'
+  ...
+# Subtest: strict real data types and missing keys are not coerced
+ok 333 - strict real data types and missing keys are not coerced
+  ---
+  duration_ms: 0.559197
+  type: 'test'
+  ...
+# Subtest: tree digest canonicalizes file order and binds path, size and content hash
+ok 334 - tree digest canonicalizes file order and binds path, size and content hash
+  ---
+  duration_ms: 1.067847
+  type: 'test'
+  ...
+# Subtest: tree metadata rejects traversal, duplicate paths, sparse/accessor rows, unsafe sizes
+ok 335 - tree metadata rejects traversal, duplicate paths, sparse/accessor rows, unsafe sizes
+  ---
+  duration_ms: 0.478264
+  type: 'test'
+  ...
+# Subtest: CLI returns bounded JSON, handles invalid UTF8 and never leaks paths/input into errors
+ok 336 - CLI returns bounded JSON, handles invalid UTF8 and never leaks paths/input into errors
+  ---
+  duration_ms: 582.319099
+  type: 'test'
+  ...
+# Subtest: signed integrated bundle, protected inputs and simulated Debian host pass without host mutation or secret output
+ok 337 - signed integrated bundle, protected inputs and simulated Debian host pass without host mutation or secret output
+  ---
+  duration_ms: 217.41909
+  type: 'test'
+  ...
+# Subtest: tampered signed payload and wrong signer fail before target commands or credential validation
+ok 338 - tampered signed payload and wrong signer fail before target commands or credential validation
+  ---
+  duration_ms: 107.324166
+  type: 'test'
+  ...
+# Subtest: wrong signing public key is rejected even when all host prerequisites are ready
+ok 339 - wrong signing public key is rejected even when all host prerequisites are ready
+  ---
+  duration_ms: 125.007916
+  type: 'test'
+  ...
+# Subtest: a valid signature never promotes a pending catalog entry
+ok 340 - a valid signature never promotes a pending catalog entry
+  ---
+  duration_ms: 127.991584
+  type: 'test'
+  ...
+# Subtest: current release must declare the observed target architecture and exact Node version
+ok 341 - current release must declare the observed target architecture and exact Node version
+  ---
+  duration_ms: 57.761554
+  type: 'test'
+  ...
+# Subtest: duplicate service and installer credentials or browser-selected admin role fail before target commands
+ok 342 - duplicate service and installer credentials or browser-selected admin role fail before target commands
+  ---
+  duration_ms: 183.977494
+  type: 'test'
+  ...
+# Subtest: secret modes, symlinks and invalid certificate hosts are rejected before target commands
+ok 343 - secret modes, symlinks and invalid certificate hosts are rejected before target commands
+  ---
+  duration_ms: 188.144938
+  type: 'test'
+  ...
+# Subtest: occupied integrated UI port yields a non-mutating rejected report
+ok 344 - occupied integrated UI port yields a non-mutating rejected report
+  ---
+  duration_ms: 100.901767
+  type: 'test'
+  ...
+# Subtest: CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+ok 345 - CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+  ---
+  duration_ms: 327.148844
+  type: 'test'
+  ...
+# Subtest: direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+ok 346 - direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+  ---
+  duration_ms: 150.333846
+  type: 'test'
+  ...
+# Subtest: verified installer forwards the same catalog port profile to the privileged host recheck
+ok 347 - verified installer forwards the same catalog port profile to the privileged host recheck
+  ---
+  duration_ms: 102.820397
+  type: 'test'
+  ...
+# Subtest: key generator refuses overwrite and protects private material
+ok 348 - key generator refuses overwrite and protects private material
+  ---
+  duration_ms: 103.868304
+  type: 'test'
+  ...
+# Subtest: verify checks signed package identity, digest, policy and exact runtime
+ok 349 - verify checks signed package identity, digest, policy and exact runtime
+  ---
+  duration_ms: 224.188329
+  type: 'test'
+  ...
+# Subtest: inventory generation never turns installed code into an approved adapter
+ok 350 - inventory generation never turns installed code into an approved adapter
+  ---
+  duration_ms: 41.102163
+  type: 'test'
+  ...
+# Subtest: changed package tree and pending catalog do not become approved by signing
+ok 351 - changed package tree and pending catalog do not become approved by signing
+  ---
+  duration_ms: 64.819284
+  type: 'test'
+  ...
+# Subtest: URL/range root dependencies and lifecycle scripts are rejected
+ok 352 - URL/range root dependencies and lifecycle scripts are rejected
+  ---
+  duration_ms: 77.079819
+  type: 'test'
+  ...
+# Subtest: installed check validates retained signature and detects changed release bytes
+ok 353 - installed check validates retained signature and detects changed release bytes
+  ---
+  duration_ms: 75.060652
+  type: 'test'
+  ...
+# Subtest: bundle preparation removes npm executable links and rejects other symlinks
+ok 354 - bundle preparation removes npm executable links and rejects other symlinks
+  ---
+  duration_ms: 49.855175
+  type: 'test'
+  ...
+# Subtest: CLI rejects duplicate, missing and extra options before work
+ok 355 - CLI rejects duplicate, missing and extra options before work
+  ---
+  duration_ms: 0.361818
+  type: 'test'
+  ...
+# Subtest: actual aliased installed tree and omitted optional package bind
+ok 356 - actual aliased installed tree and omitted optional package bind
+  ---
+  duration_ms: 7.550821
+  type: 'test'
+  ...
+# Subtest: stale or conflicting root digest is refused
+ok 357 - stale or conflicting root digest is refused
+  ---
+  duration_ms: 6.322061
+  type: 'test'
+  ...
+# Subtest: changed installed identity and unlisted package are refused
+ok 358 - changed installed identity and unlisted package are refused
+  ---
+  duration_ms: 4.673625
+  type: 'test'
+  ...
+# Subtest: missing required package, phantom component and dangling dependency are refused
+ok 359 - missing required package, phantom component and dangling dependency are refused
+  ---
+  duration_ms: 7.173309
+  type: 'test'
+  ...
+# Subtest: known vendored files must be present and bound by exact tree hash
+ok 360 - known vendored files must be present and bound by exact tree hash
+  ---
+  duration_ms: 28.937423
+  type: 'test'
+  ...
+# Subtest: fresh installations have independent CA, server key and per-store random credentials
+ok 361 - fresh installations have independent CA, server key and per-store random credentials
+  ---
+  duration_ms: 10.956106
+  type: 'test'
+  ...
+# Subtest: provision never overwrites existing installation
+ok 362 - provision never overwrites existing installation
+  ---
+  duration_ms: 7.474957
+  type: 'test'
+  ...
+# Subtest: path injection, symbolic-link parent and duplicate ports rejected
+ok 363 - path injection, symbolic-link parent and duplicate ports rejected
+  ---
+  duration_ms: 1.137111
+  type: 'test'
+  ...
+# Subtest: real TLS socket: authenticated TLS1.3 RESP fixture succeeds
+ok 364 - real TLS socket: authenticated TLS1.3 RESP fixture succeeds
+  ---
+  duration_ms: 97.50413
+  type: 'test'
+  ...
+# Subtest: real TLS socket: foreign CA rejected
+ok 365 - real TLS socket: foreign CA rejected
+  ---
+  duration_ms: 12.838736
+  type: 'test'
+  ...
+# Subtest: real TLS socket: wrong SAN rejected
+ok 366 - real TLS socket: wrong SAN rejected
+  ---
+  duration_ms: 20.467005
+  type: 'test'
+  ...
+# Subtest: real TLS socket: expired server certificate with trusted current CA rejected
+ok 367 - real TLS socket: expired server certificate with trusted current CA rejected
+  ---
+  duration_ms: 108.243081
+  type: 'test'
+  ...
+# Subtest: real TLS socket: TLS1.2-only peer rejected
+ok 368 - real TLS socket: TLS1.2-only peer rejected
+  ---
+  duration_ms: 77.868187
+  type: 'test'
+  ...
+# Subtest: plaintext RESP peer rejected
+ok 369 - plaintext RESP peer rejected
+  ---
+  duration_ms: 4.084624
+  type: 'test'
+  ...
+# Subtest: authentication failure never treated as healthy
+ok 370 - authentication failure never treated as healthy
+  ---
+  duration_ms: 26.745519
+  type: 'test'
+  ...
+# Subtest: TLS verification cannot be disabled through configuration
+ok 371 - TLS verification cannot be disabled through configuration
+  ---
+  duration_ms: 1.262682
+  type: 'test'
+  ...
+# Subtest: hung peer deadline closes network socket
+ok 372 - hung peer deadline closes network socket
+  ---
+  duration_ms: 114.806653
+  type: 'test'
+  ...
+# Subtest: response size is bounded
+ok 373 - response size is bounded
+  ---
+  duration_ms: 12.79504
+  type: 'test'
+  ...
+# Subtest: 24 caller SANs plus three default loopbacks can be inspected and renewed
+ok 374 - 24 caller SANs plus three default loopbacks can be inspected and renewed
+  ---
+  duration_ms: 531.44339
+  type: 'test'
+  ...
+# Subtest: CA directory and key exposure are rejected; CA key must match public certificate
+ok 375 - CA directory and key exposure are rejected; CA key must match public certificate
+  ---
+  duration_ms: 289.85824
+  type: 'test'
+  ...
+# Subtest: leaf renewal retains exact browser trust and SANs while replacing leaf keys
+ok 376 - leaf renewal retains exact browser trust and SANs while replacing leaf keys
+  ---
+  duration_ms: 652.536817
+  type: 'test'
+  ...
+# Subtest: renewal can replace expired leaves without relaxing public inspection
+ok 377 - renewal can replace expired leaves without relaxing public inspection
+  ---
+  duration_ms: 286.235879
+  type: 'test'
+  ...
+# Subtest: renewal refuses CA with insufficient remaining lifetime
+ok 378 - renewal refuses CA with insufficient remaining lifetime
+  ---
+  duration_ms: 132.554985
+  type: 'test'
+  ...
+# Subtest: tampered stage fails before stopping any service
+ok 379 - tampered stage fails before stopping any service
+  ---
+  duration_ms: 213.985006
+  type: 'test'
+  ...
+# Subtest: failed new listener probe restores previous HTTPS leaf
+ok 380 - failed new listener probe restores previous HTTPS leaf
+  ---
+  duration_ms: 227.252671
+  type: 'test'
+  ...
+# Subtest: web interrupted prepared is recoverable
+ok 381 - web interrupted prepared is recoverable
+  ---
+  duration_ms: 245.58145
+  type: 'test'
+  ...
+# Subtest: web interrupted old-renamed is recoverable
+ok 382 - web interrupted old-renamed is recoverable
+  ---
+  duration_ms: 214.834111
+  type: 'test'
+  ...
+# Subtest: web interrupted new-renamed is recoverable
+ok 383 - web interrupted new-renamed is recoverable
+  ---
+  duration_ms: 255.70218
+  type: 'test'
+  ...
+# Subtest: actual HTTPS TLS probe checks both exact deployed leaf identities after renewal
+ok 384 - actual HTTPS TLS probe checks both exact deployed leaf identities after renewal
+  ---
+  duration_ms: 619.545801
+  type: 'test'
+  ...
+# Subtest: web crash after durable commit confirms new leaf and never restores old leaf
+ok 385 - web crash after durable commit confirms new leaf and never restores old leaf
+  ---
+  duration_ms: 239.15688
+  type: 'test'
+  ...
+# Subtest: only the pinned upstream transport can be transformed
+ok 386 - only the pinned upstream transport can be transformed
+  ---
+  duration_ms: 2.115513
+  type: 'test'
+  ...
+# Subtest: real transformed SocketIO passes 1 MiB decompressed-message cap to ws parser before dispatch
+ok 387 - real transformed SocketIO passes 1 MiB decompressed-message cap to ws parser before dispatch
+  ---
+  duration_ms: 4.368143
+  type: 'test'
+  ...
+# Subtest: resource bound is mandatory only when the Admin transport is admitted
+ok 388 - resource bound is mandatory only when the Admin transport is admitted
+  ---
+  duration_ms: 0.517434
+  type: 'test'
+  ...
+# Subtest: nested or wrong-version transport cannot satisfy top-level transformation
+ok 389 - nested or wrong-version transport cannot satisfy top-level transformation
+  ---
+  duration_ms: 6.689548
+  type: 'test'
+  ...
+# Subtest: an unpatched admitted Admin cannot pass the signed-build verification gate
+ok 390 - an unpatched admitted Admin cannot pass the signed-build verification gate
+  ---
+  duration_ms: 129.01308
+  type: 'test'
+  ...
+1..390
+# tests 395
+# suites 0
+# pass 395
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8629.442469

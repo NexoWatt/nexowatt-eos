@@ -1,0 +1,29 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "admin/react/assets",
+    "www",
+    "ems",
+    "src-admin-tab",
+    "build",
+    "build-types",
+    "build-ts"
+  ]
+}

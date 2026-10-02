@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "documentId": "EOS-HW-RPI5-001",
+  "date": "2026-09-30",
+  "status": "user-reported-preliminary",
+  "architectureBaseCommit": "8da1152d556625bb8173fc8b5953d0caaef992f1",
+  "measured": false,
+  "releaseApproved": false,
+  "livePlantTestPerformed": false,
+  "craConformityDeclared": false,
+  "iecConformityDeclared": false,
+  "userReported": {
+    "date": "2026-09-30",
+    "hardwareFamily": "Raspberry Pi 5",
+    "ramVariantsGB": [
+      8,
+      16
+    ],
+    "storageType": "SSD",
+    "osDescription": "linux 12 lite"
+  },
+  "inferred": {
+    "osCandidate": "Raspberry Pi OS Lite based on Debian 12 Bookworm",
+    "confidence": "plausible-unconfirmed",
+    "installedArchitecture": null
+  },
+  "observedOnTarget": {
+    "distributionId": null,
+    "distributionVersion": null,
+    "imageDate": null,
+    "imageSha256": null,
+    "kernelRelease": null,
+    "kernelArchitecture": null,
+    "userspaceArchitecture": null,
+    "nodeVersion": null,
+    "nodeArchitecture": null,
+    "jsControllerVersion": null,
+    "jsControllerSourceCommit": null,
+    "boardRevision": null,
+    "eepromVersion": null,
+    "ssdModel": null,
+    "ssdCapacityBytes": null,
+    "ssdInterface": null,
+    "ssdFirmware": null,
+    "powerSupply": null,
+    "cooling": null,
+    "rtcBackupBattery": null,
+    "secureBootEnabled": null,
+    "encryptedStorage": null
+  },
+  "developmentTarget": {
+    "kernelArchitecture": "aarch64",
+    "userspaceArchitecture": "arm64",
+    "headless": true,
+    "approvedOsImage": null,
+    "automaticOsMajorMigration": false,
+    "requiresSeparateValidationPerRamVariant": true,
+    "jsControllerIncludedInProductScope": true
+  },
+  "sourceFindings": {
+    "debian12": {
+      "status": "lts",
+      "ltsUntil": "2028-06-30",
+      "relevantSupportedArchitectures": [
+        "arm64",
+        "armhf"
+      ],
+      "sourceIds": [
+        "S1",
+        "S2"
+      ],
+      "scopeLimitation": "No automatic coverage claim for Raspberry Pi firmware, Node.js, npm adapters or every installed package."
+    },
+    "raspberryPiOsDownload": {
+      "legacyLite64": {
+        "base": "Debian 12 Bookworm",
+        "imageDate": "2026-09-15",
+        "kernelSeries": "6.12",
+        "securityUpdatesAdvertised": true
+      },
+      "currentMainlineBase": "Debian 13 Trixie",
+      "sourceIds": [
+        "S3"
+      ],
+      "installedStateConfirmed": false
+    },
+    "secureBoot": {
+      "manufacturerDocumentsPi5Support": true,
+      "otpProvisioningIrreversible": true,
+      "hardwareSignatureScheme": "RSA-2048 PKCS#1 v1.5",
+      "secureEnclavePresent": false,
+      "rootOrKernelKeyProtectionGuaranteed": false,
+      "sourceIds": [
+        "S5",
+        "S6"
+      ],
+      "eosCryptographicSuitabilityAssessed": false
+    }
+  },
+  "openGates": [
+    {
+      "id": "EOS-HW-GATE-001",
+      "subject": "Identify actual OS image and full software lifecycle",
+      "status": "open"
+    },
+    {
+      "id": "EOS-HW-GATE-002",
+      "subject": "Confirm SSD, power, cooling and complete hardware bill of materials",
+      "status": "open"
+    },
+    {
+      "id": "EOS-HW-GATE-003",
+      "subject": "Measure 8 GB and 16 GB variants with actual EOS workloads",
+      "status": "open"
+    },
+    {
+      "id": "EOS-HW-GATE-004",
+      "subject": "Design and test boot integrity, secret protection, recovery and update rollback",
+      "status": "open"
+    },
+    {
+      "id": "EOS-HW-GATE-005",
+      "subject": "Prove controller and adapter isolation without breaking plant functions",
+      "status": "open"
+    }
+  ],
+  "plannedTests": [
+    {
+      "id": "EOS-HW-TEST-001",
+      "status": "not-executed",
+      "objective": "Inventory image, architectures, kernel, EEPROM, Node.js and js-controller",
+      "measured": false
+    },
+    {
+      "id": "EOS-HW-TEST-002",
+      "status": "not-executed",
+      "objective": "Install fixed adapter set and verify preserved functions",
+      "measured": false
+    },
+    {
+      "id": "EOS-HW-TEST-003",
+      "status": "not-executed",
+      "objective": "Measure sustained load, memory, I/O, thermals, undervoltage and control latency",
+      "measured": false
+    },
+    {
+      "id": "EOS-HW-TEST-004",
+      "status": "not-executed",
+      "objective": "Restore backup to replacement SSD including identity and license recovery",
+      "measured": false
+    },
+    {
+      "id": "EOS-HW-TEST-005",
+      "status": "not-executed",
+      "objective": "Reject invalid signatures and test interrupted updates, rollback and power loss",
+      "measured": false
+    },
+    {
+      "id": "EOS-HW-TEST-006",
+      "status": "not-executed",
+      "objective": "Verify process rights and communication boundaries for controller and adapters",
+      "measured": false
+    },
+    {
+      "id": "EOS-HW-TEST-007",
+      "status": "not-executed",
+      "objective": "Verify device failures, stale values, restart and plant protection functions",
+      "measured": false
+    }
+  ],
+  "documentationVerification": {
+    "scope": "Document content and JSON structure only; no target-device execution",
+    "runtimeSecurityVerified": false,
+    "hardwarePerformanceVerified": false
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://www.debian.org/releases/bookworm/",
+      "retrievedOn": "2026-09-30",
+      "kind": "primary-vendor-documentation"
+    },
+    {
+      "id": "S2",
+      "url": "https://www.debian.org/lts/",
+      "retrievedOn": "2026-09-30",
+      "kind": "primary-vendor-documentation"
+    },
+    {
+      "id": "S3",
+      "url": "https://www.raspberrypi.com/software/operating-systems/",
+      "retrievedOn": "2026-09-30",
+      "kind": "primary-vendor-documentation"
+    },
+    {
+      "id": "S4",
+      "url": "https://www.raspberrypi.com/products/raspberry-pi-5/",
+      "retrievedOn": "2026-09-30",
+      "kind": "primary-vendor-documentation"
+    },
+    {
+      "id": "S5",
+      "url": "https://github.com/raspberrypi/usbboot/blob/master/docs/secure-boot.md",
+      "retrievedOn": "2026-09-30",
+      "kind": "primary-vendor-documentation"
+    },
+    {
+      "id": "S6",
+      "url": "https://github.com/raspberrypi/usbboot/blob/master/secure-boot-recovery5/README.md",
+      "retrievedOn": "2026-09-30",
+      "kind": "primary-vendor-documentation"
+    },
+    {
+      "id": "S7",
+      "url": "https://www.raspberrypi.com/documentation/computers/raspberry-pi.html",
+      "retrievedOn": "2026-09-30",
+      "kind": "primary-vendor-documentation"
+    }
+  ]
+}

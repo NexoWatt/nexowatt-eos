@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: HTTPS accepts bounded JSON with explicit TLS verification, identity encoding and no pooling
+ok 1 - HTTPS accepts bounded JSON with explicit TLS verification, identity encoding and no pooling
+  ---
+  duration_ms: 10.416786
+  type: 'test'
+  ...
+# Subtest: HTTPS rejects scheme, credentials, fragments, alternate port and non-allowlisted host before transport
+ok 2 - HTTPS rejects scheme, credentials, fragments, alternate port and non-allowlisted host before transport
+  ---
+  duration_ms: 4.509598
+  type: 'test'
+  ...
+# Subtest: HTTPS rejects redirects without contacting redirect targets
+ok 3 - HTTPS rejects redirects without contacting redirect targets
+  ---
+  duration_ms: 2.911337
+  type: 'test'
+  ...
+# Subtest: HTTPS rejects oversized declared and streamed responses and compressed bodies
+ok 4 - HTTPS rejects oversized declared and streamed responses and compressed bodies
+  ---
+  duration_ms: 3.577331
+  type: 'test'
+  ...
+# Subtest: HTTPS rejects malformed or primitive JSON without exposing body/error text
+ok 5 - HTTPS rejects malformed or primitive JSON without exposing body/error text
+  ---
+  duration_ms: 4.710506
+  type: 'test'
+  ...
+# Subtest: HTTPS hard deadline destroys a request before response including DNS/connect stalls
+ok 6 - HTTPS hard deadline destroys a request before response including DNS/connect stalls
+  ---
+  duration_ms: 21.086805
+  type: 'test'
+  ...
+# Subtest: HTTPS hard deadline also bounds slow response bodies
+ok 7 - HTTPS hard deadline also bounds slow response bodies
+  ---
+  duration_ms: 22.14619
+  type: 'test'
+  ...
+# Subtest: HTTP bind is literal loopback unless TLS enabled; nonloopback Host and peer are rejected
+ok 8 - HTTP bind is literal loopback unless TLS enabled; nonloopback Host and peer are rejected
+  ---
+  duration_ms: 1.619411
+  type: 'test'
+  ...
+# Subtest: gzip preview returns text but rejects bombs, oversized input, and invalid gzip
+ok 9 - gzip preview returns text but rejects bombs, oversized input, and invalid gzip
+  ---
+  duration_ms: 112.524284
+  type: 'test'
+  ...
+# Subtest: gzip preview concurrency is bounded independently of compressed size
+ok 10 - gzip preview concurrency is bounded independently of compressed size
+  ---
+  duration_ms: 75.226542
+  type: 'test'
+  ...
+# Subtest: system-info calls coalesce and cache npm version; no shell is used
+ok 11 - system-info calls coalesce and cache npm version; no shell is used
+  ---
+  duration_ms: 3.365738
+  type: 'test'
+  ...
+# Subtest: upload budget admits two across routes; third denied and aborted temporary files cleaned
+ok 12 - upload budget admits two across routes; third denied and aborted temporary files cleaned
+  ---
+  duration_ms: 73.317397
+  type: 'test'
+  ...
+# Subtest: upload parser receives actual total/file/part limits and private temporary directory
+ok 13 - upload parser receives actual total/file/part limits and private temporary directory
+  ---
+  duration_ms: 37.525682
+  type: 'test'
+  ...
+# Subtest: restore storage does not follow existing destination symlink and persists restrictive permissions
+ok 14 - restore storage does not follow existing destination symlink and persists restrictive permissions
+  ---
+  duration_ms: 43.215118
+  type: 'test'
+  ...
+# Subtest: retained upload data counts against shared quota at the next admission
+ok 15 - retained upload data counts against shared quota at the next admission
+  ---
+  duration_ms: 42.012822
+  type: 'test'
+  ...
+# Subtest: upload total deadline aborts a still-active parser and removes its partial directory
+ok 16 - upload total deadline aborts a still-active parser and removes its partial directory
+  ---
+  duration_ms: 54.780033
+  type: 'test'
+  ...
+# Subtest: upload admission rejects low disk space before constructing parser
+ok 17 - upload admission rejects low disk space before constructing parser
+  ---
+  duration_ms: 4.329007
+  type: 'test'
+  ...
+# Subtest: synchronous parser initialization failure releases reserved capacity
+ok 18 - synchronous parser initialization failure releases reserved capacity
+  ---
+  duration_ms: 68.386035
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 726.031592

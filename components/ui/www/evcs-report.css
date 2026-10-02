@@ -1,0 +1,93 @@
+/*
+ * Datei: www/evcs-report.css
+ * Rolle: Code-Datei
+ * Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+ * Wartung: Diese Styles hängen an festen HTML-Klassen/IDs. Vor Änderungen betroffene Seiten mobil und Desktop prüfen.
+ */
+/*
+ * NexoWatt Code-Kommentar (DE)
+ * Zweck: Stylesheet für Kunden-/VIS-Seiten, Reports oder mobile Layouts.
+ * Zusammenhänge:
+ * - HTML-Struktur liegt in www/*.html, Logik in www/*.js.
+ * - Responsivität muss Desktop, Tablet und Smartphone abdecken.
+ * Wartungshinweise:
+ * - Keine fachliche Logik hier; nur Darstellung und Sichtbarkeit.
+ */
+
+/*
+  EVCS report page (Wallbox-Lade-Historie)
+  - uses the global NexoWatt styles (styles.css)
+  - only adds a small layout wrapper and page headline styling
+*/
+
+.report-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.report-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0 12px;
+}
+
+.report-head h2 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+.report-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.toolbar button {
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.card th, .card td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.card thead th {
+  font-weight: 700;
+}
+
+.card tfoot td {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  border-bottom: none;
+}
+
+.hint {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+}
+
+@media (max-width: 560px) {
+  .report-wrap {
+    padding: 12px;
+  }
+  .card th, .card td {
+    padding: 8px 8px;
+  }
+}

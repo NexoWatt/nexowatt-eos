@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "scope": "four-selected-existing-ui-checks",
+  "sourceVersion": "1.0.21",
+  "sourceArchiveSha256": "90db619ecd754cab335dae92fdc123a48f62ceffb505a2a2b832e119d885eefe",
+  "node": "v24.19.0",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "hardwareTest": false,
+  "browserEndToEndTest": false,
+  "fullReleaseValidation": false,
+  "scriptsExecuted": 4,
+  "scriptsPassed": 4,
+  "results": [
+    {
+      "command": [
+        "node",
+        "scripts/verify-stable-1.0.19-grid-share.cjs"
+      ],
+      "startedAt": "2026-09-30T20:38:31.010287+00:00",
+      "durationSeconds": 4.859,
+      "exitCode": 0,
+      "status": "passed",
+      "testKind": "synthetic-functional-regression",
+      "scriptSha256": "306ae8f73f1a86fe413e325e5c242de4c2537f033d9a3b2e2bdbe7155a71a9f9",
+      "stdout": "[1.0.19] OK: Netzanteil+PV, 120 Mehr-LP-Fälle, Istreservierung, Phasen und Zielplanung\n[1.0.19] OK: reale Writer Auto/Boost/PV-Verlust, 1p/3p und unveränderte Bestandsanlage\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "scripts/verify-stable-1.0.20-storage-allocation.cjs"
+      ],
+      "startedAt": "2026-09-30T20:38:35.870051+00:00",
+      "durationSeconds": 0.304,
+      "exitCode": 0,
+      "status": "passed",
+      "testKind": "synthetic-functional-regression",
+      "scriptSha256": "99153799c3000bba8726acac212f4fed5b5d27939464f714c4c59723904d83be",
+      "stdout": "[1.0.20] OK: getrennte Quellen, 240 Mehr-LP-Fälle, Schutz, Istreservierung, Min+PV und konservative Phasenwahl\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "scripts/verify-zero-export-inverter-mapping.cjs"
+      ],
+      "startedAt": "2026-09-30T20:38:36.173839+00:00",
+      "durationSeconds": 0.124,
+      "exitCode": 0,
+      "status": "passed",
+      "testKind": "synthetic-functional-regression",
+      "scriptSha256": "0e6c82eeb85b4518e649b1ed54c9bf657c2a4db1f9b9d485f8ec18bd02b932c2",
+      "stdout": "[zero-export-inverter-mapping] OK: 33 Konfigurations-, Konflikt-, Alias-, Totband- und Writer-Fälle bestanden.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "scripts/verify-energy-flow-regression-cases.js"
+      ],
+      "startedAt": "2026-09-30T20:38:36.298451+00:00",
+      "durationSeconds": 0.078,
+      "exitCode": 0,
+      "status": "passed",
+      "testKind": "fixture-structure-check",
+      "scriptSha256": "ef6d0117c55f7731f7a700e9b65f60b89336fe11507355e449228f389799cd8c",
+      "stdout": "[energy-flow-regression-cases] OK: Regressionstest-Struktur und Kommentare vorhanden.\n",
+      "stderr": ""
+    }
+  ]
+}

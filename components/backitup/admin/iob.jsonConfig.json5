@@ -1,0 +1,168 @@
+{
+    "type": "panel",
+    "label": "NexoWatt EOS",
+    "items": {
+        "_header": {
+            "type": "header",
+            "size": 2,
+            "text": "NexoWatt EOS backup",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "backupNow": {
+            "type": "setState",
+            "label": "Backup now",
+            "newLine": true,
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 6,
+            "xl": 6,
+            "id": "oneClick.iobroker",
+            "val": true,
+            "ack": false,
+            "variant": "contained"
+        },
+        "_eosHeader": {
+            "newLine": true,
+            "type": "header",
+            "size": 3,
+            "text": "NexoWatt EOS system profile",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "eosProfileEnabled": {
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Create an additional EOS system profile",
+            "help": "The EOS system profile contains a manifest, adapter inventory and selected NexoWatt vendor files. It is transferred to every enabled backup target.",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "eosIncludeVendorFile": {
+            "hidden": "!data.eosProfileEnabled",
+            "type": "checkbox",
+            "label": "Include public NexoWatt vendor configuration",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "eosIncludeVendorSecret": {
+            "hidden": "!data.eosProfileEnabled",
+            "type": "checkbox",
+            "label": "Include NexoWatt vendor secret",
+            "help": "Warning: the EOS system profile archive is not encrypted. Only enable this option for protected backup targets.",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "_eosSecurityInfo": {
+            "hidden": "!data.eosProfileEnabled",
+            "newLine": true,
+            "type": "staticText",
+            "text": "The normal NexoWatt EOS archive remains the authoritative restore point. The EOS profile adds integrity data and files outside the NexoWatt EOS object database.",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "_helpLine1": {
+            "newLine": true,
+            "type": "divider",
+            "color": "primary"
+        },
+        "minimalTime": {
+            "hidden": "data.iobrokerCron",
+            "newLine": true,
+            "type": "timePicker",
+            "label": "Backup time",
+            "format": "HH:mm",
+            "views": [
+                "hours",
+                "minutes"
+            ],
+            "timeSteps": {
+                "hours": 1,
+                "minutes": 1
+            },
+            "returnFormat": "HH:mm:ss",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3
+        },
+        "iobrokerCronJob": {
+            "hidden": "!data.iobrokerCron",
+            "newLine": true,
+            "type": "cron",
+            "label": "Backup CRON job",
+            "complex": true,
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3
+        },
+        "minimalEveryXDays": {
+            "hidden": "data.iobrokerCron",
+            "newLine": true,
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "min": 1,
+            "max": 100,
+            "type": "number",
+            "label": "days",
+            "help": "Backup will run every X days"
+        },
+        "minimalDeleteAfter": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "min": 1,
+            "max": 100,
+            "type": "number",
+            "label": "piece",
+            "help": "Delete old NexoWatt EOS backups with the exception of the last X pieces"
+        },
+        "minimalNameSuffix": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "type": "text",
+            "label": "Name suffix",
+            "help": "Name suffix for the file name of the backup"
+        },
+        "iobrokerCron": {
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Create your own CRON job (for experts only)",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3
+        }
+    }
+}

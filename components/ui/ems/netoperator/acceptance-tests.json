@@ -1,0 +1,23 @@
+{
+  "schema": "nexowatt.netoperator-acceptance-suite.v1",
+  "version": "1.0.0",
+  "tests": [
+    { "id": "T01", "name": "Kommunikationsaufbau", "stimulus": "Verbindung herstellen; Status lesen", "expected": "controller.comm_ok = true", "required": true },
+    { "id": "T02", "name": "0-kW-Limit", "stimulus": "P-Limit auf 0 kW setzen", "expected": "EOS hält den NAP innerhalb definierter Toleranz", "required": true },
+    { "id": "T03", "name": "Dynamische P-Reduktion", "stimulus": "100 % -> 60 % -> 30 %", "expected": "Sollwert wird fristgerecht umgesetzt", "required": true },
+    { "id": "T04", "name": "Harter Trip", "stimulus": "trip=true", "expected": "EOS führt sichere Abschaltsequenz aus", "required": true },
+    { "id": "T05", "name": "Freigabe weg", "stimulus": "release=false", "expected": "Keine unzulässige Einspeisung", "required": true },
+    { "id": "T06", "name": "Q-Sollwert", "stimulus": "Blindleistungssollwert ändern", "expected": "Zielwert entsprechend Anlagenfähigkeit umgesetzt", "required": true },
+    { "id": "T07", "name": "cos phi", "stimulus": "cos-phi Sollwert ändern", "expected": "Sollwert wird umgesetzt", "required": false },
+    { "id": "T08", "name": "Kommunikationsverlust", "stimulus": "Parkregler-Verbindung trennen", "expected": "Definierter Fail-Safe; Alarm; kein stilles Weiteroptimieren", "required": true },
+    { "id": "T09", "name": "Stale Data", "stimulus": "Zeitstempel einfrieren", "expected": "EOS erkennt veraltete Vorgaben", "required": true },
+    { "id": "T10", "name": "Neustart", "stimulus": "EOS/Adapter neu starten", "expected": "Sicherer Zustand; keine unkontrollierte Sollwertübernahme", "required": true },
+    { "id": "T11", "name": "BESS + PV", "stimulus": "P-Limit reduzieren bei freier Batterie", "expected": "EOS priorisiert Assets gemäß Betriebsstrategie; Grenze bleibt bindend", "required": true },
+    { "id": "T12", "name": "Logging", "stimulus": "Mehrere Sollwertwechsel", "expected": "Quelle, Zeit, alter/neuer Wert, Reaktion und Ergebnis nachvollziehbar", "required": true }
+  ],
+  "foundationStatus": {
+    "implemented": ["T01-profile-and-transport-foundation", "T08-communication-diagnostics", "T09-stale-detection", "T10-package-start-smoke", "T12-audit-foundation"],
+    "lockedUntilVendorCommissioning": ["T02", "T03", "T04", "T05", "T06", "T07", "T11"],
+    "operationEngineIntegration": "prepared-not-active"
+  }
+}

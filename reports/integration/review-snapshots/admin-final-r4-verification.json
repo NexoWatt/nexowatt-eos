@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01T12:36:48.719745+00:00",
+  "component": "iobroker.eos-admin",
+  "version": "7.10.11",
+  "profile": "nexowatt-eos-integrated-test-v1",
+  "status": "component-tested-integrated-product-tests-separate",
+  "sourceArchiveSha256": "c58a4c03b3f3113455bf1a3492b942307902deabf3fd8f670670ff16955f9a92",
+  "environment": {
+    "os": "Linux x86_64",
+    "node": "v24.19.0",
+    "typescript": "5.9.3",
+    "uid": 0
+  },
+  "build": {
+    "command": "node node_modules/typescript/bin/tsc -p tsconfig.build.json",
+    "workingDirectory": "isolated verified npm ci tree",
+    "exitCode": 0,
+    "sourceFiles": 37,
+    "compiledFiles": 59,
+    "semanticTypecheck": true,
+    "frontendRebuilt": false,
+    "unchangedFrontendFilesComparedToInputSeal": 1265,
+    "changedFrontendFiles": [],
+    "fallbackEmission": "Earlier fallback record retained historically; current shipped backend replaced with complete tsc output."
+  },
+  "tests": [
+    {
+      "id": "ADMIN-APPLIANCE-SOURCE",
+      "command": "node --test --test-reporter=tap test/eos-appliance-profile.test.cjs",
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "raw/appliance-source.tap"
+    },
+    {
+      "id": "ADMIN-APPLIANCE-BUILT",
+      "command": "EOS_TEST_RUNTIME=build node --test --test-reporter=tap test/eos-appliance-profile.test.cjs",
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "raw/appliance-built.tap"
+    },
+    {
+      "id": "ADMIN-SOCKET-OAUTH",
+      "command": "EOS_ADMIN_DEPENDENCIES=<verified isolated node_modules> EOS_TEST_RUNTIME=build node --test --test-reporter=tap test/eos-appliance-socket.integration.cjs test/eos-appliance-oauth.integration.cjs",
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "countingNote": "Four socket cases, five HTTPS OAuth subtests and one parent test. In-memory DB fixture; real published dispatcher/Express/Webserver/OAuth/TLS.",
+      "evidence": "raw/socket-oauth-integration.tap"
+    },
+    {
+      "id": "ADMIN-SECURITY-REGRESSION",
+      "command": "node --test --test-reporter=tap test/eos-license-*.test.cjs test/eos-session-security.test.cjs test/eos-web-resources.test.cjs",
+      "tests": 112,
+      "passed": 112,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "raw/security-regression.tap"
+    },
+    {
+      "id": "ADMIN-SHIPPED-BOUNDARIES",
+      "command": "node tools/nexowatt-security-boundaries-selftest.cjs",
+      "tests": 40,
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "raw/security-boundaries.log"
+    },
+    {
+      "id": "ADMIN-RELEASE-DEFAULTS",
+      "command": "node tools/nexowatt-release-defaults-selftest.cjs",
+      "exitCode": 0,
+      "evidence": "raw/release-defaults.log"
+    }
+  ],
+  "dependencyChanges": [
+    "Removed inactive MCP and Docker execution dependencies",
+    "Replaced oauth2-server3.1.1 with tested npm alias @node-oauth/oauth2-server5.3.0; root override and startup assertion mandatory",
+    "Corrected @iobroker/ws3.1.0 SRI only after independent registry metadata + direct archive verification; cause of original discrepancy unknown",
+    "npm audit fix --package-lock-only --ignore-scripts --omit=dev, without --force, followed by complete npm ci; record final audit separately"
+  ],
+  "audit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "limitations": [
+    "Not an unprivileged Debian12/systemd or ARM64 hardware test",
+    "Shared runtime UID and shared Redis identity are not adapter isolation",
+    "Not a complete frontend rebuild; supplied frontend bytes preserved",
+    "No independent penetration test, product release or CRA/IEC certificate",
+    "Target CPU/login-load, certificate lifecycle, Tailscale, backups and real device controls require overall-system evidence",
+    "npm audit at stated retrieval time is not proof of absence of vulnerabilities"
+  ],
+  "prebuiltSeal": {
+    "file": "NEXOWATT_EOS_PREBUILT_MANIFEST.json",
+    "sha256": "ac420828ed3174e68eaa439325aeed49e06da6c9de7d4bed2727048a6cbd54cd",
+    "verified": true,
+    "sealedFileCount": 1453,
+    "runtimeClosureFiles": 22,
+    "evidence": "raw/final-controller-contract-seal-verify.log"
+  },
+  "finalControllerContractCorrection": {
+    "reason": "Actual controller7 system/group view emits a translated display name as row.id; original fixture incorrectly treated that field as canonical ID. Full integration rejected legitimate login before password verification.",
+    "changes": [
+      "Session snapshot and Web role resolution use strictly validated row.value._id; malformed/duplicate canonical group objects fail closed.",
+      "Fixtures now model translated display-name keys. No password hash or authentication requirement was weakened.",
+      "Removed common.plugins declaration; release normalization prevents optional adapter plugins returning. This does not rely on CI=true.",
+      "Added io-package.json to prebuilt seal inputs."
+    ],
+    "sourceTests": {
+      "tests": 31,
+      "passed": 31,
+      "failed": 0,
+      "evidence": "raw/final-controller-contract-source.tap"
+    },
+    "builtTests": {
+      "tests": 41,
+      "passed": 41,
+      "failed": 0,
+      "evidence": "raw/final-controller-contract-built.tap",
+      "scope": "Source-equivalent profile/session tests plus actual socket dispatcher and HTTPS OAuth, fixture database."
+    },
+    "compile": {
+      "exitCode": 0,
+      "evidence": "raw/final-controller-contract-tsc.log"
+    },
+    "releaseDefaults": {
+      "exitCode": 0,
+      "evidence": "raw/final-controller-contract-defaults.log"
+    },
+    "shippedBoundaries": {
+      "tests": 40,
+      "passed": 40,
+      "failed": 0,
+      "evidence": "raw/final-controller-contract-boundaries.log"
+    },
+    "historicalTests": "The earlier tests[] entries are retained as prior component evidence. Final correction tests above apply to the current source/build."
+  }
+}

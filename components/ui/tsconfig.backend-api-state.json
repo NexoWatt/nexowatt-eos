@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/backend-api-state",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/contracts/**/*.ts",
+    "src-ts/backend/**/*.ts",
+    "src-ts/quality/backend-api-state-cases.ts",
+    "src-ts/tests/backend-api-state-runtime.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build-ts"
+  ]
+}

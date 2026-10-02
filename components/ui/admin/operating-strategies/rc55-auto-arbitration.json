@@ -1,0 +1,51 @@
+{
+  "version": "0.8.179",
+  "release": "RC55",
+  "ui": {
+    "section": "Auto-Steuerung",
+    "fields": [
+      {
+        "id": "stage",
+        "label": "Inbetriebnahmestufe",
+        "default": "shadow",
+        "options": [
+          "shadow",
+          "commissioning",
+          "active"
+        ]
+      },
+      {
+        "id": "autoSource",
+        "label": "Auto-Quelle",
+        "default": "standard",
+        "options": [
+          "standard",
+          "strategy"
+        ]
+      },
+      {
+        "id": "strategyParticipationEnabled",
+        "label": "Teilnahme an Betriebsstrategie",
+        "default": false
+      },
+      {
+        "id": "fallback",
+        "label": "Rückfall",
+        "default": "standardAuto",
+        "options": [
+          "standardAuto",
+          "pause"
+        ]
+      },
+      {
+        "id": "requestTtlSeconds",
+        "label": "Maximales Alter einer Strategieanforderung",
+        "default": 15,
+        "min": 3,
+        "max": 60
+      }
+    ]
+  },
+  "writePath": "existing-load-management-only",
+  "directHardwareWrites": false
+}

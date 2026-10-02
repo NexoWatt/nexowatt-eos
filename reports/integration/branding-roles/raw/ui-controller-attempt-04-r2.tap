@@ -1,0 +1,109 @@
+TAP version 13
+# Subtest: integrated UI laboratory WITH OS-interface fixture: TLS setup, enrollment, separate roles, own passwords, branding, central license and denied physical control
+    # Subtest: ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+    ok 1 - ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+      ---
+      duration_ms: 8136.661012
+      type: 'test'
+      ...
+    # Subtest: fresh enrollment creates device-specific service admin and two separate accounts plus exactly two disabled approved instances
+    ok 2 - fresh enrollment creates device-specific service admin and two separate accounts plus exactly two disabled approved instances
+      ---
+      duration_ms: 2999.312079
+      type: 'test'
+      ...
+    # Subtest: ordinary CLI uploads local Admin/UI assets without installation or npm
+    ok 3 - ordinary CLI uploads local Admin/UI assets without installation or npm
+      ---
+      duration_ms: 5570.71654
+      type: 'test'
+      ...
+    # Subtest: actual controller starts Admin and UI with real HTTPS identities and no physical adapters
+    ok 4 - actual controller starts Admin and UI with real HTTPS identities and no physical adapters
+      ---
+      duration_ms: 9607.210317
+      type: 'test'
+      ...
+    # Subtest: both HTTPS entrypoints deliver the supplied NexoWatt identity and require login
+    ok 5 - both HTTPS entrypoints deliver the supplied NexoWatt identity and require login
+      ---
+      duration_ms: 35.021706
+      type: 'test'
+      ...
+    # Subtest: installer and enduser must choose own passwords with current credential and lose earlier sessions
+    ok 6 - installer and enduser must choose own passwords with current credential and lose earlier sessions
+      ---
+      duration_ms: 24327.138541
+      type: 'test'
+      ...
+    # Subtest: enduser can change only their own password through UI and invalidates sessions on both ports
+    ok 7 - enduser can change only their own password through UI and invalidates sessions on both ports
+      ---
+      duration_ms: 4909.018457
+      type: 'test'
+      ...
+    # Subtest: installer and enduser cannot enter service administration or promote roles through account endpoints
+    ok 8 - installer and enduser cannot enter service administration or promote roles through account endpoints
+      ---
+      duration_ms: 5456.658366
+      type: 'test'
+      ...
+    # Subtest: password completion preserves enrolled accounts, fixed groups and runtime safety invariants
+    ok 9 - password completion preserves enrolled accounts, fixed groups and runtime safety invariants
+      ---
+      duration_ms: 19.228568
+      type: 'test'
+      ...
+    # Subtest: real authenticated WebSocket rejects installer/enduser raw account, group and credential writes
+    ok 10 - real authenticated WebSocket rejects installer/enduser raw account, group and credential writes
+      ---
+      duration_ms: 269.243207
+      type: 'test'
+      ...
+    # Subtest: real admin and UI authenticate unique account; unauthenticated license data denied
+    ok 11 - real admin and UI authenticate unique account; unauthenticated license data denied
+      ---
+      duration_ms: 3009.585941
+      type: 'test'
+      ...
+    # Subtest: central signed test license activates UI capabilities via real encrypted messagebox without raw license export
+    ok 12 - central signed test license activates UI capabilities via real encrypted messagebox without raw license export
+      ---
+      duration_ms: 478.010578
+      type: 'test'
+      ...
+    # Subtest: real Chromium opens role-specific product portal, installer account/settings dialogs and licensed EOS UI
+    ok 13 - real Chromium opens role-specific product portal, installer account/settings dialogs and licensed EOS UI
+      ---
+      duration_ms: 12328.883756
+      type: 'test'
+      ...
+    # Subtest: licensed preview denies physical commands and central removal closes capabilities
+    ok 14 - licensed preview denies physical commands and central removal closes capabilities
+      ---
+      duration_ms: 84.153665
+      type: 'test'
+      ...
+    1..14
+ok 1 - integrated UI laboratory WITH OS-interface fixture: TLS setup, enrollment, separate roles, own passwords, branding, central license and denied physical control
+  ---
+  duration_ms: 87221.731721
+  type: 'test'
+  ...
+# {"candidate":"/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/app","files":{"package-lock.json":"b0db18741ac1aefbfb3ac15dfc74826aa551a84d327a6e0aae0be20178135ab6","node_modules/iobroker.js-controller/eos-test-profile.json":"5c936a625beda84b7a6b61828c6469df8bea369558cfbd1b317a6ee6eccbabf8","node_modules/iobroker.nexowatt-ui/lib/eos-integrated.js":"c62c8e0e3ae0be4255e1d2dee7e49920dd566fc5f967fe1a7c71b7d49d6330a0","node_modules/iobroker.nexowatt-ui/main.js":"47a51c3f8338271a5fbb586ae654d80921a89abdf1751c879bc23fb979a8ea9f","node_modules/iobroker.eos-admin/build/main.js":"327e7038782f316e25570ccc02d9dd3769bd4a07458aba5788c6dc92f1b3b959"}}
+# {"labOnlyInterfaceFixture":"node_modules/@iobroker/js-controller-adapter/build/cjs/lib/adapter/adapter.js","originalSha256":"d7e751c93c97636b7cd5772777cb5c79afca716cb921773115a35a6436f5b27b","fixtureSha256":"e458862673508a334e8ed09373ff0923d8798a0e6751009487c1586a7c2c374a"}
+# {"labOnlyInterfaceFixture":"node_modules/@iobroker/js-controller-adapter/build/esm/lib/adapter/adapter.js","originalSha256":"c8ff22090bcda3316a8f39ddb6c943e1320dc806109a0668a48c7bd900eeb7af","fixtureSha256":"bf1239583e6708276147ff9fa765b905851a6e17a2e8bfbc312e8080bc22c03c"}
+# {"realBrowser":"HeadlessChrome/153.0.8010.0","webSecurityDisabled":false,"certificateTrust":"exact two ephemeral leaf SPKIs","sandbox":"disabled in isolated UID0 laboratory; no target-hardening proof"}
+# Admin anonymous license status 302 Location /index.html?login&href=%2Fnexowatt%2Flicense%2Fstatus
+# UI actual credential login status 200
+# Actual database Admin security snapshot accepted
+# OS interface fixture=true. Executed Node v24.19.0 linux/x64 UID 0: real controller/Redis/Admin/UI, CI setup with explicit random license-fixture UUID, ephemeral certificates/password/issuer; no systemd/RPi/unprivileged acceptance.
+1..1
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 87449.826973

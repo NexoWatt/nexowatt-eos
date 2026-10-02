@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: exact root normalization preserves archive integrity and local provenance
+ok 1 - exact root normalization preserves archive integrity and local provenance
+  ---
+  duration_ms: 5.933725
+  type: 'test'
+  ...
+# Subtest: normalization rejects mismatched actual installed identity
+ok 2 - normalization rejects mismatched actual installed identity
+  ---
+  duration_ms: 2.616357
+  type: 'test'
+  ...
+# Subtest: normalization rejects missing artifact integrity
+ok 3 - normalization rejects missing artifact integrity
+  ---
+  duration_ms: 2.261421
+  type: 'test'
+  ...
+# Subtest: normalization rejects traversal archive references
+ok 4 - normalization rejects traversal archive references
+  ---
+  duration_ms: 1.681603
+  type: 'test'
+  ...
+# Subtest: source snapshot skips execution dependencies and rejects links
+ok 5 - source snapshot skips execution dependencies and rejects links
+  ---
+  duration_ms: 2.805754
+  type: 'test'
+  ...
+# Subtest: existing output directories and duplicate components rejected before npm
+ok 6 - existing output directories and duplicate components rejected before npm
+  ---
+  duration_ms: 1.221277
+  type: 'test'
+  ...
+# Subtest: aggregate root preserves compatible component overrides
+ok 7 - aggregate root preserves compatible component overrides
+  ---
+  duration_ms: 0.440626
+  type: 'test'
+  ...
+# Subtest: conflicting or prototype-mutating component overrides fail before installation
+ok 8 - conflicting or prototype-mutating component overrides fail before installation
+  ---
+  duration_ms: 0.889175
+  type: 'test'
+  ...
+# Subtest: one approved leaf override merges without dropping source OAuth override
+ok 9 - one approved leaf override merges without dropping source OAuth override
+  ---
+  duration_ms: 1.948257
+  type: 'test'
+  ...
+# Subtest: conflicting component override fails before npm is invoked
+ok 10 - conflicting component override fails before npm is invoked
+  ---
+  duration_ms: 0.988255
+  type: 'test'
+  ...
+# Subtest: actual resolution, approved identities and lock binding all verified
+ok 11 - actual resolution, approved identities and lock binding all verified
+  ---
+  duration_ms: 11.166319
+  type: 'test'
+  ...
+# Subtest: missing root override rejected even when tree happens to contain fixed esbuild
+ok 12 - missing root override rejected even when tree happens to contain fixed esbuild
+  ---
+  duration_ms: 3.320822
+  type: 'test'
+  ...
+# Subtest: unreviewed controller or loader versions fail closed
+ok 13 - unreviewed controller or loader versions fail closed
+  ---
+  duration_ms: 4.891258
+  type: 'test'
+  ...
+# Subtest: old esbuild reached by actual loader cannot hide behind approved root declaration
+ok 14 - old esbuild reached by actual loader cannot hide behind approved root declaration
+  ---
+  duration_ms: 5.862557
+  type: 'test'
+  ...
+# Subtest: installed version differing from lock fails even if version is patched
+ok 15 - installed version differing from lock fails even if version is patched
+  ---
+  duration_ms: 7.908061
+  type: 'test'
+  ...
+# Subtest: another vulnerable esbuild copy in the installed lock cannot escape leaf verification
+ok 16 - another vulnerable esbuild copy in the installed lock cannot escape leaf verification
+  ---
+  duration_ms: 4.915325
+  type: 'test'
+  ...
+# Subtest: CJS module-type markers do not mask the actual controller package identity
+ok 17 - CJS module-type markers do not mask the actual controller package identity
+  ---
+  duration_ms: 5.954266
+  type: 'test'
+  ...
+# Subtest: advisory range distinguishes patched versions and rejects ambiguous prereleases
+ok 18 - advisory range distinguishes patched versions and rejects ambiguous prereleases
+  ---
+  duration_ms: 0.668681
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 279.532676

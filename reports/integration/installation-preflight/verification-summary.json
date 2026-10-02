@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-installation-preflight-verification",
+  "generatedAt": "2026-10-01T16:59:06.516037+00:00",
+  "baseCommit": "c211f1a48ee0b667fcc739ee9134616af43b6076",
+  "sourceState": "uncommitted coordinated implementation; exact SHA256 map below is authoritative",
+  "node": {
+    "version": "v24.21.0",
+    "platform": "linux-x64",
+    "executableSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c"
+  },
+  "testCommand": "node --test --test-reporter=tap tests/system/host.test.cjs tests/integration/onboard-ui.test.cjs tests/system/preflight-installation.test.cjs tests/system/release-cli.test.cjs tests/system/sbom-binding.test.cjs",
+  "results": {
+    "tests": 72,
+    "pass": 72,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "rawEvidence": {
+    "path": "reports/integration/installation-preflight/raw/node24.21.0-final.tap",
+    "sha256": "1245ee588b1131f82002331f342a1ddcc35742d55c04db5385df2dd61a5fbb1e"
+  },
+  "sourceFiles": [
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "sha256": "036c428f70e1c12005313fe70a14b2bde61a39e56edf1c3c3c8da42b5f9b940b"
+    },
+    {
+      "path": "tools/system/preflight-installation.cjs",
+      "sha256": "8ea0305a327fc72f5f244f62665ab10524593e7c2b408138747a9adaf3335ae7"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "ccdfd6ae229ee5124472e0d3c8bbd0b041db1b59f27d1c16c016b06ff41d8c73"
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "sha256": "3ff3a33f1a270ceda249ab6143ecdf4c34de5c3011c76785b483b158418d54f2"
+    },
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "sha256": "8a25f9ab34ae22aed267696875fe58db6c9399cbd756f5493693a00178c365bf"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "e809f083c65b5baf903e76583fb24c690b0baaac27378616111d8caf7811782a"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "18c2976a406f0f581e1d9acb1f98507b9f8624b354f98ac6315ba785fa312b40"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "d0706eee452f5d52eeb9e7a4b1466009588e53b0a07c8c5c16d09d10081d0d19"
+    },
+    {
+      "path": "tests/system/host.test.cjs",
+      "sha256": "c9efaf0d16624e940dbace165d0a04b0b2e7ac5130c4bf3e245759ade8d5fed4"
+    },
+    {
+      "path": "tests/system/preflight-installation.test.cjs",
+      "sha256": "c624537cb9d351dd923265639d25225e07a92c363313cad0e0bc6bb22a24596c"
+    },
+    {
+      "path": "tests/system/fixtures/installation-bundle.cjs",
+      "sha256": "db429a8ec9779229595c9c02d31a4de9e9feeaf7374e00db9120f0cf64d24db2"
+    },
+    {
+      "path": "tests/integration/onboard-ui.test.cjs",
+      "sha256": "cb988ff3fe19b255e61fe357bfcf5d21fcf5040cafee11316ac15262cd23b1c6"
+    },
+    {
+      "path": "tests/system/release-cli.test.cjs",
+      "sha256": "d78deecbf65d728b5a08028fa9760b57afb88704f77a9ed4c18511f27af76750"
+    },
+    {
+      "path": "tests/system/sbom-binding.test.cjs",
+      "sha256": "389e488f3769f62cdbf251f5580b5125701464c4e507e78e39ddddcce78aab3e"
+    }
+  ],
+  "executedScope": [
+    "Real Ed25519 signed fixture bundle, payload digests, exact catalog admission, controller/WS transform and SBOM package-tree binding; fixture is deliberately not executable EOS distribution.",
+    "Actual protected root-owned input reading and actual Admin license-public-key validator; per-test generated credentials/keys never included in report.",
+    "Real orchestration control flow with mocked persistent write/stage/host command boundaries, demonstrating non-bypassable integrated port gate and forwarding to host recheck.",
+    "Simulated fresh Debian12 x64/arm64 prerequisites, protected executable paths, distribution symlinks, no setuid/setgid, unavailable manager, OpenSSL TLS1.3 cipher observation, IPv4/IPv6 occupied ports, malformed observations and fresh-state requirements.",
+    "Existing Onboard helper/unit and release/SBOM regressions; exact test list and results in raw TAP."
+  ],
+  "notExecuted": [
+    "Installation on physical Raspberry Pi",
+    "Booted Debian12 VM installation",
+    "systemd runtime sandbox target acceptance",
+    "Actual target Redis TLS1.3 handshake",
+    "Target ARM64 native module execution",
+    "Hardware/control-loop acceptance",
+    "Independent penetration testing",
+    "CRA or IEC conformity assessment"
+  ],
+  "mutationBoundary": {
+    "liveDeploymentPerformed": false,
+    "testFilesystemFixturesOnly": true,
+    "preflightCreatesAccountsServicesOrCertificates": false
+  },
+  "componentContracts": {
+    "preflightCli": "six required absolute canonical paths: --bundle --public-key --password-file --accounts-file --license-trust --hosts-file; root operator only",
+    "signatureOrder": "protected import/key -> signature/runtime/platform -> catalog/profile/SBOM/architecture -> integrated adapter pins -> protected onboarding inputs -> read-only host prerequisites",
+    "webPortSelection": "8081/8188 selected by verified Admin/UI catalog; no CLI override; eos-base repeats gate before staging and installHost before persistent host installation",
+    "coreCompatibility": "core-only catalog retains database-port-only check",
+    "tlsEvidence": "OpenSSL enabled TLS1.3 cipher support observed only; Redis --version explicitly does not prove TLS. Authenticated TLS1.3 bootstrap remains required before controller activation.",
+    "credentialMemory": "bounded protected files, same onboarding validators, no secret-valued command arguments or output; JavaScript strings cannot be reliably zeroized",
+    "installationSequence": "Existing complete path is eos-base install --start yes then root-local onboard-ui; --start no leaves services disabled and does not initialize databases."
+  },
+  "threatModel": {
+    "method": "STRIDE",
+    "assets": [
+      "release trust key",
+      "immutable signed runtime",
+      "service and first-login credentials",
+      "host identities and systemd services"
+    ],
+    "boundaries": [
+      "operator staging to privileged verifier",
+      "signed packages to onboarding validator",
+      "host executable files to root subprocess",
+      "read-only prerequisites to later mutation"
+    ],
+    "threats": [
+      {
+        "id": "EOS-PREFLIGHT-S01",
+        "category": "Spoofing",
+        "risk": "Wrong release or license issuer identity accepted",
+        "mitigation": "Out-of-band authenticated release public key, real Ed25519 bundle validation, exact package identities, existing license public-key schema",
+        "test": "wrong signer, signed pending catalog, target mismatch, protected inputs",
+        "remaining": "Operator must authenticate release key independently; signature alone is not manufacturer approval"
+      },
+      {
+        "id": "EOS-PREFLIGHT-T01",
+        "category": "Tampering",
+        "risk": "Mutable import/tool tree or stale SBOM changes root execution inputs",
+        "mitigation": "Root-owned protected import/path chain, no special files/symlinks in bundle, digest validation, full SBOM binding; protected distribution executable symlinks only",
+        "test": "payload tamper, SBOM drift, writable tool/target, symlink inputs",
+        "remaining": "Root compromise is outside this local installer trust boundary; release provenance and vulnerability triage remain separate"
+      },
+      {
+        "id": "EOS-PREFLIGHT-R01",
+        "category": "Repudiation",
+        "risk": "Fixture results mistaken for target acceptance",
+        "mitigation": "Versioned raw TAP with source/tool hashes and explicit target exclusions; no runtime acceptance flag set",
+        "test": "structured report fields and no-mutation assertion",
+        "remaining": "No remote audit or independent certification is established"
+      },
+      {
+        "id": "EOS-PREFLIGHT-I01",
+        "category": "Information disclosure",
+        "risk": "Initial credentials leak via CLI or error output",
+        "mitigation": "Only protected paths in CLI, same bounded onboarding readers, random test-only credentials, bounded error codes, report contains only counts/status",
+        "test": "malformed secret JSON and secret absence in report",
+        "remaining": "Privileged process memory contains temporary JS strings; operator removes protected input files after onboarding"
+      },
+      {
+        "id": "EOS-PREFLIGHT-D01",
+        "category": "Denial of service",
+        "risk": "Occupied ports, malformed observations or unavailable manager lead to partial installation",
+        "mitigation": "Read-only precheck, strict observations, subprocess timeout/output bounds, catalog-derived webports repeated before mutation",
+        "test": "IPv4/IPv6 conflict, malformed ss, unavailable systemd manager, direct installer gate",
+        "remaining": "A process can acquire a port after precheck; bootstrap/onboarding health gates remain necessary and errors require fresh snapshot recovery"
+      },
+      {
+        "id": "EOS-PREFLIGHT-E01",
+        "category": "Elevation of privilege",
+        "risk": "Root checker executes writable or privilege-granting runtime binary",
+        "mitigation": "Protected root-owned executable and ancestor validation, non-executable/special/setuid/setgid rejection, Node file-capability rejection",
+        "test": "untrusted executable never invoked, setuid/setgid never invoked, getcap and exec-error failures",
+        "remaining": "Metadata/version checks do not prove OS package provenance or vulnerability absence; systemd least-privilege profile requires actual target acceptance"
+      }
+    ]
+  },
+  "releaseDecision": {
+    "testImplementationVerified": true,
+    "hardwareAccepted": false,
+    "productionApproved": false,
+    "craConformityClaim": false,
+    "owner": "NexoWatt product owner; hardware acceptance and manufacturer release decision pending"
+  }
+}

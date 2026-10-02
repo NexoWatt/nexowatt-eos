@@ -1,0 +1,71 @@
+TAP version 13
+# Subtest: maintained OAuth serves TLS password login, refresh, revocation and denied alternate grants
+    # Subtest: password login issues cookie flags and usable access token
+    ok 1 - password login issues cookie flags and usable access token
+      ---
+      duration_ms: 53.293747
+      type: 'test'
+      ...
+    # Subtest: invalid credentials cannot issue a token
+    ok 2 - invalid credentials cannot issue a token
+      ---
+      duration_ms: 7.462986
+      type: 'test'
+      ...
+    # Subtest: refresh retains proof and issues usable successor token
+    ok 3 - refresh retains proof and issues usable successor token
+      ---
+      duration_ms: 13.837206
+      type: 'test'
+      ...
+    # Subtest: credential change invalidates access and refresh token
+    ok 4 - credential change invalidates access and refresh token
+      ---
+      duration_ms: 9.602252
+      type: 'test'
+      ...
+    # Subtest: SSO and authorization-code grants remain unavailable
+    ok 5 - SSO and authorization-code grants remain unavailable
+      ---
+      duration_ms: 8.992669
+      type: 'test'
+      ...
+    1..5
+ok 1 - maintained OAuth serves TLS password login, refresh, revocation and denied alternate grants
+  ---
+  duration_ms: 123.98118
+  type: 'test'
+  ...
+# Subtest: real dispatcher allows native configuration but denies changed entrypoint before write
+ok 2 - real dispatcher allows native configuration but denies changed entrypoint before write
+  ---
+  duration_ms: 5.089897
+  type: 'test'
+  ...
+# Subtest: real administrator host dispatch cannot reach shell, package or zip import handlers
+ok 3 - real administrator host dispatch cannot reach shell, package or zip import handlers
+  ---
+  duration_ms: 0.623092
+  type: 'test'
+  ...
+# Subtest: real recursive delete alias cannot remove platform objects
+ok 4 - real recursive delete alias cannot remove platform objects
+  ---
+  duration_ms: 0.362087
+  type: 'test'
+  ...
+# Subtest: revoked own-user password call is denied despite upstream self-user shortcut
+ok 5 - revoked own-user password call is denied despite upstream self-user shortcut
+  ---
+  duration_ms: 0.351361
+  type: 'test'
+  ...
+1..5
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 496.532

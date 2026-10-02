@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "documentId": "EOS-UI-INTEGRATION-REVIEW-2026-09-30",
+  "date": "2026-09-30",
+  "kind": "source-security-review",
+  "source": {
+    "origin": "user-confirmed-current-upload",
+    "archiveName": "NexoWatt_UI_1.0.21_STABLE_FULL_REPOSITORY (1).zip",
+    "archiveSha256": "90db619ecd754cab335dae92fdc123a48f62ceffb505a2a2b832e119d885eefe",
+    "gitCommit": null,
+    "component": "iobroker.nexowatt-ui",
+    "version": "1.0.21",
+    "files": [
+      {
+        "path": "main.js",
+        "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b"
+      },
+      {
+        "path": "src-ts/runtime-executables/main.ts",
+        "sha256": "83d9c4ad4223858fdd78c4ed6bbec8f2f12489000f13e35cb67a4820fb367c9f"
+      },
+      {
+        "path": "io-package.json",
+        "sha256": "4c898a905f24276048e20cde187ae37e43fb52558d2c63fddd1093aff34244e7"
+      },
+      {
+        "path": "package.json",
+        "sha256": "2bab6f053f1e031d0cbd47b0cfee4eed838608ac869c3f9c5af099df457fbbc1"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "871ebe85b0e2f0b220be65b06de039500e2bf44ddcea41f9df377afdb86b5e01"
+      },
+      {
+        "path": "src-admin-tab/package-lock.json",
+        "sha256": "12b3c5f208d9dd609999fa9a964e6c0062dcf585808b38494e59604a11b6532d"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "99e8f445f62925ea277a5c74e46ca4fa34bb49507b674874f61632813ed65b68"
+      }
+    ]
+  },
+  "declaredCompatibility": {
+    "node": ">=22",
+    "jsController": ">=6.0.11",
+    "admin": ">=7.0.0",
+    "actualInstalledVersionsVerified": false
+  },
+  "license": {
+    "manifest": "UNLICENSED",
+    "includedLicenseTitle": "NexoWatt Proprietary License (NPL) v1.0",
+    "thirdPartyLicenseAuditCompleted": false
+  },
+  "lockfile": {
+    "version": 3,
+    "packageEntryCountIncludingRoot": 342,
+    "scope": "source-lockfile-not-installed-tree",
+    "directDependencyVersions": {
+      "@iobroker/adapter-core": "3.4.1",
+      "@iobroker/type-detector": "5.0.10",
+      "express": "4.22.2",
+      "nodemailer": "10.0.10"
+    }
+  },
+  "findings": [
+    {
+      "id": "NW-UI-260930-01",
+      "title": "HTTP auf allen Schnittstellen",
+      "status": "open",
+      "priority": "P1",
+      "evidenceStatus": "confirmed-source-and-isolated-test",
+      "component": "nexowatt-ui",
+      "version": "1.0.21",
+      "stride": [
+        "Information Disclosure",
+        "Tampering",
+        "Spoofing"
+      ],
+      "systemRequirementIds": [
+        "EOS-REQ-005",
+        "EOS-REQ-008",
+        "EOS-REQ-015"
+      ],
+      "testIds": [
+        "UI-TEST-001",
+        "UI-TEST-005"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "io-package.json",
+          "sha256": "4c898a905f24276048e20cde187ae37e43fb52558d2c63fddd1093aff34244e7",
+          "startLine": 117,
+          "endLine": 118
+        },
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 26318,
+          "endLine": 26351
+        },
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 12854,
+          "endLine": 12860
+        }
+      ],
+      "attackConditions": "Direkter Listener ist erreichbar; kein nachgewiesener TLS-Einstieg mit geschlossenem Bypass.",
+      "impact": "HTTP schützt Zugangsdaten, Sitzungen und Befehle nicht gegen Mitlesen und Manipulation auf dem Transport.",
+      "remediation": "Geprüfter TLS-Einstieg, geschütztes Backend, Cookie-/Proxy-/SSE-Tests.",
+      "ownerRole": "NexoWatt product development",
+      "targetDate": null,
+      "runtimeFixed": false,
+      "closureVerified": false
+    },
+    {
+      "id": "NW-UI-260930-02",
+      "title": "Kundensteuerung standardmäßig anonym",
+      "status": "open",
+      "priority": "P1",
+      "evidenceStatus": "confirmed-source-and-isolated-test",
+      "component": "nexowatt-ui",
+      "version": "1.0.21",
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "systemRequirementIds": [
+        "EOS-REQ-003",
+        "EOS-REQ-008",
+        "EOS-REQ-015"
+      ],
+      "testIds": [
+        "UI-TEST-002",
+        "UI-TEST-003",
+        "UI-TEST-004"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "io-package.json",
+          "sha256": "4c898a905f24276048e20cde187ae37e43fb52558d2c63fddd1093aff34244e7",
+          "startLine": 398,
+          "endLine": 398
+        },
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 13000,
+          "endLine": 13016
+        },
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 13379,
+          "endLine": 13478
+        }
+      ],
+      "attackConditions": "Gültige Lizenz, erreichbarer Listener, vorhandenes freigegebenes Kundengerät; keine Sitzung erforderlich bei Policy all.",
+      "impact": "Nicht angemeldete Clients können freigegebene Kundensteuerfunktionen betätigen. Keine Behauptung beliebiger Roh-DP- oder Adminrechte.",
+      "remediation": "Session/Pairing als neue sichere Vorgabe; dokumentierte Migration der Kundenbedienung.",
+      "ownerRole": "NexoWatt product development",
+      "targetDate": null,
+      "runtimeFixed": false,
+      "closureVerified": false
+    },
+    {
+      "id": "NW-UI-260930-03",
+      "title": "Symmetrisches Lizenzgeheimnis im ausgelieferten Code",
+      "status": "open",
+      "priority": "P1",
+      "evidenceStatus": "confirmed-source-and-isolated-test",
+      "component": "nexowatt-ui",
+      "version": "1.0.21",
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "systemRequirementIds": [
+        "EOS-REQ-009",
+        "EOS-REQ-010"
+      ],
+      "testIds": [
+        "UI-TEST-008"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 2253,
+          "endLine": 2312
+        },
+        {
+          "path": "src-ts/runtime-executables/main.ts",
+          "sha256": "83d9c4ad4223858fdd78c4ed6bbec8f2f12489000f13e35cb67a4820fb367c9f",
+          "startLine": 2237,
+          "endLine": 2296
+        }
+      ],
+      "attackConditions": "Lesbarer verteilter Runtimecode und bekannte Ziel-UUID.",
+      "impact": "Der Liefercode kann eine von seiner Prüfung akzeptierte Voll-Lizenz erzeugen; kein Nachweis eines Authentifizierungsbypasses.",
+      "remediation": "Asymmetrisch signierte Ansprüche, private Ausstellerschlüssel außerhalb der Geräte, kontrollierte Bestandsmigration.",
+      "ownerRole": "NexoWatt product development",
+      "targetDate": null,
+      "runtimeFixed": false,
+      "closureVerified": false
+    },
+    {
+      "id": "NW-UI-260930-04",
+      "title": "Lizenz unverschlüsselt im Adapterobjekt",
+      "status": "open",
+      "priority": "P2",
+      "evidenceStatus": "confirmed-source-and-isolated-test",
+      "component": "nexowatt-ui",
+      "version": "1.0.21",
+      "stride": [
+        "Information Disclosure"
+      ],
+      "systemRequirementIds": [
+        "EOS-REQ-009",
+        "EOS-REQ-010",
+        "EOS-REQ-011"
+      ],
+      "testIds": [
+        "UI-TEST-009"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 12440,
+          "endLine": 12447
+        },
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 12370,
+          "endLine": 12401
+        },
+        {
+          "path": "io-package.json",
+          "sha256": "4c898a905f24276048e20cde187ae37e43fb52558d2c63fddd1093aff34244e7"
+        }
+      ],
+      "attackConditions": "Leseberechtigung auf Adapterobjekt oder entsprechende ungeschützte Sicherung; konkrete Rechte anderer Adapter nicht getestet.",
+      "impact": "Rohschlüssel ist lesbar; autorisierte Admin-API liefert ihn ebenfalls. Keine nachgewiesene anonyme Offenlegung.",
+      "remediation": "Zentrale verschlüsselte Ablage und begrenzte Freigaben ohne Rohschlüsselweitergabe; Backup/Restore absichern.",
+      "ownerRole": "NexoWatt product development",
+      "targetDate": null,
+      "runtimeFixed": false,
+      "closureVerified": false
+    },
+    {
+      "id": "NW-UI-260930-05",
+      "title": "Gruppenentzug widerruft aktive Adminsession nicht",
+      "status": "open",
+      "priority": "P2",
+      "evidenceStatus": "confirmed-source-and-isolated-test",
+      "component": "nexowatt-ui",
+      "version": "1.0.21",
+      "stride": [
+        "Elevation of Privilege"
+      ],
+      "systemRequirementIds": [
+        "EOS-REQ-008",
+        "EOS-REQ-010"
+      ],
+      "testIds": [
+        "UI-TEST-006",
+        "UI-TEST-007"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 12823,
+          "endLine": 12834
+        },
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 12979,
+          "endLine": 12985
+        },
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 13256,
+          "endLine": 13260
+        }
+      ],
+      "attackConditions": "Zuvor gültige noch nicht abgelaufene Adminsession und nachträglicher Gruppenentzug.",
+      "impact": "Gespeicherte Adminrolle bleibt im geprüften Pfad bis Ablauf/Logout/Neustart wirksam; Standardlebensdauer 120 Minuten.",
+      "remediation": "Widerrufbare Berechtigungsversion bzw. invalidierter Rechtecache; Kontosperre/Passwortwechsel mitprüfen.",
+      "ownerRole": "NexoWatt product development",
+      "targetDate": null,
+      "runtimeFixed": false,
+      "closureVerified": false
+    },
+    {
+      "id": "NW-UI-260930-06",
+      "title": "Fehlerhaftes Cookie erzeugt Parser-Ausnahme",
+      "status": "open",
+      "priority": "P2",
+      "evidenceStatus": "confirmed-parser-exception-runtime-impact-unverified",
+      "component": "nexowatt-ui",
+      "version": "1.0.21",
+      "stride": [
+        "Denial of Service"
+      ],
+      "systemRequirementIds": [
+        "EOS-REQ-004"
+      ],
+      "testIds": [
+        "UI-TEST-010"
+      ],
+      "sourceEvidence": [
+        {
+          "path": "main.js",
+          "sha256": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+          "startLine": 140,
+          "endLine": 150
+        }
+      ],
+      "attackConditions": "Synthetisch fehlerhaft percent-kodiertes Cookie wird vom Parser verarbeitet.",
+      "impact": "URIError im Parser reproduziert. Prozessabsturz und Netzwerk-DoS NICHT nachgewiesen.",
+      "remediation": "Kontrolliertes Verwerfen/400/401; realen isolierten HTTP-/Controller-Fehlerpfad prüfen.",
+      "ownerRole": "NexoWatt product development",
+      "targetDate": null,
+      "runtimeFixed": false,
+      "closureVerified": false
+    }
+  ],
+  "tests": {
+    "kind": "hash-bound-source-fragment-tests-with-in-memory-stubs",
+    "runtime": "Node.js 24.19.0",
+    "platform": "Linux x86_64",
+    "count": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "command": "EOS_UI_SOURCE=<reviewed-extraction> node --test --test-reporter=tap tests/integration/ui-source-reproduction.test.cjs",
+    "script": "tests/integration/ui-source-reproduction.test.cjs",
+    "rawReport": "reports/integration/ui-source-reproduction.tap",
+    "scriptSha256": "7a977795816ff029c1d7ebff04e3474e2a28f023148982cb2f577e60097f5c63",
+    "rawReportSha256": "c0928bb9b486e8eea6fa6a17f516545a91a37ecdbbaa22ab7bbe0444d1d6dff5",
+    "meaning": "Finding test success confirms an observed open issue, not its remediation. Positive controls are separately named.",
+    "networkListenersStarted": false,
+    "deviceWritesPerformed": false,
+    "productionConfigurationChanged": false,
+    "fullProductTestSuiteExecuted": false,
+    "hardwareTestExecuted": false
+  },
+  "changeScope": {
+    "productSourcesChanged": false,
+    "uiDesignChanged": false,
+    "controlAlgorithmsChanged": false,
+    "newRuntimeImplemented": false
+  },
+  "release": {
+    "approved": false,
+    "craConformityDeclared": false,
+    "iecConformityDeclared": false,
+    "blockers": [
+      "Secure transport and authenticated customer defaults remain open.",
+      "Licensing trust boundary and encrypted storage require coordinated integration.",
+      "Runtime, hardware, upgrade, restore and full UI/EMS regression verification remain open."
+    ]
+  }
+}

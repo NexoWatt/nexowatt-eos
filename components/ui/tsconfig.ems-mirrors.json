@@ -1,0 +1,37 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/ems-mirrors",
+    "module": "NodeNext",
+    "target": "ES2022",
+    "removeComments": false,
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/utils/number.ts",
+    "src-ts/ems/core-limits/core-budget.ts",
+    "src-ts/ems/core-limits/core-runtime.ts",
+    "src-ts/ems/heating-rod/heating-rod-decision.ts",
+    "src-ts/ems/ai-advisor/ai-advisor-payload.ts",
+    "src-ts/ems/charging-management/charging-management.ts",
+    "src-ts/ems/charging-management/charging-budget.ts",
+    "src-ts/ems/charging-management/charging-management-runtime.ts",
+    "src-ts/ems/charging-management/charging-control.ts",
+    "src-ts/ems/charging-management/charging-write-plan.ts",
+    "src-ts/ems/charging-management/charging-normal-source.ts",
+    "src-ts/ems/charging-management/charging-phase-selection.ts",
+    "src-ts/ems/charging-management/charging-allocation.ts",
+    "src-ts/ems/para14a/para14a-constraint.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-types",
+    "build-ts"
+  ]
+}

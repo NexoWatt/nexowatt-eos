@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01T10:05:11.460964+00:00",
+  "classification": "isolated-test-tooling-only",
+  "productReleaseSelection": false,
+  "purpose": "Real Redis TLS transport integration tests on local ephemeral loopback services; binary is not shipped as an EOS product component.",
+  "name": "Redis",
+  "version": "7.2.10",
+  "source": {
+    "url": "https://download.redis.io/releases/redis-7.2.10.tar.gz",
+    "sha256": "e576ad54bc53770649c556933ecd555b975e3dac422e46356102436a437b43c7",
+    "sha256MatchedUpstream": true,
+    "upstreamDigestRepository": "https://github.com/redis/redis-hashes",
+    "upstreamDigestCommit": "1ae1e93d5c6234bb991f2dd74e6f89abaeb6ba11",
+    "upstreamDigestPath": "README",
+    "upstreamDigestCommitSignatureVerified": false
+  },
+  "build": {
+    "command": "make -j4 BUILD_TLS=yes MALLOC=libc redis-server redis-cli",
+    "exitCode": 0,
+    "workingDirectory": "/workspace/scratch/6383b3161c96/redis-test-tooling/redis-7.2.10",
+    "log": "/workspace/scratch/6383b3161c96/redis-test-tooling/build.log",
+    "logSha256": "92ee63d605a940e9efaca249db635f8868db058bbffaa1b28e847966a037dd5a",
+    "compiler": "13.3.0",
+    "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "allocator": "libc"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/6383b3161c96/redis-test-tooling/redis-7.2.10/src/redis-server",
+      "sha256": "f6beb0b6e3849dedf583d677531e32285fca909a39f1035e3c5462ef95cfd708"
+    },
+    {
+      "path": "/workspace/scratch/6383b3161c96/redis-test-tooling/redis-7.2.10/src/redis-cli",
+      "sha256": "6fa63aa4c23894268d87631552abe992a20650b4b78cc5563b01369f82977dc2"
+    }
+  ],
+  "verification": {
+    "serverVersion": "Redis server v=7.2.10 sha=00000000:0 malloc=libc bits=64 build=5413bdb47a1f3797",
+    "cliVersion": "redis-cli 7.2.10",
+    "cliAdvertisesTls": true,
+    "serverDynamicallyLinksOpenSsl": true,
+    "actualTlsHandshakeTest": "performed separately by transport integration suite; not claimed by this build provenance"
+  },
+  "installation": {
+    "hostPackageInstalled": false,
+    "hostServiceInstalled": false,
+    "hostServiceStarted": false
+  },
+  "limitations": [
+    "This intentionally pinned test fixture is not a current-product security release decision. Newer Redis 7.2 releases were visible in the upstream hashes repository.",
+    "Build provenance and TLS link checks are not a vulnerability assessment or production suitability approval.",
+    "Built for Ubuntu 24.04 x86_64; not a Raspberry Pi ARM64 or Debian 12 binary.",
+    "No reproducible-bit-for-bit build claim; binary hashes identify this actual build."
+  ],
+  "unsuccessfulPrerequisites": [
+    {
+      "operation": "git mirror ls-remote",
+      "result": "authentication unavailable; no retry or bypass"
+    },
+    {
+      "operation": "apt isolated package-list update",
+      "result": "container setgroups/setegid unsupported; no host package install; alternative official source download used"
+    }
+  ]
+}

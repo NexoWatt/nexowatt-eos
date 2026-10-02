@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "changeId": "EOS-PG-CONTROLLER-20261001",
+  "generatedAt": "2026-10-01T20:15:07.335152+00:00",
+  "status": "offline-assembly-and-controller-loader-passed-real-postgresql-startup-not-executed",
+  "componentVersions": {
+    "js-controller": "7.2.2",
+    "postgresql-driver-pg": "8.23.1",
+    "new-backend-packages": "0.1.0-dev.1"
+  },
+  "sourceBindings": [
+    {
+      "path": "runtime/postgresql/integration.cjs",
+      "bytes": 9243,
+      "sha256": "a535a2925da3bc5cb7a0969839704bf0177775f12539d929bceeab12eebe78ec"
+    },
+    {
+      "path": "tests/postgresql/controller-profile.test.cjs",
+      "bytes": 8062,
+      "sha256": "d7c1f121074310d3558c5d307288ca13945cd0192dccba34bdb84ea5ada762c5"
+    },
+    {
+      "path": "tests/postgresql/controller.integration.cjs",
+      "bytes": 9533,
+      "sha256": "e55814a6b06bba4b8b3e8d7e9725c477615627233143ef394ab941ebfd9aa356"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-offline-assembly.cjs",
+      "bytes": 2922,
+      "sha256": "47ecdd28b3da02caf68d966480e21f9367bf2dc6f7d53c2adee2e78c81f04c3f"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "reports/integration/postgresql/raw/controller-profile.tap",
+      "bytes": 2192,
+      "sha256": "3fee169c18eb2b5a3e6ff419c4ecc5c258c5b0a4203bf638f13d05397d61f0ae"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-profile.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-offline-assembly.json",
+      "bytes": 3809,
+      "sha256": "151b2d09c3bd772d2a0442c756acb697152225ec565ee21c713211021d1bb6ac"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-offline-assembly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-commands.json",
+      "bytes": 952,
+      "sha256": "489508ce23e6f10d247a3f8a58059d67fecea6addf3dcb435133c8e72d4ed373"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-initial-offline-assembly.json",
+      "bytes": 3809,
+      "sha256": "e80d05bfe710108aab1c8d8b6e057b4f5539356bfe9538490ac9a3ca8ba44b86"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-initial-offline-assembly.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/controller-initial-commands.json",
+      "bytes": 949,
+      "sha256": "0f82c425a85d36f53449fb31a379da9b32a971b30cce7df219c573eec45f8e59"
+    }
+  ],
+  "tests": {
+    "assemblyProfile": {
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "kind": "Unit fixtures, no database server"
+    },
+    "actualControllerLoader": {
+      "status": "PASS",
+      "scope": "Real installed js-controller-common dynamically selected both PostgreSQL Client exports and reported no embedded Server; import only, no database connection or controller process."
+    },
+    "actualControllerPostgresqlIntegration": {
+      "status": "NOT_EXECUTED",
+      "reason": "PostgreSQL refuses root execution; executor exposes only UID/GID 0 and nonroot account execution was unavailable. Root safety checks were not bypassed.",
+      "harness": "tests/postgresql/controller.integration.cjs",
+      "plannedCoverage": [
+        "Read-only physical KV/events emptiness checks for both mTLS/RLS domains before setup",
+        "Ordinary controller CLI setup",
+        "No physical adapter instances",
+        "Actual controller startup and host PID",
+        "Cross-process alive-state event"
+      ]
+    },
+    "harnessSyntax": "PASS"
+  },
+  "assembly": {
+    "sourceFiles": 17850,
+    "driverFiles": 126,
+    "baseManifestSha256": "318760cd63db9c2f6b9515805cb35d7a1caf3d9456759875727ff8d6b2cfbcd8",
+    "driverManifestSha256": "7ab28bb331a765e75c34b6fee9930b518a5f6f505de5d4147a9a80a4b164823c",
+    "manifestSha256": "280f5367f7dff04f505737a052d5f670d2e508312f249f0dc9930010e986854c",
+    "omittedOptionalPackages": [
+      "node_modules/pg-cloudflare"
+    ],
+    "copiedPackageBindings": [
+      {
+        "name": "@nexowatt/eos-postgresql-store",
+        "version": "0.1.0-dev.1",
+        "files": [
+          {
+            "path": "index.cjs",
+            "type": "file",
+            "mode": 420,
+            "size": 19471,
+            "sha256": "2d6080ad4e728a2316c493eff56d501503ba34faee25ea5c5600c8115eab1f3e"
+          },
+          {
+            "path": "package.json",
+            "type": "file",
+            "mode": 420,
+            "size": 323,
+            "sha256": "78916852b87e304bbef8780b999f2d8cfcb66b79f1e7ff7e40a7dc427c6a3448"
+          }
+        ]
+      },
+      {
+        "name": "@iobroker/db-objects-postgresql",
+        "version": "0.1.0-dev.1",
+        "files": [
+          {
+            "path": "README.md",
+            "type": "file",
+            "mode": 420,
+            "size": 6000,
+            "sha256": "e45f55c77ac6905137651f4f368cac70fbe6c8695a82af13ae9ed3541eebd659"
+          },
+          {
+            "path": "auth.cjs",
+            "type": "file",
+            "mode": 420,
+            "size": 4669,
+            "sha256": "acd7e7fad0f3fb974df7df5c989b9b157ea04dcb1d6443225bdb1af580b6056b"
+          },
+          {
+            "path": "facade.cjs",
+            "type": "file",
+            "mode": 420,
+            "size": 5771,
+            "sha256": "c5af1ed63dc25d0f2d3655c1ecfbdb7a98ab9418330c79689dac0ba84a2aa26a"
+          },
+          {
+            "path": "index.cjs",
+            "type": "file",
+            "mode": 420,
+            "size": 20947,
+            "sha256": "2943b0bfa077fe17d64538d909a3a8c248657cbd64162f2a5023a401b4106c52"
+          },
+          {
+            "path": "package.json",
+            "type": "file",
+            "mode": 420,
+            "size": 483,
+            "sha256": "379da5f2faab0b83847824989bb7c5490ab87fccdce528c800a2d3f02c50ac45"
+          },
+          {
+            "path": "views.cjs",
+            "type": "file",
+            "mode": 420,
+            "size": 2567,
+            "sha256": "53c339eff8692c167c41a71356d74d5b18ccd2de27a871c7705b33e572919881"
+          }
+        ]
+      },
+      {
+        "name": "@iobroker/db-states-postgresql",
+        "version": "0.1.0-dev.1",
+        "files": [
+          {
+            "path": "README.md",
+            "type": "file",
+            "mode": 420,
+            "size": 6196,
+            "sha256": "ff2ad45f1ad778f0521d69abff7f8cd257115a388e1c1d712fc2d28efe5efb51"
+          },
+          {
+            "path": "index.cjs",
+            "type": "file",
+            "mode": 420,
+            "size": 20869,
+            "sha256": "28038ebfe48b6d76446c70906a2ae60026a92856bdfd78bbf14742fa78987b83"
+          },
+          {
+            "path": "package.json",
+            "type": "file",
+            "mode": 420,
+            "size": 379,
+            "sha256": "c8d14bac134a29f0197abd76aef74cfac3104f3fb411ca58301bcbb144448eac"
+          }
+        ]
+      }
+    ],
+    "existingRuntimeModified": false,
+    "lifecycleScriptsExecuted": false,
+    "upstreamArtifactAuthenticityVerifiedByAssembler": false
+  },
+  "review": {
+    "kind": "Parallel AI source review; not independent external certification",
+    "confirmedCorrections": [
+      {
+        "issue": "Fresh database probe previously used Store.connect, starting expiry maintenance before rejection and hiding expired KV/events.",
+        "resolution": "Raw PgClient physical KV/events NOT EXISTS for both roles before any normal Store."
+      },
+      {
+        "issue": "Public stage function initially relied only on caller-provided trusted parent.",
+        "resolution": "Immediate parent must be owned by current UID and not writable by group/others; negative test passes."
+      }
+    ],
+    "historicalAttempts": [
+      {
+        "stage": "Initial offline assembly",
+        "cause": "Optional pg-cloudflare lock entry was intentionally absent from installed tree.",
+        "correction": "Record omitted optional packages; reject missing mandatory or unlocked installed packages. Final test passes."
+      },
+      {
+        "stage": "First final snapshot",
+        "cause": "Objects source changed after assembly during peer review. Report binding detected the mismatch; no stale report was issued.",
+        "correction": "Earlier raw snapshot retained under controller-initial-*; final snapshot recaptured against Objects SHA2943b0bfa077fe17d64538d909a3a8c248657cbd64162f2a5023a401b4106c52."
+      }
+    ]
+  },
+  "securityBoundary": {
+    "hostInstallerChanged": false,
+    "productionBootstrapChanged": false,
+    "redisTlsValidatorWeakened": false,
+    "releaseHoldRemoved": false,
+    "labDestination": "New exclusively created directory; source/copy files, modes and internal symlinks compared by manifest before/after.",
+    "expectedLockHashes": "Explicit inputs; copy integrity and installed name/version only, not upstream tarball authenticity."
+  },
+  "threatModel": [
+    {
+      "category": "Tampering",
+      "risk": "Changed copied source or untracked dependency",
+      "control": "Expected lock hashes; complete file hash/mode/link manifests; escaping symlinks and unlocked driver packages rejected.",
+      "limitation": "Trusted source/ancestor hierarchy; not a sandbox against same-UID/root concurrent filesystem manipulation."
+    },
+    {
+      "category": "Elevation of privilege",
+      "risk": "Accidental lifecycle execution or host mutation",
+      "control": "No npm or lifecycle scripts; no installer entry; plugin lifecycle metadata rejected; existing app never modified."
+    },
+    {
+      "category": "Information disclosure",
+      "risk": "mTLS keys in evidence",
+      "control": "Keys only in private temporary fixture config; PEM redaction; manifests contain source paths/hashes only."
+    },
+    {
+      "category": "Denial of service",
+      "risk": "Integration test modifies previously used database",
+      "control": "Explicit fresh-lab opt-in, loopback eos_lab metadata, physical-table emptiness checks before normal clients.",
+      "limitation": "Separately provisioned exclusive test database required; emptiness checks cannot prevent another concurrent writer."
+    }
+  ],
+  "remainingGates": [
+    "Real PostgreSQL TLS/database/controller startup",
+    "Admin/UI integration over PostgreSQL",
+    "Data migration/rollback",
+    "Raspberry Pi ARM64, load, power-loss and recovery",
+    "Per-adapter OS/PostgreSQL identities",
+    "Existing Redis installer/release hold unchanged"
+  ],
+  "claims": {
+    "realPostgresqlConnectionPassed": false,
+    "fullControllerCompatibility": false,
+    "productionReady": false,
+    "pentestPassed": false,
+    "CRAConformity": false,
+    "IECConformity": false
+  }
+}

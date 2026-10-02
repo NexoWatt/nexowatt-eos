@@ -1,0 +1,7 @@
+[Unit]
+Description=NexoWatt EOS restricted test system
+Requires=nexowatt-eos-postgresql.service nexowatt-eos-controller.service
+After=nexowatt-eos-postgresql.service nexowatt-eos-controller.service
+
+[Install]
+WantedBy=multi-user.target

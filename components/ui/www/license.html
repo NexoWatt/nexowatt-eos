@@ -1,0 +1,54 @@
+<!--
+  Datei: www/license.html
+  Rolle: Rollen-geschützte EOS-Lizenzverwaltung.
+  Sicherheit: Die Seite wird serverseitig ausschließlich mit `license.manage` an Admin ausgeliefert
+  und prüft dieselbe Capability zusätzlich im Browser. Im HTML stehen keine
+  UUID- oder Lizenzwerte.
+-->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NexoWatt EOS – Lizenz aktivieren</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="/static/auth.js"></script>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<body
+  class="nw-cockpit-page nw-cockpit-skin nw-page-license"
+  data-nw-required-capability="license.manage"
+  data-nw-page-name="Lizenz"
+  data-nw-required-role="Admin"
+>
+<header class="topbar">
+  <div class="brand">
+    <img alt="NexoWatt EOS" src="/static/nexowatt-logo.png" />
+  </div>
+  <h1>Lizenz aktivieren</h1>
+  <div class="nw-license-instance" id="nw-license-instance">Instanz 0</div>
+</header>
+
+<main class="container nw-page-shell nw-license-page">
+  <section class="nw-card nw-license-intro">
+    <div>
+      <div class="nw-license-eyebrow">SYSTEMEINRICHTUNG · ADMIN / INSTALLER</div>
+      <h2>Lizenzverwaltung</h2>
+      <p class="muted">Die Lizenz wird zentral im EOS Admin verwaltet. Diese Oberfläche erhält ausschließlich kurzfristige Funktionsfreigaben und keine Lizenzschlüssel.</p>
+      <p class="muted">Inbetriebnahme/Testprofil – Gerätesteuerung noch gesperrt.</p>
+    </div>
+  </section>
+
+  <section class="nw-card nw-license-footer">
+    <div class="nw-license-actions">
+      <button id="nw-license-reload" class="nw-config-btn nw-config-btn--ghost" type="button">Neu laden</button>
+      <a id="nw-license-back" class="nw-config-btn nw-config-btn--primary">EOS Admin öffnen</a>
+    </div>
+    <div id="nw-license-status" class="nw-status" role="status" aria-live="polite">Admin-Anmeldung wird geprüft …</div>
+  </section>
+</main>
+
+<script src="/static/license.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "kind": "design-contract-not-runtime-enforcement",
+  "implementationStatus": "blocked-pending-archive-and-snapshot-validation",
+  "runtimeToolDelivered": false,
+  "backupAdapterActivated": false,
+  "operator": "local-root-only",
+  "scope": {
+    "fixedDataRoots": ["/var/lib/nexowatt-eos", "/etc/nexowatt-eos"],
+    "code": "externally-verified-signed-release-reference",
+    "tailscaleIdentityIncluded": false,
+    "arbitraryPathsAllowed": false
+  },
+  "cryptographyCandidate": {
+    "outerContainer": "CMS-AuthEnvelopedData",
+    "contentCipher": "AES-256-GCM",
+    "recipientKeyAgreement": "ECDH-P256",
+    "keyWrap": "AES-256",
+    "innerContainer": "CMS-SignedData",
+    "signature": "ECDSA-P256-SHA256",
+    "signerTrust": "externally-pinned-backup-signer",
+    "releaseTrust": "separately-pinned-manufacturer-release-key",
+    "passphraseInCommandArgumentsAllowed": false,
+    "primitiveEvidence": "reports/integrated/backup/cms-feasibility.json"
+  },
+  "quarantine": {
+    "rootOwned": true,
+    "directoryMode": "0700",
+    "fileMode": "0600",
+    "parseBeforeSuccessfulDecryptionAndSignatureVerification": false,
+    "extractIntoLivePaths": false
+  },
+  "snapshot": {
+    "exclusiveMaintenanceLockRequired": true,
+    "servicesMustBeStopped": [
+      "nexowatt-eos-controller.service",
+      "nexowatt-eos-redis@objects.service",
+      "nexowatt-eos-redis@states.service"
+    ],
+    "checkActiveStateAndMainPid": true,
+    "additionalWriterExclusionRequired": true,
+    "openTransactionsAllowed": false,
+    "filesystemSnapshotStrategyTested": false
+  },
+  "archivePolicy": {
+    "containerLibraryAndVersion": null,
+    "limitsDefinedAndTested": false,
+    "canonicalRelativePathsOnly": true,
+    "allMetadataValidatedBeforeExtraction": true,
+    "allowSymlinks": false,
+    "allowHardlinks": false,
+    "allowSpecialFiles": false,
+    "allowDuplicatePaths": false,
+    "allowPrivilegeBitsOrCapabilities": false,
+    "executeHooks": false
+  },
+  "releaseApproval": {
+    "snapshotBackupTested": false,
+    "archiveAdversarialTestsPassed": false,
+    "restoreDryRunImplemented": false,
+    "restoreToFreshTargetTested": false,
+    "powerLossRecoveryTested": false,
+    "physicalDeviceRestartTested": false,
+    "productionApproved": false
+  }
+}

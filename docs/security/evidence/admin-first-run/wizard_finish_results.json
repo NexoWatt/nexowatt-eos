@@ -1,0 +1,130 @@
+{
+  "executed_at": "2026-09-30T19:13:00.540Z",
+  "runtime": "v24.19.0",
+  "kind": "isolated exact method with socket and browser stubs, not integration",
+  "source_commit": "e4b39b810f5f12cd6e969e25a39ff6f3188a6608",
+  "source_sha256": "dc6c2f241b18d397fdc1096bd8fd5e50f524ccc968d66e341c9c2c1092fd6ce1",
+  "method_sha256": "dc6c2f241b18d397fdc1096bd8fd5e50f524ccc968d66e341c9c2c1092fd6ce1",
+  "cases": [
+    {
+      "id": "defaults_remain_http_without_auth",
+      "state": {
+        "secure": false,
+        "auth": false
+      },
+      "calls": [
+        [
+          "navigate",
+          "tab-adapters",
+          null
+        ],
+        [
+          "close"
+        ]
+      ]
+    },
+    {
+      "id": "select_https_auth_with_certificates",
+      "state": {
+        "secure": true,
+        "auth": true
+      },
+      "calls": [
+        [
+          "getCertificates"
+        ],
+        [
+          "setObject",
+          "system.adapter.admin.0",
+          {
+            "_id": "system.adapter.admin.0",
+            "native": {
+              "secure": true,
+              "auth": true,
+              "certPublic": "fixturePublic",
+              "certPrivate": "fixturePrivate"
+            }
+          }
+        ],
+        [
+          "close",
+          "https://fixture.invalid:8081/#tab-adapters"
+        ]
+      ]
+    },
+    {
+      "id": "missing_certificates_first_finish",
+      "state": {
+        "secure": false,
+        "auth": true,
+        "errorText": "Cannot enable authentication as no certificates found!"
+      },
+      "calls": [
+        [
+          "getCertificates"
+        ],
+        [
+          "setState",
+          {
+            "secure": false,
+            "errorText": "Cannot enable authentication as no certificates found!"
+          }
+        ]
+      ]
+    },
+    {
+      "id": "missing_certificates_second_finish",
+      "state": {
+        "secure": false,
+        "auth": true,
+        "errorText": "Cannot enable authentication as no certificates found!"
+      },
+      "calls": [
+        [
+          "getCertificates"
+        ],
+        [
+          "setState",
+          {
+            "secure": false,
+            "errorText": "Cannot enable authentication as no certificates found!"
+          }
+        ],
+        [
+          "setObject",
+          "system.adapter.admin.0",
+          {
+            "_id": "system.adapter.admin.0",
+            "native": {
+              "secure": false,
+              "auth": true,
+              "certPublic": "",
+              "certPrivate": ""
+            }
+          }
+        ],
+        [
+          "close",
+          "http://fixture.invalid:8081/#tab-adapters"
+        ]
+      ]
+    },
+    {
+      "id": "preconfigured_certificate_names_activation",
+      "state": {
+        "secure": false,
+        "auth": true,
+        "errorText": "Cannot enable authentication as no certificates found!"
+      },
+      "calls": [
+        [
+          "setState",
+          {
+            "secure": false,
+            "errorText": "Cannot enable authentication as no certificates found!"
+          }
+        ]
+      ]
+    }
+  ]
+}

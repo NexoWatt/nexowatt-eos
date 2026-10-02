@@ -1,0 +1,46 @@
+Final isolated backend regression run. Actual shipped-code methods with in-memory ioBroker boundary; one explicitly static upload registration check. No live HTTP, controller, device, or external network test.
+UTC 2026-09-30T17:32:11.384103+00:00
+Runtime Node.js v24.19.0
+Command: node tools/nexowatt-security-boundaries-selftest.cjs
+SHA256 {"build/lib/eosRequestSecurity.js": "527328d7554b14109a0b5b7f86feefa95e9f516cb11719bfb624d123e3736bce", "build/lib/web.js": "098003f4d5ba9ff42a17b696451bcc1eaed13330c9205d5d2a44d6306df2f3de", "build/main.js": "ee679cab615ceecf4922044dd94607e48611344f3c0a08c530aacc70438a693f", "src/lib/eosRequestSecurity.ts": "7351002c500716fdff1ba13d4b394ed21742b9928e69e54326d4c3cc02e33816", "src/lib/web.ts": "c592fd6bb8621ed6a2fc74514a1300c014b6e894cc33c859d366cbdd7b09309d", "src/main.ts": "ce72f0d6795566e67f64f66940b4ff90e5ade3cb8fa7af6c3d2001cfd50e05c2", "tools/nexowatt-security-boundaries-selftest.cjs": "2376af9e1f0fac40ea741a61bd4626d69126945a62ab56b9845655306f93925c"}
+
+PASS live full-length session authenticates an enabled existing user
+PASS expired, absent, and nonnumeric session expiry fail closed
+PASS one-character session alias cannot authenticate an unrelated bearer token
+PASS disabled, deleted, and non-user objects cannot use otherwise live sessions
+PASS session and user database errors fail closed
+PASS raw/refresh namespaces and short tokens cannot authenticate a live user
+PASS upstream authenticated identity still requires an enabled existing user
+PASS missing credentials never authenticate while auth is required
+PASS role-looking labels and unconfigured group IDs never elevate authority
+PASS explicit administrator and installer membership retains intended authority
+PASS new, blank, and known shared-password accounts are disabled without setting shared passwords
+PASS provisioning preserves personal passwords, disabled status, and the administrator
+PASS password-check failure aborts startup provisioning
+PASS upload guard rejects anonymous, customer, installer, pending-password, and foreign-origin requests
+PASS upload guard permits authorized same-origin administrator and rejects ACL failures
+PASS source and shipped upload parser registration enforce limits before file handling (static)
+PASS same-origin browser writes retain host, port, and transport scheme
+PASS forged X-Forwarded-Host does not authorize another origin
+PASS cookie-authorized writes require Origin even when a bearer header is also present
+PASS explicit non-cookie bearer clients can omit Origin
+PASS malformed or non-origin URLs fail closed
+PASS cross-site and same-site fetch metadata cannot authorize writes
+PASS socket guard denies command and host execution for customer and installer
+PASS socket guard blocks sensitive object mutation including EOS Admin and xterm
+PASS socket guard blocks unresolved, missing, disabled, and pending-password identities before administrator bypass
+PASS socket administrator forwards to upstream permissions instead of bypassing them
+PASS socket customer datapoints remain read-only while normal installer writes retain upstream ACLs
+PASS first-password change requires a bounded nonempty current credential
+PASS first-password change rejects invalid current credentials and unavailable verification
+PASS first-password change with correct current credential writes and invalidates the session
+PASS role-cache refresh suspends authorization until one complete snapshot is committed
+PASS role-cache read failures leave authorization closed and never commit a partial snapshot
+PASS fresh session secret uses 32 random bytes and is persisted before web startup
+PASS session-secret persistence failure denies web startup
+PASS missing system.config never selects a built-in fallback session secret
+PASS valid existing installation session secret is preserved without regeneration
+PASS invalid nonempty existing installation secret denies web startup
+[NexoWatt EOS security boundaries] 37/37 passed; isolated shipped-code tests, no live HTTP/controller test
+
+Exit code: 0

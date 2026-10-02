@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "sourceVersion": "0.2.0-dev.8",
+  "scope": "Real loopback mTLS gateway with simulated state storage; PostgreSQL client contracts with doubles. No native PostgreSQL, systemd isolation or Pi acceptance.",
+  "environment": {
+    "node": "v24.21.0",
+    "openssl": "3.5.8",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "arch": "x86_64",
+    "uid": 0,
+    "postgresqlDriver": "8.23.1"
+  },
+  "groups": [
+    {
+      "id": "node-contracts-and-local-tls",
+      "command": [
+        "/workspace/scratch/6383b3161c96/node-qualification/node-v24.21.0-linux-x64/bin/node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/adapter-channel/channel.test.cjs",
+        "tests/system/policy-admission.test.cjs",
+        "tests/postgresql/store.test.cjs",
+        "tests/postgresql/store-review.test.cjs",
+        "tests/postgresql/store-channel-hardening.test.cjs",
+        "tests/postgresql/states.test.cjs",
+        "tests/postgresql/objects.test.cjs"
+      ],
+      "startedAt": "2026-10-02T15:05:18.184132+00:00",
+      "finishedAt": "2026-10-02T15:05:24.341407+00:00",
+      "exitCode": 0,
+      "counts": {
+        "tests": 153,
+        "pass": 153,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "raw": "raw/final-node-tests.tap",
+      "rawSha256": "b59d8796b7692882da0b3972c34097296bfad3558a0d8fabeb05c824a60908b3"
+    },
+    {
+      "id": "schema",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "tests/adapter-channel/admission-schema.test.py",
+        "-v"
+      ],
+      "startedAt": "2026-10-02T15:05:24.341741+00:00",
+      "finishedAt": "2026-10-02T15:05:24.442239+00:00",
+      "exitCode": 0,
+      "counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0
+      },
+      "raw": "raw/final-schema-tests.log",
+      "rawSha256": "b0cc0b03218676e50997210d3e479e454527d393650f257b62523396042fb393"
+    }
+  ],
+  "passed": true,
+  "totalPassed": 158,
+  "sourceBindingSha256": "2e1777e5936068b95d4d8209564e9d0e811b825df457758782f4b172f7c30e37",
+  "nativeDatabaseTested": false,
+  "targetHardwareTested": false,
+  "javascriptAdapterExecuted": false,
+  "productionReleaseApproved": false
+}

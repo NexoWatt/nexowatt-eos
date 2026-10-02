@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily NexoWatt EOS internal certificate expiry check
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1d
+RandomizedDelaySec=30min
+Unit=nexowatt-eos-certificates.service
+
+[Install]
+WantedBy=timers.target

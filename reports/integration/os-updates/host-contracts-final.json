@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-os-update-host-contracts-final",
+  "command": [
+    "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/system/host.test.cjs",
+    "tests/system/os-updates-host-contract.test.cjs",
+    "tests/system/preflight-installation.test.cjs",
+    "tests/system/release-cli.test.cjs",
+    "tests/system/activation.test.cjs"
+  ],
+  "workingDirectory": "/workspace/scratch/6383b3161c96/EOS-integrated-test",
+  "startedAt": "2026-10-01T19:12:36.186104+00:00",
+  "finishedAt": "2026-10-01T19:12:37.656907+00:00",
+  "exitCode": 0,
+  "counts": {
+    "tests": 84,
+    "pass": 84,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "environment": {
+    "nodeVersion": "v24.21.0",
+    "nodeExecutable": "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+    "nodeExecutableBinding": {
+      "sha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+      "bytes": 126595440
+    },
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "uid": 0,
+    "environmentMode": "inherited with PYTHONDONTWRITEBYTECODE=1; target host commands are fixture-mocked"
+  },
+  "sourceBindings": [
+    {
+      "path": "runtime/os-updates/README.md",
+      "sha256": "45c790ff0e339b18799ca43ce4a5e7f42224277c954eea17341fe2cab6d564ef",
+      "bytes": 10876
+    },
+    {
+      "path": "runtime/os-updates/policy.schema.json",
+      "sha256": "cd4559a5e1a5ffcc7e457c50859a74117e85897609e8200b886dbda86b0f8856",
+      "bytes": 290
+    },
+    {
+      "path": "runtime/os-updates/runner.py",
+      "sha256": "42b5f07f06a0abd9a29127108ad0666963c44a60080a400a3e6b4815dcc741f6",
+      "bytes": 26310
+    },
+    {
+      "path": "runtime/os-updates/status.schema.json",
+      "sha256": "caefb670fa093f11d2c05b102eada87aa23abaaea184fb612aabf56e24f1d149",
+      "bytes": 9814
+    },
+    {
+      "path": "system/test-base/os-updates/initial-status.json",
+      "sha256": "85e81ebf3e8fab95b441787230c609a850dd8d90e4a1d1a6708d48313a63e344",
+      "bytes": 997
+    },
+    {
+      "path": "system/test-base/os-updates/policy.json",
+      "sha256": "f3d567c897912214a963bcfe66cbb9903fb3b8aeddffd823ec4766d1c237e16c",
+      "bytes": 35
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.service",
+      "sha256": "c846da6dfba50924577cc8c9a1cfabfb271f5e5af53fa783cbe5b79f23678bc1",
+      "bytes": 945
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.timer",
+      "sha256": "2a8e58244851e3bbf64240fead10b4a6fcf6d1fe72bdbce2fb79f5bedf01f51b",
+      "bytes": 214
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-controller.service",
+      "sha256": "0fa8f9a92b1b000ccc242c03d72bbd1303b52cdce21ce2bd203d24aa10172619",
+      "bytes": 2326
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-initialize.service",
+      "sha256": "8560a76fb2964b70eb0529ee184ea01c695c8a06eb5d0011a403a7035aaf118e",
+      "bytes": 2181
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "d7de6e00051469b69f71eef5dd2326ae92744d9e9dd91404141e0d9454bb7065",
+      "bytes": 1158
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.timer",
+      "sha256": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e",
+      "bytes": 319
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-redis@.service",
+      "sha256": "dcb76e9a9bd7cf1de2eb09d737f593e68b813c96d29a796b2167881c1c85e271",
+      "bytes": 1163
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-upload.service",
+      "sha256": "79cd47374b19060dddd730f51e41a4a6035a0bf3ffa614e910961abe7e44f956",
+      "bytes": 2129
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos.target",
+      "sha256": "0e6e4e45592ad9794ad3db400c1d835a5d8d03f417d130295e5f8f727cb8bab9",
+      "bytes": 310
+    },
+    {
+      "path": "tests/system/activation.test.cjs",
+      "sha256": "e72d0769afd0016fdf6f3754a3ddfd86b612f80ce65ed317e050a820da1af1f2",
+      "bytes": 13876
+    },
+    {
+      "path": "tests/system/fixtures/installation-bundle.cjs",
+      "sha256": "cbee8e94c34652d114869937a6c4257f99673d32b66c3cc7aa4aeb3edd4a602e",
+      "bytes": 8115
+    },
+    {
+      "path": "tests/system/host.test.cjs",
+      "sha256": "d73394321316b6d963cb32be6840911c5ccd75489c7232d3598dbc874ccfe53f",
+      "bytes": 32757
+    },
+    {
+      "path": "tests/system/os-updates-host-contract.test.cjs",
+      "sha256": "05bf85c573ddeab243027b0a98580e6d0553ed06198ba16ae0a3ea71fc573f3c",
+      "bytes": 5468
+    },
+    {
+      "path": "tests/system/preflight-installation.test.cjs",
+      "sha256": "c7fd175882cf1fe455bd532b8d1c31f5fef60d65fe88ede975e342fa8e70b92a",
+      "bytes": 10971
+    },
+    {
+      "path": "tests/system/release-cli.test.cjs",
+      "sha256": "95e2e28b18c712589199eb040205f87f12f7465b73c929e3e5e930d0e60a079c",
+      "bytes": 10323
+    },
+    {
+      "path": "tools/system/activate-release.cjs",
+      "sha256": "8726a089874257bc71359f9bf619e9de51869cfaaeafa7aa27c269f0638a499d",
+      "bytes": 14070
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "9ff2d52e817d69d93087e3d8774781743fcf9c58390a39260282ebe2b26ae744",
+      "bytes": 9679
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "ccdfd6ae229ee5124472e0d3c8bbd0b041db1b59f27d1c16c016b06ff41d8c73",
+      "bytes": 9105
+    },
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "sha256": "94ffc7b010ba9bd071877f7a94a4a55ac7c55bbc356f3b712a13f7f963ba3d29",
+      "bytes": 14445
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "sha256": "68dcc07578c701d6f5a499b3ef5a626667bf43286a97bf69e34bb4ec4f8ade13",
+      "bytes": 14422
+    },
+    {
+      "path": "tools/system/preflight-installation.cjs",
+      "sha256": "8ea0305a327fc72f5f244f62665ab10524593e7c2b408138747a9adaf3335ae7",
+      "bytes": 5273
+    }
+  ],
+  "sourceBindingsUnchangedDuringRun": true,
+  "generatedRuntimeCachesBefore": [],
+  "generatedRuntimeCachesAfter": [],
+  "evidence": [
+    {
+      "path": "reports/integration/os-updates/raw/host-contracts-final.tap",
+      "sha256": "aaf79075c8da5dcb8fe6a392c5a65e63301256fbd0e41f3cb0aaa4ce14dcdb05",
+      "bytes": 19262
+    },
+    {
+      "path": "reports/integration/os-updates/raw/host-contracts-final.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "scope": {
+    "fixtureOnlyHostMutations": true,
+    "actualAptExecution": false,
+    "actualTargetSystemdOperation": false,
+    "systemdGrammarVerifiedInIsolatedRoot": true,
+    "targetHardwareAcceptance": false,
+    "newSignedReleaseProduced": false,
+    "redisInstallationHoldPreserved": true
+  },
+  "priorAttemptEvidence": [
+    "reports/integration/os-updates/host-initial-regression-attempt.json",
+    "reports/integration/os-updates/host-contracts.json"
+  ],
+  "followupCorrection": "reports/integration/os-updates/release-hygiene-correction.json"
+}

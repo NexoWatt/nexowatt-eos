@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "change": "EOS-UI-ROLES-001",
+  "component": "iobroker.nexowatt-ui",
+  "version": "1.0.21",
+  "baseCommit": "2db4418871e9882ccee2a523e0035a0e3eae6c29",
+  "testedAt": "2026-10-01T15:18:17.961673+00:00",
+  "status": "component-tested-not-production-approval",
+  "environment": {
+    "node": "v24.19.0",
+    "os": "Linux x86_64 sandbox; not target Raspberry Pi/Debian",
+    "https": "real TLS1.3 Express; fixture certificate verified by native TLS tests",
+    "controller": "fixture account/object storage, real controller integration reported separately"
+  },
+  "roles": {
+    "system.group.administrator": {
+      "internal": "admin",
+      "accountRole": "service"
+    },
+    "system.group.installateur": {
+      "internal": "installer",
+      "accountRole": "installer"
+    },
+    "system.group.endkunde": {
+      "internal": "customer",
+      "accountRole": "enduser"
+    }
+  },
+  "auth": {
+    "allProductReadsRequireSession": true,
+    "exactlyOneCanonicalRoleGroup": true,
+    "mandatoryOwnPasswordForProvisionedNonServiceAccounts": true,
+    "ownPasswordEndpoint": "POST /api/account/password",
+    "bodyFields": [
+      "currentPassword",
+      "password",
+      "passwordRepeat"
+    ],
+    "requiredHeader": {
+      "X-Nexowatt-EOS-Password": "1"
+    },
+    "origin": "exact HTTPS request origin",
+    "passwordLimits": {
+      "minCodePoints": 15,
+      "maxCodePoints": 128,
+      "maxUtf8Bytes": 256,
+      "controlCharacters": false,
+      "mustDifferFromCurrent": true
+    },
+    "kdf": {
+      "algorithm": "PBKDF2-HMAC-SHA256",
+      "iterations": 600000,
+      "saltBytes": 16,
+      "derivedBytes": 256,
+      "maxConcurrentVerifyAndDerive": 2
+    }
+  },
+  "checks": {
+    "focusedTests": {
+      "passed": 69,
+      "failed": 0,
+      "raw": "roles-auth-tls-sse-sw.tap"
+    },
+    "browser": {
+      "passed": true,
+      "browser": "153.0.8010.0",
+      "environment": "local HTTPS Express, fixture Controller accounts; browser fixture CA accepted, no external requests",
+      "checks": [
+        "mandatory first login at 390px",
+        "no pending account data",
+        "own password saved",
+        "reauthentication required",
+        "normal account password change accessible",
+        "no browser errors"
+      ]
+    },
+    "typescriptBuild": "build-ts-verified.log plus final canonical/mirror sync; final typecheck main-typing-final.log",
+    "docs": "docs-check-accepted.log",
+    "secretScan": "secrets.log (targeted detector; not general proof)"
+  },
+  "preserved": {
+    "emsSourceChanged": false,
+    "physicalControl": "EOS_TEST_CONTROL_BLOCKED remains active",
+    "centralLicense": true,
+    "TLS13Only": true
+  },
+  "openRisks": [
+    "Controller object API has no cross-adapter compare-and-swap for simultaneous administrative password resets; coordinate resets. Narrow updates never overwrite roles/enabled.",
+    "Shared runtime/database identity remains; no isolation guarantee against compromised adapter code.",
+    "RPi5 performance, hardware, independent security assessment and CRA/IEC conformity decision not performed here.",
+    "Full npm test:all / immutable package and final actual-runtime SBOM gates are orchestrator release tasks, not asserted by this component report."
+  ],
+  "files": [
+    {
+      "path": "components/ui/src-ts/runtime-executables/main.ts",
+      "sha256": "ca13d5195b11630e59f4c8aa52a4870e9d78743bd4ceff0d660ce25c0242f04f"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/eos-integrated.ts",
+      "sha256": "6b72f4278773927ef54a94d7830016b8f5563a883ade5f2fd5f9da8cd26de478"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/sse-runtime-guard.ts",
+      "sha256": "dd502d68a28c3370efbe31d4fe0cf2fbb46f3269302bc6f2e04cd5c265a531b6"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/www/auth.ts",
+      "sha256": "0af7f1752fccb4286e24a666eeb9b66fb9025ce738d8fca42494dd05eddc7765"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/www/sw.ts",
+      "sha256": "9eb27973acc0f7d1adfd0c4e1257e6e005e542f72e5dad7b6867ba9e3fcc4690"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/main.ts",
+      "sha256": "12fa6cbaa542224e2e5fc3240c80bc43034b7d2245ef78d4fb3426d7a665b1c6"
+    },
+    {
+      "path": "components/ui/main.js",
+      "sha256": "47a51c3f8338271a5fbb586ae654d80921a89abdf1751c879bc23fb979a8ea9f"
+    },
+    {
+      "path": "components/ui/lib/eos-integrated.js",
+      "sha256": "c62c8e0e3ae0be4255e1d2dee7e49920dd566fc5f967fe1a7c71b7d49d6330a0"
+    },
+    {
+      "path": "components/ui/lib/sse-runtime-guard.js",
+      "sha256": "127149ef992192fc953e574ec8ec79f98504c80311e136a7d4d4977f88a6a6af"
+    },
+    {
+      "path": "components/ui/www/auth.js",
+      "sha256": "1bed25157f6206b63d37dd859fc0352282734eb77f7a9f4f80201ede8097e5a0"
+    },
+    {
+      "path": "components/ui/www/sw.js",
+      "sha256": "9e74296d13d8b2afd3b933538157224388dc12989703870e59f0363b9aad39d2"
+    },
+    {
+      "path": "components/ui/www/index.html",
+      "sha256": "774f1201076784e7cec7112ba0db7d2b56962780dcc39b9a3040b5cee92acfdd"
+    },
+    {
+      "path": "components/ui/www/favicon.ico",
+      "sha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1"
+    },
+    {
+      "path": "components/ui/package.json",
+      "sha256": "49bec37784617bb57ff602bfc62661799a9b51d63f3474540776115981c4a52f"
+    },
+    {
+      "path": "components/ui/scripts/verify-eos-account-browser.cjs",
+      "sha256": "70f216fac463b7ce7442d4d72a65f6ba4f83bea2aaef6562f771af16523741aa"
+    },
+    {
+      "path": "components/ui/scripts/verify-eos-auth-security.cjs",
+      "sha256": "6a4fe216657d01649c1af4e6afa7938fbab39bdfc945dfd0d6f400b86103efde"
+    },
+    {
+      "path": "components/ui/scripts/verify-eos-integrated.cjs",
+      "sha256": "bb786a764b8140835515b2da614e07b8d1d91e1f4d7ed169ec5618da8cca6c7a"
+    },
+    {
+      "path": "components/ui/scripts/verify-stable-1.0.9-access.cjs",
+      "sha256": "9335164047d7a723e2e055adf382bc3844ee885f07fe465902c6071eb9103eff"
+    },
+    {
+      "path": "components/ui/test/eos-account-roles.test.cjs",
+      "sha256": "a0a6636cff44c70bd90dcc0aa8aa71b3fb2799c7d6bb9f2b3c337bdd0a250944"
+    },
+    {
+      "path": "components/ui/test/eos-sse-authorization.test.cjs",
+      "sha256": "0e73e922fc6dfa1523ac3b716280fc3cd53bb5c032dff75d149b481285804155"
+    },
+    {
+      "path": "components/ui/test/eos-service-worker-auth.test.cjs",
+      "sha256": "9af03a09c77d1e56525120927e1183de831b2868db117dbbb3dfb78990e97416"
+    },
+    {
+      "path": "components/ui/docs/security/EOS_UI_ROLES_2026-10-01_DE.md",
+      "sha256": "f8d0caecda675203872af79b7e6a01018fc2fc9955fc8548efa756cec2315893"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-acceptance.log",
+      "sha256": "bb15c2b5a3ca081da7fc39fb96c595e59c2cdad81805ed41eea1c68923d13652"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-attempt2.log",
+      "sha256": "9917c0a6c19d293cb70efa92080f67a1c6701a1fc7237b92438890e7db232c35"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-attempt3.log",
+      "sha256": "bc22d6d5ae7e8d809890a4fd61054a6da35005a6a31e37ea9184e3875f9ccaf1"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-final-pass.log",
+      "sha256": "5c6340996f8cc7366cb38c00682fdc34da06ecbf257142acf877cfd66e66d0f2"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-final.log",
+      "sha256": "c4a6a77b61b049ddf035eba3048bb0aabf78ac81ebb1f59533fba95cd7870f70"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-success.log",
+      "sha256": "115292badcfedcd256d05305a6350f0b294d1bc09d7fd6e37ad61cb6f5245b39"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser-verified.log",
+      "sha256": "342d0cfb40ec4fb9f8be519754fce5a35c135b4ae66e03b9a620507c178aa35b"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/browser.log",
+      "sha256": "68b548f81535c474b2a3cdcfb4e76592efd475b550045a5f56346c07001434d6"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/build-ts-final.log",
+      "sha256": "f76ada70ea231453773d950f862c5f9c2cf2c62f4541e55819c8c3daebf9d4ee"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/build-ts-verified.log",
+      "sha256": "f76ada70ea231453773d950f862c5f9c2cf2c62f4541e55819c8c3daebf9d4ee"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/build-ts.log",
+      "sha256": "21faa8bf9cfa1f99b371fb66fe09de8c9ee62495b6185bb0e6f98897fadf6d1d"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/docs-build-accepted.log",
+      "sha256": "564fdb7819dd889c389ad7270be4105098bd76526e6f5168c9c3c5c25faceea0"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/docs-build-final.log",
+      "sha256": "564fdb7819dd889c389ad7270be4105098bd76526e6f5168c9c3c5c25faceea0"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/docs-build.log",
+      "sha256": "564fdb7819dd889c389ad7270be4105098bd76526e6f5168c9c3c5c25faceea0"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/docs-check-accepted.log",
+      "sha256": "5d195a7f603cd72b694208cf4d3a5643fb851a3e084b1054c65ec66f16f876ad"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/docs-check-final.log",
+      "sha256": "5d195a7f603cd72b694208cf4d3a5643fb851a3e084b1054c65ec66f16f876ad"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/docs-check.log",
+      "sha256": "5d195a7f603cd72b694208cf4d3a5643fb851a3e084b1054c65ec66f16f876ad"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/main-typing-final.log",
+      "sha256": "67229ad6cdcfede53c0a9fdc70cd35327b4a329f8684b19f732584c5912a01a8"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/main-typing.log",
+      "sha256": "67229ad6cdcfede53c0a9fdc70cd35327b4a329f8684b19f732584c5912a01a8"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/mirrors-final.log",
+      "sha256": "39cd67cb9fa3979ca22a8f8b03d91bfd6f85abba08eabb659235decdc1b5f48e"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/roles-auth-tls-sse-sw.tap",
+      "sha256": "946a2dfda7f8ab71acf83d2ad9a968c7213154cbe327ed1bed71d0e5a6399bd9"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/runtime-sync.log",
+      "sha256": "f5ce1682f8ba04bea78a32a04ded4332262b5bcbf04e47fb506228907d783324"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/secrets.log",
+      "sha256": "3bc9b0d5a90e17ae542cddc86043d6aba1bc437477ca94ad03e547359d8729c4"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/sync-final.log",
+      "sha256": "f5ce1682f8ba04bea78a32a04ded4332262b5bcbf04e47fb506228907d783324"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/sync-verified.log",
+      "sha256": "f5ce1682f8ba04bea78a32a04ded4332262b5bcbf04e47fb506228907d783324"
+    },
+    {
+      "path": "components/ui/reports/security/roles-20261001/ui-own-password-390.png",
+      "sha256": "6f53c9d959b2c5d3443843a0b912e9b8ae12ab25d9a842687e9b22a5475ef9da"
+    }
+  ]
+}

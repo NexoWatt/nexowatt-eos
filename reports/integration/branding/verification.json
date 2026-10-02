@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "testedAt": "2026-10-01T15:16:42.657099+00:00",
+  "scope": "NexoWatt EOS product assets, scoped role portal, first/own-password browser workflow; local development verification",
+  "baseCommit": "2db4418871e9882ccee2a523e0035a0e3eae6c29",
+  "environment": {
+    "node": "v24.19.0",
+    "os": "Ubuntu 24.04 x86_64 container",
+    "browser": "Chromium 153.0.8010.0",
+    "liveControllerInThisReport": false,
+    "hardwareTest": false
+  },
+  "results": [
+    {
+      "command": "node --test --test-reporter=tap tests/integration/branding.test.cjs",
+      "status": "passed",
+      "tests": 4,
+      "evidence": "reports/integration/branding/raw/static-contracts.tap"
+    },
+    {
+      "command": "node tests/integration/branding-browser.cjs (isolated browser tooling configured)",
+      "status": "passed",
+      "checks": 10,
+      "evidence": "reports/integration/branding/browser-verification.json"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-first-login-selftest.cjs",
+      "status": "passed",
+      "tests": 26,
+      "evidence": "reports/integration/branding/raw/current-first-login-behavioral.tap"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-branding-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-branding-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-login-layout-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-login-layout-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-modern-ui-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-modern-ui-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-internal-reserve-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-internal-reserve-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-role-access-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-role-access-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-role-security-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-role-security-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-v7109-clean-core-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-v7109-clean-core-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-account-password-flow-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-account-password-flow-selftest.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-stability-check.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/nexowatt-stability-check.cjs.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-esm-syntax-selftest.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/admin-esm-syntax.log"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-frontend-graph-check.cjs",
+      "status": "passed",
+      "evidence": "reports/integration/branding/raw/admin-frontend-graph.log"
+    }
+  ],
+  "historicalFailedCheck": {
+    "command": "old nexowatt-first-login-selftest.cjs",
+    "status": "failed_obsolete_requirements",
+    "evidence": "reports/integration/branding/raw/nexowatt-first-login-selftest.cjs.log",
+    "reason": "Required retired shared default password, default role accounts and password composition; exact source retained as historical text. Current entry executes behavioral account-boundary tests."
+  },
+  "artifact": {
+    "providedFaviconSha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+    "newProductDependencies": []
+  },
+  "limits": [
+    "Browser role/API responses are fixtures; real authentication and TLS checked separately by controller integration.",
+    "No target RPi/Debian/IEC/CRA conformity or production approval.",
+    "Third-party names and provenance remain accurate; future third-party adapter UIs require own review.",
+    "Portal is not a complete setup wizard and does not enable physical control in the preview profile."
+  ],
+  "sourceArtifacts": [
+    {
+      "path": "components/admin/admin/favicon.ico",
+      "sha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+      "bytes": 13608
+    },
+    {
+      "path": "components/admin/adminWww/assets/bootstrap-COulQZax-v84.js",
+      "sha256": "3503b81082fa78ee16ba4445b2c1bf016f3dc395236a503be68b33202bb10c1c",
+      "bytes": 2971064
+    },
+    {
+      "path": "components/admin/adminWww/css/nexowatt-native-shell.css",
+      "sha256": "dd7ffe12370c60ea4db50bbcc24224b015152a51007997e0aa2b287d81ee45cb",
+      "bytes": 78917
+    },
+    {
+      "path": "components/admin/adminWww/favicon.ico",
+      "sha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+      "bytes": 13608
+    },
+    {
+      "path": "components/admin/adminWww/img/admin.png",
+      "sha256": "7f93d65d9e1d795bf127e1af31d88d7468ccb70b026f98351d0abbc3f3bd4df6",
+      "bytes": 29884
+    },
+    {
+      "path": "components/admin/adminWww/index.html",
+      "sha256": "edf254391614d05d58d9c6cda55f3e68828ee1abb3929c4b9f5cf0963c28fc12",
+      "bytes": 7994
+    },
+    {
+      "path": "components/admin/adminWww/js/eos-branding-sanitizer.js",
+      "sha256": "41821ecefd12b09bfe712c4e1ae82fedfa2b52af52c63388c1e55071cf40583a",
+      "bytes": 3561
+    },
+    {
+      "path": "components/admin/adminWww/js/eos-role-bootstrap.js",
+      "sha256": "0804f7a98c25bbddb588f84c9408a88be31687211afc84c68d705109d3303548",
+      "bytes": 50881
+    },
+    {
+      "path": "components/admin/adminWww/logo192.png",
+      "sha256": "7f93d65d9e1d795bf127e1af31d88d7468ccb70b026f98351d0abbc3f3bd4df6",
+      "bytes": 29884
+    },
+    {
+      "path": "components/admin/adminWww/logo512.png",
+      "sha256": "a7e6375e6f4e1f5e09f167af81eca69626e4baf4762a07e41b838bc4786f0519",
+      "bytes": 149798
+    },
+    {
+      "path": "components/admin/adminWww/manifest.json",
+      "sha256": "caf2aebf227889ac334e03d637315908d6bc40bc79593b164a507cc2506e15d4",
+      "bytes": 717
+    },
+    {
+      "path": "components/admin/adminWww/static/js/nexowatt-stable-v7109.js",
+      "sha256": "13d9d9a38e5464cdb5d7b0929d6455be8aa173b92a60204593841e719ae80463",
+      "bytes": 2125
+    },
+    {
+      "path": "components/admin/docs/security/historical/nexowatt-first-login-selftest.pre-roles-20261001.cjs.txt",
+      "sha256": "1fa65fed553b8976c0cdd0056e4e234d9852a1415e4fa2f92b35f10db01fc7da",
+      "bytes": 7918
+    },
+    {
+      "path": "components/admin/src-admin/index.html",
+      "sha256": "9117e3bfcb29ac24c8702c92f34a7f4d1d1b3c24e104002baf3353e13e675824",
+      "bytes": 8277
+    },
+    {
+      "path": "components/admin/src-admin/public/css/nexowatt-native-shell.css",
+      "sha256": "dd7ffe12370c60ea4db50bbcc24224b015152a51007997e0aa2b287d81ee45cb",
+      "bytes": 78917
+    },
+    {
+      "path": "components/admin/src-admin/public/favicon.ico",
+      "sha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+      "bytes": 13608
+    },
+    {
+      "path": "components/admin/src-admin/public/img/admin.png",
+      "sha256": "7f93d65d9e1d795bf127e1af31d88d7468ccb70b026f98351d0abbc3f3bd4df6",
+      "bytes": 29884
+    },
+    {
+      "path": "components/admin/src-admin/public/js/eos-branding-sanitizer.js",
+      "sha256": "41821ecefd12b09bfe712c4e1ae82fedfa2b52af52c63388c1e55071cf40583a",
+      "bytes": 3561
+    },
+    {
+      "path": "components/admin/src-admin/public/js/eos-role-bootstrap.js",
+      "sha256": "0804f7a98c25bbddb588f84c9408a88be31687211afc84c68d705109d3303548",
+      "bytes": 50881
+    },
+    {
+      "path": "components/admin/src-admin/public/logo192.png",
+      "sha256": "7f93d65d9e1d795bf127e1af31d88d7468ccb70b026f98351d0abbc3f3bd4df6",
+      "bytes": 29884
+    },
+    {
+      "path": "components/admin/src-admin/public/logo512.png",
+      "sha256": "a7e6375e6f4e1f5e09f167af81eca69626e4baf4762a07e41b838bc4786f0519",
+      "bytes": 149798
+    },
+    {
+      "path": "components/admin/src-admin/public/manifest.json",
+      "sha256": "caf2aebf227889ac334e03d637315908d6bc40bc79593b164a507cc2506e15d4",
+      "bytes": 717
+    },
+    {
+      "path": "components/admin/src-admin/public/static/js/nexowatt-stable-v7109.js",
+      "sha256": "13d9d9a38e5464cdb5d7b0929d6455be8aa173b92a60204593841e719ae80463",
+      "bytes": 2125
+    },
+    {
+      "path": "components/admin/src-admin/src/App.tsx",
+      "sha256": "a6bcda8e2c935d1eec81e58cdaced1c3056fa5b8673e6fd810b3deb7959d0add",
+      "bytes": 138093
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/de.json",
+      "sha256": "ebf218dd54e504a9d9064f8a557559547e474e334dd8fa1cbc7b48d68903e17d",
+      "bytes": 106201
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/en.json",
+      "sha256": "eb14073863e8cb9283f30e2df366e0b1150c5a2513fd0bb10f57b010840c26bf",
+      "bytes": 96507
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/es.json",
+      "sha256": "5b5ddaf9f460770bcc6e4702e9cc959740e33cd0a51a816269603e8c8ac8c01f",
+      "bytes": 103496
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/fr.json",
+      "sha256": "fadb53c93c454833e03282877a242a18d59de29e3001549de1c76ff7f936b5f0",
+      "bytes": 107031
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/it.json",
+      "sha256": "95116ca51db7fd06443d45b553895d0a670e341941bc2167591e4a003023ab00",
+      "bytes": 102667
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/nl.json",
+      "sha256": "22eb22bcf3bb6c913da1881619ee18432ccd07fc6cb3274bed655ccc3ad95d69",
+      "bytes": 100358
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/pl.json",
+      "sha256": "bda6903bf09b2851ba0f27d290efbf3e005d7b2e2b7a0ba4f5f0923b1f6efc50",
+      "bytes": 101852
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/pt.json",
+      "sha256": "f1a2f5468979d488ee114c406d0c98a00e02efd428e26c3167014ed9f9d63596",
+      "bytes": 102271
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/ru.json",
+      "sha256": "dec3fea9503f5ad1474b1bc9b0f31aa5ff5cfaa522562d55110a98db0f34d197",
+      "bytes": 141368
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/uk.json",
+      "sha256": "0dae1f6c43c3594f9f7f5f7c66f2143204fa18ad138b75136ad2a624e7a20880",
+      "bytes": 140522
+    },
+    {
+      "path": "components/admin/src-admin/src/i18n/zh-cn.json",
+      "sha256": "9a15ec1623ea6aaed3b57ea5f9d9b4be1175f15b599d25c1b95edad5af4ce4f4",
+      "bytes": 91144
+    },
+    {
+      "path": "components/admin/tools/nexowatt-branding-selftest.cjs",
+      "sha256": "672d78ff554cbb308f6b6e27c2e1fd7dc3ce4feef28f793a31c9b3c81cf62def",
+      "bytes": 3045
+    },
+    {
+      "path": "components/admin/tools/nexowatt-first-login-selftest.cjs",
+      "sha256": "f6b9d5cd888b11901e071436821bbd1fc5ff876ce01edfe474dd350f2a21be84",
+      "bytes": 880
+    },
+    {
+      "path": "components/admin/www/favicon.ico",
+      "sha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+      "bytes": 13608
+    },
+    {
+      "path": "components/ui/admin/admin_logo_.ico",
+      "sha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+      "bytes": 13608
+    },
+    {
+      "path": "components/ui/www/dc-station-display.html",
+      "sha256": "3969faac10717ccd8a39405d15c213450bbfe44f16e3d2fc29f2307020e804f2",
+      "bytes": 1107
+    },
+    {
+      "path": "components/ui/www/ems-apps.html",
+      "sha256": "fa4498633b93fbfdeefbcbd3a116327bb78b220598a1090fb538335a746e5ee7",
+      "bytes": 153226
+    },
+    {
+      "path": "components/ui/www/energy-ledger.html",
+      "sha256": "1f2618154415809e25a938ae805385cccbd665ea3aacf6bf2496ffeed1772d22",
+      "bytes": 8952
+    },
+    {
+      "path": "components/ui/www/evcs-report.html",
+      "sha256": "013742025881581cfc59b2cec676def4d3379b21a52f3e08f62a91fd3c59f71a",
+      "bytes": 5571
+    },
+    {
+      "path": "components/ui/www/evcs.html",
+      "sha256": "45bafe734425de4fbb025eb63f946adb5438d2df248189512cccf7b7019c128d",
+      "bytes": 5366
+    },
+    {
+      "path": "components/ui/www/favicon.ico",
+      "sha256": "c837651adbc7a00a044c4804c7140af99d3efdf54b0f4a97edf359e7b75593e1",
+      "bytes": 13608
+    },
+    {
+      "path": "components/ui/www/history.html",
+      "sha256": "dc458880e259cc835557007552f0b275ea88e9553ab961786a6bd38168cc179f",
+      "bytes": 15875
+    },
+    {
+      "path": "components/ui/www/index.html",
+      "sha256": "774f1201076784e7cec7112ba0db7d2b56962780dcc39b9a3040b5cee92acfdd",
+      "bytes": 46036
+    },
+    {
+      "path": "components/ui/www/license.html",
+      "sha256": "5aab994295f6b2661e490a43b24490fa0b6747cf46917071c6e3d80cab5542df",
+      "bytes": 2174
+    },
+    {
+      "path": "components/ui/www/logic.html",
+      "sha256": "93499279e9210ebd5bc036fea7c6e2cfd7f54f6cb8aaf03bcd1acd6dd56a70bb",
+      "bytes": 14556
+    },
+    {
+      "path": "components/ui/www/mesh-microgrid.html",
+      "sha256": "f798cece964260b8fa95c8ac901a4fdef86b2f99a5b6b761cf346e3deac3bf3d",
+      "bytes": 12323
+    },
+    {
+      "path": "components/ui/www/netoperator.html",
+      "sha256": "c46297a983b5019d25278417db1aa342a3f1275e0653e5ab7e79d5a9e87199d8",
+      "bytes": 5537
+    },
+    {
+      "path": "components/ui/www/para14a-report.html",
+      "sha256": "cb6fc66bdc19c829fe8ce95bbf050b93bbb7dcdc1caec09a614e85f2f76be3ec",
+      "bytes": 6016
+    },
+    {
+      "path": "components/ui/www/rfid-report.html",
+      "sha256": "ca9399d9ac426b6f74e6e4fe78fe176b04833c10b5215045b8394a167b456319",
+      "bytes": 6363
+    },
+    {
+      "path": "components/ui/www/settings.html",
+      "sha256": "9582446b26911943fdb97cac1677001eda3b196d7ee9071615506210811f7778",
+      "bytes": 62430
+    },
+    {
+      "path": "components/ui/www/simulation.html",
+      "sha256": "6500528a222f0d6343c9e4e8b547951dbd73fbd01dbd64e09357e580c492eb4b",
+      "bytes": 8665
+    },
+    {
+      "path": "components/ui/www/smarthome-config.html",
+      "sha256": "1da66de03355bd508aee1169f5344e311e56057bc72f89c0839536238144e78d",
+      "bytes": 28426
+    },
+    {
+      "path": "components/ui/www/smarthome.html",
+      "sha256": "b447b0019b6a0a7c688d7ce2969af36b5cc54940739279693d82ed5653485023",
+      "bytes": 5713
+    },
+    {
+      "path": "components/ui/www/storagefarm.html",
+      "sha256": "15da3aefdb9ad1722804498d5f12f22e62021ddc7b361a27b1d43a1a9c4bbd5c",
+      "bytes": 5029
+    },
+    {
+      "path": "components/ui/www/tariff-report.html",
+      "sha256": "deb4c6db4f769e2617c3a318ced5a483dac6a83da53f592a72877c28e7e6d538",
+      "bytes": 5797
+    },
+    {
+      "path": "components/ui/www/year-report.html",
+      "sha256": "97a14f8bd69f87a31729fcba41c46212f83ca0cf7b62225d2860698e5a1840c0",
+      "bytes": 5214
+    },
+    {
+      "path": "docs/security/BRANDING_INTEGRATION_DE.md",
+      "sha256": "eb088d540e692e401e2f8943e9fde4e0f482e5f059b47e42f08505154fee5ef0",
+      "bytes": 10050
+    },
+    {
+      "path": "tests/integration/branding-browser.cjs",
+      "sha256": "dd71d561e142798d69fcd570f7668cdbad41ce7c629bf0ef3914db857b2e7703",
+      "bytes": 12433
+    },
+    {
+      "path": "tests/integration/branding.test.cjs",
+      "sha256": "94580e69bad8e1b220b54129235cacbe87273ddb93797137a2cd0a1c1b9104d9",
+      "bytes": 3718
+    }
+  ],
+  "evidenceArtifacts": [
+    {
+      "path": "reports/integration/branding/admin-login-1280.png",
+      "sha256": "4c26484d11904d24a995b9557dc1af3b3fad809f6a5749cc8fcf3bbfd1332ace",
+      "bytes": 383613
+    },
+    {
+      "path": "reports/integration/branding/admin-login-390.png",
+      "sha256": "5a996c432dbfb149e53cb8ed44f1afb4f70262c8ed50883c7b379e449bfe4a06",
+      "bytes": 104305
+    },
+    {
+      "path": "reports/integration/branding/admin-portal-enduser-390.png",
+      "sha256": "3f93916c16bcd0f7fae4e40f9db1120db894e643816a873fb721c0579ddd005c",
+      "bytes": 116062
+    },
+    {
+      "path": "reports/integration/branding/admin-portal-installer-390.png",
+      "sha256": "15d7ae30cb353e205fc859efee033dfa703565eadd9d9e47f0435dd2bbbfd437",
+      "bytes": 123294
+    },
+    {
+      "path": "reports/integration/branding/browser-verification.json",
+      "sha256": "cbea6bae653718a5be59bf77d79227b79cff9285a617eb96443b6b9ae11a565f",
+      "bytes": 1536
+    },
+    {
+      "path": "reports/integration/branding/raw/admin-branding.log",
+      "sha256": "4410aa838572c7bbe76584811ead56068b8527fc8742511dbe2c609396391dd7",
+      "bytes": 27
+    },
+    {
+      "path": "reports/integration/branding/raw/admin-esm-syntax.log",
+      "sha256": "cc5519fc16b2fe9bdc9992ce5aa9dd71bf2e32d95aaff328c8b85151878b617b",
+      "bytes": 29
+    },
+    {
+      "path": "reports/integration/branding/raw/admin-frontend-graph.log",
+      "sha256": "ec28b3c8f396100f7f2486d4ef27652aa10ce8e3132c633b5579bc38868cd488",
+      "bytes": 77
+    },
+    {
+      "path": "reports/integration/branding/raw/admin-login-layout.log",
+      "sha256": "2b14efb7a3dca2393edf1b7a22dd1d1362b2040adc0e510e838a4659d935f65a",
+      "bytes": 31
+    },
+    {
+      "path": "reports/integration/branding/raw/browser.log",
+      "sha256": "d26f115ca8a93777f367a062a7b296c813bcd7cc43cf36de46b73179f3ba302d",
+      "bytes": 1427
+    },
+    {
+      "path": "reports/integration/branding/raw/current-first-login-behavioral.tap",
+      "sha256": "c30e55689669a16e57bd9b14fbfafa7dbd7e24cf75c8866ee771afa2943e06f0",
+      "bytes": 2521
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-account-password-flow-selftest.cjs.log",
+      "sha256": "01bbca91409427d5543be2997cb978d0d5015ff9bdf52b923bd3e7756cc910ef",
+      "bytes": 3272
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-branding-selftest.cjs.log",
+      "sha256": "4410aa838572c7bbe76584811ead56068b8527fc8742511dbe2c609396391dd7",
+      "bytes": 27
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-first-login-selftest.cjs.log",
+      "sha256": "8df510694127611481d4c024e2fecb0df642f2b20189885adcac46827ec71057",
+      "bytes": 683
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-internal-reserve-selftest.cjs.log",
+      "sha256": "92f169a2d4b19851fc73a06ba7f54b571e0167cde007d1b4f48336f003319471",
+      "bytes": 35
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-login-layout-selftest.cjs.log",
+      "sha256": "2b14efb7a3dca2393edf1b7a22dd1d1362b2040adc0e510e838a4659d935f65a",
+      "bytes": 31
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-modern-ui-selftest.cjs.log",
+      "sha256": "a4eb5cc0d073a6b813c69e183659668bce1a99bdc3a3700aead9085fc67b45fe",
+      "bytes": 28
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-role-access-selftest.cjs.log",
+      "sha256": "d5cfccb6d78b7c8d2802ef260639a1898472233ab79e55cdca5375ccc75442c8",
+      "bytes": 141
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-role-security-selftest.cjs.log",
+      "sha256": "88729c5009a612dd8f91c804ed9dcb791436762864ee25dd15785116c7ba8d6c",
+      "bytes": 139
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-stability-check.cjs.log",
+      "sha256": "c16771d92e361cb83f2304bc3731c56d55ba076deb937d8df800704930c88547",
+      "bytes": 28
+    },
+    {
+      "path": "reports/integration/branding/raw/nexowatt-v7109-clean-core-selftest.cjs.log",
+      "sha256": "5d07883dcdc5a1574e19c04c82ebfc83a160c0b06a9ed1076b7d2adef573b73a",
+      "bytes": 149
+    },
+    {
+      "path": "reports/integration/branding/raw/static-contracts.tap",
+      "sha256": "72aca30e625261a263ff86b607e62871690d325f4f0ffedff76dd22b973aef5f",
+      "bytes": 992
+    }
+  ]
+}

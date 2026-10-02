@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-runtime-architecture-input-binding",
+  "checkedAt": "2026-10-01T17:05:00.823Z",
+  "targetPlatform": "linux-x64",
+  "targetNodeContract": "24.21.0",
+  "architectureReport": {
+    "path": "reports/integration/stabilization/x64/architecture.json",
+    "sha256": "cb36c6454dc866319171d9d7ecc8baed5f20db0b44188d7070aa303825d86fc6"
+  },
+  "checker": {
+    "path": "tools/integration/check-runtime-architecture.cjs",
+    "sha256": "18c2976a406f0f581e1d9acb1f98507b9f8624b354f98ac6315ba785fa312b40",
+    "executedOn": {
+      "node": "v24.19.0",
+      "platform": "linux",
+      "arch": "x64"
+    }
+  },
+  "unitTests": {
+    "path": "tests/integration/runtime-architecture.test.cjs",
+    "sha256": "c388e7e14af1fcd819bc9a99a037cadfe5f629fdead5fffc6a2e0e655f251ebe",
+    "rawEvidenceSha256": "0a7ffa825d140942a17989d626c5a205d9073fcfb610ddf96290e7cf9034b750",
+    "passed": 19,
+    "failed": 0
+  },
+  "buildEvidence": {
+    "path": "build-evidence.json",
+    "sha256": "7efe725ef26e8b12b6efd0aacf67ba9cbaedeeea64c4959284e303dea26feed0",
+    "sourceScope": "sibling of examined app tree"
+  },
+  "buildToolchain": {
+    "node": "v24.21.0",
+    "hostPlatform": "linux-x64",
+    "npmVersion": "11.19.0",
+    "npmCli": {
+      "relativeToToolchain": "lib/node_modules/npm/bin/npm-cli.js",
+      "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7"
+    },
+    "npmManifest": {
+      "relativeToToolchain": "lib/node_modules/npm/package.json",
+      "sha256": "09dfcf187178ce1ab3ea6194c80d3ae082ad2a86dc1269ac963f94429e718122"
+    },
+    "nodeExecutableSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+    "pathSource": "Build PATH confirmed by parent: node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin first",
+    "npmLifecycleScriptsExecuted": false,
+    "npmNetworkMode": "offline-only"
+  },
+  "installedApp": {
+    "packageJsonSha256": "63f641f823408fe2161211cb247b114801baf8d47541f02efd90e1842fd456d2",
+    "packageLockSha256": "81477e727e4abb676b6a5b1af4bb51a3502d443a93b74cbefce9e1c093fd9073",
+    "npmInstalledTreeLockSha256": "6ed3dff551ecaeaa1ed374581bd5005eea0115a54c8c30448accc345151f9e46",
+    "targetEsbuildManifestSha256": "a3924c1835c7849adeb3d82ac24525da0d4190607b60d05265dc6746bde2ddb8",
+    "esbuildLoaderManifestSha256": "9d0bc453f4e791553c4cc2298ba023b409241fd9801e494741666eb0f6051490"
+  },
+  "targetBinaryExecutedByThisCheck": false,
+  "hardwareQualified": false
+}

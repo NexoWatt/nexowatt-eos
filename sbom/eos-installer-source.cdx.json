@@ -1,0 +1,85 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "source-file:package.json",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "b8b64c71085712c283a0ebf9650c677d01a1dca08a33040211f71939c253b5c8"
+        }
+      ],
+      "name": "package.json",
+      "type": "file"
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "incomplete",
+      "assemblies": [
+        "pkg:npm/%40iobroker/install@6.0.1"
+      ]
+    }
+  ],
+  "metadata": {
+    "component": {
+      "bom-ref": "pkg:npm/%40iobroker/install@6.0.1",
+      "description": "Observed installer source manifest; not a built, installed or complete EOS system.",
+      "name": "@iobroker/install",
+      "purl": "pkg:npm/%40iobroker/install@6.0.1",
+      "type": "application",
+      "version": "6.0.1"
+    },
+    "lifecycles": [
+      {
+        "phase": "pre-build"
+      }
+    ],
+    "properties": [
+      {
+        "name": "eos:sbom:completeness",
+        "value": "partial"
+      },
+      {
+        "name": "eos:sbom:dependency-resolution",
+        "value": "not-performed"
+      },
+      {
+        "name": "eos:sbom:scope",
+        "value": "observed-root-package-json-only"
+      },
+      {
+        "name": "eos:sbom:vulnerability-scan",
+        "value": "not-performed"
+      },
+      {
+        "name": "eos:source:git-head",
+        "value": "1e6d0377d2cb184714f0d7f6f03066a2c1a150ac"
+      },
+      {
+        "name": "eos:source:manifest-matches-head",
+        "value": "true"
+      },
+      {
+        "name": "eos:source:package-json-sha256",
+        "value": "b8b64c71085712c283a0ebf9650c677d01a1dca08a33040211f71939c253b5c8"
+      },
+      {
+        "name": "eos:source:remaining-working-tree",
+        "value": "not-inventoried"
+      }
+    ],
+    "tools": {
+      "components": [
+        {
+          "name": "nexowatt-eos-source-sbom",
+          "type": "application",
+          "version": "0.1.0"
+        }
+      ]
+    }
+  },
+  "specVersion": "1.7",
+  "version": 1
+}

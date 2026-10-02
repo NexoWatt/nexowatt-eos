@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-postgresql-test-assembly",
+  "sourceBaseReleaseId": "a687feab64ffb230694b8af5342082dafcce771b2e76885445754e7c35025c88",
+  "baseSigningKeySha256": "e4e2465af8ae947574804f42c5ed17072ada8831b9839876f188c0e7c4c08cbe",
+  "nodeVersion": "24.21.0",
+  "npmVersion": "11.19.0",
+  "platform": "linux-arm64",
+  "network": "offline-only",
+  "lifecycleScriptsExecuted": false,
+  "sourcePackages": [
+    {
+      "label": "ui",
+      "name": "iobroker.nexowatt-ui",
+      "version": "1.0.21",
+      "archive": "iobroker.nexowatt-ui-1.0.21.tgz",
+      "sha256": "fc50671fcf88fb5d2e6eba733eb5dccd992d7d7bd5f632a14e6e3ed8078c403d",
+      "integrity": "sha512-ngrXS/ocdh3u3N1/DYoOeoY+6gSxr6bhXI3/vxoEHeBRacU1rOlQgWmBrYwCkqZ0dIOcIn1W48l981mqa8Wc+Q==",
+      "snapshot": {
+        "files": 2802,
+        "bytes": 54699785
+      }
+    },
+    {
+      "label": "store",
+      "name": "@nexowatt/eos-postgresql-store",
+      "version": "0.1.0-dev.1",
+      "archive": "nexowatt-eos-postgresql-store-0.1.0-dev.1.tgz",
+      "sha256": "b3bf0afe26abbbdb30970774739be0595115e526606991d483102e8061755714",
+      "integrity": "sha512-yC9tFRRChbKzYSbcZahzZBxziEzx0/cwJDCcg/iIIfT+DRUUJe4GG4XtJ+2WiY6X2YtPk1wgoPUYVqEShDgG/g==",
+      "snapshot": {
+        "files": 2,
+        "bytes": 19794
+      }
+    },
+    {
+      "label": "db-objects-postgresql",
+      "name": "@iobroker/db-objects-postgresql",
+      "version": "0.1.0-dev.1",
+      "archive": "iobroker-db-objects-postgresql-0.1.0-dev.1.tgz",
+      "sha256": "a81c70bb8b6d6461ec925cd0f07135e2cef7c0eb0aa9a5e84943e85265a9c727",
+      "integrity": "sha512-BC8z7GxL92jTR0t2W7IiLI5d/DSG8L95UC18166apKjEuv3Fw1rjbGkHijBz/KHjB3gzgQUI4sc8VDOy3vIpgQ==",
+      "snapshot": {
+        "files": 6,
+        "bytes": 40437
+      }
+    },
+    {
+      "label": "db-states-postgresql",
+      "name": "@iobroker/db-states-postgresql",
+      "version": "0.1.0-dev.1",
+      "archive": "iobroker-db-states-postgresql-0.1.0-dev.1.tgz",
+      "sha256": "33d9aa48c61f647601f485fa0660b8672ebb42637a012e6a151585133cfabb5f",
+      "integrity": "sha512-oV6bz4s2YCqU8nGeDXMLKxdljkSGUQSbzXVAt2TtM9mf13hZfx430Oc5a/vAqIZTac9Vj4JA7Nx/niih67vNnQ==",
+      "snapshot": {
+        "files": 3,
+        "bytes": 27444
+      }
+    }
+  ],
+  "driverLockSha256": "14be123455221a016f33ad20abf98a2f40caf5827b998969a6616226e19753c4",
+  "packageLockSha256": "022325a5d79d0cf1c077f6e512a7049126e3495c5bfeb3d2c77f8b34d662efac",
+  "controllerPackageManifest": {
+    "originalSha256": "4a96107db23638188ce1efcecb356bae6f0bc591659bbd3212fb9d8379cfa507",
+    "sha256": "1f7fec03f3da55b881cc7eb8880e44dca7cff070a54b6291d020986e5955be0f",
+    "change": "exact private PostgreSQL backend dependencies added; controller executable patches unchanged"
+  },
+  "controllerProfile": {
+    "schemaVersion": 1,
+    "kind": "eos-controller-profile-verification",
+    "controllerVersion": "7.2.2",
+    "productionApproved": false,
+    "admittedAdapters": [
+      {
+        "package": "iobroker.eos-admin",
+        "version": "7.10.11",
+        "main": "build/main.js"
+      },
+      {
+        "package": "iobroker.nexowatt-ui",
+        "version": "1.0.21",
+        "main": "main.js"
+      }
+    ],
+    "files": [
+      {
+        "relativePath": "node_modules/iobroker.js-controller/build/cjs/main.js",
+        "sha256": "88803fafbf1d6138337544dc6ecc0c2820cc08a992c2e8f087ebaf76645ff272"
+      },
+      {
+        "relativePath": "node_modules/iobroker.js-controller/build/esm/main.js",
+        "sha256": "53ad6e620d7ffc78b72f9eb827701d4df47f2db0f143a7031f0c8529c26a462a"
+      },
+      {
+        "relativePath": "node_modules/@iobroker/js-controller-cli/build/cjs/lib/setup.js",
+        "sha256": "ab657dc3b539fe897edea27e9a0716c1050727ccc60a607140013e28ebc4a8af"
+      },
+      {
+        "relativePath": "node_modules/@iobroker/js-controller-cli/build/esm/lib/setup.js",
+        "sha256": "b4d161ab712290b45976c285ff4d7dace2a7b0474cafeed6d06046390ca2a17d"
+      },
+      {
+        "relativePath": "node_modules/@iobroker/js-controller-cli/build/cjs/lib/setup/setupInstall.js",
+        "sha256": "25ed684042d19835d41eba0949ec2031fbad1ed52c5a8ae419bd29d6e381b972"
+      },
+      {
+        "relativePath": "node_modules/@iobroker/js-controller-cli/build/esm/lib/setup/setupInstall.js",
+        "sha256": "38f962b040d135bd168daa6f74f968a4a3bf1010d6d15a6825b6186c2665c584"
+      },
+      {
+        "relativePath": "node_modules/iobroker.js-controller/eos-test-profile.cjs",
+        "sha256": "cb6e4c96f262843bc6525c220068830ab7f70e9778bd401e94097c57b4a168c5"
+      },
+      {
+        "relativePath": "node_modules/iobroker.js-controller/tmp/.eos-readonly",
+        "sha256": "e9c485a98e79413a77dcd54dbe51632ec763c0c64c3a2e66dfee80e25022772a"
+      },
+      {
+        "relativePath": "node_modules/iobroker.js-controller/eos-test-profile.json",
+        "sha256": "5c936a625beda84b7a6b61828c6469df8bea369558cfbd1b317a6ee6eccbabf8"
+      },
+      {
+        "relativePath": "node_modules/@iobroker/ws-server/build/index.js",
+        "sha256": "f88d1bcf2344c1c3e404b47abc8f03fceffc8b236ca97f008bd2bbac635ba9e0"
+      }
+    ]
+  },
+  "targetExecutionPerformed": false,
+  "productionApproved": false
+}

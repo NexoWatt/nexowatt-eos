@@ -1,0 +1,60 @@
+{
+  "version": "0.7.58",
+  "purpose": "Dokumentierte Regression-Cases für die spätere TypeScript-Migration. Noch keine produktive Testausführung.",
+  "cases": [
+    {
+      "id": "storage-split-zero-valid",
+      "description": "Getrennte Speicher-DPs liefern 0 W. 0 W ist ein gültiger Messwert und darf nicht als fehlend/stale ersetzt werden.",
+      "input": {
+        "storageChargeW": 0,
+        "storageDischargeW": 0,
+        "socPct": 44
+      },
+      "expected": {
+        "chargeW": 0,
+        "dischargeW": 0,
+        "source": "split"
+      }
+    },
+    {
+      "id": "storage-signed-charge",
+      "description": "Signed Speicher-DP < 0 bedeutet Laden.",
+      "input": {
+        "storageSignedW": -1800,
+        "socPct": 44
+      },
+      "expected": {
+        "chargeW": 1800,
+        "dischargeW": 0,
+        "source": "signed"
+      }
+    },
+    {
+      "id": "storage-signed-discharge",
+      "description": "Signed Speicher-DP > 0 bedeutet Entladen.",
+      "input": {
+        "storageSignedW": 1200,
+        "socPct": 44
+      },
+      "expected": {
+        "chargeW": 0,
+        "dischargeW": 1200,
+        "source": "signed"
+      }
+    },
+    {
+      "id": "storage-calculated-only-with-real-load",
+      "description": "Rechen-Fallback darf nur greifen, wenn kein Speicher-DP gemappt ist und ein echter Verbrauchswert vorhanden ist.",
+      "input": {
+        "pvW": 6500,
+        "gridExportW": 2000,
+        "loadW": 1700,
+        "socPct": 44,
+        "storageDpConfigured": false
+      },
+      "expected": {
+        "source": "calculated"
+      }
+    }
+  ]
+}

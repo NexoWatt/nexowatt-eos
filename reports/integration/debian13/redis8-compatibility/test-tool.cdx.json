@@ -1,0 +1,94 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-01T18:17:04.239998+00:00",
+    "component": {
+      "type": "application",
+      "name": "eos-isolated-redis8-compatibility-lab",
+      "version": "1",
+      "bom-ref": "eos-redis8-lab"
+    },
+    "properties": [
+      {
+        "name": "eos:sbom:scope",
+        "value": "test-tool-only-not-distributed-product-or-target-host-inventory"
+      },
+      {
+        "name": "eos:deployment:approved",
+        "value": "false"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "application",
+      "name": "redis-server",
+      "version": "8.0.2",
+      "bom-ref": "redis8-debian-source-local-x64-build",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a2ba3ad1e19c949e771afe74fa72f5e8411e78636a785036170d012be9a6029c"
+        }
+      ],
+      "properties": [
+        {
+          "name": "eos:debian:source-version",
+          "value": "5:8.0.2-3+deb13u2"
+        },
+        {
+          "name": "eos:build:platform",
+          "value": "Ubuntu 24.04 x64; BUILD_TLS=yes MALLOC=libc; not Debian ARM64 package"
+        },
+        {
+          "name": "eos:source:archive-sha256",
+          "value": "caf3c0069f06fc84c5153bd2a348b204c578de80490c73857bee01d9b5d7401f"
+        },
+        {
+          "name": "eos:source:debian-patches-sha256",
+          "value": "3384f3beb64638c62b48219c856a7a7424325a08800fd9ba070fb8bf205bfc09"
+        },
+        {
+          "name": "eos:license:review",
+          "value": "Redis8 alternative licenses require product review; no product license selection made"
+        },
+        {
+          "name": "eos:deployment:status",
+          "value": "blocked-CVE-2026-81934"
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "advisories",
+          "url": "https://security-tracker.debian.org/tracker/CVE-2026-81934"
+        },
+        {
+          "type": "distribution",
+          "url": "https://deb.debian.org/debian/pool/main/r/redis/"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "eos-redis8-lab",
+      "dependsOn": [
+        "redis8-debian-source-local-x64-build"
+      ]
+    },
+    {
+      "ref": "redis8-debian-source-local-x64-build",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "incomplete",
+      "assemblies": [
+        "eos-redis8-lab"
+      ]
+    }
+  ]
+}

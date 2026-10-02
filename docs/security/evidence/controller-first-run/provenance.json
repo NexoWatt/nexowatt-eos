@@ -1,0 +1,31 @@
+{
+  "scope": "Read-only source review and two isolated reproductions of original Admin methods; not successful security remediation",
+  "controller": {
+    "repository": "https://github.com/ioBroker/ioBroker.js-controller",
+    "version": "7.2.2",
+    "commit": "88516d65367580088327214bd9decedca77beea7"
+  },
+  "admin": {
+    "repository": "https://github.com/ioBroker/ioBroker.admin",
+    "version": "8.0.14",
+    "commit": "e4b39b810f5f12cd6e969e25a39ff6f3188a6608"
+  },
+  "npm_dist_tags_at_2026_09_30": {
+    "iobroker.js-controller": {
+      "stable": "7.2.2",
+      "latest": "7.2.3"
+    },
+    "iobroker.admin": {
+      "stable": "8.0.14",
+      "latest": "8.0.21"
+    }
+  },
+  "stable_repository_list_blob": "225e40b43ce79b06b60690b3918028cf4fecdeee",
+  "reproduce": "node docs/security/evidence/controller-first-run/reproduce.cjs",
+  "transformations": "Only original onChange method body is executed; TypeScript as string casts removed; synthetic state and callback; root-level shallow merge modeled as in BaseSettingsDialog; no browser/network/services",
+  "licenses": [
+    "LICENSE.ioBroker.admin.txt",
+    "LICENSE.ioredis.txt"
+  ],
+  "excerpt_count": 2
+}

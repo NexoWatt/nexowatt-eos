@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "documentId": "EOS-INTEGRATION-EEBUS-OCPP-20260930",
+  "date": "2026-09-30",
+  "status": "source-only-with-isolated-reproductions",
+  "productCodeChanged": false,
+  "hardwareTested": false,
+  "productConformityDeclared": false,
+  "components": [
+    {
+      "id": "eebus",
+      "repository": "https://github.com/NexoWatt/ioBroker.eebus",
+      "commit": "1c0eb410d516b90d60f6e475e6822bf5836bfd66",
+      "packageName": "iobroker.eebus",
+      "version": "0.3.0",
+      "nodeRange": ">=20",
+      "controllerRange": ">=6.0.11",
+      "globalDependencies": [
+        {
+          "admin": ">=7.7.22"
+        }
+      ],
+      "declaredLicense": "SEE LICENSE IN LICENSE",
+      "sourceAcquired": true,
+      "installedOnTarget": null,
+      "activeOnTarget": null,
+      "productApproved": false,
+      "status": "source-only",
+      "fileSha256": {
+        "package.json": "a5e7312d0e60fcc980df04d4948d5be1c73b3f79b421982457cc6169b13691a1",
+        "io-package.json": "731e06a1f93b954000d45c2a471724ec8904d9fd13448b5cfb5a278d52c3e2c2",
+        "package-lock.json": "ff6489f8307e6734d434d6201af83f3b7792d25650ee0b409cb7262dfe7bb079"
+      },
+      "runtimeDependencyRanges": {
+        "@iobroker/adapter-core": "^3.3.2",
+        "bonjour-service": "^1.3.0",
+        "ws": "^8.20.0"
+      },
+      "lockfilePresent": true,
+      "lockfileConsistent": false
+    },
+    {
+      "id": "ocpp21",
+      "repository": "https://github.com/NexoWatt/iobroker.ocpp21",
+      "commit": "ca55a1596e16ba814399de3a781c16d6d61e0f04",
+      "packageName": "iobroker.ocpp21",
+      "version": "0.4.0",
+      "nodeRange": ">=20",
+      "controllerRange": ">=6.0.0",
+      "globalDependencies": [],
+      "declaredLicense": "MIT",
+      "sourceAcquired": true,
+      "installedOnTarget": null,
+      "activeOnTarget": null,
+      "productApproved": false,
+      "status": "source-only",
+      "fileSha256": {
+        "package.json": "3b7f1db9e4d500f456629d778297923501bb7f05d8e3160ce4e197a01dc422a2",
+        "io-package.json": "dd92a084e3e7db2d68c119ff5c0179d14d7cd09534d3fabf625a9dcfe4a98310"
+      },
+      "runtimeDependencyRanges": {
+        "@iobroker/adapter-core": "^3.1.0",
+        "ocpp-rpc": "^2.0.0"
+      },
+      "lockfilePresent": false,
+      "lockfileConsistent": null
+    }
+  ],
+  "findings": [
+    {
+      "id": "EOS-INT-EEBUS-001",
+      "componentIds": [
+        "eebus"
+      ],
+      "title": "Ausgehende Discovery-Identität nicht ans Peerzertifikat gebunden",
+      "priority": "P1",
+      "status": "open",
+      "evidenceType": "source-and-isolated-reproduction",
+      "evidence": [
+        "src/lib/discoveryService.ts:68-98",
+        "src/lib/shipEndpoint.ts:133-166",
+        "src/lib/eebusRuntime.ts:1032-1038"
+      ],
+      "attackPreconditions": "Discovery/Verbindungsziel im erreichbaren Gerätenetz beeinflussbar; Nachahmung bekannter Kennung nach Trennung möglich",
+      "impact": "Verschlüsselte Verbindung kann falscher Geräteidentität zugeordnet werden; reale Regelwirkung nicht getestet",
+      "requiredAction": "SHIP-konforme Zertifikats-/SKI-Bindung, erlaubte Wiederverbindung und Zertifikatsrotation nachweisen",
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "retestStatus": "not-executed",
+      "ownerRole": "NexoWatt component maintainer / system integration",
+      "targetDate": null,
+      "releaseDecision": "requires-resolution-or-explicit-applicability-review",
+      "cve": null
+    },
+    {
+      "id": "EOS-INT-EEBUS-002",
+      "componentIds": [
+        "eebus"
+      ],
+      "title": "Verarbeitung vor abgeschlossenem Pairing möglich",
+      "priority": "P1",
+      "status": "open",
+      "evidenceType": "source-and-isolated-reproduction",
+      "evidence": [
+        "src/lib/shipEndpoint.ts:323-340",
+        "src/lib/shipEndpoint.ts:378-395",
+        "src/lib/shipEndpoint.ts:451-455",
+        "src/lib/eebusRuntime.ts:345-381",
+        "src/lib/eebusRuntime.ts:406-422"
+      ],
+      "attackPreconditions": "Zugriff auf SHIP-Verbindung; Nutzdaten oder unzulässige Control-Reihenfolge",
+      "impact": "Data-Weiterleitung und paired-data-exchange vor Trust möglich; gesonderter CLS-Trustcheck bleibt bestehen, daher kein pauschaler CLS-Bypass nachgewiesen",
+      "requiredAction": "Explizite Zustandsmaschine und Trust-Gate vor Nutzdatenverarbeitung; falsche Reihenfolge und unbekannte Peers testen",
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "Denial of Service"
+      ],
+      "retestStatus": "not-executed",
+      "ownerRole": "NexoWatt component maintainer / system integration",
+      "targetDate": null,
+      "releaseDecision": "requires-resolution-or-explicit-applicability-review",
+      "cve": null
+    },
+    {
+      "id": "EOS-INT-OCPP-001",
+      "componentIds": [
+        "ocpp21"
+      ],
+      "title": "Stationsidentität ohne Besitznachweis akzeptiert",
+      "priority": "P1",
+      "status": "open",
+      "evidenceType": "source-and-isolated-reproduction",
+      "evidence": [
+        "ocpp/server.js:19-30",
+        "io-package.json:174"
+      ],
+      "attackPreconditions": "Netzzugriff auf OCPP-Endpunkt",
+      "impact": "Freie URL-Identität wird als Stationsidentität akzeptiert, auch bei passendem Allowlist-Eintrag; konkrete Sitzungs-/Regelwirkung nicht getestet",
+      "requiredAction": "Individuelle Credentials oder Clientzertifikate sowie Bindung an Stations-ID und Enrollment implementieren",
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "retestStatus": "not-executed",
+      "ownerRole": "NexoWatt component maintainer / system integration",
+      "targetDate": null,
+      "releaseDecision": "requires-resolution-or-explicit-applicability-review",
+      "cve": null
+    },
+    {
+      "id": "EOS-INT-OCPP-002",
+      "componentIds": [
+        "ocpp21"
+      ],
+      "title": "Direkter Endpunkt ohne konfigurierte TLS-Schicht auf allen IPv4-Adressen",
+      "priority": "P1",
+      "status": "open",
+      "evidenceType": "source-and-isolated-reproduction",
+      "evidence": [
+        "ocpp/server.js:12-17",
+        "ocpp/server.js:37-39",
+        "main.js:1801-1802",
+        "README.de.md:162"
+      ],
+      "attackPreconditions": "Direkter Adapterendpunkt erreichbar; externer abgesicherter Proxy nicht nachgewiesen",
+      "impact": "Dokumentierter direkter WS-Kanal bietet keine im Adapter konfigurierte Transportverschlüsselung",
+      "requiredAction": "WSS und Stationsauthentifizierung integrieren, Bindung/Firewall begrenzen, Proxy-Strecke vollständig absichern",
+      "stride": [
+        "Information Disclosure",
+        "Tampering",
+        "Spoofing"
+      ],
+      "retestStatus": "not-executed",
+      "ownerRole": "NexoWatt component maintainer / system integration",
+      "targetDate": null,
+      "releaseDecision": "requires-resolution-or-explicit-applicability-review",
+      "cve": null
+    },
+    {
+      "id": "EOS-INT-OCPP-003",
+      "componentIds": [
+        "ocpp21"
+      ],
+      "title": "OCPP strictMode beim Start abgeschaltet",
+      "priority": "P2",
+      "status": "open",
+      "evidenceType": "source-confirmed",
+      "evidence": [
+        "main.js:1801",
+        "ocpp/server.js:14"
+      ],
+      "attackPreconditions": "Verarbeitung eingehender OCPP-Nachrichten",
+      "impact": "Vollständige Schema-Strenge nicht eingeschaltet; vorhandene fachliche Prüfungen dadurch nicht pauschal widerlegt",
+      "requiredAction": "Schema-/Semantikprüfung und Ressourcenlimits je Protokollversion nachweisen",
+      "stride": [
+        "Tampering",
+        "Denial of Service"
+      ],
+      "retestStatus": "not-executed",
+      "ownerRole": "NexoWatt component maintainer / system integration",
+      "targetDate": null,
+      "releaseDecision": "requires-resolution-or-explicit-applicability-review",
+      "cve": null
+    },
+    {
+      "id": "EOS-INT-OCPP-004",
+      "componentIds": [
+        "ocpp21"
+      ],
+      "title": "Authorize gibt unbekannte RFID-/Tokenwerte pauschal frei",
+      "priority": "P1-if-user-access-control-required",
+      "status": "open",
+      "evidenceType": "source-confirmed",
+      "evidence": [
+        "ocpp/v16.js:83-87",
+        "ocpp/v2base.js:86-92"
+      ],
+      "attackPreconditions": "Ladestation fragt Benutzer-/RFID-Freigabe an und erwartet CSMS-Berechtigungsentscheidung",
+      "impact": "Keine selektive RFID-/Token-Zugangskontrolle in diesen Handlern; Free-Charging-Absicht zu klären",
+      "requiredAction": "Betriebsmodus und rollenberechtigte Freigaberegel implementieren und Ladeabläufe kompatibel migrieren",
+      "stride": [
+        "Spoofing",
+        "Elevation of Privilege"
+      ],
+      "retestStatus": "not-executed",
+      "ownerRole": "NexoWatt component maintainer / system integration",
+      "targetDate": null,
+      "releaseDecision": "requires-resolution-or-explicit-applicability-review",
+      "cve": null
+    },
+    {
+      "id": "EOS-INT-SUPPLY-001",
+      "componentIds": [
+        "eebus",
+        "ocpp21"
+      ],
+      "title": "Abhängigkeitsstände nicht konsistent reproduzierbar aufgelöst",
+      "priority": "P2",
+      "status": "open",
+      "evidenceType": "source-confirmed",
+      "evidence": [
+        "eebus/package-lock.json:1-18",
+        "eebus/package.json:65-84",
+        "ocpp21/package.json:39-45"
+      ],
+      "attackPreconditions": "Build oder Installation anhand Versionsbereichen/veralteter Auflösung",
+      "impact": "EEBUS Lockfile passt nicht zum Manifest und enthält bonjour-service/ws nicht; OCPP Lockfile fehlt; vollständige Build-SBOM unbekannt",
+      "requiredAction": "Getrennten Build mit überprüften Integritäten, konsistentem Lockfile und artefaktgebundener SBOM herstellen",
+      "stride": [
+        "Tampering"
+      ],
+      "retestStatus": "not-executed",
+      "ownerRole": "NexoWatt component maintainer / system integration",
+      "targetDate": null,
+      "releaseDecision": "requires-resolution-or-explicit-applicability-review",
+      "cve": null
+    }
+  ],
+  "integrationGaps": [
+    {
+      "id": "EOS-GAP-PROTO-LICENSE",
+      "state": "not-found-in-reviewed-runtime-paths",
+      "detail": "Keine zentrale EOS-Entitlementprüfung in gelesenen EEBUS-/OCPP-Laufzeitpfaden; Suchbegriffauswahl und Quellreview sind kein vollständiger Negativbeweis."
+    },
+    {
+      "id": "EOS-GAP-PROTO-BUS",
+      "state": "requires-controller-integration",
+      "detail": "EEBUS UI-Bridge nutzt ioBroker sendTo; Transportverschlüsselung und Autorisierung hängen am konkret konfigurierten Controller/DB-System."
+    },
+    {
+      "id": "EOS-GAP-EEBUS-KEYSTORE",
+      "state": "not-tested",
+      "detail": "encryptedNative/protectedNative deklariert; tatsächliche Verschlüsselung nach setForeignObjectAsync, Neustart und Backup/Restore am fixierten Controller prüfen."
+    },
+    {
+      "id": "EOS-GAP-EEBUS-TLS",
+      "state": "profile-review-open",
+      "detail": "SHIP erlaubt TLS>=1.2. Geräteprofil und aktuelle SHIP-Anforderungen prüfen; nicht pauschal als unsicher einstufen oder ungeprüft auf TLS1.3 zwingen."
+    }
+  ],
+  "tests": {
+    "environment": {
+      "node": "v24.19.0",
+      "architecture": "workspace-only-not-rpi",
+      "productInstalled": false,
+      "realNetworkListeners": false,
+      "typescriptMechanism": "node:module stripTypeScriptTypes mode transform, experimental; controlled VM loader; no full tsc build"
+    },
+    "runs": [
+      {
+        "id": "EOS-PROTO-SOURCE-REPRO",
+        "command": "node --test --test-reporter=tap audit/protocol-review/source-behavior.test.cjs",
+        "passed": 7,
+        "failed": 0,
+        "meaning": "Six undesired-source-behavior reproductions and one existing-denial control; passed does not mean secure",
+        "log": "audit/protocol-review/source-behavior.tap",
+        "script": "audit/protocol-review/source-behavior.test.cjs"
+      },
+      {
+        "id": "EOS-OCPP-CORE-BASELINE",
+        "command": "node --test --test-reporter=tap component-sources/ocpp21/test/core.test.js",
+        "passed": 25,
+        "failed": 0,
+        "meaning": "Existing pure core/mock-handler suite; no complete adapter integration",
+        "log": "audit/protocol-review/ocpp-core.tap"
+      }
+    ],
+    "open": [
+      "full-eebus-build",
+      "npm-controller-integration",
+      "real-SHIP-pairing-and-certificate-negative-tests",
+      "OCPP-TLS-station-auth",
+      "message-schema-fuzz-resource-limits",
+      "controller-DB-TLS-and-ACL",
+      "license-entitlement-bridge",
+      "key-at-rest-backup-restore",
+      "ARM64-RPi5-8GB-16GB-load",
+      "real-station-and-CLS-failsafe",
+      "independent-penetration-test"
+    ]
+  },
+  "report": "docs/integration/EEBUS_OCPP_REVIEW.md"
+}

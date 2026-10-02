@@ -1,0 +1,928 @@
+TAP version 13
+# Subtest: real TLS1.3 mutual channel reads only public state fields
+ok 1 - real TLS1.3 mutual channel reads only public state fields
+  ---
+  duration_ms: 56.330317
+  type: 'test'
+  ...
+# Subtest: separate certificates send/receive authenticated messages, with no sender spoofing
+ok 2 - separate certificates send/receive authenticated messages, with no sender spoofing
+  ---
+  duration_ms: 31.799358
+  type: 'test'
+  ...
+# Subtest: telemetry writes force ack=true and server-derived sender identity
+ok 3 - telemetry writes force ack=true and server-derived sender identity
+  ---
+  duration_ms: 25.946922
+  type: 'test'
+  ...
+# Subtest: logic writes only a bounded request namespace, ack=false
+ok 4 - logic writes only a bounded request namespace, ack=false
+  ---
+  duration_ms: 21.559622
+  type: 'test'
+  ...
+# Subtest: invalid control value -1 is denied before backend
+ok 5 - invalid control value -1 is denied before backend
+  ---
+  duration_ms: 8.462591
+  type: 'test'
+  ...
+# Subtest: invalid control value 4201 is denied before backend
+ok 6 - invalid control value 4201 is denied before backend
+  ---
+  duration_ms: 8.853247
+  type: 'test'
+  ...
+# Subtest: invalid control value "100" is denied before backend
+ok 7 - invalid control value "100" is denied before backend
+  ---
+  duration_ms: 21.666086
+  type: 'test'
+  ...
+# Subtest: invalid control value null is denied before backend
+ok 8 - invalid control value null is denied before backend
+  ---
+  duration_ms: 9.743055
+  type: 'test'
+  ...
+# Subtest: invalid control value {"val":100} is denied before backend
+ok 9 - invalid control value {"val":100} is denied before backend
+  ---
+  duration_ms: 9.191166
+  type: 'test'
+  ...
+# Subtest: private data, unknown message commands and host messages are denied
+ok 10 - private data, unknown message commands and host messages are denied
+  ---
+  duration_ms: 15.070793
+  type: 'test'
+  ...
+# Subtest: additional identity fields cannot replace authenticated sender
+ok 11 - additional identity fields cannot replace authenticated sender
+  ---
+  duration_ms: 14.923962
+  type: 'test'
+  ...
+# Subtest: valid CA certificate without policy pin is denied
+ok 12 - valid CA certificate without policy pin is denied
+  ---
+  duration_ms: 5.10974
+  type: 'test'
+  ...
+# Subtest: expired certificate cannot authenticate
+ok 13 - expired certificate cannot authenticate
+  ---
+  duration_ms: 4.806906
+  type: 'test'
+  ...
+# Subtest: no client certificate cannot authenticate
+ok 14 - no client certificate cannot authenticate
+  ---
+  duration_ms: 3.70566
+  type: 'test'
+  ...
+# Subtest: wrong server name fails certificate verification
+ok 15 - wrong server name fails certificate verification
+  ---
+  duration_ms: 5.267558
+  type: 'test'
+  ...
+# Subtest: wrong trust anchor fails certificate verification
+ok 16 - wrong trust anchor fails certificate verification
+  ---
+  duration_ms: 3.508835
+  type: 'test'
+  ...
+# Subtest: TLS1.2 is rejected instead of downgraded
+ok 17 - TLS1.2 is rejected instead of downgraded
+  ---
+  duration_ms: 2.10223
+  type: 'test'
+  ...
+# Subtest: plaintext HTTP is refused
+ok 18 - plaintext HTTP is refused
+  ---
+  duration_ms: 8.582321
+  type: 'test'
+  ...
+# Subtest: replayed RPC identifier cannot perform a second write
+ok 19 - replayed RPC identifier cannot perform a second write
+  ---
+  duration_ms: 15.053513
+  type: 'test'
+  ...
+# Subtest: expired or future-dated requests never reach backend
+ok 20 - expired or future-dated requests never reach backend
+  ---
+  duration_ms: 10.843509
+  type: 'test'
+  ...
+# Subtest: expired queued messages are discarded before delivery
+ok 21 - expired queued messages are discarded before delivery
+  ---
+  duration_ms: 165.067595
+  type: 'test'
+  ...
+# Subtest: bounded mailbox rejects overflow and does not silently replace messages
+ok 22 - bounded mailbox rejects overflow and does not silently replace messages
+  ---
+  duration_ms: 128.413081
+  type: 'test'
+  ...
+# Subtest: policy revocation also invalidates live sessions and queued commands
+ok 23 - policy revocation also invalidates live sessions and queued commands
+  ---
+  duration_ms: 17.375207
+  type: 'test'
+  ...
+# Subtest: policy changes during asynchronous work deny its late completion
+ok 24 - policy changes during asynchronous work deny its late completion
+  ---
+  duration_ms: 7.752943
+  type: 'test'
+  ...
+# Subtest: unknown operations and oversized requests are rejected
+ok 25 - unknown operations and oversized requests are rejected
+  ---
+  duration_ms: 7.509258
+  type: 'test'
+  ...
+# Subtest: malformed backend values fail closed and backend error content is hidden
+ok 26 - malformed backend values fail closed and backend error content is hidden
+  ---
+  duration_ms: 7.043217
+  type: 'test'
+  ...
+# Subtest: client budgets the full session plus RPC to five seconds and does not retry
+ok 27 - client budgets the full session plus RPC to five seconds and does not retry
+  ---
+  duration_ms: 5003.466747
+  type: 'test'
+  ...
+# Subtest: closed clients cannot create another socket
+ok 28 - closed clients cannot create another socket
+  ---
+  duration_ms: 1.534646
+  type: 'test'
+  ...
+# Subtest: policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers
+ok 29 - policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers
+  ---
+  duration_ms: 0.434604
+  type: 'test'
+  ...
+# Subtest: strict request parser rejects duplicate keys, non-finite numbers and excess nesting
+ok 30 - strict request parser rejects duplicate keys, non-finite numbers and excess nesting
+  ---
+  duration_ms: 15.599006
+  type: 'test'
+  ...
+# Subtest: new gateway epoch rejects a request from an earlier service instance
+ok 31 - new gateway epoch rejects a request from an earlier service instance
+  ---
+  duration_ms: 9.311642
+  type: 'test'
+  ...
+# Subtest: null state remains null and is not reinterpreted as a zero reading
+ok 32 - null state remains null and is not reinterpreted as a zero reading
+  ---
+  duration_ms: 7.277368
+  type: 'test'
+  ...
+# Subtest: rate limiting bounds authenticated requests
+ok 33 - rate limiting bounds authenticated requests
+  ---
+  duration_ms: 240.841807
+  type: 'test'
+  ...
+# Subtest: client concurrent calls are bounded and cancelled on close
+ok 34 - client concurrent calls are bounded and cancelled on close
+  ---
+  duration_ms: 8.331603
+  type: 'test'
+  ...
+# Subtest: pin cannot authenticate a different certificate subject
+ok 35 - pin cannot authenticate a different certificate subject
+  ---
+  duration_ms: 4.234646
+  type: 'test'
+  ...
+# Subtest: Objects loads as client-only PostgreSQL backend and preserves CRUD callbacks
+ok 36 - Objects loads as client-only PostgreSQL backend and preserves CRUD callbacks
+  ---
+  duration_ms: 12.403083
+  type: 'test'
+  ...
+# Subtest: denied global write cannot mutate, publish or call callback twice (F01 regression)
+ok 37 - denied global write cannot mutate, publish or call callback twice (F01 regression)
+  ---
+  duration_ms: 2.30868
+  type: 'test'
+  ...
+# Subtest: per-object deny overrides global write and supplied forged ACL/groups
+ok 38 - per-object deny overrides global write and supplied forged ACL/groups
+  ---
+  duration_ms: 2.413628
+  type: 'test'
+  ...
+# Subtest: current group rights and enabled flag are refreshed without stale upstream ACL cache
+ok 39 - current group rights and enabled flag are refreshed without stale upstream ACL cache
+  ---
+  duration_ms: 1.703981
+  type: 'test'
+  ...
+# Subtest: owner cannot change object ACL to gain broader access or alter users without users rights
+ok 40 - owner cannot change object ACL to gain broader access or alter users without users rights
+  ---
+  duration_ms: 5.031924
+  type: 'test'
+  ...
+# Subtest: prototype-sensitive and cyclic object payloads fail before writes
+ok 41 - prototype-sensitive and cyclic object payloads fail before writes
+  ---
+  duration_ms: 0.846312
+  type: 'test'
+  ...
+# Subtest: exact reviewed built-in views work and appended executable map text fails closed
+ok 42 - exact reviewed built-in views work and appended executable map text fails closed
+  ---
+  duration_ms: 2.184393
+  type: 'test'
+  ...
+# Subtest: built-in custom and instanceStats views preserve projected values
+ok 43 - built-in custom and instanceStats views preserve projected values
+  ---
+  duration_ms: 0.250667
+  type: 'test'
+  ...
+# Subtest: file binary and metadata remain readable through original file API
+ok 44 - file binary and metadata remain readable through original file API
+  ---
+  duration_ms: 3.674974
+  type: 'test'
+  ...
+# Subtest: transaction rollback leaves no partial object or publish when publish fails
+ok 45 - transaction rollback leaves no partial object or publish when publish fails
+  ---
+  duration_ms: 0.949647
+  type: 'test'
+  ...
+# Subtest: system subscriptions, owner lease and release notification use store APIs without Lua
+ok 46 - system subscriptions, owner lease and release notification use store APIs without Lua
+  ---
+  duration_ms: 1.39734
+  type: 'test'
+  ...
+# Subtest: user subscriptions check fresh read ACL for every event
+ok 47 - user subscriptions check fresh read ACL for every event
+  ---
+  duration_ms: 1.724922
+  type: 'test'
+  ...
+# Subtest: system subscription path cannot bypass an explicit user context
+ok 48 - system subscription path cannot bypass an explicit user context
+  ---
+  duration_ms: 1.062698
+  type: 'test'
+  ...
+# Subtest: mutating ACL while a writer waits cannot bypass serialized fresh authorization
+ok 49 - mutating ACL while a writer waits cannot bypass serialized fresh authorization
+  ---
+  duration_ms: 0.914535
+  type: 'test'
+  ...
+# Subtest: file bytes and metadata roll back together on metadata failure
+ok 50 - file bytes and metadata roll back together on metadata failure
+  ---
+  duration_ms: 0.822115
+  type: 'test'
+  ...
+# Subtest: readonly file user cannot force a write with supplied privilege metadata
+ok 51 - readonly file user cannot force a write with supplied privilege metadata
+  ---
+  duration_ms: 1.365723
+  type: 'test'
+  ...
+# Subtest: unknown view and database wipe require explicit supported authority
+ok 52 - unknown view and database wipe require explicit supported authority
+  ---
+  duration_ms: 1.082757
+  type: 'test'
+  ...
+# Subtest: bulk reads and keys do not inherit the nonadministrator group bypass
+ok 53 - bulk reads and keys do not inherit the nonadministrator group bypass
+  ---
+  duration_ms: 1.839725
+  type: 'test'
+  ...
+# Subtest: nonadministrator file rename and recursive operations fail before protected target changes
+ok 54 - nonadministrator file rename and recursive operations fail before protected target changes
+  ---
+  duration_ms: 1.511362
+  type: 'test'
+  ...
+# Subtest: protocol drift invalidates client so subsequent writes fail closed
+ok 55 - protocol drift invalidates client so subsequent writes fail closed
+  ---
+  duration_ms: 0.334343
+  type: 'test'
+  ...
+# Subtest: malformed event and excessive queued bytes invalidate the connection
+ok 56 - malformed event and excessive queued bytes invalidate the connection
+  ---
+  duration_ms: 0.45927
+  type: 'test'
+  ...
+# Subtest: qualified bulk-read compatibility flag and callback retain namespace contract
+ok 57 - qualified bulk-read compatibility flag and callback retain namespace contract
+  ---
+  duration_ms: 1.101807
+  type: 'test'
+  ...
+# Subtest: empty and oversized subscription batches reject instead of leaving callbacks pending
+ok 58 - empty and oversized subscription batches reject instead of leaving callbacks pending
+  ---
+  duration_ms: 0.370698
+  type: 'test'
+  ...
+# Subtest: unlink and delFile cannot bypass recursive deletion guard through inherited helper
+ok 59 - unlink and delFile cannot bypass recursive deletion guard through inherited helper
+  ---
+  duration_ms: 1.517451
+  type: 'test'
+  ...
+# Subtest: bounded wildcard matching preserves Redis classes, escapes and UTF-8 identifiers
+ok 60 - bounded wildcard matching preserves Redis classes, escapes and UTF-8 identifiers
+  ---
+  duration_ms: 22.442975
+  type: 'test'
+  ...
+# Subtest: plugin exports native backend identity and complete inspected 7.2.2 API
+ok 61 - plugin exports native backend identity and complete inspected 7.2.2 API
+  ---
+  duration_ms: 4.933806
+  type: 'test'
+  ...
+# Subtest: setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input
+ok 62 - setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input
+  ---
+  duration_ms: 2.192916
+  type: 'test'
+  ...
+# Subtest: primitive values, explicit lc/q and Async aliases preserve contract
+ok 63 - primitive values, explicit lc/q and Async aliases preserve contract
+  ---
+  duration_ms: 3.224938
+  type: 'test'
+  ...
+# Subtest: ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound
+ok 64 - ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound
+  ---
+  duration_ms: 1.624542
+  type: 'test'
+  ...
+# Subtest: raw restore keeps exact JSON and emits no event
+ok 65 - raw restore keeps exact JSON and emits no event
+  ---
+  duration_ms: 6.311156
+  type: 'test'
+  ...
+# Subtest: system/user subscription isolation, wildcards and unsubscribe
+ok 66 - system/user subscription isolation, wildcards and unsubscribe
+  ---
+  duration_ms: 1.785284
+  type: 'test'
+  ...
+# Subtest: escaped glob literals and negated classes do not become regular-expression expressions
+ok 67 - escaped glob literals and negated classes do not become regular-expression expressions
+  ---
+  duration_ms: 1.398302
+  type: 'test'
+  ...
+# Subtest: state deletion and TTL expiration emit null; reads exclude expired values
+ok 68 - state deletion and TTL expiration emit null; reads exclude expired values
+  ---
+  duration_ms: 4.012581
+  type: 'test'
+  ...
+# Subtest: sessions expire, can be destroyed, and retain upstream one-argument success callback
+ok 69 - sessions expire, can be destroyed, and retain upstream one-argument success callback
+  ---
+  duration_ms: 2.602763
+  type: 'test'
+  ...
+# Subtest: messages/logs preserve prefixed channels and event buffers, without storing/replaying commands
+ok 70 - messages/logs preserve prefixed channels and event buffers, without storing/replaying commands
+  ---
+  duration_ms: 1.555629
+  type: 'test'
+  ...
+# Subtest: Buffer state read matches upstream JSON shape while change event revives Buffer
+ok 71 - Buffer state read matches upstream JSON shape while change event revives Buffer
+  ---
+  duration_ms: 1.067615
+  type: 'test'
+  ...
+# Subtest: callbacks are asynchronous and return id/error in their existing slots
+ok 72 - callbacks are asynchronous and return id/error in their existing slots
+  ---
+  duration_ms: 1.243789
+  type: 'test'
+  ...
+# Subtest: destroyDB is limited to state namespace and leaves sessions/protocol intact
+ok 73 - destroyDB is limited to state namespace and leaves sessions/protocol intact
+  ---
+  duration_ms: 1.598864
+  type: 'test'
+  ...
+# Subtest: disconnect fails writes closed and reconnect resumes live subscriptions without replay
+ok 74 - disconnect fails writes closed and reconnect resumes live subscriptions without replay
+  ---
+  duration_ms: 7.027323
+  type: 'test'
+  ...
+# Subtest: unexpected protocol version disconnects and prevents writes
+ok 75 - unexpected protocol version disconnects and prevents writes
+  ---
+  duration_ms: 0.587363
+  type: 'test'
+  ...
+# Subtest: autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error
+ok 76 - autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error
+  ---
+  duration_ms: 1.497982
+  type: 'test'
+  ...
+# Subtest: invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing
+ok 77 - invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing
+  ---
+  duration_ms: 1.237831
+  type: 'test'
+  ...
+# Subtest: bounded events reject oversized writes and preserve previous value
+ok 78 - bounded events reject oversized writes and preserve previous value
+  ---
+  duration_ms: 9.547842
+  type: 'test'
+  ...
+# Subtest: malformed stored JSON and malformed buffer event fail closed without raw diagnostics
+ok 79 - malformed stored JSON and malformed buffer event fail closed without raw diagnostics
+  ---
+  duration_ms: 2.165345
+  type: 'test'
+  ...
+# Subtest: simultaneous updates preserve latest value when later metadata-only write follows
+ok 80 - simultaneous updates preserve latest value when later metadata-only write follows
+  ---
+  duration_ms: 0.655195
+  type: 'test'
+  ...
+# Subtest: closed client cannot reopen, read, publish or write
+ok 81 - closed client cannot reopen, read, publish or write
+  ---
+  duration_ms: 0.220391
+  type: 'test'
+  ...
+# Subtest: overlapping subscriptions preserve normal duplicate delivery but expiry delivers once
+ok 82 - overlapping subscriptions preserve normal duplicate delivery but expiry delivers once
+  ---
+  duration_ms: 1.488918
+  type: 'test'
+  ...
+# Subtest: queued events are discarded across disconnect rather than executing stale commands
+ok 83 - queued events are discarded across disconnect rather than executing stale commands
+  ---
+  duration_ms: 0.711219
+  type: 'test'
+  ...
+# Subtest: event fanout and subscription count are bounded and overload disconnects visibly
+ok 84 - event fanout and subscription count are bounded and overload disconnects visibly
+  ---
+  duration_ms: 98.290659
+  type: 'test'
+  ...
+# Subtest: malformed UTF-8 stored data is rejected rather than normalized silently
+ok 85 - malformed UTF-8 stored data is rejected rather than normalized silently
+  ---
+  duration_ms: 0.59903
+  type: 'test'
+  ...
+# Subtest: namespace globs and overlapping domains are rejected before opening a store
+ok 86 - namespace globs and overlapping domains are rejected before opening a store
+  ---
+  duration_ms: 0.207783
+  type: 'test'
+  ...
+# Subtest: quote-shaped state ids remain literal data at the Store boundary
+ok 87 - quote-shaped state ids remain literal data at the Store boundary
+  ---
+  duration_ms: 0.256446
+  type: 'test'
+  ...
+# Subtest: non-ASCII ids and Redis byte-wise question-mark globs remain compatible
+ok 88 - non-ASCII ids and Redis byte-wise question-mark globs remain compatible
+  ---
+  duration_ms: 1.628238
+  type: 'test'
+  ...
+# Subtest: aggregate complex-glob work is bounded per incoming event
+ok 89 - aggregate complex-glob work is bounded per incoming event
+  ---
+  duration_ms: 1.040554
+  type: 'test'
+  ...
+# Subtest: working connection verifier requires encryption, authorization and actual TLS1.3
+ok 90 - working connection verifier requires encryption, authorization and actual TLS1.3
+  ---
+  duration_ms: 1.81662
+  type: 'test'
+  ...
+# Subtest: pre-reconnect watermark rejects retained event IDs and alternate numeric encodings
+ok 91 - pre-reconnect watermark rejects retained event IDs and alternate numeric encodings
+  ---
+  duration_ms: 8.943413
+  type: 'test'
+  ...
+# Subtest: replay remains rejected after duplicate cache eviction
+ok 92 - replay remains rejected after duplicate cache eviction
+  ---
+  duration_ms: 73.05402
+  type: 'test'
+  ...
+# Subtest: queued lower sequence cannot be delivered after newer committed notification
+ok 93 - queued lower sequence cannot be delivered after newer committed notification
+  ---
+  duration_ms: 0.384058
+  type: 'test'
+  ...
+# Subtest: notification queue preserves received order despite deferred first SQL response
+ok 94 - notification queue preserves received order despite deferred first SQL response
+  ---
+  duration_ms: 9.551627
+  type: 'test'
+  ...
+# Subtest: notification started before reconnect cannot deliver into new connection generation
+ok 95 - notification started before reconnect cannot deliver into new connection generation
+  ---
+  duration_ms: 2.578656
+  type: 'test'
+  ...
+# Subtest: duplicate and malformed notification IDs do not cause another read or delivery
+ok 96 - duplicate and malformed notification IDs do not cause another read or delivery
+  ---
+  duration_ms: 0.493282
+  type: 'test'
+  ...
+# Subtest: notification backlog over limit disconnects and drains without delivering old events
+ok 97 - notification backlog over limit disconnects and drains without delivering old events
+  ---
+  duration_ms: 4.101195
+  type: 'test'
+  ...
+# Subtest: missing retained event disconnects instead of silently treating stream as current
+ok 98 - missing retained event disconnects instead of silently treating stream as current
+  ---
+  duration_ms: 0.316827
+  type: 'test'
+  ...
+# Subtest: all outer mutation kinds share domain lock and nested mutations reuse transaction
+ok 99 - all outer mutation kinds share domain lock and nested mutations reuse transaction
+  ---
+  duration_ms: 1.004199
+  type: 'test'
+  ...
+# Subtest: actual pinned pg driver refuses password authentication despite inherited environment
+ok 100 - actual pinned pg driver refuses password authentication despite inherited environment
+  ---
+  duration_ms: 20.225151
+  type: 'test'
+  ...
+# Subtest: transaction deadline rejects hung callback, closes connection and denies its late SQL
+ok 101 - transaction deadline rejects hung callback, closes connection and denies its late SQL
+  ---
+  duration_ms: 5001.746318
+  type: 'test'
+  ...
+# Subtest: caught nested validation failure still aborts whole transaction without a partial commit
+ok 102 - caught nested validation failure still aborts whole transaction without a partial commit
+  ---
+  duration_ms: 0.576777
+  type: 'test'
+  ...
+# Subtest: repeated batch IDs cannot multiply allowed unique payload into an oversized result
+ok 103 - repeated batch IDs cannot multiply allowed unique payload into an oversized result
+  ---
+  duration_ms: 0.423767
+  type: 'test'
+  ...
+# Subtest: connection requires verified TLS1.3 mTLS with fixed time budgets
+ok 104 - connection requires verified TLS1.3 mTLS with fixed time budgets
+  ---
+  duration_ms: 11.746056
+  type: 'test'
+  ...
+# Subtest: configuration rejects cleartext
+ok 105 - configuration rejects cleartext
+  ---
+  duration_ms: 1.470871
+  type: 'test'
+  ...
+# Subtest: configuration rejects invalid cert input
+ok 106 - configuration rejects invalid cert input
+  ---
+  duration_ms: 0.2262
+  type: 'test'
+  ...
+# Subtest: configuration rejects disabled peer check
+ok 107 - configuration rejects disabled peer check
+  ---
+  duration_ms: 1.259233
+  type: 'test'
+  ...
+# Subtest: configuration rejects downgrade
+ok 108 - configuration rejects downgrade
+  ---
+  duration_ms: 0.207673
+  type: 'test'
+  ...
+# Subtest: configuration rejects custom identity verifier
+ok 109 - configuration rejects custom identity verifier
+  ---
+  duration_ms: 0.180161
+  type: 'test'
+  ...
+# Subtest: configuration rejects SNI override
+ok 110 - configuration rejects SNI override
+  ---
+  duration_ms: 0.150927
+  type: 'test'
+  ...
+# Subtest: configuration rejects connection string
+ok 111 - configuration rejects connection string
+  ---
+  duration_ms: 0.129625
+  type: 'test'
+  ...
+# Subtest: configuration rejects password
+ok 112 - configuration rejects password
+  ---
+  duration_ms: 0.162844
+  type: 'test'
+  ...
+# Subtest: configuration rejects unix socket
+ok 113 - configuration rejects unix socket
+  ---
+  duration_ms: 0.368434
+  type: 'test'
+  ...
+# Subtest: configuration rejects invalid port
+ok 114 - configuration rejects invalid port
+  ---
+  duration_ms: 0.156966
+  type: 'test'
+  ...
+# Subtest: configuration rejects superuser
+ok 115 - configuration rejects superuser
+  ---
+  duration_ms: 0.135163
+  type: 'test'
+  ...
+# Subtest: configuration rejects cross domain role
+ok 116 - configuration rejects cross domain role
+  ---
+  duration_ms: 0.138879
+  type: 'test'
+  ...
+# Subtest: configuration rejects query config override
+ok 117 - configuration rejects query config override
+  ---
+  duration_ms: 0.756107
+  type: 'test'
+  ...
+# Subtest: configuration rejects bad database
+ok 118 - configuration rejects bad database
+  ---
+  duration_ms: 3.543927
+  type: 'test'
+  ...
+# Subtest: TLS environment bypass rejected
+ok 119 - TLS environment bypass rejected
+  ---
+  duration_ms: 0.269756
+  type: 'test'
+  ...
+# Subtest: glob contract includes wildcards, literal escapes and ranges without regex execution
+ok 120 - glob contract includes wildcards, literal escapes and ranges without regex execution
+  ---
+  duration_ms: 0.916438
+  type: 'test'
+  ...
+# Subtest: input resembling SQL remains bound data; never concatenated into statement
+ok 121 - input resembling SQL remains bound data; never concatenated into statement
+  ---
+  duration_ms: 0.988596
+  type: 'test'
+  ...
+# Subtest: batch preserves order and missing slots; SQL enforces aggregate value limit
+ok 122 - batch preserves order and missing slots; SQL enforces aggregate value limit
+  ---
+  duration_ms: 0.463767
+  type: 'test'
+  ...
+# Subtest: key-list and complex glob work are bounded; broad star is supported
+ok 123 - key-list and complex glob work are bounded; broad star is supported
+  ---
+  duration_ms: 23.889425
+  type: 'test'
+  ...
+# Subtest: read batch and key control bytes reject before querying
+ok 124 - read batch and key control bytes reject before querying
+  ---
+  duration_ms: 1.182808
+  type: 'test'
+  ...
+# Subtest: transaction error rolls back and releases once; no commit/event
+ok 125 - transaction error rolls back and releases once; no commit/event
+  ---
+  duration_ms: 0.823648
+  type: 'test'
+  ...
+# Subtest: long session TTL accepted while nonsensical TTL and large events fail closed
+ok 126 - long session TTL accepted while nonsensical TTL and large events fail closed
+  ---
+  duration_ms: 1.095917
+  type: 'test'
+  ...
+# Subtest: approved required core is selected; optional is not installed implicitly
+ok 127 - approved required core is selected; optional is not installed implicitly
+  ---
+  duration_ms: 3.60561
+  type: 'test'
+  ...
+# Subtest: PostgreSQL transport is declared and channel cannot skip pending host isolation
+ok 128 - PostgreSQL transport is declared and channel cannot skip pending host isolation
+  ---
+  duration_ms: 3.774423
+  type: 'test'
+  ...
+# Subtest: optional exact version follows requested -> installed -> active without confusing states
+ok 129 - optional exact version follows requested -> installed -> active without confusing states
+  ---
+  duration_ms: 1.708087
+  type: 'test'
+  ...
+# Subtest: catalogue approval does not fabricate package bytes or installed status
+ok 130 - catalogue approval does not fabricate package bytes or installed status
+  ---
+  duration_ms: 3.817033
+  type: 'test'
+  ...
+# Subtest: unselected/unknown installed items are quarantined, never automatically activated
+ok 131 - unselected/unknown installed items are quarantined, never automatically activated
+  ---
+  duration_ms: 0.639
+  type: 'test'
+  ...
+# Subtest: production profile rejects test review; test profile accepts production review
+ok 132 - production profile rejects test review; test profile accepts production review
+  ---
+  duration_ms: 0.741554
+  type: 'test'
+  ...
+# Subtest: pending and rejected optional entries can be inventoried but never selected or active
+ok 133 - pending and rejected optional entries can be inventoried but never selected or active
+  ---
+  duration_ms: 6.803146
+  type: 'test'
+  ...
+# Subtest: a pending required component blocks the whole requested baseline
+ok 134 - a pending required component blocks the whole requested baseline
+  ---
+  duration_ms: 0.428004
+  type: 'test'
+  ...
+# Subtest: catalogue URL/tags/ranges and request version aliases are rejected
+ok 135 - catalogue URL/tags/ranges and request version aliases are rejected
+  ---
+  duration_ms: 5.70109
+  type: 'test'
+  ...
+# Subtest: valid exact prereleases are allowed only under explicit review
+ok 136 - valid exact prereleases are allowed only under explicit review
+  ---
+  duration_ms: 0.555715
+  type: 'test'
+  ...
+# Subtest: a different exact version is not treated as implicitly upgradeable
+ok 137 - a different exact version is not treated as implicitly upgradeable
+  ---
+  duration_ms: 0.348924
+  type: 'test'
+  ...
+# Subtest: unsigned approval metadata is a declaration, not release approval
+ok 138 - unsigned approval metadata is a declaration, not release approval
+  ---
+  duration_ms: 0.417828
+  type: 'test'
+  ...
+# Subtest: unknown fields at every trust boundary are rejected
+ok 139 - unknown fields at every trust boundary are rejected
+  ---
+  duration_ms: 2.131594
+  type: 'test'
+  ...
+# Subtest: package URL and path injection have no accepted catalogue representation
+ok 140 - package URL and path injection have no accepted catalogue representation
+  ---
+  duration_ms: 0.560253
+  type: 'test'
+  ...
+# Subtest: additional modules, shell exec and arbitrary javascript cannot be approved
+ok 141 - additional modules, shell exec and arbitrary javascript cannot be approved
+  ---
+  duration_ms: 0.498539
+  type: 'test'
+  ...
+# Subtest: internal plaintext is blocked; field Modbus legacy is explicitly declared
+ok 142 - internal plaintext is blocked; field Modbus legacy is explicitly declared
+  ---
+  duration_ms: 0.418289
+  type: 'test'
+  ...
+# Subtest: network claims cannot contradict declared TCP/discovery operations
+ok 143 - network claims cannot contradict declared TCP/discovery operations
+  ---
+  duration_ms: 0.213742
+  type: 'test'
+  ...
+# Subtest: duplicate IDs/packages/references/protocols are rejected
+ok 144 - duplicate IDs/packages/references/protocols are rejected
+  ---
+  duration_ms: 0.864209
+  type: 'test'
+  ...
+# Subtest: duplicate JSON keys including escaped spelling cannot change review
+ok 145 - duplicate JSON keys including escaped spelling cannot change review
+  ---
+  duration_ms: 0.358739
+  type: 'test'
+  ...
+# Subtest: prototype pollution keys and inherited objects are rejected without mutation
+ok 146 - prototype pollution keys and inherited objects are rejected without mutation
+  ---
+  duration_ms: 0.568054
+  type: 'test'
+  ...
+# Subtest: object API does not call getters, toJSON, or accept hidden/symbol fields
+ok 147 - object API does not call getters, toJSON, or accept hidden/symbol fields
+  ---
+  duration_ms: 0.387523
+  type: 'test'
+  ...
+# Subtest: parser rejects invalid syntax, Unicode, unsafe numbers and excessive nesting/bytes
+ok 148 - parser rejects invalid syntax, Unicode, unsafe numbers and excessive nesting/bytes
+  ---
+  duration_ms: 1.130459
+  type: 'test'
+  ...
+# Subtest: cyclic and sparse arrays are rejected; valid parsed output is deeply immutable
+ok 149 - cyclic and sparse arrays are rejected; valid parsed output is deeply immutable
+  ---
+  duration_ms: 2.222351
+  type: 'test'
+  ...
+# Subtest: strict real data types and missing keys are not coerced
+ok 150 - strict real data types and missing keys are not coerced
+  ---
+  duration_ms: 0.739832
+  type: 'test'
+  ...
+# Subtest: tree digest canonicalizes file order and binds path, size and content hash
+ok 151 - tree digest canonicalizes file order and binds path, size and content hash
+  ---
+  duration_ms: 0.857038
+  type: 'test'
+  ...
+# Subtest: tree metadata rejects traversal, duplicate paths, sparse/accessor rows, unsafe sizes
+ok 152 - tree metadata rejects traversal, duplicate paths, sparse/accessor rows, unsafe sizes
+  ---
+  duration_ms: 0.449616
+  type: 'test'
+  ...
+# Subtest: CLI returns bounded JSON, handles invalid UTF8 and never leaks paths/input into errors
+ok 153 - CLI returns bounded JSON, handles invalid UTF8 and never leaks paths/input into errors
+  ---
+  duration_ms: 148.562239
+  type: 'test'
+  ...
+1..153
+# tests 153
+# suites 0
+# pass 153
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6117.864674

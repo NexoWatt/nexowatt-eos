@@ -1,0 +1,41 @@
+[Unit]
+Description=NexoWatt EOS signed Debian OS maintenance
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/python3 -I /opt/nexowatt/eos/current/runtime/os-updates/runner.py
+Environment=LANG=C.UTF-8
+Environment=LC_ALL=C.UTF-8
+UnsetEnvironment=PYTHONPATH PYTHONHOME APT_CONFIG LD_PRELOAD LD_LIBRARY_PATH
+UMask=0022
+# APT/dpkg maintainer scripts require host write access and service management.
+# This authority is confined to this fixed root service, never adapters/sudo.
+PrivateTmp=yes
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictRealtime=yes
+LockPersonality=yes
+LimitCORE=0
+TasksMax=256
+MemoryHigh=768M
+MemoryMax=1536M
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+# SIGINT lets unattended-upgrade finish its current minimal dpkg transaction.
+# No kill of dpkg children: a stuck transaction is reported and needs service.
+KillSignal=SIGINT
+KillMode=process
+SendSIGKILL=no
+TimeoutStartSec=2h
+TimeoutStopSec=10min
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nexowatt-eos-os-updates

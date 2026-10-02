@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-01T05:07:32.548648+00:00",
+  "scope": "EOS UI authentication development increment; package baseline 1.0.21",
+  "result": "automated-gates-passed; hardware-and-product-release-not-approved",
+  "checks": [
+    {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund",
+      "exitCode": 0,
+      "log": "npm-ci-final.log",
+      "sha256": "d0411b0eaa31b21eca8b7777bf74ae002c26361b575dd5c25fbc4188e0ba2a45"
+    },
+    {
+      "command": "npm run build:ts",
+      "exitCode": 0,
+      "log": "build-ts-final.log",
+      "sha256": "83b00d78c71f63a61b8892a2f0d1e5ce7867490da16227ba0cc3000b595f90b8"
+    },
+    {
+      "command": "npm run test:all; CHROMIUM_BIN/NW_CHROMIUM_EXECUTABLE/NW_PLAYWRIGHT_MODULE configured",
+      "exitCode": 0,
+      "log": "test-all.log",
+      "sha256": "6f3f341d54a8fb9273cdf9af6b9c8b4bdfc0b6474f8f5867f6c1ddc2b9a7ae6c"
+    },
+    {
+      "command": "npm run test:eos-auth-security",
+      "exitCode": 0,
+      "log": "auth-security.tap",
+      "sha256": "6fa661581fc9b59d38bd98568b4f9a1cf947d2eebe9ba0b90237f2116b70a782"
+    },
+    {
+      "command": "node scripts/verify-stable-1.0.9-browser.cjs; browser tooling configured",
+      "exitCode": 0,
+      "log": "browser-access-retry.log",
+      "sha256": "714cf90cd19f489b79a9dab60831153072ab50f27dacc0530ed89d00553e0419"
+    },
+    {
+      "command": "npm run publish:check",
+      "exitCode": 0,
+      "log": "publish-check-final.log",
+      "sha256": "f8a5753bd735d2f81c922d8031c26687ce518308db07317f2f7811d6e4480e2c"
+    },
+    {
+      "command": "npm run docs:check",
+      "exitCode": 0,
+      "log": "docs-check-final.log",
+      "sha256": "25a9814168f6a1bddadcb7494bc1e712f23d48403c09c28ec8df147230e9cc2c"
+    },
+    {
+      "command": "npm pack --dry-run --json --ignore-scripts",
+      "exitCode": 0,
+      "log": "npm-pack-dry-run.json",
+      "sha256": "993784d20fe61f54a27099404adbdbc72093e7b5d364a6a0434ec73f1c30cc41"
+    },
+    {
+      "command": "npm audit --json --audit-level=low",
+      "exitCode": 0,
+      "log": "npm-audit-all-final.json",
+      "sha256": "dbe6250d7f910f4e96b76b76ae8d361e1db742da24f2d5cd0adcde0430223030"
+    }
+  ],
+  "securityTests": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "http": "real Express server; simulated controller users, groups, password verifier and state writes"
+  },
+  "fullSuite": {
+    "passed": true,
+    "npmScriptInvocationsIncludingNested": 174,
+    "browserTestsEnabled": true,
+    "optionalMeshBrowserTestEnabled": true,
+    "publishOverlay": "fresh copy, old Admin assets overlay and secret-blocking case; real prepublishOnly against a loopback test registry only"
+  },
+  "dependencyAudit": {
+    "knownFindings": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "includesDevDependencies": true,
+    "packageLockSha256": "4d983f650b2b1e51e37703ed5ea89f55585be827201b20f001a02e2648c75301",
+    "limits": "point-in-time registry advisory match; no proof of absence of unknown vulnerabilities"
+  },
+  "sbomValidation": {
+    "checks": "JSON syntax, CycloneDX marker/version, component identifiers, required names/versions/purls and dependency graph references",
+    "fullJsonSchemaValidation": false,
+    "runtimeComponents": 55,
+    "buildAndRuntimeComponents": 250,
+    "scope": "npm lockfile only; OS/runtime executable/controller/other adapters not included"
+  },
+  "preservation": {
+    "report": "control-and-design-invariance.json",
+    "unchangedFiles": 317,
+    "changedInCheckedSet": 0,
+    "limits": "hash comparison for specified UI and EMS paths; main auth integration and Admin security text intentionally changed"
+  },
+  "initialFailures": [
+    {
+      "log": "test-all.initial-secret-fixture.log",
+      "reason": "test fixture looked like a literal password; replaced by random ephemeral test values; guard unchanged"
+    },
+    {
+      "log": "test-all.initial-mirror.log",
+      "reason": "manual TS mirror needed the same reviewed auth changes; types preserved"
+    },
+    {
+      "log": "test-all.initial-browser-environment.log",
+      "reason": "no installed Chromium available initially"
+    },
+    {
+      "log": "test-all.initial-browser-launch.log",
+      "reason": "browser executable failed after separate command session; fresh temporary extraction used"
+    },
+    {
+      "log": "browser-access.log",
+      "reason": "same browser launch problem; browser-access-retry.log passed without changing product or test assertions"
+    }
+  ],
+  "openProductFindings": [
+    "NW-UI-260930-01",
+    "NW-UI-260930-03",
+    "NW-UI-260930-04"
+  ],
+  "noClaims": [
+    "No RPi5 or Linux 12 target execution",
+    "No actual Tailscale connection or ACL validation",
+    "No real ioBroker controller/storage/SMTP/device writes in HTTP/browser fixtures",
+    "No live plant acceptance",
+    "No CRA or IEC conformity declaration",
+    "No product TLS/mTLS provisioning",
+    "No installation or external publication"
+  ]
+}

@@ -1,0 +1,34 @@
+✔ fixed role IDs ignore configuration and service-looking aliases (3.38032ms)
+✔ normal long passphrases are accepted, control and oversized UTF-8 are rejected (0.832391ms)
+✔ first password writes only authenticated installer, clears setup flags and invalidates sessions (2.993574ms)
+✔ enduser completes own initial password independently (0.928616ms)
+✔ wrong current credential cannot claim a first password (1.413671ms)
+✔ caller cannot supply another target, roles or extra fields (2.12575ms)
+✔ foreign origin or missing explicit header fails before password work (0.480788ms)
+✔ anonymous and service accounts cannot use first-login account claiming (0.327997ms)
+✔ pending setup cannot use normal change, initialized account cannot reclaim first password (0.714162ms)
+✔ authenticated initialized installer, enduser and service change only their own password (1.94136ms)
+✔ password proof work bounded to five attempts per minute and one active write per account (25.075969ms)
+✔ normal own-password route refuses reuse of current password (0.562531ms)
+✔ legacy setup flags and initialized markers affect session fingerprint (0.334587ms)
+✔ installer capabilities do not advertise service object/package/log administration (0.24412ms)
+✔ raw object, state, file, account and arbitrary upstream commands denied to every non-service role (0.246123ms)
+✔ HTTP access requires one canonical role, including the admin username (0.464453ms)
+✔ technical HTTP route gate rejects endusers, pending setup and installer service access (0.652729ms)
+✔ integrated startup checks provisioned groups without repairing membership or ACLs (4.262356ms)
+✔ disabled canonical group loses HTTP authority and changes session fingerprint (0.677306ms)
+✔ installer account reset cannot cross into service or installer authority (1.117252ms)
+✔ ordinary enduser cannot reset any other account (0.207764ms)
+✔ service role cannot use raw account/group authority mutation instead of root provisioning (0.446567ms)
+✔ concurrent role change during current-password proof prevents account write (0.26426ms)
+✔ concurrent reset during current-password proof prevents overwriting new credential (0.207154ms)
+✔ password policy rechecks account revision after KDF before any database write (979.416501ms)
+✔ actual Admin same-origin method binds browser authority to HTTPS transport (6.786257ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1251.060573

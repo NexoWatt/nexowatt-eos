@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "commands": [
+    {
+      "argv": [
+        "npm",
+        "sbom",
+        "--omit=dev",
+        "--sbom-format=cyclonedx"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/app",
+      "startedAt": "2026-10-01T15:46:16.638410+00:00",
+      "exitCode": 0,
+      "stdout": "reports/integration/sbom/branding-roles/runtime.npm.cdx.json",
+      "stderr": "reports/integration/sbom/branding-roles/npm-sbom.stderr.log"
+    },
+    {
+      "argv": [
+        "npm",
+        "audit",
+        "--omit=dev",
+        "--json"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/app",
+      "startedAt": "2026-10-01T15:46:18.887833+00:00",
+      "exitCode": 1,
+      "stdout": "reports/integration/sbom/branding-roles/runtime.audit.json",
+      "stderr": "reports/integration/sbom/branding-roles/npm-audit.stderr.log"
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "tools/integration/bind-sbom.py",
+        "--app",
+        "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/app",
+        "--npm-sbom",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/runtime.npm.cdx.json",
+        "--out",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/runtime.cdx.json",
+        "--coverage",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/runtime.coverage.json",
+        "--transform-evidence",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/controller-transform.json"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/EOS-integrated-test",
+      "startedAt": "2026-10-01T15:46:27.885839+00:00",
+      "exitCode": 0,
+      "stdout": "reports/integration/sbom/branding-roles/bind.stdout.log",
+      "stderr": null
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "tools/integration/source-inventory.py",
+        "--register",
+        "system/integration/components.json",
+        "--sbom",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/source-lock-inventory.cdx.json"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/EOS-integrated-test",
+      "startedAt": "2026-10-01T15:46:28.125468+00:00",
+      "exitCode": 0,
+      "stdout": "reports/integration/sbom/branding-roles/source-inventory.stdout.log",
+      "stderr": null
+    },
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "tools/integration/validate-sbom.py",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/runtime.npm.cdx.json",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/runtime.cdx.json",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/source-lock-inventory.cdx.json",
+        "--output",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/schema-validation.json"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/EOS-integrated-test",
+      "startedAt": "2026-10-01T15:46:28.398929+00:00",
+      "exitCode": 0,
+      "stdout": "reports/integration/sbom/branding-roles/schema-validation.stdout.log",
+      "stderr": null
+    },
+    {
+      "argv": [
+        "npm",
+        "ci",
+        "--ignore-scripts",
+        "--omit=dev",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/replay/app",
+      "startedAt": "2026-10-01T15:46:55.084050+00:00",
+      "exitCode": 0,
+      "stdout": "reports/integration/sbom/branding-roles/replay-npm-ci.stdout.log",
+      "stderr": "reports/integration/sbom/branding-roles/replay-npm-ci.stderr.log"
+    },
+    {
+      "argv": [
+        "node",
+        "-e",
+        "const fs=require('node:fs');const t=require(process.argv[1]);const app=process.argv[2];const adapters=[{package:'iobroker.eos-admin',version:'7.10.11',main:'build/main.js'},{package:'iobroker.nexowatt-ui',version:'1.0.21',main:'main.js'}];const evidence=t.applyToBuild(app,adapters);const profile=t.verifyBuildProfile(app,adapters);fs.writeFileSync(process.argv[3],JSON.stringify(evidence,null,2)+'\\n',{flag:'wx'});fs.writeFileSync(process.argv[4],JSON.stringify(profile,null,2)+'\\n',{flag:'wx'});process.stdout.write(JSON.stringify({ok:true,files:evidence.files.length})+'\\n');",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/controller-profile/transform.cjs",
+        "/workspace/scratch/6383b3161c96/integrated-roles-candidate-r2/replay/app",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/replay-controller-transform.json",
+        "/workspace/scratch/6383b3161c96/EOS-integrated-test/reports/integration/sbom/branding-roles/replay-controller-profile.json"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/EOS-integrated-test",
+      "startedAt": "2026-10-01T15:47:10.547749+00:00",
+      "exitCode": 0,
+      "stdout": "reports/integration/sbom/branding-roles/replay-transform.stdout.log",
+      "stderr": null
+    }
+  ]
+}

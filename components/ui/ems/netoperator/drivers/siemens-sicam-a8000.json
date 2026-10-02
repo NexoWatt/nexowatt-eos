@@ -1,0 +1,234 @@
+{
+  "schema": "nexowatt.netoperator-driver.v1",
+  "id": "siemens-sicam-a8000",
+  "manufacturer": "Siemens",
+  "model": "SICAM A8000 / Plant Control",
+  "label": "Siemens SICAM-basierte Plant-Control-Lösung",
+  "status": "mapping-required",
+  "mappingVersion": "0.0.0",
+  "protocols": [
+    "modbus-tcp"
+  ],
+  "defaultProtocol": "modbus-tcp",
+  "addressBase": 0,
+  "commandSemantics": {
+    "authority": "certified-controller-superior",
+    "eosRole": "downstream-operational-orchestration",
+    "writesEnabled": false,
+    "certificationBoundary": "manufacturer-and-project-specific"
+  },
+  "signals": {
+    "grid.command.enable": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "boolean",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.command.trip": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "boolean",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.command.release": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "boolean",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.p.limit_kw": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.p.target_kw": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.p.target_pct": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.q.target_kvar": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.cosphi.target": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.mode.p": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "enum",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "grid.mode.q": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "enum",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "pcc.p.actual_kw": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "pcc.q.actual_kvar": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "pcc.u.actual_v": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "float32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "controller.status": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "enum",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "controller.comm_ok": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "boolean",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "controller.fault_code": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "string",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "controller.timestamp": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "uint32",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "controller.source": {
+      "access": "read",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "string",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "eos.ack.command_id": {
+      "access": "write",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "string",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    },
+    "eos.status.ready": {
+      "access": "write",
+      "area": "holding",
+      "address": null,
+      "addressBase": 0,
+      "dataType": "boolean",
+      "scale": 1,
+      "offset": 0,
+      "byteOrder": "ABCD"
+    }
+  },
+  "notes": [
+    "Platzhalterprofil ohne Registeradressen. Vor Einsatz vollständige Herstellerunterlagen einarbeiten.",
+    "Mapping-Version, Datentypen, Skalierung, Endianness, Quality/Validity, Watchdog und Fail-Safe projektspezifisch prüfen.",
+    "Diese RC50-Grundlage ist read-only; aktive Asset-Vorgaben bleiben gesperrt.",
+    "Modbus TCP ist in diesem Platzhalter als Zieltransport vorbereitet; tatsächliche Unterstützung anhand der Herstellerunterlagen bestätigen."
+  ],
+  "watchdog": {
+    "policy": "project-specific",
+    "notes": [
+      "Timeout und Fail-Safe erst nach Hersteller-/Netzbetreiberfreigabe verbindlich setzen."
+    ]
+  }
+}

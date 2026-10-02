@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: real TLS1.3 mutual channel reads only public state fields
+ok 1 - real TLS1.3 mutual channel reads only public state fields
+  ---
+  duration_ms: 71.561165
+  type: 'test'
+  ...
+# Subtest: separate certificates send/receive authenticated messages, with no sender spoofing
+ok 2 - separate certificates send/receive authenticated messages, with no sender spoofing
+  ---
+  duration_ms: 33.70327
+  type: 'test'
+  ...
+# Subtest: telemetry writes force ack=true and server-derived sender identity
+ok 3 - telemetry writes force ack=true and server-derived sender identity
+  ---
+  duration_ms: 28.030869
+  type: 'test'
+  ...
+# Subtest: logic writes only a bounded request namespace, ack=false
+ok 4 - logic writes only a bounded request namespace, ack=false
+  ---
+  duration_ms: 21.607048
+  type: 'test'
+  ...
+# Subtest: invalid control value -1 is denied before backend
+ok 5 - invalid control value -1 is denied before backend
+  ---
+  duration_ms: 10.047372
+  type: 'test'
+  ...
+# Subtest: invalid control value 4201 is denied before backend
+ok 6 - invalid control value 4201 is denied before backend
+  ---
+  duration_ms: 10.329176
+  type: 'test'
+  ...
+# Subtest: invalid control value "100" is denied before backend
+ok 7 - invalid control value "100" is denied before backend
+  ---
+  duration_ms: 12.205586
+  type: 'test'
+  ...
+# Subtest: invalid control value null is denied before backend
+ok 8 - invalid control value null is denied before backend
+  ---
+  duration_ms: 10.518491
+  type: 'test'
+  ...
+# Subtest: invalid control value {"val":100} is denied before backend
+ok 9 - invalid control value {"val":100} is denied before backend
+  ---
+  duration_ms: 13.226651
+  type: 'test'
+  ...
+# Subtest: private data, unknown message commands and host messages are denied
+ok 10 - private data, unknown message commands and host messages are denied
+  ---
+  duration_ms: 23.090118
+  type: 'test'
+  ...
+# Subtest: additional identity fields cannot replace authenticated sender
+ok 11 - additional identity fields cannot replace authenticated sender
+  ---
+  duration_ms: 12.251305
+  type: 'test'
+  ...
+# Subtest: valid CA certificate without policy pin is denied
+ok 12 - valid CA certificate without policy pin is denied
+  ---
+  duration_ms: 5.966628
+  type: 'test'
+  ...
+# Subtest: expired certificate cannot authenticate
+ok 13 - expired certificate cannot authenticate
+  ---
+  duration_ms: 6.02131
+  type: 'test'
+  ...
+# Subtest: no client certificate cannot authenticate
+ok 14 - no client certificate cannot authenticate
+  ---
+  duration_ms: 5.337633
+  type: 'test'
+  ...
+# Subtest: wrong server name fails certificate verification
+ok 15 - wrong server name fails certificate verification
+  ---
+  duration_ms: 7.406093
+  type: 'test'
+  ...
+# Subtest: wrong trust anchor fails certificate verification
+ok 16 - wrong trust anchor fails certificate verification
+  ---
+  duration_ms: 4.605963
+  type: 'test'
+  ...
+# Subtest: TLS1.2 is rejected instead of downgraded
+ok 17 - TLS1.2 is rejected instead of downgraded
+  ---
+  duration_ms: 7.67066
+  type: 'test'
+  ...
+# Subtest: plaintext HTTP is refused
+ok 18 - plaintext HTTP is refused
+  ---
+  duration_ms: 3.909927
+  type: 'test'
+  ...
+# Subtest: replayed RPC identifier cannot perform a second write
+ok 19 - replayed RPC identifier cannot perform a second write
+  ---
+  duration_ms: 17.296008
+  type: 'test'
+  ...
+# Subtest: expired or future-dated requests never reach backend
+ok 20 - expired or future-dated requests never reach backend
+  ---
+  duration_ms: 20.6138
+  type: 'test'
+  ...
+# Subtest: expired queued messages are discarded before delivery
+ok 21 - expired queued messages are discarded before delivery
+  ---
+  duration_ms: 178.691283
+  type: 'test'
+  ...
+# Subtest: bounded mailbox rejects overflow and does not silently replace messages
+ok 22 - bounded mailbox rejects overflow and does not silently replace messages
+  ---
+  duration_ms: 194.528777
+  type: 'test'
+  ...
+# Subtest: policy revocation also invalidates live sessions and queued commands
+ok 23 - policy revocation also invalidates live sessions and queued commands
+  ---
+  duration_ms: 18.78115
+  type: 'test'
+  ...
+# Subtest: policy changes during asynchronous work deny its late completion
+ok 24 - policy changes during asynchronous work deny its late completion
+  ---
+  duration_ms: 10.277107
+  type: 'test'
+  ...
+# Subtest: unknown operations and oversized requests are rejected
+ok 25 - unknown operations and oversized requests are rejected
+  ---
+  duration_ms: 10.202846
+  type: 'test'
+  ...
+# Subtest: malformed backend values fail closed and backend error content is hidden
+ok 26 - malformed backend values fail closed and backend error content is hidden
+  ---
+  duration_ms: 10.268995
+  type: 'test'
+  ...
+# Subtest: client budgets the full session plus RPC to five seconds and does not retry
+ok 27 - client budgets the full session plus RPC to five seconds and does not retry
+  ---
+  duration_ms: 5003.679883
+  type: 'test'
+  ...
+# Subtest: closed clients cannot create another socket
+ok 28 - closed clients cannot create another socket
+  ---
+  duration_ms: 1.492623
+  type: 'test'
+  ...
+# Subtest: policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers
+ok 29 - policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers
+  ---
+  duration_ms: 0.506171
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6011.128575

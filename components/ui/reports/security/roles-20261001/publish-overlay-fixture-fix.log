@@ -1,0 +1,26 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.12-publish
+> node scripts/verify-stable-1.0.12-publish-upgrade.cjs && npm run test:npm-version-free-guard && npm run test:npm-version-free-runtime && npm run test:publish-overlay
+
+[stable-1.0.12] OK: 15 Upgrade-/Sicherheitsfälle, Sicherungen, indirekte Chunks, Wiederholung, echter Artefakt-Guard und Publish-Vertrag.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:npm-version-free-guard
+> node scripts/verify-npm-version-free-guard-static.js
+
+[npm-version-free-guard] OK: version guard runs first; publish verifies the immutable artifact without npm/TypeScript setup.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:npm-version-free-runtime
+> node scripts/verify-npm-version-free-runtime.js
+
+[npm-version-free-runtime] OK: HTTP 404 releases the version; existing and ambiguous registry responses fail closed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:publish-overlay
+> node scripts/verify-publish-overlay.cjs
+
+[publish-overlay] Frische Repository-Kopie: vollständige Publish-Prüfkette erfolgreich, ohne Entwicklungsabhängigkeiten.
+[publish-overlay] ZIP-Überkopieren: alte JS/CSS gesichert, aktuelle Assets bytegleich, vollständige Publish-Prüfkette erfolgreich.
+[publish-overlay] Echter Secret-Testfund blockiert unverändert, ohne Ausgabe des Werts. Keine externe Veröffentlichung.

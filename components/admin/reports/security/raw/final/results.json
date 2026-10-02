@@ -1,0 +1,88 @@
+{
+  "runtime": "v24.19.0",
+  "platform": "Linux container; no live ioBroker, no target hardware",
+  "results": [
+    {
+      "name": "package",
+      "command": [
+        "npm",
+        "run",
+        "check:eos-package"
+      ],
+      "startedAt": "2026-09-30T17:35:23.046691+00:00",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "reports/security/raw/final/package.log",
+      "logSha256": "faac364470622d238876d31dc100491afabcbdad548b379b22f8113bf083ba32"
+    },
+    {
+      "name": "stability",
+      "command": [
+        "npm",
+        "run",
+        "check:eos-stability"
+      ],
+      "startedAt": "2026-09-30T17:35:24.367254+00:00",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "reports/security/raw/final/stability.log",
+      "logSha256": "b696e8b2811e319aa17b642e17791d30b301eb8c64b3508e1c62881aa6ac7a1f"
+    },
+    {
+      "name": "licensing-tap",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/eos-license-client.test.cjs",
+        "test/eos-license-core.test.cjs",
+        "test/eos-license-http.test.cjs",
+        "test/eos-license-service.test.cjs"
+      ],
+      "startedAt": "2026-09-30T17:33:55.198976+00:00",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "reports/security/raw/final/licensing-tap.log",
+      "logSha256": "6a6142b7d77ef479699aded6ba1b23d69eba2bd0d42cc30512fe4e131543420d"
+    },
+    {
+      "name": "inventory-tool",
+      "command": [
+        "node",
+        "tools/nexowatt-security-inventory-selftest.cjs"
+      ],
+      "startedAt": "2026-09-30T17:33:56.143099+00:00",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "reports/security/raw/final/inventory-tool.log",
+      "logSha256": "f68851482b476283c571ba952673deccbef6dc3a2be7200f4368dab4ce52be16"
+    },
+    {
+      "name": "fallback-transpiler",
+      "command": [
+        "node",
+        "tools/nexowatt-transpile-security-backend-selftest.cjs"
+      ],
+      "startedAt": "2026-09-30T17:33:56.244693+00:00",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "reports/security/raw/final/fallback-transpiler.log",
+      "logSha256": "8124345101632d7731691a561de04c9a1037e7fdfce14981825df8bcab2a051b"
+    },
+    {
+      "name": "pack-dry-run",
+      "command": [
+        "npm",
+        "pack",
+        "--dry-run",
+        "--ignore-scripts",
+        "--json"
+      ],
+      "startedAt": "2026-09-30T17:35:40.523813+00:00",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "reports/security/raw/final/pack-dry-run.log",
+      "logSha256": "b0260c16772af98a2b1ed7213d46c5a4bc0b56fb8f3ae05b54e8e5f3ff8c7381"
+    }
+  ]
+}

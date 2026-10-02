@@ -1,0 +1,18 @@
+RC88 CONTROL INVARIANCE REPORT
+
+Vergleichsbasis: RC87 0.8.212 -> RC88 0.8.213
+
+ems/modules: 31 Altdateien / 31 Neudateien - BYTEGLEICH/FACHLICH UNVERÄNDERT
+ems/services: 34 Altdateien / 34 Neudateien - BYTEGLEICH/FACHLICH UNVERÄNDERT
+www: 96 Altdateien / 96 Neudateien - BYTEGLEICH/FACHLICH UNVERÄNDERT
+  - erlaubt: manifest.webmanifest (nur Releaseversion)
+admin: 13 Altdateien / 13 Neudateien - BYTEGLEICH/FACHLICH UNVERÄNDERT
+
+Bewusst geänderte Runtime-Dateien:
+  - main.js / src-ts/runtime-executables/main.ts (SSE-Transport, Speicherdiagnostik)
+  - ems/rc85-runtime-hardening.js / kanonische TS-Quelle (Watchdog-/Heap-Lifecycle)
+  - ems/module-manager.js / kanonische TS-Quelle (Monitor-Lifecycle)
+  - ems/engine.js / kanonische TS-Quelle (kein vorzeitiger globaler Heap-Monitor)
+  - lib/sse-runtime-guard.js / kanonische TS-Quelle (neu)
+
+Ergebnis: EMS-Fachmodule, EMS-Services und UI/Admin-Fachcode sind unverändert.

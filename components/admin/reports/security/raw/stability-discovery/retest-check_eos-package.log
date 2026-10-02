@@ -1,0 +1,31 @@
+Command: npm run check:eos-package
+Started: 2026-09-30T17:29:56.839Z
+Exit: 0
+
+> iobroker.eos-admin@7.10.10 precheck:eos-package
+> npm run sync:eos-version && npm run prepare:eos-release-defaults && npm run clean:eos-runtime
+
+
+> iobroker.eos-admin@7.10.10 sync:eos-version
+> node tools/nexowatt-sync-release-version.cjs
+
+[NexoWatt EOS version sync] OK (7.10.10; all release files match)
+
+> iobroker.eos-admin@7.10.10 prepare:eos-release-defaults
+> node tools/nexowatt-ensure-release-defaults.cjs
+
+[NexoWatt EOS release defaults] OK (canonical sales defaults already present)
+
+> iobroker.eos-admin@7.10.10 clean:eos-runtime
+> node tools/nexowatt-clean-legacy-runtime.cjs
+
+[NexoWatt EOS runtime cleanup] OK (runtime v84, shell v7109, removed 0 legacy files)
+
+> iobroker.eos-admin@7.10.10 check:eos-package
+> node tools/nexowatt-validate-package.cjs
+
+[NexoWatt EOS package validation] OK
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.

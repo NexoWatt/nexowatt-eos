@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 1 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 4.589106
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 2 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 4.083967
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 3 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 381.850967
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 4 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 18.262742
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 5 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 5.532217
+  type: 'test'
+  ...
+# Subtest: onboarding public trust and secret modes survive restrictive inherited umask
+ok 6 - onboarding public trust and secret modes survive restrictive inherited umask
+  ---
+  duration_ms: 184.208629
+  type: 'test'
+  ...
+# Subtest: failure to revoke the trial permit still attempts to stop the controller
+ok 7 - failure to revoke the trial permit still attempts to stop the controller
+  ---
+  duration_ms: 0.711606
+  type: 'test'
+  ...
+# Subtest: failed revocation and failed stop report the more specific stop failure
+ok 8 - failed revocation and failed stop report the more specific stop failure
+  ---
+  duration_ms: 0.433937
+  type: 'test'
+  ...
+# Subtest: concurrent release change is rejected after acquiring the maintenance lock
+ok 9 - concurrent release change is rejected after acquiring the maintenance lock
+  ---
+  duration_ms: 8.849915
+  type: 'test'
+  ...
+# Subtest: readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+ok 10 - readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+  ---
+  duration_ms: 2.37409
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected success
+ok 11 - readiness rejects admin unexpected success
+  ---
+  duration_ms: 0.593898
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unrelated forbidden response
+ok 12 - readiness rejects admin unrelated forbidden response
+  ---
+  duration_ms: 0.58831
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous writes
+ok 13 - readiness rejects UI anonymous writes
+  ---
+  duration_ms: 0.563232
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous admin
+ok 14 - readiness rejects UI anonymous admin
+  ---
+  duration_ms: 0.509801
+  type: 'test'
+  ...
+# Subtest: readiness rejects unverified peer
+ok 15 - readiness rejects unverified peer
+  ---
+  duration_ms: 0.82628
+  type: 'test'
+  ...
+# Subtest: readiness rejects old TLS version
+ok 16 - readiness rejects old TLS version
+  ---
+  duration_ms: 0.478653
+  type: 'test'
+  ...
+# Subtest: readiness rejects oversized body
+ok 17 - readiness rejects oversized body
+  ---
+  duration_ms: 1.516715
+  type: 'test'
+  ...
+# Subtest: readiness rejects invalid JSON
+ok 18 - readiness rejects invalid JSON
+  ---
+  duration_ms: 1.494591
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 884.82558

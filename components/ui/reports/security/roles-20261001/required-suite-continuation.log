@@ -1,0 +1,35 @@
+
+# STEP 0: npm run test:main-runtime-helpers
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:main-runtime-helpers
+> node scripts/verify-ts-main-runtime-helpers.js
+
+[verify-ts-main-runtime-helpers] OK: main.js nutzt den ersten TS-Helfer kontrolliert mit Fallback.
+
+# STEP 1: npm run test:api-state-set-shadow
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:api-state-set-shadow
+> node scripts/verify-ts-api-state-set-shadow.js
+
+[verify-ts-api-state-set-shadow] OK: /api/state nutzt TS-Builder mit redigierter Kundenantwort und vollständiger Installerdiagnose; /api/set-Shadow bleibt kompatibel.
+
+# STEP 2: npm run test:live-dashboard-format-productive
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:live-dashboard-format-productive
+> node scripts/verify-ts-live-dashboard-format-productive.js
+
+[ts-live-dashboard-format-productive] OK: LIVE-Dashboard nutzt TS-Formatter produktiv mit JS-Fallback.
+
+# STEP 3: npm run test:heating-rod-legacy-removal-candidate
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-ui@1.0.21 test:heating-rod-legacy-removal-candidate
+> node scripts/verify-ts-heating-rod-legacy-removal-candidate.js
+
+[heating-rod-legacy-removal-candidate] OK: alter JS-Heizstabpfad ist als Entfernungs-Kandidat markiert.
+
+# STEP 4: npm run check:ts-source-syntax
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.

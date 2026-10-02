@@ -1,0 +1,46 @@
+
+# STEP 24: npm run test:rc66-station-display-stable
+
+> iobroker.nexowatt-ui@1.0.21 test:rc66-station-display-stable
+> node scripts/verify-rc66-station-display-stable.js
+
+[rc66-station-display] OK: modernes Vollbildlayout, NexoWatt-Branding, Mehr-LP-Raster, Status-/Entscheidungsdiagnose, kein CSV-UI und Single-Writer-Vertrag sind abgesichert (1000x303, 187933 Byte).
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+# STEP 25: npm run test:rc66-station-display-browser
+
+> iobroker.nexowatt-ui@1.0.21 test:rc66-station-display-browser
+> node scripts/verify-rc66-station-display-browser.js
+
+[rc66-station-display-browser] OK: 4/5/6/8 LP, 1920×1080/1600×900/1366×768, kein Scrollen, Logo, Diagnose und Single-Writer-Bedienintent in Chromium verifiziert.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+# STEP 26: npm run test:rc67-license-bootstrap-access
+
+> iobroker.nexowatt-ui@1.0.21 test:rc67-license-bootstrap-access
+> node scripts/verify-rc67-license-bootstrap-access.js
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+node:internal/assert/utils:77
+    throw err;
+    ^
+
+AssertionError [ERR_ASSERTION]: main.ts: Lizenz-Bootstrap liegt nicht vor dem allgemeinen Lizenz-Gate.
+    at verifyMain (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-rc67-license-bootstrap-access.js:97:10)
+    at Object.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-rc67-license-bootstrap-access.js:115:1)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

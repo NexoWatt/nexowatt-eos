@@ -1,0 +1,16 @@
+// Build config: compiles the backend from src/ into build/, mirroring the tree, so
+// src/lib/foo.ts -> build/lib/foo.js. rootDir and outDir come from tsconfig.json.
+//
+// The relative layout inside build/ is what the runtime depends on: build/main.js is the
+// entry point named in package.json, build/lib/execute.js loads build/lib/scripts/*.js
+// through __dirname, and build/lib/restore.js copies itself plus build/lib/restore/iobroker.js
+// into the bash directory for the detached restore. Keep the tree shape when moving things.
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "noEmit": false,
+        "noEmitOnError": true,
+        "declaration": false,
+    },
+    "exclude": ["node_modules/**", "admin/**", "src-admin/**", "src-tab/**", "test/**", "build/**"]
+}

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "changeIds": [
+    "EOS-CERT-LIFECYCLE-01",
+    "EOS-WEB-CERT-RENEWAL-01"
+  ],
+  "generatedAt": "2026-10-01T12:08:14.470Z",
+  "sourceBaseCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+  "sourceState": "working-tree-changes-identified-by-file-hashes",
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "24.19.0",
+    "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+    "redisTestTool": "7.2.10 TLS; test-only tool, not product version approval",
+    "controllerClient": "@iobroker/db-objects-redis 7.2.2 from prior exact prepared app"
+  },
+  "tests": [
+    {
+      "command": "node --test --test-reporter=tap tests/system/certificate-host.test.cjs tests/system/certificate-lifecycle.test.cjs tests/system/web-renewal.test.cjs tests/integration/web-certificates.test.cjs",
+      "passed": 58,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "reports/integration/certificates-unit.tap",
+      "scope": "44 new lifecycle/wrapper tests plus14 existing web-certificate tests; actual OpenSSL/TLS sockets; filesystem and service-command fixtures; actual systemd syntax check using environment Node path"
+    },
+    {
+      "command": "EOS_TEST_REDIS_SERVER=<absolute-redis-server> EOS_TEST_CONTROLLER_ROOT=<prepared-app> node --test --test-reporter=tap tests/system/certificate-redis.integration.cjs",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "reports/integration/certificates-redis.tap",
+      "scope": "two actual Redis processes; actual published Objects client; AOF persistence; CA swap; both DB markers; old CA rejection; no full controller/systemd"
+    }
+  ],
+  "closedReviewIssues": [
+    "CA key permissions and CA-public/private correspondence now inspected",
+    "24 configured SANs plus fixed loopback names round-trip successfully",
+    "recover after durable complete commit confirms new generation rather than restoring possibly expired old generation",
+    "permit cleanup failure still attempts physical service stops",
+    "database path inside transport directory explicitly rejected to avoid deleting application data during retirement"
+  ],
+  "open": [
+    "Debian12/RPi5 systemd accounts, mounts and actual service restarts not executed",
+    "Power loss and filesystem crash durability not physically tested",
+    "UI/physical device functional effects during maintenance not approved",
+    "HTTPS CA replacement/compromise revocation process not implemented",
+    "Expiry warnings currently journal+unit status, not delivered email/push/UI alarms",
+    "Root/SSD/backup compromise outside TLS boundary",
+    "Shared ioBroker database identity remains, no per-adapter mTLS"
+  ],
+  "sourceFiles": [
+    {
+      "path": "runtime/transport/certificate-lifecycle.cjs",
+      "sha256": "5946b30c81a7e4bcd237874f45a40de99e44aeca6f60cb25b39a62d351f7f73d"
+    },
+    {
+      "path": "runtime/transport/redis-tls.cjs",
+      "sha256": "9bae14822a1c49243aaf1bf479df4cd9a8fb23f0a9047474d78d4a6d9172803e"
+    },
+    {
+      "path": "runtime/transport/web-certificates.cjs",
+      "sha256": "85b5bd01b14937015a64026ad22ab58b60b54475f6d3627fc517b09c3f9a4bd1"
+    },
+    {
+      "path": "runtime/transport/web-renewal.cjs",
+      "sha256": "daf88c06cb21c357ebfb52f2ce71bd750e1d584c3543084e1e8719323e55b6ce"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "8b468e5abeee681ad7dea9cadcc4fed22fd03004de081e4c88ab104c85c2cc84"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.service",
+      "sha256": "c846da6dfba50924577cc8c9a1cfabfb271f5e5af53fa783cbe5b79f23678bc1"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.timer",
+      "sha256": "2a8e58244851e3bbf64240fead10b4a6fcf6d1fe72bdbce2fb79f5bedf01f51b"
+    },
+    {
+      "path": "tests/system/certificate-lifecycle.test.cjs",
+      "sha256": "21657e868e8452d84a49795fe8cab29c1159fff73d3e46fbffaa7632df75bda6"
+    },
+    {
+      "path": "tests/system/certificate-host.test.cjs",
+      "sha256": "4825100b8769608cba7b456811a0d10255c7e46ec7db37a3caf39c5b5df859a2"
+    },
+    {
+      "path": "tests/system/certificate-redis.integration.cjs",
+      "sha256": "9a28cb13612c68907c17cff0ae78249f396dbd34b49ee3181bafed8efbc7b80c"
+    },
+    {
+      "path": "tests/system/web-renewal.test.cjs",
+      "sha256": "af285e8ed635381a2f88c3ac77a947d9436cff1ff8162f4798d460c81a9d4c51"
+    },
+    {
+      "path": "tests/integration/web-certificates.test.cjs",
+      "sha256": "ad6aadabd981f2eb9564c6b7410719bea0cea1f44e0ec87626589eb7cb26df89"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "reports/integration/certificates-unit.tap",
+      "sha256": "dac2ccc155f144ca2edc74ebc6c98aaa1f9b3fc9ed61791444b9094e8c7b3085"
+    },
+    {
+      "path": "reports/integration/certificates-redis.tap",
+      "sha256": "9deaf3a8c399078ef3590158f40aaef8d1962e2c37508df088088bffaf53b136"
+    }
+  ],
+  "releaseApproved": false
+}

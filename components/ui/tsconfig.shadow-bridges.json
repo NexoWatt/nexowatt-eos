@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build-ts/shadow-bridges",
+    "rootDir": "src-ts",
+    "declaration": false,
+    "sourceMap": false,
+    "noEmit": false,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/bridges/feature-visibility-shadow.ts",
+    "src-ts/backend/feature-visibility/feature-visibility.ts",
+    "src-ts/contracts/**/*.ts"
+  ]
+}

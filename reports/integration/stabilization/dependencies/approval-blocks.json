@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "fullApplicationAudit": "blocked_by_automatic_approval_review",
+  "fullApplicationAuditClaimedPassed": false,
+  "blockedActions": [
+    {
+      "command": "npm audit --omit=dev --json --fetch-timeout=5000 --fetch-retries=0",
+      "reason": "May transmit private NexoWatt dependency names and versions to public npm registry; dependency review was not treated as authorization for that disclosure."
+    },
+    {
+      "command": "npm install --ignore-scripts --omit=dev --no-audit --no-fund --fetch-timeout=5000 --fetch-retries=0",
+      "reason": "Full-app install may send EOS manifest/private package metadata to public registry; public-dependency-only probe requested."
+    }
+  ],
+  "safeAlternative": {
+    "command": "npm install --offline --ignore-scripts --omit=dev --no-audit --no-fund",
+    "result": "passed; package cache only, no network disclosure",
+    "change": "Builder now enforces npm_config_offline=true without online opt-out",
+    "cacheMiss": "BUILD_OFFLINE_CACHE_MISS; separately acquire reviewed public package artifacts or obtain explicit disclosure authorization"
+  },
+  "notAttemptedAfterRejection": [
+    "full EOS registry audit",
+    "another online full-app install"
+  ]
+}

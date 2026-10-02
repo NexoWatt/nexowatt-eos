@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexowatt:eos:architecture:service-command:1",
+  "title": "service-command",
+  "description": "Proposed interface v1; offline shape validation only. Not an implemented or authorized runtime interface.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "requestId",
+    "source",
+    "target",
+    "issuedAt",
+    "expiresAt",
+    "sequence",
+    "action",
+    "payload"
+  ],
+  "properties": {
+    "contractVersion": {
+      "const": "1.0"
+    },
+    "requestId": {
+      "$ref": "#/$defs/uuid"
+    },
+    "source": {
+      "$ref": "#/$defs/module"
+    },
+    "target": {
+      "$ref": "#/$defs/module"
+    },
+    "issuedAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "expiresAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "sequence": {
+      "$ref": "#/$defs/sequence"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "device.setActivePower",
+        "backup.create",
+        "license.getEntitlements"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "module": {
+      "type": "string",
+      "enum": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ]
+    },
+    "licensedModule": {
+      "type": "string",
+      "enum": [
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus"
+      ]
+    },
+    "uuid": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$(?![\\s\\S])"
+    },
+    "timestamp": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 20,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$(?![\\s\\S])"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "action": {
+          "const": "device.setActivePower"
+        },
+        "source": {
+          "const": "eos-core"
+        },
+        "target": {
+          "const": "nexowatt-devices"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "deviceId",
+            "activePower",
+            "controlPolicyId"
+          ],
+          "properties": {
+            "deviceId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "activePower": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "value",
+                "unit"
+              ],
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": -1000000000,
+                  "maximum": 1000000000
+                },
+                "unit": {
+                  "const": "W"
+                }
+              }
+            },
+            "controlPolicyId": {
+              "$ref": "#/$defs/identifier"
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "action": {
+          "const": "backup.create"
+        },
+        "source": {
+          "const": "eos-admin"
+        },
+        "target": {
+          "const": "nexowatt-backitup"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "profileId",
+            "reason"
+          ],
+          "properties": {
+            "profileId": {
+              "$ref": "#/$defs/identifier"
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "operator-request",
+                "scheduled-policy"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "action": {
+          "const": "license.getEntitlements"
+        },
+        "source": {
+          "$ref": "#/$defs/licensedModule"
+        },
+        "target": {
+          "const": "identity-license"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "subject",
+            "systemId"
+          ],
+          "properties": {
+            "subject": {
+              "$ref": "#/$defs/licensedModule"
+            },
+            "systemId": {
+              "$ref": "#/$defs/uuid"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

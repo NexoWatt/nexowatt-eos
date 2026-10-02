@@ -1,0 +1,54 @@
+[Unit]
+Description=NexoWatt EOS database initialization (no automatic adapters)
+PartOf=nexowatt-eos.target
+Requires=nexowatt-eos-postgresql.service
+After=network.target nexowatt-eos-postgresql.service
+ConditionPathExists=!/var/lib/nexowatt-eos/.initialized
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=oneshot
+User=eos-runtime
+Group=eos-runtime
+WorkingDirectory=/opt/nexowatt/eos/current/app
+UnsetEnvironment=NODE_OPTIONS NODE_PATH NODE_EXTRA_CA_CERTS NODE_TLS_REJECT_UNAUTHORIZED SSLKEYLOGFILE OPENSSL_CONF OPENSSL_MODULES LD_PRELOAD LD_LIBRARY_PATH
+Environment=NODE_ENV=production
+Environment=IOBROKER_DATA_DIR=/var/lib/nexowatt-eos/iobroker-data
+Environment=HOME=/var/lib/nexowatt-eos/home
+ExecStartPre=/usr/bin/node /opt/nexowatt/eos/current/runtime/release/installed-check.cjs
+ExecStartPre=/usr/bin/node /opt/nexowatt/eos/current/runtime/postgresql/host.cjs probe --config /etc/nexowatt-eos/iobroker.json --app /opt/nexowatt/eos/current/app
+ExecStart=/usr/bin/node /opt/nexowatt/eos/current/app/node_modules/iobroker.js-controller/iobroker.js setup
+ExecStart=/usr/bin/node /opt/nexowatt/eos/current/runtime/bootstrap/initialize.cjs --config /etc/nexowatt-eos/iobroker.json --app /opt/nexowatt/eos/current/app
+TimeoutStartSec=120
+TimeoutStopSec=60
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+ReadWritePaths=/var/lib/nexowatt-eos/iobroker-data /var/lib/nexowatt-eos/home /var/log/nexowatt-eos
+BindReadOnlyPaths=/etc/nexowatt-eos/iobroker.json:/var/lib/nexowatt-eos/iobroker-data/iobroker.json
+InaccessiblePaths=-/etc/nexowatt-eos/postgresql -/var/lib/nexowatt-eos/postgresql
+MemoryHigh=5G
+MemoryMax=6G
+TasksMax=512
+LimitNOFILE=8192
+LimitCORE=0
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nexowatt-eos-initialize

@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "compatibilityStatus": "PASS",
+  "source": {
+    "schemaVersion": 1,
+    "retrievedAt": "2026-10-01T18:07:18.248135+00:00",
+    "sourcePackageVersion": "5:8.0.2-3+deb13u2",
+    "transport": "HTTPS",
+    "baseUrl": "https://deb.debian.org/debian/pool/main/r/redis/",
+    "openPgpSignatureVerified": false,
+    "files": [
+      {
+        "file": "redis_8.0.2.orig.tar.gz",
+        "bytes": 3860147,
+        "sha256": "caf3c0069f06fc84c5153bd2a348b204c578de80490c73857bee01d9b5d7401f",
+        "matchedDsc": true
+      },
+      {
+        "file": "redis_8.0.2-3+deb13u2.debian.tar.xz",
+        "bytes": 44020,
+        "sha256": "3384f3beb64638c62b48219c856a7a7424325a08800fd9ba070fb8bf205bfc09",
+        "matchedDsc": true
+      },
+      {
+        "file": "redis_8.0.2-3+deb13u2.dsc",
+        "bytes": 1915,
+        "sha256": "10ace3c9e2aaae8f4920906c0869820cac71bc5d83984b4febe114cb52879101"
+      }
+    ]
+  },
+  "build": {
+    "command": [
+      "make",
+      "-j2",
+      "BUILD_TLS=yes",
+      "MALLOC=libc"
+    ],
+    "exitCode": 0,
+    "rawFile": "raw/build.log",
+    "rawSha256": "7564ebbe2b8da2f470466202f1a80e447953cb89c3dcf98ed7b84bf66d9f38ee",
+    "dpkgSourceRawFile": "raw/dpkg-source.log",
+    "dpkgSourceRawSha256": "cc0e657e43481bdf11122323798db61ad39a9b71b28dc2dddf4221c7d3151313",
+    "debianPatchesApplied": [
+      "debian-packaging/0001-Set-Debian-configuration-defaults.patch",
+      "0001-Fix-FTBFS-on-kFreeBSD.patch",
+      "0002-Add-CPPFLAGS-to-upstream-makefiles.patch",
+      "0003-Use-get_current_dir_name-over-PATHMAX.patch",
+      "0004-Add-support-for-USE_SYSTEM_JEMALLOC-flag.patch",
+      "0005-CVE-2025-32023.patch",
+      "0006-CVE-2025-48367.patch",
+      "0007-Add-Redis-ver.-REDIS_VERSION-to-LOLWUT-8-output-as-a.patch",
+      "0008-CVE-2025-49844.patch",
+      "0009-CVE-2025-46819.patch",
+      "0010-CVE-2025-46818.patch",
+      "0011-CVE-2025-46817.patch",
+      "0012-CVE-2025-67733.patch",
+      "0013-CVE-2026-21863.patch"
+    ],
+    "redisServerVersion": "Redis server v=8.0.2 sha=00000000:1 malloc=libc bits=64 build=428cd24c0b8df8c1",
+    "redisServerSha256": "a2ba3ad1e19c949e771afe74fa72f5e8411e78636a785036170d012be9a6029c",
+    "nodeVersion": "v24.21.0",
+    "nodeSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+    "osRelease": "PRETTY_NAME=\"Ubuntu 24.04.3 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.3 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+    "architecture": "x86_64",
+    "opensslVersion": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+    "gccVersion": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+    "glibcVersion": "ldd (Ubuntu GLIBC 2.39-0ubuntu8.6) 2.39",
+    "sourceFileBindings": [
+      {
+        "path": "debian/patches/series",
+        "sha256": "f0dc096ed87d8cabd64966ef284f99cbb1c4731a319b177e509705e964bb7c1e"
+      },
+      {
+        "path": "debian/rules",
+        "sha256": "d094c17468a97ba4ec9e7b685a1d6f9d6d0797a6ec4b05c0d679364f9f1450d4"
+      },
+      {
+        "path": "debian/changelog",
+        "sha256": "a1ded4c0938d3887dd763c17642b1e07e46e4fbbefda7f5d613dc560314fdb8d"
+      },
+      {
+        "path": "debian/copyright",
+        "sha256": "207787a7cf286bb32021b32a0586f5b8b573f2689903ddff8a20c15c46ab9126"
+      },
+      {
+        "path": ".pc/applied-patches",
+        "sha256": "f0dc096ed87d8cabd64966ef284f99cbb1c4731a319b177e509705e964bb7c1e"
+      },
+      {
+        "path": "src/tls.c",
+        "sha256": "bf4137a4c1ff30aca71940df1f93d4bb78141fe6000225bea0fa994367dea07f"
+      },
+      {
+        "path": "src/Makefile",
+        "sha256": "e47a04707c3dcec0d8a657f998fa1b7c9562254dbbdb0c38c32c08b18f00d2f2"
+      }
+    ],
+    "hostInstallPerformed": false,
+    "tlsCompiled": true,
+    "tlsRuntimeVerifiedByIntegration": true
+  },
+  "configuredEnvironment": {
+    "EOS_TEST_INTERFACE_FIXTURE": "1",
+    "EOS_TEST_CONTROLLER_ROOT": "/workspace/scratch/6383b3161c96/eos-stabilization-x64/app",
+    "EOS_TEST_REDIS_SERVER": "/workspace/scratch/6383b3161c96/redis8-test-tooling/redis-8.0.2/src/redis-server",
+    "EOS_TEST_BROWSER_PUPPETEER": "/workspace/scratch/6383b3161c96/integrated-staging/components/admin/node_modules/puppeteer",
+    "EOS_TEST_BROWSER_CHROMIUM_MODULE": "/workspace/scratch/6383b3161c96/browser-test-tooling/node_modules/@sparticuz/chromium/build/index.js",
+    "NODE_OPTIONS": "",
+    "NODE_PATH": ""
+  },
+  "tests": [
+    {
+      "testFile": "tests/integration/ui-controller.integration.cjs",
+      "testFileSha256Before": "77a0b55575fa4d6191d294a2c817da1a73de02a7c2934ebaa228db4f5b02e5c1",
+      "testFileSha256After": "77a0b55575fa4d6191d294a2c817da1a73de02a7c2934ebaa228db4f5b02e5c1",
+      "command": [
+        "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/integration/ui-controller.integration.cjs"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/EOS-integrated-test",
+      "startedAt": "2026-10-01T18:08:58.124777+00:00",
+      "elapsedSeconds": 62.065,
+      "exitCode": 0,
+      "tapCounts": {
+        "tests": 16,
+        "pass": 16,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "rawFile": "raw/ui-controller-redis8.tap",
+      "rawSha256": "3420167e457e0fe2646c49556e89fe5ff6561deabddb7b1f690748c7ca279717",
+      "fixedFixtureAbsentAfter": true
+    },
+    {
+      "testFile": "tests/system/certificate-redis.integration.cjs",
+      "testFileSha256Before": "2824f64a98228a936924f8c3145a8ccde27a5c36a74d37bc0e4f175730f86d03",
+      "testFileSha256After": "2824f64a98228a936924f8c3145a8ccde27a5c36a74d37bc0e4f175730f86d03",
+      "command": [
+        "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/certificate-redis.integration.cjs"
+      ],
+      "cwd": "/workspace/scratch/6383b3161c96/EOS-integrated-test",
+      "startedAt": "2026-10-01T18:10:00.190886+00:00",
+      "elapsedSeconds": 9.021,
+      "exitCode": 0,
+      "tapCounts": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "rawFile": "raw/certificate-redis8.tap",
+      "rawSha256": "0f8e3f19016a8cfcef41462cb7818fdf979c7b9090cc72c1cb662890ec1e05da",
+      "fixedFixtureAbsentAfter": true
+    }
+  ],
+  "limitations": [
+    "Compiled Debian Redis source and all Debian patches on Ubuntu 24.04 x64; not the Debian-built binary.",
+    "Build uses MALLOC=libc, bundled dependencies and no USE_SYSTEMD; Debian packaging uses system jemalloc/systemd/hardening flags.",
+    "TLS integration uses host OpenSSL 3.0.13, not Debian 13 OpenSSL 3.5.",
+    "Actual processes under root with explicit loopback interface fixture; not unprivileged ARM64 or systemd hardware acceptance.",
+    "No independent penetration test or product conformity claim.",
+    "Debian source archive hashes matched HTTPS-retrieved .dsc; OpenPGP signature not independently verified."
+  ],
+  "status": "DEPLOYMENT_BLOCKED",
+  "securityBlocker": {
+    "schemaVersion": 1,
+    "retrievedAt": "2026-10-01T18:09:40.890369+00:00",
+    "decision": "DEPLOYMENT_BLOCKED",
+    "finding": "CVE-2026-81934",
+    "sourceUrl": "https://security-tracker.debian.org/tracker/CVE-2026-81934",
+    "sourceFile": "raw/CVE-2026-81934.debian.html",
+    "sourceSha256": "ee762c888319ff1d60fb44eb7fa44f725c96d7c6a68f70c33d61638809deb8c9",
+    "sourcePackage": "redis",
+    "testedSourceVersion": "5:8.0.2-3+deb13u2",
+    "officialTrackerStatus": "vulnerable",
+    "description": "Use-after-free in tlsProcessPendingData; remote unauthenticated attacker may execute commands with Redis server privileges.",
+    "upstreamFix": "https://github.com/redis/redis/commit/6d088c335d5c3ec49a6c28486140b498e70b7834",
+    "scope": "Bounded isolated compatibility tests only. Passing functional tests do not approve vulnerable Redis for hardware installation, product use or redistribution.",
+    "eosImpact": "EOS requires TLS; disabling TLS is not an accepted mitigation. Loopback bind narrows reachability but does not remediate the vulnerability."
+  },
+  "summaryGenerationRecovery": {
+    "schemaVersion": 1,
+    "observedAt": "2026-10-01T18:10:51.333897+00:00",
+    "phase": "summary-generation-after-both-tests-completed",
+    "harnessExitCode": 1,
+    "error": "FileNotFoundError: source-verification.json (source verification had been saved under source/source-verification.json)",
+    "testExitCodes": [
+      0,
+      0
+    ],
+    "resolution": "Copy verified source metadata to expected path and regenerate summary only from preserved test-results.json and raw TAP; no rerun.",
+    "testResultsSha256": "ba52ddb89e7dcbee7be5af1108649f1b24954ed4a847a0dc93eb12cf6214150d"
+  },
+  "debianCopyright": {
+    "path": "redis-8.0.2/debian/copyright",
+    "redis8LicenseOptions": [
+      "RSALv2",
+      "SSPLv1",
+      "AGPLv3"
+    ],
+    "productLicenseReviewComplete": false
+  }
+}

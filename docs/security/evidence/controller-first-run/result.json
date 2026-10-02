@@ -1,0 +1,41 @@
+{
+  "at_utc": "2026-09-30T19:13:14.237Z",
+  "admin_version": "8.0.14",
+  "commit": "e4b39b810f5f12cd6e969e25a39ff6f3188a6608",
+  "scope": "isolated original onChange method execution, synthetic state; not browser/end-to-end",
+  "outcome": "Security-relevant configuration loss reproduced; not a passing security test",
+  "results": [
+    {
+      "component": "Objects",
+      "file": "src-admin/src/components/BaseSettings/BaseSettingsObjects.tsx",
+      "source_sha256": "7673e683ca72ebec0b1e1e64c071be2fe4497e3eafe9f0e606c4cc27bd0fc82b",
+      "excerpt_sha256": "5481327fa5ebce23ccee6e18165283cb4219003bb52412b2661a400f8298e32f",
+      "observedOptionsKeys": [
+        "auth_pass",
+        "retry_max_delay",
+        "retry_max_count",
+        "db",
+        "family"
+      ],
+      "tlsRemoved": true,
+      "usernameRemoved": true,
+      "authPassPreserved": true
+    },
+    {
+      "component": "States",
+      "file": "src-admin/src/components/BaseSettings/BaseSettingsStates.tsx",
+      "source_sha256": "4957f8f14ec44d06e54952a9f0004755eb945d5f77defa86c6580e5a022e48cc",
+      "excerpt_sha256": "5481327fa5ebce23ccee6e18165283cb4219003bb52412b2661a400f8298e32f",
+      "observedOptionsKeys": [
+        "auth_pass",
+        "retry_max_delay",
+        "retry_max_count",
+        "db",
+        "family"
+      ],
+      "tlsRemoved": true,
+      "usernameRemoved": true,
+      "authPassPreserved": true
+    }
+  ]
+}

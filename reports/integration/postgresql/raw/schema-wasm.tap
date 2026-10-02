@@ -1,0 +1,78 @@
+TAP version 13
+# Subtest: supplemental PostgreSQL schema SQL and RLS in WASM
+    # Subtest: schema initializes on fresh database
+    ok 1 - schema initializes on fresh database
+      ---
+      duration_ms: 26.444005
+      type: 'test'
+      ...
+    # Subtest: runtime roles have no superuser or role administration powers
+    ok 2 - runtime roles have no superuser or role administration powers
+      ---
+      duration_ms: 5.98324
+      type: 'test'
+      ...
+    # Subtest: objects role can store own domain with binary value
+    ok 3 - objects role can store own domain with binary value
+      ---
+      duration_ms: 6.697782
+      type: 'test'
+      ...
+    # Subtest: objects role cannot insert states or escape to owner
+    ok 4 - objects role cannot insert states or escape to owner
+      ---
+      duration_ms: 3.162103
+      type: 'test'
+      ...
+    # Subtest: states role cannot read or change objects domain
+    ok 5 - states role cannot read or change objects domain
+      ---
+      duration_ms: 4.668662
+      type: 'test'
+      ...
+    # Subtest: event rows are isolated by database role
+    ok 6 - event rows are isolated by database role
+      ---
+      duration_ms: 3.997677
+      type: 'test'
+      ...
+    # Subtest: input byte limits and domain checks are enforced
+    ok 7 - input byte limits and domain checks are enforced
+      ---
+      duration_ms: 211.232776
+      type: 'test'
+      ...
+    # Subtest: runtime cannot create schema, change schema version, or disable RLS
+    ok 8 - runtime cannot create schema, change schema version, or disable RLS
+      ---
+      duration_ms: 3.013288
+      type: 'test'
+      ...
+    # Subtest: runtime admission SQL succeeds for both restricted roles
+    ok 9 - runtime admission SQL succeeds for both restricted roles
+      ---
+      duration_ms: 12.440717
+      type: 'test'
+      ...
+    # Subtest: parameterized SQL preserves injection text as data
+    ok 10 - parameterized SQL preserves injection text as data
+      ---
+      duration_ms: 1.928387
+      type: 'test'
+      ...
+    1..10
+ok 1 - supplemental PostgreSQL schema SQL and RLS in WASM
+  ---
+  duration_ms: 4508.848674
+  type: 'test'
+  ...
+# {"scope":"WASM SQL/RLS only","engine":"PostgreSQL 18.3 (PGlite 0.5.8) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit","schemaSha256":"19fd184544f6d87f12ef254181d0a3d0b743636c367861e7a4b5a6f9557ae33d"}
+1..1
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4697.872835

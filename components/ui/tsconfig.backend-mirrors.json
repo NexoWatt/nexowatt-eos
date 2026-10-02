@@ -1,0 +1,36 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/backend-mirrors",
+    "module": "NodeNext",
+    "target": "ES2022",
+    "removeComments": false,
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/backend/state-cache/state-cache.ts",
+    "src-ts/backend/feature-visibility/feature-visibility.ts",
+    "src-ts/backend/license/license-key-safety.ts",
+    "src-ts/backend/api-state/api-state-envelope.ts",
+    "src-ts/backend/api-state/api-set-helpers.ts",
+    "src-ts/backend/connection/connection-state.ts",
+    "src-ts/backend/main-runtime/main-runtime-helpers.ts",
+    "src-ts/backend/main-helpers/state-cache-main.ts",
+    "src-ts/backend/main-helpers/api-state-main.ts",
+    "src-ts/backend/main-helpers/settings-write-main.ts",
+    "src-ts/backend/main-helpers/info-connection-main.ts",
+    "src-ts/backend/main-helpers/license-key-main.ts",
+    "src-ts/backend/main-helpers/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-types",
+    "build-ts"
+  ]
+}

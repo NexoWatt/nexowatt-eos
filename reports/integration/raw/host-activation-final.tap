@@ -1,0 +1,244 @@
+TAP version 13
+# Subtest: additive validation admits exact new adapter and profile only
+ok 1 - additive validation admits exact new adapter and profile only
+  ---
+  duration_ms: 5.225293
+  type: 'test'
+  ...
+# Subtest: rejects sequence downgrade before service operations
+ok 2 - rejects sequence downgrade before service operations
+  ---
+  duration_ms: 1.576454
+  type: 'test'
+  ...
+# Subtest: rejects Node change before service operations
+ok 3 - rejects Node change before service operations
+  ---
+  duration_ms: 0.458714
+  type: 'test'
+  ...
+# Subtest: rejects core version change before service operations
+ok 4 - rejects core version change before service operations
+  ---
+  duration_ms: 0.572646
+  type: 'test'
+  ...
+# Subtest: rejects dependency version change before service operations
+ok 5 - rejects dependency version change before service operations
+  ---
+  duration_ms: 0.722924
+  type: 'test'
+  ...
+# Subtest: rejects controller code change before service operations
+ok 6 - rejects controller code change before service operations
+  ---
+  duration_ms: 1.110384
+  type: 'test'
+  ...
+# Subtest: rejects missing old file before service operations
+ok 7 - rejects missing old file before service operations
+  ---
+  duration_ms: 2.298365
+  type: 'test'
+  ...
+# Subtest: rejects extra core file before service operations
+ok 8 - rejects extra core file before service operations
+  ---
+  duration_ms: 1.582654
+  type: 'test'
+  ...
+# Subtest: rejects service code replacement before service operations
+ok 9 - rejects service code replacement before service operations
+  ---
+  duration_ms: 4.254815
+  type: 'test'
+  ...
+# Subtest: rejects unadmitted profile entry before service operations
+ok 10 - rejects unadmitted profile entry before service operations
+  ---
+  duration_ms: 2.071853
+  type: 'test'
+  ...
+# Subtest: existing admitted adapter bytes, version and permissions cannot change
+ok 11 - existing admitted adapter bytes, version and permissions cannot change
+  ---
+  duration_ms: 1.505707
+  type: 'test'
+  ...
+# Subtest: successful transaction verifies both releases, starts through systemd and commits pointer/state
+ok 12 - successful transaction verifies both releases, starts through systemd and commits pointer/state
+  ---
+  duration_ms: 22.01414
+  type: 'test'
+  ...
+# Subtest: new startup failure restores old pointer, verifies old startup and keeps original sequence
+ok 13 - new startup failure restores old pointer, verifies old startup and keeps original sequence
+  ---
+  duration_ms: 13.735409
+  type: 'test'
+  ...
+# Subtest: failed recovery keeps operation lock and reports manual recovery required
+ok 14 - failed recovery keeps operation lock and reports manual recovery required
+  ---
+  duration_ms: 11.303766
+  type: 'test'
+  ...
+# Subtest: concurrent or interrupted operation lock rejects new activation without commands
+ok 15 - concurrent or interrupted operation lock rejects new activation without commands
+  ---
+  duration_ms: 6.563196
+  type: 'test'
+  ...
+# Subtest: wrong signing identity and state/pointer mismatch reject before stop
+ok 16 - wrong signing identity and state/pointer mismatch reject before stop
+  ---
+  duration_ms: 9.549533
+  type: 'test'
+  ...
+# Subtest: unprivileged activation and arbitrary stage paths are refused
+ok 17 - unprivileged activation and arbitrary stage paths are refused
+  ---
+  duration_ms: 4.281495
+  type: 'test'
+  ...
+# Subtest: state commit failure triggers verified rollback rather than accepting split state
+ok 18 - state commit failure triggers verified rollback rather than accepting split state
+  ---
+  duration_ms: 9.1442
+  type: 'test'
+  ...
+# Subtest: rate limited controller is reset specifically before trial and recovery starts
+ok 19 - rate limited controller is reset specifically before trial and recovery starts
+  ---
+  duration_ms: 10.118754
+  type: 'test'
+  ...
+# Subtest: persistent journal write failure cannot block old pointer and controller restoration
+ok 20 - persistent journal write failure cannot block old pointer and controller restoration
+  ---
+  duration_ms: 10.191128
+  type: 'test'
+  ...
+# Subtest: permit revocation I/O failure still restores the previous release and retains a stopped maintenance gate
+ok 21 - permit revocation I/O failure still restores the previous release and retains a stopped maintenance gate
+  ---
+  duration_ms: 10.470155
+  type: 'test'
+  ...
+# Subtest: successful trial with failed final gate cleanup is stopped and cannot report success
+ok 22 - successful trial with failed final gate cleanup is stopped and cannot report success
+  ---
+  duration_ms: 8.57533
+  type: 'test'
+  ...
+# Subtest: OS parser never evaluates shell substitutions or accepts malformed assignments
+ok 23 - OS parser never evaluates shell substitutions or accepts malformed assignments
+  ---
+  duration_ms: 2.897332
+  type: 'test'
+  ...
+# Subtest: fresh supported fixture with exact Node matches read-only prerequisites
+ok 24 - fresh supported fixture with exact Node matches read-only prerequisites
+  ---
+  duration_ms: 20.172199
+  type: 'test'
+  ...
+# Subtest: preflight rejects wrong OS and exact Node drift
+ok 25 - preflight rejects wrong OS and exact Node drift
+  ---
+  duration_ms: 9.650146
+  type: 'test'
+  ...
+# Subtest: preflight rejects privileged Node, existing identity and occupied database ports
+ok 26 - preflight rejects privileged Node, existing identity and occupied database ports
+  ---
+  duration_ms: 9.290181
+  type: 'test'
+  ...
+# Subtest: fresh-path check catches a dangling symlink instead of overwriting it
+ok 27 - fresh-path check catches a dangling symlink instead of overwriting it
+  ---
+  duration_ms: 9.403302
+  type: 'test'
+  ...
+# Subtest: merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+ok 28 - merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+  ---
+  duration_ms: 0.858248
+  type: 'test'
+  ...
+# Subtest: generated host config passes real transport and bootstrap validators
+ok 29 - generated host config passes real transport and bootstrap validators
+  ---
+  duration_ms: 158.926854
+  type: 'test'
+  ...
+# Subtest: private writes reject replacement and symlink targets
+ok 30 - private writes reject replacement and symlink targets
+  ---
+  duration_ms: 1.655314
+  type: 'test'
+  ...
+# Subtest: installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+ok 31 - installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+  ---
+  duration_ms: 13.512252
+  type: 'test'
+  ...
+# Subtest: disabled install writes restricted config and units but never enables or starts services
+ok 32 - disabled install writes restricted config and units but never enables or starts services
+  ---
+  duration_ms: 29.286435
+  type: 'test'
+  ...
+# Subtest: pinned release state write failure prevents every service start or enable
+ok 33 - pinned release state write failure prevents every service start or enable
+  ---
+  duration_ms: 18.888017
+  type: 'test'
+  ...
+# Subtest: privileged group detected after identity creation stops before provisioning
+ok 34 - privileged group detected after identity creation stops before provisioning
+  ---
+  duration_ms: 10.455694
+  type: 'test'
+  ...
+# Subtest: start follows TLS databases then init then controller and writes root marker
+ok 35 - start follows TLS databases then init then controller and writes root marker
+  ---
+  duration_ms: 23.562097
+  type: 'test'
+  ...
+# Subtest: initialization failure stops and disables units without starting controller
+ok 36 - initialization failure stops and disables units without starting controller
+  ---
+  duration_ms: 23.248793
+  type: 'test'
+  ...
+# Subtest: cleanup failure is reported rather than claimed as a stopped installation
+ok 37 - cleanup failure is reported rather than claimed as a stopped installation
+  ---
+  duration_ms: 21.848826
+  type: 'test'
+  ...
+# Subtest: unit security boundaries and network compatibility remain explicit
+ok 38 - unit security boundaries and network compatibility remain explicit
+  ---
+  duration_ms: 0.870978
+  type: 'test'
+  ...
+# Subtest: systemd-analyze accepts complete unit grammar in isolated root fixture
+ok 39 - systemd-analyze accepts complete unit grammar in isolated root fixture
+  ---
+  duration_ms: 31.190494
+  type: 'test'
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 623.80951

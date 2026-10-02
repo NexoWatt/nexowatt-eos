@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexowatt:eos:architecture:update-manifest:1",
+  "title": "update-manifest",
+  "description": "Proposed interface v1; offline shape validation only. Not an implemented or authorized runtime interface.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "releaseId",
+    "product",
+    "version",
+    "releaseSequence",
+    "issuedAt",
+    "expiresAt",
+    "target",
+    "compatibilityProfileId",
+    "artifacts",
+    "sbomArtifactId",
+    "requiresVerifiedTufMetadata"
+  ],
+  "properties": {
+    "contractVersion": {
+      "const": "1.0"
+    },
+    "releaseId": {
+      "$ref": "#/$defs/uuid"
+    },
+    "product": {
+      "const": "nexowatt-eos"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 64,
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-(?:(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?$(?![\\s\\S])"
+    },
+    "releaseSequence": {
+      "$ref": "#/$defs/sequence"
+    },
+    "issuedAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "expiresAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "osFamily",
+        "architecture",
+        "hardwareProfileId"
+      ],
+      "properties": {
+        "osFamily": {
+          "const": "linux"
+        },
+        "architecture": {
+          "enum": [
+            "arm64",
+            "x86_64"
+          ]
+        },
+        "hardwareProfileId": {
+          "$ref": "#/$defs/identifier"
+        }
+      }
+    },
+    "compatibilityProfileId": {
+      "$ref": "#/$defs/identifier"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "artifactId",
+          "purpose",
+          "sha256",
+          "sizeBytes"
+        ],
+        "properties": {
+          "artifactId": {
+            "$ref": "#/$defs/identifier"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "system-image",
+              "sbom",
+              "release-notes"
+            ]
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 17179869184
+          }
+        }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "purpose": {
+                "const": "system-image"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "purpose": {
+                "const": "sbom"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "sbomArtifactId": {
+      "$ref": "#/$defs/identifier"
+    },
+    "requiresVerifiedTufMetadata": {
+      "const": true
+    }
+  },
+  "$defs": {
+    "module": {
+      "type": "string",
+      "enum": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ]
+    },
+    "licensedModule": {
+      "type": "string",
+      "enum": [
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus"
+      ]
+    },
+    "uuid": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$(?![\\s\\S])"
+    },
+    "timestamp": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 20,
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$(?![\\s\\S])"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    }
+  }
+}

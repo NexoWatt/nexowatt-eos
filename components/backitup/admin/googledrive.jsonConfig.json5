@@ -1,0 +1,91 @@
+{
+    "type": "panel",
+    "label": "Google Drive",
+    "items": {
+        "_header": {
+            "type": "header",
+            "size": 2,
+            "text": "Google Drive",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "_googleDrive": {
+            "newLine": true,
+            "type": "staticText",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12,
+            "text": "Cloud access is configured in the NexoWatt EOS backup interface."
+        },
+        "googledriveDeleteOldBackup": {
+            "type": "checkbox",
+            "label": "Delete old Google Drive-Backups",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        },
+        "googledriveOwnDir": {
+            "type": "checkbox",
+            "label": "Extra path for backup types",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4
+        },
+        "googledriveDeleteAfter": {
+            "newLine": true,
+            "hidden": "!data.googledriveDeleteOldBackup || !data.advancedDelete",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 1,
+            "max": 1000,
+            "type": "number",
+            "label": "piece",
+            "help": "Delete old NexoWatt EOS backups with the exception of the last X pieces"
+        },
+        "googledriveMinimalDir": {
+            "hidden": "!data.googledriveOwnDir",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "text",
+            "label": "Google Drive Path for NexoWatt EOS backup",
+            "newLine": true
+        },
+        "googledriveCcuDir": {
+            "hidden": "!data.googledriveOwnDir",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "text",
+            "label": "Google Drive Path for CCU backup"
+        },
+        "googledriveDir": {
+            "hidden": "data.googledriveOwnDir",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "text",
+            "label": "Google Drive path",
+            "newLine": true
+        }
+    }
+}

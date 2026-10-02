@@ -1,0 +1,448 @@
+{
+  "schemaVersion": 1,
+  "documentId": "EOS-INTEGRATION-DEVICES-2026-09-30",
+  "date": "2026-09-30",
+  "repository": "https://github.com/NexoWatt/nexowatt-devices",
+  "visibility": "private",
+  "branchObserved": "main",
+  "commit": "6de81f6c67294c4b26933c38715b09455c204de2",
+  "tree": "a479e538ea20b755f930da95a5dee29aa89e9b57",
+  "name": "iobroker.nexowatt-devices",
+  "version": "0.5.168",
+  "scope": "partial-source-review-plus-read-only-stub-reproductions",
+  "installedVersion": null,
+  "runtimeIntegrated": false,
+  "productionApproved": false,
+  "craConformityDeclared": false,
+  "hardwareTestsExecuted": false,
+  "sourceFiles": [
+    {
+      "path": "package.json",
+      "gitBlobSha1": "8259bc296b7ccc763a9bb6e6c185f474d376b2bb",
+      "sha256": "de3e4233020bf9868d24b91ff9512fe676f65896675baeafb8306621d87682cf",
+      "bytes": 1084
+    },
+    {
+      "path": "io-package.json",
+      "gitBlobSha1": "5e70086eafe52d2ba352a5009be811ec90b91a0d",
+      "sha256": "778aaecd364597d0fd9acf82b16f350b6d67850feaf3c81072e4f48c5139e018",
+      "bytes": 89454
+    },
+    {
+      "path": "LICENSE",
+      "gitBlobSha1": "be23427b8c23a3a7c37196ecd2172991ea0a6cf2",
+      "sha256": "ff6982f4dcaa6ec62ee8656bef8f01a31c408563b4402a5b6ae81f57e37098ee",
+      "bytes": 1657
+    },
+    {
+      "path": "bootstrap.js",
+      "gitBlobSha1": "52c61b26262395474b27748971965a658e4beed6",
+      "sha256": "4621e42987d48901200b0556f33bff86ca0af1fd4cba41e5b4e2530c52073dc1",
+      "bytes": 192
+    },
+    {
+      "path": "main.js",
+      "gitBlobSha1": "82fe42807bdadfa0ac776b291201f0fb77a751e0",
+      "sha256": "a3b02040555a0aff73a0d727121feb6fcc24f99200628d920e32c29d255f78f6",
+      "bytes": 18161
+    },
+    {
+      "path": "lib/drivers/http.js",
+      "gitBlobSha1": "55b298b0c6356a44024b420e0913d4f6deb89066",
+      "sha256": "90957abe3b0a932fadf9e083cdaa776f7a3596b09f8e8ae308ceb1f8a432530c",
+      "bytes": 9710
+    },
+    {
+      "path": "lib/drivers/mqtt.js",
+      "gitBlobSha1": "857c7a6fa5c993211355185702f0a7afa4abf3ed",
+      "sha256": "5ffcb1f36a9bb190e9ca910b22088c06eee21c6b7d09664e94105e326c930a10",
+      "bytes": 71445
+    },
+    {
+      "path": "ocpp/server.js",
+      "gitBlobSha1": "53213c90ce72184c61b4449c39113ea9dc93c380",
+      "sha256": "11a6f331dfcd675c84b589d2bbb5aabddb7b1a818536ef12beaa5b4ed8c1d2a6",
+      "bytes": 3486
+    },
+    {
+      "path": "ocpp/common.js",
+      "gitBlobSha1": "2d6f10a69a0b6873a374e7425b6041670583ddb5",
+      "sha256": "3994ec7eb63b65d6ac13882a0d99c20a324bacfcf35f675a8e49cb1d7f4a8406",
+      "bytes": 24703
+    },
+    {
+      "path": "lib/utils.js",
+      "gitBlobSha1": "15345c8d349a5cb3f0161581837277e46d7d7498",
+      "sha256": "8362f5b1ae0a20ce3892b7c14b86436b15064fee078cea0f0638d91867b743e3",
+      "bytes": 6028
+    },
+    {
+      "path": "lib/deviceRuntime.js",
+      "gitBlobSha1": "a30823de71be25b85136d71da19a2cfe5bd8cc32",
+      "sha256": "c4a3e167f8a7babf5273ef8e5e2775adf55bb00c2bd8b2935caab8885b4ca1e3",
+      "bytes": 377522
+    },
+    {
+      "path": "lib/sungrowFastFeedbackPatch.js",
+      "gitBlobSha1": "d2ba90ad35f744361309946121044b1dee51d66d",
+      "sha256": "baabce83e73e2df234f15328f0f4b6e3ecbefe9bada5d1f74a374e4ea0575d61",
+      "bytes": 15553
+    },
+    {
+      "path": "docs/THIRD_PARTY_NOTICES.md",
+      "gitBlobSha1": "7a01e900a1f740ddba5626847a4b73e5607efd71",
+      "sha256": "79d226c14f33ffe9f2a4951b25f4009ede2394b9fc80e1e72c736781ff9b2a3b",
+      "bytes": 1022
+    },
+    {
+      "path": "package-lock.json",
+      "gitBlobSha1": "3b280339b54c06f4b8006252e3198c332c36e169",
+      "sha256": "807062590736404308d04585bcbb472c3934abc5d60420851a99c7b38d73524e",
+      "bytes": 92208
+    }
+  ],
+  "packageMetadata": {
+    "license": "UNLICENSED",
+    "ioPackageLicense": "Proprietary",
+    "licenseFile": "NexoWatt Proprietary License (Internal Use)",
+    "nodeEngine": ">=18",
+    "jsControllerMinimumDeclaredInIoPackage": null,
+    "compactModeSupported": true,
+    "adapterCoreRange": "^3.2.3",
+    "encryptedNativeDeclared": false,
+    "protectedNativeDeclared": false
+  },
+  "lockfile": {
+    "version": 3,
+    "entriesIncludingRoot": 208,
+    "status": "declared-lockfile-not-installed-or-advisory-audited",
+    "directDependencies": [
+      {
+        "name": "@iobroker/adapter-core",
+        "declaredRange": "^3.2.3",
+        "lockedVersion": "3.4.3",
+        "lockfileLicense": "MIT"
+      },
+      {
+        "name": "modbus-serial",
+        "declaredRange": "^8.0.16",
+        "lockedVersion": "8.0.25",
+        "lockfileLicense": "ISC"
+      },
+      {
+        "name": "mqtt",
+        "declaredRange": "^5.10.0",
+        "lockedVersion": "5.16.0",
+        "lockfileLicense": "MIT"
+      },
+      {
+        "name": "axios",
+        "declaredRange": "^1.7.2",
+        "lockedVersion": "1.20.0",
+        "lockfileLicense": "MIT"
+      },
+      {
+        "name": "serialport",
+        "declaredRange": "^12.0.0",
+        "lockedVersion": "12.0.0",
+        "lockfileLicense": "MIT"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "EOS-INT-DEV-001",
+      "title": "HTTP ermöglicht Klartext und abschaltbare TLS-Gegenstellenprüfung",
+      "priority": "high",
+      "status": "source-and-stub-reproduced",
+      "evidence": [
+        "lib/drivers/http.js:55-80"
+      ],
+      "attackOrFailureCondition": "HTTP-URL oder bewusst/versehentlich gesetztes insecureTls/rejectUnauthorized=false; tatsächlich installierte Konfiguration unbekannt.",
+      "impact": "Gerätezugangsdaten und Steuerdaten können auf erreichbaren Netzpfaden mitgelesen oder manipuliert werden.",
+      "requiredAction": "TLS mit eigener CA/vertrauenswürdigem Zertifikat verwenden; unsichere Profile nur als dokumentierte Legacy-Ausnahme in separater Gerätezone. Keine pauschale Funktionsabschaltung.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "DEV-001"
+      ],
+      "fixed": false,
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-REQ-005",
+        "EOS-REQ-007",
+        "EOS-REQ-008"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-002",
+      "title": "HTTP-Abrufe haben kein nachgewiesenes Gesamtbudget und keine expliziten Antwort-/Redirectgrenzen",
+      "priority": "medium",
+      "status": "source-and-stub-reproduced",
+      "evidence": [
+        "lib/drivers/http.js:60-68",
+        "lib/drivers/http.js:134-139",
+        "lib/drivers/http.js:261"
+      ],
+      "attackOrFailureCondition": "Langsame/große Antwort oder veränderte Gegenstelle; konfigurierbares Timeout standardmäßig8000ms.",
+      "impact": "Blockierte Pollvorgänge, Speicherlast und unkontrollierte Weiterleitungsziele; konkreter Netzwerkangriff wurde nicht ausgeführt.",
+      "requiredAction": "Echte Abbruchdeadline maximal5000ms für externe HTTPS-Aufträge, geprüfte Zielwechsel, begrenzte Antwortgröße; Geräte-LAN-Budgets aus Protokollanforderungen ableiten.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "DEV-002"
+      ],
+      "fixed": false,
+      "stride": [
+        "Denial of Service",
+        "Spoofing"
+      ],
+      "requirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-007",
+        "EOS-REQ-015"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-003",
+      "title": "HTTP-Fehlerprotokoll enthält vollständigen Anfragepfad",
+      "priority": "medium",
+      "status": "source-and-stub-reproduced",
+      "evidence": [
+        "lib/drivers/http.js:139"
+      ],
+      "attackOrFailureCondition": "Ein Template transportiert ein Geheimnis als URL-Parameter und ein Request schlägt fehl.",
+      "impact": "Geheimnis kann im Adapterlog erscheinen; nur synthetischer Marker verwendet.",
+      "requiredAction": "Diagnosecodes und bereinigte Gegenstellenkennung statt kompletter URLs/Fehlerobjekte protokollieren.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "DEV-003"
+      ],
+      "fixed": false,
+      "stride": [
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-REQ-011",
+        "EOS-REQ-016"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-004",
+      "title": "HTTP-Treiber lässt ungeprüfte Datentypen bis an die Laufzeitgrenze passieren",
+      "priority": "medium",
+      "status": "source-and-stub-reproduced",
+      "evidence": [
+        "lib/drivers/http.js:143-195",
+        "lib/utils.js:133-185"
+      ],
+      "attackOrFailureCondition": "JSON-Feld eines numerischen Datenpunkts liefert ein Objekt oder null.",
+      "impact": "Typvertrag am Treiberausgang fehlt; Auswirkungen bis auf echten ioBroker-State oder Hardware nicht nachgewiesen.",
+      "requiredAction": "Vor Übernahme endliche Zahlen, Datentypen, Wertebereiche, Aktualität und Einheiten prüfen; vorhandene Template-Kompatibilität erhalten.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "DEV-004"
+      ],
+      "fixed": false,
+      "stride": [
+        "Tampering",
+        "Denial of Service"
+      ],
+      "requirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-017"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-005",
+      "title": "MQTT ermöglicht Klartext und deaktivierte Zertifikatsprüfung",
+      "priority": "high",
+      "status": "source-and-stub-reproduced",
+      "evidence": [
+        "lib/drivers/mqtt.js:585-637"
+      ],
+      "attackOrFailureCondition": "Konfigurierte mqtt://-URL oder rejectUnauthorized=false; sichere mqtts://-URL mit Verifikation ist ebenfalls unterstützt.",
+      "impact": "Auf erreichbaren Geräte-/Brokernetzpfaden können Anmeldung und Steuerdaten gefährdet sein.",
+      "requiredAction": "TLS/Gegenstellenprüfung im sicheren Profil durchsetzen; CA-Verteilung und geräteabhängige Legacy-Migration testen.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "DEV-005"
+      ],
+      "fixed": false,
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-REQ-005",
+        "EOS-REQ-007",
+        "EOS-REQ-008"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-006",
+      "title": "MQTT-Nachrichtenwarteschlange und Topic-Diagnose ohne sichtbare Obergrenze",
+      "priority": "medium",
+      "status": "source-review-with-bounded-stub-demonstration",
+      "evidence": [
+        "lib/drivers/mqtt.js:155",
+        "lib/drivers/mqtt.js:564-582",
+        "lib/drivers/mqtt.js:703-709",
+        "lib/drivers/mqtt.js:852-865"
+      ],
+      "attackOrFailureCondition": "Broker/Publisher liefert viele unterschiedliche Topics oder Nachrichten schneller als States verarbeitet werden; relevante Broker-ACLs unbekannt.",
+      "impact": "Mögliche Ressourcenerschöpfung;200Topics im Stub bestätigt, kein Last-/DoS-Test und kein Speicherausfallnachweis.",
+      "requiredAction": "Queue-,Payload- und Topiclimits sowie Überlastverhalten/Backpressure einführen; Messwertfrische und Failsafe gerätespezifisch erhalten.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "DEV-006"
+      ],
+      "fixed": false,
+      "stride": [
+        "Denial of Service"
+      ],
+      "requirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-016"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-007",
+      "title": "Geräteadapter migriert beim Start fremde Adapterobjekte",
+      "priority": "medium",
+      "status": "source-and-stub-reproduced",
+      "evidence": [
+        "main.js:170-204",
+        "main.js:250-253"
+      ],
+      "attackOrFailureCondition": "Controller erteilt dem Adapter Schreibrechte auf fremde Adapterobjekte.",
+      "impact": "Breiterer Schreibscope als für Geräteanbindung erforderlich; die Migration ist legitime Bestandsfunktion, kein eigenständig nachgewiesener Authentifizierungsbypass.",
+      "requiredAction": "Migration einmalig in autorisierten Systemverwaltungsprozess verlagern; Objekt-/Stateberechtigungen vor Einschränkung mit Kompatibilitätstests erfassen.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "DEV-007"
+      ],
+      "fixed": false,
+      "stride": [
+        "Elevation of Privilege",
+        "Tampering"
+      ],
+      "requirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-017"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-008",
+      "title": "Zentrale Lizenzfreigabe und geschützte Credentialfelder im geprüften Hauptpfad nicht nachgewiesen",
+      "priority": "high",
+      "status": "integration-gap",
+      "evidence": [
+        "main.js:250-335",
+        "main.js:337-356",
+        "lib/deviceRuntime.js:7605-7742",
+        "io-package.json:615-670"
+      ],
+      "attackOrFailureCondition": "Neue EOS-Architektur setzt lokale signierte Berechtigungen und getrennte Modulidentitäten voraus; dieser Quellstand startet konfigurationsbasiert.",
+      "impact": "Gesteckte Integrationsanforderungen sind im geprüften Pfad noch nicht umgesetzt. Keine Behauptung über ungesichtete OS-/Controller-Verschlüsselung.",
+      "requiredAction": "Admin7/zentralen Lizenzdienst verknüpfen; Adapter erhalten begrenzte Freigaben statt Rohschlüssel; Geheimnisse getrennt speichern; Sicherheits-/Anlagenfunktionen erhalten.",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [
+        "baseline manifests"
+      ],
+      "fixed": false,
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-REQ-008",
+        "EOS-REQ-009",
+        "EOS-REQ-010",
+        "EOS-REQ-011"
+      ],
+      "controlsImplementedByThisReview": false
+    },
+    {
+      "id": "EOS-INT-DEV-009",
+      "title": "OCPP-Quellkopie ohne nachgewiesenen aktiven Paketpfad",
+      "priority": "low",
+      "status": "source-hygiene-observation",
+      "evidence": [
+        "ocpp/server.js",
+        "main.js:1-7",
+        "lib/deviceRuntime.js:1-31",
+        "package.json:11-36"
+      ],
+      "attackOrFailureCondition": "OCPP-Dateien liegen im Repository, sind jedoch nicht in package.files/dependencies und in den geprüften Start-/Runtimeimports nicht eingebunden.",
+      "impact": "Unklarer Pflegeumfang; kein Beleg für zweiten aktiven OCPP-Listener.",
+      "requiredAction": "OCPP-Verantwortung beim Integrationsadapter festlegen; vor Entfernung oder Übernahme vollständigen Referenzbaum und Releasepaket prüfen. ",
+      "owner": "NexoWatt engineering",
+      "target": "before integrated release approval",
+      "testNames": [],
+      "fixed": false,
+      "stride": [
+        "Tampering"
+      ],
+      "requirementIds": [
+        "EOS-REQ-001",
+        "EOS-REQ-018",
+        "EOS-REQ-020"
+      ],
+      "controlsImplementedByThisReview": false
+    }
+  ],
+  "testEvidence": {
+    "harness": "tests/integration/devices-source-review.test.cjs",
+    "rawReport": "reports/integration/devices-source-review.tap",
+    "status": "13-of-13-passed-reproductions-not-security-acceptance",
+    "networkListenersOpened": false,
+    "deviceCommandsSent": false,
+    "dependenciesInstalled": false,
+    "tests": 13,
+    "passed": 13,
+    "failed": 0,
+    "timestampUtc": "2026-09-30T20:29:58.427608+00:00",
+    "nodeVersion": "24.19.0",
+    "os": "Linux",
+    "architecture": "x86_64",
+    "command": "EOS_DEVICES_SOURCE=<independently-acquired-pinned-source> node --test --test-reporter=tap tests/integration/devices-source-review.test.cjs",
+    "rawReportSha256": "8c4c37456d422a5d79375d5a820c95b9fb2698b85beb0dee209b7898edc73db3"
+  },
+  "unknowns": [
+    "Complete repository and npm artifact not acquired",
+    "Installed/active source version and hardware configuration unknown",
+    "Hardware regression and real ioBroker/Node/controller integration not performed",
+    "No complete third-party advisory scan or license audit",
+    "No benchmark or denial-of-service test",
+    "Current Admin7/license service source not part of this sub-review"
+  ],
+  "compatibility": [
+    "Retain datapoint IDs, alias contracts, units, device templates, control timing and fail-safe behavior",
+    "Reported historical ZIP0.5.169 is not automatically replaced by this Git source0.5.168",
+    "common.compact=true is capability metadata, not evidence compact mode is enabled",
+    "TLS between EOS services does not encrypt unsupported device field protocols"
+  ],
+  "sourceCodeChanged": false
+}

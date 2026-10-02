@@ -1,0 +1,10 @@
+name: Automatic Approval Disabled
+on:
+  workflow_dispatch: {}
+permissions: {}
+jobs:
+  explain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    steps:
+      - run: echo 'Automatic approval is disabled. Changes require deliberate NexoWatt review.'

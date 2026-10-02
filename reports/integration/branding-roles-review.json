@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "EOS-BRANDING-ROLES-REVIEW-20261001",
+  "createdAt": "2026-10-01T15:20:44.446223+00:00",
+  "baseCommit": "2db4418871e9882ccee2a523e0035a0e3eae6c29",
+  "target": "0.2.0-dev.2 source candidate",
+  "status": "review-complete-no-new-unresolved-blocker-in-reviewed-scope",
+  "productionReleaseApproved": false,
+  "scope": "Changed bootstrap account contract, Admin role/password/session boundaries, UI authentication/password/SSE boundary, service-worker cache boundary and exact WebSocket/SBOM transform. Code and fixtures; not independent certification or whole-product penetration test.",
+  "independence": {
+    "otherImplementation": "Reviewed by a separate agent from the authors, within the same AI-assisted development session. No external independence claim.",
+    "serviceWorker": "Reviewer authored the narrowly delegated sw.ts change and focused test; its 18 source and 18 generated checks are self-tests, not independent review."
+  },
+  "contract": {
+    "serviceGroup": "system.group.administrator",
+    "installerGroup": "system.group.installateur",
+    "enduserGroup": "system.group.endkunde",
+    "authority": "Exactly one canonical active group; root enrollment owns identities/memberships. Raw browser identity mutation denied for all roles; narrow own-password/reset handlers retain bounded authority.",
+    "accountAcl": "0x600 owned by system.user.admin/system.group.administrator; generic non-Service controller permissions all false."
+  },
+  "resolvedReviewFindings": [
+    {
+      "id": "EOS-REVIEW-ROLE-01",
+      "issue": "Admin startup could rewrite or mirror root-owned role membership/ACLs.",
+      "resolution": "Integrated startup verifies canonical groups and refreshes cache only; raw identity CRUD/password commands blocked even for Service."
+    },
+    {
+      "id": "EOS-REVIEW-ROLE-02",
+      "issue": "Upstream cached raw object reads and subscriptions could disclose native secrets or password hashes to non-Service roles.",
+      "resolution": "Actual dispatch table denies non-Service raw reads and subscription commands before upstream handlers; 2.6.0 fixture checks no implicit global-subscription publication and synchronous revocation."
+    },
+    {
+      "id": "EOS-REVIEW-ROLE-03",
+      "issue": "Ambiguous canonical membership or mutable role aliases could disagree across components.",
+      "resolution": "Admin and UI require exactly one canonical active group; no username/config alias grants authority; root validates exact enrolled inventory."
+    },
+    {
+      "id": "EOS-REVIEW-SESSION-01",
+      "issue": "Password setup metadata/group-enabled changes were not uniformly bound to session authorization.",
+      "resolution": "Current account and role revisions include relevant setup/enabled flags; per-request and event revocation checked."
+    },
+    {
+      "id": "EOS-REVIEW-SESSION-02",
+      "issue": "SSE authorization could become stale; anonymous logout could affect other sessions; timed-out authorization could accumulate.",
+      "resolution": "Per-frame authorization, two-second deny deadline, pending work held until actual settlement at maxClients, scoped logout and session-specific stream closure; reviewed current code and component fixtures."
+    },
+    {
+      "id": "EOS-REVIEW-CACHE-01",
+      "issue": "Service worker cached protected HTML/API content across authentication boundaries.",
+      "resolution": "No protected pre-cache or fallback; public same-origin/query-free static asset allowlist only; old EOS cache purge. Self-tested 18 source plus 18 generated checks."
+    },
+    {
+      "id": "EOS-REVIEW-PASSWORD-01",
+      "issue": "Concurrent security changes during password proof/KDF could use stale authorization; expensive work needed bounds.",
+      "resolution": "Account revision and current role/session checked before and after expensive work; own writes narrowly scoped; bounded KDF concurrency. No atomic cross-adapter CAS claimed."
+    },
+    {
+      "id": "EOS-REVIEW-ORIGIN-01",
+      "issue": "Admin same-origin helper did not explicitly constrain scheme to HTTPS.",
+      "resolution": "HTTP caller now passes https: and component regression covers mismatch."
+    },
+    {
+      "id": "EOS-REVIEW-TRANSPORT-01",
+      "issue": "Actual ws-server 4.5.1 had a 500 MiB inbound payload default.",
+      "resolution": "Root implemented exact original/output hash-bound 1 MiB transform with package/version and actual Admin dependency resolution checks; reviewed source. Actual assembled oversized-frame test remains separate root integration evidence."
+    }
+  ],
+  "executedByReviewer": {
+    "serviceWorker": [
+      {
+        "scope": "source service-worker handlers in VM/CacheStorage fixture",
+        "counts": {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0
+        },
+        "raw": "reports/integration/raw/branding-roles-sw-source.tap",
+        "sha256": "45f79bec6576c6bcf4fb5470e72ed50d1e08cf2eaff7fd05282dc70ad3f32fa4"
+      },
+      {
+        "scope": "generated service-worker handlers in VM/CacheStorage fixture",
+        "counts": {
+          "tests": 18,
+          "pass": 18,
+          "fail": 0
+        },
+        "raw": "reports/integration/raw/branding-roles-sw-generated.tap",
+        "sha256": "dddc6d28fa6facee7237dee02776898c1e847327405cd69cc18f09521f1e8427"
+      }
+    ],
+    "socket": {
+      "report": "reports/integration/branding-roles-review-socket.json",
+      "sha256": "b2ee624148c2312826af130169a47aa2d17f12045ec76793f111d54c9d660b23",
+      "checks": 19,
+      "actualPackageVersion": "2.6.0",
+      "result": "passed"
+    },
+    "changedTextSecretMarkers": {
+      "report": "reports/integration/branding-roles-review-secret-scan.json",
+      "sha256": "4fb3e27c19338a5678401b92c164432f6deec588dc3298314d7d1f8f77031eb9",
+      "files": 202,
+      "findings": 0,
+      "exclusions": 11,
+      "scope": "Five high-confidence token/private-key patterns; no entropy/history/binary/archive completeness claim."
+    },
+    "diffWhitespace": "git diff --check on reviewed code/test paths passed"
+  },
+  "componentEvidenceInspected": {
+    "hashChecks": [
+      {
+        "component": "ui",
+        "result": "all-declared-source-runtime-file-hashes-match",
+        "fileCount": 22
+      },
+      {
+        "component": "admin",
+        "result": "all-declared-source-runtime-file-hashes-match",
+        "fileCount": 18,
+        "field": "sourceBindings"
+      }
+    ],
+    "adminReport": "components/admin/reports/security/branding-roles/verification.json",
+    "adminCounts": {
+      "source": 57,
+      "built": 57,
+      "actualDispatcher234": 6,
+      "actualDispatcher260": 6
+    },
+    "uiReport": "components/ui/reports/security/roles-20261001/verification-summary.json",
+    "uiFocusedPassed": 69,
+    "note": "Component evidence is attributable to its authors; counts overlap and must not be summed as unique requirements. Final assembled integration/SBOM/packaging gates belong to root release evidence."
+  },
+  "limitations": [
+    {
+      "id": "EOS-RESIDUAL-CAS",
+      "status": "open",
+      "detail": "No cross-process atomic compare-and-swap for simultaneous administrative password resets; coordinate such resets. Rechecks reduce stale-proof windows; they do not provide transaction isolation."
+    },
+    {
+      "id": "EOS-RESIDUAL-SHARED-RUNTIME",
+      "status": "open",
+      "detail": "Shared runtime/database identity does not isolate a compromised adapter. Root ownership and transport encryption are not a per-adapter sandbox."
+    },
+    {
+      "id": "EOS-RESIDUAL-EVENT-LOSS",
+      "status": "documented",
+      "detail": "Normal user/group events synchronously revoke before publication. Missed events additionally rely on a five-second socket watchdog; not an instantaneous distributed-revocation guarantee."
+    },
+    {
+      "id": "EOS-RESIDUAL-TARGET",
+      "status": "not-run-by-reviewer",
+      "detail": "Raspberry Pi 5/Debian target performance, hardware/device behavior, independent penetration test, external conformity determination and production release are outside this review."
+    },
+    {
+      "id": "EOS-RESIDUAL-FINAL-ASSEMBLY",
+      "status": "separate-gate",
+      "detail": "Current assembled controller/HTTPS/WebSocket integration, final SBOM and signed immutable artifact must be checked against final source separately; this report is not their approval."
+    }
+  ],
+  "files": [
+    {
+      "path": "runtime/bootstrap/accounts.cjs",
+      "sha256": "0e9bfb4a13ffa963a6d3f8d2f590f595e8c2fac3feb35815b240f28dfddaffad"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "58d0f8ef241fe21226677ce7928a9ce816b9ad2425aef3757e9f8ac81391bbcd"
+    },
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "sha256": "b98b3442a342a010d15cd51c6c528274871844672577d7c6536291af4763ca32"
+    },
+    {
+      "path": "runtime/controller-profile/websocket-bound.cjs",
+      "sha256": "ae518d7b8d0f822cf54882159f73dfa70be93cbfc96c35b2972be0e7af5ba032"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "79ea05d3b31b550d68be8b7232b088269cccf2590289121b7867e1bc882830a1"
+    },
+    {
+      "path": "components/admin/src/main.ts",
+      "sha256": "58e6b641d0dea07d91d75aa776f8d1a534ceaa735278c94ff6a9db128c32bb2d"
+    },
+    {
+      "path": "components/admin/src/lib/web.ts",
+      "sha256": "06e75789d94f9e8c5047ac9741bdb6bae92cb82c6b19f7bc95c826b6a66b0121"
+    },
+    {
+      "path": "components/admin/src/lib/eosApplianceProfile.js",
+      "sha256": "1812e15fd0992ad6e6f8582bfe3a235e2a7a04ddd694ec3fdc79267581dad6f6"
+    },
+    {
+      "path": "components/admin/src/lib/eosSessionSecurity.js",
+      "sha256": "81c27a33278a20d6b410ea39cdb4060fce4f533f27847487078253c184181f3e"
+    },
+    {
+      "path": "components/admin/src/lib/eosRequestSecurity.ts",
+      "sha256": "7351002c500716fdff1ba13d4b394ed21742b9928e69e54326d4c3cc02e33816"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/main.ts",
+      "sha256": "ca13d5195b11630e59f4c8aa52a4870e9d78743bd4ceff0d660ce25c0242f04f"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/eos-integrated.ts",
+      "sha256": "6b72f4278773927ef54a94d7830016b8f5563a883ade5f2fd5f9da8cd26de478"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/sse-runtime-guard.ts",
+      "sha256": "dd502d68a28c3370efbe31d4fe0cf2fbb46f3269302bc6f2e04cd5c265a531b6"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/www/auth.ts",
+      "sha256": "0af7f1752fccb4286e24a666eeb9b66fb9025ce738d8fca42494dd05eddc7765"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/www/sw.ts",
+      "sha256": "9eb27973acc0f7d1adfd0c4e1257e6e005e542f72e5dad7b6867ba9e3fcc4690"
+    },
+    {
+      "path": "components/ui/www/sw.js",
+      "sha256": "9e74296d13d8b2afd3b933538157224388dc12989703870e59f0363b9aad39d2"
+    },
+    {
+      "path": "components/ui/test/eos-service-worker-auth.test.cjs",
+      "sha256": "9af03a09c77d1e56525120927e1183de831b2868db117dbbb3dfb78990e97416"
+    },
+    {
+      "path": "components/admin/test/eos-appliance-socket.integration.cjs",
+      "sha256": "b0cdb23556e1c2c482d6e23581b2314bf9fe1a22a5a02ab95ecdc9da6a8b02ed"
+    },
+    {
+      "path": "tools/sbom/test_base.py",
+      "sha256": "1ddbb7656e913190c7d85319c9b9cf7d321c761568cb2b60f7d4d3c0b8effda8"
+    },
+    {
+      "path": "tests/system/sbom-test-base.test.py",
+      "sha256": "fffec0987ebb74cc9923a1b12cde53d9bca3a7134c5ebc89c3d01632623bff76"
+    },
+    {
+      "path": "docs/security/BRANDING_ROLES_DE.md",
+      "sha256": "8fd09c671b0df51bb53d927460e3803fafc8364fd1ce562a91fd1024a3166150"
+    }
+  ]
+}

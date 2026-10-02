@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/runtime-mirrors/**/*.ts",
+    "src-ts/runtime-mirrors/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "build-ts"
+  ]
+}

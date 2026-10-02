@@ -1,0 +1,235 @@
+{
+    "type": "panel",
+    "label": "Homematic CCU",
+    "items": {
+        "_header": {
+            "type": "header",
+            "size": 2,
+            "text": "Homematic CCU backup",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "backupNow": {
+            "type": "setState",
+            "label": "Backup now",
+            "newLine": true,
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 6,
+            "xl": 6,
+            "id": "oneClick.ccu",
+            "val": true,
+            "ack": false,
+            "variant": "contained"
+        },
+        "_helpLine1": {
+            "newLine": true,
+            "type": "divider",
+            "color": "primary"
+        },
+        "ccuTime": {
+            "hidden": "data.ccuCron",
+            "newLine": true,
+            "type": "timePicker",
+            "label": "Backup time",
+            "format": "HH:mm",
+            "views": [
+                "hours",
+                "minutes"
+            ],
+            "returnFormat": "HH:mm:ss",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3
+        },
+        "ccuCronJob": {
+            "hidden": "!data.ccuCron",
+            "newLine": true,
+            "type": "cron",
+            "label": "Backup CRON job",
+            "help": "Backup time as CRON job",
+            "complex": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "ccuEveryXDays": {
+            "newLine": true,
+            "hidden": "data.ccuCron",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "min": 1,
+            "max": 100,
+            "type": "number",
+            "label": "days",
+            "help": "Backup will run every X days"
+        },
+        "ccuDeleteAfter": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "min": 1,
+            "max": 100,
+            "type": "number",
+            "label": "piece",
+            "help": "Delete old ccu backups with the exception of the last X pieces"
+        },
+        "ccuNameSuffix": {
+            "hidden": "data.ccuMulti",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "type": "text",
+            "label": "Name suffix",
+            "help": "Name suffix for the file name of the backup"
+        },
+        "ccuHost": {
+            "hidden": "data.ccuMulti",
+            "newLine": true,
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "type": "text",
+            "label": "IP address",
+            "help": "IP of the CCU",
+            "validator": "data.ccuHost",
+            "validatorNoSaveOnError": true
+        },
+        "ccuUser": {
+            "hidden": "data.ccuMulti",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "type": "text",
+            "label": "Username",
+            "help": "Username of the CCU",
+            "validator": "data.ccuUser",
+            "validatorNoSaveOnError": true
+        },
+        "ccuPassword": {
+            "hidden": "data.ccuMulti",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3,
+            "type": "password",
+            "visible": true,
+            "label": "Password",
+            "help": "Password of the CCU",
+            "validator": "data.ccuPassword",
+            "validatorNoSaveOnError": true
+        },
+        "ccuCron": {
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Create your own CRON job (for experts only)",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3
+        },
+        "ccuUsehttps": {
+            "hidden": "data.ccuMulti",
+            "type": "checkbox",
+            "label": "Use https",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3
+        },
+        "ccuSignedCertificates": {
+            "hidden": "data.ccuMulti || !data.ccuUsehttps",
+            "type": "checkbox",
+            "label": "Allow only signed certificates",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 3,
+            "xl": 3
+        },
+        "ccuMulti": {
+            "newLine": true,
+            "type": "checkbox",
+            "label": "Backup of several systems",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "ccuEvents": {
+            "newLine": true,
+            "type": "table",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12,
+            "label": "CCU hosts",
+            "hidden": "!data.ccuMulti",
+            "encryptedAttributes": [
+                "pass"
+            ],
+            "items": [
+                {
+                    "attr": "host",
+                    "type": "text",
+                    "title": "IP address",
+                    "width": "20%"
+                },
+                {
+                    "attr": "user",
+                    "type": "text",
+                    "title": "Username",
+                    "width": "20%"
+                },
+                {
+                    "attr": "pass",
+                    "type": "password",
+                    "title": "Password",
+                    "width": "20%"
+                },
+                {
+                    "attr": "nameSuffix",
+                    "type": "text",
+                    "title": "Name suffix",
+                    "width": "20%"
+                },
+                {
+                    "attr": "usehttps",
+                    "type": "checkbox",
+                    "title": "Use https",
+                    "width": "5%"
+                },
+                {
+                    "attr": "signedCertificates",
+                    "type": "checkbox",
+                    "title": "Allow only signed certificates",
+                    "width": "10%"
+                }
+            ]
+        }
+    }
+}

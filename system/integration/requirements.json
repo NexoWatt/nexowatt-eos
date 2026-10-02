@@ -1,0 +1,3678 @@
+{
+  "schemaVersion": 1,
+  "documentId": "EOS-INTEGRATION-REQUIREMENTS-20261001",
+  "changeId": "EOS-INTEGRATION-20261001",
+  "date": "2026-10-01",
+  "targetDevelopmentVersion": "0.2.0-dev.1",
+  "sourceBaselineCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+  "baselineDevelopmentVersion": "0.1.0-test.1",
+  "status": "integration_requirements_and_open_risks",
+  "productionReleaseApproved": false,
+  "conformityClaim": false,
+  "scope": "Integrated test version: core, Admin7, UI, Devices, EEBUS, OCPP, backup, signed extensions and optional Tailscale service; source inclusion is not activation approval",
+  "existingRequirementDocument": "system/security/requirements.json",
+  "existingThreatDocument": "system/security/threat-model.json",
+  "existingFindingRegister": "system/integration/finding-register.json",
+  "statusSemantics": {
+    "integration_not_verified": "Target requirement; no integrated acceptance claim. Subsequent scoped evidence may show partial implementation without fulfilling whole requirement.",
+    "planned": "Test scenario not executed for integrated release; no fabricated result.",
+    "open": "Risk unresolved or effectiveness not yet evidenced for integrated release.",
+    "historical_baseline": "Prior core evidence with source binding; never automatically promotes new integrated release."
+  },
+  "verificationLevels": [
+    "document_review",
+    "static_analysis",
+    "unit_or_mock",
+    "real_process_integration",
+    "target_os_service",
+    "physical_device",
+    "independent_assessment"
+  ],
+  "manufacturerDecisionsPending": [
+    "CRA product boundary and category against actual core functionality and2025/2392 technical descriptions",
+    "Applicable conformity procedure and harmonised EN/OJ references",
+    "Supported lifetime and dated support end",
+    "Product PSIRT/contact/reporting exercise",
+    "IEC target levels and full-text requirement applicability",
+    "Series-release decision by authorized manufacturer"
+  ],
+  "sources": [
+    {
+      "id": "CRA-LEGAL",
+      "title": "Regulation (EU) 2024/2847",
+      "url": "https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "full_text_blocked_robot_check",
+      "scopeNote": "Legal reference only; exact clause mapping remains open"
+    },
+    {
+      "id": "CRA-MANUFACTURER",
+      "title": "European Commission CRA manufacturers",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-manufacturers",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "2026-08-14"
+    },
+    {
+      "id": "CRA-SUMMARY",
+      "title": "European Commission CRA summary",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-summary",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "Official-site non-exhaustive staff summary; not legal text"
+    },
+    {
+      "id": "CRA-REPORT",
+      "title": "European Commission CRA reporting",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-reporting",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "2026-09-11"
+    },
+    {
+      "id": "CRA-CONFORMITY",
+      "title": "European Commission CRA conformity assessment",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-conformity-assessment",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "2026-07-31"
+    },
+    {
+      "id": "CRA-STANDARDS",
+      "title": "European Commission CRA standardisation",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/cra-standardisation",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "2026-07-31"
+    },
+    {
+      "id": "CRA-CATEGORIES",
+      "title": "Implementing Regulation (EU) 2025/2392",
+      "url": "https://eur-lex.europa.eu/eli/reg_impl/2025/2392/oj/eng",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "full_text_blocked_robot_check",
+      "scopeNote": "Linked and named by EC conformity page; no EOS classification inferred",
+      "attemptedUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?qid=1764577062755&uri=CELEX:32025R2392"
+    },
+    {
+      "id": "IEC-4-1",
+      "title": "IEC62443-4-1:2018 Ed1.0",
+      "url": "https://webstore.iec.ch/en/publication/33615",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "catalog_scope_read",
+      "scopeNote": "2018-01-15; full normative text not read"
+    },
+    {
+      "id": "IEC-4-2",
+      "title": "IEC62443-4-2:2019 Ed1.0 including2022 corrigendum",
+      "url": "https://webstore.iec.ch/en/publication/34421",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "catalog_scope_read",
+      "scopeNote": "2019-02-27; full normative text not read"
+    },
+    {
+      "id": "IEC-3-2",
+      "title": "IEC62443-3-2:2020 Ed1.0",
+      "url": "https://webstore.iec.ch/en/publication/30727",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "catalog_scope_read",
+      "scopeNote": "2020-06-24; full normative text not read"
+    },
+    {
+      "id": "IEC-3-3",
+      "title": "IEC62443-3-3:2013 Ed1.0 including2014 corrigendum",
+      "url": "https://webstore.iec.ch/en/publication/7033",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "catalog_scope_read",
+      "scopeNote": "2013-08-07; full normative text not read"
+    },
+    {
+      "id": "SSDF",
+      "title": "NIST SSDF SP800-218 v1.1 final",
+      "url": "https://csrc.nist.gov/projects/ssdf",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "NIST project updated2026-04-13; v1.1 final baseline"
+    },
+    {
+      "id": "SSDF-DRAFT",
+      "title": "NIST SP800-218 Rev1 v1.2 Initial Public Draft",
+      "url": "https://csrc.nist.gov/pubs/sp/800/218/r1/ipd",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "2025-12-17 initial public draft; not final"
+    },
+    {
+      "id": "ASVS",
+      "title": "OWASP ASVS5.0.0",
+      "url": "https://owasp.org/projects/asvs",
+      "retrievedDate": "2026-10-01",
+      "retrievalStatus": "read",
+      "scopeNote": "Project identifies5.0.0 as latest stable; clause applicability not yet completed"
+    }
+  ],
+  "baselineEvidence": [
+    {
+      "id": "BASE-VERIFICATION",
+      "path": "reports/test-base/verification-summary.json",
+      "sha256": "d662a51838adf4fe897a2aef7f2a04c8de26e0af5c75f566bdd5f690127fc369",
+      "sourceCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+      "scope": "Core-only0.1.0-test.1:169 system,41 legacy,15 reported integration passes (13 behavioral subtests plus2 parents); not integrated adapters; UID0 sandbox",
+      "reuseRule": "Historical baseline evidence; rerun/review required after integration changes"
+    },
+    {
+      "id": "BASE-TRANSPORT",
+      "path": "reports/test-base/delivery-integration.tap",
+      "sha256": "36379c85fd98a99c08b63ab25659977a06d04260180782d3c754b4dce58b48a5",
+      "sourceCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+      "scope": "Actual Redis TLS1.3 / controller7.2.2 / reconnect core tests; no all-adapter proof",
+      "reuseRule": "Historical baseline evidence; rerun/review required after integration changes"
+    },
+    {
+      "id": "BASE-RELEASE",
+      "path": "reports/test-base/system-unit-tests.tap",
+      "sha256": "463dcce61a2320a906a489b0310272ad7d53a75dd45f07529e1d85cccc269e5d",
+      "sourceCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+      "scope": "Core manifest, transform, additive release tests; systemd command effects simulated",
+      "reuseRule": "Historical baseline evidence; rerun/review required after integration changes"
+    },
+    {
+      "id": "BASE-BOOTSTRAP",
+      "path": "reports/test-base/delivery-integration.tap",
+      "sha256": "36379c85fd98a99c08b63ab25659977a06d04260180782d3c754b4dce58b48a5",
+      "sourceCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+      "scope": "Core setup/start/restart, no active adapters, CI UUID, UID0",
+      "reuseRule": "Historical baseline evidence; rerun/review required after integration changes"
+    },
+    {
+      "id": "BASE-HOST",
+      "path": "reports/test-base/system-unit-tests.tap",
+      "sha256": "463dcce61a2320a906a489b0310272ad7d53a75dd45f07529e1d85cccc269e5d",
+      "sourceCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+      "scope": "Host operation mocks and temporary filesystem; no unprivileged target-host acceptance",
+      "reuseRule": "Historical baseline evidence; rerun/review required after integration changes"
+    },
+    {
+      "id": "BASE-SBOM",
+      "path": "reports/test-base/controller-runtime.schema-validation.json",
+      "sha256": "7b547b02c8fb37a5e77f01de25408a676d9d92bf0d7255a5cb452f7941dc79f9",
+      "sourceCommit": "bd6efcf8025ff0aeee9f6d7661d1e8221c8c78e3",
+      "scope": "Core npm CycloneDX1.5 schema validation; not full product inventory",
+      "reuseRule": "Historical baseline evidence; rerun/review required after integration changes"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "EOS-INT-REQ-001",
+      "title": "Lieferprofil und Herkunft eindeutig binden",
+      "parentRequirementIds": [
+        "EOS-REQ-001",
+        "EOS-REQ-017",
+        "EOS-REQ-018"
+      ],
+      "componentIds": [
+        "os-base",
+        "eos-core",
+        "all-adapters"
+      ],
+      "statement": "Jeder Runtime-Lieferstand muss exakte OS/Node/Controller/Adapter-/Buildversionen, Architekturen, Quellen, Lizenzhinweise und Dateihashes binden; Quellbeilage, installiertes Paket, zugelassene Instanz und aktive Instanz getrennt ausweisen.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-001",
+        "EOS-INT-TM-002"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-RELEASE"
+      ],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-001-P",
+          "type": "positive",
+          "scenario": "Ein signiertes Manifest identifiziert denselben tatsächlich installierten Codebaum und dieselben Paketversionen wie Inventar und SBOM.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-001-N",
+          "type": "negative",
+          "scenario": "Falsche Architektur, ungebundene Quelldatei, abweichender Build oder veränderter Code verhindern Zulassung ohne bestehende Instanzen zu ändern.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Reproduzierbarer integrierter Build und finaler Lieferhash",
+        "Debian12 arm64 und x64 getrennte Zielnachweise"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [],
+      "scopedEvidenceIds": [
+        "DEPENDENCY-FINAL-R4"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-002",
+      "title": "Erststart und Instanzenaufnahme kontrollieren",
+      "parentRequirementIds": [
+        "EOS-REQ-003",
+        "EOS-REQ-013",
+        "EOS-REQ-014",
+        "EOS-REQ-020"
+      ],
+      "componentIds": [
+        "eos-core",
+        "eos-admin",
+        "all-adapters"
+      ],
+      "statement": "Nur vollständig geprüfte, zugelassene Instanzen starten; Erststart ist wiederholbar, begrenzt und ohne automatische npm-Nachinstallation. Datenmigration und Statuswechsel sind nachvollziehbar.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-002",
+        "EOS-INT-TM-003",
+        "EOS-INT-TM-014"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-BOOTSTRAP",
+        "BASE-HOST"
+      ],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-ENROLLMENT",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-UNIT-BOOTSTRAP-REGRESSION",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-MAINTENANCE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-ONBOARD-CLOSURE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-SYSTEM",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-002-P",
+          "type": "positive",
+          "scenario": "Frische Installation, kontrollierte Aufnahme der freigegebenen Instanzen und Neustart erreichen die erwarteten Readiness-States ohne Schreibzugriff auf Code.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-002-N",
+          "type": "negative",
+          "scenario": "Abbruch zwischen Schritten, fremde Instanz, parallele Aufnahme, unpassende Version und manipulierte Konfiguration führen zu definiertem Abbruch oder Wiederaufnahme.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Echte systemd-Ausführung unter Dienstkonto",
+        "Integrierter Restart mit denselben Instanzen und gespeicherten Daten"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-INT-DEV-007"
+      ],
+      "scopedEvidenceIds": [
+        "INT-REVIEW-HOST-ACTIVATION-FINAL",
+        "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-003",
+      "title": "Ersteinrichtung gegen Übernahme absichern",
+      "parentRequirementIds": [
+        "EOS-REQ-003",
+        "EOS-REQ-008",
+        "EOS-REQ-015"
+      ],
+      "componentIds": [
+        "eos-admin",
+        "identity-license"
+      ],
+      "statement": "Erste Zuordnung benötigt einen einmaligen, kurzlebigen Nachweis über vertrauenswürdigen lokalen Bereitstellungsweg; keine gemeinsamen Kennwörter. Einrichtung muss gegen parallele Beanspruchung und Teilabschluss geschützt sein.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-003",
+        "EOS-INT-TM-004"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-ENROLLMENT",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-003-P",
+          "type": "positive",
+          "scenario": "Ein berechtigter Einrichter setzt persönliche Zugangsdaten und Gerätelizenz; der Abschluss wird dauerhaft gespeichert.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-003-N",
+          "type": "negative",
+          "scenario": "Falscher/abgelaufener/verwendeter Nachweis, zweiter Browser, Reload und Prozessabbruch geben keine Kontrolle oder unlizenzierte Produktfunktion frei.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Admin7 konkreter Erststart",
+        "Keine Setup-Geheimnisse in URL/Logs/ZIP",
+        "Erreichbarer autorisierter Reparaturweg"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-ADM7-001",
+        "EOS-ADM7-002"
+      ],
+      "scopedEvidenceIds": [
+        "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-004",
+      "title": "Admin und UI ausschließlich authentisiert über HTTPS",
+      "parentRequirementIds": [
+        "EOS-REQ-003",
+        "EOS-REQ-004",
+        "EOS-REQ-015"
+      ],
+      "componentIds": [
+        "eos-admin",
+        "nexowatt-ui"
+      ],
+      "statement": "Browser- und WebSocket-Zugänge nutzen geprüftes HTTPS/WSS ohne Klartext-Rückfall. Aktionen prüfen serverseitig Rolle, Sitzung, Nutzerstatus und CSRF/Origin-Vertrag; Header-Authentifizierung nur über dokumentierte vertrauenswürdige Gegenstelle.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-003",
+        "EOS-INT-TM-004",
+        "EOS-INT-TM-005"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-ENROLLMENT",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-UNIT-WEB-CERTIFICATES",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-ONBOARD-CLOSURE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-004-P",
+          "type": "positive",
+          "scenario": "Gültige Benutzer-, Installateur- und Adminsitzungen erlauben genau die jeweiligen Aktionen; vorhandene UI-Ansichten funktionieren.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-004-N",
+          "type": "negative",
+          "scenario": "Anonym, fremde Origin, manipulierte Proxyheader/Cookies, Rollenentzug, deaktivierter Nutzer, Session-Replay, ungültiges Zertifikat und HTTP führen zu definierter Ablehnung.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Echte Browser-/WebSocket-Prüfung beider Adapter",
+        "Sitzungsschutz und Rate-Limits am tatsächlich gebauten Stand"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-ADM7-002",
+        "NW-UI-260930-01",
+        "NW-UI-260930-02",
+        "NW-UI-260930-05",
+        "NW-UI-260930-06"
+      ],
+      "scopedEvidenceIds": [
+        "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-005",
+      "title": "Alle internen Transportpfade erfassen und verschlüsseln",
+      "parentRequirementIds": [
+        "EOS-REQ-005",
+        "EOS-REQ-008"
+      ],
+      "componentIds": [
+        "eos-core",
+        "secure-bus",
+        "data-store",
+        "all-adapters"
+      ],
+      "statement": "Objects, States, Abonnements und Messagebox laufen über TLS1.3 mit CA- und Namensprüfung; jeder zusätzliche Netzwerkkanal wird separat erfasst und abgesichert. Verschlüsselte Redis-Verbindungen sind kein Nachweis individueller Adapteridentitäten.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-005",
+        "EOS-INT-TM-006",
+        "EOS-INT-TM-014"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-TRANSPORT"
+      ],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-ENROLLMENT",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-UNIT-WEB-CERTIFICATES",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-005-P",
+          "type": "positive",
+          "scenario": "Jeder aktive Adapter nutzt nachweisbar geschützte Haupt- und Abonnementverbindungen; Stateabgleich nach Reconnect bleibt funktionsfähig.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-005-N",
+          "type": "negative",
+          "scenario": "Falsche CA/SAN, falsches Passwort, abgelaufenes Zertifikat, TLS1.2/Klartext und unfreigegebene Nebenports werden abgewiesen; kein stiller Fallback.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Nachweis mit allen tatsächlich aktivierten Adaptern",
+        "Aufnahme aller direkten HTTP/MQTT/IPC/WebSocket-Nebenpfade",
+        "Frische-/Reconciliation-Vertrag bei verlorenen PubSub-Ereignissen"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [],
+      "scopedEvidenceIds": [
+        "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-006",
+      "title": "Adapterrechte und Hostgrenze wirksam trennen",
+      "parentRequirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-005",
+        "EOS-REQ-010",
+        "EOS-REQ-015"
+      ],
+      "componentIds": [
+        "os-base",
+        "eos-core",
+        "all-adapters"
+      ],
+      "statement": "Dienste erhalten minimale Hostrechte; unterschiedliche Adapteridentitäten und Autorisierung pro Operation bleiben Ziel. Gemeinsame UID oder DB-Zugangsdaten sind ausdrücklich gemeinsame Vertrauenszone. Kein allgemeines sudo, Docker-Socket oder frei parametrierbarer privilegierter Broker.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-006",
+        "EOS-INT-TM-010"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-HOST",
+        "BASE-RELEASE"
+      ],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-BOOTSTRAP-REGRESSION",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-MAINTENANCE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-ONBOARD-CLOSURE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-SYSTEM",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-006-P",
+          "type": "positive",
+          "scenario": "Zugelassene Operationen funktionieren mit minimalen Datei-/Geräte-/Netzrechten unter echtem Dienstkonto.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-006-N",
+          "type": "negative",
+          "scenario": "Ein kompromittierter Adapter kann Code/Signaturschlüssel/Hostkonfiguration nicht verändern oder freie privilegierte Kommandos ausführen; fremde Modulrechte werden geprüft.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Negative Zielhostprüfung außerhalb UID0-Sandbox",
+        "Nachweis eigener Identitäten oder offene dokumentierte Abweichung vom Modul-Isolationsziel",
+        "Gerätegrants einzeln begründen"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": []
+    },
+    {
+      "id": "EOS-INT-REQ-007",
+      "title": "Zertifikate erneuern und Ausfall beherrschen",
+      "parentRequirementIds": [
+        "EOS-REQ-005",
+        "EOS-REQ-008",
+        "EOS-REQ-014",
+        "EOS-REQ-016"
+      ],
+      "componentIds": [
+        "secure-bus",
+        "data-store",
+        "eos-admin",
+        "nexowatt-ui"
+      ],
+      "statement": "Ablaufüberwachung, vorzeitige Erneuerung, atomare Aktivierung, Vertrauenswechsel und Recovery sind je Redis-/Webkanal explizit festgelegt. Kein SSL-Prüfungs-Bypass als Reparatur; Uhrzeitfehler erkennbar.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-005",
+        "EOS-INT-TM-007",
+        "EOS-INT-TM-014"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-TRANSPORT"
+      ],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-WEB-CERTIFICATES",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-SYSTEM",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-007-P",
+          "type": "positive",
+          "scenario": "Erneuerung vor Ablauf, Restart und Wiederverbindung funktionieren; alte Schlüssel haben festgelegte Restgültigkeit und geschützte Rechte.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-007-N",
+          "type": "negative",
+          "scenario": "Abgelaufenes/unpassendes Zertifikat, rückspringende Zeit, Schreib-/Startfehler und unterbrochener Wechsel aktivieren kein halbfertiges Vertrauensmaterial.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Timer/Alarm und echte systemd-Rotation",
+        "Getrennte Redis- und Browservertrauenskette",
+        "Wiederherstellung nach abgelaufener CA oder Gerätetausch"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [],
+      "scopedEvidenceIds": [
+        "INT-REVIEW-HOST-ACTIVATION-FINAL"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-008",
+      "title": "Lizenzsignatur und verschlüsselte Speicherung",
+      "parentRequirementIds": [
+        "EOS-REQ-008",
+        "EOS-REQ-009",
+        "EOS-REQ-011"
+      ],
+      "componentIds": [
+        "identity-license",
+        "eos-admin"
+      ],
+      "statement": "Offline-Lizenzen werden asymmetrisch gegen freigegebene Ausstellerschlüssel geprüft und authentisiert verschlüsselt gespeichert; Ausstellerprivatschlüssel und gemeinsame Entschlüsselungsgeheimnisse dürfen nicht ausgeliefert werden.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-008",
+        "EOS-INT-TM-010"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-ENROLLMENT",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-ONBOARD-CLOSURE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-SYSTEM",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-008-P",
+          "type": "positive",
+          "scenario": "Gültige Lizenz auf vorgesehenem Gerät wird offline geprüft, verschlüsselt gespeichert und nach Restart wieder geladen.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-008-N",
+          "type": "negative",
+          "scenario": "Manipulierte/fremde Lizenz, falscher Aussteller, falsche Gerätebindung, beschädigtes Chiffrat und fremde OS-Identität erhalten weder Freischaltung noch Klartext.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Tatsächliche Gerätebindung und Uhrzeit-/Restore-Policy",
+        "Backup-/Schlüsselrotation und Installerintegration",
+        "Kein Schutzversprechen gegen lokalen Root ohne Hardwarevertrauensanker"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-ADM7-003",
+        "NW-UI-260930-03",
+        "NW-UI-260930-04"
+      ],
+      "scopedEvidenceIds": [
+        "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-009",
+      "title": "Freischaltungen und Schutzfunktionen getrennt behandeln",
+      "parentRequirementIds": [
+        "EOS-REQ-006",
+        "EOS-REQ-009",
+        "EOS-REQ-010"
+      ],
+      "componentIds": [
+        "identity-license",
+        "all-adapters"
+      ],
+      "statement": "Adapter erhalten minimal erforderliche Berechtigungen über eine authentisierte Schnittstelle und erzwingen Grenzen serverseitig. Lizenzfehler dürfen notwendige Schutzfunktionen, Sicherheitswartung und autorisierte Wiederherstellung nicht verhindern.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-006",
+        "EOS-INT-TM-008",
+        "EOS-INT-TM-013"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-009-P",
+          "type": "positive",
+          "scenario": "Home/Pro/Test-Berechtigungen wirken in UI und Backend konsistent; vorhandene Anlagenlimits gelten weiter.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-009-N",
+          "type": "negative",
+          "scenario": "Manipulierte UI, fremde Adapterkennung, abgelaufene Lizenz, Diensttimeout und Replay erweitern keine Rechte und lösen keine pauschale gefährliche Abschaltung aus.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Integration sämtlicher Verbraucher der Lizenzdaten",
+        "Gerätespezifisches Verhalten bei Ablauf, Offlinebetrieb und Widerruf"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-ADM7-003",
+        "EOS-INT-DEV-008"
+      ],
+      "scopedEvidenceIds": [
+        "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-010",
+      "title": "Geräte-HTTP und MQTT sicher betreiben",
+      "parentRequirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-007",
+        "EOS-REQ-015",
+        "EOS-REQ-016"
+      ],
+      "componentIds": [
+        "nexowatt-devices"
+      ],
+      "statement": "HTTPS/MQTTS nutzt Identitätsprüfung; ausgehende HTTPS-Aufträge begrenzen DNS/TLS/Body/Retry/Fallback gemeinsam auf höchstens5000ms sowie Antwortgrößen und Redirectziele. Legacy-Geräteprotokolle benötigen genehmigtes Geräteprofil mit klar benanntem Restrisiko.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-005",
+        "EOS-INT-TM-009",
+        "EOS-INT-TM-013",
+        "EOS-INT-TM-015"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-010-P",
+          "type": "positive",
+          "scenario": "Gültige Gerätedaten mit richtigen Typen, Einheiten und Frische werden verarbeitet; Verschlüsselung ist pro tatsächlicher Gegenstelle belegt.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-010-N",
+          "type": "negative",
+          "scenario": "Ungültige Typen, Infinity/NaN, übergroße Nachrichten, Slow-Response, fremdes Redirectziel, ausgeschaltete Zertifikatsprüfung und unfreigegebener Klartextpfad verursachen keine fachlichen Schreibwerte.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Aktueller Devices0.5.169-Quell-/Paketstand",
+        "Treiber-/Herstellerprofile und echte Gegenstellen",
+        "Keine URL/Credentials im Fehlerlog"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-INT-DEV-001",
+        "EOS-INT-DEV-002",
+        "EOS-INT-DEV-003",
+        "EOS-INT-DEV-004",
+        "EOS-INT-DEV-005",
+        "EOS-INT-DEV-006"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-011",
+      "title": "EEBUS-Pairing vor Steuerung erzwingen",
+      "parentRequirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-007",
+        "EOS-REQ-008"
+      ],
+      "componentIds": [
+        "eebus"
+      ],
+      "statement": "Discovery-Identität und tatsächlich verifizierter Peer werden gebunden; vor bestätigtem Pairing keine SPINE-Steuerung. Sicherheitsverhalten muss zum festgelegten SHIP-/SPINE-/Use-Case-Stand passen.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-009",
+        "EOS-INT-TM-011",
+        "EOS-INT-TM-013"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-011-P",
+          "type": "positive",
+          "scenario": "Explizit gepaarte Gegenstelle führt freigegebenen Use Case mit korrektem Prioritäts-/Leistungslimit aus.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-011-N",
+          "type": "negative",
+          "scenario": "Ungepaartes Peer, Zertifikats-/Identitätswechsel, Wiederholung, ungültige Reihenfolge, große Frames und Nachrichtenflut werden ohne unzulässige Steuerung behandelt.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Control/JSON- und PIN-Befunde auf Code-/Laborebene nachgetestet; abschließende Protokoll-/Geräteabnahme weiterhin erforderlich",
+        "Authentische Protokoll-/Gerätetests",
+        "Betriebliche §14a-/Anlagenprioritäten separat nachweisen",
+        "Kein behauptetes EEBUS-Zertifikat"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-INT-EEBUS-001",
+        "EOS-INT-EEBUS-002"
+      ],
+      "currentComponentFindingIds": [
+        "NW-EOS-ADP-261001-09",
+        "NW-EOS-ADP-261001-10"
+      ],
+      "scopedEvidenceIds": [
+        "INT-EEBUS-FINAL-593"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-012",
+      "title": "OCPP-Stationen und Ladevorgänge autorisieren",
+      "parentRequirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-007",
+        "EOS-REQ-008"
+      ],
+      "componentIds": [
+        "ocpp"
+      ],
+      "statement": "Stationen besitzen einen eigenen verifizierten Authentisierungsnachweis; TLS/WSS und strenge Schemaprüfung schützen den festgelegten OCPP-Stand. Unbekannte RFID-/Tokenwerte werden nicht pauschal akzeptiert.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-009",
+        "EOS-INT-TM-011",
+        "EOS-INT-TM-013"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-012-P",
+          "type": "positive",
+          "scenario": "Freigegebene Station verbindet sich über geprüftes WSS und verarbeitet gültige autorisierte Transaktionen/Leistungsgrenzen.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-012-N",
+          "type": "negative",
+          "scenario": "Gefälschte Stationskennung, fremdes Zertifikat/Secret, unbekannter Token, unzulässige Nachricht und Wiederholung führen zu Ablehnung ohne unbeabsichtigten Ladestart.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Exakte OCPP-Version/Profil festlegen",
+        "Stationsfirmware und Kompatibilität inklusive DC/AC",
+        "Keine Protokollzertifizierung aus Unit-Tests"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-INT-OCPP-001",
+        "EOS-INT-OCPP-002",
+        "EOS-INT-OCPP-003",
+        "EOS-INT-OCPP-004",
+        "EOS-INT-DEV-009"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-013",
+      "title": "Backup und Restore ohne allgemeine Rootrechte",
+      "parentRequirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-008",
+        "EOS-REQ-011",
+        "EOS-REQ-012"
+      ],
+      "componentIds": [
+        "nexowatt-backitup",
+        "os-base"
+      ],
+      "statement": "Sicherungen sind authentisiert verschlüsselt; Restore prüft Inhalt/Version/Pfade/Größen vor Seiteneffekten. Notwendige Mount-/Serviceaktionen laufen über eng begrenzte Hostfunktion. Keine nicht authentisierten Datei-/Fortschrittsserver.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-010",
+        "EOS-INT-TM-012",
+        "EOS-INT-TM-014"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-013-P",
+          "type": "positive",
+          "scenario": "Autorisierte Sicherung wird in isolierter frischer Umgebung vollständig und konsistent wiederhergestellt, einschließlich dokumentierter Schlüssel-/Identitätsbehandlung.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-013-N",
+          "type": "negative",
+          "scenario": "Falscher Schlüssel, manipuliertes Archiv, Traversal/Link/Archivbombe, fremde Geräteidentität oder unberechtigter Abruf ändern keinen aktiven Code und offenbaren keine Geheimnisse.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Separater geprüfter Hostbroker erforderlich",
+        "Vollständiger Restore mit DB/Config/Lizenz und Recovery-Schlüsseln",
+        "SSD-voll/Stromabbruch/Sicherung ohne Netz"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "NW-EOS-INT-BAK-001",
+        "NW-EOS-INT-BAK-002",
+        "NW-EOS-INT-BAK-003",
+        "NW-EOS-INT-BAK-004",
+        "NW-EOS-INT-BAK-005",
+        "NW-EOS-INT-BAK-006"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-014",
+      "title": "Zusatzadapter nur über signierte Zulassung",
+      "parentRequirementIds": [
+        "EOS-REQ-001",
+        "EOS-REQ-002",
+        "EOS-REQ-013",
+        "EOS-REQ-017"
+      ],
+      "componentIds": [
+        "update-agent",
+        "eos-core",
+        "eos-admin",
+        "all-adapters"
+      ],
+      "statement": "Zusätzliche Adapter benötigen exakte Paket-/Abhängigkeitshashes, definierte Rechte/Kommunikation, Tests und Freigabestatus im signierten Katalog. URL-Install, CLI/npm-Bypass, Skript-Adapter exec und dynamische Module bleiben gesperrt.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-001",
+        "EOS-INT-TM-002",
+        "EOS-INT-TM-006"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-RELEASE"
+      ],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-ENROLLMENT",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-MAINTENANCE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-ACTIVATION",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-014-P",
+          "type": "positive",
+          "scenario": "Ein geprüfter signierter Erweiterungsstand lässt sich bereitstellen und ausdrücklich aufnehmen; vorhandene Funktionen bleiben erhalten.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-014-N",
+          "type": "negative",
+          "scenario": "Unsigned/tampered/downgrade/wrong-key-Pakete, Versionsbereiche, veränderte Alt-Abhängigkeiten und URL/npm-Ausweichwege starten keinen Code.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Echte Admin-Bedienung plus direkte Backend-/CLI-Aufrufe",
+        "Startaufnahme getrennt von Paketbereitstellung",
+        "Neue Rechte erfordern explizite Prüfung"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-ADM7-004",
+        "EOS-ADM7-005"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-015",
+      "title": "Updates und Rückfall einschließlich Daten konsistent halten",
+      "parentRequirementIds": [
+        "EOS-REQ-013",
+        "EOS-REQ-014",
+        "EOS-REQ-020"
+      ],
+      "componentIds": [
+        "update-agent",
+        "data-store",
+        "all-adapters"
+      ],
+      "statement": "Allgemeine Updates brauchen atomare Aktivierung, passende Datensicherung/Migration, begrenzten Readiness-Test und dokumentierten Rollback. Additive Paketzulassung allein ist kein allgemeines OS/Node/Controller-Update.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-001",
+        "EOS-INT-TM-002",
+        "EOS-INT-TM-014"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-RELEASE",
+        "BASE-HOST"
+      ],
+      "integrationEvidence": [
+        {
+          "id": "INT-REVIEW-MAINTENANCE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-ONBOARD-CLOSURE",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-SYSTEM",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        },
+        {
+          "id": "INT-REVIEW-ACTIVATION",
+          "meaning": "scoped correction/regression evidence; full target acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-015-P",
+          "type": "positive",
+          "scenario": "Geprüftes Update und dokumentierter Rückfall erhalten konsistente Daten und erreichen sicheren Wiederanlauf.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-015-N",
+          "type": "negative",
+          "scenario": "Stromverlust, volles Medium, Journalfehler, überschrittenes Startlimit, inkompatible Migration und unerlaubte Version aktivieren keinen inkonsistenten Stand.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Allgemeiner Sicherheitsupdatepfad jenseits additiver Pakete",
+        "Echter systemd-/Stromverlusttest",
+        "OS-/Node-/Redis-Patching und Rückfallstrategie"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-ADM7-005"
+      ],
+      "scopedEvidenceIds": [
+        "INT-REVIEW-HOST-ACTIVATION-FINAL"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-016",
+      "title": "Tailscale-Servicezugang und benötigte Netze erhalten",
+      "parentRequirementIds": [
+        "EOS-REQ-002",
+        "EOS-REQ-005",
+        "EOS-REQ-007",
+        "EOS-REQ-015"
+      ],
+      "componentIds": [
+        "os-base",
+        "service-access"
+      ],
+      "statement": "Benötigte LAN-/Geräte-/VPN-Netze bleiben erreichbar; Freigaben werden nach Diensten, Rollen und Gegenstellen geprüft. Tailscale erhält eine getrennte Admin-/Geräteidentität und gezielte Zugriffsregeln. Keine automatische Subnetzroute, Exit-Node, öffentliche Weiterleitung oder pauschale vertrauenswürdige LAN-Zone.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-004",
+        "EOS-INT-TM-009",
+        "EOS-INT-TM-016"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-016-P",
+          "type": "positive",
+          "scenario": "Autorisierter Servicetechniker erreicht vorgesehene EOS-Oberflächen über Tunnel; lokale Regelung und Geräteerreichbarkeit bestehen ohne Tunnel weiter.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-016-N",
+          "type": "negative",
+          "scenario": "Nicht freigegebener Tailnet-Teilnehmer, entzogener Servicezugriff und Geräteverlust erhalten keinen Verwaltungszugang; VPN-Ausfall oder IP-Wechsel beendet nicht die lokale Regelung.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Echter Tailnet-/ACL-/Widerrufstest",
+        "Konkretes Hosting/Konto/Control-Plane und Datenschutzumfang bestimmen",
+        "VPN ersetzt keine Anwendungsauthentifizierung oder direkte Geräteabsicherung"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": []
+    },
+    {
+      "id": "EOS-INT-REQ-017",
+      "title": "Begrenzte und brauchbare Sicherheitsdiagnose",
+      "parentRequirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-016",
+        "EOS-REQ-020"
+      ],
+      "componentIds": [
+        "audit-health",
+        "all-adapters"
+      ],
+      "statement": "Sicherheitsereignisse enthalten Zeit, Release, Aktion und Ergebnis ohne Schlüssel/Passwörter/Tokens/Kundeninhalte; Raten/Größen/Aufbewahrung sind begrenzt. Fehlende Überwachung wird erkennbar.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-007",
+        "EOS-INT-TM-015",
+        "EOS-INT-TM-017"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-017-P",
+          "type": "positive",
+          "scenario": "Abgelehnte Einrichtung, fehlgeschlagene Signatur, Ablaufwarnung, Adapterausfall und Recovery sind eindeutig nachvollziehbar.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-017-N",
+          "type": "negative",
+          "scenario": "Fehlerflut, überlange Eingaben, Secret-haltige URLs und volles Medium erzeugen weder ungebundene Logs noch Geheimnisabfluss oder blockierte Regelung.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Gemeinsame Redaktions-/Aufbewahrungsregeln und Zielhostgrenzen",
+        "Manipulations-/Zeitlücken im Audit sichtbar machen"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": true
+        }
+      },
+      "historicalRelatedFindingIds": []
+    },
+    {
+      "id": "EOS-INT-REQ-018",
+      "title": "Design, Regelung und physische Betriebssicherheit erhalten",
+      "parentRequirementIds": [
+        "EOS-REQ-004",
+        "EOS-REQ-006",
+        "EOS-REQ-007",
+        "EOS-REQ-017"
+      ],
+      "componentIds": [
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "eebus",
+        "ocpp"
+      ],
+      "statement": "Sicherheitsänderungen erhalten Design und Fachverträge; Messwertfrische, Einheiten, NVP-/Geräte-/Lizenzgrenzen und Prioritäten werden bei Fehlern explizit bewertet. Unabhängige Geräteschutzfunktionen bleiben maßgeblich.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-009",
+        "EOS-INT-TM-013",
+        "EOS-INT-TM-014"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-018-P",
+          "type": "positive",
+          "scenario": "Referenzszenarien für PV/0-Einspeisung, Speicherfarm, AC/DC-Laden, Boost/Min+PV/Zeit-Ziel und Netzlimits ergeben unveränderte erlaubte Ergebnisse.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-018-N",
+          "type": "negative",
+          "scenario": "Kommunikationsverlust, alter Messwert, Restart, widersprüchliche Sollwerte und manipulierte Leistung führen zum pro Gerät/Anlage festgelegten sicheren Zustand und geordneter Wiederaufnahme.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "VM-Abnahme dann RPi5 8/16GB+SSD",
+        "Echte Geräte/Versionen und elektrische Schutzkette",
+        "Keine Echtzeit-/IEC61508-/Netzanschlusskonformität aus Softwaretests ableiten"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part I product security",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PW",
+          "PS"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": []
+    },
+    {
+      "id": "EOS-INT-REQ-019",
+      "title": "SBOM und Schwachstellenbewertung aus echtem Build",
+      "parentRequirementIds": [
+        "EOS-REQ-001",
+        "EOS-REQ-018",
+        "EOS-REQ-019"
+      ],
+      "componentIds": [
+        "all-components"
+      ],
+      "statement": "CycloneDX-JSON bindet den tatsächlichen Code- und Abhängigkeitssatz; Runtime, Quellen, OS/Node/Firmware und Testwerkzeuge werden getrennt erfasst. Scannerbefunde werden anhand tatsächlicher Nutzung bewertet.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-001",
+        "EOS-INT-TM-017"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-SBOM"
+      ],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-019-P",
+          "type": "positive",
+          "scenario": "Installationsinventar und Schema-validierte SBOM stimmen zu jedem gelieferten Paket/Hash/Abhängigkeit überein; Ausnahmen sind sichtbar.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-019-N",
+          "type": "negative",
+          "scenario": "Fehlendes Paket, unbekannte Version, abweichendes Lockfile und unbewertetes Advisory verhindern die deklarierte Vollständigkeit/Freigabe.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Vollständige integrierte Runtime-SBOM und OS-/Firmware-Abgrenzung",
+        "Neue Audits nach allen Abhängigkeitsänderungen",
+        "Moderate esbuild-Kette des Basiskerns bleibt bewertet/offen"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part II vulnerability handling",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 secure development and verification",
+          "4-2 component requirements",
+          "3-3 system requirements"
+        ],
+        "nistSsdfGroups": [
+          "PO",
+          "RV"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [
+        "EOS-INT-SUPPLY-001"
+      ],
+      "scopedEvidenceIds": [
+        "DEPENDENCY-FINAL-R4"
+      ]
+    },
+    {
+      "id": "EOS-INT-REQ-020",
+      "title": "Herstellerprozesse und regulatorische Entscheidungen",
+      "parentRequirementIds": [
+        "EOS-REQ-019",
+        "EOS-REQ-020"
+      ],
+      "componentIds": [
+        "manufacturer-process"
+      ],
+      "statement": "Produktgrenze/Kategorie, Herstellerrolle, Supportende, Schwachstellenannahme, Bewertung/Meldung, Offenlegung, Sicherheitsupdateverteilung und Lebensende werden verantwortlich festgelegt und geübt. Entwicklungsstand ist keine CRA-Erklärung.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-017"
+      ],
+      "baselineEvidenceIds": [],
+      "integrationEvidence": [],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-020-P",
+          "type": "positive",
+          "scenario": "Eine dokumentierte Übung ordnet einen realistisch simulierten Vorfall zu, entscheidet Meldepflicht und weist erreichbare Verantwortliche, Fristen und Releasekommunikation nach.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-020-N",
+          "type": "negative",
+          "scenario": "Fehlende Zuständigkeit, Fristüberschreitung, unbewertete Fremdkomponente und unvollständige Kontaktdaten bleiben offen und werden nicht als bestanden oder akzeptiert markiert.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "CRA-Klassifizierung anhand tatsächlicher Kernfunktion und technischer Kategorien",
+        "Supportmodell und verbindlicher Sicherheitskontakt",
+        "Anwendbare IEC-Volltexte/EN-Amtsblattfundstellen und Bewertungsverfahren"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part II vulnerability handling",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 lifecycle process"
+        ],
+        "nistSsdfGroups": [
+          "PO",
+          "RV"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": []
+    },
+    {
+      "id": "EOS-INT-REQ-021",
+      "title": "Freigabestufen und Nachweise trennen",
+      "parentRequirementIds": [
+        "EOS-REQ-017",
+        "EOS-REQ-018",
+        "EOS-REQ-020"
+      ],
+      "componentIds": [
+        "manufacturer-process",
+        "all-components"
+      ],
+      "statement": "Entwurf, Implementierung, Unit-/Mocktest, echte Integration, Zielhardware- und unabhängige Prüfung sind getrennte Status. Aktivierung und Produktfreigabe benötigen belastbare, releasegebundene Belege; nur komplette Repository-ZIPs liefern.",
+      "implementationStatus": "integration_not_verified",
+      "acceptanceStatus": "not_executed",
+      "ownerRole": "EOS responsible development and release owner",
+      "dueGate": "before integrated feature activation; before production release for target-environment evidence",
+      "threatIds": [
+        "EOS-INT-TM-017"
+      ],
+      "baselineEvidenceIds": [
+        "BASE-VERIFICATION"
+      ],
+      "integrationEvidence": [
+        {
+          "id": "INT-UNIT-BOOTSTRAP-REGRESSION",
+          "meaning": "scoped partial evidence; complete requirement acceptance remains open"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "EOS-INT-TEST-021-P",
+          "type": "positive",
+          "scenario": "Jeder behauptete Test zeigt Zeitpunkt, Umgebung, exakten Quell-/Buildstand, Befehl, Soll/Ist und Rohbeleg; gesamte Lieferung hat Hash und vollständige Dokumentation.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        },
+        {
+          "id": "EOS-INT-TEST-021-N",
+          "type": "negative",
+          "scenario": "Veralteter Beleg, übersprungener Test, Root-Labortest als Dienstkontoabnahme und geplantes Szenario als bestanden werden im Freigabeprozess zurückgewiesen.",
+          "status": "planned",
+          "actualResult": null,
+          "evidencePaths": []
+        }
+      ],
+      "remainingAcceptance": [
+        "Ergebnisabgleich nach fertigem integriertem Build",
+        "Externe/risikobedingt unabhängige Prüfung vor Serienfreigabe",
+        "Keine implizite Risikoakzeptanz oder öffentliche Veröffentlichung"
+      ],
+      "normativeMappingType": "engineering thematic mapping; not complete clause conformity",
+      "normativeThemes": {
+        "cra": [
+          "Annex I Part II vulnerability handling",
+          "Annex VII technical documentation"
+        ],
+        "iec62443": [
+          "4-1 lifecycle process"
+        ],
+        "nistSsdfGroups": [
+          "PO",
+          "RV"
+        ],
+        "owaspAsvs": {
+          "version": "5.0.0",
+          "targetLevel": "L2 with risk-selected L3 additions",
+          "individualControlApplicability": "not completed",
+          "relevantWebScope": false
+        }
+      },
+      "historicalRelatedFindingIds": [],
+      "scopedEvidenceIds": [
+        "DEPENDENCY-FINAL-R4"
+      ]
+    }
+  ],
+  "risks": [
+    {
+      "id": "EOS-INT-TM-001",
+      "title": "Ungeprüfter Code durch Liefer- oder Erweiterungspfad",
+      "parentThreatIds": [
+        "EOS-TM-011",
+        "EOS-TM-015"
+      ],
+      "stride": [
+        "Tampering",
+        "Elevation of Privilege"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-001",
+        "EOS-INT-REQ-014",
+        "EOS-INT-REQ-015",
+        "EOS-INT-REQ-019"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Angreifer kontrolliert Download/Registry/Importdatei oder Adapter kann npm nachladen.",
+      "impact": "Ausführung manipulierter Software mit Runtime- oder Hostrechten.",
+      "requiredControl": "Hash-/Signaturprüfung aller Dateien; minimaler Root-Installereinstieg; unveränderliche vorhandene Abhängigkeiten; gesperrte dynamische Installation.",
+      "residualRisk": "Ein zulässig signiertes schädliches Paket und kompromittierter Signierschlüssel benötigen zusätzlich Review, Widerruf und Herstellerprozesse.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-002",
+      "title": "Start einer ungeprüften oder halb migrierten Instanz",
+      "parentThreatIds": [
+        "EOS-TM-011",
+        "EOS-TM-015"
+      ],
+      "stride": [
+        "Tampering",
+        "Denial of Service"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-001",
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-014",
+        "EOS-INT-REQ-015"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Eintritt in Setup/Aktivierung bei Teilabbruch, fremdem Paket oder parallel verändertem Zustand.",
+      "impact": "Fehlstart, inkonsistente Daten oder aktive Steuerung vor Freigabe.",
+      "requiredControl": "Zustandsautomat, feste Instanzaufnahme, atomare Aktivierung, begrenzte Readiness und Recovery.",
+      "residualRisk": "Echte systemd-/Stromverlustabnahme und vollständige Migrationsstrecken fehlen bis Ausführung.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-003",
+      "title": "Übernahme der ersten Einrichtung",
+      "parentThreatIds": [
+        "EOS-TM-003"
+      ],
+      "stride": [
+        "Spoofing",
+        "Elevation of Privilege"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-003",
+        "EOS-INT-REQ-004"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Angreifer erreicht noch unzugeordnetes Gerät oder wiederverwendbaren Setupnachweis.",
+      "impact": "Fremdes Administratorkonto oder manipulierte Produktkonfiguration.",
+      "requiredControl": "Einmaliger lokaler Besitznachweis, persönliches Kennwort, atomare Erstzuordnung, HTTPS ohne Fallback.",
+      "residualRisk": "Erstvertrauen in Webzertifikat und vertrauenswürdiger Besitznachweis müssen auf Zielgerät belegbar sein.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-004",
+      "title": "Rollen-/Sitzungsumgehung über LAN oder VPN",
+      "parentThreatIds": [
+        "EOS-TM-001",
+        "EOS-TM-003",
+        "EOS-TM-004",
+        "EOS-TM-013"
+      ],
+      "stride": [
+        "Spoofing",
+        "Elevation of Privilege"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-003",
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-016"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Angreifer besitzt niedrige Rolle, alte Sitzung oder Tailnetzugang.",
+      "impact": "Unautorisierte Administration, DP-/Geräteschreibzugriff oder Codeinstallation.",
+      "requiredControl": "Serverseitige aktuelle Rollen-/Sessionprüfung, CSRF/Origin-Schutz, gezielte Servicefreigaben.",
+      "residualRisk": "VPN-Mitgliedschaft ist keine Adminrolle; echte Browser-/Tailnettests bleiben notwendig.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-005",
+      "title": "Klartext oder falsche Gegenstelle in Nebenverbindungen",
+      "parentThreatIds": [
+        "EOS-TM-005",
+        "EOS-TM-009",
+        "EOS-TM-010"
+      ],
+      "stride": [
+        "Spoofing",
+        "Information Disclosure",
+        "Tampering"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-007",
+        "EOS-INT-REQ-010"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Angreifer erreicht Datenpfad oder kann DNS/CA/SAN/Zielkonfiguration beeinflussen.",
+      "impact": "Lesen/Ändern von Zugangsdaten, Mess-/Stellwerten oder Lizenzabfragen.",
+      "requiredControl": "Kanalinventar, TLS1.3 intern, geprüfte Gegenstellen und keine abschaltbare Prüfung.",
+      "residualRisk": "Redis-TLS verschlüsselt keine separate HTTP/MQTT/OCPP-Verbindung; Feldgerätefähigkeit separat bewerten.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-006",
+      "title": "Lateraler Zugriff eines zugelassenen Adapters",
+      "parentThreatIds": [
+        "EOS-TM-009",
+        "EOS-TM-010"
+      ],
+      "stride": [
+        "Information Disclosure",
+        "Tampering",
+        "Elevation of Privilege"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-009",
+        "EOS-INT-REQ-014"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Zugelassener JavaScript-Adapter läuft unter gemeinsamer UID/DB-Identität.",
+      "impact": "Fremde Schlüssel, Module oder States sind innerhalb gemeinsamer Rechte erreichbar.",
+      "requiredControl": "Individuelle Dienstidentitäten, minimal berechtigte Operationen, geheime Daten außerhalb gemeinsamer DB, geprüfte Paketprofile.",
+      "residualRisk": "Gemeinsame ioBroker-UID/DB bleibt eine Vertrauenszone; TLS allein schließt dieses Risiko nicht.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-007",
+      "title": "Zertifikatablauf oder fehlerhafter Vertrauenswechsel",
+      "parentThreatIds": [
+        "EOS-TM-009",
+        "EOS-TM-012"
+      ],
+      "stride": [
+        "Denial of Service",
+        "Spoofing"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-007",
+        "EOS-INT-REQ-017"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Ablauf, falsche Uhrzeit, unterbrochene Rotation oder fehlender Alarm.",
+      "impact": "Kommunikationsverlust oder gefährliche Umgehung der Gegenstellenprüfung.",
+      "requiredControl": "Vorzeitige Rotation/Alarm, atomare Materialwechsel, geschützte Schlüssel, Failclosed mit dokumentierter Recovery.",
+      "residualRisk": "CA-Verlust, Restore und Webbrowser-Vertrauen benötigen getrennte Ablauf-/Recovery-Nachweise.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-008",
+      "title": "Lizenzfälschung oder Freischaltungsumgehung",
+      "parentThreatIds": [
+        "EOS-TM-008"
+      ],
+      "stride": [
+        "Tampering",
+        "Information Disclosure",
+        "Elevation of Privilege"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-009"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Angreifer verändert Datei/DB, liest ausgeliefertes gemeinsames Secret oder imitiert einen Adapter.",
+      "impact": "Unberechtigte Nutzung oder Offenlegung der Lizenz-/Geräteinformationen.",
+      "requiredControl": "Asymmetrische Offlineprüfung, AEAD-Speicherung, minimale authentisierte Capability-Abfrage, keine Ausstellerschlüssel im Produkt.",
+      "residualRisk": "Lokaler Root und gemeinsame UID können laufenden Klartext beeinflussen; Hardwaregarantie ohne TPM/vergleichbaren Nachweis unzulässig.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-009",
+      "title": "Manipulierte oder veraltete Feldwerte",
+      "parentThreatIds": [
+        "EOS-TM-002",
+        "EOS-TM-005",
+        "EOS-TM-007",
+        "EOS-TM-014"
+      ],
+      "stride": [
+        "Spoofing",
+        "Tampering"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-010",
+        "EOS-INT-REQ-011",
+        "EOS-INT-REQ-012",
+        "EOS-INT-REQ-016",
+        "EOS-INT-REQ-018"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Angreifer im Gerätenetz oder fehlerhaftes Gerät sendet plausible alte/falsche Daten.",
+      "impact": "Falsche Last-/Speicher-/Laderegelung, Verletzung betrieblicher Grenzen.",
+      "requiredControl": "Gerätebindung, Einheiten-/Bereichs-/Frischeprüfung, getrennte Gerätebereiche soweit möglich, pro Anlage sichere Wiederaufnahme.",
+      "residualRisk": "Unverschlüsseltes Modbus/Legacyprotokoll bleibt manipulierbar; Segmentierung ersetzt keinen Kryptoschutz.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-010",
+      "title": "Hostübernahme über Restore, Mount oder Schlüsseldatei",
+      "parentThreatIds": [
+        "EOS-TM-006",
+        "EOS-TM-008"
+      ],
+      "stride": [
+        "Tampering",
+        "Elevation of Privilege",
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-013"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Adapter übergibt Pfad/Kommando/Archiv an privilegierte Funktion oder kann ungeschützte Schlüssel lesen.",
+      "impact": "Hostcodeausführung, Geheimnisverlust oder fremde Dateien überschrieben.",
+      "requiredControl": "Eng begrenzter Broker ohne freie Shell, feste erlaubte Aktionen, Pfad-/Link-/Größenprüfung, getrennte Konten und Schlüssel.",
+      "residualRisk": "Fehlender Hostbroker darf nicht durch allgemeines sudo ersetzt werden; Rootoperator bleibt vertrauenswürdig.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-011",
+      "title": "Unberechtigte EEBUS-/OCPP-Steuerung",
+      "parentThreatIds": [
+        "EOS-TM-005",
+        "EOS-TM-007"
+      ],
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "Elevation of Privilege",
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-011",
+        "EOS-INT-REQ-012"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Ungepaarter Peer oder Station mit kopierter Kennung erreicht Adapterendpunkt.",
+      "impact": "Unberechtigte Netz-/Ladebefehle oder akzeptierte fremde Transaktionen.",
+      "requiredControl": "Verifizierte Gegenstellenbindung, Pairing vor Anwendung, Tokenentscheidung und Schemaprüfung.",
+      "residualRisk": "Protokollprofile und Interoperabilität müssen gegen echte zertifizierte/identifizierte Gegenstellen geprüft werden.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null,
+      "currentComponentFindingIds": [
+        "NW-EOS-ADP-261001-09",
+        "NW-EOS-ADP-261001-10"
+      ]
+    },
+    {
+      "id": "EOS-INT-TM-012",
+      "title": "Backup als Datenleck oder Identitätsklon",
+      "parentThreatIds": [
+        "EOS-TM-006"
+      ],
+      "stride": [
+        "Information Disclosure",
+        "Tampering"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-013"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Angreifer erhält Sicherungsarchiv oder spielt fremde Sicherung ein.",
+      "impact": "Geheimnisabfluss, geklonte Geräteidentität oder inkonsistenter Betrieb.",
+      "requiredControl": "Authentisierte Verschlüsselung, getrennte Schlüssel, kontrollierter Restore mit Identitäts-/Versionsentscheidungen.",
+      "residualRisk": "Verschlüsselung ohne getrennten Schlüsselschutz schützt gestohlenes vollständiges Gerät nur begrenzt.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-013",
+      "title": "Unsichere Reaktion auf Lizenz-/Kommunikationsfehler",
+      "parentThreatIds": [
+        "EOS-TM-002",
+        "EOS-TM-005",
+        "EOS-TM-014"
+      ],
+      "stride": [
+        "Tampering",
+        "Denial of Service"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-009",
+        "EOS-INT-REQ-010",
+        "EOS-INT-REQ-011",
+        "EOS-INT-REQ-012",
+        "EOS-INT-REQ-018"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Daten/Lizenz/Verbindung fehlen oder widersprechen sich während aktiver Regelung.",
+      "impact": "Gefährlicher Dauersollwert, Taktung oder pauschale Abschaltung erforderlicher Funktion.",
+      "requiredControl": "Gerätespezifische Failsafe-/Prioritäts-/Wiederanlaufverträge und Grenzwerte mit unabhängigen Geräteschutzfunktionen.",
+      "residualRisk": "Keine generische Softwareprüfung beweist elektrische oder funktionale Sicherheit einer konkreten Anlage.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-014",
+      "title": "Datenverlust bei Restart, PubSub-Lücke oder Rollback",
+      "parentThreatIds": [
+        "EOS-TM-002",
+        "EOS-TM-006",
+        "EOS-TM-011",
+        "EOS-TM-015"
+      ],
+      "stride": [
+        "Tampering",
+        "Denial of Service"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-007",
+        "EOS-INT-REQ-013",
+        "EOS-INT-REQ-015",
+        "EOS-INT-REQ-018"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Restart/Update/Stromverlust während Daten-/Befehlsübertragung.",
+      "impact": "Verlorener Stellbefehl, doppelte Aktion oder nicht konsistente Steuerung.",
+      "requiredControl": "Dauerhafte Zustände, explizite Frische/Idempotenz und Reconciliation nach Reconnect, geteste Recovery.",
+      "residualRisk": "PubSub liefert nicht lückenlos oder genau-einmal; AOF-everysec kann jüngste Daten verlieren.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null,
+      "scopedEvidenceIds": [
+        "INT-REVIEW-HOST-ACTIVATION-FINAL"
+      ],
+      "scopedImplementationNote": "Permit-revocation I/O failure no longer prevents rollback attempt; final cleanup failure retains lock and independently requests stop. Failed installer also disables certificate timer. Fixture tests passed, not actual service/power-loss acceptance."
+    },
+    {
+      "id": "EOS-INT-TM-015",
+      "title": "Ressourcenerschöpfung und Secret-Logs",
+      "parentThreatIds": [
+        "EOS-TM-012"
+      ],
+      "stride": [
+        "Denial of Service",
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-010",
+        "EOS-INT-REQ-017"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Gegenstelle flutet/verlangsamt Antworten oder Fehler enthalten Zugangsdaten.",
+      "impact": "Regelstillstand, volles Medium oder vertrauliche Daten in Diagnose.",
+      "requiredControl": "Gesamtdeadlines, Daten-/Queue-/Rate-/Loggrenzen, strukturierte Fehlercodes und Redaktion.",
+      "residualRisk": "Gemeinsame Runtime kann trotz einzelner Limits unter Last leiden; Zielhardwaremessung erforderlich.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-016",
+      "title": "Ungewollte Service-Netzfreigabe",
+      "parentThreatIds": [
+        "EOS-TM-013"
+      ],
+      "stride": [
+        "Spoofing",
+        "Elevation of Privilege",
+        "Information Disclosure"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-016"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Tailnetmitglied, verlorenes Servicegerät oder implizite Subnetzroute erweitert Zugriff.",
+      "impact": "Unbeabsichtigter Anlagen-/Adminzugang über Fernwartung.",
+      "requiredControl": "Gezielte Tailnetregeln, getrennte Serviceidentitäten, Widerruf, keine automatischen Routen/öffentlichen Freigaben.",
+      "residualRisk": "Tailscale-Control-Plane/Hosting und reale Netztopologie sind gesondert festzulegen; lokale Funktion bleibt unabhängig.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    },
+    {
+      "id": "EOS-INT-TM-017",
+      "title": "Unvollständiger Nachweis oder versäumte Schwachstellenreaktion",
+      "parentThreatIds": [
+        "EOS-TM-011",
+        "EOS-TM-012",
+        "EOS-TM-015"
+      ],
+      "stride": [
+        "Repudiation",
+        "Tampering"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-017",
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-020",
+        "EOS-INT-REQ-021"
+      ],
+      "classification": "qualitative integration risk; not a new CVE or proven exploit",
+      "attackPrecondition": "Veralteter Scan/Test wird als Releasebeleg benutzt oder kein Melde-/Patchprozess existiert.",
+      "impact": "Unbegründete Freigabe, nicht behandelte Schwachstelle oder fehlende Meldeentscheidung.",
+      "requiredControl": "Releasegebundene Belege, nachvollziehbare Zuständigkeit, SBOM/Advisorybewertung und geübter Herstellerprozess.",
+      "residualRisk": "Interne KI-/Codeprüfung ist keine unabhängige Zertifizierung; nicht ausgeführte Tests bleiben offen.",
+      "priority": "high",
+      "priorityBasis": "unauthorized control, secrets or availability at stated trust boundary; occurrence probability not quantified",
+      "status": "open",
+      "ownerRole": "EOS responsible development; manufacturer release owner",
+      "dueGate": "before affected feature activation / product release",
+      "riskAcceptance": null
+    }
+  ],
+  "sourceStatusRule": "Component-specific implementation reports may add scoped evidence. Historical findings are not silently closed by source replacement. Tests and acceptance remain open until actual integrated report is bound.",
+  "documentValidation": {
+    "status": "passed_frozen_integration_evidence",
+    "performedAt": "2026-10-01T12:47:45.652525+00:00",
+    "checks": [
+      "JSON parsing",
+      "unique requirement/risk/test identifiers",
+      "existing parent requirement/threat and historical finding references",
+      "historical evidence SHA256 equality",
+      "relative Markdown links and trailing whitespace",
+      "planned test status does not claim execution"
+    ],
+    "requirements": 21,
+    "plannedScenarios": 42,
+    "openIntegrationRisks": 17,
+    "historicalFindingReferences": 33,
+    "productTestsExecutedByThisCheck": 0,
+    "scopedComponentLogsRead": 11,
+    "reviewFindings": 7,
+    "referencedArtifactHashChecks": 655,
+    "componentFollowupFindings": 2,
+    "relatedComponentReports": 7,
+    "uniqueArtifacts": 648,
+    "dependencyAssessmentsRead": 3,
+    "finalIntegrationEvidencePending": false
+  },
+  "componentVerificationEvidence": [
+    {
+      "id": "INT-UNIT-ENROLLMENT",
+      "reportPath": "reports/integration/review-snapshots/int-unit-enrollment.tap",
+      "reportSha256": "a86fe8d5a72569aa10dc435ba89ade85db39bca4f97bcd7621c111534903dd90",
+      "testSourcePath": "tests/integration/enrollment.test.cjs",
+      "observedTestSourceSha256": "296a798607453d57e87df1384c8d09a20c422d620a72076974331fd0f6cf3f44",
+      "observedProductSourceHashes": [
+        {
+          "path": "runtime/bootstrap/enrollment.cjs",
+          "sha256": "d402fbed6327ae88bd07b4775daf9f8aaa21bbe38080b71a4e2dca54d54a0b34"
+        }
+      ],
+      "reviewedAt": "2026-10-01T11:57:49.873023+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 27,
+        "pass": 27,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "Node.js test spec reporter; .tap filename does not imply TAP grammar",
+      "evidenceLevel": "unit_or_mock; narrow local cryptographic/socket execution where stated",
+      "scope": "Fixture database objects and states; actual local PBKDF2; no controller/Admin/UI process or systemd",
+      "sourceBindingLimitation": "Hashes observed during review; source-to-run provenance is not embedded in this standalone log. Final release evidence must bind or rerun exact source.",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-003",
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-014"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false,
+      "originalReportPath": "reports/integration/raw/enrollment.tap"
+    },
+    {
+      "id": "INT-UNIT-WEB-CERTIFICATES",
+      "reportPath": "reports/integration/review-snapshots/int-unit-web-certificates.tap",
+      "reportSha256": "254c4073060756f2059d55ff3b7d94f46b6cfa5e75c1cb9399dda85a6f382b7a",
+      "testSourcePath": "tests/integration/web-certificates.test.cjs",
+      "observedTestSourceSha256": "ad6aadabd981f2eb9564c6b7410719bea0cea1f44e0ec87626589eb7cb26df89",
+      "observedProductSourceHashes": [
+        {
+          "path": "runtime/transport/web-certificates.cjs",
+          "sha256": "6a6a4c9be6fef5138f806ebe4ad01dee7d56206d3b554789e1c1320800b1ab16"
+        }
+      ],
+      "reviewedAt": "2026-10-01T11:57:49.873239+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 14,
+        "pass": 14,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "Node.js test spec reporter; .tap filename does not imply TAP grammar",
+      "evidenceLevel": "unit_or_mock; narrow local cryptographic/socket execution where stated",
+      "scope": "Actual OpenSSL certificates and TLS1.3 local sockets plus file/validation tests; no real Admin/UI listener, browser or target host",
+      "sourceBindingLimitation": "Hashes observed during review; source-to-run provenance is not embedded in this standalone log. Final release evidence must bind or rerun exact source.",
+      "requirementIds": [
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-007"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false,
+      "originalReportPath": "reports/integration/raw/web-certificates.tap"
+    },
+    {
+      "id": "INT-UNIT-BOOTSTRAP-REGRESSION",
+      "reportPath": "reports/integration/review-snapshots/int-unit-bootstrap-regression.tap",
+      "reportSha256": "f504900016ff18a3130cf14efc1fa89f82c9c158774697ea4003ff5308eedf0e",
+      "testSourcePath": "tests/system/bootstrap.test.cjs",
+      "observedTestSourceSha256": "0e406e153d1d2d79232642f48774d2673790951cdc22db871bca179fa6f4ab0d",
+      "observedProductSourceHashes": [
+        {
+          "path": "runtime/bootstrap/initialize.cjs",
+          "sha256": "51001ac973704a1d7e6468b233d784ba502c2ca976b621bcebcb0ba442cea21c"
+        }
+      ],
+      "reviewedAt": "2026-10-01T11:57:49.873643+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 46,
+        "pass": 46,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "Node.js test spec reporter; .tap filename does not imply TAP grammar",
+      "evidenceLevel": "unit_or_mock; narrow local cryptographic/socket execution where stated",
+      "scope": "Existing core bootstrap/readiness fixture tests; not complete new enrollment branch or host commissioning",
+      "sourceBindingLimitation": "Hashes observed during review; source-to-run provenance is not embedded in this standalone log. Final release evidence must bind or rerun exact source.",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-021"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false,
+      "originalReportPath": "reports/integration/raw/bootstrap-regression.tap"
+    },
+    {
+      "id": "INT-REVIEW-MAINTENANCE",
+      "reportPath": "reports/integration/review-snapshots/int-review-maintenance.tap",
+      "reportSha256": "2dc0c76fb745d8211964ea96cf13f851016467f60736c4bc140433a1e7eb7572",
+      "observedProductSourceHashes": [
+        {
+          "path": "runtime/release/maintenance.cjs",
+          "sha256": "0a189e8fd4247dd9031b3d8bc5bd70d3461bb49a7cb6dd6a66fb1a998e76083d"
+        },
+        {
+          "path": "system/test-base/systemd/nexowatt-eos-controller.service",
+          "sha256": "0fa8f9a92b1b000ccc242c03d72bbd1303b52cdce21ce2bd203d24aa10172619"
+        }
+      ],
+      "reviewedAt": "2026-10-01T12:09:51.268950+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 30,
+        "pass": 30,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP version13",
+      "evidenceLevel": "scoped unit/mock/process/file tests; see scope",
+      "scope": "8 actual /proc/child-process maintenance-gate tests,5 earlier onboarding fixtures,17 host fixture/syntax tests. Historical log, not30 unique additions to other totals.",
+      "sourceBindingLimitation": "Observed source hashes at closure review; final release snapshot still requires complete provenance",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-014",
+        "EOS-INT-REQ-015"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false,
+      "independentlyExecutedDuringReview": false,
+      "originalReportPath": "reports/integration/raw/onboarding-maintenance.tap"
+    },
+    {
+      "id": "INT-REVIEW-ONBOARD-CLOSURE",
+      "reportPath": "reports/integration/review-snapshots/int-review-onboard-closure.tap",
+      "reportSha256": "8a43b88883db47fc7e3a0f1960e44ada009bdd015e2f3c049793640da9a6488d",
+      "observedProductSourceHashes": [
+        {
+          "path": "tools/system/onboard-ui.cjs",
+          "sha256": "97dd857dd528c9a4b7f68687d20836c9af0357ff6e5c7482a567c1d95c4af769"
+        },
+        {
+          "path": "tools/system/install-host.cjs",
+          "sha256": "8cfd578cf1d18472cae073eac842ed95df0da91a2a0d12c17fc6034abb007578"
+        },
+        {
+          "path": "system/test-base/systemd/nexowatt-eos-upload.service",
+          "sha256": "79cd47374b19060dddd730f51e41a4a6035a0bf3ffa614e910961abe7e44f956"
+        },
+        {
+          "path": "tests/integration/onboard-ui.test.cjs",
+          "sha256": "dd429cf1ce32104a762a017f8ba7cbdf450f97b58b1f52a48de4a6fa9f573d0b"
+        }
+      ],
+      "reviewedAt": "2026-10-01T12:09:51.268950+00:00",
+      "result": "passed",
+      "counts": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP version13",
+      "evidenceLevel": "scoped unit/mock/process/file tests; see scope",
+      "scope": "Directly executed18 tests: includes5 pre-existing onboarding cases, child-process umask modes, mockedHTTPS security responses, cleanup callbacks and VM-executed actual onboarding code with dependency fixtures. No actual EOS runtime UID/systemd/browser acceptance.",
+      "sourceBindingLimitation": "Observed source hashes at closure review; final release snapshot still requires complete provenance",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-015"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false,
+      "independentlyExecutedDuringReview": true,
+      "originalReportPath": "reports/integration/raw/onboard-ui-closure-regression.tap"
+    },
+    {
+      "id": "INT-REVIEW-SYSTEM",
+      "reportPath": "reports/integration/review-snapshots/int-review-system.tap",
+      "reportSha256": "a4d28eab5616ab97d1d0d01db11592f3309e588d261003155455a4693f8d6972",
+      "observedProductSourceHashes": [
+        {
+          "path": "runtime/transport/web-certificates.cjs",
+          "sha256": "85b5bd01b14937015a64026ad22ab58b60b54475f6d3627fc517b09c3f9a4bd1"
+        },
+        {
+          "path": "runtime/transport/web-renewal.cjs",
+          "sha256": "daf88c06cb21c357ebfb52f2ce71bd750e1d584c3543084e1e8719323e55b6ce"
+        },
+        {
+          "path": "tests/system/web-renewal.test.cjs",
+          "sha256": "af285e8ed635381a2f88c3ac77a947d9436cff1ff8162f4798d460c81a9d4c51"
+        }
+      ],
+      "reviewedAt": "2026-10-01T12:09:51.268950+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 210,
+        "pass": 210,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP version13",
+      "evidenceLevel": "scoped unit/mock/process/file tests; see scope",
+      "scope": "System suite report read; relevant closure cases200/201 verify24 input SANs+3loopbacks and retainedCA permissions/key correspondence. Includes previous tests; no additive test-count claim or targetsystemd execution.",
+      "sourceBindingLimitation": "Observed source hashes at closure review; final release snapshot still requires complete provenance",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-007",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-015"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false,
+      "independentlyExecutedDuringReview": false,
+      "originalReportPath": "reports/integration/raw/system-tests.tap"
+    },
+    {
+      "id": "INT-REVIEW-ACTIVATION",
+      "reportPath": "reports/integration/review-snapshots/int-review-activation.tap",
+      "reportSha256": "da058ed455c337fc7041c2c776e89c6c457116087db9a28ae1125f5c97efc7d8",
+      "observedProductSourceHashes": [
+        {
+          "path": "tools/system/activate-release.cjs",
+          "sha256": "a4c5cc4ec3f62edf3016d08b8e6d8b07b2638fc410007f1a926bb3ebd8e551d5"
+        },
+        {
+          "path": "runtime/release/maintenance.cjs",
+          "sha256": "0a189e8fd4247dd9031b3d8bc5bd70d3461bb49a7cb6dd6a66fb1a998e76083d"
+        }
+      ],
+      "reviewedAt": "2026-10-01T12:09:51.268950+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP version13",
+      "evidenceLevel": "scoped unit/mock/process/file tests; see scope",
+      "scope": "Additive activation file/command fixtures including failed-start recovery. No actual systemd process ownership or target boot proof.",
+      "sourceBindingLimitation": "Observed source hashes at closure review; final release snapshot still requires complete provenance",
+      "requirementIds": [
+        "EOS-INT-REQ-014",
+        "EOS-INT-REQ-015"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false,
+      "independentlyExecutedDuringReview": false,
+      "originalReportPath": "reports/integration/raw/activation.tap"
+    },
+    {
+      "id": "INT-REVIEW-HOST-ACTIVATION-FINAL",
+      "reportPath": "reports/integration/review-snapshots/int-review-host-activation-final.tap",
+      "originalReportPath": "reports/integration/raw/host-activation-final.tap",
+      "reportSha256": "0f9d926c5ae84f09c1ea9ec6686f740a303f5b47f26a82bbcaa98f4e4f627976",
+      "reviewedAt": "2026-10-01T12:21:31.225033+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 39,
+        "pass": 39,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP13",
+      "evidenceLevel": "unit_or_mock with real temporary filesystem operations; systemctl commands simulated",
+      "scope": "Activation/host suites, including two injected maintenance revoke failures and failed installation certificate-timer disable; source assertions read. Overlaps earlier activation/host logs.",
+      "observedProductSourceHashes": [
+        {
+          "path": "tools/system/activate-release.cjs",
+          "sha256": "8726a089874257bc71359f9bf619e9de51869cfaaeafa7aa27c269f0638a499d"
+        },
+        {
+          "path": "tools/system/install-host.cjs",
+          "sha256": "752d4029c5d53ef6eb2c5746f8447192bc5eca13f72e37037dfef7d1f83cc6b9"
+        },
+        {
+          "path": "tests/system/activation.test.cjs",
+          "sha256": "e72d0769afd0016fdf6f3754a3ddfd86b612f80ce65ed317e050a820da1af1f2"
+        },
+        {
+          "path": "tests/system/host.test.cjs",
+          "sha256": "c9a2b0d3ebff108bc0d092fd95122d487fc89c174b0234be940ffcbbf85b84b8"
+        }
+      ],
+      "sourceBindingLimitation": "Source hashes observed during review; no full source-to-test provenance embedded in the standalone log.",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-007",
+        "EOS-INT-REQ-015"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false
+    },
+    {
+      "id": "INT-EEBUS-FINAL-593",
+      "reportPath": "reports/integration/review-snapshots/int-eebus-final-593-security.tap",
+      "originalReportPath": "reports/integration/sbom/eebus-final-security.tap",
+      "reportSha256": "21c411a05901efd2497e012f3d8d991e9698ac89e474c25dd88bb95b4f84d642",
+      "reviewedAt": "2026-10-01T12:32:35.988774+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 21,
+        "pass": 21,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP13",
+      "evidenceLevel": "unit_or_mock plus actual local TLS/WebSocket and OpenSSL identity",
+      "scope": "16 frame/PIN/security cases plus5 resource cases. Includes prior10; cannot add earlier10/16/21 logs. Four legacy scripts separately pass. No device certification or physical control.",
+      "sourceBindingEvidence": "reports/integrated/adapters/source-inventory.json",
+      "sourceBindingSha256": "6812a90b0fc2f77eab39c59588f0bbcd44735a3369ca89d0b1c2d89446aabd11",
+      "buildBindingEvidence": "reports/integration/sbom/eebus-final-build-verification.json",
+      "buildBindingSha256": "4b07ac0141dd93d59868e955dce0703a0cfe95a71d659d1131918734970b8188",
+      "requirementIds": [
+        "EOS-INT-REQ-011",
+        "EOS-INT-REQ-017"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false
+    },
+    {
+      "id": "INT-REVIEW-PROBE-REDIRECT",
+      "reportPath": "reports/integration/review-snapshots/int-review-probe-redirect-79.tap",
+      "originalReportPath": "reports/integration/raw/integration-unit-final.tap",
+      "reportSha256": "e78ae3beb0b1a0be3d6f6287cb19b63cbea47b36b97a6a46af6dd28688928d01",
+      "reviewedAt": "2026-10-01T12:33:51.687840+00:00",
+      "result": "reported_passed",
+      "counts": {
+        "tests": 79,
+        "pass": 79,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP13",
+      "evidenceLevel": "unit_or_mock plus previously scoped local cryptographic/process tests",
+      "scope": "Integration unit suite including four additional Admin redirect negatives; contains earlier overlapping suites. Not actual authenticated Admin/UI acceptance.",
+      "observedProductSourceHashes": [
+        {
+          "path": "tools/system/onboard-ui.cjs",
+          "sha256": "3e659e4f0406c4239bd3b5c136a4c6793ec4cce3202d78a509cc4b9b7373aab0"
+        },
+        {
+          "path": "tests/integration/onboard-ui.test.cjs",
+          "sha256": "d7ced6f2b5b924e3649a0e3279f22a26af934bec95328290062950241fba7955"
+        }
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-004"
+      ],
+      "integratedAcceptance": false,
+      "targetSystemdAcceptance": false
+    },
+    {
+      "id": "INT-REAL-UI-R4-WITH-OS-FIXTURE",
+      "reportPath": "reports/integration/raw/ui-controller-attempts/attempt-11-r4-os-interface-fixture.tap",
+      "reportSha256": "5784b684db21bc6dbeba90c652cb14f9c797bf3686dc0c77ba3f5e67ba2a326d",
+      "reviewedAt": "2026-10-01T12:43:22.950500+00:00",
+      "result": "reported_passed_with_explicit_os_interface_fixture",
+      "counts": {
+        "tests": 8,
+        "behavioralStages": 7,
+        "parentTests": 1,
+        "pass": 8,
+        "fail": 0,
+        "skipped": 0
+      },
+      "reportFormat": "TAP13",
+      "evidenceLevel": "real_process_integration with explicit disposable-copy OS interface fixture",
+      "scope": "Real controller7.2.2/Admin7.10.11/UI1.0.21 processes, Redis7.2.10 TLS1.3, actualHTTPS login/OAuth, central signed test-license activation/limits/revocation and denied physical commands. EightTAPnodes contain seven stages plusoneparent.",
+      "fixtureScope": "Native uv_interface_addresses blocked by sandbox; only disposable copies of two upstream adapter files receive test interface data. Original frozen candidate hashes checked unchanged. UID0,CItrue,loopbackonly; synthetic UUID and ephemeral testissuer/password.",
+      "sourceBindingEvidence": "reports/integration/review-snapshots/ui-controller-r4-summary.json",
+      "sourceBindingSha256": "22cefe28167dbb79e34da0d0ebc56c50bac2db185499fd47f64c2a8d239575c0",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-003",
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-009"
+      ],
+      "integratedAcceptance": false,
+      "partialIntegrationExecuted": true,
+      "targetSystemdAcceptance": false,
+      "notAccepted": [
+        "Unmodified native startup",
+        "Debian12/RPi5/VMware service UID and mounts",
+        "Browser/LAN/Tailscale/IPv6 behavior",
+        "Physical controls and fail-safes",
+        "Power-loss/reboot/target load",
+        "Whole CRA/IEC product acceptance"
+      ]
+    }
+  ],
+  "integrationCodeReview": {
+    "reviewedAt": "2026-10-01T11:59:25.368682+00:00",
+    "reviewScope": [
+      "runtime/bootstrap/enrollment.cjs",
+      "runtime/bootstrap/initialize.cjs",
+      "runtime/transport/web-certificates.cjs",
+      "tools/system/onboard-ui.cjs"
+    ],
+    "reviewKind": "independent internal team review; not independent certification or penetration test",
+    "sourceSnapshot": [
+      {
+        "path": "runtime/bootstrap/enrollment.cjs",
+        "sha256": "d402fbed6327ae88bd07b4775daf9f8aaa21bbe38080b71a4e2dca54d54a0b34"
+      },
+      {
+        "path": "runtime/bootstrap/initialize.cjs",
+        "sha256": "51001ac973704a1d7e6468b233d784ba502c2ca976b621bcebcb0ba442cea21c"
+      },
+      {
+        "path": "runtime/transport/web-certificates.cjs",
+        "sha256": "e8d611246bf6f212505616d24e89b2f50bf7b8a8da443a8386df31946ddaa9ac"
+      },
+      {
+        "path": "tools/system/onboard-ui.cjs",
+        "sha256": "0444b325a142d030c567651ecf405b42e66f9525a0057bdc44903c51bf58971d"
+      },
+      {
+        "path": "system/test-base/systemd/nexowatt-eos-controller.service",
+        "sha256": "d86fa24821f91fa4244385e58b57050abd508228037bb0a4fd5a74faa70bcd85"
+      }
+    ],
+    "targetSystemdAcceptance": false,
+    "reproductionResults": [
+      {
+        "id": "EOS-INT-REVIEW-003",
+        "name": "retained_ca_private_key_exposure_not_detected",
+        "reproduced": true,
+        "actualStatus": "VALID",
+        "keyMode": "644",
+        "secretMaterialPrinted": false
+      },
+      {
+        "id": "EOS-INT-REVIEW-004",
+        "name": "accepted_host_count_is_rejected_on_inspection",
+        "suppliedHosts": 24,
+        "normalizedHosts": 27,
+        "actualError": "WEB_CERTIFICATE_HOSTS",
+        "reproduced": true
+      },
+      {
+        "id": "EOS-INT-REVIEW-005",
+        "name": "fresh_previous_heartbeat_accepted_without_current_process",
+        "reproduced": true,
+        "returnedWithoutPidOrStartTime": true,
+        "stateRequests": 2,
+        "scope": "mock function behavior only; no actual service or attack"
+      },
+      {
+        "id": "EOS-INT-REVIEW-007",
+        "scope": "temporary file only",
+        "reproduced": true,
+        "requestedMode": "644",
+        "actualModeWithUmask077": "600"
+      }
+    ],
+    "findings": [
+      {
+        "id": "EOS-INT-REVIEW-001",
+        "title": "Später Onboardingfehler sperrt nächsten Start nicht dauerhaft",
+        "priority": "high",
+        "evidenceLevel": "code_review",
+        "affectedSource": "tools/system/onboard-ui.cjs; system/test-base/systemd/nexowatt-eos-controller.service; runtime/bootstrap/initialize.cjs",
+        "observation": "Enrollment-marker complete wird vor Upload/Enable/Start/Probe geschrieben; Fehler behält nur Lock, den kein Controller-Startgate auswertet.",
+        "proposedVerification": "Abbruch nach Enable/Start/HTTPS-Probe und nach Prozessverlust; anschließender Start muss durch durable fehlgeschlagene Onboardingphase verweigert werden.",
+        "requirementIds": [
+          "EOS-INT-REQ-002",
+          "EOS-INT-REQ-015"
+        ],
+        "status": "remediated_scoped_verification",
+        "closureEvidence": [
+          "INT-REVIEW-MAINTENANCE",
+          "INT-REVIEW-ONBOARD-CLOSURE",
+          "INT-REVIEW-ACTIVATION"
+        ],
+        "initialStatus": "reported_for_remediation",
+        "closureReviewedAt": "2026-10-01T12:09:51.268950+00:00",
+        "closureAssessment": "Root-owned maintenance permit now binds coordinator PID/startTicks/bootID; controller ExecStartPre refuses incomplete operation or dead coordinator. Initial lock and removal fsync parent. Independent stop attempt occurs even when revoke fails; both failure cases tested.",
+        "remainingAcceptance": "No target Debian12/RPi5 systemd service UID, mount namespace, full installer/onboarding process, power-loss or physical-device acceptance. Related full integration requirement remains open."
+      },
+      {
+        "id": "EOS-INT-REVIEW-002",
+        "title": "Snapshot vor globalem Wartungslock kann veraltet sein",
+        "priority": "medium",
+        "evidenceLevel": "code_review",
+        "affectedSource": "tools/system/onboard-ui.cjs",
+        "observation": "Release/current, signierter Code und Config werden vor Lockaufnahme gelesen. Parallel abgeschlossene Aktivierung/Rotation kann den Snapshot ändern.",
+        "proposedVerification": "Zwischen Snapshot und Lock Release/Config wechseln; Onboarding muss unter Lock neu prüfen oder frühzeitig abbrechen.",
+        "requirementIds": [
+          "EOS-INT-REQ-002",
+          "EOS-INT-REQ-015"
+        ],
+        "status": "remediated_scoped_verification",
+        "closureEvidence": [
+          "INT-REVIEW-ONBOARD-CLOSURE"
+        ],
+        "initialStatus": "reported_for_remediation",
+        "closureReviewedAt": "2026-10-01T12:09:51.268950+00:00",
+        "closureAssessment": "Current realpath, config, release-state and installed bytes rechecked after lock. Fixture executes actual onboarding source with release change during lock acquisition and confirms ONBOARD_SNAPSHOT_CHANGED before provisioning.",
+        "remainingAcceptance": "No target Debian12/RPi5 systemd service UID, mount namespace, full installer/onboarding process, power-loss or physical-device acceptance. Related full integration requirement remains open."
+      },
+      {
+        "id": "EOS-INT-REVIEW-003",
+        "title": "Prüfung erkennt offengelegten retained CA-Schlüssel nicht",
+        "priority": "high",
+        "evidenceLevel": "temporary_files_reproduced",
+        "affectedSource": "runtime/transport/web-certificates.cjs",
+        "observation": "authority755 und ca.key644 werden von inspectWeb als VALID akzeptiert; nur Leaf-Schlüsselrechte geprüft.",
+        "proposedVerification": "CA-Schlüssel/Verzeichnis-Rechte, Eigentümer, Schlüsselpaar und Symlinkfälle negativ prüfen.",
+        "requirementIds": [
+          "EOS-INT-REQ-007",
+          "EOS-INT-REQ-008"
+        ],
+        "status": "remediated_scoped_verification",
+        "closureEvidence": [
+          "INT-REVIEW-SYSTEM",
+          "CERTIFICATE-LIFECYCLE-REVIEW-20261001"
+        ],
+        "initialStatus": "reported_for_remediation",
+        "closureReviewedAt": "2026-10-01T12:09:51.268950+00:00",
+        "closureAssessment": "inspectWeb checks retained authority directory/key owner and private mode, CA curve/signature and key correspondence; selected system tests200/201 read and passed.",
+        "remainingAcceptance": "No target Debian12/RPi5 systemd service UID, mount namespace, full installer/onboarding process, power-loss or physical-device acceptance. Related full integration requirement remains open."
+      },
+      {
+        "id": "EOS-INT-REVIEW-004",
+        "title": "Zulässige Hostanzahl scheitert nach Normalisierung",
+        "priority": "low",
+        "evidenceLevel": "temporary_files_reproduced",
+        "affectedSource": "runtime/transport/web-certificates.cjs",
+        "observation": "24 Hosteingaben werden zu27 inklusive Loopback; anschließende Manifestprüfung verwendet erneut max24.",
+        "proposedVerification": "Obergrenze einschließlich automatisch ergänzter Namen konsistent prüfen;24 gültige Eingaben und Normalisierungsidempotenz testen.",
+        "requirementIds": [
+          "EOS-INT-REQ-004",
+          "EOS-INT-REQ-007"
+        ],
+        "status": "remediated_scoped_verification",
+        "closureEvidence": [
+          "INT-REVIEW-SYSTEM",
+          "CERTIFICATE-LIFECYCLE-REVIEW-20261001"
+        ],
+        "initialStatus": "reported_for_remediation",
+        "closureReviewedAt": "2026-10-01T12:09:51.268950+00:00",
+        "closureAssessment": "Normalized manifest accepts up to27 entries for24callerSANs+3loopbacks. Onboard now keeps raw input after validation, avoiding double-normalization. Webmodule boundary case passes; raw-input handoff additionally code-reviewed.",
+        "remainingAcceptance": "No target Debian12/RPi5 systemd service UID, mount namespace, full installer/onboarding process, power-loss or physical-device acceptance. Related full integration requirement remains open."
+      },
+      {
+        "id": "EOS-INT-REVIEW-005",
+        "title": "Adapter-Readiness nicht an neuen Prozess gebunden",
+        "priority": "medium",
+        "evidenceLevel": "mock_function_reproduced",
+        "affectedSource": "tools/system/onboard-ui.cjs",
+        "observation": "waitAdapters akzeptiert true/ack/ts10s alt ohne PID oder aktuellen Start; probeWeb prüft nur TLS und keine erwartete HTTP-/Authentisierungsantwort.",
+        "proposedVerification": "Alte frische States und falschen TLS-Dienst bei fehlenden aktuellen Adaptern ablehnen; Browser/Lizenzakzeptanz separat offen halten.",
+        "requirementIds": [
+          "EOS-INT-REQ-002",
+          "EOS-INT-REQ-004"
+        ],
+        "status": "remediated_scoped_verification",
+        "closureEvidence": [
+          "INT-REVIEW-ONBOARD-CLOSURE",
+          "INT-REVIEW-PROBE-REDIRECT",
+          "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+        ],
+        "initialStatus": "reported_for_remediation",
+        "closureReviewedAt": "2026-10-01T12:09:51.268950+00:00",
+        "closureAssessment": "Alive timestamp bound to start and exact unauthenticated HTTPS response checked. After actual middleware observation, Admin contract corrected from fixture-only403 to exact relative302; redirect negatives passed. Not proof against compromised shared-UID writers or an equivalent fake application.",
+        "remainingAcceptance": "No target Debian12/RPi5 systemd service UID, mount namespace, full installer/onboarding process, power-loss or physical-device acceptance. Related full integration requirement remains open.",
+        "followupCorrection": {
+          "reviewedAt": "2026-10-01T12:33:51.687840+00:00",
+          "observedMismatch": "Initial403 mock did not represent complete Admin authentication middleware; actual process fixture returned302 before the license handler.",
+          "correctedContract": "TLS1.3 verified identity plus status302 and exact relative Location /index.html?login&href=%2Fnexowatt%2Flicense%2Fstatus; no redirect following; UI strictauth JSON unchanged.",
+          "tests": "Four negative redirect fixtures added: external, protocol-relative, unrelated local path, extra parameters; final79-count log read.",
+          "limit": "Exact readiness and subsequent login/license flow verified in final actual process laboratory with explicit OS-interface fixture; target/native/physical acceptance remains open."
+        }
+      },
+      {
+        "id": "EOS-INT-REVIEW-006",
+        "title": "CLI-Upload ohne Bind-Mount liest leeren Config-Platzhalter",
+        "priority": "high",
+        "evidenceLevel": "code_review",
+        "affectedSource": "tools/system/onboard-ui.cjs; tools/system/install-host.cjs",
+        "observation": "runuser upload außerhalb Service-Mountnamespace erhält IOBROKER_DATA_DIR mit leerer root0600 iobroker.json statt geschützter TLS-Config.",
+        "proposedVerification": "Wartungsunit oder unterstützten expliziten Configweg mit identischem ReadOnly-Bind unter eos-runtime verwenden; keine schreibbare Runtime-Configkopie.",
+        "requirementIds": [
+          "EOS-INT-REQ-002",
+          "EOS-INT-REQ-006"
+        ],
+        "status": "remediated_scoped_verification",
+        "closureEvidence": [
+          "INT-REVIEW-ONBOARD-CLOSURE",
+          "INT-REVIEW-MAINTENANCE"
+        ],
+        "initialStatus": "reported_for_remediation",
+        "closureReviewedAt": "2026-10-01T12:09:51.268950+00:00",
+        "closureAssessment": "Fixed unprivileged upload systemd unit carries same readonly config bind. Unit contents tested, grammar tested in host suite; no real mountnamespace/UID acceptance yet.",
+        "remainingAcceptance": "No target Debian12/RPi5 systemd service UID, mount namespace, full installer/onboarding process, power-loss or physical-device acceptance. Related full integration requirement remains open."
+      },
+      {
+        "id": "EOS-INT-REVIEW-007",
+        "title": "Restriktive umask macht öffentlichen Lizenztrust unlesbar",
+        "priority": "medium",
+        "evidenceLevel": "temporary_files_reproduced",
+        "affectedSource": "tools/system/onboard-ui.cjs; tools/system/install-host.cjs",
+        "observation": "privateWrite mit Mode0644 unter umask077 erzeugt0600; danach kein chmod im Onboardpfad.",
+        "proposedVerification": "Onboarding mit umask077 und tatsächlicher Runtime-Lesbarkeit des Public-Key-Trusts prüfen; finalen sicheren Mode explizit setzen.",
+        "requirementIds": [
+          "EOS-INT-REQ-002",
+          "EOS-INT-REQ-008"
+        ],
+        "status": "remediated_scoped_verification",
+        "closureEvidence": [
+          "INT-REVIEW-ONBOARD-CLOSURE"
+        ],
+        "initialStatus": "reported_for_remediation",
+        "closureReviewedAt": "2026-10-01T12:09:51.268950+00:00",
+        "closureAssessment": "privateWrite explicitly fchmods requested mode; real subprocess under umask077 verifies public0644 and restricted0640. Actual runtime traversal/access on installed host remains open.",
+        "remainingAcceptance": "No target Debian12/RPi5 systemd service UID, mount namespace, full installer/onboarding process, power-loss or physical-device acceptance. Related full integration requirement remains open."
+      }
+    ],
+    "statusNote": "Findings bind this observed source snapshot. Later fixes require explicit retest; this section preserves discovery evidence and does not claim current code remains vulnerable after changes.",
+    "closureReviewAt": "2026-10-01T12:09:51.268950+00:00",
+    "closureScope": "Seven source-level defects corrected and checked using source review plus scoped tests. This closes the narrow review feedback, not product requirements or deployment acceptance.",
+    "retainedFailureLogs": [
+      "reports/integration/raw/attempts/maintenance-proc-namespace.tap"
+    ]
+  },
+  "relatedComponentReports": [
+    {
+      "id": "ADAPTER-COMPONENT-REVIEW-20261001",
+      "reportPath": "reports/integration/review-snapshots/adapter-component-review-20261001-verification.json",
+      "reportSha256": "ddb6fdd195f849b741e54d8cc729a2ba4d3d328155fef925158715835313b3ee",
+      "sourceInventoryPath": "reports/integration/review-snapshots/adapter-component-review-20261001-source-inventory.json",
+      "sourceInventorySha256": "2e0eb6c5be349940e7cc0f60ab0ff02b3532062c56eab7f3f2cf7cfc4ecb653d",
+      "documentationPath": "docs/integration/ADAPTERS_INTEGRATED.md",
+      "findingIds": [
+        "NW-EOS-ADP-261001-01",
+        "NW-EOS-ADP-261001-02",
+        "NW-EOS-ADP-261001-03",
+        "NW-EOS-ADP-261001-04",
+        "NW-EOS-ADP-261001-05",
+        "NW-EOS-ADP-261001-06",
+        "NW-EOS-ADP-261001-07",
+        "NW-EOS-ADP-261001-08"
+      ],
+      "reviewedScope": "Component report and source-review summary read; independent rerun of all component tests not performed by this document review",
+      "enrollmentStatus": "all four physical adapters pending and disabled",
+      "knownIntegrationGaps": [
+        "no actual device interoperability",
+        "central license guards not imported in physical adapters pending safe transition analysis",
+        "backup root shell/mount/restore architecture remains blocked"
+      ],
+      "requirementIds": [
+        "EOS-INT-REQ-009",
+        "EOS-INT-REQ-010",
+        "EOS-INT-REQ-011",
+        "EOS-INT-REQ-012",
+        "EOS-INT-REQ-013",
+        "EOS-INT-REQ-018",
+        "EOS-INT-REQ-019"
+      ],
+      "originalReportPath": "reports/integrated/adapters/verification.json",
+      "originalSourceInventoryPath": "reports/integrated/adapters/source-inventory.json"
+    },
+    {
+      "id": "CERTIFICATE-LIFECYCLE-REVIEW-20261001",
+      "reportPath": "reports/integration/review-snapshots/certificate-lifecycle-review-20261001-certificates-verification.json",
+      "reportSha256": "f2b17e1ed49db30c7d79a30061c5df880e5f6ce954b14ca8bfadd4957c867b2e",
+      "documentationPath": "docs/operations/CERTIFICATE_LIFECYCLE.md",
+      "reviewedScope": "Verification report, source-hash bindings and raw TAP counts checked; full lifecycle suite not independently rerun by document review",
+      "reportedTests": {
+        "targeted": 58,
+        "realRedisIntegration": 1,
+        "duplicatesWithOtherSuiteTotals": true
+      },
+      "targetSystemdAcceptance": false,
+      "requirementIds": [
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-007",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-015"
+      ],
+      "knownIntegrationGaps": [
+        "Debian12/RPi5 systemd accounts, mounts and actual service restarts not executed",
+        "Power loss and filesystem crash durability not physically tested",
+        "UI/physical device functional effects during maintenance not approved",
+        "HTTPS CA replacement/compromise revocation process not implemented",
+        "Expiry warnings currently journal+unit status, not delivered email/push/UI alarms",
+        "Root/SSD/backup compromise outside TLS boundary",
+        "Shared ioBroker database identity remains, no per-adapter mTLS"
+      ],
+      "originalReportPath": "reports/integration/certificates-verification.json"
+    },
+    {
+      "id": "ADMIN-COMPONENT-REVIEW-20261001",
+      "reportPath": "reports/integration/review-snapshots/admin-component-review-20261001-verification.json",
+      "originalReportPath": "components/admin/reports/security/integrated/verification.json",
+      "reportSha256": "483df04507bfe8204293144dbc67593b1a92bd44e7c173d1ba40d5c1e9402619",
+      "documentationPath": "docs/integration/ADMIN_INTEGRATED.md",
+      "requirementIds": [
+        "EOS-INT-REQ-003",
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-014",
+        "EOS-INT-REQ-019"
+      ],
+      "reviewedScope": "Component report and raw log counters read, not an independent rerun or full source audit. Source/built suites overlap; parent/subtest counts not independent cases.",
+      "logsRead": [
+        {
+          "id": "ADMIN-APPLIANCE-SOURCE",
+          "path": "components/admin/reports/security/integrated/raw/appliance-source.tap",
+          "sha256": "6f13b1bfc953785a8b0a50c91afdcf55d11286ae627cdc25e3153b6201d0c9d9",
+          "reportedTests": 13,
+          "reportedPassed": 13,
+          "reportedFailed": 0,
+          "reportedSkipped": 0,
+          "format": "TAP13"
+        },
+        {
+          "id": "ADMIN-APPLIANCE-BUILT",
+          "path": "components/admin/reports/security/integrated/raw/appliance-built.tap",
+          "sha256": "72cd511c983661e0b9e10552e2f2c46c6c29c1945d34c689625f826d2294d359",
+          "reportedTests": 13,
+          "reportedPassed": 13,
+          "reportedFailed": 0,
+          "reportedSkipped": 0,
+          "format": "TAP13"
+        },
+        {
+          "id": "ADMIN-SOCKET-OAUTH",
+          "path": "components/admin/reports/security/integrated/raw/socket-oauth-integration.tap",
+          "sha256": "88a50c8123671fb6024273e1b67694b5ece707303fb54dce71771aae97b59370",
+          "reportedTests": 10,
+          "reportedPassed": 10,
+          "reportedFailed": 0,
+          "reportedSkipped": 0,
+          "format": "TAP13"
+        },
+        {
+          "id": "ADMIN-SECURITY-REGRESSION",
+          "path": "components/admin/reports/security/integrated/raw/security-regression.tap",
+          "sha256": "550e29af19c0b58817bbbc798558430386be447d9a9b3f2c0db953d0fd4c67da",
+          "reportedTests": 112,
+          "reportedPassed": 112,
+          "reportedFailed": 0,
+          "reportedSkipped": 0,
+          "format": "TAP13"
+        },
+        {
+          "id": "ADMIN-SHIPPED-BOUNDARIES",
+          "path": "components/admin/reports/security/integrated/raw/security-boundaries.log",
+          "sha256": "01bbca91409427d5543be2997cb978d0d5015ff9bdf52b923bd3e7756cc910ef",
+          "reportedTests": 40,
+          "reportedPassed": 40,
+          "reportedFailed": 0,
+          "reportedSkipped": 0,
+          "format": "custom self-test output"
+        },
+        {
+          "id": "ADMIN-RELEASE-DEFAULTS",
+          "path": "components/admin/reports/security/integrated/raw/release-defaults.log",
+          "sha256": "cc0097ef17e5aa154e1360f7d5da6c313d3c9d7265363104ccbaab05495eaf8a",
+          "reportedTests": null,
+          "reportedPassed": null,
+          "reportedFailed": null,
+          "reportedSkipped": null,
+          "format": "custom self-test output"
+        }
+      ],
+      "knownIntegrationGaps": [
+        "No actual unprivileged Debian/systemd or ARM64 acceptance",
+        "Shared runtime UID and shared Redis identity remain one trust zone",
+        "Frontend preserved, not fully rebuilt or browser-accepted",
+        "Target CPU login-load and physical-device acceptance open"
+      ]
+    },
+    {
+      "id": "ADAPTER-COMPONENT-FOLLOWUP-REVIEW-20261001",
+      "reportPath": "reports/integration/review-snapshots/adapter-final-593-verification.json",
+      "originalReportPath": "reports/integrated/adapters/verification.json",
+      "reportSha256": "865883a68b65b4bcf3ac3fa15e1eb5fde2206bd41d8e6702f561c3b217107454",
+      "sourceInventoryPath": "reports/integration/review-snapshots/adapter-final-593-source-inventory.json",
+      "originalSourceInventoryPath": "reports/integrated/adapters/source-inventory.json",
+      "sourceInventorySha256": "6812a90b0fc2f77eab39c59588f0bbcd44735a3369ca89d0b1c2d89446aabd11",
+      "documentationPath": "docs/integration/ADAPTERS_INTEGRATED.md",
+      "findingIds": [
+        "NW-EOS-ADP-261001-09",
+        "NW-EOS-ADP-261001-10"
+      ],
+      "reviewedScope": "Final TypeScript5.9.3 build evidence,21-case TAP and four explicit legacy-script exits read; all4component source files rehashed; relevant control/PIN/socket cleanup gates inspected. No independent full component test rerun.",
+      "enrollmentStatus": "all four physical adapters pending and disabled",
+      "requirementIds": [
+        "EOS-INT-REQ-011",
+        "EOS-INT-REQ-017",
+        "EOS-INT-REQ-019"
+      ],
+      "knownIntegrationGaps": [
+        "Physical SHIP/SPINE/PIN interoperability",
+        "Safe central license-loss transition",
+        "Sustained target DoS/load and real service rights"
+      ]
+    },
+    {
+      "id": "ADMIN-FINAL-R4-CONTRACT-REVIEW-20261001",
+      "reportPath": "reports/integration/review-snapshots/admin-final-r4-verification.json",
+      "originalReportPath": "components/admin/reports/security/integrated/verification.json",
+      "reportSha256": "4672731fe38cb20fcfdbdaedbf1686f596924cf21ebb974c7bda2488dd4266bc",
+      "documentationPath": "docs/integration/ADMIN_INTEGRATED.md",
+      "reviewedAt": "2026-10-01T12:39:06.739674+00:00",
+      "requirementIds": [
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-017",
+        "EOS-INT-REQ-021"
+      ],
+      "reviewedScope": "Actual component report/raw counters read and strict canonical group parser plus both call sites and plugin declaration removal code-reviewed; not independently rerun; full controller OAuth/license acceptance remains separate.",
+      "logsRead": [
+        {
+          "id": "sourceTests",
+          "path": "components/admin/reports/security/integrated/raw/final-controller-contract-source.tap",
+          "sha256": "f050345aeb9727acd48c8292b0f6a538661ebbec641efded9e4bd7260bfe7808",
+          "reportedTests": 31,
+          "reportedPassed": 31,
+          "reportedFailed": 0,
+          "exitCode": null,
+          "reportFormat": "TAP13"
+        },
+        {
+          "id": "builtTests",
+          "path": "components/admin/reports/security/integrated/raw/final-controller-contract-built.tap",
+          "sha256": "a200cf3a58631aaf2d6c8742e82038cd8a6f983e26b55159a4d66cb12b35885d",
+          "reportedTests": 41,
+          "reportedPassed": 41,
+          "reportedFailed": 0,
+          "exitCode": null,
+          "reportFormat": "TAP13"
+        },
+        {
+          "id": "compile",
+          "path": "components/admin/reports/security/integrated/raw/final-controller-contract-tsc.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "reportedTests": null,
+          "reportedPassed": null,
+          "reportedFailed": null,
+          "exitCode": 0,
+          "reportFormat": "custom output; compiler is silent on success, exit bound by component report"
+        },
+        {
+          "id": "releaseDefaults",
+          "path": "components/admin/reports/security/integrated/raw/final-controller-contract-defaults.log",
+          "sha256": "cc0097ef17e5aa154e1360f7d5da6c313d3c9d7265363104ccbaab05495eaf8a",
+          "reportedTests": null,
+          "reportedPassed": null,
+          "reportedFailed": null,
+          "exitCode": 0,
+          "reportFormat": "custom output; compiler is silent on success, exit bound by component report"
+        },
+        {
+          "id": "shippedBoundaries",
+          "path": "components/admin/reports/security/integrated/raw/final-controller-contract-boundaries.log",
+          "sha256": "01bbca91409427d5543be2997cb978d0d5015ff9bdf52b923bd3e7756cc910ef",
+          "reportedTests": 40,
+          "reportedPassed": 40,
+          "reportedFailed": 0,
+          "exitCode": null,
+          "reportFormat": "custom output; compiler is silent on success, exit bound by component report"
+        }
+      ],
+      "correction": {
+        "observedDefect": "Full-controller group view uses translated display label as row.id; original component fixture treated it as authority ID and rejected valid login.",
+        "control": "Use strictly validated unique row.value._id for both session snapshot and role resolution; reject malformed/duplicate group identity. Password and auth controls unchanged.",
+        "telemetry": "Remove optional common.plugins declaration, enforce during release normalization, include io-package.json in prebuilt seal; independent of CI variable."
+      },
+      "knownIntegrationGaps": [
+        "Full real Admin/UI OAuth/license path still evaluated separately",
+        "No target Debian/RPi5 UID/service or browser acceptance",
+        "31 source and41 built counts overlap;41 includes10 socket/OAuth entries including parent"
+      ],
+      "subsequentRealProcessEvidenceId": "INT-REAL-UI-R4-WITH-OS-FIXTURE"
+    },
+    {
+      "id": "REAL-UI-R4-LAB-REVIEW-20261001",
+      "reportPath": "reports/integration/review-snapshots/ui-controller-r4-summary.json",
+      "originalReportPath": "reports/integration/raw/ui-controller-summary.json",
+      "reportSha256": "22cefe28167dbb79e34da0d0ebc56c50bac2db185499fd47f64c2a8d239575c0",
+      "documentationPath": "docs/integration/UI_INTEGRATED.md",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-003",
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-009"
+      ],
+      "reviewedScope": "Full summary and TAP stages read; test driver, five candidate file hashes, three additional Admin security file hashes, two original fixture input hashes and all eleven attempt hashes checked. Test not independently rerun by matrix reviewer.",
+      "knownIntegrationGaps": [
+        "Unmodified native startup",
+        "Debian12/RPi5/VMware service UID and mounts",
+        "Browser/LAN/Tailscale/IPv6 behavior",
+        "Physical controls and fail-safes",
+        "Power-loss/reboot/target load",
+        "Whole CRA/IEC product acceptance"
+      ]
+    },
+    {
+      "id": "BUILD-SBOM-FINAL-R4-REVIEW-20261001",
+      "reportPath": "reports/integration/review-snapshots/build-sbom-final-r4-verification.json",
+      "originalReportPath": "reports/integration/sbom/verification.json",
+      "reportSha256": "84906b2ee453b58c8628aa6a63f1e48d771bc54a0de5f74fdb7b94de2b4b3b29",
+      "documentationPath": "docs/architecture/INTEGRATED_SYSTEM.md",
+      "requirementIds": [
+        "EOS-INT-REQ-001",
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-021"
+      ],
+      "reviewedScope": "Final report, coverage, audit and schema results read; all22 report artifact hashes and5 validated SBOM hashes checked; raw tool counters8+4+4+18 read. Build and schema validation not independently rerun by document reviewer.",
+      "knownIntegrationGaps": [
+        "OS/Node/Redis binary and firmware inventory",
+        "Full bundled frontend dependency attribution",
+        "Target platform/permissions/physical acceptance",
+        "Final relevant advisory remediation and reachability decision"
+      ],
+      "fullSchemaCheckEvidence": "reports/integration/sbom/schema-validation.json",
+      "productReleaseApproved": false
+    }
+  ],
+  "componentFollowupFindings": [
+    {
+      "componentId": "eebus",
+      "status": "remediated_scoped_verification",
+      "reportedBy": "independent certificate review and adapter implementation agent",
+      "reviewedEvidenceLevel": "component fixture failure log read; hardware not exercised",
+      "requirementIds": [
+        "EOS-INT-REQ-011"
+      ],
+      "threatIds": [
+        "EOS-INT-TM-011"
+      ],
+      "beforeFixEvidence": {
+        "path": "reports/integrated/adapters/eebus-control-bypass-before-fix.tap",
+        "sha256": "378fe244a97235d562b6d016c60c4de589a42524c25665e42672144153415c9a",
+        "reportedTests": 16,
+        "reportedPassed": 11,
+        "reportedFailed": 5,
+        "scope": "SHIP frame and callback fixtures including actual CLS command parser, with OpenSSL identity test; no physical device write"
+      },
+      "afterFixEvidence": {
+        "path": "reports/integration/review-snapshots/int-eebus-final-593-security.tap",
+        "originalPath": "reports/integration/sbom/eebus-final-security.tap",
+        "sha256": "21c411a05901efd2497e012f3d8d991e9698ac89e474c25dd88bb95b4f84d642",
+        "reportedTests": 21,
+        "reportedPassed": 21,
+        "reportedFailed": 0,
+        "reportedSkipped": 0,
+        "reportFormat": "TAP13",
+        "scope": "16 SHIP frame/PIN cases plus5 resource cases, fixtures and one real local TLS/WebSocket registration test; TypeScript5.9.3 final build verified identical to repository",
+        "buildEvidence": "reports/integration/sbom/eebus-final-build-verification.json",
+        "buildEvidenceSha256": "4b07ac0141dd93d59868e955dce0703a0cfe95a71d659d1131918734970b8188"
+      },
+      "productActivationAllowed": false,
+      "id": "NW-EOS-ADP-261001-09",
+      "title": "SHIP Control/JSON frames can enter application callbacks outside data-channel trust gate",
+      "stride": [
+        "Spoofing",
+        "Tampering",
+        "Elevation of Privilege"
+      ],
+      "observation": "Control and bare-JSON frames deliver SPINE-shaped content to application/CLS parser before trust or completed protocol selection, and outside the data channel even after completed handshake.",
+      "impactLimit": "Fixture demonstrates application callback and actual CLS parser entry, not an untrusted physical control write. processClsEvent has a further trust check.",
+      "requiredRemediation": "Only protocol-control messages on control channel; unknown or bare-JSON application payload rejected; all application data requires current peer trust and completed protocol selection.",
+      "initialStatus": "open_reproduced_pending_retest",
+      "closureReviewedAt": "2026-10-01T12:32:35.988774+00:00",
+      "closureAssessment": "Strict SHIP control classification and current trusted protocol checks prevent the reproduced callback/PIN paths. Final test log read and relevant source gates reviewed; suite not independently rerun by document reviewer.",
+      "remainingAcceptance": "No physical SHIP/SPINE/PIN conformance, safe license-loss transition, real target service UID or physical activation; broader integration requirement and threat stay open."
+    },
+    {
+      "componentId": "eebus",
+      "status": "remediated_scoped_verification",
+      "reportedBy": "independent certificate review and adapter implementation agent",
+      "reviewedEvidenceLevel": "component fixture failure log read; hardware not exercised",
+      "requirementIds": [
+        "EOS-INT-REQ-011"
+      ],
+      "threatIds": [
+        "EOS-INT-TM-011"
+      ],
+      "beforeFixEvidence": {
+        "path": "reports/integrated/adapters/eebus-control-bypass-before-fix.tap",
+        "sha256": "378fe244a97235d562b6d016c60c4de589a42524c25665e42672144153415c9a",
+        "reportedTests": 16,
+        "reportedPassed": 11,
+        "reportedFailed": 5,
+        "scope": "SHIP frame and callback fixtures including actual CLS command parser, with OpenSSL identity test; no physical device write"
+      },
+      "afterFixEvidence": {
+        "path": "reports/integration/review-snapshots/int-eebus-final-593-security.tap",
+        "originalPath": "reports/integration/sbom/eebus-final-security.tap",
+        "sha256": "21c411a05901efd2497e012f3d8d991e9698ac89e474c25dd88bb95b4f84d642",
+        "reportedTests": 21,
+        "reportedPassed": 21,
+        "reportedFailed": 0,
+        "reportedSkipped": 0,
+        "reportFormat": "TAP13",
+        "scope": "16 SHIP frame/PIN cases plus5 resource cases, fixtures and one real local TLS/WebSocket registration test; TypeScript5.9.3 final build verified identical to repository",
+        "buildEvidence": "reports/integration/sbom/eebus-final-build-verification.json",
+        "buildEvidenceSha256": "4b07ac0141dd93d59868e955dce0703a0cfe95a71d659d1131918734970b8188"
+      },
+      "productActivationAllowed": false,
+      "id": "NW-EOS-ADP-261001-10",
+      "title": "Configured pairing PIN disclosed before trusted protocol stage or after trust revocation",
+      "stride": [
+        "Information Disclosure",
+        "Spoofing"
+      ],
+      "observation": "Required/optional PIN requests can trigger outbound configured PIN before trusted completed protocol selection; revoked peer can request it after earlier selection.",
+      "impactLimit": "Synthetic TEST-PIN used; no real pairing secret printed or device attacked.",
+      "requiredRemediation": "Check current peer trust and ordered handshake state before every PIN disclosure; revoke prevents further PIN responses.",
+      "initialStatus": "open_reproduced_pending_retest",
+      "closureReviewedAt": "2026-10-01T12:32:35.988774+00:00",
+      "closureAssessment": "Strict SHIP control classification and current trusted protocol checks prevent the reproduced callback/PIN paths. Final test log read and relevant source gates reviewed; suite not independently rerun by document reviewer.",
+      "remainingAcceptance": "No physical SHIP/SPINE/PIN conformance, safe license-loss transition, real target service UID or physical activation; broader integration requirement and threat stay open."
+    }
+  ],
+  "dependencyAssessmentEvidence": [
+    {
+      "id": "DEPENDENCY-UI-R2-CHECKPOINT",
+      "scope": "Prior isolated Admin+UI r2 checkpoint before later UI startup correction; no longer latest runtime; final candidate-r3 assessment tracked separately when available.",
+      "requirementIds": [
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-021"
+      ],
+      "installedNpmPackageDirectories": 465,
+      "distinctNpmNameVersions": 425,
+      "embeddedPackages": 2,
+      "auditPackageNodeCounts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 3,
+        "high": 0,
+        "critical": 0,
+        "total": 3
+      },
+      "countingNote": "Audit package nodes are not counts of independent CVEs; no exploitability or remediation claim solely from the count.",
+      "reviewedScope": "Reports read and counts cross-checked; installation and audit not independently rerun by this document review.",
+      "evidence": [
+        {
+          "path": "reports/integration/sbom/review-snapshots/ui-r2/candidate-final-tree.coverage.json",
+          "sha256": "1bd1ecce14181ac8156f702e8841d8d909372bff431afb314252d60a24d030c3",
+          "originalPath": "reports/integration/sbom/candidate-final-tree.coverage.json"
+        },
+        {
+          "path": "reports/integration/sbom/review-snapshots/ui-r2/candidate-final-tree.audit.json",
+          "sha256": "b073d54c5a9339a690a06dbd753efa5078dafbedee9f540cfbd1f59f30fb5566",
+          "originalPath": "reports/integration/sbom/candidate-final-tree.audit.json"
+        },
+        {
+          "path": "reports/integration/sbom/review-snapshots/ui-r2/candidate-final-tree.cdx.json",
+          "sha256": "5b3f66cb6a21f82b219d3fe2e27081804ca87144822eede93425f2f5def1d825",
+          "originalPath": "reports/integration/sbom/candidate-final-tree.cdx.json"
+        }
+      ],
+      "remainingAcceptance": [
+        "Relevant advisory reachability and remedies bound to final source/build",
+        "OS, Node, Redis binaries, firmware and actual target configuration inventory",
+        "Full frontend bundle dependency reconstruction beyond explicit embedded packages"
+      ],
+      "productionReleaseApproved": false,
+      "reviewedAt": "2026-10-01T12:27:48.107922+00:00"
+    },
+    {
+      "id": "DEPENDENCY-POST-ADMIN-ASSESSMENT",
+      "scope": "All six component dependency assessment after Admin fixes; before later EEBUS source-only follow-up fixes, not a released runtime or physical approval",
+      "requirementIds": [
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-021"
+      ],
+      "installedNpmPackageDirectories": 675,
+      "distinctNpmNameVersions": 624,
+      "embeddedPackages": 2,
+      "auditPackageNodeCounts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 10,
+        "high": 0,
+        "critical": 2,
+        "total": 12
+      },
+      "countingNote": "Audit package nodes are not counts of independent CVEs; no exploitability or remediation claim solely from the count.",
+      "reviewedScope": "Reports read and counts cross-checked; installation and audit not independently rerun by this document review.",
+      "evidence": [
+        {
+          "path": "reports/integration/review-snapshots/dependency-post-admin-assessment-tree.coverage.json",
+          "sha256": "8826fa586deaea069560c5f3280b86e93f3a42841932fabc7f4c70bbecf9c42a",
+          "originalPath": "reports/integration/sbom/post-admin-assessment-tree.coverage.json"
+        },
+        {
+          "path": "reports/integration/review-snapshots/dependency-post-admin-assessment-tree.audit.json",
+          "sha256": "fbceeec9372ecb49c74ea7a032659577d1e51e5a5a7eda44c78691e00cbad36e",
+          "originalPath": "reports/integration/sbom/post-admin-assessment-tree.audit.json"
+        },
+        {
+          "path": "reports/integration/review-snapshots/dependency-post-admin-assessment-tree.cdx.json",
+          "sha256": "48d8151e2221f6a7e5cdd064962e55e73ae927649f42347b1f1e1835eac8db3f",
+          "originalPath": "reports/integration/sbom/post-admin-assessment-tree.cdx.json"
+        }
+      ],
+      "remainingAcceptance": [
+        "Relevant advisory reachability and remedies bound to final source/build",
+        "OS, Node, Redis binaries, firmware and actual target configuration inventory",
+        "Full frontend bundle dependency reconstruction beyond explicit embedded packages"
+      ],
+      "productionReleaseApproved": false,
+      "reviewedAt": "2026-10-01T12:37:08.513422+00:00"
+    },
+    {
+      "id": "DEPENDENCY-FINAL-R4",
+      "scope": "Authoritative actual installed Admin+UI/controller r4 candidate corresponding to actual process laboratory with explicit OS-interface fixture; no OS/firmware inventory or product approval.",
+      "requirementIds": [
+        "EOS-INT-REQ-001",
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-021"
+      ],
+      "installedNpmPackageDirectories": 465,
+      "distinctNpmNameVersions": 425,
+      "embeddedPackages": 2,
+      "auditPackageNodeCounts": {
+        "info": 0,
+        "low": 0,
+        "moderate": 3,
+        "high": 0,
+        "critical": 0,
+        "total": 3
+      },
+      "countingNote": "Three moderate package nodes in same controller/esbuild dependency chain, not three independent CVEs. No exploitability clearance inferred solely from audit count.",
+      "reviewedAt": "2026-10-01T12:47:21.649054+00:00",
+      "reviewedScope": "Final report, coverage, audit and schema results read; all22 report artifact hashes and5 validated SBOM hashes checked; raw tool counters8+4+4+18 read. Build and schema validation not independently rerun by document reviewer.",
+      "evidence": [
+        {
+          "path": "reports/integration/sbom/verification.json",
+          "sha256": "84906b2ee453b58c8628aa6a63f1e48d771bc54a0de5f74fdb7b94de2b4b3b29"
+        },
+        {
+          "path": "reports/integration/sbom/candidate-final-tree.coverage.json",
+          "sha256": "d29dd987bb93c294f77aae14675036cd005602d299c8cc9b459c12a35c7b8c7e"
+        },
+        {
+          "path": "reports/integration/sbom/candidate-final-tree.cdx.json",
+          "sha256": "eddfb70cb2bb5d405750611ec4e7ddddf041990c1469d5748127e58e95b5de72"
+        },
+        {
+          "path": "reports/integration/sbom/candidate-final-tree.audit.json",
+          "sha256": "b073d54c5a9339a690a06dbd753efa5078dafbedee9f540cfbd1f59f30fb5566"
+        },
+        {
+          "path": "reports/integration/sbom/schema-validation.json",
+          "sha256": "d1c65b126e18f049bcb3f151839e95bb69ea51d65e836de6b47b9283932e6908"
+        },
+        {
+          "path": "reports/integration/sbom/candidate-final-package-lock.json",
+          "sha256": "0bcb60b6684f7e35820d9ccc70da354154e19909ba260a841c429bf98a73a4c8"
+        }
+      ],
+      "reportedToolTestsPassed": 34,
+      "schemaValidatedSboms": 5,
+      "productionReleaseApproved": false,
+      "remainingAcceptance": [
+        "OS/Node/Redis binary and firmware inventory",
+        "Full bundled frontend dependency attribution",
+        "Target platform/permissions/physical acceptance",
+        "Final relevant advisory remediation and reachability decision"
+      ]
+    }
+  ],
+  "documentValidationHistory": [
+    {
+      "at": "2026-10-01T12:27:48.107922+00:00",
+      "status": "changed_report_detected_and_reread",
+      "path": "reports/integration/sbom/candidate-final-tree.coverage.json",
+      "observation": "Document validation detected changed hash after report metadata regeneration; counts rechecked unchanged against exact r2 artifacts preserved by build owner under review-snapshots/ui-r2. No product test failed in this check."
+    }
+  ],
+  "finalDevelopmentEvidenceFrozenAt": "2026-10-01T12:47:21.649054+00:00",
+  "historicalNote": {
+    "appliesTo": "0.2.0-dev.1",
+    "currentChangeRequirements": "system/integration/branding-roles-requirements.json",
+    "currentChangeVersion": "0.2.0-dev.2",
+    "priorEvidenceIsNotCurrentAcceptance": true
+  },
+  "developmentFollowupEvidence": [
+    {
+      "id": "EOS-DEV8-CHANNEL-20261002",
+      "sourceVersion": "0.2.0-dev.8",
+      "path": "reports/integration/adapter-channel/verification-summary.json",
+      "sha256": "c920b2fa647df1ea2536d362666838c36f739c8c745004059613cca09a849774",
+      "sourceBinding": "reports/integration/adapter-channel/tested-sources.json",
+      "sourceBindingSha256": "2e1777e5936068b95d4d8209564e9d0e811b825df457758782f4b172f7c30e37",
+      "scope": "158 local TLS, contract and schema tests; no native PostgreSQL/systemd/Pi acceptance",
+      "requirementIds": [
+        "EOS-INT-REQ-005",
+        "EOS-INT-REQ-006",
+        "EOS-INT-REQ-014",
+        "EOS-INT-REQ-018",
+        "EOS-INT-REQ-021"
+      ],
+      "integrationRequirementClosed": false
+    }
+  ]
+}

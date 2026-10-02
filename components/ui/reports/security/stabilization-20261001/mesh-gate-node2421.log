@@ -1,0 +1,98 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> iobroker.nexowatt-ui@1.0.21 test:mesh-coordinator
+> npm run test:mesh-timing-contract && node scripts/verify-mesh-coordinator.cjs && node scripts/verify-mesh-coordinator-access.cjs && node scripts/verify-mesh-transformer-accounting.cjs && node scripts/verify-mesh-app-lifecycle.cjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+
+> iobroker.nexowatt-ui@1.0.21 test:mesh-timing-contract
+> node --test --test-reporter=tap test/eos-mesh-timing.test.cjs
+
+TAP version 13
+# Subtest: differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+ok 1 - differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+  ---
+  duration_ms: 170.868097
+  type: 'test'
+  ...
+# Subtest: differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+ok 2 - differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent
+  ---
+  duration_ms: 122.5911
+  type: 'test'
+  ...
+# Subtest: idle degraded target inspections are independent of repeated messages; budgets remain reserved
+ok 3 - idle degraded target inspections are independent of repeated messages; budgets remain reserved
+  ---
+  duration_ms: 96.275385
+  type: 'test'
+  ...
+# Subtest: current failed duration is reported independently of the previous successful RTT
+ok 4 - current failed duration is reported independently of the previous successful RTT
+  ---
+  duration_ms: 3.523409
+  type: 'test'
+  ...
+# Subtest: 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease
+ok 5 - 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease
+  ---
+  duration_ms: 1.032712
+  type: 'test'
+  ...
+# Subtest: bounded current attempt identifies transport rejection and retains failsafe
+ok 6 - bounded current attempt identifies transport rejection and retains failsafe
+  ---
+  duration_ms: 1.15029
+  type: 'test'
+  ...
+# Subtest: bounded current attempt identifies signature rejection and retains failsafe
+ok 7 - bounded current attempt identifies signature rejection and retains failsafe
+  ---
+  duration_ms: 1.47034
+  type: 'test'
+  ...
+# Subtest: late HELLO has current attempt evidence and cannot establish a session
+ok 8 - late HELLO has current attempt evidence and cannot establish a session
+  ---
+  duration_ms: 0.835744
+  type: 'test'
+  ...
+# Subtest: protocol reset during pending transport cannot restore stale attempt or lease
+ok 9 - protocol reset during pending transport cannot restore stale attempt or lease
+  ---
+  duration_ms: 11.604682
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 529.871983
+OK 99 Slaves; 100., doppelte ID und unsichere Rückfallsumme abgewiesen
+OK HTTP nur im Tailnet/Loopback; HMAC erkennt Manipulation
+OK Wiederanlauf erst nach bestätigtem Rückfall; 99 Teilnehmer innerhalb Budget
+OK Ein fehlender Slave: übrige Teilnehmer erhalten Rückfall, Altbudget bleibt reserviert
+OK Wiederverbindung mit begrenztem Wiederanlauf
+OK Hauptzähler-Ausfall setzt Wiederanlauf zurück; keine sofortige Freigabe
+OK Replay, fremder Boot, alte Revision und verspätete Antwort verlängern keine Lease
+OK Master-Neustart reserviert Maxima und verlangt neue Synchronisation
+OK Strangreserve und Phasen begrenzen zusätzlich; Null bleibt Null
+OK Finale Sicherheitsprüfung begrenzt Boost und addierte Ladepunkte; Ablauf erzwingt Null
+OK Finaler PV-/Speicher-Writer prüft aktuelle Nullgrenzen und Exportbudget
+OK Speicher-Freigabe nutzt kanonisches storage.controlMode und sperrt Farm/Sondermodi
+OK Schnelle Publish-Syntaxprüfung führt Code nicht aus und erkennt Fehler
+OK Microgrid-Meldung: Diagnose still, Anlauf normal, Betriebsausfall kritisch, ein Ereignis
+OK echte parallele HTTP-Kommunikation: 99 Slaves, Handshake + Freigabe in 238 ms (Loopback, kein Feldnachweis)
+AssertionError [ERR_ASSERTION]: 250-ms-Takt Runde 3: {"rounds":[{"round":0,"networkMs":85.56672700000013,"archiveMs":100.82436099999995,"checkedAfterBothMs":100.9199450000001,"state":"SITE_DEGRADED"},{"round":1,"networkMs":70.99782000000005,"archiveMs":79.34736000000021,"checkedAfterBothMs":79.44752100000005,"state":"SITE_DEGRADED"},{"round":2,"networkMs":68.34878400000002,"archiveMs":82.69414800000004,"checkedAfterBothMs":82.72240099999999,"state":"SITE_DEGRADED"},{"round":3,"networkMs":305.95369299999993,"archiveMs":376.35506699999996,"checkedAfterBothMs":376.596552,"state":"SITE_DEGRADED"}],"failed":[{"i":31,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.043296000000055,"attempt":{"kind":"exchange","durationMs":271.32010200000013,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":32,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.059841000000006,"attempt":{"kind":"exchange","durationMs":276.15389300000015,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":33,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.080442000000176,"attempt":{"kind":"exchange","durationMs":276.11915,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":34,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.22482100000002,"attempt":{"kind":"exchange","durationMs":276.23686899999984,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":35,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.25079000000005,"attempt":{"kind":"exchange","durationMs":276.686639,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":36,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.277450000000044,"attempt":{"kind":"exchange","durationMs":277.1121820000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":37,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.13488500000017,"attempt":{"kind":"exchange","durationMs":277.73925999999983,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":38,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.95241899999996,"attempt":{"kind":"exchange","durationMs":278.365718,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":39,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.00826300000017,"attempt":{"kind":"exchange","durationMs":278.620234,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":40,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.99595499999987,"attempt":{"kind":"exchange","durationMs":278.9713649999999,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":41,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.1295869999999,"attempt":{"kind":"exchange","durationMs":279.0685010000002,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":42,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.16426899999988,"attempt":{"kind":"exchange","durationMs":280.25116100000014,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":43,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.18803500000013,"attempt":{"kind":"exchange","durationMs":280.5401380000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":44,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.21337300000005,"attempt":{"kind":"exchange","durationMs":280.71317,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":45,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.23486600000001,"attempt":{"kind":"exchange","durationMs":280.8625949999996,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":46,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.26097499999992,"attempt":{"kind":"exchange","durationMs":280.97840099999985,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":47,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.54993300000001,"attempt":{"kind":"exchange","durationMs":281.0817769999999,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":48,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.616923999999926,"attempt":{"kind":"exchange","durationMs":281.20226,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":49,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.47198400000002,"attempt":{"kind":"exchange","durationMs":281.3452149999998,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":50,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.18486100000018,"attempt":{"kind":"exchange","durationMs":281.701274,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":51,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.15852999999993,"attempt":{"kind":"exchange","durationMs":281.76205600000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":52,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.14623099999994,"attempt":{"kind":"exchange","durationMs":281.68279600000005,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":53,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.15852000000018,"attempt":{"kind":"exchange","durationMs":281.85085100000015,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":54,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.159852,"attempt":{"kind":"exchange","durationMs":281.96763699999974,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":55,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.10226499999999,"attempt":{"kind":"exchange","durationMs":282.03609000000006,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":56,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.10786400000006,"attempt":{"kind":"exchange","durationMs":282.19035299999996,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":57,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.26502099999993,"attempt":{"kind":"exchange","durationMs":281.9440020000002,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":58,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.31700000000001,"attempt":{"kind":"exchange","durationMs":281.7449999999999,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":59,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.222226999999975,"attempt":{"kind":"exchange","durationMs":283.3031069999997,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":60,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.22205699999995,"attempt":{"kind":"exchange","durationMs":283.71329799999967,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":61,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.23981299999991,"attempt":{"kind":"exchange","durationMs":283.97919,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":62,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.25798099999997,"attempt":{"kind":"exchange","durationMs":284.0215539999999,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":63,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.27846199999999,"attempt":{"kind":"exchange","durationMs":284.2494979999997,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":64,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.18004300000007,"attempt":{"kind":"exchange","durationMs":284.2732149999997,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":65,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.06931499999996,"attempt":{"kind":"exchange","durationMs":284.37480800000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":66,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.06216500000005,"attempt":{"kind":"exchange","durationMs":284.8181990000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":67,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.09953100000007,"attempt":{"kind":"exchange","durationMs":284.97871099999975,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":68,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.053562000000056,"attempt":{"kind":"exchange","durationMs":285.1444120000001,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":69,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.299263999999994,"attempt":{"kind":"exchange","durationMs":285.312676,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":70,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.41112300000009,"attempt":{"kind":"exchange","durationMs":285.46891300000016,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":71,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.58946199999991,"attempt":{"kind":"exchange","durationMs":285.5168349999999,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":72,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.66311399999995,"attempt":{"kind":"exchange","durationMs":285.9513929999998,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":73,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.71006500000021,"attempt":{"kind":"exchange","durationMs":286.04814899999974,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":74,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.737526000000116,"attempt":{"kind":"exchange","durationMs":286.3786690000002,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":75,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.756975999999895,"attempt":{"kind":"exchange","durationMs":286.7362799999996,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":76,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.77811800000018,"attempt":{"kind":"exchange","durationMs":286.8569830000001,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":77,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.800201000000015,"attempt":{"kind":"exchange","durationMs":286.9711749999997,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":78,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.821734000000106,"attempt":{"kind":"exchange","durationMs":287.15072599999985,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":79,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.84480899999994,"attempt":{"kind":"exchange","durationMs":287.4176199999997,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":80,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.86747300000002,"attempt":{"kind":"exchange","durationMs":287.4586220000001,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":81,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.88995699999987,"attempt":{"kind":"exchange","durationMs":287.08476199999996,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":82,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.37643099999991,"attempt":{"kind":"exchange","durationMs":287.3596279999997,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":83,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.35471699999994,"attempt":{"kind":"exchange","durationMs":287.5328000000004,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":84,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.44538499999999,"attempt":{"kind":"exchange","durationMs":287.84052500000007,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":85,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.4193650000002,"attempt":{"kind":"exchange","durationMs":288.0067360000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":86,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":54.23548700000015,"attempt":{"kind":"exchange","durationMs":288.149903,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":87,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.268694000000096,"attempt":{"kind":"exchange","durationMs":288.280761,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":88,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.26143400000001,"attempt":{"kind":"exchange","durationMs":288.46505000000025,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":89,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.27383199999986,"attempt":{"kind":"exchange","durationMs":288.60920799999985,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":90,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.28820500000006,"attempt":{"kind":"exchange","durationMs":288.79540899999984,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":91,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.43702899999994,"attempt":{"kind":"exchange","durationMs":288.8584350000001,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":92,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.364829999999984,"attempt":{"kind":"exchange","durationMs":289.1120079999996,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":93,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.41702899999996,"attempt":{"kind":"exchange","durationMs":289.2978699999999,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":94,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.43853200000012,"attempt":{"kind":"exchange","durationMs":289.3748450000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":95,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.53418599999986,"attempt":{"kind":"exchange","durationMs":289.3920210000001,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":96,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.63852399999996,"attempt":{"kind":"exchange","durationMs":290.010127,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":97,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.67923500000006,"attempt":{"kind":"exchange","durationMs":290.2470549999998,"timeoutMs":200,"outcome":"rejected","phase":"lease"}},{"i":98,"error":"stale_or_invalid_lease","remaining":0,"lastSuccessfulRttMs":53.59062200000017,"attempt":{"kind":"exchange","durationMs":290.4406280000003,"timeoutMs":200,"outcome":"rejected","phase":"lease"}}]}
+    at main (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/scripts/verify-mesh-coordinator.cjs:137:7) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

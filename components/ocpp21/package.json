@@ -1,0 +1,63 @@
+{
+  "name": "iobroker.ocpp21",
+  "version": "0.4.0",
+  "description": "NexoWatt OCPP CSMS adapter for NexoWatt EOS with compact datapoints, fast OCPP acknowledgements, freshness monitoring and interruption-safe smart charging",
+  "author": "NexoWatt",
+  "license": "MIT",
+  "homepage": "https://github.com/NexoWatt/iobroker.ocpp21#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NexoWatt/iobroker.ocpp21.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NexoWatt/iobroker.ocpp21/issues"
+  },
+  "main": "main.js",
+  "files": [
+    "admin/",
+    "ocpp/",
+    "test/",
+    "main.js",
+    "io-package.json",
+    "LICENSE",
+    "README.md",
+    "README.de.md",
+    "CHANGELOG.md",
+    "NEXOWATT_REVIEW.md"
+  ],
+  "scripts": {
+    "start": "node main.js",
+    "test": "npm run test:core && npm run test:package && npm run test:unit && npm run test:integration && npm run test:security",
+    "test:package": "mocha test/package.js --exit",
+    "test:unit": "mocha test/unit.js --exit",
+    "test:integration": "mocha test/integration.js --exit",
+    "test:core": "node --test test/core.test.js",
+    "test:security": "node --test test/secure-transport.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@iobroker/adapter-core": "^3.1.0",
+    "ocpp-rpc": "^2.0.0"
+  },
+  "devDependencies": {
+    "@iobroker/testing": "^5.2.2",
+    "mocha": "^11.7.5"
+  },
+  "keywords": [
+    "iobroker",
+    "nexowatt",
+    "nexowatt eos",
+    "ocpp",
+    "ocpp1.6",
+    "ocpp2.0.1",
+    "ocpp2.1",
+    "csms",
+    "ev charging",
+    "charging station",
+    "smart charging",
+    "state of charge",
+    "soc"
+  ]
+}

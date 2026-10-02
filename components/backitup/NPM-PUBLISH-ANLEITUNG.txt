@@ -1,0 +1,12 @@
+NexoWatt EOS Backup 1.0.9 – direkt auf NPM veröffentlichen
+
+1. Die ZIP kann in einen neuen Ordner entpackt oder über den bisherigen Ordner kopiert werden.
+2. PowerShell im Ordner nexowatt.backitup öffnen.
+3. Optional prüfen: npm publish --dry-run
+4. Veröffentlichen: npm publish
+
+Kein npm install und kein erneuter Frontend-Build erforderlich.
+Vor jeder Prüfung entfernt die integrierte Publish-Vorbereitung automatisch alte Release-Dateien aus früheren Versionen.
+Danach werden Version, native Admin-7/8-Oberfläche, Branding und SHA-256-Dateimanifest kontrolliert.
+
+Die Offline-Prüfung kontrolliert zusätzlich die SD-Karten-Erkennung, die InfluxDB-Rotation sowie die InfluxDB-CLI-Aufrufe. Dabei wird geprüft, dass Token nicht in Prozessargumenten erscheinen und ungültige relative CLI-Pfade sicher auf influx/influxd zurückfallen.

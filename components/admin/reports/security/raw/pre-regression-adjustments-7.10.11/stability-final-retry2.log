@@ -1,0 +1,386 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eos-admin@7.10.11 precheck:eos-stability
+> npm run sync:eos-version && npm run prepare:eos-release-defaults && npm run clean:eos-runtime
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eos-admin@7.10.11 sync:eos-version
+> node tools/nexowatt-sync-release-version.cjs
+
+[NexoWatt EOS version sync] OK (7.10.11; all release files match)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eos-admin@7.10.11 prepare:eos-release-defaults
+> node tools/nexowatt-ensure-release-defaults.cjs
+
+[NexoWatt EOS release defaults] OK (canonical sales defaults already present)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eos-admin@7.10.11 clean:eos-runtime
+> node tools/nexowatt-clean-legacy-runtime.cjs
+
+[NexoWatt EOS runtime cleanup] OK (runtime v84, shell v7109, removed 0 legacy files)
+
+> iobroker.eos-admin@7.10.11 check:eos-stability
+> node tools/nexowatt-stability-check.cjs && node tools/nexowatt-esm-syntax-selftest.cjs && node tools/nexowatt-backend-runtime-selftest.cjs && node tools/nexowatt-prebuilt-release-selftest.cjs && node tools/nexowatt-import-integrity-selftest.cjs && node tools/nexowatt-entrypoint-smoke-selftest.cjs && node tools/nexowatt-frontend-graph-check.cjs && node tools/nexowatt-policy-selftest.cjs && node tools/nexowatt-publish-channel-selftest.cjs && node tools/nexowatt-release-defaults-selftest.cjs && node tools/nexowatt-role-access-selftest.cjs && node tools/nexowatt-internal-reserve-selftest.cjs && node tools/nexowatt-modern-ui-selftest.cjs && node tools/nexowatt-login-layout-selftest.cjs && node tools/nexowatt-branding-selftest.cjs && node tools/nexowatt-default-port-selftest.cjs && node tools/nexowatt-module-popup-selftest.cjs && node tools/nexowatt-datapoint-selftest.cjs && node tools/nexowatt-update-selftest.cjs && node tools/nexowatt-datapoint-interaction-selftest.cjs && node tools/nexowatt-manual-write-policy-selftest.cjs && node tools/nexowatt-value-column-selftest.cjs && node tools/nexowatt-native-shell-selftest.cjs && node tools/nexowatt-assistant-separation-selftest.cjs && node tools/nexowatt-runtime-cleanup-selftest.cjs && node tools/nexowatt-version-sync-selftest.cjs && node tools/nexowatt-merge-update-selftest.cjs && node tools/nexowatt-password-write-selftest.cjs && node tools/nexowatt-account-password-flow-selftest.cjs && npm run check:eos-stable-v7103 && node tools/nexowatt-ems-overview-selftest.cjs && node tools/nexowatt-ui-overview-runtime-selftest.cjs && node tools/nexowatt-auto-update-selftest.cjs && node tools/nexowatt-auto-update-placement-selftest.cjs && node tools/nexowatt-role-security-selftest.cjs && node tools/nexowatt-user-area-selftest.cjs && node tools/nexowatt-installer-ems-selftest.cjs && node tools/nexowatt-v7109-clean-core-selftest.cjs && npm run test:eos-licensing && npm run test:eos-security-boundaries && npm run test:eos-security-upgrade
+
+[NexoWatt EOS stability] OK
+[NexoWatt EOS ESM syntax] OK
+[NexoWatt EOS backend runtime] OK (21 local runtime files resolve, parse and are declared by the npm files whitelist; dependency-free on Windows)
+[NexoWatt EOS prebuilt release] OK (1439 sealed source/runtime files; 21 backend runtime files; no tsc/tsx required for npm publish)
+[NexoWatt EOS import integrity] OK
+[NexoWatt EOS entrypoint smoke] OK (16 scripts + role-bootstrapped app entry, runtime v84)
+[NexoWatt EOS frontend graph] OK (208 reachable JS files, one HTML5 backend)
+[NexoWatt EOS policy self-test] OK
+[NexoWatt EOS publish channel selftest] OK
+[NexoWatt EOS release defaults selftest] OK
+[NexoWatt EOS role access] OK (Admin full authority, Installer EMS access, restricted account administration, End User read-only datapoints)
+[NexoWatt EOS internal reserve] OK
+[NexoWatt EOS modern UI] OK
+[NexoWatt EOS login layout] OK
+[NexoWatt EOS branding] OK
+[NexoWatt EOS default port selftest] OK (8081)
+[NexoWatt EOS module popup selftest] OK
+[NexoWatt EOS datapoint selftest] OK
+[NexoWatt EOS update selftest] OK
+[NexoWatt EOS DP interaction selftest] OK
+[NexoWatt EOS manual write policy selftest] OK
+[NexoWatt EOS value column] OK
+[NexoWatt EOS native shell] OK
+[NexoWatt EOS assistant separation] OK (stable disabled)
+[NexoWatt EOS runtime cleanup selftest] OK
+[NexoWatt EOS version sync selftest] OK (7.10.11; stale 7.9.92 merge repaired)
+[NexoWatt EOS merge update selftest] OK (flat overwrite + EMS merge + version repair + guarded verification)
+[NexoWatt EOS password write] OK: real account name, verified password API and metadata-only update
+PASS live full-length session authenticates an enabled existing user
+PASS expired, absent, and nonnumeric session expiry fail closed
+PASS one-character session alias cannot authenticate an unrelated bearer token
+PASS disabled, deleted, and non-user objects cannot use otherwise live sessions
+PASS session and user database errors fail closed
+PASS raw/refresh namespaces and short tokens cannot authenticate a live user
+PASS upstream authenticated identity still requires an enabled existing user
+PASS missing credentials never authenticate while auth is required
+PASS legacy auth=false cannot imply administrator identity without login
+PASS role-looking labels and unconfigured group IDs never elevate authority
+PASS explicit administrator and installer membership retains intended authority
+PASS new, blank, and known shared-password accounts are disabled without setting shared passwords
+PASS provisioning preserves personal passwords, disabled status, and the administrator
+PASS password-check failure aborts startup provisioning
+PASS upload guard rejects anonymous, customer, installer, pending-password, and foreign-origin requests
+PASS upload guard permits authorized same-origin administrator and rejects ACL failures
+PASS source and shipped upload parser registration enforce limits before file handling (static)
+PASS same-origin browser writes retain host, port, and transport scheme
+PASS forged X-Forwarded-Host does not authorize another origin
+PASS cookie-authorized writes require Origin even when a bearer header is also present
+PASS explicit non-cookie bearer clients can omit Origin
+PASS malformed or non-origin URLs fail closed
+PASS cross-site and same-site fetch metadata cannot authorize writes
+PASS socket guard rejects a revoked connection even with cached administrator privileges
+PASS socket guard denies command and host execution for customer and installer
+PASS socket guard blocks sensitive object mutation including EOS Admin and xterm
+PASS socket guard blocks unresolved, missing, disabled, and pending-password identities before administrator bypass
+PASS socket administrator forwards to upstream permissions instead of bypassing them
+PASS socket customer datapoints remain read-only while normal installer writes retain upstream ACLs
+PASS first-password change requires a bounded nonempty current credential
+PASS first-password change rejects invalid current credentials and unavailable verification
+PASS first-password change with correct current credential writes and invalidates the session
+PASS role-cache refresh suspends authorization until one complete snapshot is committed
+PASS role-cache read failures leave authorization closed and never commit a partial snapshot
+PASS message dispatch denies every chat capability before any privileged MCP construction
+PASS fresh session secret uses 32 random bytes and is persisted before web startup
+PASS session-secret persistence failure denies web startup
+PASS missing system.config never selects a built-in fallback session secret
+PASS valid existing installation session secret is preserved without regeneration
+PASS invalid nonempty existing installation secret denies web startup
+[NexoWatt EOS security boundaries] 40/40 passed; isolated shipped-code tests, no live HTTP/controller test
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eos-admin@7.10.11 check:eos-stable-v7103
+> node tools/nexowatt-stable-v7103-selftest.cjs
+
+[NexoWatt EOS stable v7103] OK (v7102 crash/package baseline plus System Settings-only update control)
+[NexoWatt EMS Overview Selftest] OK: read-only Diagnosekarte, Intro-Einbindung und responsive Darstellung geprüft.
+[NexoWatt EOS UI overview runtime] OK
+[NexoWatt EOS auto update] OK (25 behavior checks: immediate quarantine, no metadata trust, legacy migration, failure visibility, no instance restart)
+[NexoWatt EOS auto-update placement] OK (System Settings only; no Overview/Modules injection)
+node:assert:885
+    throw err;
+    ^
+
+AssertionError [ERR_ASSERTION]: read-only system-info payload is incomplete
+    at Object.<anonymous> (/workspace/scratch/c16def314bc5/source/eos-admin/tools/nexowatt-role-security-selftest.cjs:150:12)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '"use strict";\n' +
+    '\n' +
+    'Object.defineProperty(exports, "__esModule", {\n' +
+    '  value: true\n' +
+    '});\n' +
+    'exports.default = void 0;\n' +
+    'var _adapterCore = require("@iobroker/adapter-core");\n' +
+    'var _webserver = require("@iobroker/webserver");\n' +
+    'var express = require("express");\n' +
+    'var _nodeFs = require("node:fs");\n' +
+    'var _nodeUtil = require("node:util");\n' +
+    'var _nodePath = require("node:path");\n' +
+    'var _nodeStream = require("node:stream");\n' +
+    'var compression = require("compression");\n' +
+    'var _mime = require("mime");\n' +
+    'var _nodeCrypto = require("node:crypto");\n' +
+    'var archiver = require("archiver");\n' +
+    'var _ajv = require("ajv");\n' +
+    'var _json = require("json5");\n' +
+    'var fileUpload = require("express-fileupload");\n' +
+    'var session = require("express-session");\n' +
+    'var bodyParser = require("body-parser");\n' +
+    'var cookieParser = require("cookie-parser");\n' +
+    'var _eosRequestSecurity = require("./eosRequestSecurity");\n' +
+    'var _eosAutoUpdate = require("./eosAutoUpdate");\n' +
+    'var _eosLicenseHttp = require("./eosLicenseHttp");\n' +
+    'var _eosHttpsClient = require("./eosHttpsClient");\n' +
+    'var _eosWebResources = require("./eosWebResources");\n' +
+    'var _eosUploadGuard = require("./eosUploadGuard");\n' +
+    'let AdapterStore;\n' +
+    '/** Content of a socket-io file */\n' +
+    'let socketIoFile;\n' +
+    '/** UUID of the installation */\n' +
+    'let uuid;\n' +
+    "const page404 = (0, _nodeFs.readFileSync)(`${__dirname}/../../public/404.html`).toString('utf8');\n" +
+    "const logTemplate = (0, _nodeFs.readFileSync)(`${__dirname}/../../public/logTemplate.html`).toString('utf8');\n" +
+    'const EOS_UPLOAD_MAX_BYTES = 200 * 1024 * 1024;\n' +
+    "const EOS_PASSWORD_SERVICE_USER = 'system.user.admin';\n" +
+    "const LEGACY_BACKUP_ADAPTER_NAME = 'backitup';\n" +
+    "const CUSTOMER_BACKUP_ADAPTER_NAMES = ['nexowatt-backup', 'eos-backup'];\n" +
+    "const CORE_PROTECTED_ADAPTER_NAMES = ['admin', 'eos-admin', 'backitup', 'nexowatt-backup', 'eos-backup', 'nexowatt-devices', 'nexowatt-device', 'nexowatt-dev', 'nexowatt-ui'];\n" +
+    '// const FORBIDDEN_CHARS = /[\\]\\[*,;\'"`<>\\\\\\s?]/g; // with space\n' +
+    '// copied from here: https://github.com/component/escape-html/blob/master/index.js\n' +
+    `const matchHtmlRegExp = /["'&<>]/;\n` +
+    'function escapeHtml(string) {\n' +
+    '  const str = `${string}`;\n' +
+    '  const match = matchHtmlRegExp.exec(str);\n' +
+    '  if (!match) {\n' +
+    '    return str;\n' +
+    '  }\n' +
+    '  let escape;\n' +
+    "  let html = '';\n" +
+    '  let index;\n' +
+    '  let lastIndex = 0;\n' +
+    '  for (index = match.index; index < str.length; index++) {\n' +
+    '    switch (str.charCodeAt(index)) {\n' +
+    '      case 34:\n' +
+    "        escape = '&quot;';\n" +
+    '        break;\n' +
+    '      case 38:\n' +
+    "        escape = '&amp;';\n" +
+    '        break;\n' +
+    '      case 39:\n' +
+    "        escape = '&#39;';\n" +
+    '        break;\n' +
+    '      case 60:\n' +
+    "        escape = '&lt;';\n" +
+    '        break;\n' +
+    '      case 62:\n' +
+    "        escape = '&gt;';\n" +
+    '        break;\n' +
+    '      default:\n' +
+    '        continue;\n' +
+    '    }\n' +
+    '    if (lastIndex !== index) {\n' +
+    '      html += str.substring(lastIndex, index);\n' +
+    '    }\n' +
+    '    lastIndex = index + 1;\n' +
+    '    html += escape;\n' +
+    '  }\n' +
+    '  return lastIndex !== index ? html + str.substring(lastIndex, index) : html;\n' +
+    '}\n' +
+    'function get404Page(customText) {\n' +
+    '  if (customText) {\n' +
+    '    return page404.replace(\'<div class="custom-message"></div>\', `<div class="custom-message">${customText}</div>`);\n' +
+    '  }\n' +
+    '  return page404;\n' +
+    '}\n' +
+    '/**\n' +
+    ' * Read folder recursive\n' +
+    ' *\n' +
+    ' * @param adapter the adapter instance\n' +
+    ' * @param adapterName name of the adapter or dir\n' +
+    ' * @param url url of the specific file or directory\n' +
+    ' */\n' +
+    'async function readFolderRecursive(adapter, adapterName, url) {\n' +
+    '  const filesOfDir = [];\n' +
+    '  const fileMetas = await adapter.readDirAsync(adapterName, url);\n' +
+    '  for (const fileMeta of fileMetas) {\n' +
+    '    if (!fileMeta.isDir) {\n' +
+    '      const file = await adapter.readFileAsync(adapterName, `${url}/${fileMeta.file}`);\n' +
+    '      if (file.file instanceof Buffer) {\n' +
+    '        filesOfDir.push({\n' +
+    '          name: url ? `${url}/${fileMeta.file}` : fileMeta.file,\n' +
+    '          file: file.file\n' +
+    '        });\n' +
+    '      } else {\n' +
+    '        filesOfDir.push({\n' +
+    '          name: url ? `${url}/${fileMeta.file}` : fileMeta.file,\n' +
+    "          file: Buffer.from(file.file.toString(), 'utf-8')\n" +
+    '        });\n' +
+    '      }\n' +
+    '    } else {\n' +
+    '      filesOfDir.push(...(await readFolderRecursive(adapter, adapterName, `${url}/${fileMeta.file}`)));\n' +
+    '    }\n' +
+    '  }\n' +
+    '  return filesOfDir;\n' +
+    '}\n' +
+    'function MemoryWriteStream() {\n' +
+    '  _nodeStream.Transform.call(this);\n' +
+    '  this._chunks = [];\n' +
+    '  this._transform = (chunk, _enc, cb) => {\n' +
+    '    this._chunks.push(chunk);\n' +
+    '    cb();\n' +
+    '  };\n' +
+    '  this.collect = () => {\n' +
+    '    const result = Buffer.concat(this._chunks);\n' +
+    '    this._chunks = [];\n' +
+    '    return result;\n' +
+    '  };\n' +
+    '}\n' +
+    '(0, _nodeUtil.inherits)(MemoryWriteStream, _nodeStream.Transform);\n' +
+    '/** Webserver class */\n' +
+    'class Web {\n' +
+    '  nexowattStableUpdateManager;\n' +
+    '  server = {\n' +
+    '    app: null,\n' +
+    '    server: null\n' +
+    '  };\n' +
+    "  LOGIN_PAGE = '/index.html?login';\n" +
+    '  /** URL to the JSON config schema */\n' +
+    '  JSON_CONFIG_SCHEMA_URL =\n' +
+    "  // 'https://raw.githubusercontent.com/ioBroker/NexoWatt EOS Admin/master/packages/jsonConfig/schemas/jsonConfig.json';\n" +
+    "  'https://raw.githubusercontent.com/ioBroker/json-config/main/schemas/jsonConfig.json';\n" +
+    '  store = null;\n' +
+    '  indexHTML;\n' +
+    "  baseDir = (0, _nodePath.join)(__dirname, '..', '..');\n" +
+    "  dirName = (0, _nodePath.normalize)(`${this.baseDir}/admin/`.replace(/\\\\/g, '/')).replace(/\\\\/g, '/');\n" +
+    '  unprotectedFiles;\n' +
+    '  systemConfig;\n' +
+    '  // todo delete after React will be main\n' +
+    "  wwwDir = (0, _nodePath.join)(this.baseDir, 'adminWww');\n" +
+    '  settings;\n' +
+    '  adapter;\n' +
+    '  options;\n' +
+    '  onReady;\n' +
+    '  systemLanguage;\n' +
+    '  checkTimeout;\n' +
+    '  oauth2Model;\n' +
+    '  /** Short-lived passwordless first-activation claims. Keys are SHA-256 hashes of HttpOnly cookie tokens. */\n' +
+    '  eosPasswordClaims = new Map();\n' +
+    '  /** Small in-memory rate limiter for unauthenticated first-activation requests. */\n' +
+    '  eosPasswordClaimRates = new Map();\n' +
+    '  /**\n' +
+    '   * Create a new instance of Web\n' +
+    '   *\n' +
+    '   * @param settings settings of the adapter\n' +
+    '   * @param adapter instance of the adapter\n' +
+    '   * @param onReady callback when the server is ready\n' +
+    '   * @param options options for the webserver\n' +
+    '   */\n' +
+    '  constructor(settings, adapter, onReady, options) {\n' +
+    '    this.settings = settings;\n' +
+    '    this.adapter = adapter;\n' +
+    '    this.onReady = onReady;\n' +
+    '    this.options = options;\n' +
+    "    this.systemLanguage = this.options?.systemLanguage || 'en';\n" +
+    '    void this.#init();\n' +
+    '  }\n' +
+    '  decorateLogFile(fileName, text) {\n' +
+    '    const log = text || (0, _nodeFs.readFileSync)(fileName).toString();\n' +
+    "    return logTemplate.replace('@@title@@', (0, _nodePath.parse)(fileName).name).replace('@@body@@', escapeHtml(log));\n" +
+    '  }\n' +
+    '  setLanguage(lang) {\n' +
+    '    this.systemLanguage = lang;\n' +
+    '  }\n' +
+    '  close() {\n' +
+    '    if (this.checkTimeout) {\n' +
+    '      this.adapter.clearTimeout(this.checkTimeout);\n' +
+    '      this.checkTimeout = null;\n' +
+    '    }\n' +
+    '    this.nexowattStableUpdateManager?.stop();\n' +
+    "    void this.adapter.setState('info.connection', false, true);\n" +
+    '    this.server.server?.close();\n' +
+    '  }\n' +
+    '  processMessage(msg) {\n' +
+    '    return this.oauth2Model?.processMessage(msg);\n' +
+    '  }\n' +
+    '  async prepareIndex(index) {\n' +
+    "    let template = (0, _nodeFs.readFileSync)((0, _nodePath.join)(this.wwwDir, index)).toString('utf8');\n" +
+    `    const m = template.match(/(["']?@@\\w+@@["']?)/g);\n` +
+    '    for (let pattern of m) {\n' +
+    `      pattern = pattern.replace(/@/g, '').replace(/'/g, '').replace(/"/g, '');\n` +
+    "      if (pattern === 'disableDataReporting') {\n" +
+    '        // read sentry state\n' +
+    '        const state = await this.adapter.getStateAsync(`system.adapter.${this.adapter.namespace}.plugins.sentry.enabled`);\n' +
+    `        template = template.replace(/['"]@@disableDataReporting@@["']/g, state?.val ? 'true' : 'false');\n` +
+    "      } else if (pattern === 'loginBackgroundImage') {\n" +
+    '        if (this.adapter.config.loginBackgroundImage) {\n' +
+    "          template = template.replace('@@loginBackgroundImage@@', `files/${this.adapter.namespace}/login-bg.png`);\n" +
+    '        } else {\n' +
+    "          template = template.replace('@@loginBackgroundImage@@', '');\n" +
+    '        }\n' +
+    "      } else if (pattern === 'loginBackgroundColor') {\n" +
+    "        template = template.replace('@@loginBackgroundColor@@', this.adapter.config.loginBackgroundColor || 'inherit');\n" +
+    "      } else if (pattern === 'loadingBackgroundImage') {\n" +
+    '        if (this.adapter.config.loadingBackgroundImage) {\n' +
+    "          template = template.replace('@@loadingBackgroundImage@@', `files/${this.adapter.namespace}/loading-bg.png`);\n" +
+    '        } else {\n' +
+    "          template = template.replace('@@loadingBackgroundImage@@', '');\n" +
+    '        }\n' +
+    "      } else if (pattern === 'loadingBackgroundColor') {\n" +
+    "        template = template.replace('@@loadingBackgroundColor@@', this.adapter.config.loadingBackgroundColor || '');\n" +
+    "      } else if (pattern === 'vendorPrefix') {\n" +
+    "        template = template.replace(`@@vendorPrefix@@`, this.systemConfig.native.vendor.uuidPrefix || (uuid.length > 36 ? uuid.substring(0, 2) : ''));\n" +
+    "      } else if (pattern === 'loginMotto') {\n" +
+    "        template = template.replace(`@@loginMotto@@`, this.systemConfig.native.vendor.admin.login.motto || this.adapter.config.loginMotto || '');\n" +
+    "      } else if (pattern === 'loginLogo') {\n" +
+    "        template = template.replace(`@@loginLogo@@`, this.systemConfig.native.vendor.icon || '');\n" +
+    "      } else if (pattern === 'loginLink') {\n" +
+    "        template = template.replace(`@@loginLink@@`, this.systemConfig.native.vendor.admin.login.link || '');\n" +
+    "      } else if (pattern === 'loginTitle') {\n" +
+    "        template = template.replace(`@@loginTitle@@`, this.systemConfig.native.vendor.admin.login.title || '');\n" +
+    '      } else {\n' +
+    "        template = template.replace(`@@${pattern}@@`, this.adapter.config[pattern] !== undefined ? this.adapter.config[pattern] : '');\n" +
+    '      }\n' +
+    '    }\n' +
+    '    return template;\n' +
+    '  }\n' +
+    '  getInfoJs() {\n' +
+    '    const result = [`window.sysLang = "${this.systemLanguage}";`];\n' +
+    '    if (uuid?.length === 38) {\n' +
+    '      result.push(`window.vendorPrefix = "${uuid.substring(0, 2)}";`);\n' +
+    '    }\n' +
+    '    if (this.adapter.config.loadingBackgroundColor) {\n' +
+    '      result.push(`window.loadingBackgroundColor = "${this.adapter.config.loadingBackgroundColor}";`);\n' +
+    '    }\n' +
+    '    if (this.adapter.config.loadingBackgroundImage) {\n' +
+    '      result.push(`window.loadingBackgroundImage = "${this.adapter.config.loadingBackgroundImage}";`);\n' +
+    '    }\n' +
+    "    return result.join('\\n');\n" +
+    '  }\n' +
+    '  getErrorRedirect(origin) {\n' +
+    '    // LOGIN_PAGE /index.html?login\n' +
+    '    // origin can be "?login&href=" -\n' +
+    '    // or "/?login&href=" -\n' +
+    '    //\n' +
+    '    if (origin) {\n' +
+    '      const parts = origin'... 97479 more characters,
+  expected: /ramMb/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

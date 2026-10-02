@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "component": "iobroker.nexowatt-ui",
+  "version": "1.0.21",
+  "profile": "EOS integrated development preview; modified source; no standalone release",
+  "verifiedAt": "2026-10-01T12:24:44.645121+00:00",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64",
+    "uid": 0
+  },
+  "tests": {
+    "tlsAuthCentralLicense": {
+      "passed": 43,
+      "failed": 0,
+      "skipped": 0,
+      "controller": "fixtures",
+      "network": "real TLS1.3 HTTPS sockets",
+      "evidence": "reports/security/integrated-20261001/https-auth-integration-r2.tap"
+    },
+    "accessRegression": {
+      "result": "passed",
+      "evidence": "reports/security/integrated-20261001/access-regression.log"
+    },
+    "typescriptBuild": {
+      "result": "passed",
+      "evidence": "reports/security/integrated-20261001/build-ts-r2.log"
+    },
+    "docs": {
+      "result": "passed",
+      "evidence": "reports/security/integrated-20261001/docs-check-r2.log"
+    },
+    "sourceSyntax": {
+      "result": "passed",
+      "evidence": "reports/security/integrated-20261001/ts-source-syntax.log"
+    },
+    "typedMirror": {
+      "result": "passed",
+      "evidence": "reports/security/integrated-20261001/main-runtime-typing.log"
+    },
+    "secretPatternScan": {
+      "result": "no findings within supported rules",
+      "evidence": "reports/security/integrated-20261001/secret-check.log"
+    },
+    "legacyFullReleaseSuite": {
+      "result": "blocked at unchanged standalone artifact gate; remaining suite not executed",
+      "evidence": "reports/security/integrated-20261001/test-all-attempt.log"
+    },
+    "npmPackDryRun": {
+      "result": "passed; includes central-client and TLS helper",
+      "evidence": "reports/security/integrated-20261001/npm-pack-dry-run.json"
+    }
+  },
+  "limitations": [
+    "No target Raspberry Pi / Debian12 unprivileged systemd acceptance",
+    "No real physical control or device failsafe claim",
+    "UI preview blocks all control and configuration mutation",
+    "Root controller/Admin/Redis integration is a separate evidence scope",
+    "Same Unix user/messagebox trust zone; no per-adapter cryptographic identity",
+    "No new vulnerability audit of final combined product in this component task",
+    "Old standalone UI release manifest/tests not resealed or claimed complete"
+  ],
+  "criticalFiles": [
+    {
+      "path": "main.js",
+      "sha256": "c088c2232742a3f2a255c5ef11c382221561697673e67419cc66d2f605f9bc4b"
+    },
+    {
+      "path": "src-ts/runtime-executables/main.ts",
+      "sha256": "f921f56514b2a862900f1930c021e179c1378b6fc479c2d2383c1e78dbd439b6"
+    },
+    {
+      "path": "lib/eos-integrated.js",
+      "sha256": "820fa924339d361e2e4a2f80374fa6b92eff51d5ca16460302a04a1f83c9c7b2"
+    },
+    {
+      "path": "src-ts/runtime-executables/lib/eos-integrated.ts",
+      "sha256": "ed9d4fea3fa3fe5ff1e5b137c4cd01570336e7b9fb24f2cd287dec8ffa51485d"
+    },
+    {
+      "path": "packages/eos-license-client/index.js",
+      "sha256": "0f9c3e5d0f2ab31e8bac47cc315b05d994f9ab0ddf1650d807c7b03be8abc4a5"
+    },
+    {
+      "path": "packages/eos-license-client/package.json",
+      "sha256": "afb8d8d8e1d9817e66eba311064d1d0fc068072850a45d2070caf296c736a792"
+    },
+    {
+      "path": "io-package.json",
+      "sha256": "979cb17435a891224961fbc79fca959d64b8cc15c76104b35011edf9940fd2bb"
+    },
+    {
+      "path": "package.json",
+      "sha256": "78fac1db2e548436689266ca56ffc59495a291e8cae13a12829de4edc198bd03"
+    },
+    {
+      "path": "www/index.html",
+      "sha256": "2ce6259e478bd5a5caace1455fec55d5313e2df047ad4e68f282411c732b264f"
+    },
+    {
+      "path": "www/license.html",
+      "sha256": "9bad7b93a115e89f36d9ff9382d161b6981ef01769ad1801a1039b49bfe037ca"
+    },
+    {
+      "path": "www/license.js",
+      "sha256": "0ac3b781ba7ce2d22b2f445016b6d1df12cbd5945278e99aa57986d33412f78a"
+    },
+    {
+      "path": "admin/license.html",
+      "sha256": "56197ba0c110bec78b363859a16a09366b0b39f69ca1879de020bdd6aec7f05f"
+    },
+    {
+      "path": "admin/jsonConfig.json",
+      "sha256": "1698ea9fa2baf02f2e32e3c440fa4511dec2df8cee7103ccccbb202b6c91ca1f"
+    },
+    {
+      "path": "scripts/verify-eos-integrated.cjs",
+      "sha256": "1e5f253805f95fe1e41f05324f66c5e0bdef34293d4837bf1592888777a3d669"
+    },
+    {
+      "path": "scripts/verify-eos-auth-security.cjs",
+      "sha256": "cf33315b9326c97feff420f3aabff0c33badaec56a7863e23c0872cfdf2685f5"
+    },
+    {
+      "path": "scripts/verify-stable-1.0.9-access.cjs",
+      "sha256": "4f4d1b47cea75d6b5048daf2a4f4763b869b9539ce22ad2a93cd230cb9c39d6a"
+    },
+    {
+      "path": "scripts/eos-tls-fixture.cjs",
+      "sha256": "6129b63a5864090676e90ae6dc4086054f4862dad2e0dd0586757015f5fc1531"
+    }
+  ],
+  "integrationFinding": {
+    "id": "EOS-UI-INT-01",
+    "change": "Allow only acknowledged own states under captured nexowatt-ui.0 namespace for controller default-value initialization",
+    "componentRegression": "passed; actual final controller rerun pending"
+  }
+}

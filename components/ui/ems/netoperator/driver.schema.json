@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexowatt.com/schemas/netoperator-driver-v1.json",
+  "title": "NexoWatt EOS Netzbetreiber-Treiberprofil",
+  "$defs": {
+    "readDescriptor": {
+      "type": "object",
+      "properties": {
+        "area": { "enum": ["coil", "discrete", "holding", "input"] },
+        "functionCode": { "type": "integer", "enum": [1, 2, 3, 4] },
+        "address": { "type": ["integer", "null"], "minimum": 0, "maximum": 65535 },
+        "addressBase": { "enum": [0, 1] },
+        "dataType": { "enum": ["boolean", "bool", "int16", "uint16", "int32", "uint32", "int64", "uint64", "float32", "float64", "enum", "string", "datetime"] },
+        "registers": { "type": "integer", "minimum": 1, "maximum": 125 },
+        "bit": { "type": "integer", "minimum": 0, "maximum": 15 },
+        "scale": { "type": "number" },
+        "offset": { "type": "number" },
+        "byteOrder": { "enum": ["AB", "BA", "ABCD", "BADC", "CDAB", "DCBA"] },
+        "enumMap": { "type": "object" },
+        "objectId": { "type": "string" }
+      }
+    },
+    "readDescriptorStrict": {
+      "allOf": [{ "$ref": "#/$defs/readDescriptor" }],
+      "unevaluatedProperties": false
+    },
+    "qualityDescriptor": {
+      "allOf": [
+        { "$ref": "#/$defs/readDescriptor" },
+        {
+          "type": "object",
+          "properties": {
+            "goodValues": { "type": "array" },
+            "staleValues": { "type": "array" },
+            "badValues": { "type": "array" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  },
+  "type": "object",
+  "required": ["schema", "id", "manufacturer", "model", "mappingVersion", "protocols", "signals"],
+  "properties": {
+    "schema": { "const": "nexowatt.netoperator-driver.v1" },
+    "id": { "type": "string", "minLength": 1 },
+    "manufacturer": { "type": "string", "minLength": 1 },
+    "model": { "type": "string", "minLength": 1 },
+    "label": { "type": "string" },
+    "status": { "enum": ["ready", "mapping-required", "experimental"] },
+    "mappingVersion": { "type": "string", "minLength": 1 },
+    "protocols": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["modbus-tcp", "state-map", "modbus-rtu", "opc-ua", "iec-104", "iec-61850"] }
+    },
+    "defaultProtocol": { "enum": ["modbus-tcp", "state-map", "modbus-rtu", "opc-ua", "iec-104", "iec-61850"] },
+    "addressBase": { "enum": [0, 1] },
+    "commandSemantics": { "type": "object" },
+    "watchdog": {
+      "type": "object",
+      "properties": {
+        "maxAgeMs": { "type": "integer", "minimum": 250 },
+        "policy": { "enum": ["project-specific", "last-valid", "release", "block"] },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "signals": {
+      "type": "object",
+      "additionalProperties": {
+        "allOf": [
+          { "$ref": "#/$defs/readDescriptor" },
+          {
+            "type": "object",
+            "properties": {
+              "access": { "enum": ["read", "write"] },
+              "required": { "type": "boolean" },
+              "quality": { "$ref": "#/$defs/qualityDescriptor" },
+              "timestamp": { "$ref": "#/$defs/readDescriptorStrict" }
+            }
+          }
+        ],
+        "unevaluatedProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

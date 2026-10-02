@@ -1,0 +1,62 @@
+NexoWatt EOS Backup 1.0.9 native Admin UI and EOS theme
+=====================================================
+
+Converted: 28
+  ccu.jsonConfig.json5:items.backupNow: BackupNow -> setState(oneClick.ccu)
+  dropbox.jsonConfig.json5:items._dropbox: Dropbox -> staticText
+  googledrive.jsonConfig.json5:items._googleDrive: GoogleDrive -> staticText
+  iob.jsonConfig.json5:items.backupNow: BackupNow -> setState(oneClick.iobroker)
+  main.jsonConfig.json5:items.minimalEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.ccuEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.javascriptsEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.zigbee2mqttEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.zigbeeEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.historyEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.influxDBEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.mySqlEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.pgSqlEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.sqliteEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.noderedEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.yahkaEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.jarvisEnabled: AdapterExist -> checkbox
+  main.jsonConfig.json5:items.esphomeEnabled: AdapterExist -> checkbox
+  notifications.jsonConfig.json5:items.telegramInstance: Instance -> instance(telegram)
+  notifications.jsonConfig.json5:items.whatsappInstance: Instance -> instance(whatsapp-cmb)
+  notifications.jsonConfig.json5:items.gotifyInstance: Instance -> instance(gotify)
+  notifications.jsonConfig.json5:items.signalInstance: Instance -> instance(signal-cmb)
+  notifications.jsonConfig.json5:items.matrixInstance: Instance -> instance(matrix-org)
+  notifications.jsonConfig.json5:items.pushoverInstance: Instance -> instance(pushover)
+  notifications.jsonConfig.json5:items.emailInstance: Instance -> instance(email)
+  notifications.jsonConfig.json5:items.discordInstance: Instance -> instance(discord)
+  onedrive.jsonConfig.json5:items._oneDrive: Onedrive -> staticText
+  restore.jsonConfig.json5:items._restore: RestoreBackup -> staticText
+
+Removed non-essential React-only helpers: 26
+  ccu.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  ccu.jsonConfig.json5:items.detectNow (DetectConfig)
+  cifs.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  dropbox.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  extras.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  ftp.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  googledrive.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  grafana.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  history.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  history.jsonConfig.json5:items.detectNow (DetectConfig)
+  influxdb.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  influxdb.jsonConfig.json5:items.detectNow (DetectConfig)
+  iob.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  main.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  mysql.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  mysql.jsonConfig.json5:items.detectNow (DetectConfig)
+  notifications.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  onedrive.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  pgsql.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  pgsql.jsonConfig.json5:items.detectNow (DetectConfig)
+  redis.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  restore.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  sqlite.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  sqlite.jsonConfig.json5:items.detectNow (DetectConfig)
+  webdav.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+  zigbee2mqtt.jsonConfig.json5:items._checkConfig (CheckAllConfigInvisible)
+
+Windows publish compatibility: Linux/POSIX path semantics are used explicitly for SD-card validation tests.

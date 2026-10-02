@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "retrievedAt": "2026-10-01T18:09:40.890369+00:00",
+  "decision": "DEPLOYMENT_BLOCKED",
+  "finding": "CVE-2026-81934",
+  "sourceUrl": "https://security-tracker.debian.org/tracker/CVE-2026-81934",
+  "sourceFile": "raw/CVE-2026-81934.debian.html",
+  "sourceSha256": "ee762c888319ff1d60fb44eb7fa44f725c96d7c6a68f70c33d61638809deb8c9",
+  "sourcePackage": "redis",
+  "testedSourceVersion": "5:8.0.2-3+deb13u2",
+  "officialTrackerStatus": "vulnerable",
+  "description": "Use-after-free in tlsProcessPendingData; remote unauthenticated attacker may execute commands with Redis server privileges.",
+  "upstreamFix": "https://github.com/redis/redis/commit/6d088c335d5c3ec49a6c28486140b498e70b7834",
+  "scope": "Bounded isolated compatibility tests only. Passing functional tests do not approve vulnerable Redis for hardware installation, product use or redistribution.",
+  "eosImpact": "EOS requires TLS; disabling TLS is not an accepted mitigation. Loopback bind narrows reachability but does not remediate the vulnerability."
+}

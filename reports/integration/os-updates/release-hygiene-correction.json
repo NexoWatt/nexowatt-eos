@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-release-hygiene-correction",
+  "recordedAt": "2026-10-01T19:11:31.974651+00:00",
+  "finding": "Generated CPython bytecode from fixture import was present beneath runtime source and would have entered preparePayload.",
+  "removedGeneratedFile": {
+    "path": "runtime/os-updates/__pycache__/runner.cpython-312.pyc",
+    "bytes": 36046,
+    "sha256": "a98a5e6344f467c03aa43c629d78ab274844fe203bbac4ba51f9e82e9c98a964"
+  },
+  "fix": "copyDirectory rejects __pycache__ directories and .pyc/.pyo entries with BUILD_GENERATED_PYTHON_CACHE; negative tests cover nested paths and failed preparePayload cleanup.",
+  "firstAttemptEvidencePreserved": [
+    "reports/integration/os-updates/host-contracts.json",
+    "reports/integration/os-updates/raw/host-contracts.tap"
+  ],
+  "finalVerificationReport": "reports/integration/os-updates/host-contracts-final.json",
+  "historicalSignedBundlesModified": false
+}

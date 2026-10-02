@@ -1,0 +1,2433 @@
+{
+  "type": "tabs",
+  "items": {
+    "general": {
+      "type": "panel",
+      "label": "General",
+      "items": {
+        "_alive": {
+          "type": "alive",
+          "label": "Instance status",
+          "textAlive": "Instance %s is alive",
+          "textNotAlive": "Instance %s is not alive",
+          "newLine": true
+        },
+        "_headline_poll": {
+          "type": "staticText",
+          "text": "Global polling settings (applies to polling drivers like Modbus/HTTP/UDP; event-driven drivers ignore it).",
+          "newLine": true
+        },
+        "pollIntervalMs": {
+          "type": "number",
+          "label": "Global polling interval (ms)",
+          "min": 250,
+          "max": 600000,
+          "sm": 6,
+          "md": 4,
+          "newLine": true
+        },
+        "modbusTimeoutMs": {
+          "type": "number",
+          "label": "Default Modbus timeout (ms)",
+          "min": 100,
+          "max": 60000,
+          "sm": 6,
+          "md": 4
+        },
+        "registerAddressOffset": {
+          "type": "number",
+          "label": "Default register address offset",
+          "min": -100000,
+          "max": 100000,
+          "sm": 6,
+          "md": 4,
+          "newLine": true
+        },
+        "_hint_poll": {
+          "type": "staticText",
+          "text": "Tip: You can override polling interval and protocol timeouts per device in the Devices tab.",
+          "newLine": true
+        }
+      }
+    },
+    "devicesTab": {
+      "type": "panel",
+      "label": "Devices",
+      "items": {
+        "_help0": {
+          "type": "staticText",
+          "text": "Geräte hinzufügen und konfigurieren. Auswahl erfolgt lokal aus den integrierten Templates (keine laufende Instanz erforderlich).",
+          "newLine": true
+        },
+        "devices": {
+          "type": "accordion",
+          "label": "Configured devices",
+          "titleAttr": "id",
+          "clone": "id",
+          "items": [
+            {
+              "type": "checkbox",
+              "attr": "enabled",
+              "label": "Active",
+              "default": true,
+              "sm": 3,
+              "md": 2
+            },
+            {
+              "type": "text",
+              "attr": "id",
+              "label": "Device ID (unique)",
+              "sm": 5,
+              "md": 3,
+              "validator": "(() => { try { if (!data.id) return false; if (!globalData || !Array.isArray(globalData.devices)) return true; const id = String(data.id); const cnt = globalData.devices.filter(d => d && String(d.id) === id).length; return cnt <= 1; } catch (e) { return !!data.id; } })()"
+            },
+            {
+              "type": "text",
+              "attr": "name",
+              "label": "Name (optional)",
+              "sm": 4,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "select",
+              "attr": "category",
+              "label": "Category",
+              "noTranslation": true,
+              "sm": 6,
+              "md": 4,
+              "validator": "!!data.category",
+              "newLine": true,
+              "options": [
+                {
+                  "label": "Batterie (BATTERY)",
+                  "value": "BATTERY"
+                },
+                {
+                  "label": "Batteriewechselrichter (BATTERY_INVERTER)",
+                  "value": "BATTERY_INVERTER"
+                },
+                {
+                  "label": "Charger (CHARGER)",
+                  "value": "CHARGER"
+                },
+                {
+                  "label": "DC Charger (DC_CHARGER)",
+                  "value": "DC_CHARGER"
+                },
+                {
+                  "label": "Energiespeicher (ESS)",
+                  "value": "ESS"
+                },
+                {
+                  "label": "Wallbox / Ladestation (EVCS)",
+                  "value": "EVCS"
+                },
+                {
+                  "label": "EVSE / EVSE Controller (EVSE)",
+                  "value": "EVSE"
+                },
+                {
+                  "label": "Allgemein (GENERIC)",
+                  "value": "GENERIC"
+                },
+                {
+                  "label": "Heizung / Heizstab (HEAT)",
+                  "value": "HEAT"
+                },
+                {
+                  "label": "I/O (IO)",
+                  "value": "IO"
+                },
+                {
+                  "label": "Zähler / Meter (METER)",
+                  "value": "METER"
+                },
+                {
+                  "label": "PV-Wechselrichter (PV_INVERTER)",
+                  "value": "PV_INVERTER"
+                }
+              ]
+            },
+            {
+              "type": "autocomplete",
+              "attr": "manufacturer",
+              "label": "Manufacturer",
+              "noTranslation": true,
+              "sm": 6,
+              "md": 4,
+              "validator": "!!data.manufacturer",
+              "options": [
+                {
+                  "label": "1-Wire",
+                  "value": "1-Wire"
+                },
+                {
+                  "label": "ABB",
+                  "value": "ABB"
+                },
+                {
+                  "label": "ABL",
+                  "value": "ABL"
+                },
+                {
+                  "label": "ADS-TEC",
+                  "value": "ADS-TEC"
+                },
+                {
+                  "label": "Alfen",
+                  "value": "Alfen"
+                },
+                {
+                  "label": "Alpitronic",
+                  "value": "Alpitronic"
+                },
+                {
+                  "label": "Artemes",
+                  "value": "Artemes"
+                },
+                {
+                  "label": "Askoma",
+                  "value": "Askoma"
+                },
+                {
+                  "label": "B-Control",
+                  "value": "B-Control"
+                },
+                {
+                  "label": "BGEtech",
+                  "value": "BGEtech"
+                },
+                {
+                  "label": "BMW",
+                  "value": "BMW"
+                },
+                {
+                  "label": "BYD",
+                  "value": "BYD"
+                },
+                {
+                  "label": "Camille Bauer",
+                  "value": "Camille Bauer"
+                },
+                {
+                  "label": "Carlo Gavazzi",
+                  "value": "Carlo Gavazzi"
+                },
+                {
+                  "label": "ChargePoint",
+                  "value": "ChargePoint"
+                },
+                {
+                  "label": "Discovergy",
+                  "value": "Discovergy"
+                },
+                {
+                  "label": "Eastron",
+                  "value": "Eastron"
+                },
+                {
+                  "label": "FENECON",
+                  "value": "FENECON"
+                },
+                {
+                  "label": "Filipowski",
+                  "value": "Filipowski"
+                },
+                {
+                  "label": "FoxESS",
+                  "value": "FoxESS"
+                },
+                {
+                  "label": "Generic",
+                  "value": "Generic"
+                },
+                {
+                  "label": "go-e",
+                  "value": "go-e"
+                },
+                {
+                  "label": "Goodwe",
+                  "value": "Goodwe"
+                },
+                {
+                  "label": "Hager",
+                  "value": "Hager"
+                },
+                {
+                  "label": "Heidelberg",
+                  "value": "Heidelberg"
+                },
+                {
+                  "label": "Janitza",
+                  "value": "Janitza"
+                },
+                {
+                  "label": "KACO",
+                  "value": "KACO"
+                },
+                {
+                  "label": "Kdk",
+                  "value": "Kdk"
+                },
+                {
+                  "label": "KEBA",
+                  "value": "KEBA"
+                },
+                {
+                  "label": "Kmtronic",
+                  "value": "Kmtronic"
+                },
+                {
+                  "label": "Kostal",
+                  "value": "Kostal"
+                },
+                {
+                  "label": "LAMBDA",
+                  "value": "LAMBDA"
+                },
+                {
+                  "label": "M-Bus",
+                  "value": "M-Bus"
+                },
+                {
+                  "label": "Mennekes",
+                  "value": "Mennekes"
+                },
+                {
+                  "label": "Mypv",
+                  "value": "Mypv"
+                },
+                {
+                  "label": "openWB",
+                  "value": "openWB"
+                },
+                {
+                  "label": "Phoenixcontact",
+                  "value": "Phoenixcontact"
+                },
+                {
+                  "label": "Plexlog",
+                  "value": "Plexlog"
+                },
+                {
+                  "label": "PQPlus",
+                  "value": "PQPlus"
+                },
+                {
+                  "label": "Pylontech",
+                  "value": "Pylontech"
+                },
+                {
+                  "label": "REFU",
+                  "value": "REFU"
+                },
+                {
+                  "label": "Samsung",
+                  "value": "Samsung"
+                },
+                {
+                  "label": "Schneider",
+                  "value": "Schneider"
+                },
+                {
+                  "label": "Shelly",
+                  "value": "Shelly"
+                },
+                {
+                  "label": "Siemens",
+                  "value": "Siemens"
+                },
+                {
+                  "label": "Siemens LOGO!",
+                  "value": "Siemens LOGO!"
+                },
+                {
+                  "label": "Sinexcel",
+                  "value": "Sinexcel"
+                },
+                {
+                  "label": "SMA",
+                  "value": "SMA"
+                },
+                {
+                  "label": "Socomec",
+                  "value": "Socomec"
+                },
+                {
+                  "label": "Solar-Log",
+                  "value": "Solar-Log"
+                },
+                {
+                  "label": "SolaX",
+                  "value": "SolaX"
+                },
+                {
+                  "label": "Soltaro",
+                  "value": "Soltaro"
+                },
+                {
+                  "label": "Spelsberg",
+                  "value": "Spelsberg"
+                },
+                {
+                  "label": "SunSpec",
+                  "value": "SunSpec"
+                },
+                {
+                  "label": "TECALOR",
+                  "value": "TECALOR"
+                },
+                {
+                  "label": "Technische Alternative",
+                  "value": "Technische Alternative"
+                },
+                {
+                  "label": "Tesla",
+                  "value": "Tesla"
+                },
+                {
+                  "label": "TESVOLT",
+                  "value": "TESVOLT"
+                },
+                {
+                  "label": "Victron",
+                  "value": "Victron"
+                },
+                {
+                  "label": "W&T",
+                  "value": "W&T"
+                },
+                {
+                  "label": "Webasto",
+                  "value": "Webasto"
+                },
+                {
+                  "label": "Weidmüller",
+                  "value": "Weidmüller"
+                },
+                {
+                  "label": "ZIEHL",
+                  "value": "ZIEHL"
+                },
+                {
+                  "label": "VARTA",
+                  "value": "VARTA"
+                },
+                {
+                  "label": "DEYE",
+                  "value": "DEYE"
+                }
+              ],
+              "freeSolo": false
+            },
+            {
+              "type": "autocomplete",
+              "attr": "templateId",
+              "label": "Driver / Template",
+              "freeSolo": false,
+              "noTranslation": true,
+              "sm": 12,
+              "validator": "!!data.templateId",
+              "newLine": true,
+              "options": [
+                {
+                  "value": "battery.bmw.BatteryBmwImpl",
+                  "label": "BATTERY | BMW BatteryBmwImpl BMW BatteryBmwImpl"
+                },
+                {
+                  "value": "battery.bydcommercial.BydBatteryBoxCommercialC130Impl",
+                  "label": "BATTERY | BYD BydBatteryBoxCommercialC130Impl BYD BydBatteryBoxCommercialC130Impl"
+                },
+                {
+                  "value": "battery.fenecon.BatteryFeneconCommercialImpl",
+                  "label": "BATTERY | FENECON commercial FENECON commercial"
+                },
+                {
+                  "value": "battery.fenecon.BatteryFeneconHomeImpl",
+                  "label": "BATTERY | FENECON home FENECON home"
+                },
+                {
+                  "value": "battery.pylontech.PylontechPowercubeM2BatteryImpl",
+                  "label": "BATTERY | Pylontech powercubem2 Pylontech powercubem2"
+                },
+                {
+                  "value": "battery.sma.SmaBatteryImpl",
+                  "label": "BATTERY | SMA ess.stpxx3se.battery SMA ess.stpxx3se.battery"
+                },
+                {
+                  "value": "battery.soltaro.BatterySoltaroClusterVersionBImpl",
+                  "label": "BATTERY | Soltaro cluster.versionb Soltaro cluster.versionb"
+                },
+                {
+                  "value": "battery.soltaro.BatterySoltaroClusterVersionCImpl",
+                  "label": "BATTERY | Soltaro cluster.versionc Soltaro cluster.versionc"
+                },
+                {
+                  "value": "battery.soltaro.BatterySoltaroSingleRackVersionAImpl",
+                  "label": "BATTERY | Soltaro single.versiona Soltaro single.versiona"
+                },
+                {
+                  "value": "battery.soltaro.BatterySoltaroSingleRackVersionBImpl",
+                  "label": "BATTERY | Soltaro single.versionb Soltaro single.versionb"
+                },
+                {
+                  "value": "battery.soltaro.BatterySoltaroSingleRackVersionCImpl",
+                  "label": "BATTERY | Soltaro single.versionc Soltaro single.versionc"
+                },
+                {
+                  "value": "battery.victron.VictronBatteryImpl",
+                  "label": "BATTERY | Victron battery Victron battery"
+                },
+                {
+                  "value": "battery_inverter.refu88k.BatteryInverterRefuStore88kImpl",
+                  "label": "BATTERY_INVERTER | REFU BatteryInverterRefuStore88kImpl REFU BatteryInverterRefuStore88kImpl"
+                },
+                {
+                  "value": "battery_inverter.sinexcel.BatteryInverterSinexcelImpl",
+                  "label": "BATTERY_INVERTER | Sinexcel BatteryInverterSinexcelImpl Sinexcel BatteryInverterSinexcelImpl"
+                },
+                {
+                  "value": "battery_inverter.victron.VictronBatteryInverterImpl",
+                  "label": "BATTERY_INVERTER | Victron batteryinverter Victron batteryinverter"
+                },
+                {
+                  "value": "charger.goodwe.AbstractGoodWeEtCharger",
+                  "label": "CHARGER | Goodwe charger Goodwe charger"
+                },
+                {
+                  "value": "dc_charger.victron.VictronDcChargerImpl",
+                  "label": "DC_CHARGER | Victron dccharger Victron dccharger"
+                },
+                {
+                  "value": "ess.adstec.EssAdstecStoraxeImpl",
+                  "label": "ESS | ADS-TEC storaxe ADS-TEC storaxe"
+                },
+                {
+                  "value": "ess.fenecon.EssFeneconCommercial40Impl",
+                  "label": "ESS | FENECON commercial40 FENECON commercial40"
+                },
+                {
+                  "value": "ess.fenecon.AbstractEssFeneconCommercial40Pv",
+                  "label": "ESS | FENECON commercial40.charger FENECON commercial40.charger"
+                },
+                {
+                  "value": "ess.fenecon.AbstractFeneconDessCharger",
+                  "label": "ESS | FENECON dess.charger FENECON dess.charger"
+                },
+                {
+                  "value": "ess.fenecon.FeneconDessEssImpl",
+                  "label": "ESS | FENECON dess.ess FENECON dess.ess"
+                },
+                {
+                  "value": "ess.fenecon.FeneconHomeEssImpl",
+                  "label": "ESS | FENECON home.ess FENECON home.ess"
+                },
+                {
+                  "value": "ess.fenecon.FeneconMiniEssImpl",
+                  "label": "ESS | FENECON mini.ess FENECON mini.ess"
+                },
+                {
+                  "value": "ess.fenecon.FeneconProEssImpl",
+                  "label": "ESS | FENECON pro.ess FENECON pro.ess"
+                },
+                {
+                  "value": "ess.foxess.FoxESSH3Ess",
+                  "label": "ESS | FoxESS H3 FoxESS H3 Hybrid (Modbus)"
+                },
+                {
+                  "value": "ess.foxess.FoxESSH3ProEss",
+                  "label": "ESS | FoxESS H3Pro FoxESS H3 Pro Hybrid (Modbus)"
+                },
+                {
+                  "value": "ess.kaco.gridsave.sunspec.v1",
+                  "label": "ESS | KACO GridSave KACO GridSave (SunSpec Modbus)"
+                },
+                {
+                  "value": "ess.kaco.hybrid10.sunspec.v1",
+                  "label": "ESS | KACO Hybrid10 KACO Hybrid10 (SunSpec Modbus)"
+                },
+                {
+                  "value": "ess.kostal.KostalManagedEssImpl",
+                  "label": "ESS | Kostal plenticore.ess Kostal plenticore.ess"
+                },
+                {
+                  "value": "ess.kostal.KostalManagedEssBigEndianImpl",
+                  "label": "ESS | Kostal plenticore.ess.abcd Kostal plenticore.ess (ABCD / Sunspec byte order)"
+                },
+                {
+                  "value": "ess.samsung.sdi.http.v1",
+                  "label": "ESS | Samsung SDI ESS Samsung SDI ESS (HTTP R3EMS)"
+                },
+                {
+                  "value": "ess.sma.EssSmaSunnyIslandImpl",
+                  "label": "ESS | SMA ess.sunnyisland SMA ess.sunnyisland"
+                },
+                {
+                  "value": "ess.solax.Ems1000ModbusTcp",
+                  "label": "ESS | SolaX EMS1000 SolaX EMS1000 (ModbusTCP)"
+                },
+                {
+                  "value": "ess.solax.SolaXHybridX1X3Ess",
+                  "label": "ESS | SolaX Hybrid X1/X3 ESS SolaX Hybrid X1/X3 ESS (Modbus)"
+                },
+                {
+                  "value": "ess.sunspec.generic.basic124.v1",
+                  "label": "ESS | SunSpec Generic Storage (Model 124) Generic SunSpec Storage (Model 124 + 123)"
+                },
+                {
+                  "value": "ess.tesla.powerwall2.gateway.http.v1",
+                  "label": "ESS | Tesla Powerwall 2 / Gateway (Local API) Tesla Powerwall 2 / Gateway (Local API)"
+                },
+                {
+                  "value": "ess.tesvolt.TesvoltEnergyManagerVermarkter",
+                  "label": "ESS | TESVOLT Energy Manager TESVOLT Energy Manager (Vermarkter-Schnittstelle Modbus TCP)"
+                },
+                {
+                  "value": "ess.tesvolt.iotGateway.mqttV2",
+                  "label": "ESS | TESVOLT IoT Gateway MQTT V2 TESVOLT IoT Gateway (MQTT EMS Interface V2)"
+                },
+                {
+                  "value": "ess.victron.VictronEssImpl",
+                  "label": "ESS | Victron ess Victron ess"
+                },
+                {
+                  "value": "evcs.abl.emh1.evcc2_3.modbusAscii",
+                  "label": "EVCS | ABL eMH1 (EVCC2/3) ABL eMH1 (EVCC2/3) (Modbus ASCII)"
+                },
+                {
+                  "value": "evcs.abl.EvcsAblImpl",
+                  "label": "EVCS | ABL EvcsAblImpl ABL EvcsAblImpl"
+                },
+                {
+                  "value": "evcs.alfen.ng9xx.ace.socket1.modbusTcp",
+                  "label": "EVCS | Alfen NG9xx (ACE Modbus) Socket Alfen NG9xx (ACE) Socket 1 (Modbus TCP)"
+                },
+                {
+                  "value": "evcs.alfen.ng9xx.ace.socket2.modbusTcp",
+                  "label": "EVCS | Alfen NG9xx (ACE Modbus) Socket Alfen NG9xx (ACE) Socket 2 (Modbus TCP)"
+                },
+                {
+                  "value": "evcs.alfen.ng9xx.ace.station.modbusTcp",
+                  "label": "EVCS | Alfen NG9xx (ACE Modbus) Station/SCN Alfen NG9xx (ACE) Station/SCN (Unit-ID 200, Modbus TCP)"
+                },
+                {
+                  "value": "evcs.alpitronic.hypercharger.connector1",
+                  "label": "EVCS | Alpitronic Hypercharger (Connector 1) Alpitronic Hypercharger (Connector 1)"
+                },
+                {
+                  "value": "evcs.alpitronic.hypercharger.connector2",
+                  "label": "EVCS | Alpitronic Hypercharger (Connector 2) Alpitronic Hypercharger (Connector 2)"
+                },
+                {
+                  "value": "evcs.alpitronic.hypercharger.connector3",
+                  "label": "EVCS | Alpitronic Hypercharger (Connector 3) Alpitronic Hypercharger (Connector 3)"
+                },
+                {
+                  "value": "evcs.alpitronic.hypercharger.connector4",
+                  "label": "EVCS | Alpitronic Hypercharger (Connector 4) Alpitronic Hypercharger (Connector 4)"
+                },
+                {
+                  "value": "evcs.alpitronic.hypercharger.station",
+                  "label": "EVCS | Alpitronic Hypercharger (Station) Alpitronic Hypercharger (Station)"
+                },
+                {
+                  "value": "evcs.goe.chargerhome.http.v1",
+                  "label": "EVCS | go-e Charger HOME / HOME+ / HOMEfix go-e Charger HOME (HTTP v1 /status + /mqtt)"
+                },
+                {
+                  "value": "evcs.goe.gemini.http.v2",
+                  "label": "EVCS | go-e Gemini / Gemini flex / Gemini 2.0 / Pro go-e Charger Gemini (HTTP API v2 /api/status + /api/set)"
+                },
+                {
+                  "value": "evcs.goe.gemini.http.v2.legacy",
+                  "label": "EVCS | go-e Gemini / older FW (<= 51.3) go-e Charger Gemini (HTTP API v2 legacy filter)"
+                },
+                {
+                  "value": "evcs.goe.EvcsGoeModbusImpl",
+                  "label": "EVCS | go-e modbus go-e modbus"
+                },
+                {
+                  "value": "evcs.heidelberg.EvcsHeidelbergEnergyImpl",
+                  "label": "EVCS | Heidelberg energy Heidelberg energy"
+                },
+                {
+                  "value": "evcs.keba.udp.KeContactP20P30",
+                  "label": "EVCS | KEBA KeContact P20/P30 (UDP 7090)"
+                },
+                {
+                  "value": "evcs.keba.EvcsKebaModbusImpl",
+                  "label": "EVCS | KEBA KeContact P40 / P40 Pro Modbus TCP V1.02"
+                },
+                {
+                  "value": "evcs.mennekes.EvcsMennekesImpl",
+                  "label": "EVCS | Mennekes EvcsMennekesImpl Mennekes EvcsMennekesImpl"
+                },
+                {
+                  "value": "evcs.openwb.lp1.mqtt.v1",
+                  "label": "EVCS | openWB openWB (MQTT) openWB (MQTT) Chargepoint 0 (lp1)"
+                },
+                {
+                  "value": "evcs.openwb.lp2.mqtt.v1",
+                  "label": "EVCS | openWB openWB (MQTT) openWB (MQTT) Chargepoint 1 (lp2)"
+                },
+                {
+                  "value": "evcs.solax.SolaXHacG2",
+                  "label": "EVCS | SolaX X1/X3-HAC EV Charger G2 SolaX X1/X3-HAC EV-Charger G2 (Modbus)"
+                },
+                {
+                  "value": "evcs.spelsberg.EvcsSpelsbergSmartImpl",
+                  "label": "EVCS | Spelsberg smart Spelsberg smart"
+                },
+                {
+                  "value": "evcs.webasto.EvcsWebastoNextImpl",
+                  "label": "EVCS | Webasto next Webasto next"
+                },
+                {
+                  "value": "evcs.webasto.EvcsWebastoUniteImpl",
+                  "label": "EVCS | Webasto unite Webasto unite"
+                },
+                {
+                  "value": "evse.chargepoint.EvseAlpitronicImpl",
+                  "label": "EVSE | ChargePoint alpitronic ChargePoint alpitronic"
+                },
+                {
+                  "value": "evse.chargepoint.EvseChargePointHeidelbergConnectImpl",
+                  "label": "EVSE | ChargePoint heidelberg.connect ChargePoint heidelberg.connect"
+                },
+                {
+                  "value": "evse.chargepoint.EvseKebaModbusImpl",
+                  "label": "EVSE | ChargePoint keba.modbus ChargePoint keba.modbus"
+                },
+                {
+                  "value": "generic.canbus.raw.v1",
+                  "label": "GENERIC | Generic CANbus CANbus Raw Frames (can-utils)"
+                },
+                {
+                  "value": "generic.http",
+                  "label": "GENERIC | Generic HTTP Generic HTTP"
+                },
+                {
+                  "value": "generic.modbus",
+                  "label": "GENERIC | Generic Modbus Generic Modbus"
+                },
+                {
+                  "value": "generic.mqtt",
+                  "label": "GENERIC | Generic MQTT Generic MQTT"
+                },
+                {
+                  "value": "heat.askoma.HeatAskomaImpl",
+                  "label": "HEAT | Askoma HeatAskomaImpl Askoma HeatAskomaImpl"
+                },
+                {
+                  "value": "heat.lambda.LambdaWpModbus",
+                  "label": "HEAT | LAMBDA wp LAMBDA Wärmepumpe (Modbus)"
+                },
+                {
+                  "value": "heat.mypv.HeatMyPvAcThor9sImpl",
+                  "label": "HEAT | Mypv acthor9s Mypv acthor9s"
+                },
+                {
+                  "value": "heat.tecalor.TecalorLwzModbus",
+                  "label": "HEAT | TECALOR lwz TECALOR Lüftungsintegralgerät (LWZ/LWA / ISG Modbus)"
+                },
+                {
+                  "value": "heat.tecalor.TecalorWpm3iModbus",
+                  "label": "HEAT | TECALOR wpm3i TECALOR Wärmepumpe (WPM 3(i) / ISG Modbus)"
+                },
+                {
+                  "value": "heat.ta.cmi",
+                  "label": "HEAT | Technische Alternative CMI / CMI-S – alle CAN-Knoten lesen + bidirektionale Heizungsbrücke"
+                },
+                {
+                  "value": "io.onewire.OneWireDs18b20Temperature.V1",
+                  "label": "IO | 1-Wire DS18B20 1-Wire DS18B20 Temperatur"
+                },
+                {
+                  "value": "io.filipowski.IoFilipowskiMrAo1Impl",
+                  "label": "IO | Filipowski analog.mr Filipowski analog.mr"
+                },
+                {
+                  "value": "io.kmtronic.IoKmtronicRelay8PortImpl",
+                  "label": "IO | Kmtronic eight Kmtronic eight"
+                },
+                {
+                  "value": "io.kmtronic.IoKmtronicRelay4PortImpl",
+                  "label": "IO | Kmtronic four Kmtronic four"
+                },
+                {
+                  "value": "io.shelly.shelly1",
+                  "label": "IO | Shelly Shelly 1 Shelly Shelly 1 (Gen1 /status)"
+                },
+                {
+                  "value": "io.shelly.shelly25",
+                  "label": "IO | Shelly Shelly 2.5 Shelly 2.5 (Gen1 /status)"
+                },
+                {
+                  "value": "io.shelly.plug_gen1",
+                  "label": "IO | Shelly Shelly Plug / Plug S (Gen1) Shelly Plug / Plug S (Gen1 /status)"
+                },
+                {
+                  "value": "io.shelly.plugsg3",
+                  "label": "IO | Shelly Shelly Plug S Gen3 Shelly Shelly Plug S Gen3 (Gen3 RPC)"
+                },
+                {
+                  "value": "io.shelly.plus1pm",
+                  "label": "IO | Shelly Shelly Plus 1PM Shelly Shelly Plus 1PM (Gen2 RPC)"
+                },
+                {
+                  "value": "io.shelly.pro4pm",
+                  "label": "IO | Shelly Shelly Pro 4PM Shelly Pro 4PM (Gen2 RPC)"
+                },
+                {
+                  "value": "io.siemenslogo.SiemensLogoRelayImpl",
+                  "label": "IO | Siemens LOGO! SiemensLogoRelayImpl Siemens LOGO! SiemensLogoRelayImpl"
+                },
+                {
+                  "value": "io.wut.WebIoDigital4_57733_4xInOutImpl",
+                  "label": "IO | W&T #57733 4xIn/Out Web-IO Digital 4.0 (ModbusTCP)"
+                },
+                {
+                  "value": "io.wut.WebIoDigital4_57736_16xInOutImpl",
+                  "label": "IO | W&T #57736 16xIn/Out Web-IO Digital 4.0 (ModbusTCP)"
+                },
+                {
+                  "value": "io.wut.WebIoDigital4_57756_Logger16xInOutImpl",
+                  "label": "IO | W&T #57756 Digital Logger 16xIn/Out Web-IO Digital 4.0 Logger (ModbusTCP)"
+                },
+                {
+                  "value": "meter.abb.b23.mbus.v1",
+                  "label": "METER | ABB B23/B32 (M-Bus) ABB B23/B32 (M-Bus)"
+                },
+                {
+                  "value": "meter.artemes.MeterArtemesAM2Impl",
+                  "label": "METER | Artemes am2 Artemes am2"
+                },
+                {
+                  "value": "meter.bcontrol.MeterBControlEM300Impl",
+                  "label": "METER | B-Control em300 B-Control em300"
+                },
+                {
+                  "value": "meter.bgetech.MeterBgeTechDrt428M2Impl",
+                  "label": "METER | BGEtech MeterBgeTechDrt428M2Impl BGEtech MeterBgeTechDrt428M2Impl"
+                },
+                {
+                  "value": "meter.camillebauer.MeterCamillebauerAplusImpl",
+                  "label": "METER | Camille Bauer aplus Camille Bauer aplus"
+                },
+                {
+                  "value": "meter.carlo.MeterCarloGavazziEm100Impl",
+                  "label": "METER | Carlo Gavazzi EM100 Carlo Gavazzi EM100 (Modbus)"
+                },
+                {
+                  "value": "meter.carlo.MeterCarloGavazziEm300Impl",
+                  "label": "METER | Carlo Gavazzi EM300 Carlo Gavazzi EM300 (Modbus)"
+                },
+                {
+                  "value": "meter.discovergy.inexogy.http.v1",
+                  "label": "METER | Discovergy Smart Meter (Inexogy API) Discovergy/Inexogy Smart Meter (HTTP API last_reading)"
+                },
+                {
+                  "value": "meter.eastron.MeterEastronSdm120Impl",
+                  "label": "METER | Eastron SDM120 Eastron SDM120 (Modbus)"
+                },
+                {
+                  "value": "meter.eastron.MeterEastronSdm630Impl",
+                  "label": "METER | Eastron SDM630 Eastron SDM630 (Modbus)"
+                },
+                {
+                  "value": "meter.fenecon.FeneconDessGridMeterImpl",
+                  "label": "METER | FENECON dess.gridmeter FENECON dess.gridmeter"
+                },
+                {
+                  "value": "meter.fenecon.FeneconDessPvMeterImpl",
+                  "label": "METER | FENECON dess.pvmeter FENECON dess.pvmeter"
+                },
+                {
+                  "value": "meter.fenecon.FeneconMiniGridMeterImpl",
+                  "label": "METER | FENECON mini.gridmeter FENECON mini.gridmeter"
+                },
+                {
+                  "value": "meter.fenecon.FeneconMiniPvMeterImpl",
+                  "label": "METER | FENECON mini.pvmeter FENECON mini.pvmeter"
+                },
+                {
+                  "value": "meter.fenecon.FeneconProPvMeterImpl",
+                  "label": "METER | FENECON pro.pvmeter FENECON pro.pvmeter"
+                },
+                {
+                  "value": "meter.hager.ecr380d",
+                  "label": "METER | Hager ECR380D Hager ECR380D (Modbus)"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg104Impl",
+                  "label": "METER | Janitza umg104 Janitza umg104"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg511Impl",
+                  "label": "METER | Janitza umg511 Janitza umg511"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg604Impl",
+                  "label": "METER | Janitza umg604 Janitza UMG 604/604-PRO"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg604proImpl",
+                  "label": "METER | Janitza umg604pro Janitza UMG 604-PRO"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg801Impl",
+                  "label": "METER | Janitza umg801 Janitza umg801"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg806Impl",
+                  "label": "METER | Janitza umg806 Janitza umg806"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg96paImpl",
+                  "label": "METER | Janitza umg96pa Janitza UMG 96-PA"
+                },
+                {
+                  "value": "meter.janitza.MeterJanitzaUmg96rmeImpl",
+                  "label": "METER | Janitza umg96rme Janitza umg96rme"
+                },
+                {
+                  "value": "meter.kdk.MeterKdk2puctImpl",
+                  "label": "METER | Kdk puct2 Kdk puct2"
+                },
+                {
+                  "value": "meter.kostal.KostalGridMeterImpl",
+                  "label": "METER | Kostal plenticore.gridmeter Kostal plenticore.gridmeter"
+                },
+                {
+                  "value": "meter.kostal.KostalGridMeterBigEndianImpl",
+                  "label": "METER | Kostal plenticore.gridmeter.abcd Kostal plenticore.gridmeter (ABCD / Sunspec byte order)"
+                },
+                {
+                  "value": "meter.mbus.GenericWiredMbusDevice.V1",
+                  "label": "METER | M-Bus Generic M-Bus (wired) Generic Meter"
+                },
+                {
+                  "value": "meter.phoenixcontact.PhoenixContactMeterImpl",
+                  "label": "METER | Phoenixcontact PhoenixContactMeterImpl Phoenixcontact PhoenixContactMeterImpl"
+                },
+                {
+                  "value": "meter.plexlog.MeterPlexlogDataloggerImpl",
+                  "label": "METER | Plexlog MeterPlexlogDataloggerImpl Plexlog MeterPlexlogDataloggerImpl"
+                },
+                {
+                  "value": "meter.pqplus.MeterPqplusUmd96Impl",
+                  "label": "METER | PQPlus umd96 PQPlus umd96"
+                },
+                {
+                  "value": "meter.pqplus.MeterPqplusUmd97Impl",
+                  "label": "METER | PQPlus umd97 PQPlus umd97"
+                },
+                {
+                  "value": "meter.samsung.ess.grid.http.v1",
+                  "label": "METER | Samsung ESS Grid Meter Samsung ESS Grid Meter (HTTP R3EMS)"
+                },
+                {
+                  "value": "meter.schneider.MeterSchneiderActi9SmartlinkImpl",
+                  "label": "METER | Schneider acti9.smartlink Schneider acti9.smartlink"
+                },
+                {
+                  "value": "meter.shelly.3em_gen1",
+                  "label": "METER | Shelly Shelly 3EM (Gen1) Shelly 3EM (Gen1 /status)"
+                },
+                {
+                  "value": "meter.shelly.pro3em",
+                  "label": "METER | Shelly Shelly Pro 3EM Shelly Pro 3EM (RPC EM.GetStatus)"
+                },
+                {
+                  "value": "meter.siemens.MeterSiemensPac1600Impl",
+                  "label": "METER | Siemens pac1600 Siemens pac1600"
+                },
+                {
+                  "value": "meter.siemens.MeterSiemensPac2200Impl",
+                  "label": "METER | Siemens pac2200 Siemens pac2200"
+                },
+                {
+                  "value": "meter.siemens.MeterSiemensSicamt7kg966Impl",
+                  "label": "METER | Siemens sicam Siemens sicam"
+                },
+                {
+                  "value": "meter.sma.MeterSmaShm20Impl",
+                  "label": "METER | SMA meter.shm20 SMA Sunny Home Manager 2.0 (Modbus)"
+                },
+                {
+                  "value": "meter.sma.SmaEnergyMeterSpeedwireImpl",
+                  "label": "METER | SMA SmaEnergyMeterSpeedwireImpl SMA Energy Meter / SHM (Speedwire)"
+                },
+                {
+                  "value": "meter.socomec.countis_e14_singlephase",
+                  "label": "METER | Socomec Countis E14 (1-ph) Socomec Countis E14 (1-ph)"
+                },
+                {
+                  "value": "meter.socomec.countis_e23_e24_e27_e28",
+                  "label": "METER | Socomec Countis E23/E24/E27/E28 (3-ph) Socomec Countis E23/E24/E27/E28 (3-ph)"
+                },
+                {
+                  "value": "meter.socomec.countis_e34_e44",
+                  "label": "METER | Socomec Countis E34/E44 (3-ph) Socomec Countis E34/E44 (3-ph)"
+                },
+                {
+                  "value": "meter.socomec.diris_a10",
+                  "label": "METER | Socomec DIRIS A-10 (3-ph) Socomec DIRIS A-10 (3-ph)"
+                },
+                {
+                  "value": "meter.socomec.diris_a14",
+                  "label": "METER | Socomec DIRIS A-14 (3-ph) Socomec DIRIS A-14 (3-ph)"
+                },
+                {
+                  "value": "meter.socomec.diris_b30",
+                  "label": "METER | Socomec DIRIS B-30 (3-ph) Socomec DIRIS B-30 (3-ph)"
+                },
+                {
+                  "value": "meter.sunspec.generic.model201.v1",
+                  "label": "METER | SunSpec Generic Meter (Model 201) Generic SunSpec Meter (Model 201)"
+                },
+                {
+                  "value": "meter.sunspec.generic.model202.v1",
+                  "label": "METER | SunSpec Generic Meter (Model 202) Generic SunSpec Meter (Model 202)"
+                },
+                {
+                  "value": "meter.sunspec.generic.model203.v1",
+                  "label": "METER | SunSpec Generic Meter (Model 203) Generic SunSpec Meter (Model 203)"
+                },
+                {
+                  "value": "meter.victron.VictronAcInPowerMeterImpl",
+                  "label": "METER | Victron meter.acin Victron meter.acin"
+                },
+                {
+                  "value": "meter.victron.VictronAcOutPowerMeterImpl",
+                  "label": "METER | Victron meter.acout Victron meter.acout"
+                },
+                {
+                  "value": "meter.victron.VictronMeterImpl",
+                  "label": "METER | Victron meter.grid Victron meter.grid"
+                },
+                {
+                  "value": "meter.weidmueller.MeterWeidmueller525Impl",
+                  "label": "METER | Weidmüller MeterWeidmueller525Impl Weidmüller MeterWeidmueller525Impl"
+                },
+                {
+                  "value": "meter.ziehl.MeterZiehlEfr4001IpImpl",
+                  "label": "METER | ZIEHL efr4001ip ZIEHL efr4001ip"
+                },
+                {
+                  "value": "pv_inverter.foxess.FoxESSTG3G3PvInverter",
+                  "label": "PV_INVERTER | FoxESS T/G3 (GD470) FoxESS T/G3 (GD470) PV Inverter (Modbus)"
+                },
+                {
+                  "value": "pv_inverter.goodwe.AbstractGoodWe",
+                  "label": "PV_INVERTER | Goodwe common Goodwe common"
+                },
+                {
+                  "value": "pv_inverter.goodwe.GoodWeEmergencyPowerMeterImpl",
+                  "label": "PV_INVERTER | Goodwe emergencypowermeter Goodwe emergencypowermeter"
+                },
+                {
+                  "value": "pv_inverter.goodwe.GoodWeGridMeterImpl",
+                  "label": "PV_INVERTER | Goodwe gridmeter Goodwe gridmeter"
+                },
+                {
+                  "value": "pv_inverter.kaco.blueplanet.nx3.sunspec.v1",
+                  "label": "PV_INVERTER | KACO blueplanet NX3 / 100-125 KACO blueplanet NX3 (SunSpec Modbus)"
+                },
+                {
+                  "value": "pv_inverter.kostal.KostalPvInverterImpl",
+                  "label": "PV_INVERTER | Kostal plenticore.pvinverter Kostal plenticore.pvinverter"
+                },
+                {
+                  "value": "pv_inverter.kostal.KostalPvInverterBigEndianImpl",
+                  "label": "PV_INVERTER | Kostal plenticore.pvinverter.abcd Kostal plenticore.pvinverter (ABCD / Sunspec byte order)"
+                },
+                {
+                  "value": "pv_inverter.sma.SmaStp12570ModbusAll",
+                  "label": "PV_INVERTER | SMA STP125-70 (SMA Modbus) SMA STP125-70 (SMA Modbus) - Alle Register"
+                },
+                {
+                  "value": "pv_inverter.sma.SmaStp12570SunSpecImpl",
+                  "label": "PV_INVERTER | SMA STP125-70 (SunSpec) SMA STP125-70 (SunSpec Modbus)"
+                },
+                {
+                  "value": "pv_inverter.sma.SmaStp12570SunSpecMinimal",
+                  "label": "PV_INVERTER | SMA STP125-70 (SunSpec) SMA STP125-70 (SunSpec Modbus) - Minimal"
+                },
+                {
+                  "value": "pv_inverter.sma.SmaStpxx50Minimal",
+                  "label": "PV_INVERTER | SMA STPxx-50 (SMA Modbus) SMA STPxx-50 (Modbus) - Minimal (Fixed)"
+                },
+                {
+                  "value": "pv_inverter.sma.SmaStpxxUs41Minimal",
+                  "label": "PV_INVERTER | SMA STPxx-US-41 (SMA Modbus) SMA STPxx-US-41 (Modbus) - Minimal"
+                },
+                {
+                  "value": "pv_inverter.sma.SmaSunnyTripowerXMinimal",
+                  "label": "PV_INVERTER | SMA Sunny Tripower X (SMA Modbus) SMA Sunny Tripower X (Modbus) - Minimal"
+                },
+                {
+                  "value": "pv_inverter.solarlog.SolarLogDpmDirectMarketing",
+                  "label": "PV_INVERTER | Solar-Log DPM (Direktvermarkter) Solar-Log DPM (Direktvermarktung Modbus TCP)"
+                },
+                {
+                  "value": "pv_inverter.solarlog.SolarLogPmV2PowerManagement",
+                  "label": "PV_INVERTER | Solar-Log PM V2 (Power Management) Solar-Log PM V2 (Power Management Modbus TCP)"
+                },
+                {
+                  "value": "pv_inverter.solarlog.PvInverterSolarlogImpl",
+                  "label": "PV_INVERTER | Solar-Log PvInverterSolarlogImpl Solar-Log PvInverterSolarlogImpl"
+                },
+                {
+                  "value": "pv_inverter.solax.SolaXX3MegaForthMinimal",
+                  "label": "PV_INVERTER | SolaX X3-MEGA G2/X3-FORTH (Modbus-RTU) SolaX X3-MEGA G2/X3-FORTH (Modbus RTU) - Minimal"
+                },
+                {
+                  "value": "pv_inverter.sunspec.generic.model101.v1",
+                  "label": "PV_INVERTER | SunSpec Generic Inverter (Model 101) Generic SunSpec Inverter (Model 101)"
+                },
+                {
+                  "value": "pv_inverter.sunspec.generic.model102.v1",
+                  "label": "PV_INVERTER | SunSpec Generic Inverter (Model 102) Generic SunSpec Inverter (Model 102)"
+                },
+                {
+                  "value": "pv_inverter.sunspec.generic.model103.v1",
+                  "label": "PV_INVERTER | SunSpec Generic Inverter (Model 103) Generic SunSpec Inverter (Model 103)"
+                },
+                {
+                  "value": "pv_inverter.victron.VictronPvInverterImpl",
+                  "label": "PV_INVERTER | Victron pvinverter Victron pvinverter"
+                },
+                {
+                  "value": "pv_inverter.victron.VictronPvInverterViaDcChargerImpl",
+                  "label": "PV_INVERTER | Victron pvinverterviadccharger Victron pvinverterviadccharger"
+                },
+                {
+                  "value": "ess.varta.element.modbusTcpV14",
+                  "label": "VARTA element – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "value": "ess.varta.oneL.modbusTcpV14",
+                  "label": "VARTA one L – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "value": "ess.varta.oneXL.modbusTcpV14",
+                  "label": "VARTA one XL – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "value": "ess.varta.elementBackup.modbusTcpV14",
+                  "label": "VARTA element backup – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "value": "ess.varta.pulse.modbusTcpV14",
+                  "label": "VARTA pulse – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "value": "ess.varta.pulseNeo.modbusTcpV14",
+                  "label": "VARTA pulse neo – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "value": "ess.varta.link.modbusTcpV14",
+                  "label": "VARTA link – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "value": "ess.varta.flexStorage.modbusTcpV14",
+                  "label": "VARTA flex storage – Modbus TCP V14, erweiterte Messwerte und Steuerregister"
+                },
+                {
+                  "label": "DEYE Hybrid einphasig – Modbus RTU (vorläufig)",
+                  "value": "ess.deye.singlePhase.modbusRtu"
+                },
+                {
+                  "label": "DEYE Hybrid dreiphasig LV – Modbus RTU (vorläufig)",
+                  "value": "ess.deye.threePhaseLv.modbusRtu"
+                },
+                {
+                  "label": "DEYE Hybrid dreiphasig HV – Modbus RTU (vorläufig)",
+                  "value": "ess.deye.threePhaseHv.modbusRtu"
+                }
+              ]
+            },
+            {
+              "type": "select",
+              "attr": "protocol",
+              "label": "Protocol",
+              "noTranslation": true,
+              "sm": 6,
+              "md": 4,
+              "validator": "!!data.protocol",
+              "newLine": true,
+              "options": [
+                {
+                  "label": "1-Wire",
+                  "value": "onewire"
+                },
+                {
+                  "label": "CANbus",
+                  "value": "canbus"
+                },
+                {
+                  "label": "HTTP/JSON",
+                  "value": "http"
+                },
+                {
+                  "label": "M-Bus",
+                  "value": "mbus"
+                },
+                {
+                  "label": "Modbus ASCII",
+                  "value": "modbusAscii"
+                },
+                {
+                  "label": "Modbus RTU",
+                  "value": "modbusRtu"
+                },
+                {
+                  "label": "Modbus TCP",
+                  "value": "modbusTcp"
+                },
+                {
+                  "label": "MQTT",
+                  "value": "mqtt"
+                },
+                {
+                  "label": "Speedwire",
+                  "value": "speedwire"
+                },
+                {
+                  "label": "TA CMI JSON + Modbus bridge",
+                  "value": "taCmi"
+                },
+                {
+                  "label": "UDP",
+                  "value": "udp"
+                }
+              ]
+            },
+            {
+              "type": "number",
+              "attr": "pollIntervalMs",
+              "label": "Polling interval (ms, optional)",
+              "min": 0,
+              "max": 600000,
+              "sm": 6,
+              "md": 4,
+              "helperText": "0 = use global/template default"
+            },
+            {
+              "type": "number",
+              "attr": "heartbeatTimeoutMs",
+              "label": "Heartbeat timeout (ms)",
+              "min": 1000,
+              "max": 600000,
+              "sm": 6,
+              "md": 4,
+              "helperText": "Used to mark device stale (0 = disabled).",
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "Modbus TCP connection",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.host",
+              "label": "Host / IP",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "port",
+              "attr": "connection.port",
+              "label": "Port",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "default": 502,
+              "sm": 3,
+              "md": 2
+            },
+            {
+              "type": "number",
+              "attr": "connection.unitId",
+              "label": "Unit-ID",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "default": 1,
+              "min": 0,
+              "max": 255,
+              "sm": 3,
+              "md": 2
+            },
+            {
+              "type": "number",
+              "attr": "connection.timeoutMs",
+              "label": "Timeout (ms)",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "min": 100,
+              "max": 60000,
+              "sm": 6,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.addressOffset",
+              "label": "Addr-Offset",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "min": -100000,
+              "max": 100000,
+              "sm": 6,
+              "md": 3
+            },
+            {
+              "type": "select",
+              "attr": "connection.wordOrder",
+              "label": "Word Order",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "default": "be",
+              "options": [
+                {
+                  "label": "BE",
+                  "value": "be"
+                },
+                {
+                  "label": "LE",
+                  "value": "le"
+                }
+              ],
+              "sm": 6,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "select",
+              "attr": "connection.byteOrder",
+              "label": "Byte Order",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "default": "be",
+              "options": [
+                {
+                  "label": "BE",
+                  "value": "be"
+                },
+                {
+                  "label": "LE",
+                  "value": "le"
+                }
+              ],
+              "sm": 6,
+              "md": 3
+            },
+            {
+              "type": "text",
+              "attr": "connection.writePassword",
+              "label": "Write password (optional)",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'modbusTcp'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "Modbus Serial connection (RTU/ASCII)",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.path",
+              "label": "Serial device (e.g. /dev/ttyUSB0)",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "sm": 8,
+              "md": 6,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.baudRate",
+              "label": "Baudrate",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "default": 9600,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "select",
+              "attr": "connection.parity",
+              "label": "Parity",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "default": "none",
+              "options": [
+                {
+                  "label": "none",
+                  "value": "none"
+                },
+                {
+                  "label": "even",
+                  "value": "even"
+                },
+                {
+                  "label": "odd",
+                  "value": "odd"
+                }
+              ],
+              "sm": 4,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.dataBits",
+              "label": "Data bits",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "default": 8,
+              "min": 5,
+              "max": 8,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "number",
+              "attr": "connection.stopBits",
+              "label": "Stop bits",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "default": 1,
+              "min": 1,
+              "max": 2,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "number",
+              "attr": "connection.unitId",
+              "label": "Unit-ID",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "default": 1,
+              "min": 0,
+              "max": 247,
+              "sm": 4,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.timeoutMs",
+              "label": "Timeout (ms)",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "min": 100,
+              "max": 60000,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "number",
+              "attr": "connection.addressOffset",
+              "label": "Addr-Offset",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "min": -100000,
+              "max": 100000,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "select",
+              "attr": "connection.wordOrder",
+              "label": "Word Order",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "default": "be",
+              "options": [
+                {
+                  "label": "BE",
+                  "value": "be"
+                },
+                {
+                  "label": "LE",
+                  "value": "le"
+                }
+              ],
+              "sm": 4,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "select",
+              "attr": "connection.byteOrder",
+              "label": "Byte Order",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "default": "be",
+              "options": [
+                {
+                  "label": "BE",
+                  "value": "be"
+                },
+                {
+                  "label": "LE",
+                  "value": "le"
+                }
+              ],
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "text",
+              "attr": "connection.writePassword",
+              "label": "Write password (optional)",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'modbusRtu' && data.protocol !== 'modbusAscii'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "M-Bus (wired) connection",
+              "hidden": "data.protocol !== 'mbus'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.path",
+              "label": "Serial device (e.g. /dev/ttyUSB0)",
+              "hidden": "data.protocol !== 'mbus'",
+              "sm": 8,
+              "md": 6,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.baudRate",
+              "label": "Baudrate",
+              "hidden": "data.protocol !== 'mbus'",
+              "default": 2400,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "select",
+              "attr": "connection.parity",
+              "label": "Parity",
+              "hidden": "data.protocol !== 'mbus'",
+              "default": "even",
+              "options": [
+                {
+                  "label": "even",
+                  "value": "even"
+                },
+                {
+                  "label": "none",
+                  "value": "none"
+                },
+                {
+                  "label": "odd",
+                  "value": "odd"
+                }
+              ],
+              "sm": 4,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.dataBits",
+              "label": "Data bits",
+              "hidden": "data.protocol !== 'mbus'",
+              "default": 8,
+              "min": 5,
+              "max": 8,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "number",
+              "attr": "connection.stopBits",
+              "label": "Stop bits",
+              "hidden": "data.protocol !== 'mbus'",
+              "default": 1,
+              "min": 1,
+              "max": 2,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "number",
+              "attr": "connection.unitId",
+              "label": "Address / Unit-ID",
+              "hidden": "data.protocol !== 'mbus'",
+              "default": 1,
+              "min": 0,
+              "max": 250,
+              "sm": 4,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.timeoutMs",
+              "label": "Timeout (ms)",
+              "hidden": "data.protocol !== 'mbus'",
+              "min": 100,
+              "max": 60000,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.sendNke",
+              "label": "Send SND_NKE before request",
+              "hidden": "data.protocol !== 'mbus'",
+              "default": true,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'mbus'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "MQTT connection",
+              "hidden": "data.protocol !== 'mqtt'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.url",
+              "label": "Broker URL (mqtt://, mqtts://, ws:// or wss://)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "helperText": "TESVOLT IoT Gateway: mqtt://<gateway>:1884 (no TLS). Username/password authenticate the client.",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.username",
+              "label": "Username (optional)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.password",
+              "label": "Password (optional)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "text",
+              "attr": "connection.clientId",
+              "label": "Fixed MQTT Client-ID",
+              "hidden": "data.protocol !== 'mqtt'",
+              "helperText": "Use a stable value. TESVOLT gateway ACLs may explicitly whitelist this Client-ID.",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "MQTT TLS / security",
+              "hidden": "data.protocol !== 'mqtt'",
+              "newLine": true
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.rejectUnauthorized",
+              "label": "Verify TLS certificate",
+              "hidden": "data.protocol !== 'mqtt'",
+              "default": true,
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.caFile",
+              "label": "TLS CA certificate file (optional)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "helperText": "Path on the NexoWatt controller; only needed for a private/self-signed CA.",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.servername",
+              "label": "TLS server name / SNI (optional)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "helperText": "Use when the certificate name differs from the gateway IP address.",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.connectTimeoutMs",
+              "label": "MQTT CONNACK/connect timeout (ms)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "default": 10000,
+              "min": 1000,
+              "max": 120000,
+              "sm": 6,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.reconnectPeriodMs",
+              "label": "MQTT reconnect interval (ms)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "default": 5000,
+              "min": 0,
+              "max": 120000,
+              "sm": 6,
+              "md": 3
+            },
+            {
+              "type": "number",
+              "attr": "connection.keepaliveSeconds",
+              "label": "MQTT keepalive (s)",
+              "hidden": "data.protocol !== 'mqtt'",
+              "default": 30,
+              "min": 5,
+              "max": 3600,
+              "sm": 6,
+              "md": 3
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.cleanSession",
+              "label": "MQTT clean session",
+              "hidden": "data.protocol !== 'mqtt'",
+              "default": true,
+              "sm": 6,
+              "md": 3
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'mqtt'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "TESVOLT IoT Gateway cyclic control",
+              "hidden": "data.protocol !== 'mqtt' || data.templateId !== 'ess.tesvolt.iotGateway.mqttV2'",
+              "newLine": true
+            },
+            {
+              "type": "select",
+              "attr": "connection.tesvoltTopicMode",
+              "label": "TESVOLT topic format",
+              "hidden": "data.protocol !== 'mqtt' || data.templateId !== 'ess.tesvolt.iotGateway.mqttV2'",
+              "default": "auto",
+              "options": [
+                {
+                  "value": "auto",
+                  "label": "Automatic (monitoring only)"
+                },
+                {
+                  "value": "ems",
+                  "label": "EMS/... (without V2)"
+                },
+                {
+                  "value": "v2",
+                  "label": "EMS/V2/..."
+                }
+              ],
+              "sm": 12,
+              "md": 6,
+              "newLine": true,
+              "helperText": "For power control choose a fixed topic format. Automatic mode waits for fresh usable telemetry."
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.tesvoltControlEnabled",
+              "label": "Enable power control by NexoWatt EOS",
+              "hidden": "data.protocol !== 'mqtt' || data.templateId !== 'ess.tesvolt.iotGateway.mqttV2'",
+              "default": false,
+              "sm": 12,
+              "md": 6,
+              "helperText": "Leave disabled for parallel monitoring with TEM. Enable only after control handover has been agreed."
+            },
+            {
+              "type": "number",
+              "attr": "connection.tesvoltSetpointIntervalMs",
+              "label": "TESVOLT setpoint refresh interval (ms)",
+              "hidden": "data.protocol !== 'mqtt' || data.templateId !== 'ess.tesvolt.iotGateway.mqttV2'",
+              "default": 5000,
+              "min": 1000,
+              "max": 20000,
+              "helperText": "Must remain clearly below the IoT Gateway EMS-offline timeout (default 30 s).",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.tesvoltCommandSourceTimeoutMs",
+              "label": "NexoWatt command freshness timeout (ms)",
+              "hidden": "data.protocol !== 'mqtt' || data.templateId !== 'ess.tesvolt.iotGateway.mqttV2'",
+              "default": 20000,
+              "min": 5000,
+              "max": 120000,
+              "helperText": "If EOS stops updating the command, the Device Adapter switches to 0 W before the gateway watchdog expires.",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "number",
+              "attr": "connection.tesvoltTelemetryStaleMs",
+              "label": "TESVOLT telemetry stale timeout (ms)",
+              "hidden": "data.protocol !== 'mqtt' || data.templateId !== 'ess.tesvolt.iotGateway.mqttV2'",
+              "default": 5000,
+              "min": 1000,
+              "max": 120000,
+              "helperText": "Default TESVOLT publication is 500 ms; increase only if the gateway adapters publish more slowly.",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.tesvoltTrackingDelayMs",
+              "label": "Setpoint tracking delay (ms)",
+              "hidden": "data.protocol !== 'mqtt' || data.templateId !== 'ess.tesvolt.iotGateway.mqttV2'",
+              "default": 3000,
+              "min": 500,
+              "max": 30000,
+              "helperText": "Delay before measured active power is compared with the command.",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'mqtt'",
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'mqtt'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "CANbus connection (SocketCAN / can-utils)",
+              "hidden": "data.protocol !== 'canbus'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.interface",
+              "label": "CAN interface (e.g. can0)",
+              "hidden": "data.protocol !== 'canbus'",
+              "default": "can0",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.candumpPath",
+              "label": "candump path",
+              "hidden": "data.protocol !== 'canbus'",
+              "default": "candump",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "text",
+              "attr": "connection.candumpArgs",
+              "label": "candump args (optional)",
+              "hidden": "data.protocol !== 'canbus'",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.cansendPath",
+              "label": "cansend path",
+              "hidden": "data.protocol !== 'canbus'",
+              "default": "cansend",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'canbus'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "1-Wire connection (Linux sysfs)",
+              "hidden": "data.protocol !== 'onewire'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.basePath",
+              "label": "Base path",
+              "hidden": "data.protocol !== 'onewire'",
+              "default": "/sys/bus/w1/devices",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.sensorId",
+              "label": "Sensor ID (e.g. 28-xxxx)",
+              "hidden": "data.protocol !== 'onewire'",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.file",
+              "label": "File",
+              "hidden": "data.protocol !== 'onewire'",
+              "default": "w1_slave",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "select",
+              "attr": "connection.parser",
+              "label": "Parser",
+              "hidden": "data.protocol !== 'onewire'",
+              "default": "ds18b20",
+              "options": [
+                {
+                  "label": "ds18b20",
+                  "value": "ds18b20"
+                },
+                {
+                  "label": "float",
+                  "value": "float"
+                },
+                {
+                  "label": "raw",
+                  "value": "raw"
+                }
+              ],
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'onewire'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "HTTP/JSON connection",
+              "hidden": "data.protocol !== 'http'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.baseUrl",
+              "label": "Base URL (e.g. http://host)",
+              "hidden": "data.protocol !== 'http'",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.timeoutMs",
+              "label": "Timeout (ms)",
+              "hidden": "data.protocol !== 'http'",
+              "default": 8000,
+              "min": 100,
+              "max": 60000,
+              "sm": 6,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.insecureTls",
+              "label": "Allow insecure TLS (self-signed)",
+              "hidden": "data.protocol !== 'http'",
+              "default": false,
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "text",
+              "attr": "connection.username",
+              "label": "Username (optional)",
+              "hidden": "data.protocol !== 'http'",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.password",
+              "label": "Password (optional)",
+              "hidden": "data.protocol !== 'http'",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'http'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "Technische Alternative CMI / CMI-S",
+              "hidden": "data.protocol !== 'taCmi'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.baseUrl",
+              "label": "CMI Base URL (e.g. http://192.168.1.50)",
+              "hidden": "data.protocol !== 'taCmi'",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.username",
+              "label": "CMI expert username",
+              "hidden": "data.protocol !== 'taCmi'",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.password",
+              "label": "CMI password",
+              "hidden": "data.protocol !== 'taCmi'",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "text",
+              "attr": "connection.nodes",
+              "label": "CAN nodes (1-62 or 1,3,7)",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": "1-62",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.groups",
+              "label": "API groups (empty = automatic)",
+              "hidden": "data.protocol !== 'taCmi'",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "number",
+              "attr": "connection.timeoutMs",
+              "label": "HTTP timeout (ms)",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": 10000,
+              "min": 500,
+              "max": 60000,
+              "sm": 4,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.includeDesignations",
+              "label": "Read TA designations",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": true,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.insecureTls",
+              "label": "Allow insecure TLS",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": false,
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.bridgeEnabled",
+              "label": "Enable NexoWatt Modbus bridge",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": true,
+              "sm": 4,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.bridgeHost",
+              "label": "Bridge bind address",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": "0.0.0.0",
+              "sm": 4,
+              "md": 3
+            },
+            {
+              "type": "port",
+              "attr": "connection.bridgePort",
+              "label": "Bridge port",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": 1502,
+              "sm": 2,
+              "md": 2
+            },
+            {
+              "type": "number",
+              "attr": "connection.bridgeUnitId",
+              "label": "Bridge Unit-ID",
+              "hidden": "data.protocol !== 'taCmi'",
+              "default": 1,
+              "min": 1,
+              "max": 247,
+              "sm": 2,
+              "md": 2
+            },
+            {
+              "type": "text",
+              "attr": "connection.bridgeMapJson",
+              "label": "Bridge channel map JSON (optional)",
+              "hidden": "data.protocol !== 'taCmi'",
+              "sm": 12,
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "CMI JSON is read-only and officially limited to one request per minute. For writes, configure the CMI as Modbus master to this NexoWatt server. Default: HR 0..63 / coils 0..63 NexoWatt→CMI; HR 100..163 / coils 100..163 CMI→NexoWatt.",
+              "hidden": "data.protocol !== 'taCmi'",
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'taCmi'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "UDP connection",
+              "hidden": "data.protocol !== 'udp'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.host",
+              "label": "Host / IP",
+              "hidden": "data.protocol !== 'udp'",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "port",
+              "attr": "connection.port",
+              "label": "Port",
+              "hidden": "data.protocol !== 'udp'",
+              "default": 7090,
+              "sm": 3,
+              "md": 2
+            },
+            {
+              "type": "number",
+              "attr": "connection.timeoutMs",
+              "label": "Timeout (ms)",
+              "hidden": "data.protocol !== 'udp'",
+              "default": 1500,
+              "min": 100,
+              "max": 60000,
+              "sm": 3,
+              "md": 2
+            },
+            {
+              "type": "number",
+              "attr": "connection.commandPauseMs",
+              "label": "Pause between commands (ms)",
+              "hidden": "data.protocol !== 'udp'",
+              "default": 0,
+              "min": 0,
+              "max": 60000,
+              "sm": 6,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "divider",
+              "hidden": "data.protocol !== 'udp'",
+              "newLine": true
+            },
+            {
+              "type": "staticText",
+              "text": "Speedwire (UDP multicast)",
+              "hidden": "data.protocol !== 'speedwire'",
+              "newLine": true
+            },
+            {
+              "type": "text",
+              "attr": "connection.multicastGroup",
+              "label": "Multicast group",
+              "hidden": "data.protocol !== 'speedwire'",
+              "default": "239.12.255.254",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "port",
+              "attr": "connection.port",
+              "label": "Port",
+              "hidden": "data.protocol !== 'speedwire'",
+              "default": 9522,
+              "sm": 3,
+              "md": 2
+            },
+            {
+              "type": "text",
+              "attr": "connection.interfaceAddress",
+              "label": "Interface address (optional)",
+              "hidden": "data.protocol !== 'speedwire'",
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "text",
+              "attr": "connection.host",
+              "label": "Filter source IP (optional)",
+              "hidden": "data.protocol !== 'speedwire'",
+              "sm": 6,
+              "md": 4,
+              "newLine": true
+            },
+            {
+              "type": "number",
+              "attr": "connection.staleTimeoutMs",
+              "label": "Stale timeout (ms)",
+              "hidden": "data.protocol !== 'speedwire'",
+              "default": 30000,
+              "min": 1000,
+              "max": 600000,
+              "sm": 6,
+              "md": 3,
+              "newLine": true
+            },
+            {
+              "type": "checkbox",
+              "attr": "connection.softStale",
+              "label": "Soft-stale (keep last values)",
+              "hidden": "data.protocol !== 'speedwire'",
+              "default": true,
+              "sm": 6,
+              "md": 4
+            },
+            {
+              "type": "staticText",
+              "text": "VARTA erweiterte Tabelle 14: TCP 502, Unit-ID 255 empfohlen, Offset 0; FC3/FC6. Messwerte und Steuerregister je Modell, Pextra ist zusätzliche Leistung. Max. eine Anfrage/s; link eine Anfrage/5 s. Kein automatisches Verlängern alter Befehle. Frequenzregelung nur nach Freischaltung durch VARTA; Alive-Zeitvorgaben separat klären. Entladezähler bleibt ohne NDA-Schlüssel verschlüsselt.",
+              "hidden": "!String(data.templateId || '').startsWith('ess.varta.')",
+              "newLine": true
+            },
+            {
+              "type": "checkbox",
+              "attr": "vartaExtendedEnabled",
+              "label": "VARTA: erweiterte Register lesen",
+              "default": true,
+              "hidden": "!String(data.templateId || '').startsWith('ess.varta.')",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "checkbox",
+              "attr": "vartaAllowControlWrites",
+              "label": "VARTA: dokumentierte Steuerregister zum Schreiben freigeben",
+              "default": false,
+              "hidden": "!String(data.templateId || '').startsWith('ess.varta.')",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "select",
+              "attr": "vartaLimitClass",
+              "label": "VARTA: bestätigte Leistungsklasse für UG/OG",
+              "default": "",
+              "options": [
+                {
+                  "label": "Unbestätigt – nur Nullgrenzen schreiben",
+                  "value": ""
+                },
+                {
+                  "label": "Haushalt – Mindestgrenze 500 W",
+                  "value": "residential"
+                },
+                {
+                  "label": "Gewerbe – Mindestgrenze 5000 W",
+                  "value": "commercial"
+                }
+              ],
+              "hidden": "!String(data.templateId || '').startsWith('ess.varta.')",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "checkbox",
+              "attr": "vartaLegacyUnpaddedToken",
+              "label": "VARTA: ältere Linux-EMS mit bestätigtem Token-Fehler (führende Hex-Null weglassen)",
+              "default": false,
+              "hidden": "!String(data.templateId || '').startsWith('ess.varta.') || data.templateId === 'ess.varta.link.modbusTcpV14'",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "checkbox",
+              "attr": "vartaFrequencyControlEnabled",
+              "label": "VARTA: Frequenzregelungsregister wurden vom Hersteller freigeschaltet",
+              "default": false,
+              "hidden": "!['ess.varta.pulseNeo.modbusTcpV14','ess.varta.flexStorage.modbusTcpV14'].includes(data.templateId)",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "checkbox",
+              "attr": "vartaAllowScaleFactorWrites",
+              "label": "VARTA: SF-Konfiguration ausdrücklich freigeben (keine Leistungssteuerung)",
+              "default": false,
+              "hidden": "!['ess.varta.pulseNeo.modbusTcpV14','ess.varta.flexStorage.modbusTcpV14'].includes(data.templateId)",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "staticText",
+              "text": "DEYE vorläufig: 9600 Baud, 8N1, Offset 0. Unit-ID 1 ist ein Vorschlag. Konfigurationsgrenzen sind keine Lade-/Entladebefehle; Remote-Steuerung bleibt gesperrt. Einheiten/Vorzeichen bei Inbetriebnahme bestätigen.",
+              "hidden": "!String(data.templateId || '').startsWith('ess.deye.')",
+              "newLine": true
+            },
+            {
+              "type": "checkbox",
+              "attr": "deyeAllowConfigurationWrites",
+              "label": "DEYE: vier Konfigurationsgrenzen ausdrücklich zum Schreiben freigeben",
+              "default": false,
+              "hidden": "!String(data.templateId || '').startsWith('ess.deye.')",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "checkbox",
+              "attr": "deyeReadRemoteRegisters",
+              "label": "DEYE dreiphasig: Remote-Register zusätzlich lesen (keine Steuerung)",
+              "default": false,
+              "hidden": "!String(data.templateId || '').startsWith('ess.deye.')",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "select",
+              "attr": "deyeBatteryPowerSign",
+              "label": "DEYE: bestätigte Batterie-Leistungsrichtung",
+              "default": "unconfirmed",
+              "options": [
+                {
+                  "value": "unconfirmed",
+                  "label": "Unbestätigt – Alias bleibt unbekannt"
+                },
+                {
+                  "value": "positiveDischarge",
+                  "label": "Positiv = Entladen"
+                },
+                {
+                  "value": "positiveCharge",
+                  "label": "Positiv = Laden"
+                }
+              ],
+              "hidden": "!String(data.templateId || '').startsWith('ess.deye.')",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "select",
+              "attr": "deyeBatteryPowerScale",
+              "label": "DEYE dreiphasig: bestätigte W je Register-590-Schritt",
+              "default": "unconfirmed",
+              "options": [
+                {
+                  "value": "unconfirmed",
+                  "label": "Unbestätigt"
+                },
+                {
+                  "value": "1",
+                  "label": "1 W"
+                },
+                {
+                  "value": "10",
+                  "label": "10 W"
+                }
+              ],
+              "hidden": "!String(data.templateId || '').startsWith('ess.deye.')",
+              "newLine": true,
+              "sm": 12
+            },
+            {
+              "type": "select",
+              "attr": "deyeGridPowerSign",
+              "label": "DEYE dreiphasig: bestätigte Netz-Leistungsrichtung",
+              "default": "unconfirmed",
+              "options": [
+                {
+                  "value": "unconfirmed",
+                  "label": "Unbestätigt – Alias bleibt unbekannt"
+                },
+                {
+                  "value": "positiveImport",
+                  "label": "Positiv = Bezug"
+                },
+                {
+                  "value": "positiveExport",
+                  "label": "Positiv = Einspeisung"
+                }
+              ],
+              "hidden": "!String(data.templateId || '').startsWith('ess.deye.')",
+              "newLine": true,
+              "sm": 12
+            }
+          ]
+        }
+      }
+    },
+    "advanced": {
+      "type": "panel",
+      "label": "Advanced",
+      "items": {
+        "_adv0": {
+          "type": "staticText",
+          "text": "Legacy settings: devicesJson was used by the old Materialize UI. The adapter will auto-migrate it into the new devices array when possible.",
+          "newLine": true
+        },
+        "devicesJson": {
+          "type": "jsonEditor",
+          "label": "devicesJson (legacy)",
+          "newLine": true,
+          "sm": 12
+        }
+      }
+    }
+  }
+}

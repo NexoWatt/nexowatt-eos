@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "primitive-feasibility-not-backup-tool-test",
+  "generatedAt": "2026-10-01T12:03:36.184699+00:00",
+  "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+  "checks": [
+    {
+      "id": "cms-aes256gcm-ecdh-roundtrip",
+      "passed": true
+    },
+    {
+      "id": "cms-pinned-signer-roundtrip",
+      "passed": true
+    },
+    {
+      "id": "cms-gcm-tamper-rejected",
+      "passed": true,
+      "outputFileMayExistOnFailure": true,
+      "outputBytesOnFailure": 803
+    },
+    {
+      "id": "cms-wrong-signer-rejected",
+      "passed": true
+    },
+    {
+      "id": "cms-wrong-recipient-key-rejected",
+      "passed": true
+    }
+  ],
+  "productionBackupImplemented": false,
+  "archiveOrFilesystemSnapshotTested": false,
+  "privateArtifactsRetained": false,
+  "limitation": "OpenSSL can create output before authentication/signature verification succeeds. Only root-private quarantine is allowed; never parse/extract failure output."
+}

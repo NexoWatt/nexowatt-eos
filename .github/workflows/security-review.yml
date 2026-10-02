@@ -1,0 +1,141 @@
+name: EOS security regression
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '*.sh'
+      - tasks.js
+      - versions.json
+      - package.json
+      - core/**
+      - security/**
+      - lib-npx/**
+      - install/**
+      - tests/**
+      - docs/**
+      - system/**
+      - tools/**
+      - sbom/**
+      - .github/workflows/**
+  push:
+    paths:
+      - '*.sh'
+      - tasks.js
+      - versions.json
+      - package.json
+      - core/**
+      - security/**
+      - lib-npx/**
+      - install/**
+      - tests/**
+      - docs/**
+      - system/**
+      - tools/**
+      - sbom/**
+      - .github/workflows/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eos-security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  architecture-checks:
+    name: Architecture contracts and partial source SBOM
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Install hash-locked development validators
+        run: |
+          python3 -c 'import platform, sys; assert sys.version_info[:2] == (3, 12) and platform.machine() == "x86_64"'
+          python3 -m venv "$RUNNER_TEMP/eos-architecture-venv"
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" -m pip install --require-hashes --only-binary=:all: --no-deps -r tools/architecture/requirements-linux-x86_64-py312.txt
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" -m pip check
+
+      - name: Run isolated positive and negative tool tests
+        run: |
+          for test_script in tests/architecture/*.test.py; do
+            "$RUNNER_TEMP/eos-architecture-venv/bin/python" "$test_script"
+          done
+
+      - name: Validate design links, examples and partial source inventory
+        run: |
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/architecture/check-blueprint.py
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/architecture/validate-contracts.py --examples
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/source_sbom.py --validate sbom/eos-installer-source.cdx.json
+          sbom_directory="$(mktemp -d "$RUNNER_TEMP/eos-source-sbom.XXXXXX")"
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/source_sbom.py --repo . --output "$sbom_directory/source.cdx.json" --coverage "$sbom_directory/source.coverage.json"
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/source_sbom.py --validate "$sbom_directory/source.cdx.json"
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/component_sources.py --inventory system/components/source-inventory.json --check-only
+          "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/component_sources.py --inventory system/components/source-inventory.json --output "$sbom_directory/components.cdx.json"
+
+      - name: State architecture verification scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          Architecture checks validate document consistency, offline JSON contracts and a partial pre-build source SBOM.
+          They do not verify runtime TLS, module isolation, license signatures, installation, UI compatibility or hardware behavior.
+          Product tests and CRA/IEC assessment remain separate release gates.
+          SUMMARY
+
+  focused-security-checks:
+    name: Build, syntax and isolated security regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout reviewed source
+        # actions/checkout v7.0.1; official tag and commit verified 2026-09-30.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Record source and tool versions
+        run: |
+          git rev-parse HEAD
+          node --version
+          python3 --version
+          bash --version
+
+      - name: Build distribution scripts without dependencies or deployment
+        run: node tasks --create
+
+      - name: Check source and generated shell syntax
+        run: |
+          for script in installer.sh installer_library.sh fix_installation.sh node-update.sh diag.sh security/*.sh dist/*.sh; do
+            bash -n "$script"
+          done
+
+      - name: Run isolated Node security tests
+        run: node --test tests/security/*.test.cjs
+
+      - name: Run isolated Python security tests
+        run: |
+          for test_script in tests/security/*.test.py; do
+            # Ownership fixtures require uid 0. Host/service operations are stubbed.
+            sudo env CODEX_PRIMARY_RUNTIME_NODE="$(command -v node)" python3 "$test_script"
+          done
+
+      - name: State verification scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          These checks cover the local build, shell syntax and focused isolated security regression tests.
+          No full installation, operating-system update, live SFTP deployment, EOS device integration or hardware test is performed by this job.
+          This workflow does not constitute a product release approval or CRA/IEC conformity assessment.
+          SUMMARY

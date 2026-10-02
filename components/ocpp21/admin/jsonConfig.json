@@ -1,0 +1,992 @@
+{
+  "type": "tabs",
+  "items": {
+    "general": {
+      "type": "panel",
+      "label": {
+        "en": "Connection and protocols",
+        "de": "Verbindung und Protokolle",
+        "ru": "Connection and protocols",
+        "pt": "Connection and protocols",
+        "nl": "Connection and protocols",
+        "fr": "Connection and protocols",
+        "it": "Connection and protocols",
+        "es": "Connection and protocols",
+        "pl": "Connection and protocols",
+        "uk": "Connection and protocols",
+        "zh-cn": "Connection and protocols"
+      },
+      "items": {
+        "port": {
+          "type": "number",
+          "label": {
+            "en": "WebSocket port",
+            "de": "WebSocket-Port",
+            "ru": "WebSocket port",
+            "pt": "WebSocket port",
+            "nl": "WebSocket port",
+            "fr": "WebSocket port",
+            "it": "WebSocket port",
+            "es": "WebSocket port",
+            "pl": "WebSocket port",
+            "uk": "WebSocket port",
+            "zh-cn": "WebSocket port"
+          },
+          "min": 1,
+          "max": 65535,
+          "default": 9220,
+          "help": {
+            "en": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "de": "Ladestationen verbinden sich mit ws://EOS-IP:Port/Identity.",
+            "ru": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "pt": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "nl": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "fr": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "it": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "es": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "pl": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "uk": "Charging stations connect to ws://EOS-IP:port/identity.",
+            "zh-cn": "Charging stations connect to ws://EOS-IP:port/identity."
+          }
+        },
+        "enable16": {
+          "type": "checkbox",
+          "label": {
+            "en": "Enable OCPP 1.6J",
+            "de": "OCPP 1.6J aktivieren",
+            "ru": "Enable OCPP 1.6J",
+            "pt": "Enable OCPP 1.6J",
+            "nl": "Enable OCPP 1.6J",
+            "fr": "Enable OCPP 1.6J",
+            "it": "Enable OCPP 1.6J",
+            "es": "Enable OCPP 1.6J",
+            "pl": "Enable OCPP 1.6J",
+            "uk": "Enable OCPP 1.6J",
+            "zh-cn": "Enable OCPP 1.6J"
+          },
+          "default": true
+        },
+        "enable201": {
+          "type": "checkbox",
+          "label": {
+            "en": "Enable OCPP 2.0.1",
+            "de": "OCPP 2.0.1 aktivieren",
+            "ru": "Enable OCPP 2.0.1",
+            "pt": "Enable OCPP 2.0.1",
+            "nl": "Enable OCPP 2.0.1",
+            "fr": "Enable OCPP 2.0.1",
+            "it": "Enable OCPP 2.0.1",
+            "es": "Enable OCPP 2.0.1",
+            "pl": "Enable OCPP 2.0.1",
+            "uk": "Enable OCPP 2.0.1",
+            "zh-cn": "Enable OCPP 2.0.1"
+          },
+          "default": true
+        },
+        "enable21": {
+          "type": "checkbox",
+          "label": {
+            "en": "Enable OCPP 2.1",
+            "de": "OCPP 2.1 aktivieren",
+            "ru": "Enable OCPP 2.1",
+            "pt": "Enable OCPP 2.1",
+            "nl": "Enable OCPP 2.1",
+            "fr": "Enable OCPP 2.1",
+            "it": "Enable OCPP 2.1",
+            "es": "Enable OCPP 2.1",
+            "pl": "Enable OCPP 2.1",
+            "uk": "Enable OCPP 2.1",
+            "zh-cn": "Enable OCPP 2.1"
+          },
+          "default": true
+        },
+        "heartbeatIntervalSec": {
+          "type": "number",
+          "label": {
+            "en": "Requested heartbeat interval (seconds)",
+            "de": "Angefordertes Heartbeat-Intervall (Sekunden)",
+            "ru": "Requested heartbeat interval (seconds)",
+            "pt": "Requested heartbeat interval (seconds)",
+            "nl": "Requested heartbeat interval (seconds)",
+            "fr": "Requested heartbeat interval (seconds)",
+            "it": "Requested heartbeat interval (seconds)",
+            "es": "Requested heartbeat interval (seconds)",
+            "pl": "Requested heartbeat interval (seconds)",
+            "uk": "Requested heartbeat interval (seconds)",
+            "zh-cn": "Requested heartbeat interval (seconds)"
+          },
+          "min": 10,
+          "max": 3600,
+          "default": 300,
+          "help": {
+            "en": "Returned in BootNotification response and used as the liveness baseline.",
+            "de": "Wird in der BootNotification-Antwort zurückgegeben und als Grundlage für die Verbindungsüberwachung genutzt.",
+            "ru": "Returned in BootNotification response and used as the liveness baseline.",
+            "pt": "Returned in BootNotification response and used as the liveness baseline.",
+            "nl": "Returned in BootNotification response and used as the liveness baseline.",
+            "fr": "Returned in BootNotification response and used as the liveness baseline.",
+            "it": "Returned in BootNotification response and used as the liveness baseline.",
+            "es": "Returned in BootNotification response and used as the liveness baseline.",
+            "pl": "Returned in BootNotification response and used as the liveness baseline.",
+            "uk": "Returned in BootNotification response and used as the liveness baseline.",
+            "zh-cn": "Returned in BootNotification response and used as the liveness baseline."
+          }
+        },
+        "identityAllowlist": {
+          "type": "chips",
+          "label": {
+            "en": "Charging-station identity allowlist",
+            "de": "Whitelist der Ladestations-Identitäten",
+            "ru": "Charging-station identity allowlist",
+            "pt": "Charging-station identity allowlist",
+            "nl": "Charging-station identity allowlist",
+            "fr": "Charging-station identity allowlist",
+            "it": "Charging-station identity allowlist",
+            "es": "Charging-station identity allowlist",
+            "pl": "Charging-station identity allowlist",
+            "uk": "Charging-station identity allowlist",
+            "zh-cn": "Charging-station identity allowlist"
+          },
+          "default": [],
+          "help": {
+            "en": "Empty means all identities are accepted.",
+            "de": "Leer bedeutet, dass alle Identitäten angenommen werden.",
+            "ru": "Empty means all identities are accepted.",
+            "pt": "Empty means all identities are accepted.",
+            "nl": "Empty means all identities are accepted.",
+            "fr": "Empty means all identities are accepted.",
+            "it": "Empty means all identities are accepted.",
+            "es": "Empty means all identities are accepted.",
+            "pl": "Empty means all identities are accepted.",
+            "uk": "Empty means all identities are accepted.",
+            "zh-cn": "Empty means all identities are accepted."
+          }
+        },
+        "callTimeoutSec": {
+          "type": "number",
+          "label": {
+            "en": "OCPP command timeout (seconds)",
+            "de": "Zeitüberschreitung für OCPP-Befehle (Sekunden)",
+            "ru": "OCPP command timeout (seconds)",
+            "pt": "OCPP command timeout (seconds)",
+            "nl": "OCPP command timeout (seconds)",
+            "fr": "OCPP command timeout (seconds)",
+            "it": "OCPP command timeout (seconds)",
+            "es": "OCPP command timeout (seconds)",
+            "pl": "OCPP command timeout (seconds)",
+            "uk": "OCPP command timeout (seconds)",
+            "zh-cn": "OCPP command timeout (seconds)"
+          },
+          "min": 5,
+          "max": 120,
+          "default": 20
+        }
+      }
+    },
+    "freshness": {
+      "type": "panel",
+      "label": {
+        "en": "EOS data freshness",
+        "de": "EOS-Datenaktualität",
+        "ru": "EOS data freshness",
+        "pt": "EOS data freshness",
+        "nl": "EOS data freshness",
+        "fr": "EOS data freshness",
+        "it": "EOS data freshness",
+        "es": "EOS data freshness",
+        "pl": "EOS data freshness",
+        "uk": "EOS data freshness",
+        "zh-cn": "EOS data freshness"
+      },
+      "items": {
+        "healthCheckIntervalSec": {
+          "type": "number",
+          "label": {
+            "en": "Health check interval (seconds)",
+            "de": "Prüfintervall der Zustandsüberwachung (Sekunden)",
+            "ru": "Health check interval (seconds)",
+            "pt": "Health check interval (seconds)",
+            "nl": "Health check interval (seconds)",
+            "fr": "Health check interval (seconds)",
+            "it": "Health check interval (seconds)",
+            "es": "Health check interval (seconds)",
+            "pl": "Health check interval (seconds)",
+            "uk": "Health check interval (seconds)",
+            "zh-cn": "Health check interval (seconds)"
+          },
+          "min": 2,
+          "max": 60,
+          "default": 5
+        },
+        "activityTimeoutSec": {
+          "type": "number",
+          "label": {
+            "en": "Minimum OCPP activity window (seconds)",
+            "de": "Mindestzeitfenster für OCPP-Aktivität (Sekunden)",
+            "ru": "Minimum OCPP activity window (seconds)",
+            "pt": "Minimum OCPP activity window (seconds)",
+            "nl": "Minimum OCPP activity window (seconds)",
+            "fr": "Minimum OCPP activity window (seconds)",
+            "it": "Minimum OCPP activity window (seconds)",
+            "es": "Minimum OCPP activity window (seconds)",
+            "pl": "Minimum OCPP activity window (seconds)",
+            "uk": "Minimum OCPP activity window (seconds)",
+            "zh-cn": "Minimum OCPP activity window (seconds)"
+          },
+          "min": 90,
+          "max": 3600,
+          "default": 90,
+          "help": {
+            "en": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "de": "health.activityFresh bleibt wahr, wenn innerhalb dieses Mindestzeitfensters irgendeine OCPP-Anfrage oder -Antwort empfangen wurde. Das wirksame Zeitfenster ist niemals kürzer als die konfigurierte Heartbeat-Toleranz.",
+            "ru": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "pt": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "nl": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "fr": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "it": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "es": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "pl": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "uk": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance.",
+            "zh-cn": "health.activityFresh remains true while any OCPP request or response is received within this minimum window. The effective window is never shorter than the configured heartbeat tolerance."
+          }
+        },
+        "stateRefreshIntervalSec": {
+          "type": "number",
+          "label": {
+            "en": "Republish unchanged datapoints (seconds)",
+            "de": "Unveränderte Datenpunkte erneut veröffentlichen (Sekunden)",
+            "ru": "Republish unchanged datapoints (seconds)",
+            "pt": "Republish unchanged datapoints (seconds)",
+            "nl": "Republish unchanged datapoints (seconds)",
+            "fr": "Republish unchanged datapoints (seconds)",
+            "it": "Republish unchanged datapoints (seconds)",
+            "es": "Republish unchanged datapoints (seconds)",
+            "pl": "Republish unchanged datapoints (seconds)",
+            "uk": "Republish unchanged datapoints (seconds)",
+            "zh-cn": "Republish unchanged datapoints (seconds)"
+          },
+          "min": 5,
+          "max": 300,
+          "default": 10,
+          "help": {
+            "en": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "de": "Aktualisiert bei einer online befindlichen Station die Zeitstempel zwischengespeicherter Status-, Meta-, Transaktions- und Zählerdatenpunkte. Echtzeit- und SoC-Datenpunkte werden einzeln nur so lange aktualisiert, wie ihr jeweiliger Quellwert noch aktuell ist; große Datenpunktmengen werden fair über mehrere Zyklen verteilt.",
+            "ru": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "pt": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "nl": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "fr": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "it": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "es": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "pl": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "uk": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles.",
+            "zh-cn": "Refreshes timestamps for cached status, metadata, transaction and counter datapoints while the station is online. Realtime and SoC datapoints are refreshed individually only while their exact source value remains fresh; large datapoint sets are rotated fairly across cycles."
+          }
+        },
+        "telemetryMaxAgeSec": {
+          "type": "number",
+          "label": {
+            "en": "Maximum meter-value age (seconds)",
+            "de": "Maximales Alter der Messwerte (Sekunden)",
+            "ru": "Maximum meter-value age (seconds)",
+            "pt": "Maximum meter-value age (seconds)",
+            "nl": "Maximum meter-value age (seconds)",
+            "fr": "Maximum meter-value age (seconds)",
+            "it": "Maximum meter-value age (seconds)",
+            "es": "Maximum meter-value age (seconds)",
+            "pl": "Maximum meter-value age (seconds)",
+            "uk": "Maximum meter-value age (seconds)",
+            "zh-cn": "Maximum meter-value age (seconds)"
+          },
+          "min": 15,
+          "max": 900,
+          "default": 90,
+          "help": {
+            "en": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "de": "Nach diesem Alter wird health.powerFresh auf false gesetzt. health.dataFresh wird ebenfalls false, sofern kein protokollseitig sicher abgeleiteter Nullwert aktiv ist; Heartbeat oder andere Messwerte verlängern die Leistungsaktualität nicht.",
+            "ru": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "pt": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "nl": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "fr": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "it": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "es": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "pl": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "uk": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness.",
+            "zh-cn": "After this age, health.powerFresh becomes false. health.dataFresh also becomes false unless a protocol-derived safe zero is active; heartbeat or unrelated meter values never extend power freshness."
+          }
+        },
+        "socMaxAgeSec": {
+          "type": "number",
+          "label": {
+            "en": "Maximum SoC age (seconds)",
+            "de": "Maximales SoC-Alter (Sekunden)",
+            "ru": "Maximum SoC age (seconds)",
+            "pt": "Maximum SoC age (seconds)",
+            "nl": "Maximum SoC age (seconds)",
+            "fr": "Maximum SoC age (seconds)",
+            "it": "Maximum SoC age (seconds)",
+            "es": "Maximum SoC age (seconds)",
+            "pl": "Maximum SoC age (seconds)",
+            "uk": "Maximum SoC age (seconds)",
+            "zh-cn": "Maximum SoC age (seconds)"
+          },
+          "min": 30,
+          "max": 3600,
+          "default": 300,
+          "help": {
+            "en": "Controls health.socFresh independently from power/current freshness.",
+            "de": "Steuert health.socFresh unabhängig von der Aktualität von Leistung und Strom.",
+            "ru": "Controls health.socFresh independently from power/current freshness.",
+            "pt": "Controls health.socFresh independently from power/current freshness.",
+            "nl": "Controls health.socFresh independently from power/current freshness.",
+            "fr": "Controls health.socFresh independently from power/current freshness.",
+            "it": "Controls health.socFresh independently from power/current freshness.",
+            "es": "Controls health.socFresh independently from power/current freshness.",
+            "pl": "Controls health.socFresh independently from power/current freshness.",
+            "uk": "Controls health.socFresh independently from power/current freshness.",
+            "zh-cn": "Controls health.socFresh independently from power/current freshness."
+          }
+        },
+        "heartbeatTimeoutFactor": {
+          "type": "number",
+          "label": {
+            "en": "Heartbeat timeout factor",
+            "de": "Heartbeat-Zeitüberschreitungsfaktor",
+            "ru": "Heartbeat timeout factor",
+            "pt": "Heartbeat timeout factor",
+            "nl": "Heartbeat timeout factor",
+            "fr": "Heartbeat timeout factor",
+            "it": "Heartbeat timeout factor",
+            "es": "Heartbeat timeout factor",
+            "pl": "Heartbeat timeout factor",
+            "uk": "Heartbeat timeout factor",
+            "zh-cn": "Heartbeat timeout factor"
+          },
+          "min": 1.2,
+          "max": 10,
+          "default": 2.5,
+          "help": {
+            "en": "Online timeout = requested heartbeat interval × factor.",
+            "de": "Online-Zeitüberschreitung = angefordertes Heartbeat-Intervall × Faktor.",
+            "ru": "Online timeout = requested heartbeat interval × factor.",
+            "pt": "Online timeout = requested heartbeat interval × factor.",
+            "nl": "Online timeout = requested heartbeat interval × factor.",
+            "fr": "Online timeout = requested heartbeat interval × factor.",
+            "it": "Online timeout = requested heartbeat interval × factor.",
+            "es": "Online timeout = requested heartbeat interval × factor.",
+            "pl": "Online timeout = requested heartbeat interval × factor.",
+            "uk": "Online timeout = requested heartbeat interval × factor.",
+            "zh-cn": "Online timeout = requested heartbeat interval × factor."
+          }
+        },
+        "activeRefresh": {
+          "type": "checkbox",
+          "label": {
+            "en": "Actively request fresh telemetry",
+            "de": "Aktuelle Telemetrie aktiv anfordern",
+            "ru": "Actively request fresh telemetry",
+            "pt": "Actively request fresh telemetry",
+            "nl": "Actively request fresh telemetry",
+            "fr": "Actively request fresh telemetry",
+            "it": "Actively request fresh telemetry",
+            "es": "Actively request fresh telemetry",
+            "pl": "Actively request fresh telemetry",
+            "uk": "Actively request fresh telemetry",
+            "zh-cn": "Actively request fresh telemetry"
+          },
+          "default": true,
+          "help": {
+            "en": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "de": "Wenn Messwerte veralten, fordert der Adapter MeterValues an. Die Anfragen sind begrenzt und verzögern niemals die OCPP-Antwort.",
+            "ru": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "pt": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "nl": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "fr": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "it": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "es": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "pl": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "uk": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement.",
+            "zh-cn": "When telemetry becomes stale the adapter asks the station for MeterValues. Requests are rate-limited and never delay the OCPP acknowledgement."
+          }
+        },
+        "activeRefreshIntervalSec": {
+          "type": "number",
+          "label": {
+            "en": "Active refresh interval (seconds)",
+            "de": "Intervall der aktiven Aktualisierung (Sekunden)",
+            "ru": "Active refresh interval (seconds)",
+            "pt": "Active refresh interval (seconds)",
+            "nl": "Active refresh interval (seconds)",
+            "fr": "Active refresh interval (seconds)",
+            "it": "Active refresh interval (seconds)",
+            "es": "Active refresh interval (seconds)",
+            "pl": "Active refresh interval (seconds)",
+            "uk": "Active refresh interval (seconds)",
+            "zh-cn": "Active refresh interval (seconds)"
+          },
+          "min": 30,
+          "max": 300,
+          "default": 60,
+          "help": {
+            "en": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "de": "Mindestintervall der aktiven Aktualisierung. Für Ladestationen mit empfindlicher Firmware werden 60 Sekunden empfohlen.",
+            "ru": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "pt": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "nl": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "fr": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "it": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "es": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "pl": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "uk": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware.",
+            "zh-cn": "Minimum interval for active refresh. 60 seconds is recommended for stations with sensitive firmware."
+          }
+        },
+        "refreshMeterValues": {
+          "type": "checkbox",
+          "label": {
+            "en": "Request MeterValues",
+            "de": "MeterValues anfordern",
+            "ru": "Request MeterValues",
+            "pt": "Request MeterValues",
+            "nl": "Request MeterValues",
+            "fr": "Request MeterValues",
+            "it": "Request MeterValues",
+            "es": "Request MeterValues",
+            "pl": "Request MeterValues",
+            "uk": "Request MeterValues",
+            "zh-cn": "Request MeterValues"
+          },
+          "default": true
+        },
+        "refreshStatusNotification": {
+          "type": "checkbox",
+          "label": {
+            "en": "Request StatusNotification",
+            "de": "StatusNotification anfordern",
+            "ru": "Request StatusNotification",
+            "pt": "Request StatusNotification",
+            "nl": "Request StatusNotification",
+            "fr": "Request StatusNotification",
+            "it": "Request StatusNotification",
+            "es": "Request StatusNotification",
+            "pl": "Request StatusNotification",
+            "uk": "Request StatusNotification",
+            "zh-cn": "Request StatusNotification"
+          },
+          "default": false,
+          "help": {
+            "en": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "de": "Standardmäßig deaktiviert, da wiederholte StatusNotification-Trigger bei manchen Stations-Firmwares Probleme verursachen können.",
+            "ru": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "pt": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "nl": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "fr": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "it": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "es": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "pl": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "uk": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware.",
+            "zh-cn": "Disabled by default because repeated StatusNotification triggers can cause problems with some station firmware."
+          }
+        },
+        "zeroPowerWhenIdle": {
+          "type": "checkbox",
+          "label": {
+            "en": "Set measured power/current to zero on definite idle/end states",
+            "de": "Gemessene Leistung/Strom bei eindeutigem Leerlauf/Ladeende auf null setzen",
+            "ru": "Set measured power/current to zero on definite idle/end states",
+            "pt": "Set measured power/current to zero on definite idle/end states",
+            "nl": "Set measured power/current to zero on definite idle/end states",
+            "fr": "Set measured power/current to zero on definite idle/end states",
+            "it": "Set measured power/current to zero on definite idle/end states",
+            "es": "Set measured power/current to zero on definite idle/end states",
+            "pl": "Set measured power/current to zero on definite idle/end states",
+            "uk": "Set measured power/current to zero on definite idle/end states",
+            "zh-cn": "Set measured power/current to zero on definite idle/end states"
+          },
+          "default": true,
+          "help": {
+            "en": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "de": "Es werden nur Protokollzustände verwendet, die eindeutig keine Energieübertragung bedeuten. Veraltete Werte während eines aktiven Ladevorgangs werden niemals stillschweigend auf null gesetzt.",
+            "ru": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "pt": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "nl": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "fr": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "it": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "es": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "pl": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "uk": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero.",
+            "zh-cn": "Only protocol states that definitively mean no energy transfer are used. Stale active charging values are never silently converted to zero."
+          }
+        },
+        "maxConnectorsPerRefresh": {
+          "type": "number",
+          "label": {
+            "en": "Maximum connectors per refresh cycle",
+            "de": "Maximale Anschlüsse je Aktualisierungszyklus",
+            "ru": "Maximum connectors per refresh cycle",
+            "pt": "Maximum connectors per refresh cycle",
+            "nl": "Maximum connectors per refresh cycle",
+            "fr": "Maximum connectors per refresh cycle",
+            "it": "Maximum connectors per refresh cycle",
+            "es": "Maximum connectors per refresh cycle",
+            "pl": "Maximum connectors per refresh cycle",
+            "uk": "Maximum connectors per refresh cycle",
+            "zh-cn": "Maximum connectors per refresh cycle"
+          },
+          "min": 1,
+          "max": 32,
+          "default": 2,
+          "help": {
+            "en": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "de": "Begrenzt die TriggerMessage-Anfragen je Zyklus. Bei mehr Anschlüssen wechselt der Adapter fair durch alle Anschlüsse.",
+            "ru": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "pt": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "nl": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "fr": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "it": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "es": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "pl": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "uk": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors.",
+            "zh-cn": "Limits TriggerMessage requests per cycle. When more connectors exist, the adapter rotates fairly through all connectors."
+          }
+        },
+        "maxRepublishedStates": {
+          "type": "number",
+          "label": {
+            "en": "Maximum datapoints republished per station/cycle",
+            "de": "Maximale erneut veröffentlichte Datenpunkte je Station/Zyklus",
+            "ru": "Maximum datapoints republished per station/cycle",
+            "pt": "Maximum datapoints republished per station/cycle",
+            "nl": "Maximum datapoints republished per station/cycle",
+            "fr": "Maximum datapoints republished per station/cycle",
+            "it": "Maximum datapoints republished per station/cycle",
+            "es": "Maximum datapoints republished per station/cycle",
+            "pl": "Maximum datapoints republished per station/cycle",
+            "uk": "Maximum datapoints republished per station/cycle",
+            "zh-cn": "Maximum datapoints republished per station/cycle"
+          },
+          "min": 25,
+          "max": 2000,
+          "default": 100,
+          "help": {
+            "en": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "de": "Begrenzt die State-Schreibvorgänge je Zyklus. Datenpunkte oberhalb des Limits werden nicht ausgelassen, sondern in den folgenden Zyklen rotierend aktualisiert.",
+            "ru": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "pt": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "nl": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "fr": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "it": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "es": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "pl": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "uk": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles.",
+            "zh-cn": "Limits state writes per cycle. Datapoints beyond the limit are not skipped permanently; they are refreshed in rotating subsequent cycles."
+          }
+        }
+      }
+    },
+    "structure": {
+      "type": "panel",
+      "label": {
+        "en": "Datapoint structure",
+        "de": "Datenpunktstruktur",
+        "ru": "Datapoint structure",
+        "pt": "Datapoint structure",
+        "nl": "Datapoint structure",
+        "fr": "Datapoint structure",
+        "it": "Datapoint structure",
+        "es": "Datapoint structure",
+        "pl": "Datapoint structure",
+        "uk": "Datapoint structure",
+        "zh-cn": "Datapoint structure"
+      },
+      "items": {
+        "connectorDetails": {
+          "type": "checkbox",
+          "label": {
+            "en": "Create flat measurements per connector",
+            "de": "Flache Messwerte je Ladeanschluss anlegen",
+            "ru": "Create flat measurements per connector",
+            "pt": "Create flat measurements per connector",
+            "nl": "Create flat measurements per connector",
+            "fr": "Create flat measurements per connector",
+            "it": "Create flat measurements per connector",
+            "es": "Create flat measurements per connector",
+            "pl": "Create flat measurements per connector",
+            "uk": "Create flat measurements per connector",
+            "zh-cn": "Create flat measurements per connector"
+          },
+          "default": false,
+          "help": {
+            "en": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "de": "Für Wallboxen mit nur einem Ladeanschluss standardmäßig deaktiviert. Nur aktivieren, wenn eine Mehrfach-Ladestation getrennte Anschlussdiagnosen benötigt; das EOS-Lademanagement nutzt die kompakten Messwerte auf Stationsebene.",
+            "ru": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "pt": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "nl": "Standaard uitgeschakeld voor wallboxen met één aansluiting. Alleen inschakelen als een laadstation met meerdere aansluitingen afzonderlijke diagnose per aansluiting nodig heeft; het EOS-laadmanagement gebruikt de compacte meetwaarden op stationsniveau.",
+            "fr": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "it": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "es": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "pl": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "uk": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements.",
+            "zh-cn": "Disabled by default for single-connector wallboxes. Enable only when a multi-connector station requires separate connector diagnostics; the EOS load management uses the compact station-level measurements."
+          }
+        },
+        "cleanupLegacyObjects": {
+          "type": "checkbox",
+          "label": {
+            "en": "Remove obsolete deep datapoint branches",
+            "de": "Veraltete tiefe Datenpunktzweige entfernen",
+            "ru": "Remove obsolete deep datapoint branches",
+            "pt": "Remove obsolete deep datapoint branches",
+            "nl": "Remove obsolete deep datapoint branches",
+            "fr": "Remove obsolete deep datapoint branches",
+            "it": "Remove obsolete deep datapoint branches",
+            "es": "Remove obsolete deep datapoint branches",
+            "pl": "Remove obsolete deep datapoint branches",
+            "uk": "Remove obsolete deep datapoint branches",
+            "zh-cn": "Remove obsolete deep datapoint branches"
+          },
+          "default": true,
+          "help": {
+            "en": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "de": "Entfernt die vom Adapter erzeugten Zweige main, meterValues, evse, evChargingNeeds, ocpp und dm, sobald die kompakte Struktur bereit ist.",
+            "ru": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "pt": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "nl": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "fr": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "it": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "es": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "pl": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "uk": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready.",
+            "zh-cn": "Removes adapter-generated main, meterValues, evse, evChargingNeeds, ocpp and dm branches after the compact structure is ready."
+          }
+        },
+        "createTechnicalAliases": {
+          "type": "checkbox",
+          "label": {
+            "en": "Create additional technical compatibility aliases",
+            "de": "Zusätzliche technische Kompatibilitäts-Aliase anlegen",
+            "ru": "Create additional technical compatibility aliases",
+            "pt": "Create additional technical compatibility aliases",
+            "nl": "Create additional technical compatibility aliases",
+            "fr": "Create additional technical compatibility aliases",
+            "it": "Create additional technical compatibility aliases",
+            "es": "Create additional technical compatibility aliases",
+            "pl": "Create additional technical compatibility aliases",
+            "uk": "Create additional technical compatibility aliases",
+            "zh-cn": "Create additional technical compatibility aliases"
+          },
+          "default": false
+        },
+        "captureRawMessages": {
+          "type": "checkbox",
+          "label": {
+            "en": "Store last raw OCPP messages",
+            "de": "Letzte rohe OCPP-Nachrichten speichern",
+            "ru": "Store last raw OCPP messages",
+            "pt": "Store last raw OCPP messages",
+            "nl": "Store last raw OCPP messages",
+            "fr": "Store last raw OCPP messages",
+            "it": "Store last raw OCPP messages",
+            "es": "Store last raw OCPP messages",
+            "pl": "Store last raw OCPP messages",
+            "uk": "Store last raw OCPP messages",
+            "zh-cn": "Store last raw OCPP messages"
+          },
+          "default": false,
+          "help": {
+            "en": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "de": "Erzeugt einen kompakten Diagnoseordner advanced. Standardmäßig deaktiviert, um Objektzahl und Schreiblast zu reduzieren.",
+            "ru": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "pt": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "nl": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "fr": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "it": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "es": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "pl": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "uk": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load.",
+            "zh-cn": "Creates one compact advanced diagnostics folder. Disabled by default to reduce object count and write load."
+          }
+        },
+        "captureDeviceModelReport": {
+          "type": "checkbox",
+          "label": {
+            "en": "Store last Device Model report as JSON",
+            "de": "Letzten Device-Model-Bericht als JSON speichern",
+            "ru": "Store last Device Model report as JSON",
+            "pt": "Store last Device Model report as JSON",
+            "nl": "Store last Device Model report as JSON",
+            "fr": "Store last Device Model report as JSON",
+            "it": "Store last Device Model report as JSON",
+            "es": "Store last Device Model report as JSON",
+            "pl": "Store last Device Model report as JSON",
+            "uk": "Store last Device Model report as JSON",
+            "zh-cn": "Store last Device Model report as JSON"
+          },
+          "default": false
+        },
+        "maxRawPayloadBytes": {
+          "type": "number",
+          "label": {
+            "en": "Maximum raw payload size (bytes)",
+            "de": "Maximale Größe roher Nutzdaten (Byte)",
+            "ru": "Maximum raw payload size (bytes)",
+            "pt": "Maximum raw payload size (bytes)",
+            "nl": "Maximum raw payload size (bytes)",
+            "fr": "Maximum raw payload size (bytes)",
+            "it": "Maximum raw payload size (bytes)",
+            "es": "Maximum raw payload size (bytes)",
+            "pl": "Maximum raw payload size (bytes)",
+            "uk": "Maximum raw payload size (bytes)",
+            "zh-cn": "Maximum raw payload size (bytes)"
+          },
+          "min": 4096,
+          "max": 1048576,
+          "default": 65536
+        }
+      }
+    },
+    "stability": {
+      "type": "panel",
+      "label": {
+        "en": "Charging stability",
+        "de": "Ladestabilität",
+        "ru": "Charging stability",
+        "pt": "Charging stability",
+        "nl": "Charging stability",
+        "fr": "Charging stability",
+        "it": "Charging stability",
+        "es": "Charging stability",
+        "pl": "Charging stability",
+        "uk": "Charging stability",
+        "zh-cn": "Charging stability"
+      },
+      "items": {
+        "zeroLimitBehavior": {
+          "type": "select",
+          "label": {
+            "en": "Behaviour when charging limit is 0",
+            "de": "Verhalten bei Ladegrenze 0",
+            "ru": "Behaviour when charging limit is 0",
+            "pt": "Behaviour when charging limit is 0",
+            "nl": "Behaviour when charging limit is 0",
+            "fr": "Behaviour when charging limit is 0",
+            "it": "Behaviour when charging limit is 0",
+            "es": "Behaviour when charging limit is 0",
+            "pl": "Behaviour when charging limit is 0",
+            "uk": "Behaviour when charging limit is 0",
+            "zh-cn": "Behaviour when charging limit is 0"
+          },
+          "options": [
+            {
+              "label": {
+                "en": "Keep last valid limit (recommended)",
+                "de": "Letzte gültige Grenze beibehalten (empfohlen)",
+                "ru": "Keep last valid limit (recommended)",
+                "pt": "Keep last valid limit (recommended)",
+                "nl": "Keep last valid limit (recommended)",
+                "fr": "Keep last valid limit (recommended)",
+                "it": "Keep last valid limit (recommended)",
+                "es": "Keep last valid limit (recommended)",
+                "pl": "Keep last valid limit (recommended)",
+                "uk": "Keep last valid limit (recommended)",
+                "zh-cn": "Keep last valid limit (recommended)"
+              },
+              "value": "keepLast"
+            },
+            {
+              "label": {
+                "en": "Clear NexoWatt charging profile",
+                "de": "NexoWatt-Ladeprofil löschen",
+                "ru": "Clear NexoWatt charging profile",
+                "pt": "Clear NexoWatt charging profile",
+                "nl": "Clear NexoWatt charging profile",
+                "fr": "Clear NexoWatt charging profile",
+                "it": "Clear NexoWatt charging profile",
+                "es": "Clear NexoWatt charging profile",
+                "pl": "Clear NexoWatt charging profile",
+                "uk": "Clear NexoWatt charging profile",
+                "zh-cn": "Clear NexoWatt charging profile"
+              },
+              "value": "clearProfile"
+            },
+            {
+              "label": {
+                "en": "Send explicit zero profile (may interrupt charging)",
+                "de": "Explizites Nullprofil senden (kann Laden unterbrechen)",
+                "ru": "Send explicit zero profile (may interrupt charging)",
+                "pt": "Send explicit zero profile (may interrupt charging)",
+                "nl": "Send explicit zero profile (may interrupt charging)",
+                "fr": "Send explicit zero profile (may interrupt charging)",
+                "it": "Send explicit zero profile (may interrupt charging)",
+                "es": "Send explicit zero profile (may interrupt charging)",
+                "pl": "Send explicit zero profile (may interrupt charging)",
+                "uk": "Send explicit zero profile (may interrupt charging)",
+                "zh-cn": "Send explicit zero profile (may interrupt charging)"
+              },
+              "value": "sendZero"
+            }
+          ],
+          "default": "keepLast",
+          "help": {
+            "en": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "de": "Die Standardeinstellung verhindert, dass eine kurzzeitige 0 aus der Regelung einen Ladevorgang pausiert oder beendet. Zum Beenden ist der ausdrückliche Stopp-Befehl vorgesehen.",
+            "ru": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "pt": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "nl": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "fr": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "it": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "es": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "pl": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "uk": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction.",
+            "zh-cn": "The default prevents a temporary 0 from the control loop from suspending or ending a transaction. Use the explicit stop command to stop a transaction."
+          }
+        },
+        "minimumChargingCurrentA": {
+          "type": "number",
+          "label": {
+            "en": "Minimum charging current per phase (A)",
+            "de": "Mindestladestrom je Phase (A)",
+            "ru": "Minimum charging current per phase (A)",
+            "pt": "Minimum charging current per phase (A)",
+            "nl": "Minimum charging current per phase (A)",
+            "fr": "Minimum charging current per phase (A)",
+            "it": "Minimum charging current per phase (A)",
+            "es": "Minimum charging current per phase (A)",
+            "pl": "Minimum charging current per phase (A)",
+            "uk": "Minimum charging current per phase (A)",
+            "zh-cn": "Minimum charging current per phase (A)"
+          },
+          "min": 1,
+          "max": 32,
+          "default": 6
+        },
+        "nominalVoltageV": {
+          "type": "number",
+          "label": {
+            "en": "Nominal phase voltage for W limits (V)",
+            "de": "Nennspannung je Phase für W-Grenzen (V)",
+            "ru": "Nominal phase voltage for W limits (V)",
+            "pt": "Nominal phase voltage for W limits (V)",
+            "nl": "Nominal phase voltage for W limits (V)",
+            "fr": "Nominal phase voltage for W limits (V)",
+            "it": "Nominal phase voltage for W limits (V)",
+            "es": "Nominal phase voltage for W limits (V)",
+            "pl": "Nominal phase voltage for W limits (V)",
+            "uk": "Nominal phase voltage for W limits (V)",
+            "zh-cn": "Nominal phase voltage for W limits (V)"
+          },
+          "min": 100,
+          "max": 300,
+          "default": 230
+        },
+        "smartChargingMinIntervalMs": {
+          "type": "number",
+          "label": {
+            "en": "Minimum interval between charging profiles (ms)",
+            "de": "Mindestabstand zwischen Ladeprofilen (ms)",
+            "ru": "Minimum interval between charging profiles (ms)",
+            "pt": "Minimum interval between charging profiles (ms)",
+            "nl": "Minimum interval between charging profiles (ms)",
+            "fr": "Minimum interval between charging profiles (ms)",
+            "it": "Minimum interval between charging profiles (ms)",
+            "es": "Minimum interval between charging profiles (ms)",
+            "pl": "Minimum interval between charging profiles (ms)",
+            "uk": "Minimum interval between charging profiles (ms)",
+            "zh-cn": "Minimum interval between charging profiles (ms)"
+          },
+          "min": 1000,
+          "max": 60000,
+          "default": 5000
+        },
+        "smartChargingDeadbandW": {
+          "type": "number",
+          "label": {
+            "en": "Charging profile deadband (W)",
+            "de": "Totband für Ladeprofile (W)",
+            "ru": "Charging profile deadband (W)",
+            "pt": "Charging profile deadband (W)",
+            "nl": "Charging profile deadband (W)",
+            "fr": "Charging profile deadband (W)",
+            "it": "Charging profile deadband (W)",
+            "es": "Charging profile deadband (W)",
+            "pl": "Charging profile deadband (W)",
+            "uk": "Charging profile deadband (W)",
+            "zh-cn": "Charging profile deadband (W)"
+          },
+          "min": 0,
+          "max": 5000,
+          "default": 100
+        },
+        "smartChargingDeadbandA": {
+          "type": "number",
+          "label": {
+            "en": "Charging profile deadband (A)",
+            "de": "Totband für Ladeprofile (A)",
+            "ru": "Charging profile deadband (A)",
+            "pt": "Charging profile deadband (A)",
+            "nl": "Charging profile deadband (A)",
+            "fr": "Charging profile deadband (A)",
+            "it": "Charging profile deadband (A)",
+            "es": "Charging profile deadband (A)",
+            "pl": "Charging profile deadband (A)",
+            "uk": "Charging profile deadband (A)",
+            "zh-cn": "Charging profile deadband (A)"
+          },
+          "min": 0,
+          "max": 10,
+          "default": 0.2
+        },
+        "smartChargingConnectorId": {
+          "type": "number",
+          "label": {
+            "en": "OCPP 1.6 connector for smart charging",
+            "de": "OCPP-1.6-Anschluss für Smart Charging",
+            "ru": "OCPP 1.6 connector for smart charging",
+            "pt": "OCPP 1.6 connector for smart charging",
+            "nl": "OCPP 1.6 connector for smart charging",
+            "fr": "OCPP 1.6 connector for smart charging",
+            "it": "OCPP 1.6 connector for smart charging",
+            "es": "OCPP 1.6 connector for smart charging",
+            "pl": "OCPP 1.6 connector for smart charging",
+            "uk": "OCPP 1.6 connector for smart charging",
+            "zh-cn": "OCPP 1.6 connector for smart charging"
+          },
+          "min": 0,
+          "max": 64,
+          "default": 1
+        },
+        "maxDeferredTasks": {
+          "type": "number",
+          "label": {
+            "en": "Maximum deferred processing queue",
+            "de": "Maximale nachgelagerte Verarbeitungswarteschlange",
+            "ru": "Maximum deferred processing queue",
+            "pt": "Maximum deferred processing queue",
+            "nl": "Maximum deferred processing queue",
+            "fr": "Maximum deferred processing queue",
+            "it": "Maximum deferred processing queue",
+            "es": "Maximum deferred processing queue",
+            "pl": "Maximum deferred processing queue",
+            "uk": "Maximum deferred processing queue",
+            "zh-cn": "Maximum deferred processing queue"
+          },
+          "min": 25,
+          "max": 5000,
+          "default": 250,
+          "help": {
+            "en": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "de": "OCPP-Antworten werden sofort gesendet; die Datenpunktverarbeitung läuft nachgelagert. Verwerfbare Telemetrie oberhalb des Limits wird unter health.queueDropped gezählt.",
+            "ru": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "pt": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "nl": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "fr": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "it": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "es": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "pl": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "uk": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped.",
+            "zh-cn": "OCPP replies are sent immediately; datapoint processing runs behind them. Excess droppable telemetry is counted in health.queueDropped."
+          }
+        }
+      }
+    }
+  }
+}

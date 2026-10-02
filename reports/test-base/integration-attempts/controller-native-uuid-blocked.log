@@ -1,0 +1,58 @@
+▶ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS
+  ✖ ordinary setup completes and preserves mandatory TLS configuration (2125.877243ms)
+✖ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS (6347.246458ms)
+ℹ  Unable to increase LUA script timeout: NOPERM User eos-runtime has no permissions to run the 'config|set' command
+ Unable to enable Expiry Keyspace events from Redis Server: NOPERM User eos-runtime has no permissions to run the 'config|set' command
+ Cannot read system.config: null (OK when migrating or restoring)
+host.eos-core-test Plugin sentry Failed to initialize plugin: Sentry Plugin disabled for this process because CI system detected
+Successfully migrated 2 objects to Redis Sets
+object "0_userdata.0.example_state" created
+object "0_userdata.0" created
+object "alias.0" created
+object "system.certificates" created
+object "system.licenses" created
+object "system.repositories" created
+object "system.config" created
+object "enum.functions" created
+object "enum.rooms" created
+object "system.group.user" created
+object "system.group.administrator" created
+object "_design/system" created
+object system.user.admin created
+Uncaught Rejection: SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_interface_addresses returned Unknown system error 1 (Unknown system error 1)
+    at Object.networkInterfaces (node:os:218:16)
+    at uuid (file:///tmp/eos-controller-runtime-ZOj2le/app/node_modules/@iobroker/js-controller-common-db/build/esm/lib/common/tools.js:418:27)
+    at updateUuid (file:///tmp/eos-controller-runtime-ZOj2le/app/node_modules/@iobroker/js-controller-common-db/build/esm/lib/common/tools.js:463:23)
+    at Module.createUuid (file:///tmp/eos-controller-runtime-ZOj2le/app/node_modules/@iobroker/js-controller-common-db/build/esm/lib/common/tools.js:537:16)
+    at async Setup.dbSetup (file:///tmp/eos-controller-runtime-ZOj2le/app/node_modules/@iobroker/js-controller-cli/build/esm/lib/setup/setupSetup.js:233:13)
+
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6502.135553
+
+✖ failing tests:
+
+test at tests/system/transport-controller.integration.cjs:100:13
+✖ ordinary setup completes and preserves mandatory TLS configuration (2125.877243ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  6 !== 0
+  
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:103:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:100:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 6,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

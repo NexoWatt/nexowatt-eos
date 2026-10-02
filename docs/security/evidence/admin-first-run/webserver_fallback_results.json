@@ -1,0 +1,48 @@
+{
+  "executed_at": "2026-09-30T19:13:00.630Z",
+  "runtime": "v24.19.0",
+  "kind": "actual package module executed with HTTP/HTTPS and certificate-provider stubs; no real TLS handshake or listener",
+  "package": "@iobroker/webserver@3.0.2",
+  "source_sha256": "de9a88e7d2669c31bcca1baedfe3379c5d15be1454e28f5a5d87a8173e2514f5",
+  "cases": [
+    {
+      "id": "secure_true_null_certificate_result",
+      "configuration": {
+        "secure": true,
+        "leCollection": false
+      },
+      "calls": [
+        "http.createServer"
+      ],
+      "result": {
+        "kind": "http-server-stub"
+      }
+    },
+    {
+      "id": "secure_true_unresolved_pem_paths",
+      "configuration": {
+        "secure": true,
+        "leCollection": false
+      },
+      "calls": [
+        "http.createServer"
+      ],
+      "result": {
+        "kind": "http-server-stub"
+      }
+    },
+    {
+      "id": "secure_true_certificate_options",
+      "configuration": {
+        "secure": true,
+        "leCollection": false
+      },
+      "calls": [
+        "https.createServer"
+      ],
+      "result": {
+        "kind": "https-server-stub"
+      }
+    }
+  ]
+}

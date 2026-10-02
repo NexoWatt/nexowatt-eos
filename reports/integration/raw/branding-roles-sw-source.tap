@@ -1,0 +1,118 @@
+TAP version 13
+# Subtest: worker installs without prefetching login-protected content
+ok 1 - worker installs without prefetching login-protected content
+  ---
+  duration_ms: 80.988699
+  type: 'test'
+  ...
+# Subtest: activation deletes legacy EOS caches before controlling clients
+ok 2 - activation deletes legacy EOS caches before controlling clients
+  ---
+  duration_ms: 266.615779
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /
+ok 3 - offline protected route cannot use a previous session cache: /
+  ---
+  duration_ms: 45.345761
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /index.html
+ok 4 - offline protected route cannot use a previous session cache: /index.html
+  ---
+  duration_ms: 8.555096
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /static/index.html
+ok 5 - offline protected route cannot use a previous session cache: /static/index.html
+  ---
+  duration_ms: 2.610848
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /api/state
+ok 6 - offline protected route cannot use a previous session cache: /api/state
+  ---
+  duration_ms: 17.612233
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /api/export.json
+ok 7 - offline protected route cannot use a previous session cache: /api/export.json
+  ---
+  duration_ms: 16.736278
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /config
+ok 8 - offline protected route cannot use a previous session cache: /config
+  ---
+  duration_ms: 46.329087
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /state/live
+ok 9 - offline protected route cannot use a previous session cache: /state/live
+  ---
+  duration_ms: 227.827014
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /static/auth.js?token=fixture
+ok 10 - offline protected route cannot use a previous session cache: /static/auth.js?token=fixture
+  ---
+  duration_ms: 15.921817
+  type: 'test'
+  ...
+# Subtest: authentication denial is returned directly without cache fallback
+ok 11 - authentication denial is returned directly without cache fallback
+  ---
+  duration_ms: 88.75174
+  type: 'test'
+  ...
+# Subtest: only successful public same-origin assets are cached
+ok 12 - only successful public same-origin assets are cached
+  ---
+  duration_ms: 56.972153
+  type: 'test'
+  ...
+# Subtest: public asset denied response never enters cache
+ok 13 - public asset denied response never enters cache
+  ---
+  duration_ms: 7.205737
+  type: 'test'
+  ...
+# Subtest: public asset redirect response never enters cache
+ok 14 - public asset redirect response never enters cache
+  ---
+  duration_ms: 9.838888
+  type: 'test'
+  ...
+# Subtest: public asset offline fallback is confined to current cache
+ok 15 - public asset offline fallback is confined to current cache
+  ---
+  duration_ms: 8.411019
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: GET https://other.test/asset.js
+ok 16 - worker does not intercept native transport: GET https://other.test/asset.js
+  ---
+  duration_ms: 4.789713
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: GET /events
+ok 17 - worker does not intercept native transport: GET /events
+  ---
+  duration_ms: 9.609812
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: POST /api/account/password
+ok 18 - worker does not intercept native transport: POST /api/account/password
+  ---
+  duration_ms: 2.346028
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2091.323633

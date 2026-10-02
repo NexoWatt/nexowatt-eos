@@ -1,0 +1,243 @@
+UTC: 2026-09-30T17:35:24.367254+00:00
+COMMAND: ["npm", "run", "check:eos-stability"]
+EXIT: 0
+
+
+> iobroker.eos-admin@7.10.10 precheck:eos-stability
+> npm run sync:eos-version && npm run prepare:eos-release-defaults && npm run clean:eos-runtime
+
+
+> iobroker.eos-admin@7.10.10 sync:eos-version
+> node tools/nexowatt-sync-release-version.cjs
+
+[NexoWatt EOS version sync] OK (7.10.10; all release files match)
+
+> iobroker.eos-admin@7.10.10 prepare:eos-release-defaults
+> node tools/nexowatt-ensure-release-defaults.cjs
+
+[NexoWatt EOS release defaults] OK (canonical sales defaults already present)
+
+> iobroker.eos-admin@7.10.10 clean:eos-runtime
+> node tools/nexowatt-clean-legacy-runtime.cjs
+
+[NexoWatt EOS runtime cleanup] OK (runtime v84, shell v7109, removed 0 legacy files)
+
+> iobroker.eos-admin@7.10.10 check:eos-stability
+> node tools/nexowatt-stability-check.cjs && node tools/nexowatt-esm-syntax-selftest.cjs && node tools/nexowatt-backend-runtime-selftest.cjs && node tools/nexowatt-prebuilt-release-selftest.cjs && node tools/nexowatt-import-integrity-selftest.cjs && node tools/nexowatt-entrypoint-smoke-selftest.cjs && node tools/nexowatt-frontend-graph-check.cjs && node tools/nexowatt-policy-selftest.cjs && node tools/nexowatt-publish-channel-selftest.cjs && node tools/nexowatt-release-defaults-selftest.cjs && node tools/nexowatt-role-access-selftest.cjs && node tools/nexowatt-internal-reserve-selftest.cjs && node tools/nexowatt-modern-ui-selftest.cjs && node tools/nexowatt-login-layout-selftest.cjs && node tools/nexowatt-branding-selftest.cjs && node tools/nexowatt-default-port-selftest.cjs && node tools/nexowatt-module-popup-selftest.cjs && node tools/nexowatt-datapoint-selftest.cjs && node tools/nexowatt-update-selftest.cjs && node tools/nexowatt-datapoint-interaction-selftest.cjs && node tools/nexowatt-manual-write-policy-selftest.cjs && node tools/nexowatt-value-column-selftest.cjs && node tools/nexowatt-native-shell-selftest.cjs && node tools/nexowatt-assistant-separation-selftest.cjs && node tools/nexowatt-runtime-cleanup-selftest.cjs && node tools/nexowatt-version-sync-selftest.cjs && node tools/nexowatt-merge-update-selftest.cjs && node tools/nexowatt-password-write-selftest.cjs && node tools/nexowatt-account-password-flow-selftest.cjs && npm run check:eos-stable-v7103 && node tools/nexowatt-ems-overview-selftest.cjs && node tools/nexowatt-ui-overview-runtime-selftest.cjs && node tools/nexowatt-auto-update-selftest.cjs && node tools/nexowatt-auto-update-placement-selftest.cjs && node tools/nexowatt-role-security-selftest.cjs && node tools/nexowatt-user-area-selftest.cjs && node tools/nexowatt-installer-ems-selftest.cjs && node tools/nexowatt-v7109-clean-core-selftest.cjs && npm run test:eos-licensing && npm run test:eos-security-boundaries
+
+[NexoWatt EOS stability] OK
+[NexoWatt EOS ESM syntax] OK
+[NexoWatt EOS backend runtime] OK (17 local runtime files resolve, parse and are declared by the npm files whitelist; dependency-free on Windows)
+[NexoWatt EOS prebuilt release] OK (1424 sealed source/runtime files; 17 backend runtime files; no tsc/tsx required for npm publish)
+[NexoWatt EOS import integrity] OK
+[NexoWatt EOS entrypoint smoke] OK (16 scripts + role-bootstrapped app entry, runtime v84)
+[NexoWatt EOS frontend graph] OK (208 reachable JS files, one HTML5 backend)
+[NexoWatt EOS policy self-test] OK
+[NexoWatt EOS publish channel selftest] OK
+[NexoWatt EOS release defaults selftest] OK
+[NexoWatt EOS role access] OK (Admin full authority, Installer EMS access, restricted account administration, End User read-only datapoints)
+[NexoWatt EOS internal reserve] OK
+[NexoWatt EOS modern UI] OK
+[NexoWatt EOS login layout] OK
+[NexoWatt EOS branding] OK
+[NexoWatt EOS default port selftest] OK (8081)
+[NexoWatt EOS module popup selftest] OK
+[NexoWatt EOS datapoint selftest] OK
+[NexoWatt EOS update selftest] OK
+[NexoWatt EOS DP interaction selftest] OK
+[NexoWatt EOS manual write policy selftest] OK
+[NexoWatt EOS value column] OK
+[NexoWatt EOS native shell] OK
+[NexoWatt EOS assistant separation] OK (stable disabled)
+[NexoWatt EOS runtime cleanup selftest] OK
+[NexoWatt EOS version sync selftest] OK (7.10.10; stale 7.9.92 merge repaired)
+[NexoWatt EOS merge update selftest] OK (flat overwrite + EMS merge + version repair + guarded verification)
+[NexoWatt EOS password write] OK: real account name, verified password API and metadata-only update
+PASS live full-length session authenticates an enabled existing user
+PASS expired, absent, and nonnumeric session expiry fail closed
+PASS one-character session alias cannot authenticate an unrelated bearer token
+PASS disabled, deleted, and non-user objects cannot use otherwise live sessions
+PASS session and user database errors fail closed
+PASS raw/refresh namespaces and short tokens cannot authenticate a live user
+PASS upstream authenticated identity still requires an enabled existing user
+PASS missing credentials never authenticate while auth is required
+PASS role-looking labels and unconfigured group IDs never elevate authority
+PASS explicit administrator and installer membership retains intended authority
+PASS new, blank, and known shared-password accounts are disabled without setting shared passwords
+PASS provisioning preserves personal passwords, disabled status, and the administrator
+PASS password-check failure aborts startup provisioning
+PASS upload guard rejects anonymous, customer, installer, pending-password, and foreign-origin requests
+PASS upload guard permits authorized same-origin administrator and rejects ACL failures
+PASS source and shipped upload parser registration enforce limits before file handling (static)
+PASS same-origin browser writes retain host, port, and transport scheme
+PASS forged X-Forwarded-Host does not authorize another origin
+PASS cookie-authorized writes require Origin even when a bearer header is also present
+PASS explicit non-cookie bearer clients can omit Origin
+PASS malformed or non-origin URLs fail closed
+PASS cross-site and same-site fetch metadata cannot authorize writes
+PASS socket guard denies command and host execution for customer and installer
+PASS socket guard blocks sensitive object mutation including EOS Admin and xterm
+PASS socket guard blocks unresolved, missing, disabled, and pending-password identities before administrator bypass
+PASS socket administrator forwards to upstream permissions instead of bypassing them
+PASS socket customer datapoints remain read-only while normal installer writes retain upstream ACLs
+PASS first-password change requires a bounded nonempty current credential
+PASS first-password change rejects invalid current credentials and unavailable verification
+PASS first-password change with correct current credential writes and invalidates the session
+PASS role-cache refresh suspends authorization until one complete snapshot is committed
+PASS role-cache read failures leave authorization closed and never commit a partial snapshot
+PASS fresh session secret uses 32 random bytes and is persisted before web startup
+PASS session-secret persistence failure denies web startup
+PASS missing system.config never selects a built-in fallback session secret
+PASS valid existing installation session secret is preserved without regeneration
+PASS invalid nonempty existing installation secret denies web startup
+[NexoWatt EOS security boundaries] 37/37 passed; isolated shipped-code tests, no live HTTP/controller test
+
+> iobroker.eos-admin@7.10.10 check:eos-stable-v7103
+> node tools/nexowatt-stable-v7103-selftest.cjs
+
+[NexoWatt EOS stable v7103] OK (v7102 crash/package baseline plus System Settings-only update control)
+[NexoWatt EMS Overview Selftest] OK: read-only Diagnosekarte, Intro-Einbindung und responsive Darstellung geprüft.
+[NexoWatt EOS UI overview runtime] OK
+[NexoWatt EOS auto update] OK (restart-safe state persistence, delayed startup, stable-only scope, third-party isolation and restore)
+[NexoWatt EOS auto-update placement] OK (System Settings only; no Overview/Modules injection)
+[NexoWatt EOS role security] OK (Admin full rights, Installer EMS App-Center access, End User read-only datapoints, protected Admin tools)
+[NexoWatt EOS user area] OK (End User read-only actions and system info; Admin unchanged)
+[NexoWatt EOS installer EMS] OK (Installer may use EMS App-Center; Simulation/License remain Admin-only; End User remains blocked)
+[NexoWatt EOS v7109 clean core] OK (modern Services/Datapoints/Logs without redundant page information; Structure hidden; Installer controls native)
+
+> iobroker.eos-admin@7.10.10 test:eos-licensing
+> node --test test/eos-license-*.test.cjs
+
+✔ starts denied, permits signed-service decision and sends no license key (6.196806ms)
+✔ a new request uses a new nonce and rejects replay from an older request (1.129374ms)
+✔ Home and Pro quantity limits and features are checked independently (4.605407ms)
+✔ malformed, stale, future, oversized and missing entitlements fail closed (5.763775ms)
+✔ timeout invalidates an existing lease; late and duplicate callbacks cannot reopen it (21.430704ms)
+✔ throws and rejected transport promises settle denied without an unhandled rejection (0.957075ms)
+✔ lease expires autonomously, onLost is once per denial episode, then recovery is possible (38.766913ms)
+✔ wall clock rollback does not extend monotonic lease and a forward jump immediately denies (36.809695ms)
+✔ stop cancels in-flight request and prevents late callback activation (0.57029ms)
+✔ concurrent callers coalesce safely and status mutation cannot change entitlement (0.532937ms)
+✔ failed safe-state callback latches denial and sanitizes logs (5.678017ms)
+✔ asynchronous safe-state transition must finish before a fresh grant is accepted (2.108141ms)
+✔ invalid configuration cannot create a permissive guard (1.016338ms)
+✔ one shared lease gates each Home/Pro feature without extra messages or rights after loss (1.008794ms)
+✔ UUID normalizes case/space while preserving canonical and direct vendor-prefix identity (6.014202ms)
+✔ Home license authenticates UUID, explicit adapters, limits and immutable derived features (2.25544ms)
+✔ Pro license enables Pro features only from signed edition and caps 10 batteries (2.598931ms)
+✔ expiry and notBefore use exact millisecond boundaries without coercion or grace (3.232071ms)
+✔ forged or edited signature, foreign signing key, unknown kid and legacy format fail closed (2.21457ms)
+✔ trust accepts only bounded explicit Ed25519 public SPKI keys (152.294448ms)
+✔ schema rejects wildcard adapters, duplicate adapters, unsafe limits and unknown signed fields (7.928143ms)
+✔ malformed/oversized tokens and noncanonical base64 cannot reach successful verification (1.935365ms)
+✔ encrypted storage roundtrips across restart with fresh nonce and no plaintext on disk (40.017753ms)
+✔ GCM binds UUID and fails after ciphertext/tag/nonce corruption (56.421248ms)
+✔ missing/wrong/short storage key never silently regenerates existing encrypted license (11.510563ms)
+✔ storage high water mark cannot decrease; serialized operations preserve monotonic value (32.997416ms)
+✔ clear removes only license, keeps device encryption key and permits fresh install (15.131378ms)
+✔ storage rejects symlink files, symlink directory/ancestor and hard linked secrets (19.948492ms)
+✔ storage rejects permissive POSIX modes and unsafe directory roots (21.448577ms)
+✔ storage bounds files and rejects malformed data/envelopes without destructive overwrite (14.275059ms)
+✔ license endpoints authorize before body parser, service calls and static files (4.905604ms)
+✔ secure admin activation invokes parser after authorization and returns no submitted token (0.920126ms)
+✔ cross-origin, missing origin/header and cross-site writes fail before parser (1.169747ms)
+✔ forwarded host/proto headers do not establish origin or TLS trust (0.404778ms)
+✔ plaintext LAN is denied for every route; explicit socket loopback can perform setup (0.375074ms)
+✔ malformed activation/removal bodies are rejected without reaching service (6.249375ms)
+✔ parser size/syntax errors are sanitized and cannot reach activation (0.500732ms)
+✔ authorization and asynchronous service failures return sanitized bounded errors (0.662134ms)
+✔ per-address write and read rate budgets deny excess operations (2.505031ms)
+✔ license page has restrictive CSP and safe no-cache headers (0.512197ms)
+✔ origin matching uses scheme, hostname and port exactly (0.338409ms)
+✔ startup without provisioned trust denies and creates no license (34.882505ms)
+✔ startup with empty trust configuration denies (8.320397ms)
+✔ trusted service without stored license denies (5.680438ms)
+✔ Home allows licensed adapter and published Home limits with bounded lease (18.804993ms)
+✔ Home rejects Pro feature and over-limit resource counts (18.578716ms)
+✔ Pro grants its feature set only to listed adapter and within signed limits (41.621554ms)
+✔ licensed second adapter receives grants only when enabled (22.931029ms)
+✔ missing, disabled, renamed or non-instance senders cannot obtain grants (24.526151ms)
+✔ sender mismatch, unknown feature, extra keys and invalid quota types reject (28.247516ms)
+✔ malformed or untrusted import preserves existing encrypted license (16.814248ms)
+✔ explicit license removal denies checks and remains removed after restart (23.670219ms)
+✔ external license deletion invalidates previously cached grant eligibility (12.990549ms)
+✔ tampered authenticated ciphertext invalidates cached license (11.51281ms)
+✔ encrypted license and edition persist over clean service restart (16.824595ms)
+✔ changed system UUID denies while running (15.338073ms)
+✔ lease is capped at expiry and license expires at exact boundary (10.890929ms)
+✔ expiry is rechecked after delayed adapter object lookup (27.912369ms)
+✔ wall clock rollback relative to monotonic time fails closed until restart (23.482733ms)
+✔ frequent sub-tolerance checks cannot keep a frozen wall clock licensed (14.409136ms)
+✔ small cumulative backward steps cannot reset the monotonic clock anchor (16.876697ms)
+✔ persisted high-water mark detects ordinary rollback across restart (21.753263ms)
+✔ sender rate cap denies excess requests and renews after window (218.542777ms)
+✔ queue cap rejects excess work without preventing earlier jobs completing (3.219203ms)
+✔ new checks and mutations after stop are denied (10.081014ms)
+✔ check queued before stop cannot grant or restore cached validity after stop (9.93957ms)
+✔ check already in adapter lookup cannot grant after stop (9.178422ms)
+✔ database timeout clears validity, bounds outstanding reads and ignores late results (41.588894ms)
+✔ timeout during adapter identity lookup clears a previously valid license view (73.508108ms)
+✔ serialized deletion ahead of a check prevents an intervening grant (13.231852ms)
+✔ status rechecks expiry after delayed UUID lookup (9.041963ms)
+✔ import expiring during UUID lookup preserves the previous valid license (35.196224ms)
+✔ production directory resolver works without an assumed adapter instance method (18.959495ms)
+✔ directory resolver failure is contained and keeps authority denied (4.619551ms)
+ℹ tests 74
+ℹ suites 0
+ℹ pass 74
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1062.117027
+
+> iobroker.eos-admin@7.10.10 test:eos-security-boundaries
+> node tools/nexowatt-security-boundaries-selftest.cjs
+
+PASS live full-length session authenticates an enabled existing user
+PASS expired, absent, and nonnumeric session expiry fail closed
+PASS one-character session alias cannot authenticate an unrelated bearer token
+PASS disabled, deleted, and non-user objects cannot use otherwise live sessions
+PASS session and user database errors fail closed
+PASS raw/refresh namespaces and short tokens cannot authenticate a live user
+PASS upstream authenticated identity still requires an enabled existing user
+PASS missing credentials never authenticate while auth is required
+PASS role-looking labels and unconfigured group IDs never elevate authority
+PASS explicit administrator and installer membership retains intended authority
+PASS new, blank, and known shared-password accounts are disabled without setting shared passwords
+PASS provisioning preserves personal passwords, disabled status, and the administrator
+PASS password-check failure aborts startup provisioning
+PASS upload guard rejects anonymous, customer, installer, pending-password, and foreign-origin requests
+PASS upload guard permits authorized same-origin administrator and rejects ACL failures
+PASS source and shipped upload parser registration enforce limits before file handling (static)
+PASS same-origin browser writes retain host, port, and transport scheme
+PASS forged X-Forwarded-Host does not authorize another origin
+PASS cookie-authorized writes require Origin even when a bearer header is also present
+PASS explicit non-cookie bearer clients can omit Origin
+PASS malformed or non-origin URLs fail closed
+PASS cross-site and same-site fetch metadata cannot authorize writes
+PASS socket guard denies command and host execution for customer and installer
+PASS socket guard blocks sensitive object mutation including EOS Admin and xterm
+PASS socket guard blocks unresolved, missing, disabled, and pending-password identities before administrator bypass
+PASS socket administrator forwards to upstream permissions instead of bypassing them
+PASS socket customer datapoints remain read-only while normal installer writes retain upstream ACLs
+PASS first-password change requires a bounded nonempty current credential
+PASS first-password change rejects invalid current credentials and unavailable verification
+PASS first-password change with correct current credential writes and invalidates the session
+PASS role-cache refresh suspends authorization until one complete snapshot is committed
+PASS role-cache read failures leave authorization closed and never commit a partial snapshot
+PASS fresh session secret uses 32 random bytes and is persisted before web startup
+PASS session-secret persistence failure denies web startup
+PASS missing system.config never selects a built-in fallback session secret
+PASS valid existing installation session secret is preserved without regeneration
+PASS invalid nonempty existing installation secret denies web startup
+[NexoWatt EOS security boundaries] 37/37 passed; isolated shipped-code tests, no live HTTP/controller test
+
+STDERR:
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.

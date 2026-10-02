@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "changeId": "EOS-ROLES-20261001",
+  "generatedAt": "2026-10-01T15:12:29.543827+00:00",
+  "component": "iobroker.eos-admin",
+  "version": "7.10.11",
+  "status": "component-verified-awaits-current-assembled-process-test",
+  "environment": {
+    "node": "v24.19.0",
+    "typescript": "5.9.3",
+    "os": "Linux x86_64 development container"
+  },
+  "tests": [
+    {
+      "name": "typescript.log",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.build.json"
+      ],
+      "cwdScope": "isolated locked development dependency tree",
+      "environmentOverrides": {},
+      "exitCode": 0,
+      "raw": "raw/typescript.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "roles-source.tap",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/eos-roles-account.test.cjs",
+        "test/eos-appliance-profile.test.cjs",
+        "test/eos-session-security.test.cjs"
+      ],
+      "cwdScope": "repository component",
+      "environmentOverrides": {},
+      "exitCode": 0,
+      "raw": "raw/roles-source.tap",
+      "sha256": "413aebcb1f308c2907a498e58c81ab2381cf3560dc0e545e580eb44749a41a60",
+      "tests": 57,
+      "passed": 57,
+      "failed": 0
+    },
+    {
+      "name": "roles-built.tap",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/eos-roles-account.test.cjs",
+        "test/eos-appliance-profile.test.cjs",
+        "test/eos-session-security.test.cjs"
+      ],
+      "cwdScope": "repository component",
+      "environmentOverrides": {
+        "EOS_TEST_RUNTIME": "build"
+      },
+      "exitCode": 0,
+      "raw": "raw/roles-built.tap",
+      "sha256": "887b22701c0b25dfb639486fcb4b1f9aa88b1a7d24d68332e7d46f6d5162a166",
+      "tests": 57,
+      "passed": 57,
+      "failed": 0
+    },
+    {
+      "name": "socket-declared-2.3.4.tap",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/eos-appliance-socket.integration.cjs"
+      ],
+      "cwdScope": "repository component",
+      "environmentOverrides": {
+        "EOS_ADMIN_DEPENDENCIES": "/workspace/scratch/6383b3161c96/integrated-staging/components/admin/node_modules",
+        "EOS_ADMIN_SOCKET_CLASSES_VERSION": "2.3.4",
+        "EOS_TEST_RUNTIME": "build"
+      },
+      "exitCode": 0,
+      "raw": "raw/socket-declared-2.3.4.tap",
+      "sha256": "c3003a63fa6b6bc9d0eb0c0cd3fa574edd9b9a0f0cfe10d801b7473e469a6b83",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "name": "socket-candidate-2.6.0.tap",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/eos-appliance-socket.integration.cjs"
+      ],
+      "cwdScope": "repository component",
+      "environmentOverrides": {
+        "EOS_ADMIN_DEPENDENCIES": "/workspace/scratch/6383b3161c96/integrated-ui-candidate-r4/app/node_modules",
+        "EOS_ADMIN_SOCKET_CLASSES_VERSION": "2.6.0",
+        "EOS_TEST_RUNTIME": "build"
+      },
+      "exitCode": 0,
+      "raw": "raw/socket-candidate-2.6.0.tap",
+      "sha256": "a39c90e2ec9a8700c18bda7e852f4585454cfad0dda54f2066791461ac2fe4de",
+      "tests": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "name": "existing-boundaries.log",
+      "command": [
+        "node",
+        "tools/nexowatt-security-boundaries-selftest.cjs"
+      ],
+      "cwdScope": "repository component",
+      "environmentOverrides": {},
+      "exitCode": 0,
+      "raw": "raw/existing-boundaries.log",
+      "sha256": "01bbca91409427d5543be2997cb978d0d5015ff9bdf52b923bd3e7756cc910ef"
+    }
+  ],
+  "sourceBindings": {
+    "src/main.ts": "58e6b641d0dea07d91d75aa776f8d1a534ceaa735278c94ff6a9db128c32bb2d",
+    "src/lib/web.ts": "06e75789d94f9e8c5047ac9741bdb6bae92cb82c6b19f7bc95c826b6a66b0121",
+    "src/lib/eosApplianceProfile.js": "1812e15fd0992ad6e6f8582bfe3a235e2a7a04ddd694ec3fdc79267581dad6f6",
+    "src/lib/eosSessionSecurity.js": "81c27a33278a20d6b410ea39cdb4060fce4f533f27847487078253c184181f3e",
+    "build/main.js": "327e7038782f316e25570ccc02d9dd3769bd4a07458aba5788c6dc92f1b3b959",
+    "build/main.js.map": "deea6826f6fcbe3da3f31f5e80e734933f851e2e5bd6b8c84c455a48f02d04e9",
+    "build/lib/web.js": "11227efff01c9c6265095d90269239dbd8a06126813e2395bfbfc0f8b2118696",
+    "build/lib/web.js.map": "6cc05516518b83a3902cdd7729ed07aaa783a50a76336f668533bf5fba88924b",
+    "build/lib/eosApplianceProfile.js": "a682a5bbecfe5a1973d19201c25be23668c7d5a353a69fa489cf164d9c59f3cc",
+    "build/lib/eosApplianceProfile.js.map": "7d162b5b202e11c57861e939120f1b02746bc172644905b3706acc223364481e",
+    "build/lib/eosSessionSecurity.js": "4820cd5d32aa825623fc8f434d9fc27d00275cca97dd65ef7ba32e93ac09f185",
+    "build/lib/eosSessionSecurity.js.map": "f7f6fabfec888a4118fd5fa834ed42c7e763853cfcb23cef1a22fa664527a0f6",
+    "test/eos-roles-account.test.cjs": "2c07380babf377d5df62c355bafb28cdd320956c234475ee8bd96da6e73e7aa9",
+    "test/eos-appliance-socket.integration.cjs": "b0cdb23556e1c2c482d6e23581b2314bf9fe1a22a5a02ab95ecdc9da6a8b02ed",
+    "tools/nexowatt-security-boundaries-selftest.cjs": "7920062923bfc71b601d9b7f99746185dc6f575f9f75576d99013edeb1d0342f",
+    "test/eos-appliance-profile.test.cjs": "2bab3bfdb8439a0182540247d044efad4e924ab14a3a15dff42fc35d5d906da6",
+    "test/eos-session-security.test.cjs": "08126817fdae9d709b4a112b721a1437c01b1f0633c2d39595a718beb9eb7177",
+    "reports/security/branding-roles/CHANGE_AND_THREATS_DE.md": "9c98233b64e13d7fa19d08c8a9b2333e13b9498cfc154d31f0e3a2eaab1e9f1a"
+  },
+  "scope": [
+    "26 HTTP/account/role tests against compiled methods with in-memory database boundaries",
+    "14 appliance policy/TLS/password tests",
+    "17 session tests including real watchdog",
+    "6 actual SocketCommandsAdmin dispatcher tests independently for component-locked 2.3.4 and assembled-tree 2.6.0",
+    "40 existing isolated shipped-code boundary regressions",
+    "Full TypeScript semantic compilation with locked component development dependencies"
+  ],
+  "limitations": [
+    "No browser/React visual acceptance in this component report",
+    "No RPi/VM/systemd/hardware execution",
+    "Real controller/HTTPS role onboarding and whole-product packaging are tracked in the root integration report",
+    "Allfalse generic role ACLs require installer/enduser product HTTP UI; upstream React Admin is reserved for Service",
+    "Rate limits and password mutation serialization are process-local; no cross-adapter atomic password compare-and-swap is asserted",
+    "Upstream WebSocket frame cap is handled separately by root build profile; not claimed by this component change",
+    "No independent CRA or IEC conformity assessment"
+  ]
+}

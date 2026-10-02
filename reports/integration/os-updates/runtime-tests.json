@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01T19:11:49.653198+00:00",
+  "scope": "offline-unit-and-injected-workflow; actual-read-only-apt-config; not target installation",
+  "tests": {
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0
+  },
+  "environment": {
+    "python": "Python 3.12.14",
+    "apt": "apt 2.8.3 (amd64)",
+    "platform": "Ubuntu Linux x64 workspace; uid0",
+    "jsonschema": "4.26.0"
+  },
+  "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/workspace/scratch/6383b3161c96/architecture-venv/lib/python3.12/site-packages python3 -B tests/system/os-updates.test.py",
+  "notExecuted": [
+    "apt-get update",
+    "unattended-upgrade real transaction",
+    "python3-apt real cache integration",
+    "systemd service execution",
+    "Debian12/13 target acceptance",
+    "Raspberry Pi ARM64 acceptance",
+    "independent penetration test"
+  ],
+  "sourceBindings": [
+    {
+      "path": "runtime/os-updates/README.md",
+      "sha256": "45c790ff0e339b18799ca43ce4a5e7f42224277c954eea17341fe2cab6d564ef"
+    },
+    {
+      "path": "runtime/os-updates/policy.schema.json",
+      "sha256": "cd4559a5e1a5ffcc7e457c50859a74117e85897609e8200b886dbda86b0f8856"
+    },
+    {
+      "path": "runtime/os-updates/runner.py",
+      "sha256": "42b5f07f06a0abd9a29127108ad0666963c44a60080a400a3e6b4815dcc741f6"
+    },
+    {
+      "path": "runtime/os-updates/status.schema.json",
+      "sha256": "caefb670fa093f11d2c05b102eada87aa23abaaea184fb612aabf56e24f1d149"
+    },
+    {
+      "path": "system/test-base/os-updates/initial-status.json",
+      "sha256": "85e81ebf3e8fab95b441787230c609a850dd8d90e4a1d1a6708d48313a63e344"
+    },
+    {
+      "path": "system/test-base/os-updates/policy.json",
+      "sha256": "f3d567c897912214a963bcfe66cbb9903fb3b8aeddffd823ec4766d1c237e16c"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "d7de6e00051469b69f71eef5dd2326ae92744d9e9dd91404141e0d9454bb7065"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.timer",
+      "sha256": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e"
+    },
+    {
+      "path": "tests/system/os-updates.test.py",
+      "sha256": "2fe89df7f94e06e04c123678cc9da4e0659fa5555ac93e340b22794d01627f12"
+    }
+  ],
+  "rawEvidence": {
+    "path": "reports/integration/os-updates/runtime-tests.log",
+    "sha256": "c79d25d3e1443d342cd05dbe5613ad4b27d4d3c9a6895d38bdbf7e9e3314d135"
+  }
+}

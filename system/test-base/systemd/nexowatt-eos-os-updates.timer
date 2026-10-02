@@ -1,0 +1,13 @@
+[Unit]
+Description=NexoWatt EOS daily OS security maintenance window
+
+[Timer]
+OnCalendar=*-*-* 02:00:00 Europe/Berlin
+RandomizedDelaySec=15min
+AccuracySec=1min
+# No surprise daytime catch-up of package maintainer service restarts.
+Persistent=false
+Unit=nexowatt-eos-os-updates.service
+
+[Install]
+WantedBy=timers.target

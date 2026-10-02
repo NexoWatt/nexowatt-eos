@@ -1,0 +1,831 @@
+{
+  "schemaVersion": "1.0.0",
+  "documentId": "EOS-SYSTEM-REQUIREMENTS",
+  "date": "2026-09-30",
+  "status": "designed",
+  "scope": "Geplantes gemeinsames EOS-System; keine Produktfreigabe oder Erfüllungsbescheinigung.",
+  "moduleIds": [
+    "os-base",
+    "eos-core",
+    "eos-admin",
+    "nexowatt-ui",
+    "nexowatt-devices",
+    "nexowatt-backitup",
+    "eebus",
+    "identity-license",
+    "secure-bus",
+    "data-store",
+    "update-agent",
+    "audit-health"
+  ],
+  "sourceBaseline": "docs/security/CRA_IEC_SCOPE.md",
+  "implementationClaim": false,
+  "requirements": [
+    {
+      "id": "EOS-REQ-001",
+      "title": "Lieferumfang binden",
+      "status": "designed",
+      "moduleIds": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ],
+      "statement": "Jeder Lieferstand bindet Hardwareprofil, OS, Runtime, Controller und eigene sowie fremde Komponenten an Version, Herkunft und Artefakthash. Unbekannte Werte bleiben ausdrücklich unbekannt.",
+      "acceptance": {
+        "positive": "Kompletter freigegebener Bestand wird einem Build zugeordnet.",
+        "negative": "Fehlende Quellversion oder Hash verhindert eine vollständige Produktfreigabe."
+      },
+      "testIds": [
+        "EOS-TEST-001-P",
+        "EOS-TEST-001-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Produktgrenze und technische Dokumentation",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-002",
+      "title": "Dienstrechte trennen",
+      "status": "designed",
+      "moduleIds": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ],
+      "statement": "Module erhalten getrennte Betriebssystemidentitäten, minimale Dateirechte, explizite Ressourcenlimits und einzeln begründete Gerätezugriffe. Laufzeitprozesse erhalten keine allgemeinen sudo-, Docker-Socket- oder Root-Rechte.",
+      "acceptance": {
+        "positive": "Ein Dienst erreicht ausschließlich seine genehmigten Ressourcen.",
+        "negative": "Ein kompromittierter Adapter kann keine fremden Schlüssel, Hostwartung oder fremden Modulbefehle verwenden."
+      },
+      "testIds": [
+        "EOS-TEST-002-P",
+        "EOS-TEST-002-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Zugangskontrolle und Begrenzung der Angriffsfläche",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-003",
+      "title": "Einrichtung abschließen",
+      "status": "designed",
+      "moduleIds": [
+        "eos-admin",
+        "identity-license",
+        "os-base"
+      ],
+      "statement": "Bis zur vollständigen authentisierten Einrichtung und Lizenzprüfung sind Produktfunktionen gesperrt; Einrichtung, autorisierte Wiederherstellung und Sicherheitswartung bleiben erreichbar. Keine Standardpasswörter, kein HTTP-Rückfall.",
+      "acceptance": {
+        "positive": "Erfolgreiche lokale Einrichtung aktiviert ausschließlich lizenzierte Funktionen.",
+        "negative": "Reload, Abbruch, Restore, falsche Lizenz und Zertifikatfehler umgehen den Einrichtungsstatus nicht."
+      },
+      "testIds": [
+        "EOS-TEST-003-P",
+        "EOS-TEST-003-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Sichere Voreinstellungen und Authentifizierung",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-004",
+      "title": "Schnittstellen validieren",
+      "status": "designed",
+      "moduleIds": [
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "eebus",
+        "secure-bus",
+        "data-store"
+      ],
+      "statement": "Versionierte Verträge definieren Typen, Größen, Wertebereiche, Einheiten, Fristen und zulässige Zustandsübergänge. Vor jedem Seiteneffekt vollständig validieren; speichersichere Implementierung bevorzugen.",
+      "acceptance": {
+        "positive": "Vertragskonforme Messwerte und Befehle werden unverändert verarbeitet.",
+        "negative": "Unbekannte Felder bei geschlossenen Verträgen, ungültige Typen, Übergrößen und Injection-Versuche verursachen keine Seiteneffekte."
+      },
+      "testIds": [
+        "EOS-TEST-004-P",
+        "EOS-TEST-004-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Integrität und sichere Entwicklung",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-005",
+      "title": "Modulverbindungen schützen",
+      "status": "designed",
+      "moduleIds": [
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ],
+      "statement": "Für geplante Netzwerkverbindungen zwischen Modulen gilt TLS 1.3 mit gegenseitiger Identitätsprüfung und Autorisierung je Operation. Keine gemeinsamen Modulschlüssel, kein Klartext-Fallback. Lokale Sonderkanäle benötigen eine ausdrücklich geprüfte gleichwertige Grenze.",
+      "acceptance": {
+        "positive": "Berechtigte Dienstidentität kann ihre erlaubte Operation verschlüsselt ausführen.",
+        "negative": "Fremde Identität, falscher Servername, abgelaufenes Zertifikat und verweigerte Operation werden abgewiesen."
+      },
+      "testIds": [
+        "EOS-TEST-005-P",
+        "EOS-TEST-005-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Vertraulichkeit, Integrität und Zugangskontrolle",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-006",
+      "title": "Steuerung und Failsafe schützen",
+      "status": "designed",
+      "moduleIds": [
+        "eos-core",
+        "nexowatt-devices",
+        "eebus",
+        "secure-bus"
+      ],
+      "statement": "Steuerbefehle sind an Ziel, Identität, Frische, Reihenfolge und zulässige Leistungsgrenzen gebunden. Fehlerzustände werden pro Anlage festgelegt; unabhängige Geräteschutzfunktionen werden nicht ersetzt.",
+      "acceptance": {
+        "positive": "Zulässige aktuelle Befehle halten definierte Anlagen- und Netzgrenzen ein.",
+        "negative": "Replay, veraltete Werte, Kommunikationsausfall und Neustart führen zum dokumentierten betrieblich sicheren Verhalten."
+      },
+      "testIds": [
+        "EOS-TEST-006-P",
+        "EOS-TEST-006-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Verfügbarkeit, Integrität und Risikominderung",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-007",
+      "title": "Feldprotokolle begrenzen",
+      "status": "designed",
+      "moduleIds": [
+        "nexowatt-devices",
+        "eebus",
+        "os-base"
+      ],
+      "statement": "Nicht kryptografisch schützbare Feldprotokolle liegen in getrennten Gerätebereichen mit freigegebenen Gegenstellen und Schreibrechten. Protokollschutz und Restrisiken werden je Gerät belegt; Segmentierung ist keine Verschlüsselung.",
+      "acceptance": {
+        "positive": "Genehmigte Gerätekommunikation funktioniert über die freigegebene Verbindung.",
+        "negative": "Unbekannte Gegenstellen, nicht freigegebene Schreiboperationen und Zonenwechsel sind gesperrt."
+      },
+      "testIds": [
+        "EOS-TEST-007-P",
+        "EOS-TEST-007-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Begrenzung der Angriffsfläche und Risikobewertung",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-008",
+      "title": "Identitäten verwalten",
+      "status": "designed",
+      "moduleIds": [
+        "identity-license",
+        "secure-bus",
+        "os-base",
+        "update-agent"
+      ],
+      "statement": "Einmalige Dienstschlüssel bleiben in geschützten dienstgebundenen Speichern. Ausstellung, Rotation, Widerruf, Ablauf, Uhrzeitfehler und Wiederherstellung sind offline beherrschbar. Hardware-Schlüsselschutz wird nur bei nachgewiesener Hardwareunterstützung zugesagt.",
+      "acceptance": {
+        "positive": "Rotation und Wiederherstellung erhalten autorisierten Betrieb ohne gemeinsame Geheimnisse.",
+        "negative": "Alte widerrufene Identität, fremder Schlüssel und Zeitrücksprung werden gemäß dokumentierter Richtlinie behandelt."
+      },
+      "testIds": [
+        "EOS-TEST-008-P",
+        "EOS-TEST-008-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Schlüsselverwaltung und Zugangskontrolle",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-009",
+      "title": "Offline-Lizenz verifizieren",
+      "status": "designed",
+      "moduleIds": [
+        "identity-license",
+        "eos-admin"
+      ],
+      "statement": "Der lokale Lizenzdienst verifiziert signierte, an die freigegebene Geräteidentität gebundene Berechtigungen. Der private Ausstellerschlüssel bleibt außerhalb des Produkts; lokale Verschlüsselung ergänzt die Signatur und verteilt keinen Entschlüsselungsschlüssel an Adapter.",
+      "acceptance": {
+        "positive": "Eine gültige lokal bereitgestellte Lizenz wird ohne Cloudverbindung geprüft.",
+        "negative": "Manipulierte Lizenz, unbekannter Aussteller und unpassende Gerätebindung liefern keine Freischaltung."
+      },
+      "testIds": [
+        "EOS-TEST-009-P",
+        "EOS-TEST-009-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Integrität und Schutz gespeicherter Informationen",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-010",
+      "title": "Freischaltungen begrenzen",
+      "status": "designed",
+      "moduleIds": [
+        "identity-license",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus"
+      ],
+      "statement": "Adapter fragen nur ihre minimalen Freigaben über authentisierte Schnittstellen ab und erzwingen sie serverseitig. Lizenzfehler sperren neue unberechtigte Produktnutzung, nicht Sicherheitsupdates, autorisierte Wiederherstellung oder notwendige Anlagenschutzfunktionen.",
+      "acceptance": {
+        "positive": "Jedes Modul erhält nur die für seine Identität freigegebenen Funktionen und Grenzen.",
+        "negative": "Manipulierte UI, Fremdabfrage, fehlende Lizenz und abgelaufene Berechtigungen umgehen keine Freigabe oder Anlagenschutzfunktion."
+      },
+      "testIds": [
+        "EOS-TEST-010-P",
+        "EOS-TEST-010-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Zugangskontrolle und Verfügbarkeit",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-011",
+      "title": "Daten schützen",
+      "status": "designed",
+      "moduleIds": [
+        "data-store",
+        "identity-license",
+        "os-base"
+      ],
+      "statement": "Datenklassen erhalten dienstgebundene Lese-/Schreibrechte, definierte Aufbewahrung und geschützte Schlüssel. Lizenzdaten und Sicherungen werden authentisiert verschlüsselt; notwendiger Geräte- oder Datenträgerschutz wird hardwarebezogen festgelegt.",
+      "acceptance": {
+        "positive": "Autorisierte Prozesse verarbeiten ihre Daten und erhalten Integritätsfehler nachvollziehbar.",
+        "negative": "Fremder Dienst und manipuliertes Chiffrat erhalten weder Klartext noch Schreibrechte."
+      },
+      "testIds": [
+        "EOS-TEST-011-P",
+        "EOS-TEST-011-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Vertraulichkeit, Datenminimierung und Integrität",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-012",
+      "title": "Sicher wiederherstellen",
+      "status": "designed",
+      "moduleIds": [
+        "nexowatt-backitup",
+        "data-store",
+        "identity-license"
+      ],
+      "statement": "Sicherungen sind authentisiert verschlüsselt, vollständig inventarisiert und wiederherstellbar. Import prüft Format, Version, Integrität, Pfade, Größen und Zielberechtigung; produktive Identitäten werden nicht unkontrolliert geklont.",
+      "acceptance": {
+        "positive": "Vollständige Sicherung wird in isolierter Zielumgebung mit konsistenten Daten wiederhergestellt.",
+        "negative": "Pfadtraversal, beschädigte Archive, falsche Schlüssel und fremde Geräteidentitäten werden ohne Teilüberschreiben zurückgewiesen."
+      },
+      "testIds": [
+        "EOS-TEST-012-P",
+        "EOS-TEST-012-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Verfügbarkeit, Integrität und Wiederherstellbarkeit",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-013",
+      "title": "Updates authentisieren",
+      "status": "designed",
+      "moduleIds": [
+        "update-agent",
+        "os-base"
+      ],
+      "statement": "Vor Installation werden signierte Freigabemetadaten, Artefakthash, Zielhardware und Version gegen einen unabhängig verankerten Vertrauensschlüssel geprüft. Kein ungeprüftes curl-zu-Root-Shell; Schlüsselwechsel benötigt eine belastbare Vertrauenskette.",
+      "acceptance": {
+        "positive": "Ein für das Ziel freigegebenes vollständiges Release wird mit gültiger Signatur angenommen.",
+        "negative": "Manipuliertes Artefakt, mutable Fremdreferenz, unbekannter Signierer oder falsches Ziel wird vor Ausführung gesperrt."
+      },
+      "testIds": [
+        "EOS-TEST-013-P",
+        "EOS-TEST-013-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Produktintegrität und sichere Aktualisierung",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-014",
+      "title": "Updates rückfallfähig machen",
+      "status": "designed",
+      "moduleIds": [
+        "update-agent",
+        "eos-core",
+        "data-store",
+        "nexowatt-backitup"
+      ],
+      "statement": "Staging, Gesundheitsprüfung und atomare Aktivierung trennen Download und Betrieb. Datenbankschema, Sicherung und Vorgängerversion werden gemeinsam geprüft. Rollback auf verwundbare Versionen ist gesperrt, außer einem ausdrücklich autorisierten dokumentierten Wiederherstellungsweg.",
+      "acceptance": {
+        "positive": "Freigegebenes Update und Rückfall erhalten konsistente Daten sowie die erforderliche Regelung.",
+        "negative": "Stromverlust, Teilupdate, inkompatible Migration und unerlaubtes Downgrade aktivieren keinen inkonsistenten Stand."
+      },
+      "testIds": [
+        "EOS-TEST-014-P",
+        "EOS-TEST-014-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Verfügbarkeit und sichere Aktualisierung",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-015",
+      "title": "Exponierung minimieren",
+      "status": "designed",
+      "moduleIds": [
+        "os-base",
+        "eos-admin",
+        "nexowatt-ui",
+        "eebus"
+      ],
+      "statement": "Nur begründete Dienste und Ports sind erreichbar. Debugzugänge und Standardzugänge sind aus. Rollen, Sitzungsablauf, CSRF-Schutz und erneute Autorisierung schützen Verwaltungsaktionen.",
+      "acceptance": {
+        "positive": "Freigegebene Nutzerrolle erreicht genau ihre vorgesehenen Funktionen.",
+        "negative": "Abgelaufene Sitzung, CSRF, anonyme Nutzung und niedrige Rolle können keine Verwaltungsaktion ausführen."
+      },
+      "testIds": [
+        "EOS-TEST-015-P",
+        "EOS-TEST-015-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Sichere Voreinstellungen und Zugangskontrolle",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-016",
+      "title": "Überwachung begrenzen",
+      "status": "designed",
+      "moduleIds": [
+        "audit-health",
+        "eos-core",
+        "os-base"
+      ],
+      "statement": "Sicherheitsereignisse sind zeitlich und versionsbezogen nachvollziehbar, zugriffsbeschränkt und frei von Geheimnissen. Logs und Anfragen haben Größen-, Raten- und Aufbewahrungsgrenzen; Ausfall der Überwachung wird erkennbar.",
+      "acceptance": {
+        "positive": "Relevante Ereignisse sind mit Quelle und Zeit nachvollziehbar; Rotation hält Ressourcenbudgets ein.",
+        "negative": "Logflut, volle Platte, manipulierte Ereignisse und Überwachungsausfall überlasten die Regelung nicht; erkannte Störungen werden nachvollziehbar angezeigt."
+      },
+      "testIds": [
+        "EOS-TEST-016-P",
+        "EOS-TEST-016-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Nachvollziehbarkeit und Verfügbarkeit",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-017",
+      "title": "Kompatibilität belegen",
+      "status": "designed",
+      "moduleIds": [
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus"
+      ],
+      "statement": "Vor Funktionsänderungen werden aktuelle Admin-7-/Adapterquellen, Screenshots, DOM, Zustände, Einheiten, Regeln und externe API-Verträge als Referenz gesichert. Security-Änderungen erhalten Design und Fachfunktionen; notwendige Abweichungen brauchen dokumentierte Migration.",
+      "acceptance": {
+        "positive": "Die gleichen fachlichen Abläufe, Gerätewerte und UI-Funktionen bleiben im freigegebenen Referenzumfang erhalten.",
+        "negative": "Abweichende Datenpunkte, Einheiten, Regelprioritäten oder verlorene Konfiguration verhindern die Freigabe."
+      },
+      "testIds": [
+        "EOS-TEST-017-P",
+        "EOS-TEST-017-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Risikobewertung und Validierung",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-018",
+      "title": "SBOM und Build verbinden",
+      "status": "designed",
+      "moduleIds": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ],
+      "statement": "CycloneDX-JSON wird aus dem tatsächlich gebauten Lieferumfang erzeugt und an Release, Werkzeugstand und Artefakthashes gebunden. Unbekannte oder nur geplante Komponenten werden nicht als installierte Bestandteile ausgegeben.",
+      "acceptance": {
+        "positive": "Ein reproduzierbarer Build erzeugt eine validierte SBOM mit dem tatsächlichen Umfang.",
+        "negative": "Fehlende Komponenten, unbelegte Versionen oder vom Artefakt abweichende Hashes verhindern eine vollständige SBOM-Freigabe."
+      },
+      "testIds": [
+        "EOS-TEST-018-P",
+        "EOS-TEST-018-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Komponentenverzeichnis und technische Dokumentation",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-019",
+      "title": "Lebenszyklus betreiben",
+      "status": "designed",
+      "moduleIds": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ],
+      "statement": "Herstellerverantwortung, Supportzeitraum, Schwachstellenannahme, Bewertung, Meldungsentscheidung, Patchverteilung, koordinierte Offenlegung und Lebensende sind verbindlich dokumentiert und geübt.",
+      "acceptance": {
+        "positive": "Eine Testmeldung wird über dokumentierte Zuständigkeiten bis Abhilfe und Nachprüfung verfolgt.",
+        "negative": "Ausfall des Meldekanals, nicht erreichbare Verantwortliche und verspätete Eskalation werden erkannt und bearbeitet."
+      },
+      "testIds": [
+        "EOS-TEST-019-P",
+        "EOS-TEST-019-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Schwachstellenbehandlung und Herstellerprozesse",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    },
+    {
+      "id": "EOS-REQ-020",
+      "title": "Nachweise und Freigabe trennen",
+      "status": "designed",
+      "moduleIds": [
+        "os-base",
+        "eos-core",
+        "eos-admin",
+        "nexowatt-ui",
+        "nexowatt-devices",
+        "nexowatt-backitup",
+        "eebus",
+        "identity-license",
+        "secure-bus",
+        "data-store",
+        "update-agent",
+        "audit-health"
+      ],
+      "statement": "Anforderungen, Bedrohungen, Änderungen, tatsächlich ausgeführte Prüfungen und Lieferstände sind rückverfolgbar. Mock-, Integrations-, Hardware- und unabhängige Sicherheitsprüfung bleiben getrennt; offene kritische Risiken verhindern eine Produktfreigabe.",
+      "acceptance": {
+        "positive": "Freigabeentscheidung verweist auf überprüfbare Ergebnisse des exakten Lieferstands.",
+        "negative": "Fehlende Tests, falscher Quellstand und ungeklärte kritische Risiken können nicht als bestanden oder konform markiert werden."
+      },
+      "testIds": [
+        "EOS-TEST-020-P",
+        "EOS-TEST-020-N"
+      ],
+      "testStatus": "planned",
+      "references": {
+        "CRA": {
+          "mapping": "thematic",
+          "theme": "Risikobewertung und Konformitätsnachweise",
+          "exactClauseMapping": "pending_product_scope_and_full_text_review"
+        },
+        "IEC": {
+          "mapping": "thematic",
+          "standards": [
+            "IEC 62443-4-1",
+            "IEC 62443-4-2",
+            "IEC 62443-3-2",
+            "IEC 62443-3-3"
+          ],
+          "exactClauseMapping": "pending_applicability_and_normative_text_review"
+        }
+      }
+    }
+  ]
+}

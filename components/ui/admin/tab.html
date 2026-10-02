@@ -1,0 +1,66 @@
+<!--
+  Datei: admin/tab.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Statische Admin-/Redirect-Seite für ioBroker Admin oder Installer-Start.
+  Zusammenhänge:
+  - Verlinkt auf Kunden-/Installerseiten oder React-Admin-Tab.
+  - Wird durch ioBroker Admin bzw. Adapter-Webserver ausgeliefert.
+  Wartungshinweise:
+  - Keine Kundenfunktionen ohne Berechtigung freigeben.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexoWatt EOS – Installer</title>
+  <style>
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      display: grid;
+      place-items: center;
+      background: #0b1220;
+      color: rgba(255,255,255,0.92);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
+    }
+    .box {
+      max-width: 640px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 18px;
+      background: rgba(2,6,23,0.55);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    a { color: #22c55e; }
+  </style>
+  <script>
+    (function () {
+      var search = window.location.search || '';
+      var target = 'react/index.html' + search + '#/installer';
+      window.__nwReactAdminTarget = target;
+      window.location.replace(target);
+    })();
+  </script>
+</head>
+<body>
+  <div class="box">
+    <h1>NexoWatt EOS – Installer</h1>
+    <p>Seite wird geladen. Falls die Weiterleitung blockiert wird, öffne bitte <a id="manualLink" href="react/index.html#/installer">diese Seite</a>.</p>
+  </div>
+  <script>
+    (function () {
+      var link = document.getElementById('manualLink');
+      if (link && window.__nwReactAdminTarget) {
+        link.href = window.__nwReactAdminTarget;
+      }
+    })();
+  </script>
+</body>
+</html>

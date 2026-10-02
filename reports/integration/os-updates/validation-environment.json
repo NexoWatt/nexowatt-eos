@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sourceSbomValidationAttempts": [
+    {
+      "command": "python3 -B tools/integration/validate-sbom.py ...",
+      "result": "not-run-missing-python-jsonschema",
+      "error": "ModuleNotFoundError: jsonschema"
+    },
+    {
+      "command": "architecture-venv/bin/python -B tools/integration/validate-sbom.py ...",
+      "result": "not-run-venv-interpreter-link-missing"
+    },
+    {
+      "command": "PYTHONPATH=/workspace/scratch/6383b3161c96/architecture-venv/lib/python3.12/site-packages python3 -B tools/integration/validate-sbom.py reports/integration/os-updates/source-supplement.cdx.json --output reports/integration/os-updates/source-sbom-validation.json",
+      "result": "see source-sbom-validation.json"
+    }
+  ],
+  "notes": "Existing offline validator libraries reused; no package installation or network dependency download."
+}

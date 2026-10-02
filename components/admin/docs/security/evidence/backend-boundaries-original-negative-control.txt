@@ -1,0 +1,502 @@
+NEGATIVE CONTROL against original user-provided 7.10.9 ZIP. Failures are expected: old backend lacks the new protections. Missing new helper functions are reported as absent behavior, not a separate exploit. Same final regression harness used. Startup dependency stubs use a nonempty placeholder for the old fixed-secret global, never extract or print its actual value. No live HTTP/controller/network.
+UTC 2026-09-30T17:32:13.530259+00:00
+Runtime Node.js v24.19.0
+Original archive SHA256 f92092a78ac629e139963b503c70c0d7d72d221bc2bb2dfcfcc1e7c6e6bcabad
+Original selected file SHA256 {"build/lib/eosRequestSecurity.js": "c9193759d0ca2f5221d31688b4ab3b0ec21aa2f4862443c0171e608adb9858a0", "build/lib/web.js": "f7d0adebfe5b7890f09d3b5eff986cd564724cc7a8497048dc670b43d69b1d90", "build/main.js": "7578ee14ea840950ad5164b0063c091c983528ebc32689dec5dc499062fbc92e", "public/404.html": "6c6458ba2bc49b0c27973293e461262bf697607a8e71ab716227553f6d7005eb", "public/logTemplate.html": "fc371fc8e4d7ef57c0ca76a405508eced038523464ff65b6cae04dae6144fd54", "src/lib/web.ts": "c4683adc8e32e23280bf6fead41cc7c67ff41982d33e388119b18a7ac9997fb7"}
+Harness SHA256 2376af9e1f0fac40ea741a61bd4626d69126945a62ab56b9845655306f93925c
+
+PASS live full-length session authenticates an enabled existing user
+PASS missing credentials never authenticate while auth is required
+PASS explicit administrator and installer membership retains intended authority
+PASS provisioning preserves personal passwords, disabled status, and the administrator
+PASS socket administrator forwards to upstream permissions instead of bypassing them
+PASS socket customer datapoints remain read-only while normal installer writes retain upstream ACLs
+PASS valid existing installation session secret is preserved without regeneration
+[NexoWatt EOS security boundaries] 7/37 passed; isolated shipped-code tests, no live HTTP/controller test
+FAIL expired, absent, and nonnumeric session expiry fail closed: AssertionError [ERR_ASSERTION]: Rejected aExp=1790789531495
++ actual - expected
+
++ 'system.user.guest'
+- null
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:68:16
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL one-character session alias cannot authenticate an unrelated bearer token: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'system.user.admin'
+- null
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:74:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL disabled, deleted, and non-user objects cannot use otherwise live sessions: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'system.user.guest'
+- null
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:81:16
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL session and user database errors fail closed: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'system.user.guest'
+- null
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:88:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL raw/refresh namespaces and short tokens cannot authenticate a live user: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'system.user.guest'
+- null
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:96:16
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL upstream authenticated identity still requires an enabled existing user: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'system.user.guest'
+- null
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:107:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL role-looking labels and unconfigured group IDs never elevate authority: AssertionError [ERR_ASSERTION]: NexoWatt Service
+
+'admin' !== 'enduser'
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:118:16
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL new, blank, and known shared-password accounts are disabled without setting shared passwords: AssertionError [ERR_ASSERTION]: system.user.installer must not remain usable
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:178:16
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL password-check failure aborts startup provisioning: AssertionError [ERR_ASSERTION]: Missing expected rejection.
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:204:5
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL upload guard rejects anonymous, customer, installer, pending-password, and foreign-origin requests: TypeError: web.eosTechnicalRouteGuard is not a function
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:218:13
+    at new Promise (<anonymous>)
+    at runTechnicalGuard (/tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:213:12)
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:224:30
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL upload guard permits authorized same-origin administrator and rejects ACL failures: TypeError: web.eosTechnicalRouteGuard is not a function
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:218:13
+    at new Promise (<anonymous>)
+    at runTechnicalGuard (/tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:213:12)
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:231:25
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL source and shipped upload parser registration enforce limits before file handling (static): AssertionError [ERR_ASSERTION]: The input did not match the regular expression /EOS_UPLOAD_MAX_BYTES\s*=\s*200\s*\*\s*1024\s*\*\s*1024/. Input:
+
+"import { commonTools, EXIT_CODES } from '@iobroker/adapter-core';\n" +
+  "import { checkPublicIP, WebServer, createOAuth2Server, type OAuth2Model } from '@iobroker/webserver';\n" +
+  "import * as express from 'express';\n" +
+  "import type { Express, Response, Request, NextFunction } from 'express';\n" +
+  "import type { Server } from 'node:http';\n" +
+  "import { readFileSync, existsSync, createReadStream, readdirSync, lstatSync } from 'node:fs';\n" +
+  "import { inherits } from 'node:util';\n" +
+  "import { join, normalize, parse, dirname } from 'node:path';\n" +
+  "import { tmpdir, totalmem } from 'node:os';\n" +
+  "import { Transform } from 'node:stream';\n" +
+  "import { execFileSync } from 'node:child_process';\n" +
+  "import * as compression from 'compression';\n" +
+  "import { getType } from 'mime';\n" +
+  "import { gunzipSync } from 'node:zlib';\n" +
+  "import { createHash, randomBytes } from 'node:crypto';\n" +
+  "import * as archiver from 'archiver';\n" +
+  "import axios from 'axios';\n" +
+  "import { Ajv } from 'ajv';\n" +
+  "import { parse as JSON5 } from 'json5';\n" +
+  "import * as fileUpload from 'express-fileupload';\n" +
+  '\n' +
+  "import type { Store } from 'express-session';\n" +
+  "import * as session from 'express-session';\n" +
+  "import * as bodyParser from 'body-parser';\n" +
+  "import * as cookieParser from 'cookie-parser';\n" +
+  "import type { InternalStorageToken } from '@iobroker/socket-classes';\n" +
+  "import { McpServer, type McpAdapterConfig } from 'iobroker.mcp';\n" +
+  "import type { AdminAdapterConfig } from '../types';\n" +
+  "import { isEosSameOriginRequest } from './eosRequestSecurity';\n" +
+  "import { NexoWattStableUpdateManager } from './eosAutoUpdate';\n" +
+  '\n' +
+  'let AdapterStore;\n' +
+  '/** Content of a socket-io file */\n' +
+  'let socketIoFile: false | string;\n' +
+  '/** UUID of the installation */\n' +
+  'let uuid: string;\n' +
+  "const page404 = readFileSync(`${__dirname}/../../public/404.html`).toString('utf8');\n" +
+  "const logTemplate = readFileSync(`${__dirname}/../../public/logTemplate.html`).toString('utf8');\n" +
+  "const EOS_PASSWORD_SERVICE_USER = 'system.user.admin' as ioBroker.ObjectIDs.User;\n" +
+  "type EosAccessRole = 'admin' | 'installer' | 'enduser';\n" +
+  'interface EosPasswordClaim {\n' +
+  '    userId: string;\n' +
+  "    role: 'installer' | 'enduser';\n" +
+  '    expiresAt: number;\n' +
+  '    remoteAddress: string;\n' +
+  '}\n' +
+  'interface EosPasswordClaimRate {\n' +
+  '    count: number;\n' +
+  '    windowStartedAt: number;\n' +
+  '}\n' +
+  "const LEGACY_BACKUP_ADAPTER_NAME = 'backitup';\n" +
+  "const CUSTOMER_BACKUP_ADAPTER_NAMES = ['nexowatt-backup', 'eos-backup'] as const;\n" +
+  'const CORE_PROTECTED_ADAPTER_NAMES = [\n' +
+  "    'admin',\n" +
+  "    'eos-admin',\n" +
+  "    'backitup',\n" +
+  "    'nexowatt-backup',\n" +
+  "    'eos-backup',\n" +
+  "    'nexowatt-devices',\n" +
+  "    'nexowatt-device',\n" +
+  "    'nexowatt-dev',\n" +
+  "    'nexowatt-ui',\n" +
+  '] as const;\n' +
+  '// const FORBIDDEN_CHARS = /[\\]\\[*,;\'"`<>\\\\\\s?]/g; // with space\n' +
+  '\n' +
+  '// copied from here: https://github.com/component/escape-html/blob/master/index.js\n' +
+  `const matchHtmlRegExp = /["'&<>]/;\n` +
+  'function escapeHtml(string: string): string {\n' +
+  '    const str = `${string}`;\n' +
+  '    const match = matchHtmlRegExp.exec(str);\n' +
+  '\n' +
+  '    if (!match) {\n' +
+  '        return str;\n' +
+  '    }\n' +
+  '\n' +
+  '    let escape;\n' +
+  "    let html = '';\n" +
+  '    let index;\n' +
+  '    let lastIndex = 0;\n' +
+  '\n' +
+  '    for (index = match.index; index < str.length; index++) {\n' +
+  '        switch (str.charCodeAt(index)) {\n' +
+  '            case 34: // "\n' +
+  "                escape = '&quot;';\n" +
+  '                break;\n' +
+  '            case 38: // &\n' +
+  "                escape = '&amp;';\n" +
+  '                break;\n' +
+  "            case 39: // '\n" +
+  "                escape = '&#39;';\n" +
+  '                break;\n' +
+  '            case 60: // <\n' +
+  "                escape = '&lt;';\n" +
+  '                break;\n' +
+  '            case 62: // >\n' +
+  "                escape = '&gt;';\n" +
+  '                break;\n' +
+  '            default:\n' +
+  '                continue;\n' +
+  '        }\n' +
+  '\n' +
+  '        if (lastIndex !== index) {\n' +
+  '            html += str.substring(lastIndex, index);\n' +
+  '        }\n' +
+  '\n' +
+  '        lastIndex = index + 1;\n' +
+  '        html += escape;\n' +
+  '    }\n' +
+  '\n' +
+  '    return lastIndex !== index ? html + str.substring(lastIndex, index) : html;\n' +
+  '}\n' +
+  '\n' +
+  'function get404Page(customText?: string): string {\n' +
+  '    if (customText) {\n' +
+  '        return page404.replace(\'<div class="custom-message"></div>\', `<div class="custom-message">${customText}</div>`);\n' +
+  '    }\n' +
+  '\n' +
+  '    return page404;\n' +
+  '}\n' +
+  '\n' +
+  '/**\n' +
+  ' * Read folder recursive\n' +
+  ' *\n' +
+  ' * @param adapter the adapter instance\n' +
+  ' * @param adapterName name of the adapter or dir\n' +
+  ' * @param url url of the specific file or directory\n' +
+  ' */\n' +
+  'async function readFolderRecursive(\n' +
+  '    adapter: AdminAdapter,\n' +
+  '    adapterName: string,\n' +
+  '    url: string,\n' +
+  '): Promise<{ name: string; file: Buffer }[]> {\n' +
+  '    const filesOfDir = [];\n' +
+  '    const fileMetas = await adapter.readDirAsync(adapterName, url);\n' +
+  '    for (const fileMeta of fileMetas) {\n' +
+  '        if (!fileMeta.isDir) {\n' +
+  '            const file = await adapter.readFileAsync(adapterName, `${url}/${fileMeta.file}`);\n' +
+  '\n' +
+  '            if (file.file instanceof Buffer) {\n' +
+  '                filesOfDir.push({ name: url ? `${url}/${fileMeta.file}` : fileMeta.file, file: file.file });\n' +
+  '            } else {\n' +
+  '                filesOfDir.push({\n' +
+  '                    name: url ? `${url}/${fileMeta.file}` : fileMeta.file,\n' +
+  "                    file: Buffer.from(file.file.toString(), 'utf-8'),\n" +
+  '                });\n' +
+  '            }\n' +
+  '        } else {\n' +
+  '            filesOfDir.push(...(await readFolderRecursive(adapter, adapterName, `${url}/${fileMeta.file}`)));\n' +
+  '        }\n' +
+  '    }\n' +
+  '\n' +
+  '    return filesOfDir;\n' +
+  '}\n' +
+  '\n' +
+  'function MemoryWriteStream(): void {\n' +
+  '    Transform.call(this);\n' +
+  '    this._chunks = [];\n' +
+  '    this._transform = (chunk: Buffer, _enc: string, cb: () => void): void => {\n' +
+  '        this._chunks.push(chunk);\n' +
+  '        cb();\n' +
+  '    };\n' +
+  '    this.collect = (): Buffer<ArrayBuffer> => {\n' +
+  '        const result = Buffer.concat(this._chunks);\n' +
+  '        this._chunks = [];\n' +
+  '        return result;\n' +
+  '    };\n' +
+  '}\n' +
+  'inherits(MemoryWriteStream, Transform);\n' +
+  '\n' +
+  'interface WebOptions {\n' +
+  '    systemLanguage: ioBroker.Languages;\n' +
+  '}\n' +
+  '\n' +
+  'interface AdminAdapter extends ioBroker.Adapter {\n' +
+  '    secret: string;\n' +
+  '    setPasswordAsync?: (user: string, password: string, options?: { user?: ioBroker.ObjectIDs.User }) => Promise<void>;\n' +
+  '    checkPasswordAsync?: (\n' +
+  '        user: string,\n' +
+  '        password: string,\n' +
+  '        options?: { user?: ioBroker.ObjectIDs.User },\n' +
+  '    ) => Promise<[boolean, `system.user.${string}`] | boolean>;\n' +
+  '    setPassword?: (\n' +
+  '        user: string,\n' +
+  '        password: string,\n' +
+  '        options: { user?: ioBroker.ObjectIDs.User },\n' +
+  '        callback: (error?: Error | null) => void,\n' +
+  '    ) => void;\n' +
+  '    config: AdminAdapterConfig;\n' +
+  '    getSession: (id: string, callback: (token?: InternalStorageToken | null) => void) => void;\n' +
+  '    getObjectViewAsync: (design: string, search: string, params: ioBroker.GetObjectViewParams) => Promise<ioBroker.GetObjectViewResult>;\n' +
+  '}\n' +
+  '\n' +
+  '/** Webserver class */\n' +
+  'export default class Web {\n' +
+  '    private nexowattStableUpdateManager?: NexoWattStableUpdateManager;\n' +
+  '    server: {\n' +
+  '        app: null | Express;\n' +
+  '        server: null | (Server & { __server: { app: null | Express; server: null | Server } });\n' +
+  '    } = {\n' +
+  '        app: null,\n' +
+  '        server: null,\n' +
+  '    };\n' +
+  '\n' +
+  "    private readonly LOGIN_PAGE = '/index.html?login';\n" +
+  '\n' +
+  '    /** URL to the JSON config schema */\n' +
+  '    private readonly JSON_CONFIG_SCHEMA_URL =\n' +
+  "        // 'https://raw.githubusercontent.com/ioBroker/NexoWatt EOS Admin/master/packages/jsonConfig/schemas/jsonConfig.json';\n" +
+  "        'https://raw.githubusercontent.com/ioBroker/json-config/main/schemas/jsonConfig.json';\n" +
+  '\n' +
+  '    private store: Store | null = null;\n' +
+  '    private indexHTML: string;\n' +
+  "    baseDir = join(__dirname, '..', '..');\n" +
+  "    dirName = normalize(`${this.baseDir}/admin/`.replace(/\\\\/g, '/')).replace(/\\\\/g, '/');\n" +
+  '    private unprotectedFiles: { name: string; isDir: boolean }[];\n' +
+  '    systemConfig: Partial<ioBroker.SystemConfigObject>;\n' +
+  '\n' +
+  '    // todo delete after React will be main\n' +
+  "    wwwDir = join(this.baseDir, 'adminWww');\n" +
+  '\n' +
+  '    private settings: AdminAdapterConfig;\n' +
+  '    private readonly adapter: AdminAdapter;\n' +
+  '    private options: WebOptions;\n' +
+  '    private readonly onReady: (\n' +
+  '        server: Server & { __server: { app: null | Express; server: null | Server } },\n' +
+  '        store: Store,\n' +
+  '        adapter: AdminAdapter,\n' +
+  '    ) => void | Promise<void>;\n' +
+  '    private systemLanguage: ioBroker.Languages;\n' +
+  '    private checkTimeout: ioBroker.Timeout;\n' +
+  '    private oauth2Model: OAuth2Model;\n' +
+  '    private mcpServer: McpServer | null = null;\n' +
+  '\n' +
+  '    /** Short-lived passwordless first-activation claims. Keys are SHA-256 hashes of HttpOnly cookie tokens. */\n' +
+  '    private readonly eosPasswordClaims = new Map<string, EosPasswordClaim>();\n' +
+  '\n' +
+  '    /** Small in-memory rate limiter for unauthenticated first-activation requests. */\n' +
+  '    private readonly eosPasswordClaimRates = new Map<string, EosPasswordClaimRate>();\n' +
+  '\n' +
+  '    /**\n' +
+  '     * Create a new instance of Web\n' +
+  '     *\n' +
+  '     * @param settings settings of the adapter\n' +
+  '     * @param adapter instance of the adapter\n' +
+  '     * @param onReady callback when the server is ready\n' +
+  '     * @param options options for the webserver\n' +
+  '     */\n' +
+  '    constructor(\n' +
+  '        settings: AdminAdapterConfig,\n' +
+  '        adapter: AdminAdapter,\n' +
+  '        onReady: (\n' +
+  '            server: Server & { __server: { app: null | Express; server: null | Server } },\n' +
+  '            store: Store,\n' +
+  '            adapter: AdminAdapter,\n' +
+  '        ) => void | Promise<void>,\n' +
+  '        options: WebOptions,\n' +
+  '    ) {\n' +
+  '        this.settings = settings;\n' +
+  '        this.adapter = adapter;\n' +
+  '        this.onReady = onReady;\n' +
+  '        this.options = options;\n' +
+  '\n' +
+  "        this.systemLanguage = this.options?.systemLanguage || 'en';\n" +
+  '\n' +
+  '        void this.#init();\n' +
+  '    }\n' +
+  '\n' +
+  '    decorateLogFile(fileName: string, text?: string): string {\n' +
+  '        const log = text || readFileSync(fileName).toString();\n' +
+  "        return logTemplate.replace('@@title@@', parse(fileName).name).replace('@@body@@', log);\n" +
+  '    }\n' +
+  '\n' +
+  '    setLanguage(lang: ioBroker.Languages): void {\n' +
+  '        this.systemLanguage = lang;\n' +
+  '    }\n' +
+  '\n' +
+  '    close(): void {\n' +
+  '        if (this.checkTimeout) {\n' +
+  '            this.adapter.clearTimeout(this.checkTimeout);\n' +
+  '            this.checkTimeout = null;\n' +
+  '        }\n' +
+  '\n' +
+  '        this.mcpServer?.unload();\n' +
+  '        this.nexowattStableUpdateManager?.stop();\n' +
+  '\n' +
+  "        void this.adapter.setState('info.connection', false, true);\n" +
+  '        this.server.server?.close();\n' +
+  '    }\n' +
+  '\n' +
+  '    processMessage(msg: ioBroker.Message): boolean {\n' +
+  '        return this'... 120831 more characters
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:240:16
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL same-origin browser writes retain host, port, and transport scheme: AssertionError [ERR_ASSERTION]: Mixed-scheme origin
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:255:12
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL forged X-Forwarded-Host does not authorize another origin: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:262:12
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL cookie-authorized writes require Origin even when a bearer header is also present: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:267:12
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL explicit non-cookie bearer clients can omit Origin: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:275:16
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL malformed or non-origin URLs fail closed: AssertionError [ERR_ASSERTION]: https://eos.local:8188/
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:281:16
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL cross-site and same-site fetch metadata cannot authorize writes: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:287:16
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL socket guard denies command and host execution for customer and installer: AssertionError [ERR_ASSERTION]: installer/sendToHost
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:322:20
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL socket guard blocks sensitive object mutation including EOS Admin and xterm: AssertionError [ERR_ASSERTION]: installer/setObject/system.adapter.eos-admin.0
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:334:24
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL socket guard blocks unresolved, missing, disabled, and pending-password identities before administrator bypass: AssertionError [ERR_ASSERTION]: admin/{"userId":null}
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:345:20
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL first-password change requires a bounded nonempty current credential: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+200 !== 400
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:401:16
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL first-password change rejects invalid current credentials and unavailable verification: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+200 !== 403
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:410:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL first-password change with correct current credential writes and invalidates the session: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 1
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:427:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL role-cache refresh suspends authorization until one complete snapshot is committed: AssertionError [ERR_ASSERTION]: No socket authorization during asynchronous refresh
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:464:12
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:19
+FAIL role-cache read failures leave authorization closed and never commit a partial snapshot: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+true !== false
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:480:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL fresh session secret uses 32 random bytes and is persisted before web startup: AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
++   24
+-   32
+  ]
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:540:16
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL session-secret persistence failure denies web startup: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:553:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL missing system.config never selects a built-in fallback session secret: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'negative-control-legacy-fallback-placeholder'
+- undefined
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:559:12
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+FAIL invalid nonempty existing installation secret denies web startup: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+1 !== 0
+
+    at /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:577:16
+    at async /tmp/eos-boundary-negative-control-tj_kaefs/tools/nexowatt-security-boundaries-selftest.cjs:588:13
+
+Exit code: 1

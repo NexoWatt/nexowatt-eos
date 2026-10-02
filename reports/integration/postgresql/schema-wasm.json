@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-01T20:12:12.052259+00:00",
+  "scope": "supplemental synthetic SQL/schema/RLS in embedded WASM only",
+  "package": "@electric-sql/pglite",
+  "packageVersion": "0.5.8",
+  "engine": "PostgreSQL18.3(WASM32)",
+  "targetEngine": "PostgreSQL17.11nativeDebian13ARM64",
+  "isProductDependency": false,
+  "latestPostgreSQLSecurityRelease": false,
+  "securityClearance": false,
+  "caseCount": 10,
+  "nodeTestCountIncludingParent": 11,
+  "passed": 11,
+  "failed": 0,
+  "actualNetworkTests": 0,
+  "actualTlsTests": 0,
+  "actualMultiClientTests": 0,
+  "checks": [
+    "Fresh schema SQL executes",
+    "Restricted role privileges",
+    "Binary value roundtrip in objects domain",
+    "Cross-domain write and role escalation rejected",
+    "States cannot read/change objects",
+    "Event domain RLS",
+    "Byte length constraints",
+    "Schema/version/RLS modification rejected",
+    "Exact runtime admission SQL executes under both identities",
+    "Parameterized injection string remains data"
+  ],
+  "identitySimulation": "SET SESSION AUTHORIZATION from isolated in-memory bootstrap identity; not connection authentication",
+  "sourceBindings": [
+    {
+      "path": "runtime/postgresql/schema.sql",
+      "bytes": 3041,
+      "sha256": "19fd184544f6d87f12ef254181d0a3d0b743636c367861e7a4b5a6f9557ae33d"
+    },
+    {
+      "path": "runtime/postgresql/packages/store/index.cjs",
+      "bytes": 19471,
+      "sha256": "2d6080ad4e728a2316c493eff56d501503ba34faee25ea5c5600c8115eab1f3e"
+    },
+    {
+      "path": "tests/postgresql/schema-wasm.test.cjs",
+      "bytes": 6265,
+      "sha256": "1ceb01d7737c9fbe412b8ae51ebdb3cf96d874251ddafd9bd60ee3638ab4cb85"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm.tap",
+      "bytes": 2605,
+      "sha256": "f43ce31b7aae9c3cf9578b6e6f97e4e34228d1949d0e5d494c150fb4b6d097b6"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pglite-package-lock.json",
+      "bytes": 604,
+      "sha256": "9c8aeef8cb3622c7516a9641c4bcca0b6192443628bd880d522fdea7ba07139a"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pglite-package.json",
+      "bytes": 147,
+      "sha256": "0c151c9408f94e4a2fded1d2a4e21b69f00e8fe1e630feb5707577a6156f5dff"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/pglite-install.log",
+      "bytes": 173,
+      "sha256": "274c23fe475b2f1ec9c9ee38138417d457fc106a4846c5d6957b8d4b8c80cc6f"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm-initial-role-fixture.log",
+      "bytes": 2060,
+      "sha256": "d8fb68b1da7df726c850b4ef12c29a5e2b9e469e8538f8165947b8b71b15ae34"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/schema-wasm-initial-role-fixture.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "wasmBindings": [
+    {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/pglite-client/node_modules/@electric-sql/pglite/dist/initdb.wasm",
+      "bytes": 395242,
+      "sha256": "4c8988dca3b2f0bbfd23a0714023e4822a2909ead01804f37acffd9ff3ca9f8a"
+    },
+    {
+      "path": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/pglite-client/node_modules/@electric-sql/pglite/dist/pglite.wasm",
+      "bytes": 10088161,
+      "sha256": "356b89f6fcb2ab3a397bec4128327b67b7137ec2a900b13251dade81bcbc0ef0"
+    }
+  ],
+  "initialAttempt": {
+    "status": "failed-invalid-test-fixture",
+    "passed": 8,
+    "failedIncludingParent": 2,
+    "explanation": "SET ROLE from a superuser session retains authority to switch roles; initial negative role-switch check was invalid. Replaced with SET SESSION AUTHORIZATION and asserted session_user. Initial raw log retained; not a product defect."
+  },
+  "limitations": [
+    "Different major/minor engine than target; rerun all cases on native17.11",
+    "Single exclusive WASM connection; no TCP/mTLS/authentication/process isolation evidence",
+    "No sustained concurrency, durable crash recovery, ARM64 hardware or controller integration acceptance",
+    "PGlite18.3 is not current upstream security patch level and is not an EOS release dependency"
+  ],
+  "sourceStableDuringFinalRerun": true,
+  "finalRerunCommand": [
+    "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/postgresql/schema-wasm.test.cjs"
+  ]
+}

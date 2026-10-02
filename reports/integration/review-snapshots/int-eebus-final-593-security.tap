@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: unpaired session has an enforced total pairing deadline that frees its slot
+ok 1 - unpaired session has an enforced total pairing deadline that frees its slot
+  ---
+  duration_ms: 10.948019
+  type: 'test'
+  ...
+# Subtest: session limit rejects the 65th socket and stop force-closes every retained session
+ok 2 - session limit rejects the 65th socket and stop force-closes every retained session
+  ---
+  duration_ms: 22.552215
+  type: 'test'
+  ...
+# Subtest: repeated discovery cannot create parallel outbound handshakes and stop resolves pending connect
+ok 3 - repeated discovery cannot create parallel outbound handshakes and stop resolves pending connect
+  ---
+  duration_ms: 5.133694
+  type: 'test'
+  ...
+# Subtest: late close from a dropped socket cannot delete a replacement session for the same peer
+ok 4 - late close from a dropped socket cannot delete a replacement session for the same peer
+  ---
+  duration_ms: 1.559008
+  type: 'test'
+  ...
+# Subtest: actual TLS/WebSocket malformed frame during deferred onNode is contained and never creates a late session
+ok 5 - actual TLS/WebSocket malformed frame during deferred onNode is contained and never creates a late session
+  ---
+  duration_ms: 83.156512
+  type: 'test'
+  ...
+# Subtest: data before completed handshake never reaches message/CLS handlers
+ok 6 - data before completed handshake never reaches message/CLS handlers
+  ---
+  duration_ms: 7.743202
+  type: 'test'
+  ...
+# Subtest: unsolicited PIN state and input cannot skip trusted hello and protocol selection
+ok 7 - unsolicited PIN state and input cannot skip trusted hello and protocol selection
+  ---
+  duration_ms: 2.165496
+  type: 'test'
+  ...
+# Subtest: protocol selection is rejected before mutual hello
+ok 8 - protocol selection is rejected before mutual hello
+  ---
+  duration_ms: 0.520868
+  type: 'test'
+  ...
+# Subtest: complete trusted hello and protocol selection permit data
+ok 9 - complete trusted hello and protocol selection permit data
+  ---
+  duration_ms: 1.929689
+  type: 'test'
+  ...
+# Subtest: trust revocation blocks the next data frame and outbound reuse
+ok 10 - trust revocation blocks the next data frame and outbound reuse
+  ---
+  duration_ms: 1.203951
+  type: 'test'
+  ...
+# Subtest: local revoke/disconnect immediately removes outbound permission
+ok 11 - local revoke/disconnect immediately removes outbound permission
+  ---
+  duration_ms: 0.709093
+  type: 'test'
+  ...
+# Subtest: second peer session cannot replace the existing one
+ok 12 - second peer session cannot replace the existing one
+  ---
+  duration_ms: 1.503965
+  type: 'test'
+  ...
+# Subtest: peer certificate is mandatory before an incoming session is registered
+ok 13 - peer certificate is mandatory before an incoming session is registered
+  ---
+  duration_ms: 0.997298
+  type: 'test'
+  ...
+# Subtest: frame queue is bounded during asynchronous trust checks
+ok 14 - frame queue is bounded during asynchronous trust checks
+  ---
+  duration_ms: 24.385683
+  type: 'test'
+  ...
+# Subtest: TLS public key identity matches OpenSSL SKI and cannot be replaced by discovery values
+ok 15 - TLS public key identity matches OpenSSL SKI and cannot be replaced by discovery values
+  ---
+  duration_ms: 39.200791
+  type: 'test'
+  ...
+# Subtest: untrusted control and bare JSON cannot tunnel a valid SPINE command into the CLS parser
+ok 16 - untrusted control and bare JSON cannot tunnel a valid SPINE command into the CLS parser
+  ---
+  duration_ms: 3.410569
+  type: 'test'
+  ...
+# Subtest: trusted-but-unfinished control and JSON frames cannot tunnel a CLS command either
+ok 17 - trusted-but-unfinished control and JSON frames cannot tunnel a CLS command either
+  ---
+  duration_ms: 0.609812
+  type: 'test'
+  ...
+# Subtest: even a completed trusted session accepts SPINE only through the data channel
+ok 18 - even a completed trusted session accepts SPINE only through the data channel
+  ---
+  duration_ms: 1.172203
+  type: 'test'
+  ...
+# Subtest: PIN requests cannot disclose configured PIN before trusted completed protocol selection
+ok 19 - PIN requests cannot disclose configured PIN before trusted completed protocol selection
+  ---
+  duration_ms: 0.672567
+  type: 'test'
+  ...
+# Subtest: legitimate PIN request after trusted hello and protocol selection retains pairing flow
+ok 20 - legitimate PIN request after trusted hello and protocol selection retains pairing flow
+  ---
+  duration_ms: 0.924008
+  type: 'test'
+  ...
+# Subtest: revoked session cannot request PIN after previously completed protocol selection
+ok 21 - revoked session cannot request PIN after previously completed protocol selection
+  ---
+  duration_ms: 0.306334
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 329.685424

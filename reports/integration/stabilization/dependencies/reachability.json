@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "kind": "reviewed-runtime-call-path",
+  "baseline": "integrated-roles-candidate-r2",
+  "advisory": "GHSA-67mh-4wv8-2f99",
+  "uniqueAdvisories": 1,
+  "cveId": null,
+  "baselinePackageNodes": 3,
+  "chain": [
+    {
+      "name": "iobroker.js-controller",
+      "version": "7.2.2"
+    },
+    {
+      "name": "@alcalzone/esbuild-register",
+      "version": "2.5.1-1"
+    },
+    {
+      "name": "esbuild",
+      "version": "0.11.23"
+    }
+  ],
+  "sourceBindings": {
+    "controllerCjs": {
+      "path": "node_modules/iobroker.js-controller/build/cjs/main.js",
+      "sha256": "88803fafbf1d6138337544dc6ecc0c2820cc08a992c2e8f087ebaf76645ff272"
+    },
+    "controllerEsm": {
+      "path": "node_modules/iobroker.js-controller/build/esm/main.js",
+      "sha256": "53ad6e620d7ffc78b72f9eb827701d4df47f2db0f143a7031f0c8529c26a462a"
+    },
+    "defaultNodeArgsCjs": {
+      "path": "node_modules/iobroker.js-controller/node_modules/@iobroker/js-controller-common-db/build/cjs/lib/common/tools.js",
+      "sha256": "471884540adde741e539be9dd8f6decddca9971685d359ccab487a1476d0e727"
+    },
+    "defaultNodeArgsEsm": {
+      "path": "node_modules/iobroker.js-controller/node_modules/@iobroker/js-controller-common-db/build/esm/lib/common/tools.js",
+      "sha256": "0aed4f76a9a5d61752ff34268a67db016e92e505667ed981c727270d0b23c122"
+    },
+    "loader": {
+      "path": "node_modules/@alcalzone/esbuild-register/dist/node.js",
+      "sha256": "2818ec88d08b0b4beb44047688f59236fa5825fb03829874dc08b0b252a39a75"
+    },
+    "loaderRegistration": {
+      "path": "node_modules/@alcalzone/esbuild-register/register.js",
+      "sha256": "824dced53ce2fc92316ad511cbf816555cb11e9c03090fafba593fb7b3e28322"
+    }
+  },
+  "reviewedCalls": [
+    {
+      "path": "node_modules/iobroker.js-controller/build/cjs/main.js",
+      "pattern": "require2(\"@alcalzone/esbuild-register\")",
+      "condition": "adapterMainFile.endsWith(.ts) inside compact adapter path"
+    },
+    {
+      "path": "node_modules/iobroker.js-controller/node_modules/@iobroker/js-controller-common-db/build/cjs/lib/common/tools.js",
+      "pattern": "getDefaultNodeArgs(mainFile)",
+      "condition": "adds -r @alcalzone/esbuild-register only for .ts entry point"
+    },
+    {
+      "path": "node_modules/@alcalzone/esbuild-register/dist/node.js",
+      "pattern": "_esbuild.transformSync.call",
+      "condition": "require hook transforms JS/TS/JSX source; no esbuild serve/context call at this invocation"
+    }
+  ],
+  "productGuard": {
+    "path": "runtime/controller-profile/guard.cjs",
+    "sha256": "7538f4727376c40b9f6e0e65b4aa848363166b0e95e8edf45c0e6ab63dd42a44",
+    "restrictions": [
+      "safeRelative admits only js/cjs/mjs entry points",
+      "assertEnvironment requires compact=false",
+      "NODE_OPTIONS and NODE_PATH forbidden"
+    ],
+    "inference": "Advisory development-server entry point was not observed in admitted Admin/UI execution paths. This is limited call-path analysis, not a universal non-exploitability or formal VEX attestation."
+  },
+  "remediation": {
+    "state": "patched_in_verified_offline_dependency_tree",
+    "esbuild": "0.28.2",
+    "controllerUnchanged": true,
+    "loaderUnchanged": true,
+    "patchFloorFromMaintainer": "0.25.0",
+    "proof": "installed-policy.json and raw/controller-loader.tap"
+  },
+  "sources": [
+    {
+      "url": "https://github.com/evanw/esbuild/security/advisories/GHSA-67mh-4wv8-2f99",
+      "checkedOn": "2026-10-01",
+      "kind": "maintainer security advisory",
+      "facts": [
+        "affected <=0.24.2; fixed >=0.25.0",
+        "development-server CORS permits arbitrary web origins to read served source",
+        "No known CVE field"
+      ]
+    },
+    {
+      "url": "https://esbuild.github.io/api/#transform",
+      "checkedOn": "2026-10-01",
+      "kind": "maintainer API documentation"
+    },
+    {
+      "url": "https://registry.npmjs.org/esbuild/0.28.2",
+      "checkedOn": "2026-10-01",
+      "kind": "publisher registry metadata",
+      "version": "0.28.2",
+      "nodeEngine": ">=18"
+    }
+  ]
+}

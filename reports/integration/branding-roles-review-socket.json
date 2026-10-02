@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 2,
+  "createdAt": "2026-10-01T15:17:54.250Z",
+  "test": "real-candidate-socket-read-subscription-publication-boundaries",
+  "status": "passed",
+  "scope": "Actual SocketCommandsAdmin 2.6.0 and EOS policy/session source, with database, adapter-core discovery and transport fixtures; no network or hardware test.",
+  "correction": "Supersedes earlier review JSON whose version label said 2.3.4 incorrectly; that earlier fixture also loaded this candidate path (2.6.0). Version is now asserted from actual package metadata.",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64",
+    "dependencyVersion": "2.6.0"
+  },
+  "command": "EOS_REVIEW_DEPENDENCIES=<isolated-candidate>/app/node_modules node reports/integration/raw/branding-roles-review-socket.cjs",
+  "baseline": {
+    "configSecretExposed": true,
+    "unacledUserPasswordExposed": true,
+    "valuesAreNonSecretFixtureMarkers": true
+  },
+  "checkCount": 19,
+  "checks": [
+    {
+      "role": "installer",
+      "command": "getAllObjects",
+      "result": "denied-before-upstream-read"
+    },
+    {
+      "role": "installer",
+      "command": "getObjects",
+      "result": "denied-before-upstream-read"
+    },
+    {
+      "role": "installer",
+      "command": "getObject",
+      "result": "denied-before-upstream-read"
+    },
+    {
+      "role": "installer",
+      "command": "global-object-publication",
+      "result": "no-implicit-browser-subscription-or-publication"
+    },
+    {
+      "role": "installer",
+      "command": "subscribeObjects",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "installer",
+      "command": "subscribe",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "installer",
+      "command": "subscribeFiles",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "installer",
+      "command": "clientSubscribe",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "installer",
+      "command": "post-denial-publication",
+      "result": "no-object-state-file-events"
+    },
+    {
+      "role": "enduser",
+      "command": "getAllObjects",
+      "result": "denied-before-upstream-read"
+    },
+    {
+      "role": "enduser",
+      "command": "getObjects",
+      "result": "denied-before-upstream-read"
+    },
+    {
+      "role": "enduser",
+      "command": "getObject",
+      "result": "denied-before-upstream-read"
+    },
+    {
+      "role": "enduser",
+      "command": "global-object-publication",
+      "result": "no-implicit-browser-subscription-or-publication"
+    },
+    {
+      "role": "enduser",
+      "command": "subscribeObjects",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "enduser",
+      "command": "subscribe",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "enduser",
+      "command": "subscribeFiles",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "enduser",
+      "command": "clientSubscribe",
+      "result": "denied-before-subscription"
+    },
+    {
+      "role": "enduser",
+      "command": "post-denial-publication",
+      "result": "no-object-state-file-events"
+    },
+    {
+      "role": "previously-privileged",
+      "command": "publication-after-security-object-change",
+      "result": "actual-session-guard-denies-even-if-transport-and-subscription-remain"
+    }
+  ],
+  "files": [
+    {
+      "path": "components/admin/src/lib/eosApplianceProfile.js",
+      "sha256": "1812e15fd0992ad6e6f8582bfe3a235e2a7a04ddd694ec3fdc79267581dad6f6"
+    },
+    {
+      "path": "components/admin/src/lib/eosSessionSecurity.js",
+      "sha256": "81c27a33278a20d6b410ea39cdb4060fce4f533f27847487078253c184181f3e"
+    },
+    {
+      "path": "reports/integration/raw/branding-roles-review-socket.cjs",
+      "sha256": "c83c1be00f349d5bb94cd4bb38552a805ebbe85bcb046ce3b449a688a0ed5fbd"
+    },
+    {
+      "path": "@iobroker/socket-classes/package.json",
+      "sha256": "9c3d2a33df78702ad18051e014a36b9576ff530780f10dfaf2c6af1458f09fae"
+    },
+    {
+      "path": "@iobroker/socket-classes/build/lib/socketCommandsAdmin.js",
+      "sha256": "eae5608c8053ee0fa7c1728e609479388f9881d47adffd73d8523e32e4fc8e60"
+    },
+    {
+      "path": "@iobroker/socket-classes/build/lib/socketCommands.js",
+      "sha256": "d7362b9ebb55260c2ffce9513148d248d862763e9c936b9ce10ff2ec7fc16c6d"
+    },
+    {
+      "path": "@iobroker/socket-classes/build/lib/socketAdmin.js",
+      "sha256": "cfb111b34169b5a14976e2a00b70d98c84fd0c5e8774dcbe886bc394435d7946"
+    },
+    {
+      "path": "@iobroker/js-controller-common-db/package.json",
+      "sha256": "e22cba3601e72c242119e161f2a6f64f6706826f92ba73dc8adb90b116536dd4"
+    },
+    {
+      "path": "@iobroker/js-controller-common-db/build/cjs/lib/common/tools.js",
+      "sha256": "471884540adde741e539be9dd8f6decddca9971685d359ccab487a1476d0e727"
+    }
+  ],
+  "limits": [
+    "The upstream publish primitive does not apply object ACLs itself; this EOS boundary relies on denying non-Service subscription commands and revoking existing sessions.",
+    "Missed database-change events rely additionally on the existing five-second watchdog; this fixture checks the ordinary synchronous event path.",
+    "No full product penetration test, live browser, hardware or cross-process atomicity claim."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-01T17:02:13.261759+00:00",
+    "component": {
+      "type": "application",
+      "name": "NexoWatt EOS external runtime input",
+      "version": "0.2.0-test.1"
+    },
+    "properties": [
+      {
+        "name": "eos:scope",
+        "value": "supplied Linux ARM64 Node archive only; not target device inventory"
+      },
+      {
+        "name": "eos:missing-scope",
+        "value": "Node embedded libraries, OS, Redis, firmware, bootloader and target configuration"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "application",
+      "name": "Node.js",
+      "version": "24.21.0",
+      "bom-ref": "node-linux-arm64-24.21.0",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6ad1325edbdb5649c379b75a237147a666c95d4f9ae8d340fef2d1575d289ad2"
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://nodejs.org/download/release/v24.21.0/node-v24.21.0-linux-arm64.tar.xz"
+        }
+      ],
+      "properties": [
+        {
+          "name": "eos:archive-filename",
+          "value": "node-v24.21.0-linux-arm64.tar.xz"
+        },
+        {
+          "name": "eos:target-executed",
+          "value": "false"
+        }
+      ]
+    }
+  ]
+}

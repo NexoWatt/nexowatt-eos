@@ -1,0 +1,362 @@
+/*
+ * Datei: src-admin-tab/src/styles.css
+ * Rolle: Admin-React-Quelle
+ * Zweck: React-Quellcode für ioBroker-Admin-Tab und Installer-Einstiegsseiten.
+ * Wartung: Diese Styles hängen an festen HTML-Klassen/IDs. Vor Änderungen betroffene Seiten mobil und Desktop prüfen.
+ */
+/*
+ * NexoWatt Code-Kommentar (DE)
+ * Zweck: Stylesheet der React-Admin-Tab-Quelle.
+ * Zusammenhänge:
+ * - Build wird nach admin/react/ geschrieben.
+ * - Admin-Layout muss ioBroker-Admin-kompatibel bleiben.
+ * Wartungshinweise:
+ * - Bei Änderungen admin:build ausführen.
+ */
+
+:root {
+  color-scheme: dark;
+  --nw-bg: #0b1220;
+  --nw-bg-2: rgba(2, 6, 23, 0.72);
+  --nw-bg-3: rgba(2, 6, 23, 0.46);
+  --nw-border: rgba(148, 163, 184, 0.22);
+  --nw-border-strong: rgba(34, 197, 94, 0.4);
+  --nw-text: rgba(255, 255, 255, 0.94);
+  --nw-muted: rgba(255, 255, 255, 0.68);
+  --nw-accent: #22c55e;
+  --nw-accent-soft: rgba(34, 197, 94, 0.12);
+  --nw-danger: #ef4444;
+  --nw-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 20% 0%, rgba(30, 58, 138, 0.28), transparent 58%),
+    radial-gradient(900px 500px at 90% 20%, rgba(14, 116, 144, 0.18), transparent 60%),
+    var(--nw-bg);
+  color: var(--nw-text);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+code,
+.nw-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.nw-page-shell {
+  min-height: 100vh;
+  position: relative;
+}
+
+.nw-page-gradient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.nw-page-wrap {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 22px 48px;
+}
+
+.nw-page-wrap--compact {
+  max-width: 980px;
+}
+
+.nw-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.nw-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nw-brand__logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nw-hero h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.15rem);
+}
+
+.nw-instance-badge {
+  border: 1px solid var(--nw-border);
+  background: var(--nw-bg-3);
+  color: var(--nw-muted);
+  padding: 10px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.nw-header-card,
+.nw-card {
+  border: 1px solid var(--nw-border);
+  background: var(--nw-bg-2);
+  border-radius: 18px;
+  box-shadow: var(--nw-shadow);
+  backdrop-filter: blur(12px);
+}
+
+.nw-header-card {
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+.nw-header-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.nw-link-button,
+.nw-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--nw-border);
+  background: rgba(2, 6, 23, 0.46);
+  color: var(--nw-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease, border-color 0.15s ease;
+}
+
+.nw-link-button:hover,
+.nw-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.nw-button--primary {
+  border-color: var(--nw-border-strong);
+  background: var(--nw-accent-soft);
+}
+
+.nw-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.nw-subtitle,
+.nw-text-muted {
+  color: var(--nw-muted);
+  line-height: 1.55;
+}
+
+.nw-subtitle {
+  margin: 0;
+}
+
+.nw-card {
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.nw-card--centered {
+  text-align: center;
+}
+
+.nw-card h2 {
+  margin: 0 0 14px;
+  font-size: 1.08rem;
+}
+
+.nw-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.nw-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.nw-button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.nw-list {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.65;
+}
+
+.nw-status {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--nw-border);
+  background: rgba(255, 255, 255, 0.03);
+  font-weight: 600;
+}
+
+.nw-status--ok {
+  border-color: rgba(34, 197, 94, 0.28);
+  color: #9ee6b8;
+}
+
+.nw-status--bad {
+  border-color: rgba(239, 68, 68, 0.32);
+  color: #f9a8a8;
+}
+
+.nw-install-hint {
+  margin-top: 18px;
+  color: var(--nw-muted);
+  font-size: 0.92rem;
+}
+
+.nw-field-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--nw-muted);
+  font-size: 0.92rem;
+}
+
+.nw-input {
+  width: 100%;
+  min-height: 46px;
+  border-radius: 12px;
+  border: 1px solid var(--nw-border);
+  background: rgba(2, 6, 23, 0.36);
+  color: var(--nw-text);
+  padding: 11px 14px;
+  outline: none;
+}
+
+.nw-input:focus {
+  border-color: var(--nw-border-strong);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+}
+
+.nw-inline-controls,
+.nw-actions-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nw-actions-row--centered {
+  justify-content: center;
+}
+
+.nw-inline-controls .nw-input {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 860px) {
+  .nw-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nw-grid--two {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .nw-page-wrap {
+    padding: 20px 14px 32px;
+  }
+
+  .nw-inline-controls--stack-mobile {
+    align-items: stretch;
+  }
+
+  .nw-inline-controls--stack-mobile .nw-button,
+  .nw-inline-controls--stack-mobile .nw-input {
+    width: 100%;
+  }
+}
+
+/* RC45: Geschützte Admin-Routen zeigen keinerlei sensible Inhalte vor der EOS-Anmeldung. */
+.nw-access-gate {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.nw-access-gate__form {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.nw-access-gate__form .nw-actions-row {
+  margin-top: 8px;
+}
+
+.nw-protected-route {
+  min-height: 100vh;
+}
+
+.nw-protected-route__session {
+  position: fixed;
+  z-index: 20;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(620px, calc(100vw - 36px));
+  padding: 9px 10px 9px 14px;
+  border: 1px solid var(--nw-border-strong);
+  border-radius: 999px;
+  background: rgba(2, 6, 23, 0.94);
+  box-shadow: var(--nw-shadow);
+  color: var(--nw-muted);
+  font-size: 0.82rem;
+}
+
+.nw-protected-route__session .nw-button {
+  min-height: 34px;
+  padding: 6px 11px;
+}
+
+@media (max-width: 640px) {
+  .nw-protected-route__session {
+    position: static;
+    margin: 12px;
+    border-radius: 14px;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: laboratory assembly copies exact base and plugin bytes without modifying source
+ok 1 - laboratory assembly copies exact base and plugin bytes without modifying source
+  ---
+  duration_ms: 15.769083
+  type: 'test'
+  ...
+# Subtest: existing destination and paths under source are never changed
+ok 2 - existing destination and paths under source are never changed
+  ---
+  duration_ms: 2.535876
+  type: 'test'
+  ...
+# Subtest: a writable shared destination parent is rejected before any copy
+ok 3 - a writable shared destination parent is rejected before any copy
+  ---
+  duration_ms: 3.015101
+  type: 'test'
+  ...
+# Subtest: changed driver lock and installed version cannot pass admission
+ok 4 - changed driver lock and installed version cannot pass admission
+  ---
+  duration_ms: 16.535733
+  type: 'test'
+  ...
+# Subtest: lock-listed omitted optional packages are explicitly reported as absent
+ok 5 - lock-listed omitted optional packages are explicitly reported as absent
+  ---
+  duration_ms: 8.250831
+  type: 'test'
+  ...
+# Subtest: unlocked installed driver packages fail admission
+ok 6 - unlocked installed driver packages fail admission
+  ---
+  duration_ms: 2.073075
+  type: 'test'
+  ...
+# Subtest: wrong controller, package identity or fictitious embedded Server fail closed
+ok 7 - wrong controller, package identity or fictitious embedded Server fail closed
+  ---
+  duration_ms: 32.352398
+  type: 'test'
+  ...
+# Subtest: lifecycle metadata is rejected and partial copy removed
+ok 8 - lifecycle metadata is rejected and partial copy removed
+  ---
+  duration_ms: 4.378463
+  type: 'test'
+  ...
+# Subtest: tree copier preserves internal symlinks but rejects escaping links
+ok 9 - tree copier preserves internal symlinks but rejects escaping links
+  ---
+  duration_ms: 2.830381
+  type: 'test'
+  ...
+# Subtest: separate experimental profile requires both encrypted store validations without release claims
+ok 10 - separate experimental profile requires both encrypted store validations without release claims
+  ---
+  duration_ms: 0.747731
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 191.999567

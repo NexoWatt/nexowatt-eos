@@ -1,0 +1,276 @@
+{
+  "eos-admin": {
+    "name": "eos-admin",
+    "version": "7.9.78",
+    "title": "NexoWatt EOS Admin",
+    "titleLang": {
+      "en": "NexoWatt EOS Admin",
+      "de": "NexoWatt EOS Admin",
+      "ru": "NexoWatt EOS Admin",
+      "pt": "NexoWatt EOS Admin",
+      "pl": "NexoWatt EOS Admin",
+      "fr": "NexoWatt EOS Admin",
+      "nl": "NexoWatt EOS Admin",
+      "it": "NexoWatt EOS Admin",
+      "es": "NexoWatt EOS Admin",
+      "uk": "NexoWatt EOS Admin",
+      "zh-cn": "NexoWatt EOS Admin"
+    },
+    "desc": {
+      "en": "Standalone NexoWatt EOS administration interface with role-based visibility, legacy admin lock and protected system adapters for Energy Operation System installations.",
+      "de": "Eigenständige NexoWatt EOS Administrationsoberfläche mit rollenbasierter Sichtbarkeit, Legacy-Admin-Sperre und geschützten Systemadaptern für Energy Operation System Installationen."
+    },
+    "news": {
+      "7.9.76": {
+        "en": "Makes every writable datapoint operable by its native type: button/trigger, boolean switch, or scalar value dialog. Safety-relevant commands are available only in expert mode and direct writes are deduplicated.",
+        "de": "Macht jeden beschreibbaren Datenpunkt entsprechend seinem Grundtyp bedienbar: Button/Trigger, boolescher Schalter oder Wertdialog. Sicherheitsrelevante Befehle sind nur im Expertenmodus verfügbar und direkte Schreibbefehle werden gegen Doppelauslösung geschützt.",
+        "nl": "Maakt elk beschrijfbaar datapunt bedienbaar volgens het basistype: knop/trigger, booleaanse schakelaar of waardedialoog. Veiligheidsrelevante opdrachten zijn alleen beschikbaar in expertmodus en directe schrijfopdrachten worden tegen dubbele activering beveiligd."
+      },
+      "7.9.71": {
+        "en": "Fixed Module filter popups: closed keep-mounted MUI menus can no longer become visible, menu anchors remain stable, popup DOM work is scoped to open overlays, and runtime cache paths were advanced.",
+        "de": "Filter-Popups unter Module korrigiert: geschlossene MUI-Menüs können nicht mehr sichtbar werden, die Verankerung bleibt stabil, DOM-Anpassungen greifen nur bei geöffneten Overlays und die Runtime-Cachepfade wurden erneuert.",
+        "nl": "Filterpop-ups onder Modules hersteld: gesloten MUI-menu’s kunnen niet meer zichtbaar worden, ankers blijven stabiel, DOM-aanpassingen gelden alleen voor geopende overlays en de runtime-cachepaden zijn vernieuwd."
+      },
+      "7.9.54": {
+        "en": "Restores stable native ioBroker ObjectBrowser datapoint handling: read-only states stay read-only, writable states can be edited, and the broken DPWrite module-federation bundle/performance guard is removed.",
+        "de": "Stellt die stabile native ioBroker-ObjectBrowser-Datenpunktbedienung wieder her: nur lesbare States bleiben nur lesbar, beschreibbare States sind editierbar, und das fehlerhafte DPWrite-Module-Federation-Bundle/Performance-Guard ist entfernt."
+      },
+      "7.9.49": {
+        "en": "Reliable manual writes for writable states, corrected boolean switch handling and faster objects page updates.",
+        "de": "Zuverlässiges manuelles Beschreiben beschreibbarer Datenpunkte, korrigierte Boolean-/Switch-Behandlung und schnellere Datenpunkte-Oberfläche."
+      },
+      "7.9.48": {
+        "en": "Role guard fix: formal admin/installer/end-user roles, end-user auto-routing away from the blank intro page, and role-filtered EOS navigation.",
+        "de": "Rollen-Fix: klare Admin-/Installateur-/Endkundenrollen, automatische Endkunden-Weiterleitung weg von der leeren Intro-Seite und rollenbasierte EOS-Navigation."
+      },
+      "7.9.47": {
+        "en": "Quiet delete guard fix: stale delete-lock repair runs once and skips protected core adapters, preventing repeated log entries while service deletion remains functional.",
+        "de": "Leiser Delete-Guard-Fix: Reparatur alter Löschsperren läuft nur einmal und überspringt geschützte Core-Adapter, wodurch wiederholte Logeinträge verhindert werden; Dienste löschen bleibt funktionsfähig."
+      },
+      "7.9.44": {
+        "en": "Fix service/instance delete button: core-only protection, stale lock repair, guarded DOM scope.",
+        "de": "Fix für Dienste/Instanzen löschen: Schutz nur für EOS-Core, Reparatur alter Locks, enger DOM-Schutz."
+      },
+      "7.9.42": {
+        "en": "Forced visible update package with cache-busting version markers; adapter/instance deletion is blocked only for Admin/EOS Admin, BackItUp/Backup, NexoWatt Devices and NexoWatt UI; writable datapoints keep reliable command writes.",
+        "de": "Sichtbares Force-Update mit Cache-Busting-Versionen; Adapter-/Instanz-Löschung bleibt nur für Admin/EOS Admin, BackItUp/Backup, NexoWatt Devices und NexoWatt UI gesperrt; beschreibbare Datenpunkte schreiben Befehlswerte weiterhin zuverlässig."
+      },
+      "7.9.38": {
+        "en": "Fixed native dialog/popup compatibility and adapter install search after EOS overlay changes.",
+        "de": "Native Dialoge, Popups und Adapter-Installationssuche nach EOS-Overlay-Anpassungen korrigiert."
+      },
+      "7.9.37": {
+        "en": "Fixes notification dialog closing/acknowledgement handling, keeps BackItUp untouched by EOS object protection, and repairs German EOS Security text encoding on settings pages.",
+        "de": "Korrigiert das Schließen/Bestätigen von Benachrichtigungen, lässt BackItUp von EOS-Objektschutz unverändert und repariert deutsche EOS-Sicherheitsbeschriftungen in den Einstellungen."
+      },
+      "7.9.35": {
+        "en": "Fixes EOS Admin login redirect/logout origin handling and restores reliable interaction with adapter instance configuration dialogs.",
+        "de": "Korrigiert den EOS-Admin Login-/Logout-Redirect und stellt die Bedienung von Adapter-Instanzkonfigurationen wieder zuverlässig her."
+      },
+      "7.9.31": {
+        "en": "UI cleanup: fixes EOS Security German text encoding, removes the logout tile next to the compact navigation arrow, and expands EOS Assist with AI-ready multi-path setup guidance.",
+        "de": "UI-Feinschliff: korrigiert deutsche EOS-Sicherheitsbeschriftungen, entfernt die Abmelden-Kachel neben dem Kompaktpfeil und erweitert EOS Assist um KI-bereite Mehrwege-Einrichtungshilfe."
+      },
+      "7.9.30": {
+        "en": "UI polish: moves the compact navigation button further left, improves the black NexoWatt logo badge, fixes EOS Assist opening and hides EOS Security from non-admin users.",
+        "de": "UI-Feinschliff: Kompakt-Navigationspfeil weiter nach links gesetzt, schwarzes NexoWatt-Logo verbessert, EOS Assist Öffnen repariert und EOS Security für Nicht-Administratoren ausgeblendet."
+      },
+      "7.9.29": {
+        "en": "Self-update hardening: EOS Admin now uses its own webserver upgrade path, update-all skips the running EOS shell, and object-level delete locks are cleared so updates stay possible.",
+        "de": "Self-Update gehärtet: EOS Admin nutzt nun den eigenen Webserver-Updatepfad, Update-Alle überspringt die laufende EOS-Oberfläche und objektbasierte Löschsperren werden entfernt, damit Updates möglich bleiben."
+      },
+      "7.9.27": {
+        "en": "Header/navigation polish: black logo background, non-destructive compact navigation toggle and EOS Assist setup helper preview.",
+        "de": "Header-/Navigations-Feinschliff: schwarzer Logo-Hintergrund, nicht-destruktive Kompakt-Navigation per Pfeil und EOS-Assist-Einrichtungshelfer als Vorschau."
+      },
+      "7.9.25": {
+        "en": "EOS visibility guard: the legacy admin adapter is hidden for non-administrators and protected system components stay updateable.",
+        "de": "EOS-Sichtbarkeitsschutz: der alte Admin-Adapter wird für Nicht-Administratoren ausgeblendet und geschützte Systemkomponenten bleiben updatefähig."
+      },
+      "7.9.24": {
+        "en": "EOS security guard added: legacy admin.0 is kept disabled, selected adapters are protected from deletion while updates remain possible.",
+        "de": "EOS-Sicherheitswächter ergänzt: legacy admin.0 bleibt deaktiviert, ausgewählte Adapter werden gegen Löschen geschützt und bleiben updatefähig."
+      },
+      "7.9.23": {
+        "en": "Standalone EOS Admin adapter: uses eos-admin as technical adapter name to avoid replacement conflicts with the official admin adapter.",
+        "de": "Eigenständiger EOS-Admin-Adapter: nutzt eos-admin als technischen Adapternamen, um Ersatz-/Update-Konflikte mit dem offiziellen admin-Adapter zu vermeiden."
+      },
+      "7.9.22": {
+        "en": "NexoWatt repository warning removed: the active nexowatt repository is treated as the official EOS repository.",
+        "de": "NexoWatt-Repository-Hinweis entfernt: Das aktive Repository nexowatt wird als offizielles EOS-Repository behandelt."
+      },
+      "7.9.21": {
+        "en": "Repository update fix: documents packetName vendor mapping and keeps EOS branding cache-busting current.",
+        "de": "Repository-Update-Fix: dokumentiert das packetName-Vendor-Mapping und aktualisiert das EOS Cache-Busting."
+      },
+      "7.9.20": {
+        "en": "Hardened Admin settings save handling: sanitizes login timeout and keeps MCP disabled unless explicitly configured.",
+        "de": "Speichern der Admin-Einstellungen gehärtet: Login-Timeout wird bereinigt und MCP bleibt deaktiviert, sofern nicht ausdrücklich konfiguriert."
+      },
+      "7.9.19": {
+        "en": "Repository update workflow fixed: vendor packetName entry and npm alias fallback documented for NexoWatt EOS Admin.",
+        "de": "Repository-Update-Workflow korrigiert: Vendor-packetName-Eintrag und npm-Alias-Fallback für NexoWatt EOS Admin dokumentiert."
+      },
+      "7.9.18": {
+        "en": "NexoWatt repository update hardening: version bump, cache busting and repository entry helper for EOS Admin distribution.",
+        "de": "NexoWatt Repository-Update-Härtung: Versionssprung, Cache-Busting und Repository-Eintragshelfer für die EOS-Admin-Auslieferung.",
+        "ru": "Улучшена поставка через репозиторий NexoWatt: обновление версии, cache busting и помощник для записи репозитория."
+      },
+      "7.9.17": {
+        "en": "README and package documentation updated for NexoWatt EOS Admin public npm distribution with proprietary license notice",
+        "de": "README und Paketdokumentation für NexoWatt EOS Admin mit öffentlicher npm-Bereitstellung und proprietärem Lizenzhinweis aktualisiert"
+      },
+      "7.9.2": {
+        "en": "AI must be enabled first in the settings to be used in the admin interface",
+        "de": "AI muss zuerst in den Einstellungen aktiviert werden, die in der Admin-Schnittstelle verwendet werden sollen",
+        "ru": "ИИ должен быть включен первым в настройках, которые будут использоваться в интерфейсе администратора",
+        "pt": "AI deve ser ativado primeiro nas configurações a serem usadas na interface de administração",
+        "nl": "AI moet eerst ingeschakeld zijn in de instellingen die gebruikt moeten worden in de admin interface",
+        "fr": "L'IA doit être activée d'abord dans les paramètres à utiliser dans l'interface admin",
+        "it": "L'intelligenza artificiale deve essere abilitata prima nelle impostazioni da utilizzare nell'interfaccia di amministrazione",
+        "es": "AI debe ser habilitado primero en los ajustes a utilizar en la interfaz de administración",
+        "pl": "AI musi być włączona najpierw w ustawieniach używanych w interfejsie admin",
+        "uk": "AI повинен бути включений спочатку в налаштуваннях для використання в інтерфейсі адміністратора",
+        "zh-cn": "在管理界面中使用的设置中必须首先启用AI"
+      },
+      "7.9.1": {
+        "en": "Added AI assistant to the admin interface",
+        "de": "AI-Assistent zur Admin-Schnittstelle hinzugefügt",
+        "ru": "Добавлен помощник AI в интерфейс администратора",
+        "pt": "Adicionado assistente de IA para a interface de administração",
+        "nl": "Toegevoegd AI assistent aan de admin interface",
+        "fr": "Ajout de l'assistant AI à l'interface d'administration",
+        "it": "Aggiunto AI assistente all'interfaccia di amministrazione",
+        "es": "Agregado asistente de inteligencia artificial a la interfaz de administración",
+        "pl": "Dodano asystenta AI do interfejsu admin",
+        "uk": "Доданий помічник AI в інтерфейсі адміністратора",
+        "zh-cn": "添加到管理界面的 AI 助手"
+      },
+      "7.9.0": {
+        "en": "Added the central credentials manager \nAdded the possibility of installation of packages on specific hosts",
+        "de": "Hinzufügen des zentralen Anmeldedatenmanagers\nHinzufügen der Möglichkeit der Installation von Paketen auf bestimmten Hosts",
+        "ru": "Добавлен менеджер центральных учетных данных\nДобавлена возможность установки пакетов на конкретных хостах",
+        "pt": "Adicionado o gerenciador central de credenciais\nAdicionada a possibilidade de instalação de pacotes em hosts específicos",
+        "nl": "De hoofdgegevensbeheerder toegevoegd\nToegevoegd de mogelijkheid van installatie van pakketten op specifieke hosts",
+        "fr": "Ajouté le gestionnaire central des références\nAjout de la possibilité d'installation de paquets sur des hôtes spécifiques",
+        "it": "Aggiunto il direttore delle credenziali centrali\nAggiunta la possibilità di installazione di pacchetti su host specifici",
+        "es": "Añadido el administrador central de credenciales\nSe agregó la posibilidad de instalar paquetes en hosts específicos",
+        "pl": "Dodano centralnego menedżera mandatów\nDodano możliwość instalacji pakietów na poszczególnych hostach",
+        "uk": "Додано центральний менеджер облікових записів\nДодано можливість установки пакетів на конкретні господарі",
+        "zh-cn": "增加了中央证书管理员\n添加在特定主机上安装包的可能性"
+      },
+      "7.8.29": {
+        "en": "Corrected JSON config for the select component with grouped options",
+        "de": "JSON config für die ausgewählte Komponente mit gruppierten Optionen korrigiert",
+        "ru": "Исправленная конфигурация JSON для выбранного компонента с сгруппированными опциями",
+        "pt": "Configuração do JSON corrigida para o componente seleccionado com opções agrupadas",
+        "nl": "Gecorrigeerde JSON configuratie voor het geselecteerde component met gegroepeerde opties",
+        "fr": "Configuration JSON corrigée pour le composant sélectionné avec options groupées",
+        "it": "Configurazione JSON corretta per il componente selezionato con opzioni raggruppate",
+        "es": "Ajuste JSON corregido para el componente selecto con opciones agrupadas",
+        "pl": "Skorygowana konfiguracja JSON dla wybranego komponentu z pogrupowanymi opcjami",
+        "uk": "Виправлено налаштування JSON для вибраного компонента з позначеними опціями",
+        "zh-cn": "更正了带有分组选项的选定组件的 JSON 配置"
+      },
+      "7.8.28": {
+        "en": "Corrected JSON config for the select component with grouped options",
+        "de": "JSON config für die ausgewählte Komponente mit gruppierten Optionen korrigiert",
+        "ru": "Исправленная конфигурация JSON для выбранного компонента с сгруппированными опциями",
+        "pt": "Configuração do JSON corrigida para o componente seleccionado com opções agrupadas",
+        "nl": "Gecorrigeerde JSON configuratie voor het geselecteerde component met gegroepeerde opties",
+        "fr": "Configuration JSON corrigée pour le composant sélectionné avec options groupées",
+        "it": "Configurazione JSON corretta per il componente selezionato con opzioni raggruppate",
+        "es": "Ajuste JSON corregido para el componente selecto con opciones agrupadas",
+        "pl": "Skorygowana konfiguracja JSON dla wybranego komponentu z pogrupowanymi opcjami",
+        "uk": "Виправлено налаштування JSON для вибраного компонента з позначеними опціями",
+        "zh-cn": "更正了带有分组选项的选定组件的 JSON 配置"
+      },
+      "7.8.27": {
+        "en": "Updated packages",
+        "de": "Aktualisierte Pakete",
+        "ru": "Обновленные пакеты",
+        "pt": "Pacotes atualizados",
+        "nl": "Bijgewerkte pakketten",
+        "fr": "Paquets mis à jour",
+        "it": "Pacchetti aggiornati",
+        "es": "Paquetes actualizados",
+        "pl": "Aktualizacja pakietów",
+        "uk": "Оновлені пакети",
+        "zh-cn": "更新软件包"
+      },
+      "7.8.25": {
+        "en": "Extended JSON config for frigate adapter",
+        "de": "Erweiterte JSON config für frigate Adapter",
+        "ru": "Расширенный конфигуратор JSON для фрегата",
+        "pt": "Configuração estendida do JSON para adaptador fragata",
+        "nl": "Uitgebreide JSON-configuratie voor fregatadapter",
+        "fr": "Config JSON étendue pour adaptateur de frégate",
+        "it": "Configurazione estesa di JSON per l'adattatore di fregata",
+        "es": "Configuración JSON ampliada para adaptador de fragata",
+        "pl": "Rozszerzony plik konfiguracyjny JSON do adaptera fregata",
+        "uk": "Розширений налаштування JSON для адаптера фригату",
+        "zh-cn": "JSON 护卫舰适配器扩展配置"
+      },
+      "7.9.39": {
+        "en": "Improved datapoint value editing and object-table hover information without changing stable EOS Admin behavior.",
+        "de": "Verbesserte Wertbearbeitung in Datenpunkten und Objekt-Tabellen-Hover-Informationen ohne Änderung des stabilen EOS-Admin-Verhaltens."
+      },
+      "7.9.41": {
+        "en": "Fixed EOS adapter deletion policy so only Admin/EOS Admin, Backup, NexoWatt Devices and NexoWatt UI stay protected; writable datapoints now write command values more reliably.",
+        "de": "EOS-Löschschutz korrigiert: Nur Admin/EOS Admin, Backup, NexoWatt Devices und NexoWatt UI bleiben geschützt; beschreibbare Datenpunkte schreiben Befehlswerte zuverlässiger."
+      },
+      "7.9.40": {
+        "en": "Fixed repository update package mapping by adding packetName and preserved technical npm/ioBroker package output in command dialogs.",
+        "de": "Repository-Update-Mapping korrigiert: packetName ergänzt und technische npm/ioBroker-Paketausgaben in Befehlsdialogen unverändert gelassen."
+      },
+      "7.9.45": {
+        "en": "Hard fix for service/module deletion: DOM security scripts no longer capture trash clicks, stale delete locks are repaired, and only EOS core adapters remain protected.",
+        "de": "Hardfix für Dienste-/Module-Löschung: DOM-Security-Skripte fangen Mülleimer-Klicks nicht mehr ab, alte Löschsperren werden repariert und nur EOS-Core-Adapter bleiben geschützt.",
+        "ru": "Исправление удаления служб/модулей: DOM security больше не перехватывает клики по корзине, устаревшие блокировки удаления исправляются, защищены только основные адаптеры EOS.",
+        "pt": "Correção de exclusão de serviços/módulos: scripts DOM security não capturam mais cliques na lixeira, bloqueios antigos são reparados e apenas adaptadores EOS core ficam protegidos.",
+        "nl": "Hardfix voor verwijderen van diensten/modules: DOM-securityscripts vangen prullenbakklikken niet meer af, oude verwijderblokkades worden hersteld en alleen EOS-coreadapters blijven beschermd.",
+        "fr": "Correctif suppression services/modules : les scripts DOM security ne capturent plus les clics corbeille, les anciens verrous sont réparés et seuls les adaptateurs cœur EOS restent protégés.",
+        "it": "Fix eliminazione servizi/moduli: gli script DOM security non intercettano più i clic sul cestino, i vecchi blocchi vengono riparati e solo gli adattatori core EOS restano protetti.",
+        "es": "Corrección de eliminación de servicios/módulos: los scripts DOM security ya no capturan clics de papelera, se reparan bloqueos antiguos y solo adaptadores core EOS quedan protegidos.",
+        "pl": "Poprawka usuwania usług/modułów: skrypty DOM security nie przechwytują kliknięć kosza, stare blokady są naprawiane i chronione pozostają tylko adaptery rdzeniowe EOS.",
+        "uk": "Виправлення видалення служб/модулів: DOM security більше не перехоплює кліки кошика, старі блокування виправляються, захищені лише основні адаптери EOS.",
+        "zh-cn": "服务/模块删除硬修复：DOM security 脚本不再拦截垃圾桶点击，会修复旧删除锁，仅 EOS 核心适配器受保护。"
+      },
+      "7.9.70": {
+        "en": "Stability consolidation: one coherent frontend runtime, resilient role policy loading, reversible EOS ACL handling, native datapoint semantics and hardened update caching.",
+        "de": "Stabilitätskonsolidierung: eine einheitliche Frontend-Laufzeit, robuste Rollenabfrage, reversible EOS-ACLs, native Datenpunktlogik und abgesicherter Update-Cache.",
+        "nl": "Stabiliteitsconsolidatie: één consistente frontend-runtime, robuuste rolcontrole, herstelbare EOS-ACLs, native datapuntlogica en veiligere updatecache."
+      }
+    },
+    "meta": "https://unpkg.com/iobroker.eos-admin@7.9.78/io-package.json",
+    "icon": "https://unpkg.com/iobroker.eos-admin@7.9.78/admin/admin.png",
+    "extIcon": "https://unpkg.com/iobroker.eos-admin@7.9.78/admin/admin.svg",
+    "type": "general",
+    "mode": "daemon",
+    "platform": "Javascript/Node.js",
+    "connectionType": "local",
+    "dataSource": "push",
+    "adminUI": {
+      "config": "json"
+    },
+    "license": "NexoWatt Proprietary",
+    "licenseInformation": {
+      "license": "NexoWatt Proprietary",
+      "type": "paid",
+      "link": "/adapter/eos-admin/LICENSE-NEXOWATT.md"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "stopBeforeUpdate": false,
+    "dontDelete": false,
+    "nondeletable": false,
+    "readme": "https://unpkg.com/iobroker.eos-admin@7.9.78/README.md",
+    "packetName": "iobroker.eos-admin",
+    "npmPackage": "iobroker.eos-admin",
+    "allowAdapterUpdate": true,
+    "allowAdapterDelete": false
+  }
+}

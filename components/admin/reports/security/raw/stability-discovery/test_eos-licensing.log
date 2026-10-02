@@ -1,0 +1,88 @@
+Command: npm run test:eos-licensing
+Started: 2026-09-30T17:27:07.324Z
+Exit: 0
+
+> iobroker.eos-admin@7.10.10 test:eos-licensing
+> node --test test/eos-license-*.test.cjs
+
+✔ starts denied, permits signed-service decision and sends no license key (6.141306ms)
+✔ a new request uses a new nonce and rejects replay from an older request (3.045326ms)
+✔ Home and Pro quantity limits and features are checked independently (14.741789ms)
+✔ malformed, stale, future, oversized and missing entitlements fail closed (11.629799ms)
+✔ timeout invalidates an existing lease; late and duplicate callbacks cannot reopen it (24.739079ms)
+✔ throws and rejected transport promises settle denied without an unhandled rejection (0.81886ms)
+✔ lease expires autonomously, onLost is once per denial episode, then recovery is possible (36.267404ms)
+✔ wall clock rollback does not extend monotonic lease and a forward jump immediately denies (36.38024ms)
+✔ stop cancels in-flight request and prevents late callback activation (2.400557ms)
+✔ concurrent callers coalesce safely and status mutation cannot change entitlement (0.526131ms)
+✔ failed safe-state callback latches denial and sanitizes logs (5.493482ms)
+✔ asynchronous safe-state transition must finish before a fresh grant is accepted (4.978275ms)
+✔ invalid configuration cannot create a permissive guard (1.086611ms)
+✔ one shared lease gates each Home/Pro feature without extra messages or rights after loss (2.303715ms)
+✔ UUID normalizes case/space while preserving canonical and direct vendor-prefix identity (4.653602ms)
+✔ Home license authenticates UUID, explicit adapters, limits and immutable derived features (1.615462ms)
+✔ Pro license enables Pro features only from signed edition and caps 10 batteries (1.89559ms)
+✔ expiry and notBefore use exact millisecond boundaries without coercion or grace (7.683624ms)
+✔ forged or edited signature, foreign signing key, unknown kid and legacy format fail closed (4.465541ms)
+✔ trust accepts only bounded explicit Ed25519 public SPKI keys (65.475586ms)
+✔ schema rejects wildcard adapters, duplicate adapters, unsafe limits and unknown signed fields (8.995731ms)
+✔ malformed/oversized tokens and noncanonical base64 cannot reach successful verification (2.416285ms)
+✔ encrypted storage roundtrips across restart with fresh nonce and no plaintext on disk (53.288625ms)
+✔ GCM binds UUID and fails after ciphertext/tag/nonce corruption (59.927105ms)
+✔ missing/wrong/short storage key never silently regenerates existing encrypted license (59.648871ms)
+✔ storage high water mark cannot decrease; serialized operations preserve monotonic value (112.229769ms)
+✔ clear removes only license, keeps device encryption key and permits fresh install (43.762085ms)
+✔ storage rejects symlink files, symlink directory/ancestor and hard linked secrets (25.418183ms)
+✔ storage rejects permissive POSIX modes and unsafe directory roots (16.656011ms)
+✔ storage bounds files and rejects malformed data/envelopes without destructive overwrite (16.362075ms)
+✔ license endpoints authorize before body parser, service calls and static files (5.900847ms)
+✔ secure admin activation invokes parser after authorization and returns no submitted token (1.222543ms)
+✔ cross-origin, missing origin/header and cross-site writes fail before parser (1.180812ms)
+✔ forwarded host/proto headers do not establish origin or TLS trust (0.443954ms)
+✔ plaintext LAN is denied for every route; explicit socket loopback can perform setup (0.592931ms)
+✔ malformed activation/removal bodies are rejected without reaching service (13.2458ms)
+✔ parser size/syntax errors are sanitized and cannot reach activation (1.083801ms)
+✔ authorization and asynchronous service failures return sanitized bounded errors (0.55602ms)
+✔ per-address write and read rate budgets deny excess operations (3.645037ms)
+✔ license page has restrictive CSP and safe no-cache headers (0.557962ms)
+✔ origin matching uses scheme, hostname and port exactly (0.3933ms)
+✔ startup without provisioned trust denies and creates no license (26.376342ms)
+✔ startup with empty trust configuration denies (5.349718ms)
+✔ trusted service without stored license denies (9.307135ms)
+✔ Home allows licensed adapter and published Home limits with bounded lease (38.181407ms)
+✔ Home rejects Pro feature and over-limit resource counts (75.806816ms)
+✔ Pro grants its feature set only to listed adapter and within signed limits (164.241627ms)
+✔ licensed second adapter receives grants only when enabled (29.339473ms)
+✔ missing, disabled, renamed or non-instance senders cannot obtain grants (54.35869ms)
+✔ sender mismatch, unknown feature, extra keys and invalid quota types reject (16.847377ms)
+✔ malformed or untrusted import preserves existing encrypted license (19.999807ms)
+✔ explicit license removal denies checks and remains removed after restart (13.188902ms)
+✔ external license deletion invalidates previously cached grant eligibility (9.68595ms)
+✔ tampered authenticated ciphertext invalidates cached license (8.781287ms)
+✔ encrypted license and edition persist over clean service restart (22.051482ms)
+✔ changed system UUID denies while running (14.438741ms)
+✔ lease is capped at expiry and license expires at exact boundary (19.094001ms)
+✔ expiry is rechecked after delayed adapter object lookup (12.402769ms)
+✔ wall clock rollback relative to monotonic time fails closed until restart (9.482797ms)
+✔ frequent sub-tolerance checks cannot keep a frozen wall clock licensed (12.946654ms)
+✔ small cumulative backward steps cannot reset the monotonic clock anchor (17.083703ms)
+✔ persisted high-water mark detects ordinary rollback across restart (20.756561ms)
+✔ sender rate cap denies excess requests and renews after window (136.378922ms)
+✔ queue cap rejects excess work without preventing earlier jobs completing (3.689708ms)
+✔ new checks and mutations after stop are denied (6.849498ms)
+✔ check queued before stop cannot grant or restore cached validity after stop (9.150033ms)
+✔ check already in adapter lookup cannot grant after stop (10.727678ms)
+✔ database timeout clears validity, bounds outstanding reads and ignores late results (31.616439ms)
+✔ timeout during adapter identity lookup clears a previously valid license view (42.877822ms)
+✔ serialized deletion ahead of a check prevents an intervening grant (13.534798ms)
+✔ status rechecks expiry after delayed UUID lookup (41.841746ms)
+✔ import expiring during UUID lookup preserves the previous valid license (16.764825ms)
+ℹ tests 72
+ℹ suites 0
+ℹ pass 72
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1090.940012
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.

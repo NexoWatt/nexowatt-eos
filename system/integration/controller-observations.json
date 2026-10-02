@@ -1,0 +1,532 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-controller-source-observations",
+  "observationId": "EOS-INT-CONTROLLER-20260930",
+  "observedAt": "2026-09-30T20:27:13.450994Z",
+  "status": "source-inventory-and-targeted-review-only",
+  "installerBaseCommit": "8da1152d556625bb8173fc8b5953d0caaef992f1",
+  "claims": {
+    "productReleaseApproved": false,
+    "runtimeModified": false,
+    "installedVersionKnown": false,
+    "runtimeTlsVerified": false,
+    "perAdapterIsolationVerified": false,
+    "hardwareTestPerformed": false,
+    "craConformityDeclared": false,
+    "completeSbom": false
+  },
+  "architectureModuleIds": [
+    "eos-core",
+    "data-store",
+    "secure-bus",
+    "update-agent",
+    "eos-admin"
+  ],
+  "installerSelection": {
+    "file": "installer.sh",
+    "line": 233,
+    "package": "iobroker.js-controller",
+    "specifier": "stable",
+    "immutableVersionPinned": false,
+    "selectionChanged": false,
+    "currentNpmDistTagRefresh": {
+      "status": "failed",
+      "transport": "https",
+      "url": "https://registry.npmjs.org/-/package/iobroker.js-controller/dist-tags",
+      "timeoutSeconds": 5,
+      "errorClass": "URLError",
+      "fallbackUsedForInstall": false
+    },
+    "priorSameDayObservation": {
+      "npmStable": "7.2.2",
+      "npmLatest": "7.2.3",
+      "provenance": "docs/security/CONTROLLER_FIRST_RUN.md",
+      "currentRefreshConfirmed": false
+    }
+  },
+  "controller": {
+    "repository": "https://github.com/ioBroker/ioBroker.js-controller.git",
+    "referenceTag": "v7.2.2",
+    "commit": "88516d65367580088327214bd9decedca77beea7",
+    "sourceAvailability": "full-git-checkout-read-only",
+    "manifestVersion": "7.2.2",
+    "sourceRootAtReview": "/workspace/scratch/6383b3161c96/upstream-controller-stable",
+    "packages": [
+      {
+        "path": "packages/adapter/package.json",
+        "sha256": "de94225cd787c2fe2aad6d9aba30fe56b1ba861dafd57ff93d66d9c3082d4859",
+        "name": "@iobroker/js-controller-adapter",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=18.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@alcalzone/pak": "^0.11.0",
+          "@iobroker/db-objects-file": "file:../db-objects-file",
+          "@iobroker/db-objects-jsonl": "file:../db-objects-jsonl",
+          "@iobroker/db-objects-redis": "file:../db-objects-redis",
+          "@iobroker/db-states-file": "file:../db-states-file",
+          "@iobroker/db-states-jsonl": "file:../db-states-jsonl",
+          "@iobroker/db-states-redis": "file:../db-states-redis",
+          "@iobroker/js-controller-common": "file:../common",
+          "@iobroker/js-controller-common-db": "file:../common-db",
+          "@iobroker/plugin-base": "~3.0.3",
+          "deep-clone": "^3.0.3",
+          "fs-extra": "^11.3.2",
+          "jsonwebtoken": "^9.0.0",
+          "node-schedule": "^2.1.0",
+          "node.extend": "^2.0.2",
+          "pidusage": "^3.0.2",
+          "readline": "^1.3.0",
+          "semver": "^7.5.2",
+          "yargs": "^17.7.2"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/cli/package.json",
+        "sha256": "73d3cabc2a0de13cbf4a3043b8486279a6bb5dd7f2b7c36a95c60b7bcfa72fcc",
+        "name": "@iobroker/js-controller-cli",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=18.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@iobroker/js-controller-common": "file:../common",
+          "@iobroker/js-controller-common-db": "file:../common-db",
+          "@iobroker/plugin-base": "~3.0.3",
+          "axios": "^1.13.6",
+          "chokidar": "^3.5.3",
+          "debug": "^4.4.3",
+          "deep-clone": "^3.0.3",
+          "event-stream": "^4.0.1",
+          "fs-extra": "^11.3.2",
+          "mime-types": "^2.1.35",
+          "promisify-child-process": "^4.1.1",
+          "readline-sync": "^1.4.10",
+          "semver": "^7.5.2",
+          "tar": "^7.5.11",
+          "yargs": "^17.6.2"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/common/package.json",
+        "sha256": "2f31c4d859b8b043a0e3d93ff4ab526241c74dfb8bf3d3bb6147e9818b2455cd",
+        "name": "@iobroker/js-controller-common",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@iobroker/db-objects-file": "file:../db-objects-file",
+          "@iobroker/db-objects-jsonl": "file:../db-objects-jsonl",
+          "@iobroker/db-objects-redis": "file:../db-objects-redis",
+          "@iobroker/db-states-file": "file:../db-states-file",
+          "@iobroker/db-states-jsonl": "file:../db-states-jsonl",
+          "@iobroker/db-states-redis": "file:../db-states-redis",
+          "@iobroker/js-controller-common-db": "file:../common-db",
+          "fs-extra": "^11.3.2",
+          "jszip": "^3.10.1"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/common-db/package.json",
+        "sha256": "ab9790d1c941bafbd7e8d7ed019678bf878a164ff66921617e3e983e60f11151",
+        "name": "@iobroker/js-controller-common-db",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=18.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@alcalzone/pak": "^0.11.0",
+          "axios": "^1.13.6",
+          "ci-info": "^3.8.0",
+          "deep-clone": "^3.0.3",
+          "event-stream": "^4.0.1",
+          "fs-extra": "^11.3.2",
+          "jsonwebtoken": "^9.0.0",
+          "node-forge": "^1.3.2",
+          "node.extend": "^2.0.2",
+          "promisify-child-process": "^4.1.2",
+          "readline": "^1.3.0",
+          "semver": "^7.5.2",
+          "triple-beam": "^1.3.0",
+          "winston": "^3.7.2",
+          "winston-daily-rotate-file": "^5.0.0",
+          "winston-transport": "^4.5.0"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/controller/package.json",
+        "sha256": "f401ec3aeb15515ba7edef5fb23c9150c5075d3706e980bc3ed81e4c21525964",
+        "name": "iobroker.js-controller",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=18.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@alcalzone/esbuild-register": "^2.5.1-1",
+          "@iobroker/db-objects-file": "file:../db-objects-file",
+          "@iobroker/db-objects-jsonl": "file:../db-objects-jsonl",
+          "@iobroker/db-objects-redis": "file:../db-objects-redis",
+          "@iobroker/db-states-file": "file:../db-states-file",
+          "@iobroker/db-states-jsonl": "file:../db-states-jsonl",
+          "@iobroker/db-states-redis": "file:../db-states-redis",
+          "@iobroker/js-controller-adapter": "file:../adapter",
+          "@iobroker/js-controller-cli": "file:../cli",
+          "@iobroker/js-controller-common": "file:../common",
+          "@iobroker/js-controller-common-db": "file:../common-db",
+          "@iobroker/plugin-base": "~3.0.3",
+          "@iobroker/plugin-sentry": "~3.1.2",
+          "axios": "^1.18.0",
+          "cron-parser": "^4.9.0",
+          "debug": "^4.4.3",
+          "decache": "^4.6.1",
+          "deep-clone": "^3.0.3",
+          "fs-extra": "^11.3.2",
+          "jsonwebtoken": "^9.0.0",
+          "loadavg-windows": "^1.1.1",
+          "node-schedule": "^2.1.1",
+          "pidusage": "^4.0.1",
+          "promisify-child-process": "^4.1.1",
+          "prompt": "^1.2.2",
+          "readline-sync": "^1.4.10",
+          "semver": "^7.5.2"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/db-base/package.json",
+        "sha256": "030d096703cf542156879979588d966c37335917bd72ffd116acd38533c690c1",
+        "name": "@iobroker/db-base",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=18.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@iobroker/js-controller-common-db": "file:../common-db",
+          "deep-clone": "^3.0.3",
+          "fs-extra": "^11.3.2",
+          "respjs": "^4.2.0"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/db-objects-file/package.json",
+        "sha256": "ec234ad379a8fa4f6c0202873a805d770df5650991658807d3705baec1283626",
+        "name": "@iobroker/db-objects-file",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "Apache 2.0",
+        "dependenciesDeclared": {
+          "@iobroker/db-base": "file:../db-base",
+          "@iobroker/db-objects-redis": "file:../db-objects-redis",
+          "deep-clone": "^3.0.3",
+          "fs-extra": "^11.3.2"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/db-objects-jsonl/package.json",
+        "sha256": "fb10461229a54a85a5a9660df2364a26451db79f68c14658158b9a7ea9bd18b0",
+        "name": "@iobroker/db-objects-jsonl",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "Apache 2.0",
+        "dependenciesDeclared": {
+          "@alcalzone/jsonl-db": "~3.1.1",
+          "@iobroker/db-base": "file:../db-base",
+          "@iobroker/db-objects-file": "file:../db-objects-file",
+          "@iobroker/db-objects-redis": "file:../db-objects-redis",
+          "deep-clone": "^3.0.3",
+          "fs-extra": "^11.3.2"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/db-objects-redis/package.json",
+        "sha256": "0b4bfc4d33a9feb085372726b3cc5d5d8089c011a372399d1b68e0f5b14e232f",
+        "name": "@iobroker/db-objects-redis",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=16.4.0",
+        "licenseDeclared": "Apache 2.0",
+        "dependenciesDeclared": {
+          "@iobroker/db-base": "file:../db-base",
+          "deep-clone": "^3.0.3",
+          "ioredis": "^4.28.2",
+          "mime-types": "^2.1.35",
+          "node.extend": "^2.0.2",
+          "semver": "^7.5.2"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/db-states-file/package.json",
+        "sha256": "6ca3a4a1740d137d07f2812a407b30c03fefad9ef2c7862857eb224c0985f5c2",
+        "name": "@iobroker/db-states-file",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@iobroker/db-base": "file:../db-base",
+          "@iobroker/db-states-redis": "file:../db-states-redis"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/db-states-jsonl/package.json",
+        "sha256": "4b62c1db7e47fb27984a9ea1a7718b7b6a4e585ac085440b6e3a3edd2304dc46",
+        "name": "@iobroker/db-states-jsonl",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@alcalzone/jsonl-db": "~3.1.1",
+          "@iobroker/db-base": "file:../db-base",
+          "@iobroker/db-states-file": "file:../db-states-file",
+          "@iobroker/db-states-redis": "file:../db-states-redis"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/db-states-redis/package.json",
+        "sha256": "d231ec0b884fad9eb7a5b93fa55a8ff7156341bab0b162a811c0a77916794c2f",
+        "name": "@iobroker/db-states-redis",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {
+          "@iobroker/db-base": "file:../db-base",
+          "ioredis": "^4.28.2"
+        },
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/types-dev/package.json",
+        "sha256": "5a90f4f317450452ea08fef0240f2d334a27b98dee2cccf0fdab8258c66992dd",
+        "name": "@iobroker/types-dev",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {},
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      },
+      {
+        "path": "packages/types-public/package.json",
+        "sha256": "5f48617e1868aff68dd4cc83f3feef66a9902b5d46b752e85d234fd2d5b39953",
+        "name": "@iobroker/types",
+        "declaredVersion": "7.2.2",
+        "nodeEngine": ">=12.0.0",
+        "licenseDeclared": "MIT",
+        "dependenciesDeclared": {},
+        "peerDependenciesDeclared": {},
+        "installedVersion": null,
+        "resolvedRuntimeTreeVerified": false
+      }
+    ],
+    "codeEvidence": [
+      {
+        "path": "packages/controller/conf/iobroker-dist.json",
+        "sha256": "7bb270ba7c2d0863635baab18eced1f49ca747f733a8ac6aaa87efeb6354fc37"
+      },
+      {
+        "path": "packages/controller/src/main.ts",
+        "sha256": "bbf7470b383bb48ab244ac2bb71dac22414885034a09a91e594a936476daa1e7"
+      },
+      {
+        "path": "packages/db-objects-redis/src/lib/objects/objectsInRedisClient.ts",
+        "sha256": "c8597e1dd193a1b9e748cddc3a03d320a6bc3ce662091b664578daca8ba38362"
+      },
+      {
+        "path": "packages/db-states-redis/src/lib/states/statesInRedisClient.ts",
+        "sha256": "31127a0f0b5529f75d58cb0fde54abf8a8770273be290ee32f11439b6264b5ad"
+      },
+      {
+        "path": "packages/db-objects-file/src/lib/objects/objectsInMemServerRedis.js",
+        "sha256": "4c94f833ebe6c8885c9406a881685f061d233e63d24f2fd4ea67d62b07960191"
+      },
+      {
+        "path": "packages/db-states-file/src/lib/states/statesInMemServerRedis.js",
+        "sha256": "85f53fc65473d3d99fb6b3387da0bd7820e5d821afd5cb1b8f53f72bf4eab336"
+      },
+      {
+        "path": "packages/db-objects-jsonl/src/lib/objects/objectsInMemServerRedis.js",
+        "sha256": "861620320d885f2a527d34070ec047dedf0d6761e1350849b4f3dbf3faae8112"
+      },
+      {
+        "path": "packages/db-states-jsonl/src/lib/states/statesInMemServerRedis.js",
+        "sha256": "c3f6fb7ffc8d58581e8a4d33557ec1c0af8a65403e0e86390e0a0c64cb795546"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "0c349408346e0454e759a143fbe55861d2eaf85152d54572948e9379b9f8e69b"
+      }
+    ],
+    "sourceLockObservation": {
+      "package": "ioredis",
+      "version": "4.28.5",
+      "declaredRange": "^4.28.2",
+      "isInstalledRuntimeVersion": false
+    }
+  },
+  "upstreamObservations": {
+    "stableList": {
+      "url": "https://github.com/ioBroker/ioBroker.repositories/blob/master/sources-dist-stable.json",
+      "blob": "225e40b43ce79b06b60690b3918028cf4fecdeee",
+      "jsControllerVersion": "7.2.2",
+      "channelType": "iobroker-repository-list-not-npm-dist-tag"
+    },
+    "latestGithubRelease": {
+      "tag": "v7.2.3",
+      "publishedAt": "2026-09-19T11:06:06Z",
+      "commit": "418bc1c25967cfa283532a75486f0dd9cb99854a",
+      "url": "https://github.com/ioBroker/ioBroker.js-controller/releases/tag/v7.2.3",
+      "selectedForProduct": false,
+      "packageManifestVersion": "7.2.3-alpha.19-20260918-45e1308b9",
+      "packageManifestBlob": "fbfef9823f4d4bd4ca752d2dc1eec546dc0a3749",
+      "ioPackageVersion": "7.2.3",
+      "ioPackageBlob": "5f5ea36e72bb7c0534a472942f19f333d6df5a0b",
+      "metadataReconciliation": "open-before-artifact-selection",
+      "vulnerabilityClaim": false
+    },
+    "master": {
+      "commit": "587444e1cd24858845c2a0297f76e8ba72fe8ed5",
+      "selectedForProduct": false
+    }
+  },
+  "adapterCore": {
+    "repository": "https://github.com/ioBroker/adapter-core.git",
+    "referenceTag": "v3.4.3",
+    "commit": "cc8c32f9d7b3e94bab5c07c34b14a0b36b48978f",
+    "sourceRootAtReview": "/workspace/scratch/6383b3161c96/component-sources/adapter-core",
+    "sourceAvailability": "full-git-checkout-read-only",
+    "manifest": {
+      "path": "package.json",
+      "sha256": "bfe3201a4213b8591010bcaa88e6903be48581dd55fbec50b95e7f26106d7db9",
+      "name": "@iobroker/adapter-core",
+      "declaredVersion": "3.4.3",
+      "nodeEngine": ">=18",
+      "licenseDeclared": "MIT",
+      "dependenciesDeclared": {},
+      "peerDependenciesDeclared": {
+        "@iobroker/types": ">=6.0.11",
+        "@iobroker/js-controller-common-db": ">=7.2.2"
+      },
+      "installedVersion": null,
+      "resolvedRuntimeTreeVerified": false
+    },
+    "resolverEvidence": {
+      "path": "src/utils.ts",
+      "sha256": "6d134658b5806458d8b2e7871007f1a05ac122d57c2903b5b845338a5ac5cee4",
+      "blob": "3f50a44be7ff46f51e9ae97b516d7952a9baf77b",
+      "behavior": "Resolves js-controller-adapter dynamically with controller-path fallbacks; actual loaded version must be recorded per adapter."
+    },
+    "npmLatestObservation": {
+      "url": "https://registry.npmjs.org/@iobroker%2fadapter-core/latest",
+      "version": "3.4.3",
+      "gitHead": "cc8c32f9d7b3e94bab5c07c34b14a0b36b48978f",
+      "installedVersion": null
+    },
+    "productCompatibilityVerified": false
+  },
+  "communicationObservations": [
+    {
+      "id": "EOS-CTRL-OBS-001",
+      "scope": "js-controller 7.2.2",
+      "method": "source-review",
+      "statement": "Distribution configuration uses objects/states JSONL on loopback and empty auth_pass; multihost secure flag is a distinct mechanism.",
+      "runtimeReproduced": false
+    },
+    {
+      "id": "EOS-CTRL-OBS-002",
+      "scope": "four File/JSONL server implementations at review commit",
+      "method": "source-review",
+      "statement": "secure flag calls reject without return, followed by net.createServer/listen; unsupported TLS must not be described as proven fail-closed. Full lifecycle/listener behavior remains untested.",
+      "runtimeReproduced": false
+    },
+    {
+      "id": "EOS-CTRL-OBS-003",
+      "scope": "objects/states external Redis clients at review commit",
+      "method": "source-review",
+      "statement": "connection.options reach ioredis including tls; password is overwritten from options.auth_pass or connection.pass. This proves an option path, not a verified TLS deployment.",
+      "runtimeReproduced": false
+    },
+    {
+      "id": "EOS-CTRL-OBS-004",
+      "scope": "controller readBaseSettings/writeBaseSettings",
+      "method": "source-review",
+      "statement": "Read returns full configuration; write performs limited structural checks. Whole authorization chain and policy enforcement remain open. Do not put universally readable per-service private keys in this configuration.",
+      "runtimeReproduced": false
+    },
+    {
+      "id": "EOS-CTRL-OBS-005",
+      "scope": "EOS runtime architecture",
+      "method": "architecture-analysis",
+      "statement": "A shared OS identity and readable shared credentials remain a joint trust zone even with encrypted transport.",
+      "runtimeReproduced": false
+    }
+  ],
+  "requiredRuntimeInventory": [
+    "controller-version-and-package-hash",
+    "actual-loaded-js-controller-adapter-per-process",
+    "adapter-core-per-adapter",
+    "objects-states-db-package-versions",
+    "full-resolved-dependency-tree",
+    "node-version-and-openssl",
+    "os-distribution-architecture-kernel-firmware",
+    "active-db-backends-and-redacted-tls-policy",
+    "actual-listeners-and-process-identities",
+    "egress-and-optional-plugin-enablement"
+  ],
+  "requiredIntegrationChecks": [
+    "fixed-release-artifact-source-binding",
+    "existing-design-datapoint-unit-and-rule-regression",
+    "admin7-config-policy-preservation",
+    "real-tls13-identity-auth-and-plaintext-rejection",
+    "pubsub-reconnect-rotation",
+    "individual-adapter-identity-and-authorization",
+    "jsonl-migration-backup-restore-rollback",
+    "outage-stale-data-queue-and-safe-recovery",
+    "rpi5-8gb-and-16gb-hardware-tests"
+  ],
+  "testStatus": {
+    "newRuntimeTestsPerformed": 0,
+    "method": "Read-only source and metadata inspection; existing evidence referenced; no installation/build/package lifecycle executed.",
+    "open": [
+      "all-real-runtime-and-hardware-checks",
+      "installed-version-inventory",
+      "latest-release-metadata-reconciliation",
+      "current-controller-npm-dist-tag-refresh"
+    ]
+  },
+  "relatedDocuments": [
+    "docs/integration/JS_CONTROLLER_SCOPE.md",
+    "docs/security/CONTROLLER_FIRST_RUN.md",
+    "docs/security/RUNTIME_TLS.md",
+    "docs/security/THREAT_MODEL_SYSTEM.md",
+    "docs/cra/SYSTEM_REQUIREMENTS.md"
+  ]
+}

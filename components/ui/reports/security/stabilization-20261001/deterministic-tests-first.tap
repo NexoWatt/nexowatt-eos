@@ -1,0 +1,113 @@
+✖ differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent (7.555241ms)
+✖ differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent (1.061436ms)
+✔ idle degraded target inspections are independent of repeated messages; budgets remain reserved (182.410965ms)
+✖ current failed duration is reported independently of the previous successful RTT (1.780153ms)
+✖ 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease (0.499296ms)
+✖ bounded current attempt identifies transport rejection and retains failsafe (0.3633ms)
+✖ bounded current attempt identifies signature rejection and retains failsafe (0.287615ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 1
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 468.162518
+
+✖ failing tests:
+
+test at test/eos-mesh-timing.test.cjs:20:48
+✖ differential fixed: fallback/recovery/hello/missing peer/199-200ms remain equivalent (7.555241ms)
+  Error: evW: tatsächlichen Leistungs-Messwert in W zuordnen.
+      at fail (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:34:40)
+      at Object.validateConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:115:55)
+      at slaveConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:18:40)
+      at /workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:22:98
+      at Array.map (<anonymous>)
+      at /workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:22:72
+      at Array.map (<anonymous>)
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:22:36)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25) {
+    statusCode: 422
+  }
+
+test at test/eos-mesh-timing.test.cjs:20:48
+✖ differential transformer: fallback/recovery/hello/missing peer/199-200ms remain equivalent (1.061436ms)
+  Error: evW: tatsächlichen Leistungs-Messwert in W zuordnen.
+      at fail (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:34:40)
+      at Object.validateConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:115:55)
+      at slaveConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:18:40)
+      at /workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:22:98
+      at Array.map (<anonymous>)
+      at /workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:22:72
+      at Array.map (<anonymous>)
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:22:36)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25) {
+    statusCode: 422
+  }
+
+test at test/eos-mesh-timing.test.cjs:52:1
+✖ current failed duration is reported independently of the previous successful RTT (1.780153ms)
+  Error: evW: tatsächlichen Leistungs-Messwert in W zuordnen.
+      at fail (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:34:40)
+      at Object.validateConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:115:55)
+      at slaveConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:18:40)
+      at harness (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:51:12)
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:52:107)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12) {
+    statusCode: 422
+  }
+
+test at test/eos-mesh-timing.test.cjs:53:1
+✖ 200ms accepted, 201ms rejected; receipt never restarts the 3000ms lease (0.499296ms)
+  Error: evW: tatsächlichen Leistungs-Messwert in W zuordnen.
+      at fail (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:34:40)
+      at Object.validateConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:115:55)
+      at slaveConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:18:40)
+      at harness (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:51:12)
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:53:98)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12) {
+    statusCode: 422
+  }
+
+test at test/eos-mesh-timing.test.cjs:54:84
+✖ bounded current attempt identifies transport rejection and retains failsafe (0.3633ms)
+  Error: evW: tatsächlichen Leistungs-Messwert in W zuordnen.
+      at fail (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:34:40)
+      at Object.validateConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:115:55)
+      at slaveConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:18:40)
+      at harness (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:51:12)
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:54:184)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12) {
+    statusCode: 422
+  }
+
+test at test/eos-mesh-timing.test.cjs:54:84
+✖ bounded current attempt identifies signature rejection and retains failsafe (0.287615ms)
+  Error: evW: tatsächlichen Leistungs-Messwert in W zuordnen.
+      at fail (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:34:40)
+      at Object.validateConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/lib/mesh-coordinator-contract.js:115:55)
+      at slaveConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:18:40)
+      at harness (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:51:12)
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/components/ui/test/eos-mesh-timing.test.cjs:54:184)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12) {
+    statusCode: 422
+  }

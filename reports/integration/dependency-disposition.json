@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-development-dependency-disposition",
+  "recordedAt": "2026-10-01T12:44:25.243095+00:00",
+  "releaseApproved": false,
+  "notFormalVexAttestation": true,
+  "interpretation": "npm package-node findings, not unique CVE counts; no not-affected or fixed attestation without reachability/remediation evidence",
+  "nextAction": "review reachability and supported patches before product approval; backup remains disabled; do not use npm audit fix --force to downgrade controller",
+  "snapshots": [
+    {
+      "scope": "admin-ui-r4-current-laboratory-candidate",
+      "audit": "reports/integration/sbom/candidate-final-tree.audit.json",
+      "auditSha256": "b073d54c5a9339a690a06dbd753efa5078dafbedee9f540cfbd1f59f30fb5566",
+      "reportedPackageNodes": {
+        "info": 0,
+        "low": 0,
+        "moderate": 3,
+        "high": 0,
+        "critical": 0,
+        "total": 3
+      },
+      "dispositions": [
+        {
+          "package": "@alcalzone/esbuild-register",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/@alcalzone/esbuild-register"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": []
+        },
+        {
+          "package": "esbuild",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/esbuild"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+              "title": "esbuild enables any website to send any requests to the development server and read the response",
+              "range": "<=0.24.2"
+            }
+          ]
+        },
+        {
+          "package": "iobroker.js-controller",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/iobroker.js-controller"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": []
+        }
+      ]
+    },
+    {
+      "scope": "historical-all-six-assessment-before-final-protocol-auth-corrections",
+      "audit": "reports/integration/sbom/post-admin-assessment-tree.audit.json",
+      "auditSha256": "fbceeec9372ecb49c74ea7a032659577d1e51e5a5a7eda44c78691e00cbad36e",
+      "reportedPackageNodes": {
+        "info": 0,
+        "low": 0,
+        "moderate": 10,
+        "high": 0,
+        "critical": 2,
+        "total": 12
+      },
+      "dispositions": [
+        {
+          "package": "@alcalzone/esbuild-register",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/@alcalzone/esbuild-register"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": []
+        },
+        {
+          "package": "ajv",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/ocpp-rpc/node_modules/ajv"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-2g4f-4pwh-qvx6",
+              "title": "ajv has ReDoS when using `$data` option",
+              "range": ">=7.0.0-alpha.0 <8.18.0"
+            }
+          ]
+        },
+        {
+          "package": "dropbox-v2-api",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/dropbox-v2-api"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": []
+        },
+        {
+          "package": "esbuild",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/esbuild"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+              "title": "esbuild enables any website to send any requests to the development server and read the response",
+              "range": "<=0.24.2"
+            }
+          ]
+        },
+        {
+          "package": "form-data",
+          "severity": "critical",
+          "paths": [
+            "node_modules/request/node_modules/form-data"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-fjxv-7rqg-78g4",
+              "title": "form-data uses unsafe random function in form-data for choosing boundary",
+              "range": "<2.5.4"
+            },
+            {
+              "url": "https://github.com/advisories/GHSA-hmw2-7cc7-3qxx",
+              "title": "form-data: CRLF injection in form-data via unescaped multipart field names and filenames",
+              "range": "<2.5.6"
+            }
+          ]
+        },
+        {
+          "package": "iobroker.js-controller",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/iobroker.js-controller"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": []
+        },
+        {
+          "package": "iobroker.nexowatt-backup",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/iobroker.nexowatt-backup"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": []
+        },
+        {
+          "package": "ocpp-rpc",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/ocpp-rpc"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": []
+        },
+        {
+          "package": "qs",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/request/node_modules/qs"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-6rw7-vpxm-498p",
+              "title": "qs's arrayLimit bypass in its bracket notation allows DoS via memory exhaustion",
+              "range": "<6.14.1"
+            },
+            {
+              "url": "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+              "title": "qs: Denial of Service via Attacker Controlled isBuffer",
+              "range": ">=2.2.5 <6.16.0"
+            }
+          ]
+        },
+        {
+          "package": "request",
+          "severity": "critical",
+          "paths": [
+            "node_modules/request"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-p8p7-x288-28g6",
+              "title": "Server-Side Request Forgery in Request",
+              "range": "<=2.88.2"
+            }
+          ]
+        },
+        {
+          "package": "tough-cookie",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/tough-cookie"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-72xf-g2v4-qvf3",
+              "title": "tough-cookie Prototype Pollution vulnerability",
+              "range": "<4.1.3"
+            }
+          ]
+        },
+        {
+          "package": "uuid",
+          "severity": "moderate",
+          "paths": [
+            "node_modules/uuid"
+          ],
+          "status": "under_investigation",
+          "productionApproval": false,
+          "advisories": [
+            {
+              "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+              "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+              "range": "<11.1.1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

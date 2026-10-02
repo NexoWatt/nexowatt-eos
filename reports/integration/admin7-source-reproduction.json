@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "EOS-ADMIN7-INTEGRATION-20260930",
+  "timestampUtc": "2026-09-30T20:27:50.821726+00:00",
+  "component": {
+    "repository": "https://github.com/NexoWatt/ioBroker.eos.admin",
+    "commit": "93e155b50e0c56aea506ba4ea7a23dde2ea8b09a",
+    "name": "iobroker.eos-admin",
+    "version": "7.10.9",
+    "packageLicense": "UNLICENSED",
+    "licenseNotes": "Proprietary NexoWatt-specific parts; retained upstream MIT notices. Legal compatibility of complete product not assessed.",
+    "engines": {
+      "node": ">=18.0.0"
+    },
+    "controllerDependency": ">=6.0.11",
+    "hashes": {
+      "package.json": "e255daafe25f17e1c84cb00080b6c3004ca6a244d1dacaff3b27a8443ea58338",
+      "io-package.json": "d4c5cb38d5cd2cc53456b34a45abadd2a25501f291b186abf91690896d02d139",
+      "package-lock.json": "187803bc10d8624ce3c0b02e9b6ae8a3b64dedaf2d438d23f8cba1de37dd48fa",
+      "build/main.js": "7578ee14ea840950ad5164b0063c091c983528ebc32689dec5dc499062fbc92e"
+    }
+  },
+  "tests": {
+    "kind": "source-function-stub-reproduction",
+    "passed": 5,
+    "failed": 0,
+    "meaning": "Successful reproduction of observations, not successful security acceptance.",
+    "runtime": "Node.js v24.19.0",
+    "command": "EOS_ADMIN_SOURCE_DIR=/path/to/ioBroker.eos.admin node --test --test-reporter=tap tests/integration/admin7-source-reproduction.test.cjs",
+    "rawEvidence": "reports/integration/admin7-source-reproduction.tap"
+  },
+  "status": "observations-reproduced-findings-open",
+  "prodAcceptancePassed": false,
+  "repoInstructions": {
+    "read": ".github/copilot-instructions.md",
+    "note": "Inherited instructions describe a monorepo and Node20/.nvmrc not present in this checkout. No adapter build or GUI acceptance run. Isolated extracted-function tests used available Node24.19.0; this does not validate a supported product Node combination."
+  },
+  "testSha256": "f1bb42b08279d169da3506c11a471ae663faa5f1ae44b9339645741942994a1f",
+  "rawEvidenceSha256": "c7178b1897b6e63ec1e8863b2371bcaaf019c54db70f18144f8370ddc24a1909"
+}

@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent-agent-source-and-targeted-store-review",
+  "reviewedAt": "2026-10-01T20:16:29.026596+00:00",
+  "startedAt": "2026-10-01T20:16:23.760790+00:00",
+  "scope": "PostgreSQL Store and schema plus a narrow States matching-budget source follow-up",
+  "reviewer": "parallel-agent-not-external-certifier",
+  "command": [
+    "/workspace/scratch/6383b3161c96/node-test-tooling/24.21.0/node-v24.21.0-linux-x64/bin/node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/postgresql/store-review.test.cjs"
+  ],
+  "environment": {
+    "nodeVersion": "v24.21.0",
+    "pgVersion": "8.23.1",
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "NODE_PATH": "/workspace/scratch/6383b3161c96/postgresql-test-tooling/pg-client/node_modules"
+  },
+  "sourceBindingsBefore": [
+    {
+      "path": "runtime/postgresql/packages/store/index.cjs",
+      "bytes": 19471,
+      "sha256": "2d6080ad4e728a2316c493eff56d501503ba34faee25ea5c5600c8115eab1f3e"
+    },
+    {
+      "path": "runtime/postgresql/schema.sql",
+      "bytes": 3041,
+      "sha256": "19fd184544f6d87f12ef254181d0a3d0b743636c367861e7a4b5a6f9557ae33d"
+    },
+    {
+      "path": "tests/postgresql/store-review.test.cjs",
+      "bytes": 8625,
+      "sha256": "56b0aabb44cf942f76e31ffb1a297e21dc4ae342ab4972ef560c28472bc6ee6b"
+    }
+  ],
+  "sourceBindingsAfter": [
+    {
+      "path": "runtime/postgresql/packages/store/index.cjs",
+      "bytes": 19471,
+      "sha256": "2d6080ad4e728a2316c493eff56d501503ba34faee25ea5c5600c8115eab1f3e"
+    },
+    {
+      "path": "runtime/postgresql/schema.sql",
+      "bytes": 3041,
+      "sha256": "19fd184544f6d87f12ef254181d0a3d0b743636c367861e7a4b5a6f9557ae33d"
+    },
+    {
+      "path": "tests/postgresql/store-review.test.cjs",
+      "bytes": 8625,
+      "sha256": "56b0aabb44cf942f76e31ffb1a297e21dc4ae342ab4972ef560c28472bc6ee6b"
+    }
+  ],
+  "sourcesUnchangedDuringRun": true,
+  "tests": {
+    "exitCode": 0,
+    "pass": 10,
+    "realFiveSecondDeadline": true,
+    "sqlResponses": "explicit doubles",
+    "pgDriver": "actual pinned driver password-request path without networking",
+    "nativePostgresqlServer": false,
+    "tlsHandshake": false,
+    "rlsRuntime": false,
+    "targetHardware": false
+  },
+  "evidenceBindings": [
+    {
+      "path": "reports/integration/postgresql/raw/store-review.tap",
+      "bytes": 2490,
+      "sha256": "67e3642e41f485c7c1557f7120eef8a16e063c1b43aeb9593b74e9f785eb2086"
+    },
+    {
+      "path": "reports/integration/postgresql/raw/store-review.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "findings": [
+    {
+      "id": "EOS-PG-REVIEW-001",
+      "issue": "Concurrent notification fetches could reorder events and deliver old generation data after reconnect.",
+      "status": "fixed-targeted-response-double-tests-pass",
+      "tests": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "remaining": "Real PostgreSQL LISTEN ordering, connection loss and resynchronization still require actual integration tests."
+    },
+    {
+      "id": "EOS-PG-REVIEW-002",
+      "issue": "Different mutation advisory locks and omitted nested locks did not serialize all changes; nested non-SQL failure could be caught and partially committed.",
+      "status": "fixed-targeted-response-double-tests-pass",
+      "tests": [
+        6,
+        9
+      ],
+      "remaining": "Real concurrent sessions, deadlock and failover tests remain open."
+    },
+    {
+      "id": "EOS-PG-REVIEW-003",
+      "issue": "password:undefined allowed pg environment and pgpass credential fallback despite intended certificate-only profile.",
+      "status": "fixed-pinned-driver-password-request-test-pass",
+      "tests": [
+        7
+      ],
+      "remaining": "Server-side certificate authentication and wrong-certificate refusal need actual PostgreSQL TLS tests."
+    },
+    {
+      "id": "EOS-PG-REVIEW-004",
+      "issue": "Transaction timer closed client but left an unresolved application callback and outer transaction promise hanging.",
+      "status": "fixed-targeted-response-double-real-timer-test-pass",
+      "tests": [
+        8
+      ],
+      "remaining": "Connection loss around COMMIT can have an indeterminate commit result; recovery/idempotency must be tested on a real server."
+    },
+    {
+      "id": "EOS-PG-REVIEW-005",
+      "issue": "Batch row count alone admitted excessive materialized data, including repeated IDs expanded by downstream parsing.",
+      "status": "duplicate-projection-test-pass-sql-aggregate-reviewed-only",
+      "tests": [
+        10
+      ],
+      "remaining": "Actual PostgreSQL CASE/window aggregate memory and query plans remain unexecuted."
+    },
+    {
+      "id": "EOS-PG-REVIEW-006",
+      "issue": "Schema version and role flags alone did not prove deployed access controls.",
+      "status": "partially-mitigated-open-production-gate",
+      "sourceReview": "Admission now rejects role memberships, unexpected ownership, missing enabled/forced RLS and inappropriate schema/version-write grants.",
+      "remaining": "Exact policy definitions, all grants/default privileges, ownership changes and cross-domain denial must be validated against the real server; per-adapter identity and namespace authorization remain an explicit unresolved product gate."
+    },
+    {
+      "id": "EOS-PG-REVIEW-007",
+      "issue": "Each Store formerly opened up to four pool connections plus LISTEN and ran its own expiry sweep.",
+      "status": "partially-mitigated-source-reviewed-only",
+      "sourceReview": "Pool maximum is now one; listener session advisory lock elects an expiry worker per domain.",
+      "remaining": "Total adapter connection budget, election failover, transaction contention, expiry backlog and Pi resource/latency tests remain open."
+    },
+    {
+      "id": "EOS-PG-REVIEW-008",
+      "issue": "Obsolete listener callbacks and close/initialization/election races could affect new lifecycle state.",
+      "status": "source-fixes-reviewed-not-runtime-tested-here",
+      "sourceReview": "Listener identity guards, closed checks, post-election admission and failed-connect reset are present.",
+      "remaining": "Actual failed-handshake, cancellation and reconnect stress tests remain required."
+    }
+  ],
+  "sourceOnlyObservations": [
+    "RLS predicates bind current_user to the objects/states domain, with ENABLE and FORCE in schema source; no cross-domain bypass was identified by this source review.",
+    "Fixed TLS options require TLS1.3, certificate material, hostname validation and rejectUnauthorized; no downgrade entry point was identified by source inspection.",
+    "States per-event glob matching now shares a bounded UTF-8 byte work budget; States contract suite was not independently rerun by this reviewer."
+  ],
+  "limitations": [
+    "No native PostgreSQL server started: current environment is UID0-only and PostgreSQL correctly refuses root; no bypass attempted.",
+    "No hardware, deployment, full penetration test, IEC certification or CRA conformity approval is provided.",
+    "No data migration or production approval follows from these targeted tests."
+  ],
+  "rerunReason": "Store glob matching changed to UTF-8 byte semantics; reran the same ten focused tests against the frozen source."
+}

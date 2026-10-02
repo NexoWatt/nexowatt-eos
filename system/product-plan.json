@@ -1,0 +1,290 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-system-architecture-plan",
+  "architectureRevision": "2026-09-30.3",
+  "status": "design-and-tooling-only",
+  "productReleaseVersion": null,
+  "baseCommit": "0e34142a49d96945100bd2721d2fd025d09d0a59",
+  "releaseApproved": false,
+  "runtimeIntegrated": false,
+  "cloudRequiredForOperation": false,
+  "sourceScope": "Installer and integration tooling; external Git and user-uploaded archive observations are in system/components/source-inventory.json. All named component source entries are observed; installed product inventory and complete dependency/build verification remain unresolved.",
+  "preservation": {
+    "uiDesign": "must-preserve",
+    "functionalBehavior": "must-preserve-with-reviewed-security-migrations",
+    "baselineCaptured": false,
+    "regressionVerified": false,
+    "currentAdminMajorReportedByUser": 7,
+    "autoUpgradeAdminMajor": false,
+    "contracts": [
+      "layout-and-navigation",
+      "roles-and-visibility",
+      "existing-api-and-datapoint-identifiers",
+      "units-and-sign-conventions",
+      "configuration-and-device-mappings",
+      "charge-storage-grid-and-microgrid-rules",
+      "offline-behavior-and-recovery",
+      "backup-restoration"
+    ]
+  },
+  "modules": [
+    {
+      "id": "os-base",
+      "name": "Linux-Systembasis",
+      "zone": "host",
+      "targetPrincipal": "kernel-and-system-services",
+      "sourceStatus": "missing",
+      "version": null,
+      "purpose": "Kernel, Treiber, Boot und Betriebssystempflege",
+      "isolationImplemented": false
+    },
+    {
+      "id": "eos-core",
+      "name": "EOS Core / Controller",
+      "zone": "runtime",
+      "targetPrincipal": "eos-core",
+      "sourceStatus": "source-observed",
+      "version": null,
+      "purpose": "Bestehende Regelung und Controller-Schnittstellen hinter geschützten Verträgen",
+      "isolationImplemented": false
+    },
+    {
+      "id": "eos-admin",
+      "name": "EOS Admin",
+      "zone": "management",
+      "targetPrincipal": "eos-admin",
+      "sourceStatus": "source-observed",
+      "version": null,
+      "purpose": "Bestehende Admin-Oberfläche, Rollen und sichere Ersteinrichtung",
+      "isolationImplemented": false
+    },
+    {
+      "id": "nexowatt-ui",
+      "name": "NexoWatt UI",
+      "zone": "management",
+      "targetPrincipal": "nexowatt-ui",
+      "sourceStatus": "source-observed",
+      "version": null,
+      "purpose": "Bestehendes Design, Navigation und Bedienfunktionen",
+      "isolationImplemented": false
+    },
+    {
+      "id": "nexowatt-devices",
+      "name": "NexoWatt Devices",
+      "zone": "field-gateway",
+      "targetPrincipal": "nexowatt-devices",
+      "sourceStatus": "source-observed",
+      "version": null,
+      "purpose": "Geräteprotokolle und geprüfte Datenpunktzuordnungen",
+      "isolationImplemented": false
+    },
+    {
+      "id": "nexowatt-backitup",
+      "name": "NexoWatt Backitup",
+      "zone": "maintenance",
+      "targetPrincipal": "eos-backup",
+      "sourceStatus": "source-observed",
+      "version": null,
+      "purpose": "Verschlüsselte Sicherung und kontrollierte Wiederherstellung",
+      "isolationImplemented": false
+    },
+    {
+      "id": "eebus",
+      "name": "EEBUS",
+      "zone": "field-gateway",
+      "targetPrincipal": "eos-eebus",
+      "sourceStatus": "source-observed",
+      "version": null,
+      "purpose": "Autorisierte Kopplung und Gerätekommunikation",
+      "isolationImplemented": false
+    },
+    {
+      "id": "identity-license",
+      "name": "Identität und Lizenz",
+      "zone": "management",
+      "targetPrincipal": "eos-identity",
+      "sourceStatus": "planned",
+      "version": null,
+      "purpose": "Lokale Prüfung signierter Lizenzen und dienstgebundene Rechte",
+      "isolationImplemented": false
+    },
+    {
+      "id": "secure-bus",
+      "name": "Kommunikations- und Autorisierungsgrenze",
+      "zone": "runtime",
+      "targetPrincipal": "eos-bus",
+      "sourceStatus": "planned",
+      "version": null,
+      "purpose": "Authentifizierte Nachrichten und serverseitige Befehlsberechtigung",
+      "isolationImplemented": false
+    },
+    {
+      "id": "data-store",
+      "name": "Daten und Geheimnisse",
+      "zone": "data",
+      "targetPrincipal": "eos-data",
+      "sourceStatus": "planned",
+      "version": null,
+      "purpose": "Getrennte Daten-/Schlüsselablage, Rechte und Speichergrenzen",
+      "isolationImplemented": false
+    },
+    {
+      "id": "update-agent",
+      "name": "Update und Recovery",
+      "zone": "maintenance",
+      "targetPrincipal": "eos-update-with-fixed-privileged-helper",
+      "sourceStatus": "partial-installer-only",
+      "version": null,
+      "purpose": "Signierte Pakete, atomarer Wechsel und geprüfte Rückfallverfahren",
+      "isolationImplemented": false
+    },
+    {
+      "id": "audit-health",
+      "name": "Sicherheitsprotokoll und Zustandsprüfung",
+      "zone": "operations",
+      "targetPrincipal": "eos-audit",
+      "sourceStatus": "planned",
+      "version": null,
+      "purpose": "Begrenzte Ereignisprotokolle, Zustand und Wiederanlaufüberwachung",
+      "isolationImplemented": false
+    }
+  ],
+  "securityDefaults": {
+    "defaultCredentials": false,
+    "debugPorts": false,
+    "sshEnabled": false,
+    "publicDatabaseListener": false,
+    "publicAdminBeforeEnrollment": false,
+    "arbitraryAdapterInstallation": false,
+    "internalNetworkMinimumTLS": "TLSv1.3",
+    "internalNetworkMutualAuthentication": true,
+    "licenseRequiredForInitialCommercialActivation": true,
+    "safetyFunctionsDependOnCommercialLicense": false,
+    "securityMaintenanceDependsOnCommercialLicense": false,
+    "protectedEnrollmentRequired": true
+  },
+  "connections": [
+    {
+      "id": "EOS-FLOW-001",
+      "source": "eos-admin",
+      "target": "identity-license",
+      "transport": "tls13-mtls",
+      "purpose": "identities-and-scoped-entitlements",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-002",
+      "source": "nexowatt-ui",
+      "target": "eos-core",
+      "transport": "tls13-mtls",
+      "purpose": "existing-function-compatibility-api",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-003",
+      "source": "eos-core",
+      "target": "secure-bus",
+      "transport": "tls13-mtls",
+      "purpose": "authorized-bounded-commands",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-004",
+      "source": "secure-bus",
+      "target": "nexowatt-devices",
+      "transport": "tls13-mtls",
+      "purpose": "device-specific-authorized-command",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-005",
+      "source": "secure-bus",
+      "target": "eebus",
+      "transport": "tls13-mtls",
+      "purpose": "eebus-command-and-telemetry",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-006",
+      "source": "secure-bus",
+      "target": "data-store",
+      "transport": "tls13-mtls",
+      "purpose": "least-privilege-data-access",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-007",
+      "source": "nexowatt-backitup",
+      "target": "data-store",
+      "transport": "tls13-mtls",
+      "purpose": "authorized-consistent-snapshot",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-008",
+      "source": "update-agent",
+      "target": "os-base",
+      "transport": "peer-credential-unix-socket-and-signed-artifact",
+      "purpose": "fixed-privileged-update-operation",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-009",
+      "source": "eos-core",
+      "target": "audit-health",
+      "transport": "tls13-mtls",
+      "purpose": "bounded-redacted-security-events",
+      "implemented": false
+    },
+    {
+      "id": "EOS-FLOW-010",
+      "source": "identity-license",
+      "target": "secure-bus",
+      "transport": "tls13-mtls",
+      "purpose": "service-bound-authorization-policy",
+      "implemented": false
+    }
+  ],
+  "releaseGates": [
+    {
+      "id": "EOS-GATE-001",
+      "status": "open",
+      "description": "Actual sources, versions and build inventories for all shipped components"
+    },
+    {
+      "id": "EOS-GATE-002",
+      "status": "open",
+      "description": "Existing UI/API/device behavior baseline and complete regression evidence"
+    },
+    {
+      "id": "EOS-GATE-003",
+      "status": "open",
+      "description": "Real isolated principals, credentials and denied cross-module operations"
+    },
+    {
+      "id": "EOS-GATE-004",
+      "status": "open",
+      "description": "Protected first contact, TLS failures, license and account lifecycle"
+    },
+    {
+      "id": "EOS-GATE-005",
+      "status": "open",
+      "description": "System install, signed update, failed update, compatible rollback and restore"
+    },
+    {
+      "id": "EOS-GATE-006",
+      "status": "open",
+      "description": "Per-device physical operating limits and safe recovery verified"
+    },
+    {
+      "id": "EOS-GATE-007",
+      "status": "open",
+      "description": "Complete build/image CycloneDX inventory plus assessed vulnerabilities"
+    },
+    {
+      "id": "EOS-GATE-008",
+      "status": "open",
+      "description": "CRA product classification, technical documentation, support and release decision"
+    }
+  ]
+}

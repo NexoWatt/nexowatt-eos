@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "EOS-PG-OBJECTS-PEER-20261001",
+  "reviewer": "Separate pg_states_contract agent; internal AI-assisted review, not independent certification",
+  "generatedAt": "2026-10-01T20:14:15.685393+00:00",
+  "scope": "Read-only source review of Objects compatibility facade, inherited7.2.2 methods and authorization/event boundaries",
+  "sourceBindings": [
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/index.cjs",
+      "bytes": 20947,
+      "sha256": "2943b0bfa077fe17d64538d909a3a8c248657cbd64162f2a5023a401b4106c52"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/facade.cjs",
+      "bytes": 5771,
+      "sha256": "c5af1ed63dc25d0f2d3655c1ecfbdb7a98ab9418330c79689dac0ba84a2aa26a"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/auth.cjs",
+      "bytes": 4669,
+      "sha256": "acd7e7fad0f3fb974df7df5c989b9b157ea04dcb1d6443225bdb1af580b6056b"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/views.cjs",
+      "bytes": 2567,
+      "sha256": "53c339eff8692c167c41a71356d74d5b18ccd2de27a871c7705b33e572919881"
+    }
+  ],
+  "findings": [
+    {
+      "id": "PG-OBJECTS-PEER-01",
+      "issue": "Inherited rename checked source only; protected destination and directory child permissions could be bypassed",
+      "resolution": "rename requires administrator; broader per-file parity remains open",
+      "status": "fix confirmed by source review"
+    },
+    {
+      "id": "PG-OBJECTS-PEER-02",
+      "issue": "Protocol mismatch/malformed events signaled disconnect while leaving operations enabled",
+      "resolution": "fatalEventFailure stops client, clears facade and closes Store",
+      "status": "fix confirmed by source review"
+    },
+    {
+      "id": "PG-OBJECTS-PEER-03",
+      "issue": "Event count alone permitted large pending bytes and unbounded aggregate pattern work",
+      "resolution": "16MiB pending payload bound,1MiB event bound,1024 patterns and shared2,000,000 matching work budget; simple prefix/literal fast paths",
+      "status": "fix confirmed by source review"
+    },
+    {
+      "id": "PG-OBJECTS-PEER-04",
+      "issue": "Initial glob implementation omitted classes/escapes and mismatched Unicode iteration units",
+      "resolution": "Reviewed States byte-wise glob implementation reused and positive cases added by Objects agent",
+      "status": "fix confirmed by source review"
+    },
+    {
+      "id": "PG-OBJECTS-PEER-05",
+      "issue": "unlink/delFile directory path directly called _rm, bypassing public rm administrator gate",
+      "resolution": "Lower-level _rm now checks administrator before inherited recursive operation",
+      "status": "fix confirmed by final source review"
+    }
+  ],
+  "positiveObservations": [
+    "Exact view map allowlist is compared as text; no new eval or arbitrary database-supplied code execution path.",
+    "Mutation wrapper enters shared Store transaction before authorization and inherited file mutation calls.",
+    "getObjectList postfilter examines full document in row.value.",
+    "Old object ACL is preserved by inherited _setObject when next ACL omitted."
+  ],
+  "testExecution": {
+    "reviewerExecutedObjectsTests": false,
+    "producerReportedObjectsTestsPassed": 25,
+    "statesOwnTestsPassed": 29,
+    "realPostgreSQLExecuted": false
+  },
+  "limits": [
+    "This reviewer did not independently execute Objects tests or PostgreSQL SQL/TLS/RLS tests.",
+    "No full application authorization proof: caller-supplied service user identities and shared database credentials remain a release blocker.",
+    "Nonadministrator file rename/directory operations are intentionally restricted pending full compatibility work.",
+    "No target hardware, migration, live controller/adapters or production/CRA/IEC acceptance established."
+  ]
+}

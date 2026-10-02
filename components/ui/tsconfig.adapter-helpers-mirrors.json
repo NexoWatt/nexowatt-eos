@@ -1,0 +1,31 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/adapter-helpers",
+    "module": "NodeNext",
+    "target": "ES2022",
+    "removeComments": false,
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/contracts/**/*.ts",
+    "src-ts/adapter/state-cache.ts",
+    "src-ts/adapter/api-state.ts",
+    "src-ts/adapter/api-set.ts",
+    "src-ts/adapter/settings-writes.ts",
+    "src-ts/adapter/connection-state.ts",
+    "src-ts/adapter/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-types",
+    "build-ts"
+  ]
+}

@@ -1,0 +1,85 @@
+{
+    "type": "panel",
+    "label": "Grafana backup",
+    "items": {
+        "_header": {
+            "type": "header",
+            "size": 2,
+            "text": "Grafana backup",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "grafanaHost": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "text",
+            "label": "Grafana Hostname",
+            "newLine": true,
+            "validator": "data.grafanaHost",
+            "validatorNoSaveOnError": true
+        },
+        "grafanaPort": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "min": 1,
+            "max": 65535,
+            "type": "number",
+            "label": "Grafana port",
+            "validator": "data.grafanaPort",
+            "validatorNoSaveOnError": true
+        },
+        "grafanaProtocol": {
+            "type": "select",
+            "label": "Protocol",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "help": "Protocol",
+            "options": [
+                {
+                    "label": "http",
+                    "value": "http"
+                },
+                {
+                    "label": "https",
+                    "value": "https"
+                }
+            ]
+        },
+        "grafanaApiKey": {
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "type": "password",
+            "visible": true,
+            "label": "Grafana API-Key or Service Token",
+            "newLine": true,
+            "validator": "data.grafanaApiKey",
+            "validatorNoSaveOnError": true
+        },
+        "grafanaSignedCertificates": {
+            "hidden": "data.grafanaProtocol == 'http'",
+            "type": "checkbox",
+            "label": "Allow only signed certificates",
+            "xs": 12,
+            "sm": 9,
+            "md": 6,
+            "lg": 4,
+            "xl": 4,
+            "newLine": true
+        }
+    }
+}

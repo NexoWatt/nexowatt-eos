@@ -1,0 +1,58 @@
+{
+  "beschreibung": "Produktionsnahe Energiefluss-Resolver-Fälle für die spätere Runtime-Migration. Diese Datei dokumentiert erwartete Fachregeln; 0.7.61 verdrahtet sie noch nicht produktiv.",
+  "cases": [
+    {
+      "name": "splitStorageZeroIsValid",
+      "zweck": "Getrennte Speicher-DPs mit 0 W sind gültig und dürfen nicht durch Bilanz ersetzt werden.",
+      "input": {
+        "hasConfiguredSplitDp": true,
+        "hasConfiguredChargeDp": true,
+        "hasConfiguredDischargeDp": true,
+        "chargeW": 0,
+        "dischargeW": 0,
+        "socPct": 44
+      },
+      "expected": {
+        "source": "split-dp",
+        "chargeW": 0,
+        "dischargeW": 0,
+        "quality": "measured"
+      }
+    },
+    {
+      "name": "configuredDpBlocksFallback",
+      "zweck": "Konfigurierter DP ohne Zahlenwert blockiert Bilanz-Fallback, damit History nicht verfälscht wird.",
+      "input": {
+        "hasConfiguredSplitDp": true,
+        "hasConfiguredChargeDp": true,
+        "chargeW": null,
+        "pvW": 6000,
+        "buildingLoadW": 1000,
+        "gridImportW": 0,
+        "gridExportW": 3000
+      },
+      "expected": {
+        "source": "missing",
+        "quality": "configured-missing",
+        "hasConfiguredStorageDp": true
+      }
+    },
+    {
+      "name": "storageFallbackOnlyWithoutDp",
+      "zweck": "Bilanz-Fallback nur bei Anlagen ohne echten Speicher-DP.",
+      "input": {
+        "hasConfiguredSplitDp": false,
+        "hasConfiguredSignedDp": false,
+        "pvW": 6500,
+        "buildingLoadW": 1700,
+        "gridImportW": 0,
+        "gridExportW": 2000
+      },
+      "expected": {
+        "source": "calculated",
+        "chargeW": 2800,
+        "dischargeW": 0
+      }
+    }
+  ]
+}

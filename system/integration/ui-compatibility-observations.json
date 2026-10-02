@@ -1,0 +1,330 @@
+{
+  "schemaVersion": 1,
+  "documentId": "EOS-UI-COMPATIBILITY-20260930",
+  "createdAt": "2026-09-30T20:40:53.866543+00:00",
+  "status": "source-baseline-with-selected-synthetic-checks",
+  "source": {
+    "authority": "user-upload-designated-current",
+    "archiveName": "NexoWatt_UI_1.0.21_STABLE_FULL_REPOSITORY (1).zip",
+    "archiveSha256": "90db619ecd754cab335dae92fdc123a48f62ceffb505a2a2b832e119d885eefe",
+    "package": "iobroker.nexowatt-ui",
+    "version": "1.0.21",
+    "gitCommit": null,
+    "archiveComparedFiles": 2098,
+    "archiveByteIdenticalFiles": 2098,
+    "productSourceModified": false,
+    "anchorSha256": {
+      "package.json": "2bab6f053f1e031d0cbd47b0cfee4eed838608ac869c3f9c5af099df457fbbc1",
+      "package-lock.json": "871ebe85b0e2f0b220be65b06de039500e2bf44ddcea41f9df377afdb86b5e01",
+      "io-package.json": "4c898a905f24276048e20cde187ae37e43fb52558d2c63fddd1093aff34244e7",
+      "main.js": "67d3ef9b866ea9903cf932109ea37ba8c63f5f1ea51130f682981e25c66c241b",
+      "admin/jsonConfig.json": "741a1cd7f913f08033c8352486c5a1e25a48253e4e091c8bc967cb13f22d08af",
+      "src-admin-tab/package.json": "e75d089bdae6767b7a21619f4b03aabd3ed03f572c049a0fa8d1746bb58857b3",
+      "src-admin-tab/src/App.tsx": "a76e0ccc4a2bfa35f6d3a2680b88ec83dfaa6e1e6cfccc4a493573c8c2d28d50",
+      "src-ts/runtime-executables/main.ts": "83d9c4ad4223858fdd78c4ed6bbec8f2f12489000f13e35cb67a4820fb367c9f",
+      "ems/engine.js": "602e84de734e633226424c62cc2ed5d7b4408457abbdf326c9b699c272bee079",
+      "ems/module-manager.js": "d59cbf544f2bafdbfd33d35c3091b0ba6594a231bbc86df58ddc68f8cfd2e9a6",
+      "ems/datapoints.js": "5f6b3c94494181fa004464254a7ac1cbe14f5ed252a683c5d451a8b911c44d47",
+      "ems/evcs-control-mapping.js": "4213703d8df229d902712906dd542081282d4020f96caabe469280ad1682744d",
+      "ems/services/para14a-eebus-api.js": "8f1ebc0b7ba801af2b58001429d143b158f487793fdf47369a1e1ccd45466a28",
+      "src-ts/runtime-executables/ems/modules/charging-management.ts": "a8c98f270d4b8e964c83d7c4848367a8b16fe2db85ad755f532453f824a734ce",
+      "www/index.html": "436dcd134b8c94525b6f7f25254c9e5105ca938f90e0da9f7d5d2f357d674c0f",
+      "www/styles.css": "d1053aae3ea07d4bd6c9b9bef13f5b462b26e3ff48a321d786ad0623a4d96e5b"
+    }
+  },
+  "declaredRequirements": {
+    "node": ">=22",
+    "jsController": ">=6.0.11",
+    "admin": ">=7.0.0",
+    "runtimeDependencies": {
+      "@iobroker/adapter-core": "^3.4.1",
+      "@iobroker/type-detector": "5.0.10",
+      "express": "^4.22.2",
+      "nodemailer": "10.0.10"
+    },
+    "installedVersionsVerified": false
+  },
+  "entrypoints": {
+    "runtime": "main.js",
+    "canonicalRuntime": "src-ts/runtime-executables/",
+    "generationCommand": "npm run sync:ts-runtime-executables",
+    "browserStatic": "www/",
+    "adminReactSource": "src-admin-tab/",
+    "adminReactOutput": "admin/react/",
+    "adminReactSubpackageVersion": "0.8.8",
+    "engine": "ems/engine.js",
+    "moduleManager": "ems/module-manager.js",
+    "processSeparationVerified": false
+  },
+  "operatingProfile": {
+    "userReportedHardware": [
+      "Raspberry Pi 5 / 8 GB RAM",
+      "Raspberry Pi 5 / 16 GB RAM"
+    ],
+    "userReportedStorage": "SSD",
+    "userReportedOs": "Linux 12 Lite",
+    "exactDistributionVerified": false,
+    "osImageKernelArchitectureVerified": false,
+    "hardwareTestExecuted": false
+  },
+  "transportObservations": [
+    {
+      "id": "UI-IF-001",
+      "from": "browser/admin-tab",
+      "to": "nexowatt-ui",
+      "mechanism": "Express HTTP listener; browser API and live updates",
+      "defaultPort": 8188,
+      "defaultBind": "0.0.0.0",
+      "source": "main.js; io-package.json",
+      "targetMigration": "geschützter Gateway und gleichbleibende API-/Navigationssemantik; Sicherheitsbefunde separat"
+    },
+    {
+      "id": "UI-IF-002",
+      "from": "nexowatt-ui",
+      "to": "js-controller / shared object-state storage",
+      "mechanism": "adapter-core, subscribeForeignStatesAsync/getForeignStateAsync/setForeignStateAsync, sendTo",
+      "defaultPort": null,
+      "source": "main.js; ems/datapoints.js",
+      "targetMigration": "State-ID/ack/ts/lc/q und Configvertragskompatibilität; Controller-Transport separat verifizieren"
+    },
+    {
+      "id": "UI-IF-003",
+      "from": "nexowatt-ui",
+      "to": "nexowatt-devices / OCPP21 / other field adapters",
+      "mechanism": "konfigurierte und abgeleitete ioBroker-State-IDs",
+      "defaultPort": null,
+      "source": "ems/evcs-control-mapping.js; ems/modules/charging-management.js",
+      "targetMigration": "aliases.v1.r/ctrl, native ocpp21.<instance>.<station> und explizite Zuordnung erhalten"
+    },
+    {
+      "id": "UI-IF-004",
+      "from": "eebus.<instance>",
+      "to": "nexowatt-ui",
+      "mechanism": "sendTo API v1",
+      "commands": [
+        "nexowatt.para14a.hello.v1",
+        "nexowatt.para14a.command.v1",
+        "nexowatt.para14a.implementation.v1"
+      ],
+      "source": "ems/services/para14a-eebus-api.js",
+      "targetMigration": "gegenseitige Identität und Autorisierung ergänzen, fachliche Rückmeldungen erhalten"
+    },
+    {
+      "id": "UI-IF-005",
+      "from": "nexowatt-ui",
+      "to": "configured history adapter",
+      "mechanism": "sendTo getHistory",
+      "defaultInstance": "influxdb.0",
+      "source": "main.js; io-package.json native.history",
+      "targetMigration": "Abfragen, Zeitfenster, Dateneinheiten und Fehlersemantik erhalten"
+    },
+    {
+      "id": "UI-IF-006",
+      "from": "nexowatt-ui",
+      "to": "netoperator Modbus-TCP device",
+      "mechanism": "net.createConnection",
+      "defaultPort": 502,
+      "enabledByDefault": false,
+      "source": "ems/services/netoperator-modbus-tcp.js; io-package.json native.netOperatorInterface",
+      "targetMigration": "Feldprotokollrisiko segmentieren; keinen TLS-Nachweis behaupten"
+    },
+    {
+      "id": "UI-IF-007",
+      "from": "EOS Mesh participant",
+      "to": "configured Mesh peer/master",
+      "mechanism": "configured HTTP(S) URL or local command state; coordinator protocol",
+      "defaultPort": null,
+      "source": "lib/mesh-coordinator.js; ems/modules/mesh-microgrid.js",
+      "targetMigration": "unterscheidbare Legacy-/Koordinatorpfade und Schlüssel-/Lease-Migration prüfen"
+    }
+  ],
+  "preservationAreas": [
+    {
+      "id": "UI-COMP-001",
+      "area": "Bedienoberfläche und Rollenansichten",
+      "paths": [
+        "www/",
+        "src-admin-tab/src/",
+        "admin/react/"
+      ],
+      "preserve": [
+        "Layout, Branding und Navigation",
+        "Live/History/Einstellungen/Smart Home",
+        "Installer-, Admin- und Kundenansichten",
+        "AppCenter und Diagnoseansichten"
+      ],
+      "validationStatus": "source-inventoried-not-browser-verified"
+    },
+    {
+      "id": "UI-COMP-002",
+      "area": "Laden AC/DC und mehrere Ladepunkte",
+      "paths": [
+        "ems/modules/charging-management.js",
+        "ems/evcs-control-mapping.js",
+        "src-ts/ems/charging-management/",
+        "lib/ts-mirrors/ems/charging-management/"
+      ],
+      "preserve": [
+        "Modi und Zielzeiten",
+        "Netz-/PV-/Speicheranteile",
+        "Min/Max, Einheit W/A, Phasen und Stationsgrenzen",
+        "Hysterese, Messalter, Reservierung tatsächlich fließender Last"
+      ],
+      "validationStatus": "selected-synthetic-regressions-passed"
+    },
+    {
+      "id": "UI-COMP-003",
+      "area": "Speicher und Speicherfarm",
+      "paths": [
+        "ems/modules/storage-control.js",
+        "ems/modules/storage-mapping.js",
+        "ems/modules/multi-use.js",
+        "ems/services/storage-farm-aggregation.js",
+        "ems/services/storage-self-consumption-policy.js"
+      ],
+      "preserve": [
+        "Vorzeichen und Leistungs-/Energieeinheiten",
+        "SOC und Reserve-/Nutzungsbereiche",
+        "Einzelanlage/Farm, Leistungsfreigaben und Regelautorität",
+        "keine doppelte Anrechnung von Speicherleistung"
+      ],
+      "validationStatus": "selected-allocation-regression-passed-no-device-verification"
+    },
+    {
+      "id": "UI-COMP-004",
+      "area": "NVP, Netzlimits, PV und Null-Einspeisung",
+      "paths": [
+        "ems/modules/grid-constraints.js",
+        "ems/modules/nvp-coordinator.js",
+        "ems/modules/core-limits.js",
+        "ems/modules/peak-shaving.js",
+        "ems/services/safety-envelope.js",
+        "ems/services/zero-export-pv-coordinator.js"
+      ],
+      "preserve": [
+        "NVP-Zuordnung und Messqualität",
+        "Soft-/Hardlimits, Freigaben und Stop-Priorität",
+        "WR-Zuordnungen und Überschussverteilung",
+        "Ablehnung widersprüchlicher Alias-/Schreibziele"
+      ],
+      "validationStatus": "selected-synthetic-regressions-passed"
+    },
+    {
+      "id": "UI-COMP-005",
+      "area": "EEBUS / §14a / Netzbetreiber",
+      "paths": [
+        "ems/services/para14a-eebus-api.js",
+        "ems/modules/para14a.js",
+        "ems/modules/netoperator-interface.js",
+        "ems/netoperator/acceptance-tests.json"
+      ],
+      "preserve": [
+        "versionierte sendTo-Kommandos",
+        "Annahme, Anwendung und Umsetzungsmeldung getrennt",
+        "Signalalter, Priorität und projektspezifischer Fallback"
+      ],
+      "validationStatus": "source-inventoried-not-executed"
+    },
+    {
+      "id": "UI-COMP-006",
+      "area": "Microgrid / Mesh",
+      "paths": [
+        "lib/mesh-coordinator.js",
+        "lib/mesh-coordinator-contract.js",
+        "lib/mesh-coordinator-protocol.js",
+        "ems/modules/mesh-microgrid.js",
+        "lib/mesh-energy-journal.js"
+      ],
+      "preserve": [
+        "Autonomie bei Ausfall",
+        "Master/Slave-Lease und Wiederanlauf",
+        "Gesamt-/Phasen-/Teilnehmerlimits",
+        "Abrechnung/Journal getrennt von Steuerfreigabe"
+      ],
+      "validationStatus": "source-inventoried-not-executed"
+    },
+    {
+      "id": "UI-COMP-007",
+      "area": "Weitere Apps und Gebäudefunktionen",
+      "paths": [
+        "ems/modules/heating-rod-control.js",
+        "ems/modules/thermal-control.js",
+        "ems/modules/operating-strategies.js",
+        "ems/nexologic-engine.js",
+        "ems/consumers/",
+        "www/smarthome-config.js"
+      ],
+      "preserve": [
+        "Heizstab/thermische Lasten und Prioritäten",
+        "Betriebsstrategien/NexoLogic",
+        "Smart-Home-Zuordnungen",
+        "Tarif/Prognose sowie Fehlerzustände"
+      ],
+      "validationStatus": "source-inventoried-not-executed"
+    },
+    {
+      "id": "UI-COMP-008",
+      "area": "Historie und Anzeigen",
+      "paths": [
+        "www/history.js",
+        "www/energy-ledger.js",
+        "ems/modules/energy-ledger.js",
+        "main.js"
+      ],
+      "preserve": [
+        "ioBroker getHistory-Datenfluss",
+        "Datentypen, Einheiten und Vorzeichen",
+        "Reale Nullwerte nicht als fehlend behandeln",
+        "Aktualität und Verfügbarkeit sichtbar halten"
+      ],
+      "validationStatus": "fixture-structure-only-no-history-integration"
+    }
+  ],
+  "existingFixtureInventory": [
+    {
+      "path": "tests/fixtures/regression-plan.de.json",
+      "entries": 8,
+      "executionClaim": "not-executed-here",
+      "role": "existing-planned-or-fixture-data-not-pass-evidence"
+    },
+    {
+      "path": "tests/fixtures/energy-flow-resolver-cases.de.json",
+      "entries": 3,
+      "executionClaim": "not-executed-here",
+      "role": "existing-planned-or-fixture-data-not-pass-evidence"
+    },
+    {
+      "path": "tests/regression/energy-flow-cases.json",
+      "entries": 4,
+      "executionClaim": "not-executed-here",
+      "role": "existing-planned-or-fixture-data-not-pass-evidence"
+    },
+    {
+      "path": "ems/netoperator/acceptance-tests.json",
+      "entries": 12,
+      "executionClaim": "not-executed-here",
+      "role": "existing-planned-or-fixture-data-not-pass-evidence"
+    }
+  ],
+  "tests": {
+    "report": "reports/integration/ui-existing-tests.json",
+    "rawLog": "reports/integration/ui-existing-tests.log",
+    "scriptCount": 4,
+    "passedScripts": 4,
+    "syntheticFunctionalScripts": 3,
+    "structureOnlyScripts": 1,
+    "fullReleaseValidation": false,
+    "browserEndToEnd": false,
+    "hardwareIntegration": false,
+    "noPerformanceClaim": true
+  },
+  "openBaselineNeeds": [
+    "anonymisierter tatsächlicher ioBroker Objekt-/State- und Instanzkonfigurationsstand",
+    "Admin-/js-controller-/Node-/Adapterversionen des Zielgeräts",
+    "Rollenbezogene Screenshots und Bedienpfade",
+    "Geräte-/Firmware-/Schreibzuordnungen mit sicheren Testszenarien",
+    "Installations-/Update-/Backup-/Restore-Test auf RPi 5 und SSD",
+    "Lizenzmigration und Wiederanlauf ohne Beeinträchtigung physischer Schutzfunktionen"
+  ],
+  "conformityClaim": false
+}

@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - run: npm i
+        env:
+          SKIP_POSTINSTALL: true
+
+      - run: npm run deploy
+        env:
+          SFTP_HOST: ${{secrets.SFTP_HOST}}
+          SFTP_PASS: ${{secrets.SFTP_PASS}}
+          SFTP_PORT: ${{secrets.SFTP_PORT}}
+          SFTP_USER: ${{secrets.SFTP_USER}}
+          SFTP_HOST_KEY_SHA256: ${{secrets.SFTP_HOST_KEY_SHA256}}

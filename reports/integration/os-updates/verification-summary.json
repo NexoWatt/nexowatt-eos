@@ -1,0 +1,656 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-os-security-updates-source-delivery",
+  "sourceVersion": "0.2.0-dev.5",
+  "createdAt": "2026-10-01T19:40:00.273505+00:00",
+  "baselineCommit": "c18ae242efa69a7e8c79c81d1ce3dc074904aea6",
+  "finalCommitLocation": "outer full-repository delivery.json",
+  "status": "source-tested-new-installation-still-blocked",
+  "newInstallationApproved": false,
+  "newSignedRuntimeBundleProduced": false,
+  "actualOsPackageTransactionExecuted": false,
+  "targetHardwareAccepted": false,
+  "productionReleaseApproved": false,
+  "independentPenetrationTestPerformed": false,
+  "craConformityEstablished": false,
+  "iecConformityEstablished": false,
+  "gitHubPublished": false,
+  "implemented": [
+    "Separate root-only unattended OS maintenance with fixed signed Debian/Pi channels",
+    "Authenticated read-only status in existing EOS settings",
+    "Root-owned status and policy outside adapter writable paths",
+    "Default automatic daily scheduling; no automatic reboot",
+    "Pending/held/pinned packages, freshness, activation and independent distro automation gaps",
+    "Actual installed dpkg CycloneDX inventory generator",
+    "Host prerequisite/installation integration and generated-Python-cache release rejection"
+  ],
+  "tests": [
+    {
+      "name": "host-installer-release-bundle-contracts",
+      "counts": {
+        "tests": 84,
+        "pass": 84,
+        "fail": 0,
+        "skipped": 0
+      },
+      "evidence": "reports/integration/os-updates/host-contracts-final.json",
+      "targetExecution": false
+    },
+    {
+      "name": "python-updater-offline-and-read-only-apt-config",
+      "counts": {
+        "passed": 22,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": "reports/integration/os-updates/runtime-tests.json",
+      "targetExecution": false
+    },
+    {
+      "name": "status-file-and-actual-https-api-with-fixtures",
+      "counts": {
+        "tests": 34,
+        "pass": 34,
+        "fail": 0,
+        "skipped": 0
+      },
+      "evidence": "components/ui/reports/security/os-updates-20261001/status-tests.tap",
+      "targetExecution": false
+    },
+    {
+      "name": "existing-auth-account-regression",
+      "counts": {
+        "tests": 34,
+        "pass": 34,
+        "fail": 0,
+        "skipped": 0
+      },
+      "evidence": "components/ui/reports/security/os-updates-20261001/auth-regression.tap",
+      "targetExecution": false
+    },
+    {
+      "name": "python-js-cross-contract",
+      "counts": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "skipped": 0
+      },
+      "evidence": "reports/integration/os-updates/cross-contracts.json",
+      "targetExecution": false
+    }
+  ],
+  "browser": {
+    "passed": true,
+    "browser": "HeadlessChrome/153.0.8010.0",
+    "checks": [
+      "authenticated settings route",
+      "desktop status",
+      "mobile pending/activation warning",
+      "offline clears stale counts",
+      "BFCache resumes polling",
+      "untrusted strings cannot create markup",
+      "503 clears details"
+    ],
+    "certificateTrust": "exact ephemeral SPKI",
+    "sandbox": "disabled in isolated root test environment",
+    "limitations": [
+      "fixture status and Controller",
+      "no actual Debian updates or Pi hardware"
+    ]
+  },
+  "sourceReportBindingChecks": [
+    {
+      "report": "reports/integration/os-updates/host-contracts-final.json",
+      "sourceBindingsVerified": 27
+    },
+    {
+      "report": "reports/integration/os-updates/runtime-tests.json",
+      "sourceBindingsVerified": 9
+    },
+    {
+      "report": "reports/integration/os-updates/security-review.json",
+      "sourceBindingsVerified": 21
+    },
+    {
+      "report": "reports/integration/os-updates/cross-contracts.json",
+      "sourceBindingsVerified": 3
+    },
+    {
+      "report": "components/ui/reports/security/os-updates-20261001/verification-summary.json",
+      "sourceBindingsVerified": 13
+    }
+  ],
+  "sourceBindings": [
+    {
+      "path": "README.md",
+      "sha256": "184d1fd9613cdac214dcb118bb0a353fe16a1aeacd9af904dcf41b96d72ee6dc",
+      "bytes": 5972
+    },
+    {
+      "path": "components/ui/docs/security/EOS_OS_UPDATE_STATUS_DE.md",
+      "sha256": "447ee467ee74520712bff8eda894aa0c3f17a4d1918f02c0b2666c7e67299998",
+      "bytes": 6780
+    },
+    {
+      "path": "components/ui/lib/os-update-status.js",
+      "sha256": "abc24f1bd27d399632b568b93221d772c19372c9e2a8edb9be18780801beac49",
+      "bytes": 9414
+    },
+    {
+      "path": "components/ui/main.js",
+      "sha256": "ec04a1ef0f983919c06cf473ce511c9160d29ce6b2df4576d8d8574d85a4407a",
+      "bytes": 1729476
+    },
+    {
+      "path": "components/ui/package.json",
+      "sha256": "1da3e9a4c12ef8c0d8cdc0b04655f929fd344a86c504c37761fe997867fc1463",
+      "bytes": 73057
+    },
+    {
+      "path": "components/ui/scripts/verify-eos-os-updates-browser.cjs",
+      "sha256": "12aba56d8d21edcb7939ef52a19a4e96d4e290b1abb4dbe4c79742d6179411e7",
+      "bytes": 6858
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/os-update-status.ts",
+      "sha256": "362ca451ed8c16d1f6886ee71a3b02653f295a32e3bc4b1a26e766768d15f418",
+      "bytes": 8727
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/main.ts",
+      "sha256": "c5a1bb80bdb425f761ba7e68ded11aa64b731152c7fe6cfa74b3a710b2766016",
+      "bytes": 1728821
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/www/os-update-status.ts",
+      "sha256": "24f63a45c2caa0f3cf27957a6b9be1706845093880d25d384f44a6981d460238",
+      "bytes": 6994
+    },
+    {
+      "path": "components/ui/test/eos-os-update-status.test.cjs",
+      "sha256": "8ef17d860ba13b025be0c70dcf87eea848cf3f4cfa88f5032d77395b7a520a8d",
+      "bytes": 10018
+    },
+    {
+      "path": "components/ui/test/os-update-status-fixture.cjs",
+      "sha256": "ea7ae1ed540c57b104b034476d98943129be2cee9137d6bc77e6c4b322777790",
+      "bytes": 819
+    },
+    {
+      "path": "components/ui/www/os-update-status.js",
+      "sha256": "8d8124a6590effa34c8c0bed1ea32a401ba607b67523c8eb9bf1773e053449be",
+      "bytes": 7681
+    },
+    {
+      "path": "components/ui/www/settings.html",
+      "sha256": "fa3cf9ae8b5cf675e634d008c979725fb7a3b4f2d9214f4b317a163e78436d8a",
+      "bytes": 64620
+    },
+    {
+      "path": "components/ui/www/styles.css",
+      "sha256": "225789883044f1568aa124b12f26302f1d29b2221a643fae927efb8771b18792",
+      "bytes": 351590
+    },
+    {
+      "path": "docs/architecture/INTEGRATED_SYSTEM.md",
+      "sha256": "f354e4482b4c38543c0ab30bd10578e47aec472f960fda909e7a67c8dc07ebfa",
+      "bytes": 25882
+    },
+    {
+      "path": "docs/architecture/INTERFACE_CONTRACTS.md",
+      "sha256": "a2b0b75829cd2f4b10b03afab91f817034223b4753fc66e1fe4fb433e195f629",
+      "bytes": 13498
+    },
+    {
+      "path": "docs/cra/INTEGRATED_TEST_REQUIREMENTS.md",
+      "sha256": "565a7881b390f918a54f5081bc466e10fff4c6492d2ab7e8a61aaec80d50a5a6",
+      "bytes": 26805
+    },
+    {
+      "path": "docs/operations/OS_SECURITY_UPDATES_DE.md",
+      "sha256": "76b765c1834c3cb39345e0794a155c5c09c173577a42c1c4aad8c69ae7185435",
+      "bytes": 5318
+    },
+    {
+      "path": "docs/security/OS_SECURITY_UPDATES_DE.md",
+      "sha256": "b8879570ceae893da05f7db194c1224434c434a4fc3b751fef37ffee63dd3159",
+      "bytes": 13226
+    },
+    {
+      "path": "runtime/os-updates/README.md",
+      "sha256": "45c790ff0e339b18799ca43ce4a5e7f42224277c954eea17341fe2cab6d564ef",
+      "bytes": 10876
+    },
+    {
+      "path": "runtime/os-updates/policy.schema.json",
+      "sha256": "cd4559a5e1a5ffcc7e457c50859a74117e85897609e8200b886dbda86b0f8856",
+      "bytes": 290
+    },
+    {
+      "path": "runtime/os-updates/runner.py",
+      "sha256": "42b5f07f06a0abd9a29127108ad0666963c44a60080a400a3e6b4815dcc741f6",
+      "bytes": 26310
+    },
+    {
+      "path": "runtime/os-updates/status.schema.json",
+      "sha256": "caefb670fa093f11d2c05b102eada87aa23abaaea184fb612aabf56e24f1d149",
+      "bytes": 9814
+    },
+    {
+      "path": "system/product.json",
+      "sha256": "345853c54312c870160deac4d5f2e05f7fa44944e741fb5e7648f116224d957b",
+      "bytes": 1802
+    },
+    {
+      "path": "system/test-base/os-updates/initial-status.json",
+      "sha256": "85e81ebf3e8fab95b441787230c609a850dd8d90e4a1d1a6708d48313a63e344",
+      "bytes": 997
+    },
+    {
+      "path": "system/test-base/os-updates/policy.json",
+      "sha256": "f3d567c897912214a963bcfe66cbb9903fb3b8aeddffd823ec4766d1c237e16c",
+      "bytes": 35
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.service",
+      "sha256": "c846da6dfba50924577cc8c9a1cfabfb271f5e5af53fa783cbe5b79f23678bc1",
+      "bytes": 945
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-certificates.timer",
+      "sha256": "2a8e58244851e3bbf64240fead10b4a6fcf6d1fe72bdbce2fb79f5bedf01f51b",
+      "bytes": 214
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-controller.service",
+      "sha256": "0fa8f9a92b1b000ccc242c03d72bbd1303b52cdce21ce2bd203d24aa10172619",
+      "bytes": 2326
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-initialize.service",
+      "sha256": "8560a76fb2964b70eb0529ee184ea01c695c8a06eb5d0011a403a7035aaf118e",
+      "bytes": 2181
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "d7de6e00051469b69f71eef5dd2326ae92744d9e9dd91404141e0d9454bb7065",
+      "bytes": 1158
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.timer",
+      "sha256": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e",
+      "bytes": 319
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-redis@.service",
+      "sha256": "dcb76e9a9bd7cf1de2eb09d737f593e68b813c96d29a796b2167881c1c85e271",
+      "bytes": 1163
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-upload.service",
+      "sha256": "79cd47374b19060dddd730f51e41a4a6035a0bf3ffa614e910961abe7e44f956",
+      "bytes": 2129
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos.target",
+      "sha256": "0e6e4e45592ad9794ad3db400c1d835a5d8d03f417d130295e5f8f727cb8bab9",
+      "bytes": 310
+    },
+    {
+      "path": "tests/system/activation.test.cjs",
+      "sha256": "e72d0769afd0016fdf6f3754a3ddfd86b612f80ce65ed317e050a820da1af1f2",
+      "bytes": 13876
+    },
+    {
+      "path": "tests/system/fixtures/installation-bundle.cjs",
+      "sha256": "cbee8e94c34652d114869937a6c4257f99673d32b66c3cc7aa4aeb3edd4a602e",
+      "bytes": 8115
+    },
+    {
+      "path": "tests/system/host.test.cjs",
+      "sha256": "d73394321316b6d963cb32be6840911c5ccd75489c7232d3598dbc874ccfe53f",
+      "bytes": 32757
+    },
+    {
+      "path": "tests/system/os-updates-cross-contract.test.cjs",
+      "sha256": "b413e325053b576d311be29a2509d173b6f44d1975a905826ce4cb740b35e240",
+      "bytes": 2822
+    },
+    {
+      "path": "tests/system/os-updates-host-contract.test.cjs",
+      "sha256": "05bf85c573ddeab243027b0a98580e6d0553ed06198ba16ae0a3ea71fc573f3c",
+      "bytes": 5468
+    },
+    {
+      "path": "tests/system/os-updates.test.py",
+      "sha256": "2fe89df7f94e06e04c123678cc9da4e0659fa5555ac93e340b22794d01627f12",
+      "bytes": 17836
+    },
+    {
+      "path": "tests/system/preflight-installation.test.cjs",
+      "sha256": "c7fd175882cf1fe455bd532b8d1c31f5fef60d65fe88ede975e342fa8e70b92a",
+      "bytes": 10971
+    },
+    {
+      "path": "tests/system/release-cli.test.cjs",
+      "sha256": "95e2e28b18c712589199eb040205f87f12f7465b73c929e3e5e930d0e60a079c",
+      "bytes": 10323
+    },
+    {
+      "path": "tools/system/activate-release.cjs",
+      "sha256": "8726a089874257bc71359f9bf619e9de51869cfaaeafa7aa27c269f0638a499d",
+      "bytes": 14070
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "9ff2d52e817d69d93087e3d8774781743fcf9c58390a39260282ebe2b26ae744",
+      "bytes": 9679
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "ccdfd6ae229ee5124472e0d3c8bbd0b041db1b59f27d1c16c016b06ff41d8c73",
+      "bytes": 9105
+    },
+    {
+      "path": "tools/system/host-preflight.cjs",
+      "sha256": "94ffc7b010ba9bd071877f7a94a4a55ac7c55bbc356f3b712a13f7f963ba3d29",
+      "bytes": 14445
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "sha256": "68dcc07578c701d6f5a499b3ef5a626667bf43286a97bf69e34bb4ec4f8ade13",
+      "bytes": 14422
+    },
+    {
+      "path": "tools/system/preflight-installation.cjs",
+      "sha256": "8ea0305a327fc72f5f244f62665ab10524593e7c2b408138747a9adaf3335ae7",
+      "bytes": 5273
+    },
+    {
+      "path": "docs/architecture/DATABASE_TRANSPORT_OPTIONS_DE.md",
+      "sha256": "22fd6f9d23c804aa30167caecad60b725543d4f481665e53b3795f9299cd1223",
+      "bytes": 10329
+    },
+    {
+      "path": "docs/architecture/DATABASE_TRANSPORT_OPTIONS_DE.md",
+      "sha256": "22fd6f9d23c804aa30167caecad60b725543d4f481665e53b3795f9299cd1223",
+      "bytes": 10329
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/auth-regression.tap",
+      "sha256": "3af216d6f8512941eda339113cf1b343df1ee26426cde1c5d4f76a0bcdfb3640",
+      "bytes": 7873
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/browser-initial-navigation.stderr",
+      "sha256": "e1cd57a9f858aa6965cb4f88f2d845f014a8d4c0ce554f525495a6492c241f85",
+      "bytes": 1152
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/browser.json",
+      "sha256": "4007c6cd488b870fcdb70c4e6bba319b50fdc9e6a8ab6843cb8de253f1f2f2ca",
+      "bytes": 456
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/browser.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/docs-check.log",
+      "sha256": "0cd7f8dd44bf103ad075f817cd03ccc0be8f2a742095cfe9ee10f88c183963e9",
+      "bytes": 83
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/os-updates-desktop.png",
+      "sha256": "ec6291e112a1adfc5b4c977b8579dcd5770d9b8ef316bec7252189e3c83b8ff1",
+      "bytes": 137265
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/os-updates-mobile-warning.png",
+      "sha256": "7b2bfa3de479800a095d75980719bfb4c5199eff98e5d16d95ff48d7252814fe",
+      "bytes": 156164
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/package-dry-run.json",
+      "sha256": "a160f196e7b4611579e19ac78e0ba19251df54e542ef592642de3dabf8a11f53",
+      "bytes": 46803
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/runtime-check.log",
+      "sha256": "732768230c1560fbc4119bd758c8f1af34739ff9136894ffd10ed394c0e0c5bc",
+      "bytes": 108
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/status-tests.tap",
+      "sha256": "597504a2ee47bf440b8309070420916c837aa417595187d8cd583aa50dcec3ab",
+      "bytes": 5804
+    },
+    {
+      "path": "components/ui/reports/security/os-updates-20261001/verification-summary.json",
+      "sha256": "c9c18af707fa21c78cf593dfc7490b629209fbe981aca507f63e33ac7bc517f3",
+      "bytes": 7345
+    },
+    {
+      "path": "reports/integration/os-updates/cross-contracts.json",
+      "sha256": "27f60706bb17a849b55caeb10c97c57cafc95d57c5d0649cf518731bfdb6efcc",
+      "bytes": 1544
+    },
+    {
+      "path": "reports/integration/os-updates/host-contracts-final.json",
+      "sha256": "263fafab79ff99793e3d9def93fcf744e5fb0fb5c898286036d782c5b34a431e",
+      "bytes": 7136
+    },
+    {
+      "path": "reports/integration/os-updates/host-contracts.json",
+      "sha256": "635edf6b5ef8d657c025db5292f6417b26c5bae242398c930bc329e94f7527e8",
+      "bytes": 7176
+    },
+    {
+      "path": "reports/integration/os-updates/host-initial-regression-attempt.json",
+      "sha256": "a0245e412d39c416d7caf9f25deaf44186389d666149c235abc1b07bbf569339",
+      "bytes": 1909
+    },
+    {
+      "path": "reports/integration/os-updates/raw/cross-contracts.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reports/integration/os-updates/raw/cross-contracts.tap",
+      "sha256": "06e9f11058c013f2edabc45c4805291af783f2d7e571e8902f92e637cf1dddca",
+      "bytes": 560
+    },
+    {
+      "path": "reports/integration/os-updates/raw/host-contracts-final.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reports/integration/os-updates/raw/host-contracts-final.tap",
+      "sha256": "aaf79075c8da5dcb8fe6a392c5a65e63301256fbd0e41f3cb0aaa4ce14dcdb05",
+      "bytes": 19262
+    },
+    {
+      "path": "reports/integration/os-updates/raw/host-contracts.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "reports/integration/os-updates/raw/host-contracts.tap",
+      "sha256": "3ca1453e5351ad5d11eee8c1ff97597c2f90673861351bcf183ad9739601e962",
+      "bytes": 18777
+    },
+    {
+      "path": "reports/integration/os-updates/raw/scan-packaging-patterns.py",
+      "sha256": "48a52f9494460de184531a0f0c150542ee3d114f027dd09c4bb6b1b3b6235934",
+      "bytes": 11271
+    },
+    {
+      "path": "reports/integration/os-updates/release-hygiene-correction.json",
+      "sha256": "1d3ac455385f15c4a870d0a05e2cec963ec8f014eae3d2dc15f17b2dd77fe305",
+      "bytes": 938
+    },
+    {
+      "path": "reports/integration/os-updates/runtime-tests.json",
+      "sha256": "1518ba6430870923ec900d4f0c60ef4a7ec16e22e2e33da95333b0f41ec2778c",
+      "bytes": 2444
+    },
+    {
+      "path": "reports/integration/os-updates/runtime-tests.log",
+      "sha256": "c79d25d3e1443d342cd05dbe5613ad4b27d4d3c9a6895d38bdbf7e9e3314d135",
+      "bytes": 3186
+    },
+    {
+      "path": "reports/integration/os-updates/security-review.json",
+      "sha256": "2b21ac91232c9f35a043d9e80f92cafdc15d7278f186bbff887bed7341d3af3e",
+      "bytes": 13699
+    },
+    {
+      "path": "reports/integration/os-updates/source-sbom-validation.json",
+      "sha256": "bd5b465fbb1d31d8a9e6a42c16920790f8a03718adac8cf3502cbd1f898df824",
+      "bytes": 352
+    },
+    {
+      "path": "reports/integration/os-updates/source-supplement.cdx.json",
+      "sha256": "1b2496a614184dce34e27e345bc733fa53f0cceabb04f5dc746264c76dad2d17",
+      "bytes": 7181
+    },
+    {
+      "path": "reports/integration/os-updates/validation-environment.json",
+      "sha256": "2f5f45ccbc485f7b889efe75ca4631859f993816e93e27f3e0109ec1781ebb78",
+      "bytes": 870
+    },
+    {
+      "path": "reports/integration/os-updates/database-alternatives-review.json",
+      "sha256": "2c20249503ff6206d88e1334d02aa2d54ac318e3e6531031c12b775b15e20e66",
+      "bytes": 4134
+    },
+    {
+      "path": "reports/integration/os-updates/backend-alternatives.json",
+      "sha256": "16d4b0b00c4a82573c9b12673b750af8ddc1c9b9de9f054f866bebad1a76ee22",
+      "bytes": 3778
+    }
+  ],
+  "historicalReports": [
+    "reports/integration/debian13/verification-summary.json",
+    "reports/integration/os-updates/host-contracts.json"
+  ],
+  "historicalEvidencePolicy": "Preserved unchanged; first82 host tests not added to final84; historical runtime is not rebuilt and lacks new feature.",
+  "sbom": {
+    "sourceSupplement": "reports/integration/os-updates/source-supplement.cdx.json",
+    "scope": "20 changed production source files; no claimed new installed runtime or target inventory",
+    "schemaValidation": "reports/integration/os-updates/source-sbom-validation.json",
+    "osInventory": "Generated only from actual installed dpkg rows after completed maintenance; test fixtures are not real Pi inventory"
+  },
+  "openGates": [
+    {
+      "id": "EOS-HOST-REDIS-20261001",
+      "status": "open-release-blocker",
+      "next": "Admit a concretely remediated Redis artifact or separately tested alternative; TLS remains required."
+    },
+    {
+      "id": "EOS-OS-UPDATES-RUNTIME-PIN-20261001",
+      "status": "open",
+      "next": "Coordinated signed update of exact Node runtime; blocked package corrections cannot be marked fixed."
+    },
+    {
+      "id": "EOS-OS-UPDATES-TARGET-20261001",
+      "status": "not-executed",
+      "next": "Actual Debian12/13 ARM64 APT/cache/kernel/service/reboot/load/powerloss and restoration acceptance."
+    },
+    {
+      "id": "EOS-OS-UPDATES-USER-POSTPONE-20261001",
+      "status": "open",
+      "next": "User-friendly product-wide postponement/opt-out; root policy and timestamped observation alone do not establish full CRA user workflow."
+    },
+    {
+      "id": "UI-MESH-PERF-20261001",
+      "status": "open-not-retested",
+      "next": "Resolve previously failed performance gate; physical device control remains disabled in lab."
+    }
+  ],
+  "additionalLimitations": [
+    "OS updater supports configured public Debian/Pi sources; no automatic product-wide vulnerability clearance.",
+    "Pi mixed vendor stream and packages outside configured origins remain visible coverage gaps.",
+    "Package maintainer scripts can restart services; no uninterrupted energy-control acceptance.",
+    "MemoryMax/OOM and lingering package transaction behavior require actual target tests.",
+    "No per-adapter mTLS/isolation, additional device adapter acceptance, full backup/restore or independent security acceptance established by this change."
+  ],
+  "redisAlternativeEvaluation": {
+    "candidate": "Valkey (one of several candidates; no longer the sole alternative)",
+    "implemented": false,
+    "eosCompatibilityTested": false,
+    "debian13PackageAlsoAffected": "8.1.1+dfsg1-3+deb13u2",
+    "advisory": "CVE-2026-56684",
+    "source": "https://security-tracker.debian.org/tracker/CVE-2026-56684",
+    "upstreamAdvisory": "https://github.com/valkey-io/valkey/security/advisories/GHSA-53mc-f3m3-99vh",
+    "migrationCaution": "Redis7.4+ data files are not guaranteed compatible; no blind Redis8 AOF/RDB copy.",
+    "decision": "Prior Redis requirement superseded; backend selection remains open",
+    "candidates": [
+      "Valkey 8.1.10",
+      "Valkey 9.1.2",
+      "SQLite/SQLCipher with a new compatible transport/backend"
+    ],
+    "sqliteIsNotDropIn": true,
+    "evidence": "reports/integration/os-updates/database-alternatives-review.json",
+    "documentation": "docs/architecture/DATABASE_TRANSPORT_OPTIONS_DE.md"
+  },
+  "targetObservation": "reports/integration/debian13/target-followup-20261001T184926Z.json",
+  "packagingReview": {
+    "path": "reports/integration/os-updates/packaging-pattern-review.json",
+    "sha256": "f7248ded224ba83efbaa98bd8279375530bb9013913d56c9069169adf2d1c2ca",
+    "bytes": 1529196
+  },
+  "completeRepositoryManifest": "reports/integration/os-updates/repository-files.sha256.json",
+  "finalMetadataReview": {
+    "scope": "Pattern-report, summary and final manifest contain generated paths, hashes, counts and nonsecret scope statements. Actual bounded-pattern pass is checked before archival.",
+    "patternReportFileLedgerMatchesCurrentFiles": true,
+    "sourceHashBindingsMatch": true,
+    "sourceChangesAfterFinalTests": false,
+    "uiScreenshotsVisuallyReviewedByRoot": true,
+    "documentationChangedAfterFinalTests": true,
+    "sourceChangesAfterFinalTestsScope": "Executable production and test source; text-only architecture/doc changes followed the final tests.",
+    "finalReportSourceChecks": [
+      {
+        "report": "reports/integration/os-updates/host-contracts-final.json",
+        "verified": 27
+      },
+      {
+        "report": "reports/integration/os-updates/runtime-tests.json",
+        "verified": 9
+      },
+      {
+        "report": "reports/integration/os-updates/security-review.json",
+        "verified": 21
+      },
+      {
+        "report": "reports/integration/os-updates/cross-contracts.json",
+        "verified": 3
+      },
+      {
+        "report": "components/ui/reports/security/os-updates-20261001/verification-summary.json",
+        "verified": 13
+      }
+    ],
+    "documentationAppendedAfterTests": "Alternative assessment only; no tested production sources changed after tests.",
+    "additiveMetadataBoundedPatternCheck": "PASS; executed after summary and manifest generation before commit"
+  },
+  "databaseAlternativeEvaluation": {
+    "redisNoLongerFixed": true,
+    "candidates": [
+      "Valkey",
+      "SQLite with SQLCipher",
+      "PostgreSQL"
+    ],
+    "implemented": false,
+    "eosCompatibilityTested": false,
+    "artifactSecurityClearance": false,
+    "evidence": "reports/integration/os-updates/backend-alternatives.json",
+    "architecture": "docs/architecture/DATABASE_TRANSPORT_OPTIONS_DE.md",
+    "decision": "Select only after concrete backend contract, lifecycle, security and ARM64 acceptance. TLS remains required for internal network communication."
+  }
+}

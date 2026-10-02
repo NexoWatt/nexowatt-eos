@@ -1,0 +1,134 @@
+<!--
+  Datei: www/tariff-report.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!doctype html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Report-Seite: Druck-/PDF-/CSV-nahe Auswertung für History, EVCS, Tarif, §14a oder RFID.
+  Zusammenhänge:
+  - Logik liegt in gleichnamiger .js-Datei und gemeinsamen Report-Hilfen.
+  - Daten kommen aus Report-APIs in main.js.
+  Wartungshinweise:
+  - Drucklayout und Tabellenbreiten beachten.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NexoWatt EOS – Tarif / Netzentgelt Nachweis</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="stylesheet" href="/static/report.css" />
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-tariff-report">
+  <!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar">
+    <script>
+      (function () {
+        var p = window.location.pathname || '';
+        if (p && !p.endsWith('/') && !p.endsWith('.html')) {
+          window.history.replaceState({}, '', p + '/');
+        }
+      })();
+    </script>
+
+    <div class="brand"><img alt="NexoWatt" src="/static/nexowatt-logo.png" /></div>
+    <button id="menuBtn" aria-label="Menü">☰</button>
+    <h1>NexoWatt EOS</h1>
+
+    <nav class="tabs">
+      <button class="tab" id="liveTabBtn" data-tab="live" onclick="window.location.href='/'">LIVE</button>
+      <button class="tab active" id="historyTabBtn" data-tab="history" onclick="window.location.href='/history'">HISTORY</button>
+      <button class="tab hidden" id="tabStorageFarm" onclick="window.location.href='/storagefarm.html'">SPEICHERFARM</button>
+      <button class="tab hidden" id="tabSmartHome" onclick="window.location.href='/smarthome'">SMARTHOME</button>
+      <button class="tab hidden" id="tabEvcs" onclick="window.location.href='/evcs'">EVCS</button>
+    </nav>
+    <div class="status-dot" id="liveDot" title="Live Verbindung"></div>
+    <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+<div class="menu hidden" id="menuDropdown">
+      <a class="menu-item" href="/">Live</a>
+      <a class="menu-item" href="/history">History</a>
+      <a class="menu-item hidden" id="menuStorageFarmLink" href="/storagefarm.html">Speicherfarm</a>
+      <a class="menu-item hidden" id="menuSmartHomeLink" href="/smarthome">SmartHome</a>
+      <a class="menu-item hidden" id="menuEvcsLink" href="/evcs">EVCS</a>
+      <a class="menu-item" href="/settings">Einstellungen</a>
+    </div>
+  </header>
+
+  <section class="nw-page-hero" aria-label="Seitenübersicht">
+    <div>
+      <div class="nw-page-hero__eyebrow">Nachweis</div>
+      <div class="nw-page-hero__title">Tarif / Netzentgelt</div>
+      <div class="nw-page-hero__subtitle">Tarif- und Netzentgelt-Ereignisse sauber auswerten und exportieren.</div>
+    </div>
+    <div class="nw-page-hero__right">
+      <span class="nw-page-hero__pill">Audit</span>
+    </div>
+  </section>
+
+
+  <!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="wrap report-wrap nw-subpage nw-subpage-report">
+    <div class="report-head">
+      <div>
+        <h2>Tarif / Netzentgelt Nachweis</h2>
+        <div class="report-meta" id="rangeMeta">15-Minuten-Nachweis mit Datum, Uhrzeit, Preis, Netzbezug und Kosten.</div>
+      </div>
+      <div>
+        <button id="backBtn" class="btn sm" type="button">Zurück</button>
+      </div>
+    </div>
+
+    <div class="report-toolbar">
+      <label>Von <input type="datetime-local" id="fromInput" /></label>
+      <label>Bis <input type="datetime-local" id="toInput" /></label>
+      <button id="reloadBtn" class="btn sm" type="button">Laden</button>
+      <button id="printBtn" class="btn sm" type="button">Drucken / PDF</button>
+      <button id="exportBtn" class="btn sm" type="button">CSV Export</button>
+    </div>
+
+    <section class="report-card">
+      <div class="report-caption" id="reportNote">
+        Der Bericht arbeitet im 15-Minuten-Raster und eignet sich zur Gegenprüfung von Strompreis, variablem Netzentgelt und abgerechneten Kosten.
+      </div>
+      <div id="reportFlags" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </section>
+
+    <div class="report-grid" id="summaryGrid"></div>
+
+    <section class="report-card">
+      <h3 class="report-section-title">15-Minuten-Tabelle</h3>
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>Start</th>
+              <th>Ende</th>
+              <th class="num">Basispreis</th>
+              <th class="num">Netzentgelt</th>
+              <th class="num">Gesamtpreis</th>
+              <th class="num">Bezug</th>
+              <th class="num">Basis-Kosten</th>
+              <th class="num">Netzentgelt</th>
+              <th class="num">Gesamtkosten</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="report-empty hidden" id="emptyState">Keine historischen Tarif-/Netzentgelt-Daten im gewählten Zeitraum.</div>
+    </section>
+  </main>
+
+  <script src="/static/report-common.js"></script>
+  <script src="/static/tariff-report.js"></script>
+
+  <script src="/static/cockpit-shell.js"></script>
+
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src-ts",
+    "outDir": "build-ts/api-state-feature",
+    "declaration": false,
+    "sourceMap": false,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext"
+  },
+  "include": [
+    "src-ts/types/**/*.d.ts",
+    "src-ts/contracts/**/*.ts",
+    "src-ts/utils/**/*.ts",
+    "src-ts/backend/**/*.ts",
+    "src-ts/quality/api-state-feature-cases.ts",
+    "src-ts/tests/api-state-feature-runtime.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "build-types",
+    "build-ts"
+  ]
+}

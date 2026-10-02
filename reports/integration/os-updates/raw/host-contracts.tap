@@ -1,0 +1,502 @@
+TAP version 13
+# Subtest: additive validation admits exact new adapter and profile only
+ok 1 - additive validation admits exact new adapter and profile only
+  ---
+  duration_ms: 7.104015
+  type: 'test'
+  ...
+# Subtest: rejects sequence downgrade before service operations
+ok 2 - rejects sequence downgrade before service operations
+  ---
+  duration_ms: 0.889094
+  type: 'test'
+  ...
+# Subtest: rejects Node change before service operations
+ok 3 - rejects Node change before service operations
+  ---
+  duration_ms: 0.36989
+  type: 'test'
+  ...
+# Subtest: rejects core version change before service operations
+ok 4 - rejects core version change before service operations
+  ---
+  duration_ms: 0.69432
+  type: 'test'
+  ...
+# Subtest: rejects dependency version change before service operations
+ok 5 - rejects dependency version change before service operations
+  ---
+  duration_ms: 10.376434
+  type: 'test'
+  ...
+# Subtest: rejects controller code change before service operations
+ok 6 - rejects controller code change before service operations
+  ---
+  duration_ms: 0.475209
+  type: 'test'
+  ...
+# Subtest: rejects missing old file before service operations
+ok 7 - rejects missing old file before service operations
+  ---
+  duration_ms: 0.475168
+  type: 'test'
+  ...
+# Subtest: rejects extra core file before service operations
+ok 8 - rejects extra core file before service operations
+  ---
+  duration_ms: 1.257131
+  type: 'test'
+  ...
+# Subtest: rejects service code replacement before service operations
+ok 9 - rejects service code replacement before service operations
+  ---
+  duration_ms: 0.842805
+  type: 'test'
+  ...
+# Subtest: rejects unadmitted profile entry before service operations
+ok 10 - rejects unadmitted profile entry before service operations
+  ---
+  duration_ms: 1.211101
+  type: 'test'
+  ...
+# Subtest: existing admitted adapter bytes, version and permissions cannot change
+ok 11 - existing admitted adapter bytes, version and permissions cannot change
+  ---
+  duration_ms: 0.692898
+  type: 'test'
+  ...
+# Subtest: successful transaction verifies both releases, starts through systemd and commits pointer/state
+ok 12 - successful transaction verifies both releases, starts through systemd and commits pointer/state
+  ---
+  duration_ms: 13.444344
+  type: 'test'
+  ...
+# Subtest: new startup failure restores old pointer, verifies old startup and keeps original sequence
+ok 13 - new startup failure restores old pointer, verifies old startup and keeps original sequence
+  ---
+  duration_ms: 29.355655
+  type: 'test'
+  ...
+# Subtest: failed recovery keeps operation lock and reports manual recovery required
+ok 14 - failed recovery keeps operation lock and reports manual recovery required
+  ---
+  duration_ms: 22.264598
+  type: 'test'
+  ...
+# Subtest: concurrent or interrupted operation lock rejects new activation without commands
+ok 15 - concurrent or interrupted operation lock rejects new activation without commands
+  ---
+  duration_ms: 5.525948
+  type: 'test'
+  ...
+# Subtest: wrong signing identity and state/pointer mismatch reject before stop
+ok 16 - wrong signing identity and state/pointer mismatch reject before stop
+  ---
+  duration_ms: 4.626517
+  type: 'test'
+  ...
+# Subtest: unprivileged activation and arbitrary stage paths are refused
+ok 17 - unprivileged activation and arbitrary stage paths are refused
+  ---
+  duration_ms: 3.899448
+  type: 'test'
+  ...
+# Subtest: state commit failure triggers verified rollback rather than accepting split state
+ok 18 - state commit failure triggers verified rollback rather than accepting split state
+  ---
+  duration_ms: 11.06095
+  type: 'test'
+  ...
+# Subtest: rate limited controller is reset specifically before trial and recovery starts
+ok 19 - rate limited controller is reset specifically before trial and recovery starts
+  ---
+  duration_ms: 15.29934
+  type: 'test'
+  ...
+# Subtest: persistent journal write failure cannot block old pointer and controller restoration
+ok 20 - persistent journal write failure cannot block old pointer and controller restoration
+  ---
+  duration_ms: 8.41685
+  type: 'test'
+  ...
+# Subtest: permit revocation I/O failure still restores the previous release and retains a stopped maintenance gate
+ok 21 - permit revocation I/O failure still restores the previous release and retains a stopped maintenance gate
+  ---
+  duration_ms: 4.629813
+  type: 'test'
+  ...
+# Subtest: successful trial with failed final gate cleanup is stopped and cannot report success
+ok 22 - successful trial with failed final gate cleanup is stopped and cannot report success
+  ---
+  duration_ms: 6.457487
+  type: 'test'
+  ...
+# Subtest: OS parser never evaluates shell substitutions or accepts malformed assignments
+ok 23 - OS parser never evaluates shell substitutions or accepts malformed assignments
+  ---
+  duration_ms: 4.031828
+  type: 'test'
+  ...
+# Subtest: fresh supported fixture matches prerequisites but cannot bypass Redis security admission
+ok 24 - fresh supported fixture matches prerequisites but cannot bypass Redis security admission
+  ---
+  duration_ms: 16.602781
+  type: 'test'
+  ...
+# Subtest: preflight rejects wrong OS and exact Node drift
+ok 25 - preflight rejects wrong OS and exact Node drift
+  ---
+  duration_ms: 8.398502
+  type: 'test'
+  ...
+# Subtest: Debian 13 ARM64 fixture requires its reviewed Redis/systemd profile without claiming hardware acceptance
+ok 26 - Debian 13 ARM64 fixture requires its reviewed Redis/systemd profile without claiming hardware acceptance
+  ---
+  duration_ms: 21.038771
+  type: 'test'
+  ...
+# Subtest: unknown OS versions and malformed release suffixes are rejected without broad family matching
+ok 27 - unknown OS versions and malformed release suffixes are rejected without broad family matching
+  ---
+  duration_ms: 28.432892
+  type: 'test'
+  ...
+# Subtest: Debian 13 rejects Debian 12 daemon versions and unexpected Redis major or malformed version output
+ok 28 - Debian 13 rejects Debian 12 daemon versions and unexpected Redis major or malformed version output
+  ---
+  duration_ms: 17.794744
+  type: 'test'
+  ...
+# Subtest: Debian 13 preserves architecture, port, runtime privilege and fresh-host gates
+ok 29 - Debian 13 preserves architecture, port, runtime privilege and fresh-host gates
+  ---
+  duration_ms: 5.380047
+  type: 'test'
+  ...
+# Subtest: preflight rejects privileged Node, existing identity and occupied database ports
+ok 30 - preflight rejects privileged Node, existing identity and occupied database ports
+  ---
+  duration_ms: 5.619339
+  type: 'test'
+  ...
+# Subtest: fresh-path check catches a dangling symlink instead of overwriting it
+ok 31 - fresh-path check catches a dangling symlink instead of overwriting it
+  ---
+  duration_ms: 4.413255
+  type: 'test'
+  ...
+# Subtest: merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+ok 32 - merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+  ---
+  duration_ms: 0.509561
+  type: 'test'
+  ...
+# Subtest: generated host config passes real transport and bootstrap validators
+ok 33 - generated host config passes real transport and bootstrap validators
+  ---
+  duration_ms: 158.07434
+  type: 'test'
+  ...
+# Subtest: private writes reject replacement and symlink targets
+ok 34 - private writes reject replacement and symlink targets
+  ---
+  duration_ms: 2.22143
+  type: 'test'
+  ...
+# Subtest: installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+ok 35 - installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+  ---
+  duration_ms: 5.058751
+  type: 'test'
+  ...
+# Subtest: installer repeats the verified integrated port profile before persistent changes
+ok 36 - installer repeats the verified integrated port profile before persistent changes
+  ---
+  duration_ms: 2.877422
+  type: 'test'
+  ...
+# Subtest: verified catalog selects web port checks without changing core-only prerequisites
+ok 37 - verified catalog selects web port checks without changing core-only prerequisites
+  ---
+  duration_ms: 0.306063
+  type: 'test'
+  ...
+# Subtest: disabled install writes restricted config and units but never enables or starts services
+ok 38 - disabled install writes restricted config and units but never enables or starts services
+  ---
+  duration_ms: 10.494062
+  type: 'test'
+  ...
+# Subtest: pinned release state write failure prevents every service start or enable
+ok 39 - pinned release state write failure prevents every service start or enable
+  ---
+  duration_ms: 6.079035
+  type: 'test'
+  ...
+# Subtest: privileged group detected after identity creation stops before provisioning
+ok 40 - privileged group detected after identity creation stops before provisioning
+  ---
+  duration_ms: 3.01491
+  type: 'test'
+  ...
+# Subtest: start follows TLS databases then init then controller and writes root marker
+ok 41 - start follows TLS databases then init then controller and writes root marker
+  ---
+  duration_ms: 6.668726
+  type: 'test'
+  ...
+# Subtest: initialization failure stops and disables units without starting controller
+ok 42 - initialization failure stops and disables units without starting controller
+  ---
+  duration_ms: 7.662209
+  type: 'test'
+  ...
+# Subtest: cleanup failure is reported rather than claimed as a stopped installation
+ok 43 - cleanup failure is reported rather than claimed as a stopped installation
+  ---
+  duration_ms: 7.573224
+  type: 'test'
+  ...
+# Subtest: unit security boundaries and network compatibility remain explicit
+ok 44 - unit security boundaries and network compatibility remain explicit
+  ---
+  duration_ms: 0.664785
+  type: 'test'
+  ...
+# Subtest: systemd-analyze accepts complete unit grammar in isolated root fixture
+ok 45 - systemd-analyze accepts complete unit grammar in isolated root fixture
+  ---
+  duration_ms: 22.043179
+  type: 'test'
+  ...
+# Subtest: web listeners are reserved only for the verified integrated profile, including IPv6
+ok 46 - web listeners are reserved only for the verified integrated profile, including IPv6
+  ---
+  duration_ms: 16.249656
+  type: 'test'
+  ...
+# Subtest: malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+ok 47 - malformed listener output and missing TLS1.3 ciphers fail without daemon probes
+  ---
+  duration_ms: 11.16137
+  type: 'test'
+  ...
+# Subtest: untrusted or non-executable tools are rejected before executing their bytes
+ok 48 - untrusted or non-executable tools are rejected before executing their bytes
+  ---
+  duration_ms: 4.37361
+  type: 'test'
+  ...
+# Subtest: protected distribution symlink is allowed, writable target and private runtime traversal are denied
+ok 49 - protected distribution symlink is allowed, writable target and private runtime traversal are denied
+  ---
+  duration_ms: 18.333338
+  type: 'test'
+  ...
+# Subtest: nonregular executable path, unavailable manager and invalid hostname fail before installation
+ok 50 - nonregular executable path, unavailable manager and invalid hostname fail before installation
+  ---
+  duration_ms: 15.710552
+  type: 'test'
+  ...
+# Subtest: setuid or setgid runtime executables are never executed by the prerequisite checker
+ok 51 - setuid or setgid runtime executables are never executed by the prerequisite checker
+  ---
+  duration_ms: 8.573937
+  type: 'test'
+  ...
+# Subtest: execution errors cannot be accepted through otherwise plausible output and exit status
+ok 52 - execution errors cannot be accepted through otherwise plausible output and exit status
+  ---
+  duration_ms: 8.877823
+  type: 'test'
+  ...
+# Subtest: OS update prerequisite inventory is read-only and rejects absent or partially configured packages
+ok 53 - OS update prerequisite inventory is read-only and rejects absent or partially configured packages
+  ---
+  duration_ms: 9.823557
+  type: 'test'
+  ...
+# Subtest: OS update trust rejects mutable tools and keyrings before querying package state
+ok 54 - OS update trust rejects mutable tools and keyrings before querying package state
+  ---
+  duration_ms: 2.691281
+  type: 'test'
+  ...
+# Subtest: Pi hardware reporting Debian still requires the vendor keyring and package
+ok 55 - Pi hardware reporting Debian still requires the vendor keyring and package
+  ---
+  duration_ms: 5.719971
+  type: 'test'
+  ...
+# Subtest: existing updater directories and dangling unit links require migration, never overwrite
+ok 56 - existing updater directories and dangling unit links require migration, never overwrite
+  ---
+  duration_ms: 7.805226
+  type: 'test'
+  ...
+# Subtest: disabled installer copies signed never-run status and protected policy without running package commands
+ok 57 - disabled installer copies signed never-run status and protected policy without running package commands
+  ---
+  duration_ms: 8.257109
+  type: 'test'
+  ...
+# Subtest: missing or writable updater release files reject installation before account or host writes
+ok 58 - missing or writable updater release files reject installation before account or host writes
+  ---
+  duration_ms: 9.319706
+  type: 'test'
+  ...
+# Subtest: failed updater timer activation disables future scheduling without killing an APT transaction
+ok 59 - failed updater timer activation disables future scheduling without killing an APT transaction
+  ---
+  duration_ms: 5.411125
+  type: 'test'
+  ...
+# Subtest: prepared release inventory binds updater implementation, policy, initial status and units
+ok 60 - prepared release inventory binds updater implementation, policy, initial status and units
+  ---
+  duration_ms: 57.604159
+  type: 'test'
+  ...
+# Subtest: actual Redis hold rejects fresh installation before any updater filesystem mutation
+ok 61 - actual Redis hold rejects fresh installation before any updater filesystem mutation
+  ---
+  duration_ms: 7.372531
+  type: 'test'
+  ...
+# Subtest: valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host
+ok 62 - valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host
+  ---
+  duration_ms: 228.609292
+  type: 'test'
+  ...
+# Subtest: tampered signed payload and wrong signer fail before target commands or credential validation
+ok 63 - tampered signed payload and wrong signer fail before target commands or credential validation
+  ---
+  duration_ms: 54.744348
+  type: 'test'
+  ...
+# Subtest: wrong signing public key is rejected even when all host prerequisites are ready
+ok 64 - wrong signing public key is rejected even when all host prerequisites are ready
+  ---
+  duration_ms: 103.627993
+  type: 'test'
+  ...
+# Subtest: a valid signature never promotes a pending catalog entry
+ok 65 - a valid signature never promotes a pending catalog entry
+  ---
+  duration_ms: 100.946828
+  type: 'test'
+  ...
+# Subtest: current release must declare the observed target architecture and exact Node version
+ok 66 - current release must declare the observed target architecture and exact Node version
+  ---
+  duration_ms: 77.433725
+  type: 'test'
+  ...
+# Subtest: duplicate service and installer credentials or browser-selected admin role fail before target commands
+ok 67 - duplicate service and installer credentials or browser-selected admin role fail before target commands
+  ---
+  duration_ms: 106.586702
+  type: 'test'
+  ...
+# Subtest: secret modes, symlinks and invalid certificate hosts are rejected before target commands
+ok 68 - secret modes, symlinks and invalid certificate hosts are rejected before target commands
+  ---
+  duration_ms: 95.499648
+  type: 'test'
+  ...
+# Subtest: occupied integrated UI port yields a non-mutating rejected report
+ok 69 - occupied integrated UI port yields a non-mutating rejected report
+  ---
+  duration_ms: 90.321536
+  type: 'test'
+  ...
+# Subtest: CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+ok 70 - CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+  ---
+  duration_ms: 152.581819
+  type: 'test'
+  ...
+# Subtest: direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+ok 71 - direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+  ---
+  duration_ms: 81.674142
+  type: 'test'
+  ...
+# Subtest: actual Redis admission hold prevents direct signed installation before staging, accounts or services
+ok 72 - actual Redis admission hold prevents direct signed installation before staging, accounts or services
+  ---
+  duration_ms: 189.474891
+  type: 'test'
+  ...
+# Subtest: verified installer forwards the same catalog port profile to the privileged host recheck
+ok 73 - verified installer forwards the same catalog port profile to the privileged host recheck
+  ---
+  duration_ms: 76.478599
+  type: 'test'
+  ...
+# Subtest: key generator refuses overwrite and protects private material
+ok 74 - key generator refuses overwrite and protects private material
+  ---
+  duration_ms: 104.25684
+  type: 'test'
+  ...
+# Subtest: verify checks signed package identity, digest, policy and exact runtime
+ok 75 - verify checks signed package identity, digest, policy and exact runtime
+  ---
+  duration_ms: 168.28342
+  type: 'test'
+  ...
+# Subtest: signed stale upstream SBOM cannot describe locally transformed runtime
+ok 76 - signed stale upstream SBOM cannot describe locally transformed runtime
+  ---
+  duration_ms: 171.565055
+  type: 'test'
+  ...
+# Subtest: inventory generation never turns installed code into an approved adapter
+ok 77 - inventory generation never turns installed code into an approved adapter
+  ---
+  duration_ms: 42.959925
+  type: 'test'
+  ...
+# Subtest: changed package tree and pending catalog do not become approved by signing
+ok 78 - changed package tree and pending catalog do not become approved by signing
+  ---
+  duration_ms: 43.355754
+  type: 'test'
+  ...
+# Subtest: URL/range root dependencies and lifecycle scripts are rejected
+ok 79 - URL/range root dependencies and lifecycle scripts are rejected
+  ---
+  duration_ms: 33.706439
+  type: 'test'
+  ...
+# Subtest: installed check validates retained signature and detects changed release bytes
+ok 80 - installed check validates retained signature and detects changed release bytes
+  ---
+  duration_ms: 63.200929
+  type: 'test'
+  ...
+# Subtest: bundle preparation removes npm executable links and rejects other symlinks
+ok 81 - bundle preparation removes npm executable links and rejects other symlinks
+  ---
+  duration_ms: 45.07843
+  type: 'test'
+  ...
+# Subtest: CLI rejects duplicate, missing and extra options before work
+ok 82 - CLI rejects duplicate, missing and extra options before work
+  ---
+  duration_ms: 0.471013
+  type: 'test'
+  ...
+1..82
+# tests 82
+# suites 0
+# pass 82
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1624.441052

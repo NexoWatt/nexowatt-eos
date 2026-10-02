@@ -1,0 +1,452 @@
+{
+  "common": {
+    "name": "nexowatt-ui",
+    "version": "1.0.21",
+    "news": {
+      "1.0.21": {
+        "en": "Clarify zero-export setup in a full-width panel, preserve PV inverter measurement mappings, and restrict SmartHome configuration in its own area to installers and administrators.",
+        "de": "Nulleinspeisung in voller Breite übersichtlich einrichten, PV-Wechselrichter-Messzuordnungen erhalten und SmartHome-Konfiguration im eigenen Bereich auf Installateur und Admin beschränken."
+      },
+      "1.0.20": {
+        "en": "Allow verified storage support for zero-export charge-point grid limits while retaining storage protection, household priority and electrical limits; restore heating-rod tariff operation without an explicit cap.",
+        "de": "Bestätigte Speicherunterstützung bei LP-Netzgrenzen der Nulleinspeisung, mit Speicherschutz, Hauslast-Vorrang und elektrischen Grenzen; Heizstab-Tarifbetrieb ohne ausdrückliche Begrenzung korrigiert."
+      },
+      "1.0.19": {
+        "en": "Zero-export per-charge-point grid share instead of a total Boost cap: measured PV adds on top, Auto minimum plus PV, tariff and target planning within limits.",
+        "de": "Bei Nulleinspeisung Netzanteil je Ladepunkt statt Boost-Gesamtgrenze: gemessene PV zusätzlich, Auto mit Minimum plus PV, Tarif und Zeit-Ziel innerhalb der Grenzen."
+      },
+      "1.0.18": {
+        "en": "Bounded zero-export PV charging hold and restart pause; per-charge-point Boost power cap with AC phase handling.",
+        "de": "Begrenzte PV-Überbrückung und Wiederanlaufsperre bei Nulleinspeisung; Boost-Leistungsgrenze je Ladepunkt mit AC-Phasenwahl."
+      },
+      "1.0.17": {
+        "en": "Coordinate bounded zero-export PV startup across charging, heating rods and directly controllable storage; preserve electrical limits and safe phase switching. Site commissioning remains required.",
+        "de": "Nulleinspeise-PV-Anlauf für Ladepunkte, Heizstäbe und direkt regelbare Speicher zentral koordinieren; elektrische Grenzen und sichere Phasenumschaltung erhalten. Anlagenbezogene Inbetriebnahme bleibt erforderlich."
+      },
+      "1.0.16": {
+        "en": "Integrate Microgrid setup, operation and metering into the EMS app with unified installation gating and protected active limits.",
+        "de": "Microgrid-Einrichtung, Regelung und Zählerarchiv als gemeinsame EMS-App mit Installationsprüfung und geschützten aktiven Grenzen."
+      },
+      "1.0.15": {
+        "en": "Transformer master with demand-based house limits, optional durable meter archives and operator billing drafts; fast exchanges and verified command acknowledgements.",
+        "de": "Trafo-Master mit bedarfsabhängigen Hausgrenzen, optionalem dauerhaftem Zählerarchiv und Abrechnungsentwürfen; schneller Austausch mit stabiler Wirkungsbestätigung."
+      }
+    },
+    "title": "NexoWatt EOS",
+    "titleLang": {
+      "en": "NexoWatt EOS",
+      "de": "NexoWatt EOS"
+    },
+    "desc": {
+      "en": "NexoWatt EOS – local energy, charging and building control platform.",
+      "de": "NexoWatt EOS – lokale Plattform für Energie, Laden und Gebäudesteuerung."
+    },
+    "authors": [
+      "NexoWatt"
+    ],
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "compact": true,
+    "enabled": true,
+    "loglevel": "info",
+    "type": "visualization",
+    "adminUI": {
+      "config": "json",
+      "tab": "html"
+    },
+    "keywords": [
+      "visualization",
+      "ems",
+      "nexowatt",
+      "dashboard"
+    ],
+    "connectionType": "local",
+    "dataSource": "poll",
+    "icon": "admin.png",
+    "logo": "admin_logo_.ico",
+    "adminTab": {
+      "name": {
+        "de": "NexoWatt EOS",
+        "en": "NexoWatt EOS"
+      },
+      "fa-icon": "bolt",
+      "order": 50
+    },
+    "welcomeScreenPro": [
+      {
+        "link": "/adapter/nexowatt-ui/tab.html",
+        "name": "Energiefluss",
+        "desc": {
+          "de": "Direkt zu NexoWatt EOS (aktuelle Anlagenadresse und Visualisierungsport).",
+          "en": "Open NexoWatt EOS using the current system address and visualization port."
+        },
+        "img": "admin.png",
+        "color": "#00c853",
+        "order": 10,
+        "localLinks": {
+          "_default": "/adapter/nexowatt-ui/tab.html"
+        }
+      }
+    ],
+    "welcomeScreen": "adapter/nexowatt-ui/tab.html",
+    "license": "UNLICENSED",
+    "stopBeforeUpdate": true,
+    "stopTimeout": 2500,
+    "wwwDontUpload": true,
+    "extIcon": "https://raw.githubusercontent.com/NexoWatt/NexoWatt-ui/main/admin/admin.png",
+    "readme": "https://github.com/NexoWatt/NexoWatt-ui/blob/main/docs/README.md",
+    "licenseInformation": {
+      "type": "limited",
+      "license": "NexoWatt Proprietary License (NPL) v1.0",
+      "link": "https://github.com/NexoWatt/NexoWatt-ui/blob/main/LICENSE"
+    },
+    "tier": 3,
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "eos-admin": "7.10.11"
+      }
+    ],
+    "messagebox": true
+  },
+  "native": {
+    "port": 8188,
+    "bind": "0.0.0.0",
+    "publicPath": "/",
+    "units": {
+      "power": "W",
+      "energy": "kWh"
+    },
+    "datapoints": {
+      "autarky": "fenecon.0._sum.Autarchy",
+      "selfConsumption": "fenecon.0._sum.SelfConsumption",
+      "pvPower": "fenecon.0._sum.ProductionAcActivePower",
+      "productionTotal": "0_userdata.0.nexowatt.pv.energy_total",
+      "consumptionTotal": "fenecon.0._sum.ConsumptionAcActivePower",
+      "gridBuyPower": "0_userdata.0.nexowatt.grid.buy.power",
+      "gridSellPower": "0_userdata.0.nexowatt.grid.sell.power",
+      "gridPointPower": "",
+      "storageChargePower": "0_userdata.0.nexowatt.battery.charge.power",
+      "storageDischargePower": "0_userdata.0.nexowatt.battery.discharge.power",
+      "storageSoc": "fenecon.0._sum.EssSoc",
+      "consumptionEvcs": "0_userdata.0.nexowatt.evcs.power",
+      "consumptionOther": "0_userdata.0.nexowatt.house.other.power",
+      "evcsStatus": "",
+      "evcsLastChargeKwh": "",
+      "gridFrequency": "fenecon.0._sum.GridFrequency",
+      "gridVoltage": "0_userdata.0.nexowatt.grid.voltage",
+      "gridBuyEnergy": "0_userdata.0.nexowatt.grid.buy.energy_total",
+      "gridSellEnergy": "0_userdata.0.nexowatt.grid.sell.energy_total",
+      "batteryPower": "0_userdata.0.nexowatt.battery.power",
+      "batterySOC": "0_userdata.0.nexowatt.battery.soc",
+      "batteryEnergyTotal": "0_userdata.0.nexowatt.battery.energy_total",
+      "housePower": "0_userdata.0.nexowatt.house.power",
+      "houseTemp": "0_userdata.0.nexowatt.house.temperature",
+      "inverterTemp": "0_userdata.0.nexowatt.inverter.temperature",
+      "storageCapacityKwh": "",
+      "consumer1Power": "",
+      "consumer2Power": "",
+      "priceCurrent": "",
+      "priceAverage": ""
+    },
+    "sections": {
+      "tabs": [
+        "live",
+        "history",
+        "settings",
+        "smarthome"
+      ]
+    },
+    "smartHome": {
+      "enabled": false,
+      "datapoints": {
+        "heatPumpOn": "",
+        "roomTemp": "",
+        "wallboxLock": "",
+        "gridLimit": "",
+        "pvCurtailment": "",
+        "blindPosition": "",
+        "blindUp": "",
+        "blindDown": "",
+        "blindStop": "",
+        "rtrSetpoint": "",
+        "rtrMode": "",
+        "rtrHumidity": "",
+        "scene1": "",
+        "scene2": "",
+        "scene3": "",
+        "scene4": ""
+      }
+    },
+    "futureOptions": {
+      "theme": "nexowatt-dark",
+      "enableAnimations": true,
+      "showGridVoltage": false
+    },
+    "auth": {
+      "enabled": true,
+      "protectWrites": true,
+      "sessionTtlMin": 120,
+      "installerUsers": "admin,installer",
+      "installerGroups": "system.group.administrator"
+    },
+    "installerConfig": {},
+    "history": {
+      "instance": "influxdb.0",
+      "datapoints": {
+        "pvPower": "fenecon.0._sum.ProductionAcActivePower",
+        "consumptionTotal": "fenecon.0._sum.ConsumptionAcActivePower",
+        "gridBuyPower": "0_userdata.0.nexowatt.grid.buy.power",
+        "gridSellPower": "0_userdata.0.nexowatt.grid.sell.power",
+        "storageChargePower": "0_userdata.0.nexowatt.battery.charge.power",
+        "storageDischargePower": "0_userdata.0.nexowatt.battery.discharge.power",
+        "storageSoc": "fenecon.0._sum.EssSoc"
+      }
+    },
+    "settings": {
+      "evcsActive": "",
+      "evcsMode": "",
+      "flowSubtractEvFromBuilding": true,
+      "flowInvertBattery": false,
+      "flowInvertGrid": false,
+      "flowInvertPv": false,
+      "flowInvertEv": false,
+      "flowGridShowNet": false,
+      "dynamicTariff": false,
+      "energyWalletEnabled": true,
+      "energyWalletShowPriceSource": false,
+      "energyWalletFixedImportEurPerKwh": 0.35,
+      "energyWalletFeedInEurPerKwh": 0.08,
+      "energyWalletEvcsValueEurPerKwh": 0.35
+    },
+    "logic": {
+      "enabled": true,
+      "tags": [
+        "demo"
+      ],
+      "meta": {
+        "version": 1
+      }
+    },
+    "smartHomeConfig": {
+      "version": 2,
+      "floors": [],
+      "rooms": [],
+      "functions": [],
+      "devices": [],
+      "pages": [],
+      "meta": {}
+    },
+    "peakShaving": {
+      "atypical": {
+        "enabled": false,
+        "mode": "hybrid",
+        "voltageLevel": "MS",
+        "thresholdPercent": 20,
+        "minShiftW": 100000,
+        "annualPeakReferenceW": 0,
+        "targetLimitW": 0,
+        "safetyMarginW": 0,
+        "includeWeekends": false,
+        "excludeChristmasNewYear": true,
+        "highLoadWindows": [],
+        "holidays": [],
+        "bridgeDays": [],
+        "calendarExceptions": []
+      },
+      "strategyMode": "standard",
+      "mode": "static",
+      "reserveW": 0,
+      "safetyMarginW": 0,
+      "hysteresisW": 500,
+      "smoothingSeconds": 10,
+      "activateDelaySeconds": 2,
+      "releaseDelaySeconds": 5,
+      "staleTimeoutSec": 300,
+      "fastTripEnabled": true
+    },
+    "ip": "0.0.0.0",
+    "countryProfile": {
+      "country": "DE",
+      "languageMode": "system",
+      "note": "Sprache wird standardmäßig aus der NexoWatt-EOS-Systemeinstellung übernommen."
+    },
+    "energyWallet": {
+      "enabled": true,
+      "showOnLive": true,
+      "gridImportEurPerKwh": 0.35,
+      "feedInEurPerKwh": 0.08,
+      "importPriceEurPerKwh": 0.35,
+      "feedInPriceEurPerKwh": 0.08,
+      "evcsValueEurPerKwh": 0,
+      "recommendationsEnabled": true,
+      "storageValueEurPerKwh": 0
+    },
+    "enableEnergyWallet": true,
+    "enableEnergyLedger": false,
+    "enableChargeKiosk": false,
+    "chargeKiosk": {
+      "enabled": false,
+      "displayBasePath": "/display/station/",
+      "stations": []
+    },
+    "energyLedger": {
+      "enabled": false,
+      "source": "chargeKiosk.lastSessionsByLpJson",
+      "recentEntryLimit": 200,
+      "processedSessionLimit": 2000,
+      "origin": {
+        "enabled": false,
+        "siteId": "site_1",
+        "siteName": "Standort 1",
+        "country": "AUTO",
+        "intervalMinutes": 15,
+        "staleSeconds": 300,
+        "recentIntervalLimit": 672,
+        "allocationMethod": "proportional",
+        "evidenceMode": "operational",
+        "dataPoints": {
+          "gridImportEnergyKwh": "",
+          "gridExportEnergyKwh": "",
+          "pvGenerationEnergyKwh": "",
+          "otherRenewableEnergyKwh": "",
+          "buildingEnergyKwh": "",
+          "storageChargeEnergyKwh": "",
+          "storageDischargeEnergyKwh": ""
+        },
+        "units": {
+          "gridImportEnergyKwh": "kWh",
+          "gridExportEnergyKwh": "kWh",
+          "pvGenerationEnergyKwh": "kWh",
+          "otherRenewableEnergyKwh": "kWh",
+          "buildingEnergyKwh": "kWh",
+          "storageChargeEnergyKwh": "kWh",
+          "storageDischargeEnergyKwh": "kWh"
+        },
+        "storage": {
+          "enabled": true,
+          "chargeEfficiencyPct": 95,
+          "dischargeEfficiencyPct": 95,
+          "exclusiveRenewableChargingDeclared": false,
+          "initialInventoryKwh": 0,
+          "initialPvSharePct": 0,
+          "inventoryMethod": "pro-rata"
+        },
+        "evidence": {
+          "sameGridConnectionDeclared": false,
+          "meteringComplianceDeclared": false,
+          "publicChargingDeclared": false,
+          "sameWozObjectDeclared": false,
+          "directLineDeclared": false,
+          "noOperatingSubsidyDeclared": false,
+          "integratedMidMeterDeclared": false,
+          "operatorType": "business",
+          "nlGridRenewableSharePct": 50.5
+        },
+        "chargePoints": [],
+        "meters": []
+      }
+    },
+    "nlP1": {
+      "enabled": false,
+      "staleTimeoutSec": 300,
+      "returnValueEurPerKwh": 0.08,
+      "returnCostEurPerKwh": 0,
+      "datapoints": {
+        "importPowerW": "",
+        "exportPowerW": "",
+        "netPowerW": "",
+        "importEnergyKwh": "",
+        "exportEnergyKwh": "",
+        "gasM3": "",
+        "activeTariff": ""
+      }
+    },
+    "enableMeshMicrogrid": false,
+    "meshMicrogrid": {
+      "enabled": false,
+      "mode": "diagnostic",
+      "clusterId": "cluster_01",
+      "clusterName": "Lokaler Energieverbund",
+      "gridLimitW": 0,
+      "nodes": [],
+      "controlMode": "diagnostic",
+      "fieldTestApproved": false,
+      "commandStateDp": "",
+      "maxCommandsPerTick": 3,
+      "tailscale": {
+        "enabled": false,
+        "profile": "mesh-microgrid",
+        "localNodeId": "local",
+        "peerUrls": [],
+        "peerToken": "",
+        "timeoutMs": 2500
+      }
+    },
+    "accessControl": {
+      "enabled": true,
+      "adminGroups": "system.group.administrator,system.group.eosAdmin,system.group.nexowattAdmin",
+      "installerGroups": "system.group.installer,system.group.eosInstaller,system.group.nexowattInstaller",
+      "customerGroups": "system.group.user,system.group.eosUser,system.group.nexowattUser",
+      "defaultRole": "none",
+      "trustedHeaderEnabled": false,
+      "customerWritePolicy": "session",
+      "allowedOrigins": ""
+    },
+    "diagnostics": {
+      "actuatorArbiterMode": "enforce-safety",
+      "actuatorArbiterEnforcePriorityFloor": 750,
+      "actuatorArbiterBlockedLogIntervalMs": 60000
+    },
+    "enableNetOperatorInterface": false,
+    "netOperatorInterface": {
+      "enabled": false,
+      "mode": "diagnostic",
+      "profileSource": "builtin",
+      "driverId": "generic-modbus-tcp-template",
+      "customProfileJson": "",
+      "commissioned": false,
+      "installerApproved": false,
+      "writebackEnabled": false,
+      "signalMaxAgeSec": 5,
+      "auditLimit": 500,
+      "failSafePolicy": "project-specific",
+      "transport": {
+        "type": "modbus-tcp",
+        "host": "",
+        "port": 502,
+        "unitId": 1,
+        "timeoutMs": 2000,
+        "pollIntervalMs": 1000
+      }
+    },
+    "eosLicenseAdminInstance": "eos-admin.0"
+  },
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Adapter information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": "Adapter connection",
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
+}

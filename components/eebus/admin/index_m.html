@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>eebus adapter settings</title>
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
+    <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+    <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="../../js/translate.js"></script>
+    <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+    <script type="text/javascript" src="words.js"></script>
+    <script type="text/javascript">
+        function load(settings, onChange) {
+            if (!settings) return;
+            $('.value').each(function () {
+                var $this = $(this);
+                var id = $this.attr('id');
+                if (settings[id] !== undefined) {
+                    if ($this.attr('type') === 'checkbox') {
+                        $this.prop('checked', settings[id]);
+                    } else {
+                        $this.val(settings[id]);
+                    }
+                }
+                $this.on('change keyup', function () {
+                    onChange();
+                });
+            });
+            onChange(false);
+            if (typeof M !== 'undefined') {
+                M.updateTextFields();
+            }
+        }
+
+        function save(callback) {
+            var obj = {};
+            $('.value').each(function () {
+                var $this = $(this);
+                var id = $this.attr('id');
+                if ($this.attr('type') === 'checkbox') {
+                    obj[id] = $this.prop('checked');
+                } else {
+                    obj[id] = $this.val();
+                }
+            });
+            callback(obj);
+        }
+    </script>
+</head>
+<body>
+    <div class="m adapter-container">
+        <div class="row">
+            <div class="col s12">
+                <h6 class="translate">NexoWatt EEBus / Imsys settings</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12 m6 l4">
+                <input id="host" class="value" type="text">
+                <label for="host" class="translate">EEBus Host</label>
+            </div>
+            <div class="input-field col s12 m6 l2">
+                <input id="port" class="value" type="number">
+                <label for="port" class="translate">EEBus Port</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12 m6 l4">
+                <label>
+                    <input id="useTLS" type="checkbox" class="value" />
+                    <span class="translate">Use TLS</span>
+                </label>
+            </div>
+            <div class="col s12 m6 l4">
+                <label>
+                    <input id="allowUtilityControl" type="checkbox" class="value" />
+                    <span class="translate">Allow utility control</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <p class="translate">
+                    Note: This version only creates datapoints. EEBus communication has to be implemented later.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

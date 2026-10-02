@@ -1,0 +1,141 @@
+<!--
+  Datei: www/rfid-report.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!doctype html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Report-Seite: Druck-/PDF-/CSV-nahe Auswertung für History, EVCS, Tarif, §14a oder RFID.
+  Zusammenhänge:
+  - Logik liegt in gleichnamiger .js-Datei und gemeinsamen Report-Hilfen.
+  - Daten kommen aus Report-APIs in main.js.
+  Wartungshinweise:
+  - Drucklayout und Tabellenbreiten beachten.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>NexoWatt EOS – Ladekarten-Abrechnung</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link rel="stylesheet" href="/static/styles.css"/>
+  <style>
+    body{ background:transparent; color:var(--nx-text); }
+    .wrap{ max-width:1100px; margin:16px auto; padding:0 12px; }
+    header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    h1{ font-size:18px; margin:0; }
+    .meta{ font-size:12px; color:#555; margin-top:4px; }
+    table{ width:100%; border-collapse:collapse; margin-top:12px; }
+    th,td{ border:1px solid #ddd; padding:6px 8px; font-size:12px; }
+    th{ background:rgba(5,20,36,.96); text-align:left; }
+    tfoot td{ font-weight:bold; background:rgba(255,255,255,.04); }
+    .actions{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .btn{ border:1px solid #ccc; background:#fff; color:#111; padding:6px 10px; border-radius:6px; cursor:pointer; }
+    .btn.primary{ background:#111; color:#fff; border-color:#111; }
+    .muted{ color:#666; }
+    @media print{
+      .no-print{ display:none !important; }
+      body{ margin:0; background:#fff !important; color:#111 !important; }
+      .wrap{ max-width:none; padding:0; }
+      table{ page-break-inside:auto; color:#111 !important; }
+      th,td{ color:#111 !important; background:#fff !important; border-color:#ddd !important; }
+      th{ background:#f3f3f3 !important; }
+      tr{ page-break-inside:avoid; page-break-after:auto; }
+    }
+  
+    @media screen{
+      body{ background:var(--nx-bg-0) !important; color:var(--nx-text) !important; }
+      .wrap{ max-width:1180px; margin:0 auto; padding:16px; }
+      header.report-head{ margin-bottom:12px; }
+      h1{ color:#fff; }
+      .meta{ color:var(--nx-muted); }
+      table{ color:rgba(255,255,255,.88); background:rgba(5,20,36,.65); border-radius:16px; overflow:hidden; }
+      th,td{ border-color:rgba(255,255,255,.08); }
+      th{ background:rgba(6,20,36,.96); color:#fff; }
+      tfoot td{ background:rgba(0,230,118,.045); }
+    }
+  </style>
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-rfid-report">
+  <!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar no-print">
+    <div class="brand"><a href="/" aria-label="NexoWatt Live"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a></div>
+    <button aria-label="Menü" id="menuBtn">☰</button>
+    <h1>NexoWatt EOS</h1>
+    <nav class="tabs" aria-label="Hauptnavigation">
+      <a class="tab" href="/">LIVE</a>
+      <a class="tab active" href="/history.html">HISTORY</a>
+      <a class="tab hidden" id="tabSmartHome" href="/smarthome.html">SMARTHOME</a>
+      <a class="tab hidden" id="tabStorageFarm" href="/storagefarm.html">SPEICHERFARM</a>
+      <a class="tab hidden" id="tabEvcs" href="/evcs.html">EVCS</a>
+    </nav>
+    <a class="topbar-gear" href="/settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+    <div class="menu hidden" id="menuDropdown">
+      <a class="menu-item" href="/">Live</a>
+      <a class="menu-item" href="/history.html">History</a>
+      <a class="menu-item hidden" id="menuStorageFarmLink" href="/storagefarm.html">Speicherfarm</a>
+      <a class="menu-item hidden" id="menuSmartHomeLink" href="/smarthome.html">SmartHome</a>
+      <a class="menu-item hidden" id="menuEvcsLink" href="/evcs.html">EVCS</a>
+      <a class="menu-item" href="/settings.html">Einstellungen</a>
+    </div>
+  </header>
+
+  <div class="wrap nw-subpage nw-subpage-report">
+
+    <section class="nw-page-hero no-print" aria-label="Seitenübersicht">
+      <div>
+        <div class="nw-page-hero__eyebrow">Report</div>
+        <div class="nw-page-hero__title">Ladekarten-Abrechnung</div>
+        <div class="nw-page-hero__subtitle">RFID-Sessions und Ladeenergie übersichtlich für Druck und CSV-Ausgabe.</div>
+      </div>
+      <div class="nw-page-hero__right"><span class="nw-page-hero__pill">RFID</span></div>
+    </section>
+    <header class="no-print">
+      <div>
+        <h1>Ladekarten-Abrechnung</h1>
+        <div class="meta" id="metaText">–</div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="reloadBtn" type="button">Neu laden</button>
+        <button class="btn" id="csvBtn" type="button">CSV Tageswerte</button>
+        <button class="btn" id="csvSessionsBtn" type="button">CSV Sessions</button>
+        <button class="btn primary" id="printBtn" type="button">Drucken / PDF</button>
+      </div>
+    </header>
+
+    <div class="meta" id="metaTextPrint"></div>
+
+    <table id="reportTable">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th style="text-align:right;">Sessions</th>
+          <th style="text-align:right;">Energie (kWh)</th>
+          <th style="text-align:right;">Max (kW)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td>Summe Zeitraum</td>
+          <td id="sumSessions" style="text-align:right;">0</td>
+          <td id="sumKwh" style="text-align:right;">0,000</td>
+          <td id="sumPeakKw" style="text-align:right;">0,00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="meta muted" style="margin-top:10px;">
+      Hinweis: Für die PDF-Ausgabe bitte „Drucken / PDF“ nutzen (Browser-Druckdialog).
+    </div>
+  </div>
+
+  <script src="/static/nw-shell.js"></script>
+  <script src="/static/rfid-report.js"></script>
+  <script src="/static/cockpit-shell.js"></script>
+
+</body>
+</html>

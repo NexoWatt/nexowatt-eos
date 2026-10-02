@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: normal start, incomplete maintenance blocked, live trial and cleanup
+not ok 1 - normal start, incomplete maintenance blocked, live trial and cleanup
+  ---
+  duration_ms: 9.590456
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:12:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/proc/12/stat'"
+  code: 'ENOENT'
+  stack: |-
+    Object.readFileSync (node:fs:484:20)
+    processIdentity (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:16:21)
+    Object.authorizeStart (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:30:48)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:15:51)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: exited coordinator cannot grant later reboot/start through its old permit
+not ok 2 - exited coordinator cannot grant later reboot/start through its old permit
+  ---
+  duration_ms: 163.313681
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:20:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:24:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: stale or invalid permit startTicks
+not ok 3 - stale or invalid permit startTicks
+  ---
+  duration_ms: 1.156088
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:27:5'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/proc/12/stat'"
+  code: 'ENOENT'
+  stack: |-
+    Object.readFileSync (node:fs:484:20)
+    processIdentity (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:16:21)
+    Object.authorizeStart (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:30:48)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:29:29)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: stale or invalid permit bootId
+not ok 4 - stale or invalid permit bootId
+  ---
+  duration_ms: 0.829745
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:27:5'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/proc/12/stat'"
+  code: 'ENOENT'
+  stack: |-
+    Object.readFileSync (node:fs:484:20)
+    processIdentity (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:16:21)
+    Object.authorizeStart (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:30:48)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:29:29)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: stale or invalid permit operation
+not ok 5 - stale or invalid permit operation
+  ---
+  duration_ms: 0.790876
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:27:5'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/proc/12/stat'"
+  code: 'ENOENT'
+  stack: |-
+    Object.readFileSync (node:fs:484:20)
+    processIdentity (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:16:21)
+    Object.authorizeStart (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:30:48)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:29:29)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: stale or invalid permit version
+not ok 6 - stale or invalid permit version
+  ---
+  duration_ms: 0.935775
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:27:5'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/proc/12/stat'"
+  code: 'ENOENT'
+  stack: |-
+    Object.readFileSync (node:fs:484:20)
+    processIdentity (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:16:21)
+    Object.authorizeStart (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:30:48)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:29:29)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: orphan permit cannot bypass absent lock
+not ok 7 - orphan permit cannot bypass absent lock
+  ---
+  duration_ms: 0.834182
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:33:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/proc/12/stat'"
+  code: 'ENOENT'
+  stack: |-
+    Object.readFileSync (node:fs:484:20)
+    processIdentity (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:16:21)
+    Object.authorizeStart (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/release/maintenance.cjs:30:48)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/maintenance.test.cjs:35:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: writable lock and symlinked permit rejected
+ok 8 - writable lock and symlinked permit rejected
+  ---
+  duration_ms: 1.218303
+  type: 'test'
+  ...
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 9 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 2.703339
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 10 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 5.478567
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 11 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 202.722403
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 12 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 7.616846
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 13 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 0.74685
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 6
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 400.33244

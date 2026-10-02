@@ -1,0 +1,53 @@
+TAP version 13
+# Subtest: real integrated UI laboratory: TLS setup, enrollment, HTTPS login, central license and denied physical control
+    # Subtest: ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+    ok 1 - ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+      ---
+      duration_ms: 7620.915608
+      type: 'test'
+      ...
+    # Subtest: fresh enrollment creates unique protected admin and exactly two disabled approved instances
+    not ok 2 - fresh enrollment creates unique protected admin and exactly two disabled approved instances
+      ---
+      duration_ms: 16.455403
+      type: 'test'
+      location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:67:57'
+      failureType: 'testCodeFailure'
+      error: 'TLS_CONFIG_REJECTED'
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        fail (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/bootstrap/initialize.cjs:17:30)
+        assertRuntimeConfig (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/bootstrap/initialize.cjs:22:62)
+        Object.initialize (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/bootstrap/initialize.cjs:105:5)
+        verifyFresh (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:105:106)
+        Object.enroll (/workspace/scratch/6383b3161c96/EOS-integrated-test/runtime/bootstrap/enrollment.cjs:128:11)
+        async /workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:105:20
+        async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:67:77)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async stage (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:67:49)
+        async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:104:5)
+      ...
+    1..2
+not ok 1 - real integrated UI laboratory: TLS setup, enrollment, HTTPS login, central license and denied physical control
+  ---
+  duration_ms: 11246.694689
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:53:1'
+  failureType: 'testCodeFailure'
+  error: 'LAB_STAGE_FAILED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    stage (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:67:120)
+    async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-integrated-test/tests/integration/ui-controller.integration.cjs:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 3
+# suites 0
+# pass 1
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15989.454334

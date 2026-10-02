@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nexowatt:eos:accounts:1",
+  "title": "NexoWatt EOS local enrollment accounts",
+  "description": "Protected local root input for EOS 0.2.0-dev.2. Do not commit populated account files or passwords.",
+  "$comment": "Runtime validation also requires unique usernames and passwords, password inequality with the separately supplied service password, and at most 256 UTF-8 bytes per password. JSON Schema alone does not express those checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "accounts"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "accounts": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/account"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "role"
+            ],
+            "properties": {
+              "role": {
+                "const": "installer"
+              }
+            }
+          },
+          "minContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "role"
+            ],
+            "properties": {
+              "role": {
+                "const": "enduser"
+              }
+            }
+          },
+          "minContains": 1
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "username",
+        "role",
+        "password"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{2,31}$",
+          "not": {
+            "enum": [
+              "admin",
+              "administrator",
+              "root",
+              "service",
+              "nexowatt",
+              "eos",
+              "guest",
+              "anonymous"
+            ]
+          },
+          "maxLength": 32,
+          "minLength": 3,
+          "allOf": [
+            {
+              "not": {
+                "pattern": "[\\u0000-\\u001F\\u007F\\u2028\\u2029]"
+              }
+            }
+          ]
+        },
+        "role": {
+          "enum": [
+            "installer",
+            "enduser"
+          ],
+          "description": "Fixed host-enrollment role. Service/admin is provisioned separately; browser clients cannot choose a role."
+        },
+        "password": {
+          "type": "string",
+          "minLength": 15,
+          "maxLength": 128,
+          "writeOnly": true,
+          "description": "Individual temporary credential requiring authenticated first-login replacement; runtime also limits UTF-8 bytes and rejects reused credentials.",
+          "not": {
+            "pattern": "[\\u0000-\\u001F\\u007F]"
+          }
+        }
+      }
+    }
+  }
+}

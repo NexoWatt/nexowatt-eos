@@ -1,0 +1,10 @@
+name: Manual EOS Release Review
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: read
+jobs:
+  review:
+    uses: ./.github/workflows/test-and-release.yml
+# No publishing credential, npm publish, release creation or automatic approval.
+# Production release needs a separately reviewed NexoWatt process and evidence.

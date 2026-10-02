@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-runtime-architecture-verification-evidence",
+  "checkedAt": "2026-10-01T17:06:12.171Z",
+  "sourceRevision": "working-tree-uncommitted",
+  "testCommand": "node --test --test-reporter=tap tests/integration/runtime-architecture.test.cjs",
+  "testResult": {
+    "tests": 19,
+    "passed": 19,
+    "failed": 0
+  },
+  "candidate": {
+    "name": "integrated-roles-candidate-r2/app",
+    "platforms": [
+      {
+        "platform": "linux-x64",
+        "passed": false
+      },
+      {
+        "platform": "linux-arm64",
+        "passed": false
+      }
+    ],
+    "executedTargetCode": false,
+    "hardwareQualified": false
+  },
+  "evidence": [
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "18c2976a406f0f581e1d9acb1f98507b9f8624b354f98ac6315ba785fa312b40"
+    },
+    {
+      "path": "tests/integration/runtime-architecture.test.cjs",
+      "sha256": "c388e7e14af1fcd819bc9a99a037cadfe5f629fdead5fffc6a2e0e655f251ebe"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/README.md",
+      "sha256": "f5de732cc8c1a378884ab17853c27b1612e81919d27764e390e7b04d520654b4"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/unit-tests.tap",
+      "sha256": "0a7ffa825d140942a17989d626c5a205d9073fcfb610ddf96290e7cf9034b750"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/r2-linux-x64.json",
+      "sha256": "ae127a432100d721a1ff9a1ace5937ae2d7a85d655a6514f1ab868101aafb31f"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/r2-linux-arm64.json",
+      "sha256": "ec897a97d781b2e9cb1b11f9e38b5a88719843abd4099bdbe83e412bb1238067"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/architecture.json",
+      "sha256": "cb36c6454dc866319171d9d7ecc8baed5f20db0b44188d7070aa303825d86fc6"
+    },
+    {
+      "path": "reports/integration/stabilization/x64/architecture-binding.json",
+      "sha256": "8e45f3bbb2d2a76ccaa38f337809519895b95c377b6adb8ace1af956a6006ab3"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/architecture.json",
+      "sha256": "ecc35037324f2d3adab70daf9acdf8ade4f3a138d06cd44376ea586bc4e98a85"
+    },
+    {
+      "path": "reports/integration/stabilization/arm64/architecture-binding.json",
+      "sha256": "d746ab52886ae9ea3ad3e28416b8e551cf97c1d01a0775458222cca95d95eecd"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/x64-as-arm64-negative.json",
+      "sha256": "bb528982e7c7fb3838614d50d878efed96b2dcac0cd0fc4ec51e81b041c0bdd4"
+    },
+    {
+      "path": "reports/integration/stabilization/architecture/platform-tree-comparison.json",
+      "sha256": "9ac7b87dc9d78110b60429c026c8c3e9a6f3e08bc46214cfbb095ea3449974b9"
+    }
+  ],
+  "reviewedPrimaryArtifacts": [
+    {
+      "path": "package.json",
+      "sha256": "428e99cc3b043fe94dcd1070496b44e247c31f8288f3d34ebb583deb0c209ec3"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "b0db18741ac1aefbfb3ac15dfc74826aa551a84d327a6e0aae0be20178135ab6"
+    },
+    {
+      "path": "node_modules/esbuild/package.json",
+      "sha256": "178a0d8be6aaf611bcd73e30fb0328066a0f71b75f4be58039fe1ea881cc1550"
+    },
+    {
+      "path": "node_modules/diskusage/package.json",
+      "sha256": "f4687f455026932d109f4d41c669adab9ad5d47f33b55c393d94561541309b24"
+    },
+    {
+      "path": "node_modules/diskusage/index.js",
+      "sha256": "c87aa357fc676205fa60a6c0215738b0a261f7f7b1fb1f836231de38ef2d2abf"
+    },
+    {
+      "path": "node_modules/bare-fs/package.json",
+      "sha256": "1e4ecc418b0f73cd6e89af07019f532b670f3f1e875d98e76926fb555d6f0895"
+    },
+    {
+      "path": "node_modules/bare-fs/binding.js",
+      "sha256": "884e9b3f3c0a760a12a43a0925e9db2596524614b0065f7e7152ceca63b49953"
+    },
+    {
+      "path": "node_modules/bare-url/package.json",
+      "sha256": "1851b50ce08efffb3120032ad07a97b9fed467a94a0abde572a9595f30aa4ec9"
+    },
+    {
+      "path": "node_modules/bare-url/binding.js",
+      "sha256": "884e9b3f3c0a760a12a43a0925e9db2596524614b0065f7e7152ceca63b49953"
+    },
+    {
+      "path": "node_modules/bare-path/package.json",
+      "sha256": "c1f20c1714e9e8957a617e9a3c25c115f31ba6cedc1e03eba43c4e7f86556254"
+    },
+    {
+      "path": "node_modules/bare-path/index.js",
+      "sha256": "bec10c50dc9e7bba7f54ee5dd3e5e040c82e5c1d4ec6a1e80812f941d397011c"
+    },
+    {
+      "path": "node_modules/tar-stream/package.json",
+      "sha256": "1cc0f028c086c697b40636b530ed1006923631df813e13f1d717f2ebd5e0ff47"
+    },
+    {
+      "path": "node_modules/tar-stream/constants.js",
+      "sha256": "6dcd4aa7d4ab7876c54b28bc6bf281e9d6423787b17eae4353a87af34605972e"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://docs.npmjs.com/cli/v11/using-npm/config/",
+      "accessed": "2026-10-01"
+    },
+    {
+      "url": "https://docs.npmjs.com/cli/v11/configuring-npm/package-json/",
+      "accessed": "2026-10-01"
+    },
+    {
+      "url": "https://esbuild.github.io/getting-started/",
+      "accessed": "2026-10-01"
+    }
+  ],
+  "limitations": [
+    "Reports are static architecture gates; no target binary execution or hardware qualification.",
+    "The named new candidates passed static architecture checks; no Pi runtime qualification or CRA conformity declaration is provided."
+  ],
+  "additionalCandidates": [
+    {
+      "name": "eos-stabilization-x64/app",
+      "platform": "linux-x64",
+      "passed": true,
+      "executedTargetCode": false,
+      "hardwareQualified": false
+    },
+    {
+      "name": "eos-stabilization-arm64/app",
+      "platform": "linux-arm64",
+      "passed": true,
+      "executedTargetCode": false,
+      "hardwareQualified": false
+    }
+  ],
+  "negativeCrosscheck": {
+    "name": "eos-stabilization-x64/app",
+    "declaredPlatform": "linux-arm64",
+    "passed": false,
+    "blocked": true
+  }
+}

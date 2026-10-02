@@ -1,0 +1,322 @@
+TAP version 13
+# Subtest: core-only default refuses adapter activation and admits no arbitrary package
+ok 1 - core-only default refuses adapter activation and admits no arbitrary package
+  ---
+  duration_ms: 2.639291
+  type: 'test'
+  ...
+# Subtest: immutable admitted package/version and main must match current instance
+ok 2 - immutable admitted package/version and main must match current instance
+  ---
+  duration_ms: 0.728181
+  type: 'test'
+  ...
+# Subtest: Node injection flags are forbidden regardless of test profile environment switches
+ok 3 - Node injection flags are forbidden regardless of test profile environment switches
+  ---
+  duration_ms: 0.602261
+  type: 'test'
+  ...
+# Subtest: dynamic modules, exec, compact and extension starts are blocked
+ok 4 - dynamic modules, exec, compact and extension starts are blocked
+  ---
+  duration_ms: 1.115868
+  type: 'test'
+  ...
+# Subtest: host environment and configuration cannot enable preload/shell/compact/plugins
+ok 5 - host environment and configuration cannot enable preload/shell/compact/plugins
+  ---
+  duration_ms: 0.745568
+  type: 'test'
+  ...
+# Subtest: profile rejects JavaScript adapter, duplicates, unknown fields and escaped main paths
+ok 6 - profile rejects JavaScript adapter, duplicates, unknown fields and escaped main paths
+  ---
+  duration_ms: 0.391682
+  type: 'test'
+  ...
+# Subtest: entry check accepts real admitted file and rejects symlink/entry/package-version substitutions
+ok 7 - entry check accepts real admitted file and rejects symlink/entry/package-version substitutions
+  ---
+  duration_ms: 3.098866
+  type: 'test'
+  ...
+# Subtest: all six original executable inputs and three source mirrors are bound to actual SHA256
+ok 8 - all six original executable inputs and three source mirrors are bound to actual SHA256
+  ---
+  duration_ms: 31.97159
+  type: 'test'
+  ...
+# Subtest: all transformed executable variants pass the real Node parser
+ok 9 - all transformed executable variants pass the real Node parser
+  ---
+  duration_ms: 610.607958
+  type: 'test'
+  ...
+# Subtest: mandatory build gate rejects unpatched artifacts, modified helper and missing profile
+ok 10 - mandatory build gate rejects unpatched artifacts, modified helper and missing profile
+  ---
+  duration_ms: 43.640927
+  type: 'test'
+  ...
+# Subtest: mandatory gate rejects controller version drift, extra profile packages and bad UTF8
+ok 11 - mandatory gate rejects controller version drift, extra profile packages and bad UTF8
+  ---
+  duration_ms: 212.357994
+  type: 'test'
+  ...
+# Subtest: mandatory gate rejects symlink code/profile and unexpected catalogue fields
+ok 12 - mandatory gate rejects symlink code/profile and unexpected catalogue fields
+  ---
+  duration_ms: 61.945749
+  type: 'test'
+  ...
+# Subtest: cjs: real patched processMessage denies privileged actions before their original bodies
+ok 13 - cjs: real patched processMessage denies privileged actions before their original bodies
+  ---
+  duration_ms: 6.924952
+  type: 'test'
+  ...
+# Subtest: cjs: ordinary getInterfaces still passes original command route
+ok 14 - cjs: ordinary getInterfaces still passes original command route
+  ---
+  duration_ms: 6.517716
+  type: 'test'
+  ...
+# Subtest: cjs: real normal start denies Node preload before adapter lookup or fork
+ok 15 - cjs: real normal start denies Node preload before adapter lookup or fork
+  ---
+  duration_ms: 7.1411
+  type: 'test'
+  ...
+# Subtest: cjs: real scheduled start rechecks altered instance before fork
+ok 16 - cjs: real scheduled start rechecks altered instance before fork
+  ---
+  duration_ms: 8.762722
+  type: 'test'
+  ...
+# Subtest: cjs: real automatic install/upgrade functions produce no installer action
+ok 17 - cjs: real automatic install/upgrade functions produce no installer action
+  ---
+  duration_ms: 17.48062
+  type: 'test'
+  ...
+# Subtest: cjs: real CLI dispatch denies aliases and installation commands before DB/installer access
+ok 18 - cjs: real CLI dispatch denies aliases and installation commands before DB/installer access
+  ---
+  duration_ms: 3.437839
+  type: 'test'
+  ...
+# Subtest: cjs: real Install._npmInstall method rejects directly invoked package install
+ok 19 - cjs: real Install._npmInstall method rejects directly invoked package install
+  ---
+  duration_ms: 1.45458
+  type: 'test'
+  ...
+# Subtest: esm: real patched processMessage denies privileged actions before their original bodies
+ok 20 - esm: real patched processMessage denies privileged actions before their original bodies
+  ---
+  duration_ms: 7.672113
+  type: 'test'
+  ...
+# Subtest: esm: ordinary getInterfaces still passes original command route
+ok 21 - esm: ordinary getInterfaces still passes original command route
+  ---
+  duration_ms: 7.317977
+  type: 'test'
+  ...
+# Subtest: esm: real normal start denies Node preload before adapter lookup or fork
+ok 22 - esm: real normal start denies Node preload before adapter lookup or fork
+  ---
+  duration_ms: 6.707683
+  type: 'test'
+  ...
+# Subtest: esm: real scheduled start rechecks altered instance before fork
+ok 23 - esm: real scheduled start rechecks altered instance before fork
+  ---
+  duration_ms: 7.66433
+  type: 'test'
+  ...
+# Subtest: esm: real automatic install/upgrade functions produce no installer action
+ok 24 - esm: real automatic install/upgrade functions produce no installer action
+  ---
+  duration_ms: 12.296315
+  type: 'test'
+  ...
+# Subtest: esm: real CLI dispatch denies aliases and installation commands before DB/installer access
+ok 25 - esm: real CLI dispatch denies aliases and installation commands before DB/installer access
+  ---
+  duration_ms: 2.761286
+  type: 'test'
+  ...
+# Subtest: esm: real Install._npmInstall method rejects directly invoked package install
+ok 26 - esm: real Install._npmInstall method rejects directly invoked package install
+  ---
+  duration_ms: 1.156128
+  type: 'test'
+  ...
+# Subtest: approved required core is selected; optional is not installed implicitly
+ok 27 - approved required core is selected; optional is not installed implicitly
+  ---
+  duration_ms: 3.428726
+  type: 'test'
+  ...
+# Subtest: optional exact version follows requested -> installed -> active without confusing states
+ok 28 - optional exact version follows requested -> installed -> active without confusing states
+  ---
+  duration_ms: 1.123629
+  type: 'test'
+  ...
+# Subtest: catalogue approval does not fabricate package bytes or installed status
+ok 29 - catalogue approval does not fabricate package bytes or installed status
+  ---
+  duration_ms: 1.941867
+  type: 'test'
+  ...
+# Subtest: unselected/unknown installed items are quarantined, never automatically activated
+ok 30 - unselected/unknown installed items are quarantined, never automatically activated
+  ---
+  duration_ms: 0.898759
+  type: 'test'
+  ...
+# Subtest: production profile rejects test review; test profile accepts production review
+ok 31 - production profile rejects test review; test profile accepts production review
+  ---
+  duration_ms: 1.664758
+  type: 'test'
+  ...
+# Subtest: pending and rejected optional entries can be inventoried but never selected or active
+ok 32 - pending and rejected optional entries can be inventoried but never selected or active
+  ---
+  duration_ms: 1.184742
+  type: 'test'
+  ...
+# Subtest: a pending required component blocks the whole requested baseline
+ok 33 - a pending required component blocks the whole requested baseline
+  ---
+  duration_ms: 0.38334
+  type: 'test'
+  ...
+# Subtest: catalogue URL/tags/ranges and request version aliases are rejected
+ok 34 - catalogue URL/tags/ranges and request version aliases are rejected
+  ---
+  duration_ms: 3.625292
+  type: 'test'
+  ...
+# Subtest: valid exact prereleases are allowed only under explicit review
+ok 35 - valid exact prereleases are allowed only under explicit review
+  ---
+  duration_ms: 0.475329
+  type: 'test'
+  ...
+# Subtest: a different exact version is not treated as implicitly upgradeable
+ok 36 - a different exact version is not treated as implicitly upgradeable
+  ---
+  duration_ms: 0.535881
+  type: 'test'
+  ...
+# Subtest: unsigned approval metadata is a declaration, not release approval
+ok 37 - unsigned approval metadata is a declaration, not release approval
+  ---
+  duration_ms: 0.565495
+  type: 'test'
+  ...
+# Subtest: unknown fields at every trust boundary are rejected
+ok 38 - unknown fields at every trust boundary are rejected
+  ---
+  duration_ms: 6.962059
+  type: 'test'
+  ...
+# Subtest: package URL and path injection have no accepted catalogue representation
+ok 39 - package URL and path injection have no accepted catalogue representation
+  ---
+  duration_ms: 2.051042
+  type: 'test'
+  ...
+# Subtest: additional modules, shell exec and arbitrary javascript cannot be approved
+ok 40 - additional modules, shell exec and arbitrary javascript cannot be approved
+  ---
+  duration_ms: 1.02506
+  type: 'test'
+  ...
+# Subtest: internal plaintext is blocked; field Modbus legacy is explicitly declared
+ok 41 - internal plaintext is blocked; field Modbus legacy is explicitly declared
+  ---
+  duration_ms: 1.483984
+  type: 'test'
+  ...
+# Subtest: network claims cannot contradict declared TCP/discovery operations
+ok 42 - network claims cannot contradict declared TCP/discovery operations
+  ---
+  duration_ms: 0.236858
+  type: 'test'
+  ...
+# Subtest: duplicate IDs/packages/references/protocols are rejected
+ok 43 - duplicate IDs/packages/references/protocols are rejected
+  ---
+  duration_ms: 1.154727
+  type: 'test'
+  ...
+# Subtest: duplicate JSON keys including escaped spelling cannot change review
+ok 44 - duplicate JSON keys including escaped spelling cannot change review
+  ---
+  duration_ms: 0.557994
+  type: 'test'
+  ...
+# Subtest: prototype pollution keys and inherited objects are rejected without mutation
+ok 45 - prototype pollution keys and inherited objects are rejected without mutation
+  ---
+  duration_ms: 0.639297
+  type: 'test'
+  ...
+# Subtest: object API does not call getters, toJSON, or accept hidden/symbol fields
+ok 46 - object API does not call getters, toJSON, or accept hidden/symbol fields
+  ---
+  duration_ms: 0.594459
+  type: 'test'
+  ...
+# Subtest: parser rejects invalid syntax, Unicode, unsafe numbers and excessive nesting/bytes
+ok 47 - parser rejects invalid syntax, Unicode, unsafe numbers and excessive nesting/bytes
+  ---
+  duration_ms: 1.521852
+  type: 'test'
+  ...
+# Subtest: cyclic and sparse arrays are rejected; valid parsed output is deeply immutable
+ok 48 - cyclic and sparse arrays are rejected; valid parsed output is deeply immutable
+  ---
+  duration_ms: 0.910557
+  type: 'test'
+  ...
+# Subtest: strict real data types and missing keys are not coerced
+ok 49 - strict real data types and missing keys are not coerced
+  ---
+  duration_ms: 0.840621
+  type: 'test'
+  ...
+# Subtest: tree digest canonicalizes file order and binds path, size and content hash
+ok 50 - tree digest canonicalizes file order and binds path, size and content hash
+  ---
+  duration_ms: 1.155307
+  type: 'test'
+  ...
+# Subtest: tree metadata rejects traversal, duplicate paths, sparse/accessor rows, unsafe sizes
+ok 51 - tree metadata rejects traversal, duplicate paths, sparse/accessor rows, unsafe sizes
+  ---
+  duration_ms: 0.530262
+  type: 'test'
+  ...
+# Subtest: CLI returns bounded JSON, handles invalid UTF8 and never leaks paths/input into errors
+ok 52 - CLI returns bounded JSON, handles invalid UTF8 and never leaks paths/input into errors
+  ---
+  duration_ms: 379.167907
+  type: 'test'
+  ...
+1..52
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1221.824286

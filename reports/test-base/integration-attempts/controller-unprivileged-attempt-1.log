@@ -1,0 +1,24 @@
+✖ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS (2411.065639ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2591.663705
+
+✖ failing tests:
+
+test at tests/system/transport-controller.integration.cjs:46:1
+✖ fresh controller ordinary setup, hardened bootstrap, core startup and restart over TLS (2411.065639ms)
+  Error: EINVAL: invalid argument, chown '/tmp/eos-controller-runtime-tPQ16j/data'
+      at Object.chownSync (node:fs:2217:11)
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/EOS-test-base/tests/system/transport-controller.integration.cjs:81:44)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -22,
+    code: 'EINVAL',
+    syscall: 'chown',
+    path: '/tmp/eos-controller-runtime-tPQ16j/data'
+  }

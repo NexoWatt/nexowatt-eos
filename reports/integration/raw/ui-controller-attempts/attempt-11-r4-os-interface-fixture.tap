@@ -1,0 +1,66 @@
+TAP version 13
+# Subtest: integrated UI laboratory WITH OS-interface fixture: TLS setup, enrollment, HTTPS login, central license and denied physical control
+    # Subtest: ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+    ok 1 - ordinary setup and core hardening over two authenticated TLS1.3 Redis stores
+      ---
+      duration_ms: 7646.114339
+      type: 'test'
+      ...
+    # Subtest: fresh enrollment creates unique protected admin and exactly two disabled approved instances
+    ok 2 - fresh enrollment creates unique protected admin and exactly two disabled approved instances
+      ---
+      duration_ms: 1065.915578
+      type: 'test'
+      ...
+    # Subtest: ordinary CLI uploads local Admin/UI assets without installation or npm
+    ok 3 - ordinary CLI uploads local Admin/UI assets without installation or npm
+      ---
+      duration_ms: 4879.263548
+      type: 'test'
+      ...
+    # Subtest: actual controller starts Admin and UI with real HTTPS identities and no physical adapters
+    ok 4 - actual controller starts Admin and UI with real HTTPS identities and no physical adapters
+      ---
+      duration_ms: 8729.159529
+      type: 'test'
+      ...
+    # Subtest: real admin and UI authenticate unique account; unauthenticated license data denied
+    ok 5 - real admin and UI authenticate unique account; unauthenticated license data denied
+      ---
+      duration_ms: 1951.166995
+      type: 'test'
+      ...
+    # Subtest: central signed test license activates UI capabilities via real encrypted messagebox without raw license export
+    ok 6 - central signed test license activates UI capabilities via real encrypted messagebox without raw license export
+      ---
+      duration_ms: 101.283224
+      type: 'test'
+      ...
+    # Subtest: licensed preview denies physical commands and central removal closes capabilities
+    ok 7 - licensed preview denies physical commands and central removal closes capabilities
+      ---
+      duration_ms: 43.324536
+      type: 'test'
+      ...
+    1..7
+ok 1 - integrated UI laboratory WITH OS-interface fixture: TLS setup, enrollment, HTTPS login, central license and denied physical control
+  ---
+  duration_ms: 30239.289352
+  type: 'test'
+  ...
+# {"candidate":"/workspace/scratch/6383b3161c96/integrated-ui-candidate-r4/app","files":{"package-lock.json":"0bcb60b6684f7e35820d9ccc70da354154e19909ba260a841c429bf98a73a4c8","node_modules/iobroker.js-controller/eos-test-profile.json":"5c936a625beda84b7a6b61828c6469df8bea369558cfbd1b317a6ee6eccbabf8","node_modules/iobroker.nexowatt-ui/lib/eos-integrated.js":"820fa924339d361e2e4a2f80374fa6b92eff51d5ca16460302a04a1f83c9c7b2","node_modules/iobroker.nexowatt-ui/main.js":"c088c2232742a3f2a255c5ef11c382221561697673e67419cc66d2f605f9bc4b","node_modules/iobroker.eos-admin/build/main.js":"03ae7655a23e01970804ca19860f495ad137878d733ed40d347fb6f6711b748a"}}
+# {"labOnlyInterfaceFixture":"node_modules/@iobroker/js-controller-adapter/build/cjs/lib/adapter/adapter.js","originalSha256":"d7e751c93c97636b7cd5772777cb5c79afca716cb921773115a35a6436f5b27b","fixtureSha256":"e458862673508a334e8ed09373ff0923d8798a0e6751009487c1586a7c2c374a"}
+# {"labOnlyInterfaceFixture":"node_modules/@iobroker/js-controller-adapter/build/esm/lib/adapter/adapter.js","originalSha256":"c8ff22090bcda3316a8f39ddb6c943e1320dc806109a0668a48c7bd900eeb7af","fixtureSha256":"bf1239583e6708276147ff9fa765b905851a6e17a2e8bfbc312e8080bc22c03c"}
+# Admin anonymous license status 302 Location /index.html?login&href=%2Fnexowatt%2Flicense%2Fstatus
+# UI actual credential login status 200
+# Actual database Admin security snapshot accepted
+# OS interface fixture=true. Executed Node v24.19.0 linux/x64 UID 0: real controller/Redis/Admin/UI, CI setup with explicit random license-fixture UUID, ephemeral certificates/password/issuer; no systemd/RPi/unprivileged acceptance.
+1..1
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 30529.572162

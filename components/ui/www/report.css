@@ -1,0 +1,178 @@
+/*
+ * Datei: www/report.css
+ * Rolle: Code-Datei
+ * Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+ * Wartung: Diese Styles hängen an festen HTML-Klassen/IDs. Vor Änderungen betroffene Seiten mobil und Desktop prüfen.
+ */
+/*
+ * NexoWatt Code-Kommentar (DE)
+ * Zweck: Stylesheet für Kunden-/VIS-Seiten, Reports oder mobile Layouts.
+ * Zusammenhänge:
+ * - HTML-Struktur liegt in www/*.html, Logik in www/*.js.
+ * - Responsivität muss Desktop, Tablet und Smartphone abdecken.
+ * Wartungshinweise:
+ * - Keine fachliche Logik hier; nur Darstellung und Sichtbarkeit.
+ */
+
+.report-wrap {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.report-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0 12px;
+}
+
+.report-head h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+.report-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.68);
+}
+
+.report-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+  align-items: center;
+}
+
+.report-toolbar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.82);
+}
+
+.report-toolbar input[type="datetime-local"] {
+  min-width: 220px;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.report-card {
+  background: linear-gradient(135deg, #111827, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 18px;
+  padding: 12px;
+  color: #e5e7eb;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+}
+
+.report-card small,
+.report-note,
+.report-hint {
+  color: rgba(255,255,255,0.68);
+}
+
+.report-card b {
+  display: block;
+  margin-top: 4px;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.report-table-wrap {
+  overflow: auto;
+  border-radius: 16px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 960px;
+}
+
+.report-table th,
+.report-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  vertical-align: top;
+}
+
+.report-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(15, 23, 42, 0.98);
+  text-align: left;
+}
+
+.report-table td.num,
+.report-table th.num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.report-table td.wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.report-empty {
+  padding: 18px 12px;
+  color: rgba(255,255,255,0.68);
+}
+
+.report-caption {
+  margin: 2px 0 10px;
+  color: rgba(255,255,255,0.72);
+}
+
+.report-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(2, 6, 23, 0.34);
+  color: #e5e7eb;
+  font-size: 12px;
+}
+
+.report-section-title {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.report-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .report-wrap { padding: 12px; }
+  .report-head { flex-direction: column; align-items: flex-start; }
+  .report-toolbar { align-items: stretch; }
+  .report-toolbar label { flex-direction: column; align-items: flex-start; }
+  .report-toolbar input[type="datetime-local"] { min-width: 0; width: 100%; }
+}
+
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+  header.topbar, .report-toolbar, #backBtn { display: none !important; }
+  .report-wrap { max-width: none; padding: 0; }
+  .report-card { box-shadow: none; background: #fff !important; color: #000 !important; border-color: rgba(0,0,0,0.18); }
+  .report-card small, .report-note, .report-hint, .report-caption { color: rgba(0,0,0,0.72) !important; }
+  .report-table thead th { position: static; background: #fff !important; }
+  .report-table th, .report-table td { border-color: rgba(0,0,0,0.16); color: #000 !important; }
+  .report-pill { color: #000 !important; border-color: rgba(0,0,0,0.2); background: #fff !important; }
+}

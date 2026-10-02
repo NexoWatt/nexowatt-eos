@@ -1,0 +1,106 @@
+<!--
+  Datei: www/storagefarm.html
+  Rolle: Code-Datei
+  Zweck: Allgemeiner Projektcode; genaue Verantwortung ergibt sich aus Pfad und Funktionsnamen.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Kundenansicht der Speicherfarm: reine Status-/Tabellenansicht.
+  Zusammenhänge:
+  - Logik in www/storagefarm.js, Daten aus storageFarm.* States.
+  - Konfiguration bleibt im App-Center.
+  Wartungshinweise:
+  - Bei Anlagen ohne Speicherfarm ausblenden.
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>NexoWatt EOS – Speicherfarm</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=eos-20261001" sizes="16x16 32x32 48x48 64x64">
+  <link href="/static/styles.css" rel="stylesheet"/>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0c0f12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NexoWatt EOS">
+  <script src="/static/nw-i18n.js" defer></script>
+</head>
+<body class="nw-cockpit-page nw-cockpit-skin nw-page-storagefarm">
+<!-- Abschnitt: Kopfbereich/Navigation. Wird durch CSS und teils durch JS-Menülogik gesteuert. -->
+<header class="topbar nw-cockpit-topbar">
+  <script>
+  (function () {
+    try {
+      var p = window.location.pathname || "";
+      if (p && !p.endsWith("/") && !p.endsWith(".html")) {
+        window.location.replace(p + "/" + window.location.search + window.location.hash);
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <div class="brand"><a href="./" aria-label="NexoWatt Live"><img alt="NexoWatt" src="/static/nexowatt-logo.png"/></a></div>
+  <button aria-label="Menu" id="menuBtn" data-nw-menu-fallback="1" type="button">☰</button>
+  <h1>NexoWatt EOS</h1>
+  <nav class="tabs">
+    <button class="tab" id="liveTabBtn" type="button" onclick="window.location.href='./'">LIVE</button>
+    <button class="tab" id="historyTabBtn" type="button" onclick="window.location.href='history.html'">HISTORY</button>
+    <button class="tab active hidden" id="tabStorageFarm" type="button" onclick="window.location.href='storagefarm.html'">SPEICHERFARM</button>
+    <button class="tab hidden" id="tabEvcs" type="button" onclick="window.location.href='evcs.html'">EVCS</button>
+    <button class="tab hidden" id="tabSmartHome" type="button" onclick="window.location.href='smarthome.html'">SMARTHOME</button>
+  </nav>
+  <div class="status-dot live" id="liveDot" title="Live Verbindung"></div>
+  <a class="topbar-gear" href="settings.html" aria-label="Einstellungen" title="Einstellungen">⚙️</a>
+  <div class="menu hidden" id="menuDropdown">
+    <a class="menu-item" href="./">Live</a>
+    <a class="menu-item" href="history.html">History</a>
+    <a class="menu-item hidden" href="storagefarm.html" id="menuStorageFarmLink">Speicherfarm</a>
+    <a class="menu-item hidden" href="evcs.html" id="menuEvcsLink">EVCS</a>
+    <a class="menu-item hidden" href="smarthome.html" id="menuSmartHomeLink">SmartHome</a>
+    <a class="menu-item" href="settings.html">Einstellungen</a>
+  </div>
+</header>
+
+<!-- Abschnitt: Hauptinhalt der Seite. DOM-IDs in diesem Bereich werden durch zugehörige JS-Dateien befüllt. -->
+<main class="storagefarm-wrap nw-subpage" aria-label="Speicherfarm Tabelle">
+  <section class="card nw-storagefarm-card" aria-live="polite">
+    <div class="nw-storagefarm-head">
+      <div>
+        <div class="nw-page-hero__eyebrow">Speicherfarm</div>
+        <h2>Speicherfarm</h2>
+        <small id="sf_summary">SoC Ø: -- % | Farm netto: -- | PV/WR: -- | Brutto Laden: -- | Brutto Entladen: -- | Online: --/-- | Regelbar: --/--</small>
+      </div>
+      <div class="nw-storagefarm-actions">
+        <span id="sf_mode_label" class="nw-storagefarm-mode">Modus: --</span>
+        <button class="btn" id="sf_reload" type="button">Neu laden</button>
+      </div>
+    </div>
+
+    <div class="sf-table nw-storagefarm-table" role="table" aria-label="Speicherfarm Status">
+      <div class="nw-storagefarm-row nw-storagefarm-row--head" role="row">
+        <div role="columnheader">Speicher</div>
+        <div role="columnheader">SoC (%)</div>
+        <div role="columnheader">Laden</div>
+        <div role="columnheader">Entladen</div>
+        <div role="columnheader">Status</div>
+      </div>
+      <div id="sf_status_rows" class="nw-storagefarm-rows"></div>
+    </div>
+    <small id="sf_msg" class="nw-storagefarm-msg"></small>
+  </section>
+</main>
+
+<script src="/static/storagefarm.js"></script>
+<script src="/static/cockpit-shell.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').catch(console.error);
+  });
+}
+</script>
+<script src="/static/nw-shell.js"></script>
+</body>
+</html>

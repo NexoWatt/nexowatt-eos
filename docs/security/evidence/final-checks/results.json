@@ -1,0 +1,228 @@
+{
+  "date": "2026-09-30",
+  "baseCommit": "18195cd94f1b0972d093128ab4572742515f7799",
+  "branch": "security/eos-first-run-hardening-20260930",
+  "node": "v24.19.0",
+  "python": "Python 3.12.14",
+  "checks": [
+    {
+      "check": "build",
+      "command": [
+        "node",
+        "tasks",
+        "--create"
+      ],
+      "exitCode": 0,
+      "seconds": 0.078,
+      "log": "build.txt"
+    },
+    {
+      "check": "node-tests",
+      "command": [
+        "node",
+        "--test",
+        "tests/security/runtime-tls.test.cjs",
+        "tests/security/sftp.test.cjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.966,
+      "log": "node-tests.txt"
+    },
+    {
+      "check": "host-policy.test",
+      "command": [
+        "python3",
+        "tests/security/host-policy.test.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.491,
+      "log": "host-policy.test.txt"
+    },
+    {
+      "check": "node-update-log.test",
+      "command": [
+        "python3",
+        "tests/security/node-update-log.test.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.123,
+      "log": "node-update-log.test.txt"
+    },
+    {
+      "check": "profile.test",
+      "command": [
+        "python3",
+        "tests/security/profile.test.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.305,
+      "log": "profile.test.txt"
+    },
+    {
+      "check": "wrapper.test",
+      "command": [
+        "python3",
+        "tests/security/wrapper.test.py"
+      ],
+      "exitCode": 0,
+      "seconds": 75.228,
+      "log": "wrapper.test.txt"
+    },
+    {
+      "check": "wizard-evidence",
+      "command": [
+        "node",
+        "docs/security/evidence/admin-first-run/test_wizard_finish.cjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.157,
+      "log": "wizard-evidence.txt"
+    },
+    {
+      "check": "webserver-evidence",
+      "command": [
+        "node",
+        "docs/security/evidence/admin-first-run/test_webserver_fallback.cjs"
+      ],
+      "exitCode": 0,
+      "seconds": 0.088,
+      "log": "webserver-evidence.txt"
+    },
+    {
+      "check": "shell-installer.sh",
+      "command": [
+        "bash",
+        "-n",
+        "installer.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.004,
+      "log": "shell-installer.sh.txt"
+    },
+    {
+      "check": "shell-installer_library.sh",
+      "command": [
+        "bash",
+        "-n",
+        "installer_library.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.006,
+      "log": "shell-installer_library.sh.txt"
+    },
+    {
+      "check": "shell-fix_installation.sh",
+      "command": [
+        "bash",
+        "-n",
+        "fix_installation.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.004,
+      "log": "shell-fix_installation.sh.txt"
+    },
+    {
+      "check": "shell-node-update.sh",
+      "command": [
+        "bash",
+        "-n",
+        "node-update.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.004,
+      "log": "shell-node-update.sh.txt"
+    },
+    {
+      "check": "shell-security-eos-cli.sh",
+      "command": [
+        "bash",
+        "-n",
+        "security/eos-cli.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.003,
+      "log": "shell-security-eos-cli.sh.txt"
+    },
+    {
+      "check": "shell-security-install-cli.sh",
+      "command": [
+        "bash",
+        "-n",
+        "security/install-cli.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.003,
+      "log": "shell-security-install-cli.sh.txt"
+    },
+    {
+      "check": "shell-security-profile-common.sh",
+      "command": [
+        "bash",
+        "-n",
+        "security/profile-common.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.003,
+      "log": "shell-security-profile-common.sh.txt"
+    },
+    {
+      "check": "shell-dist-diag.sh",
+      "command": [
+        "bash",
+        "-n",
+        "dist/diag.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.004,
+      "log": "shell-dist-diag.sh.txt"
+    },
+    {
+      "check": "shell-dist-fix.sh",
+      "command": [
+        "bash",
+        "-n",
+        "dist/fix.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.005,
+      "log": "shell-dist-fix.sh.txt"
+    },
+    {
+      "check": "shell-dist-install.sh",
+      "command": [
+        "bash",
+        "-n",
+        "dist/install.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.005,
+      "log": "shell-dist-install.sh.txt"
+    },
+    {
+      "check": "shell-dist-node-update.sh",
+      "command": [
+        "bash",
+        "-n",
+        "dist/node-update.sh"
+      ],
+      "exitCode": 0,
+      "seconds": 0.005,
+      "log": "shell-dist-node-update.sh.txt"
+    },
+    {
+      "check": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "seconds": 0.007,
+      "log": "diff-check.txt"
+    }
+  ],
+  "fullInstallationExecuted": false,
+  "hardwareTestExecuted": false,
+  "networkTLSVerified": false,
+  "githubCIRun": false
+}

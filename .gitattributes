@@ -1,0 +1,30 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Force shell scripts to have LF ending
+*.sh text eol=lf
+
+# Preserve exact upstream evidence bytes, including trailing blank lines.
+docs/security/evidence/admin-first-run/fixtures/WizardDialog.onClose.ts whitespace=-blank-at-eof
+docs/security/evidence/controller-first-run/LICENSE.ioredis.txt whitespace=-blank-at-eof
+
+# Preserve byte-exact upstream fixtures and raw failure evidence (hash-bound).
+tests/system/controller-profile-fixtures/*.original.txt -text -whitespace
+reports/test-base/integration-attempts/*.log -text -whitespace
+
+# Imported component builds and evidence are bound by raw-byte digests. Do not
+# normalize their line endings while recording the integrated source delivery.
+components/** -text
+reports/integrated/** -text
+reports/integration/** -text
+delivery/** -text
+
+# Keep historical upstream prose and hash-bound failed-test output byte exact.
+# These exceptions apply only to archived evidence, not executable sources.
+docs/history/UPSTREAM_README.md -text -whitespace
+components/ui/reports/security/roles-20261001/*.log whitespace=-blank-at-eof
+reports/integration/branding-roles/raw/*.tap -whitespace
+# V8 GC diagnostics and tool stdout retain original whitespace for hash binding.
+components/ui/reports/security/stabilization-20261001/*.log -whitespace
+
+reports/integration/debian13/redis8-compatibility/raw/* -whitespace

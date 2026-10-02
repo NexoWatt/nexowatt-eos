@@ -1,0 +1,115 @@
+<!--
+  Datei: src-admin-tab/index.html
+  Rolle: Admin-React-Quelle
+  Zweck: React-Quellcode für ioBroker-Admin-Tab und Installer-Einstiegsseiten.
+  Wartung: HTML-IDs/Klassen sind Vertragsstellen für www/*.js und CSS. Nicht ohne Suche nach Referenzen ändern.
+-->
+<!DOCTYPE html>
+<!--
+  NexoWatt Code-Kommentar (DE)
+  Zweck: Vite-Einstiegsseite der React-Admin-Tab-Quelle.
+  Zusammenhänge:
+  - Lädt src-admin-tab/src/main.jsx.
+  - Build erzeugt admin/react/*.
+  Wartungshinweise:
+  - Nicht mit Kunden-VIS verwechseln.
+-->
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexoWatt EOS Admin</title>
+    <script>
+      (function () {
+        // Frühere Builds konnten den vollständigen Lizenzschlüssel im Browser
+        // zwischenspeichern. Diese Altwerte werden vor jedem React-Start entfernt.
+        try {
+          for (var storageIndex = 0; storageIndex < 2; storageIndex += 1) {
+            var storage = storageIndex === 0 ? window.localStorage : window.sessionStorage;
+            for (var i = storage.length - 1; i >= 0; i -= 1) {
+              var key = storage.key(i) || '';
+              if (/^nexowatt-ui\.licenseKey\./.test(key)) storage.removeItem(key);
+            }
+          }
+        } catch (_e) {}
+
+        // Ein direkter Admin-Deep-Link darf das React-Bundle nicht erst rendern
+        // und dadurch Lizenzinhalte kurz sichtbar machen. Die Runtime-Seite
+        // erzwingt die Rollenprüfung server- und clientseitig.
+        function redirectProtectedLicenseRoute() {
+          var hash = String(window.location.hash || '');
+          if (!/^#\/license(?:[/?]|$)/.test(hash)) return false;
+          try { document.documentElement.style.visibility = 'hidden'; } catch (_e) {}
+          var query = window.location.search || '';
+          window.location.replace('../license.html' + query);
+          return true;
+        }
+
+        window.addEventListener('hashchange', redirectProtectedLicenseRoute, true);
+        redirectProtectedLicenseRoute();
+      })();
+    </script>
+    <script>
+      (function () {
+        if (window.io || window.socket || (window.parent && window.parent.socket) || (window.top && window.top.socket)) {
+          return;
+        }
+
+        var promise;
+        window.__nwSocketLoader = function () {
+          if (promise) return promise;
+          promise = new Promise(function (resolve, reject) {
+            var candidates = [];
+            var qs = new URLSearchParams(window.location.search || '');
+            var host = qs.get('host') || window.location.hostname;
+            var port = qs.get('port') || '8081';
+
+            if (window.location.port === '5173' || window.location.port === '3000') {
+              candidates.push(window.location.protocol + '//' + host + ':' + port + '/lib/js/socket.io.js');
+            }
+            candidates.push('/lib/js/socket.io.js');
+            candidates.push('../../lib/js/socket.io.js');
+            candidates.push('../../../lib/js/socket.io.js');
+
+            candidates = candidates.filter(function (src, index, arr) {
+              return src && arr.indexOf(src) === index;
+            });
+
+            var index = 0;
+            var tryNext = function () {
+              if (index >= candidates.length) {
+                reject(new Error('socket.io.js konnte nicht geladen werden'));
+                return;
+              }
+
+              var src = candidates[index++];
+              if (document.querySelector('script[data-nw-socket-src="' + src + '"]')) {
+                resolve();
+                return;
+              }
+
+              var script = document.createElement('script');
+              script.async = true;
+              script.dataset.nwSocketSrc = src;
+              script.onload = function () { resolve(); };
+              script.onerror = function () {
+                script.remove();
+                tryNext();
+              };
+              script.src = src;
+              document.head.appendChild(script);
+            };
+
+            tryNext();
+          });
+          return promise;
+        };
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-At9r9fB1.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-guFGGMRU.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

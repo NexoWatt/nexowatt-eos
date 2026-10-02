@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: OS parser never evaluates shell substitutions or accepts malformed assignments
+ok 1 - OS parser never evaluates shell substitutions or accepts malformed assignments
+  ---
+  duration_ms: 4.857211
+  type: 'test'
+  ...
+# Subtest: fresh supported fixture with exact Node matches read-only prerequisites
+ok 2 - fresh supported fixture with exact Node matches read-only prerequisites
+  ---
+  duration_ms: 7.569308
+  type: 'test'
+  ...
+# Subtest: preflight rejects wrong OS and exact Node drift
+ok 3 - preflight rejects wrong OS and exact Node drift
+  ---
+  duration_ms: 4.035548
+  type: 'test'
+  ...
+# Subtest: preflight rejects privileged Node, existing identity and occupied database ports
+ok 4 - preflight rejects privileged Node, existing identity and occupied database ports
+  ---
+  duration_ms: 3.995163
+  type: 'test'
+  ...
+# Subtest: fresh-path check catches a dangling symlink instead of overwriting it
+ok 5 - fresh-path check catches a dangling symlink instead of overwriting it
+  ---
+  duration_ms: 3.217406
+  type: 'test'
+  ...
+# Subtest: merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+ok 6 - merge disables shell, multihost, compact and diagnostics plugin without downgrading TLS fields
+  ---
+  duration_ms: 0.825774
+  type: 'test'
+  ...
+# Subtest: generated host config passes real transport and bootstrap validators
+ok 7 - generated host config passes real transport and bootstrap validators
+  ---
+  duration_ms: 111.339755
+  type: 'test'
+  ...
+# Subtest: private writes reject replacement and symlink targets
+ok 8 - private writes reject replacement and symlink targets
+  ---
+  duration_ms: 1.437804
+  type: 'test'
+  ...
+# Subtest: installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+ok 9 - installer refuses bypass profile, unverified stage path, nonroot and implicit start before commands
+  ---
+  duration_ms: 3.312029
+  type: 'test'
+  ...
+# Subtest: disabled install writes restricted config and units but never enables or starts services
+ok 10 - disabled install writes restricted config and units but never enables or starts services
+  ---
+  duration_ms: 9.006891
+  type: 'test'
+  ...
+# Subtest: pinned release state write failure prevents every service start or enable
+ok 11 - pinned release state write failure prevents every service start or enable
+  ---
+  duration_ms: 6.018162
+  type: 'test'
+  ...
+# Subtest: privileged group detected after identity creation stops before provisioning
+ok 12 - privileged group detected after identity creation stops before provisioning
+  ---
+  duration_ms: 4.577052
+  type: 'test'
+  ...
+# Subtest: start follows TLS databases then init then controller and writes root marker
+ok 13 - start follows TLS databases then init then controller and writes root marker
+  ---
+  duration_ms: 4.542254
+  type: 'test'
+  ...
+# Subtest: initialization failure stops and disables units without starting controller
+ok 14 - initialization failure stops and disables units without starting controller
+  ---
+  duration_ms: 4.480175
+  type: 'test'
+  ...
+# Subtest: cleanup failure is reported rather than claimed as a stopped installation
+ok 15 - cleanup failure is reported rather than claimed as a stopped installation
+  ---
+  duration_ms: 4.257068
+  type: 'test'
+  ...
+# Subtest: unit security boundaries and network compatibility remain explicit
+ok 16 - unit security boundaries and network compatibility remain explicit
+  ---
+  duration_ms: 0.668025
+  type: 'test'
+  ...
+# Subtest: systemd-analyze accepts complete unit grammar in isolated root fixture
+ok 17 - systemd-analyze accepts complete unit grammar in isolated root fixture
+  ---
+  duration_ms: 22.651017
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 416.279619
