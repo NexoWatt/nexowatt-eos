@@ -1,6 +1,8 @@
 # EOS: eine verbindliche Quelle für System und Adapter
 
-Stand: 1. Oktober 2026, Entwicklungsstand `0.2.0-dev.3`. Dieser Ablauf verhindert,
+Git-Arbeitsablauf aktualisiert: 3. Oktober 2026, Nutzerentscheidung für `main`.
+Die weiteren Produktbeschreibungen stammen aus dem Entwicklungsstand
+`0.2.0-dev.3` vom 1. Oktober 2026. Dieser Ablauf verhindert,
 dass eine Adapterkorrektur nur in einem Einzelrepository ankommt und im
 ausgelieferten EOS-System fehlt. Er beschreibt den Arbeitsvertrag; eine neue
 GitHub-Synchronisierung, CI-Veröffentlichung oder Zweitfreigabe wird damit nicht
@@ -9,11 +11,18 @@ als bereits eingerichtet dargestellt.
 ## Verbindlicher Quellstand
 
 Das zusammengeführte EOS-Repository ist die Hauptquelle des Produkts. Sein
-konfiguriertes `origin` ist `https://github.com/NexoWatt/Nexowatt-EOS.git`
+konfiguriertes `origin` ist `https://github.com/NexoWatt/nexowatt-eos.git`
 (erneut geprüft am 03.10.2026); ein lokaler
 Commit bedeutet noch keinen Push auf GitHub. Produktversion und Produktscope
 stehen in `system/product.json`. Das Root-`package.json` bezeichnet weiterhin
 den übernommenen Installer und ist keine EOS-Produktversionsdatei.
+
+**Neue autorisierte Arbeiten und Commits erfolgen direkt auf `main`.** Keine
+zusätzlichen Feature-/Testzweige ohne ausdrücklichen Nutzerauftrag anlegen.
+Vor Beginn Zweig, Arbeitsbaum und Remote-Stand prüfen und `main` ohne Verwerfen
+fremder Änderungen mit `origin/main` abgleichen. Die dauerhafte Vorgabe steht
+in [AGENTS.md](../../AGENTS.md). Aktuelle Installationsanleitungen verweisen auf
+die [README auf main](https://github.com/NexoWatt/nexowatt-eos/blob/main/README.md).
 
 | Bereich | Verbindliche Quelle | Beitrag zum Produkt |
 | --- | --- | --- |
@@ -40,7 +49,7 @@ Spiegel nicht unabhängig von ihrer Quelle korrigieren.
 
 ## Änderung bis zum Testpaket
 
-1. Von einem bestimmten EOS-Commit einen Arbeitszweig anlegen. Problem,
+1. Auf dem abgeglichenen `main` den Ausgangscommit festhalten. Problem,
    betroffene Komponenten, Schnittstellen und bisherige Befundkennung festhalten.
    Eine funktionierende ältere Funktion nicht beiläufig entfernen oder umbenennen.
 2. Die Änderung in der maßgeblichen Quelle unter `components/` beziehungsweise
@@ -83,7 +92,7 @@ Synchronisierung eingerichtet. Solange dort noch entwickelt wird, gilt:
 
 1. Den vollständigen fremden Änderungsstand mit Repository, Commit und
    Paketversion festhalten; Änderungen gegen die EOS-Komponente vergleichen.
-2. Gewünschte Änderungen gezielt in einen EOS-Arbeitszweig übernehmen. Bereits
+2. Gewünschte Änderungen gezielt in den aktuellen EOS-`main` übernehmen. Bereits
    vorhandene EOS-Authentifizierung, Lizenzgrenzen, TLS und Sicherheitskorrekturen
    dabei erhalten. Ein vollständiges Überschreiben des Komponentenordners ist
    keine Konfliktauflösung.

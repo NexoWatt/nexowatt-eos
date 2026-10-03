@@ -27,8 +27,8 @@ Commit über den vereinbarten Übergabeweg authentisieren, **bevor** Programme
 aus dem Checkout als root ausgeführt werden:
 
 ```sh
-git clone --single-branch --branch feature/eos-first-start-20261002 \
-  https://github.com/NexoWatt/Nexowatt-EOS.git /root/Nexowatt-EOS-test3
+git clone --single-branch --branch main \
+  https://github.com/NexoWatt/nexowatt-eos.git /root/Nexowatt-EOS-test3
 cd /root/Nexowatt-EOS-test3
 git rev-parse HEAD
 ```

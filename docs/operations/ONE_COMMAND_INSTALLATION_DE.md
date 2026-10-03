@@ -19,7 +19,7 @@ Hardwaretests sind weiterhin **OFFEN, nicht ausgeführt**.
 Bei `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING` wurde der frühere, fest
 gebundene Installationsblock ausgeführt. Dieser bleibt unverändert gesperrt und
 beendet sich vor der Paketinstallation. Den **gesamten Block** erneut aus der
-[aktuellen README des Testzweigs](https://github.com/NexoWatt/nexowatt-eos/blob/feature/eos-first-start-20261002/README.md)
+[aktuellen README auf main](https://github.com/NexoWatt/nexowatt-eos/blob/main/README.md)
 kopieren und in der SSH-Root-Sitzung ausführen. Einzelne Hashes oder Dateien auf
 dem Pi müssen dafür nicht geändert werden.
 
@@ -33,7 +33,7 @@ dem Pi müssen dafür nicht geändert werden.
    bereithalten. Bei einem fein abgestuften Token: Ressourceninhaber `NexoWatt`,
    nur dieses Repository und **Contents: Read-only** auswählen. Je nach
    Organisationsrichtlinie muss der Token zuerst freigegeben sein.
-3. Den vollständigen aktuellen Installationsblock aus der **[README des Testzweigs](https://github.com/NexoWatt/nexowatt-eos/blob/feature/eos-first-start-20261002/README.md)**
+3. Den vollständigen aktuellen Installationsblock aus der **[README auf main](https://github.com/NexoWatt/nexowatt-eos/blob/main/README.md)**
    kopieren und einmal in die Root-Sitzung einfügen. Den Token erst bei der
    verdeckten Abfrage eingeben; keine Tokenwerte in den Befehl einsetzen.
 4. Die automatische Vorbereitung und Installation abwarten. Nach erfolgreichem

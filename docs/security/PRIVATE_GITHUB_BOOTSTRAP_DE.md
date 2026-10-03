@@ -20,7 +20,7 @@ Das neue Manifest enthält `ready: true`. Der frühere Einstieg mit fehlendem
 Trust bleibt als unverändertes historisches Paket gesperrt. Seine Meldung
 `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING` tritt vor der Paketinstallation
 auf. Betroffene Nutzer ersetzen den gesamten kopierten Block durch den aus der
-[aktuellen README des Testzweigs](https://github.com/NexoWatt/nexowatt-eos/blob/feature/eos-first-start-20261002/README.md).
+[aktuellen README auf main](https://github.com/NexoWatt/nexowatt-eos/blob/main/README.md).
 Der öffentliche Prüfschlüssel wird im Installerkit mitgeliefert; eine manuelle
 Schlüsselübernahme oder Abschaltung der Prüfung auf dem Pi ist nicht nötig.
 

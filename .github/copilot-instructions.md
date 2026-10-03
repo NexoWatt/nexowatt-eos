@@ -1,3 +1,10 @@
+# NexoWatt EOS: current repository workflow
+
+Follow the user-directed workflow in [AGENTS.md](../AGENTS.md): authorized work
+and commits belong on `main`. Do not create feature/test branches unless the
+user explicitly requests one. The EOS security instructions in `CLAUDE.md`
+take precedence over the historical upstream guidance below.
+
 # ioBroker Platform Installer
 
 ioBroker is a comprehensive home automation and IoT integration platform installer and management system. This repository contains cross-platform installation scripts, diagnostic tools, and the NPX package for setting up complete ioBroker instances.

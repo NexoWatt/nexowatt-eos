@@ -1,3 +1,10 @@
+# Verbindlicher Git-Arbeitsablauf (2026-10-03)
+
+Die Nutzerentscheidung in [AGENTS.md](AGENTS.md) gilt für neue Arbeiten:
+autorisierte Änderungen direkt auf `main`, keine neuen Feature-/Testzweige
+ohne ausdrücklichen Auftrag. Die folgenden historischen Anleitungen ändern
+diese Vorgabe nicht. Sicherheits- und Abnahmebedingungen gelten unverändert.
+
 # EOS branch security override (2026-09-30)
 
 This branch intentionally differs from the historical upstream description below. Shell installers load local reviewed sources; `node tasks --create` embeds the library, CLI, profile, TLS validator and versions.json. The CLI is root-owned outside the runtime tree. Remote maintenance shortcuts and plaintext Redis provisioning are disabled. Only Linux/systemd is covered. The service remains stopped and disabled pending documented acceptance. No complete installation or product-conformance test has yet passed in this review environment. Never disable certificate verification to make a build work.

@@ -1,6 +1,9 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
 # EOS per SSH auf einem neuen Pi installieren
 
+Verbindlicher Projektzweig für neue Arbeiten und Installationsanleitungen ist
+[`main`](https://github.com/NexoWatt/nexowatt-eos/tree/main).
+
 **Der Testinstaller enthält jetzt den öffentlichen Prüfschlüssel eurer vorhandenen
 EOS-Lizenzverwaltung.** Auf dem Pi genügt die einmalige verdeckte Eingabe des
 GitHub-Tokens. Git und eine manuelle Übertragung der Schlüsseldatei sind nicht nötig.
