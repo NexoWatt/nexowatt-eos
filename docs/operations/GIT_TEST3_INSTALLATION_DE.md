@@ -20,6 +20,11 @@ und daraus die Wiederherstellung festlegen. Keine Konten oder Bestandsdaten
 pauschal löschen und keine Sudoers-Regeln ergänzen. Der neue Installationsblock
 ist kein Reparatur- oder Fortsetzungsbefehl.
 
+Für den inzwischen diagnostizierten R2-Abbruch steht ein
+[separater geprüfter Wiederanlauf-Befehl](SUDO_ABORT_RECOVERY_DE.md) bereit.
+Er erhält die alte Bereitstellung und ihre numerischen Dienstidentitäten,
+bevor er Revision 3 startet.
+
 ## 1. Voraussetzungen und Repository
 
 Die bereits korrekt vorbereitete Node-/PostgreSQL-Umgebung kann weiterverwendet werden, sofern darauf noch keine EOS-Installation begonnen wurde. Vorausgesetzt werden `/usr/bin/node` **24.21.0**, PostgreSQL **17.11 oder neuer innerhalb 17**, systemd 257+, Python 3, OpenSSL, die Debian-Updatewerkzeuge und mindestens 6 GiB freier Speicher. Der Installer prüft die tatsächlichen Voraussetzungen. Er ersetzt weder vorhandene EOS-Daten noch PostgreSQL-Cluster und lädt keine npm-Pakete nach.

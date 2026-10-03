@@ -70,6 +70,14 @@ Pi muss vor einer Wiederherstellung diagnostiziert werden. Der neue README-
 Block ist kein automatischer Reparatur- oder Fortsetzungsweg; es gibt keine
 Kontolöschung, pauschale Sudoers-Änderung oder Abschaltung der Frischsystemprüfung.
 
+Die nachgereichte Pi-Diagnose ist im
+[Wiederanlauf-Nachweis](../../reports/integration/sudo-abort-recovery-20261003/README.md)
+erfasst. Ein separater fest gepinnter Helfer kann ausschließlich den bekannten
+R2-Baum und das gesperrte Konto mit UID 999 / GID 985 erhalten und umbenennen.
+Vollinventur, Signatur, Konten, Prozesse und Mounts werden vorher geprüft;
+Teilfehler bleiben mit Journal zur Prüfung stehen. Die anschließende
+Neuinstallation durchläuft unverändert sämtliche R3-Frischsystemprüfungen.
+
 Die APT-Korrektur ergänzt ausschließlich `.pgp` neben `.gpg` und `.asc` für
 einzelne Keyring-Dateinamen unter `/usr/share/keyrings/`. Das deckt die
 [offizielle Raspberry-Pi-OS-ARM64-Vorlage](https://raw.githubusercontent.com/RPi-Distro/pi-gen/4d8ee447dd3d37e8b0ef8752e460d9082d9d435d/stage0/00-configure-apt/files/raspi.sources)

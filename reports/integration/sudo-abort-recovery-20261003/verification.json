@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "kind": "sudo-abort-recovery-local-verification",
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "24.21.0"
+  },
+  "ok": true,
+  "rows": [
+    {
+      "executable": "python",
+      "args": [
+        "-I",
+        "-B",
+        "tests/bootstrap/recover-sudo-abort.test.py"
+      ],
+      "status": 0,
+      "errorCode": null,
+      "stdout": {
+        "path": "raw/recovery.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "raw/recovery.stderr.log",
+        "sha256": "3de36c3ffd64ec76a592679f2a53080a602d830f94da3b5bc5e25c8a94561abc"
+      }
+    },
+    {
+      "executable": "node",
+      "args": [
+        "--test",
+        "tests/bootstrap/sudo-recovery-command.test.cjs"
+      ],
+      "status": 0,
+      "errorCode": null,
+      "stdout": {
+        "path": "raw/entry.stdout.log",
+        "sha256": "af131782db28a8c55c260f5684053ce751c6e215304b1b44df127f5f74335b7a"
+      },
+      "stderr": {
+        "path": "raw/entry.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "executable": "python",
+      "args": [
+        "-I",
+        "-B",
+        "reports/integration/sudo-abort-recovery-20261003/verify-r2-archive.py"
+      ],
+      "status": 0,
+      "errorCode": null,
+      "stdout": {
+        "path": "raw/historical-archive.stdout.log",
+        "sha256": "873d7d16187b36396521843c2a9606c8d811ac7551165ef909b985fd22f77f3d"
+      },
+      "stderr": {
+        "path": "raw/historical-archive.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "path": "tools/bootstrap/recover-sudo-abort.py",
+      "sha256": "66104780fda7c92368e21d5baf88528ba7788a8055ccfc091d919c3a161efce4"
+    },
+    {
+      "path": "tests/bootstrap/recover-sudo-abort.test.py",
+      "sha256": "292c5dd924a34c4d80fb2f6bbfedd08f0ef4d49f9d20756795540e37ed4d55e6"
+    },
+    {
+      "path": "tools/bootstrap/build-sudo-recovery-command.cjs",
+      "sha256": "dd4fc2e24a5ce5ccb54412282bd6a3b7ca7b4ec5019a5c8944dd01d630d4e0cd"
+    },
+    {
+      "path": "tests/bootstrap/sudo-recovery-command.test.cjs",
+      "sha256": "b48c5a3f3199a90d5f5a0c2ba4e5aeff745f9710d771d22ec59a88bb925f167a"
+    },
+    {
+      "path": "reports/integration/sudo-abort-recovery-20261003/verify-r2-archive.py",
+      "sha256": "7e5bf839890f856343e24aaa22ee17398abd74b40e0385dbd60904c9bba9bbe2"
+    },
+    {
+      "path": "reports/integration/sudo-abort-recovery-20261003/record-local.cjs",
+      "sha256": "3b6b79fe0016c04cb7af35369900a3b5c43e88b4f98d43b378ed29e81ef1d854"
+    }
+  ],
+  "targetRecoveryExecuted": false,
+  "targetInstallationExecuted": false,
+  "hardwareAcceptance": "OPEN",
+  "scope": "Local fixtures and actual historical archive verification. No native Linux account, rename, fsync, sudo, systemd or installation acceptance."
+}

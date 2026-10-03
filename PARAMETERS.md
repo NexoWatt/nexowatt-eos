@@ -21,9 +21,15 @@ The current packet is `delivery/bootstrap-test3-r3`. The signed host installers
 require a successful root sudo query and its complete C-locale denial for the
 specific service account; an exit code alone does not establish absent rights.
 A previous `PG_SUDO_POLICY_REJECTED` failure may already have created
-`eos-runtime` and staged `/opt/nexowatt/eos` files. Preserve that state and
-diagnose before recovery; no force/retry flag, automatic account deletion or
-sudoers change is provided. This entry remains for fresh installations.
+`eos-runtime` and staged `/opt/nexowatt/eos` files. This entry remains for
+fresh installations. The separate `tools/bootstrap/recover-sudo-abort.py`
+accepts exactly `--check` (read only) or `--recover` (guarded quarantine).
+It is restricted to the diagnosed R2 release and UID 999 / GID 985; it has no
+target-root, force or bypass option. It preserves the old tree and numerical
+account identity, renames the account/group, journals mutations and stops on
+partial failure. No account deletion or sudoers change is provided. The
+[separate recovery entry](docs/operations/SUDO_ABORT_RECOVERY_DE.md) proceeds
+to the unchanged R3 bootstrap only after successful recovery.
 
 `tools/bootstrap/build-download.cjs` runs only on the manufacturer build host.
 It requires exactly `--base-url` (fixed HTTPS directory), `--license-trust`

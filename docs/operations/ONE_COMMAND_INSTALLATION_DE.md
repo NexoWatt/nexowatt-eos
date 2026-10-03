@@ -32,6 +32,11 @@ Dienststatus zunächst nur lesen. Danach eine Wiederherstellung passend zum
 tatsächlichen Zustand festlegen. Konten oder Bestandsdaten nicht pauschal
 löschen und keine zusätzlichen Sudoers-Regeln vergeben.
 
+Für den inzwischen diagnostizierten R2-Abbruch gibt es jetzt den
+[separaten Wiederanlauf mit einer Tokenabfrage](SUDO_ABORT_RECOVERY_DE.md).
+Er prüft genau diesen Restzustand, bewahrt die alte Bereitstellung und
+Dienstidentität auf und startet erst danach den unveränderten R3-Installer.
+
 Bei `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING` wurde der frühere, fest
 gebundene Installationsblock ausgeführt. Dieser bleibt unverändert gesperrt und
 beendet sich vor der Paketinstallation. Den **gesamten Block** erneut aus der

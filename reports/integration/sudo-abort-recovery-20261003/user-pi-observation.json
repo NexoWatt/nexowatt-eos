@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "kind": "user-provided-pi-recovery-diagnostic",
+  "originalAttachment": {
+    "name": "Eingefügter Text.txt",
+    "bytes": 9201,
+    "sha256": "1981517182078065e9261bea78cde09ad845ef20b3825412f698e1e44d25e96c"
+  },
+  "excerpt": {
+    "path": "user-pi-diagnostic.txt",
+    "sha256": "dac81c20b357180ebf6ff5346a49716f15b40f962fdbfccc5991382c534a8969",
+    "transformation": "Last diagnostic block beginning root@NexoWatt:~# export LC_ALL=C; CRLF normalized to LF. Earlier download commands omitted."
+  },
+  "observed": {
+    "account": "eos-runtime",
+    "uid": 999,
+    "gid": 985,
+    "home": "/nonexistent",
+    "shell": "/usr/sbin/nologin",
+    "passwordLocked": true,
+    "sudoVersion": "1.9.16p2-3+deb13u2",
+    "sudoListStatus": 0,
+    "sudoDenial": "User eos-runtime is not allowed to run sudo on NexoWatt.",
+    "processRows": 0,
+    "clusterOutputEmpty": true,
+    "filteredUnitOutputEmpty": true,
+    "reportedMissingPaths": [
+      "/etc/nexowatt-eos",
+      "/var/lib/nexowatt-eos",
+      "/var/log/nexowatt-eos",
+      "/opt/nexowatt/eos/current"
+    ],
+    "stagedRelease": "f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef"
+  },
+  "limitations": [
+    "User-provided transcript, not agent-executed SSH.",
+    "Cluster and filtered-unit command statuses were not captured; helper must independently require successful queries.",
+    "maxdepth3 listing does not verify signed file contents, mount state, full account or EOS namespace."
+  ],
+  "targetRecoveryExecuted": false,
+  "targetInstallationExecuted": false,
+  "hardwareAcceptance": "OPEN"
+}

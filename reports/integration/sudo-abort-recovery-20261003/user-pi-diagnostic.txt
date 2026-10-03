@@ -1,0 +1,46 @@
+root@NexoWatt:~# export LC_ALL=C
+getent passwd eos-runtime eos-postgres eos-setup
+getent group eos-runtime eos-postgres eos-setup
+id eos-runtime
+/usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /usr/bin/sudo -n -l -U eos-runtime
+printf 'sudo-Exitcode: %s\n' "$?"
+readlink -f /usr/bin/sudo
+dpkg-query -W -f='${Package} ${Version}\n' sudo sudo-rs 2>/dev/null
+passwd -S eos-runtime
+ps -u eos-runtime -o pid,ppid,user,comm
+pg_lsclusters --no-header
+systemctl list-unit-files 'nexowatt-eos*' 'iobroker*' --no-legend --no-pager --full
+stat -c '%F %U:%G %a %n' /etc/nexowatt-eos /var/lib/nexowatt-eos /var/log/nexowatt-eos /opt/nexowatt/eos/current
+find -P /opt/nexowatt/eos -xdev -maxdepth 3 -printf '%y %u:%g %m %p -> %l\n'
+eos-runtime:x:999:985::/nonexistent:/usr/sbin/nologin
+eos-runtime:x:985:
+uid=999(eos-runtime) gid=985(eos-runtime) groups=985(eos-runtime)
+User eos-runtime is not allowed to run sudo on NexoWatt.
+sudo-Exitcode: 0
+/usr/bin/sudo
+sudo 1.9.16p2-3+deb13u2
+eos-runtime L 2026-10-03 -1 -1 -1 -1
+    PID    PPID USER     COMMAND
+stat: cannot statx '/etc/nexowatt-eos': No such file or directory
+stat: cannot statx '/var/lib/nexowatt-eos': No such file or directory
+stat: cannot statx '/var/log/nexowatt-eos': No such file or directory
+stat: cannot statx '/opt/nexowatt/eos/current': No such file or directory
+d root:root 755 /opt/nexowatt/eos ->
+d root:root 755 /opt/nexowatt/eos/releases ->
+d root:root 755 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef ->
+f root:root 644 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/catalog.json ->
+d root:root 755 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/runtime ->
+d root:root 755 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/security ->
+d root:root 755 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/licenses ->
+d root:root 755 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/system ->
+f root:root 644 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/LICENSE ->
+d root:root 755 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/tools ->
+d root:root 755 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/app ->
+f root:root 644 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/sbom.cdx.json ->
+f root:root 644 /opt/nexowatt/eos/releases/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/THIRD_PARTY_NOTICES.md ->
+d root:root 755 /opt/nexowatt/eos/verified ->
+d root:root 755 /opt/nexowatt/eos/verified/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef ->
+f root:root 644 /opt/nexowatt/eos/verified/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/manifest.sig ->
+f root:root 644 /opt/nexowatt/eos/verified/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/release-public.pem ->
+f root:root 644 /opt/nexowatt/eos/verified/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/native-acceptance.json ->
+f root:root 644 /opt/nexowatt/eos/verified/f8791884897defb86c07bd58114ef3df4abf5c9bda053694e4406d6ac7e779ef/manifest.json ->

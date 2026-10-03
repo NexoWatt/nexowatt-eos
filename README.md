@@ -34,11 +34,11 @@ weitergeben. Paketquellen und Signaturprüfungen müssen dafür nicht verändert
 
 
 **Nach `PG_SUDO_POLICY_REJECTED`:** Revision 3 korrigiert die Sudo-Abfrage
-für neue Dienstkonten. Auf dem bereits betroffenen Pi können `eos-runtime`
-und Dateien unter `/opt/nexowatt/eos` zurückgeblieben sein. Dort zuerst den
-Restzustand prüfen und den Wiederanlauf vorbereiten; der folgende Block ist
-für einen frischen Host und übernimmt keine Teilinstallation.
-[Befund und Wiederanlaufstatus](reports/integration/github-bootstrap-sudo-20261003/README.md).
+für neue Dienstkonten. Für den diagnostizierten Abbruch der Revision 2 gibt
+es einen [eigenen Wiederanlauf-Befehl mit einmaliger Tokenabfrage](docs/operations/SUDO_ABORT_RECOVERY_DE.md).
+Er prüft die alte Bereitstellung vollständig, erhält sie in Quarantäne und
+startet anschließend Revision 3. Der folgende normale Installationsblock
+bleibt für einen frischen Host.
 
 ```bash
 /bin/bash <<'EOS_INSTALL'
