@@ -28,6 +28,12 @@ verwendet; keine Zugangsdaten im Bericht. Der Herstellerlauf verwendet die
 Windows-Zertifikatsbasis und lehnt fremde CA-Umgebungsvariablen vor dem
 Credentialabruf ab. Dies prüft **nicht** den Debian-CA-Pfad oder Pi-Dateirechte.
 
+Nach dem Hochladen in `feature/eos-first-start-20261002` wurden auch Loader,
+gesperrtes Manifest und Installationsblock aus GitHub vollständig zurückgelesen:
+[Startdatei-Readback](private-bootstrap-readback.json). Blob-ID, SHA-256 und
+Bytezahl stimmen für alle drei Dateien. Die Veröffentlichung dieses vorbereiteten
+Einstiegs hebt dessen `ready:false`-Sperre nicht auf.
+
 ## Noch fehlende Herstellerzuordnung
 
 Der vorhandene Export `Downloads/license-trust.json` ist ein gültiges
