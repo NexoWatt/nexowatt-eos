@@ -1,13 +1,71 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# EOS-Testinstallation: neuer Stand wird geprüft
+# EOS auf dem Debian-13-Test-Pi installieren
 
-Revision 3 enthält einen bestätigten PostgreSQL-Verzeichnisfehler unter umask 077.
-Der korrigierte Stand test.3 Revision 4 wird mit SBOM, Signatur und Prüfbelegen
-gebaut. Der neue Installationsbefehl wird hier erst mit der geprüften Lieferung
-eingetragen. [Änderungen und Grenzen](reports/integration/stability-20261003/README.md).
+Aktueller **signierter ARM64-Testkandidat: test.3 Revision 4**.
+Quellstand und Nachweise: [Stabilisierung](reports/integration/stability-20261003/README.md).
+Die frühere Revision 3 enthält den behobenen PostgreSQL-Verzeichnisfehler und ist
+kein aktueller Neuinstallationsweg. Historische Dateien bleiben unverändert.
 
-Bitte bis dahin keinen alten Installationsbefehl erneut ausführen. Vorhandene
-Dateien und abgebrochene Installationen bleiben für die Diagnose erhalten.
+1. Mit PuTTY/SSH als Benutzer mit sudo-Recht am Pi anmelden.
+2. Den gesamten folgenden Block einmal einfügen. Er lädt alle Teile über curl,
+   prüft ihre festen Fingerabdrücke und richtet Node, PostgreSQL und EOS ein.
+   Ein sudo-Passwort und einmal der nur lesende GitHub-Token werden gegebenenfalls
+   verdeckt abgefragt. Keine Benutzerpasswörter werden im Terminal eingerichtet.
+3. Nach erfolgreicher Installation die angezeigte HTTPS-Adresse öffnen, die
+   Geräte-CA über SSH samt Fingerabdruck übernehmen und den Erststart-Assistenten
+   mit dem kurzlebigen Einrichtungscode durchlaufen. UUID, Lizenz und persönliche
+   Passwörter werden im Frontend behandelt.
+
+Voraussetzung: Debian 13/Raspberry Pi OS 13, ARM64, laufendes systemd, korrekte Uhr,
+bash, sudo, curl, python3 und mindestens 6 GiB frei. Das Repository bleibt privat;
+deshalb ist für den Download Leserecht auf NexoWatt/nexowatt-eos erforderlich.
+
+Der Befehl unterstützt einen frischen Host sowie ausschließlich den bereits
+diagnostizierten R2-Sudo-Abbruch: dieser alte Stand wird streng geprüft und
+erhalten. Andere bestehende Installationen/Daten werden abgewiesen. Der Befehl
+ist kein Updater und keine allgemeine Reparaturfunktion.
+
+```bash
+sudo /bin/bash <<'EOS_INSTALL'
+# EOS_GITHUB_BOOTSTRAP_VERSION=2026-10-03
+set +x
+set -euo pipefail
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
+umask 077
+[[ $EUID -eq 0 ]] || { echo 'EOS: Bitte zuerst sudo -i ausfuehren.' >&2; exit 1; }
+[[ -x /usr/bin/curl && -x /usr/bin/python3 ]] || { echo 'EOS: curl und python3 werden im Basisabbild benoetigt.' >&2; exit 1; }
+[[ -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1
+(( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1
+set +a
+unset eos_token
+read -r -s -p 'GitHub-Token: ' eos_token </dev/tty
+printf '\n' >/dev/tty
+[[ $eos_token =~ ^[A-Za-z0-9_]{20,512}$ ]] || { echo 'EOS: Tokenformat ungueltig.' >&2; exit 1; }
+eos_stage=$(/usr/bin/mktemp -d /root/eos-download-XXXXXXXX)
+printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14301 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/c51218e36b554333ab06be5c8952be053d520858' -o "$eos_stage/github-download.py"
+printf '%s  %s\n' '64f500e3df22e7cbde730c7136f68296aaabdaea3a02e1cb45bfe37416377ca3' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
+# Only the separately diagnosed R2 sudo-abort state may be preserved automatically.
+if [[ -e /opt/nexowatt/eos || -L /opt/nexowatt/eos ]]; then
+  printf 'EOS: Vorhandenen Installationszustand streng pruefen; kein pauschales Zuruecksetzen.\n'
+  printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 22129 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/c6e1d41fb35db05ada65a5437e97217f3ca1aefe' -o "$eos_stage/recover-sudo-abort.py"
+  printf '%s  %s\n' '66104780fda7c92368e21d5baf88528ba7788a8055ccfc091d919c3a161efce4' "$eos_stage/recover-sudo-abort.py" | /usr/bin/sha256sum --check --status
+  /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/python3 -I -B "$eos_stage/recover-sudo-abort.py" --recover
+fi
+exec 3< <(printf '%s\n' "$eos_token")
+unset eos_token
+exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 007de25af806ac83f5f6e71805df9212898e9be4 --manifest-sha256 f610f4a4906111f85803bb0ca424846e85f65a7d9a3dfd0e539e383ab4021001
+EOS_INSTALL
+```
+
+[Befehl als Textdatei](delivery/bootstrap-test3-r4/INSTALL_ONE_COMMAND.txt) ·
+[SBOM und Buildnachweise](reports/integration/installable-test3-r4-20261003/) ·
+[Pi-Abnahme und Fehlerdiagnose](docs/operations/STABILITY_TEST4_DE.md).
+
+**Pi-Vollinstallation, Reboot, Backup/Restore und Geräteabnahme bleiben OFFEN,
+bis ihre tatsächlichen Ergebnisse vorliegen.** Anlagenbefehle bleiben gesperrt.
+Das Paket ist kein Produktionsrelease und keine CRA-/IEC-Konformitätserklärung.
+Die PostgreSQL-Zertifikate benötigen vor Dauerbetrieb einen separat abgenommenen
+Erneuerungsweg; diese Testlieferung implementiert keine automatische Rotation.
 <!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
 
 ---

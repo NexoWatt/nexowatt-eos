@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "ea3439ee6cb837ae42441dcdea89f9a454fd3c6c",
+  "host": "linux-x64",
+  "node": "24.21.0",
+  "deliveryRevision": 4,
+  "releaseSequence": 7,
+  "commands": [
+    {
+      "name": "publication-scope-regression",
+      "program": "/usr/bin/python3",
+      "args": [
+        "-I",
+        "-B",
+        "reports/integration/installable-test3-r4-20261003/publish-candidate.test.py"
+      ],
+      "started": "2026-10-03T18:22:25.346Z",
+      "finished": "2026-10-03T18:22:25.462Z",
+      "exitCode": 0,
+      "errorCode": null
+    },
+    {
+      "name": "revision-regression",
+      "program": "/opt/hostedtoolcache/node/24.21.0/x64/bin/node",
+      "args": [
+        "--test",
+        "reports/integration/installable-test3-r4-20261003/build-revision.test.cjs",
+        "reports/integration/installable-test3-r4-20261003/entrypoint-reuse.test.cjs",
+        "tests/system/install-from-checkout.test.cjs",
+        "tests/integration/postgresql-catalog-payload.test.cjs",
+        "tests/integration/test-archive.test.cjs",
+        "tests/system/sudo-policy.test.cjs",
+        "tests/onboarding/frontend.test.cjs",
+        "tests/postgresql/provision-permissions.test.cjs",
+        "tests/bootstrap/stability-entry.test.cjs"
+      ],
+      "started": "2026-10-03T18:22:25.462Z",
+      "finished": "2026-10-03T18:22:28.547Z",
+      "exitCode": 0,
+      "errorCode": null
+    },
+    {
+      "name": "extract-previous",
+      "program": "/usr/bin/python3",
+      "args": [
+        "-I",
+        "-B",
+        "tools/system/extract-test-bundle.py",
+        "--archive",
+        "/home/runner/work/nexowatt-eos/nexowatt-eos/delivery/test-pi-0.2.0-test.3-r3/eos-0.2.0-test.3-linux-arm64.tar.gz",
+        "--destination",
+        "/home/runner/work/nexowatt-eos/nexowatt-eos/.work/runtime-test3-r4-20261003/previous-archive",
+        "--sha256",
+        "743781feebfaadb3f2404ba3dca2768e050a30c4db5e3cc6445d49ddbd6efe11"
+      ],
+      "started": "2026-10-03T18:22:28.547Z",
+      "finished": "2026-10-03T18:23:24.934Z",
+      "exitCode": 0,
+      "errorCode": null
+    },
+    {
+      "name": "package",
+      "program": "/opt/hostedtoolcache/node/24.21.0/x64/bin/node",
+      "args": [
+        "tools/integration/package-postgresql-test.cjs",
+        "/home/runner/work/nexowatt-eos/nexowatt-eos/.work/runtime-test3-r4-20261003"
+      ],
+      "started": "2026-10-03T18:23:33.340Z",
+      "finished": "2026-10-03T18:24:15.558Z",
+      "exitCode": 0,
+      "errorCode": null
+    },
+    {
+      "name": "deliver",
+      "program": "/opt/hostedtoolcache/node/24.21.0/x64/bin/node",
+      "args": [
+        "tools/integration/deliver-postgresql-test.cjs",
+        "/home/runner/work/nexowatt-eos/nexowatt-eos/.work/runtime-test3-r4-20261003"
+      ],
+      "started": "2026-10-03T18:24:19.236Z",
+      "finished": "2026-10-03T18:24:24.870Z",
+      "exitCode": 0,
+      "errorCode": null
+    },
+    {
+      "name": "bootstrap",
+      "program": "/opt/hostedtoolcache/node/24.21.0/x64/bin/node",
+      "args": [
+        "tools/bootstrap/build-github-download.cjs",
+        "--license-trust",
+        "/home/runner/work/nexowatt-eos/nexowatt-eos/delivery/bootstrap-test3-r3/license-public-trust.json",
+        "--license-trust-sha256",
+        "470dce1dec8f4a5da87339e9166aed025789ea86ab85613f2c508f5e9d434b6f",
+        "--release-public-key-sha256",
+        "d35d09a005703eecf1b5a8843b553064c5ab90758cfc71a634599459cda6e8b3",
+        "--output",
+        "/home/runner/work/nexowatt-eos/nexowatt-eos/delivery/bootstrap-test3-r4"
+      ],
+      "started": "2026-10-03T18:24:30.313Z",
+      "finished": "2026-10-03T18:24:36.300Z",
+      "exitCode": 0,
+      "errorCode": null
+    }
+  ],
+  "completedBuildPassed": true,
+  "signedArchiveReadbackPassed": true,
+  "publishedR3AppUnchanged": true,
+  "historicalDeliveriesUnchanged": true,
+  "nativeTargetExecutionPerformed": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "bootstrap": "delivery/bootstrap-test3-r4",
+  "published": false
+}
