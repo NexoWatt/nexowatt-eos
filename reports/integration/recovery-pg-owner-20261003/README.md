@@ -2,8 +2,10 @@
 
 Stand: 03.10.2026. Befundkennung: **NW-EOS-261003-RECOVERY-PG-OWNER**.
 Status: Ursache bestätigt; Quellkorrektur und lokale Nachprüfung bestanden.
-Der neue Einstieg ist veröffentlicht und vollständig zurückgelesen; die
-Zielabnahme steht aus. [Aktuelle Pins und CI](publication.json).
+Der neue Einstieg ist veröffentlicht und vollständig zurückgelesen. Der Nutzer
+meldet um 21:41 Uhr Europe/Berlin den erreichten Zustand
+`HTTPS_FIRST_START_READY`; Browser-Einrichtung und weitere Zielabnahme stehen
+aus. [Aktuelle Pins und CI](publication.json).
 Betroffen: `tools/bootstrap/recover-sudo-abort.py` und der öffentliche
 Installationsstart mit dem darin eingebetteten Recovery-Helfer.
 
@@ -105,7 +107,7 @@ die weiterhin unabhängige Clusterprüfung. Die 14 neuen Fälle wurden zusätzli
 separat geprüft; sie sind eine Teilmenge der 47 und werden nicht hinzuaddiert.
 Reale lokale Verzeichnis-/Deskriptoroperationen und die Archivsignaturprüfung
 sind von simulierten Eigentümern, Konten und Hostbefehlen zu unterscheiden.
-Es wurden keine Konten auf dem Pi geändert.
+Diese lokalen Prüfungen haben keine Konten auf dem Pi geändert.
 
 Der neue Einstieg wurde exklusiv unter
 `delivery/public-entry-test3-r4-recovery2` erzeugt und auf Commit
@@ -133,8 +135,32 @@ fehlgeschlagen oder übersprungen. Darin enthalten sind die 14 neuen Fälle.
 CodeQL sind separate Prüfungen; daraus wird kein vollständiges grünes
 Repository- oder Produktionsurteil abgeleitet.
 
-**Native Recovery auf dem Nutzer-Pi, anschließende Vollinstallation,
-Browser-Ersteinrichtung, Reboot und Hardware-/Anlagenbetrieb sind weiterhin
-OFFEN.** Der bisherige Installationsversuch ist mit dem genannten Fehler
-abgebrochen. Ein erfolgreicher lokaler oder CI-Nachtest ersetzt diese
-Zielprüfungen nicht. Keine Produktions-, CRA- oder IEC-Konformitätsfreigabe.
+## Neuer Zielbericht: geschützter Erststart bereit
+
+Am 03.10.2026 um 21:41 Uhr Europe/Berlin meldet der Nutzer nach Übergabe des
+korrigierten Einstiegs die Ausgabe `EOS: Geschuetzter Erststart ist bereit.`.
+Der Installer nennt eine lokale HTTPS-Adresse auf Port 8443, die CA-Datei
+`/etc/nexowatt-eos/web/ca.crt` und einen SHA-256-Fingerabdruck. Außerdem meldet
+er, dass der Einrichtungscode ausschließlich im lokalen Terminal ausgegeben
+wurde, und kennzeichnet die Hardwareabnahme als offen. Die lokale IP-Adresse,
+der Fingerabdruckwert und der Einrichtungscode werden hier nicht gespeichert.
+[Strukturierter Nutzerbeleg](user-pi-first-start-observation.json).
+
+Der Aufrufbefehl wurde bei dieser Rückmeldung nicht erneut mitgeteilt; die
+Zuordnung zum korrigierten Einstieg folgt dem Gesprächsablauf. Der
+Quellpfad `tools/bootstrap/first-start.cjs` gibt die Erfolgsmeldung erst nach
+einem Installationsergebnis mit `ok === true`, `installed === true` und
+`phase === 'HTTPS_FIRST_START_READY'` sowie weiteren Ergebnisprüfungen aus.
+Damit ist der native Installationsfortschritt bis zur Bereitstellung des
+geschützten Erststarts als **vom Nutzer berichtet erreicht** dokumentiert.
+Der zuvor gemeldete Recovery-Abbruch blockiert diesen berichteten Folgelauf
+nicht mehr. Das native Recovery-Journal und seine einzelnen Änderungen wurden
+jedoch nicht separat eingesehen; daraus wird keine unabhängige vollständige
+Recovery-Abnahme abgeleitet.
+
+**OFFEN bleiben Browser-Erreichbarkeit und CA-Vertrauen, vollständige
+Ersteinrichtung mit Lizenz und Passwort, Dienstbetrieb nach Einrichtung,
+Reboot sowie Hardware-/Anlagenbetrieb.** Die Erfolgsmeldung bestätigt noch
+keinen Browseraufruf oder abgeschlossenen Einrichtungsassistenten. Weder
+dieser Nutzerbericht noch die lokalen und CI-Prüfungen ergeben eine
+Produktions-, CRA- oder IEC-Konformitätsfreigabe.

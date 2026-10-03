@@ -4,7 +4,9 @@ Stand: 03.10.2026. Ziel: isolierter Debian-13-/Raspberry-Pi-OS-13-Host, ARM64,
 systemd und ausreichend freier Speicher. Keine laufende Kundenanlage migrieren.
 Die tatsächliche Pi-Abnahme ist noch offen. Der Nutzerlauf mit dem ursprünglichen
 öffentlichen Einstieg scheiterte an `RECOVERY_PATH_OWNER`. Einstiegsrevision 2
-behebt dessen bestätigte PostgreSQL-Eigentümerprüfung; der native Nachtest steht aus.
+behebt dessen bestätigte PostgreSQL-Eigentümerprüfung. Der Nutzer meldet nun den
+erreichten geschützten Erststart; Browserabschluss, Login und Neustart sind offen
+([Zielrückmeldung](../../reports/integration/recovery-pg-owner-20261003/user-pi-first-start-observation.json)).
 
 ## Installation
 
@@ -63,6 +65,9 @@ Den Einrichtungscode eingeben. Die UUID für den Lizenzgenerator kopieren,
 Lizenz zuordnen und das persönliche Servicepasswort im Frontend vergeben.
 Standort und Anlagenplan ausfüllen oder fehlende Angaben ausdrücklich offenlassen.
 Weitere Installateur-/Benutzerkonten erhalten persönliche Einladungen.
+
+[Windows: Geräte-CA mit Fingerabdruck prüfen, importieren und bei Bedarf den
+Einrichtungscode erneuern](WINDOWS_GERAETE_CA_DE.md).
 
 Eine ausbleibende Antwort gilt nicht als erfolgreiche Einrichtung. Nach einem
 unklaren Abschluss liest der Browser zuerst den Gerätestatus. Er sendet Passwort

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "findingId": "NW-EOS-261003-RECOVERY-PG-OWNER",
+  "reportedAt": "2026-10-03T21:41:00+02:00",
+  "reportedTimePrecision": "minute",
+  "timezone": "Europe/Berlin",
+  "source": "User-reported terminal output after handover of the corrected public entry; not an agent-executed SSH session",
+  "hostLabel": "NexoWatt",
+  "installerCommandRepeatedInReport": false,
+  "correctedEntryAssociation": "conversation sequence; command identity was not independently re-established in this report",
+  "observed": {
+    "successMessage": "EOS: Geschuetzter Erststart ist bereit.",
+    "setupAddressSupplied": true,
+    "setupProtocol": "https",
+    "setupPort": 8443,
+    "lanAddressStored": false,
+    "caCertificateFile": "/etc/nexowatt-eos/web/ca.crt",
+    "fingerprintSupplied": true,
+    "fingerprintStored": false,
+    "setupCodeLocalTerminalOnlyMessageSupplied": true,
+    "setupCodeStored": false,
+    "hardwareAcceptanceMessage": "OFFEN"
+  },
+  "sourceInterpretation": {
+    "path": "tools/bootstrap/first-start.cjs",
+    "requiredResultFieldsBeforeSuccess": {
+      "ok": true,
+      "installed": true,
+      "phase": "HTTPS_FIRST_START_READY",
+      "physicalControlEnabled": false
+    },
+    "otherGuards": "Expected setup origin, release identifier format and protected CA handling are also checked before success output.",
+    "status": "HTTPS_FIRST_START_READY_REPORTED"
+  },
+  "assessment": {
+    "nativeInstallerReachedFirstStartReported": true,
+    "priorRecoveryErrorBlockedReportedFollowup": false,
+    "recoveryJournalInspected": false,
+    "independentNativeRecoveryAcceptancePassed": false,
+    "browserReachabilityPassed": false,
+    "browserCaTrustPassed": false,
+    "fullFrontendSetupPassed": false,
+    "licenseAndPasswordSetupPassed": false,
+    "postSetupServiceAcceptancePassed": false,
+    "rebootAcceptancePassed": false,
+    "hardwareAcceptancePassed": false,
+    "productionReleaseApproved": false
+  },
+  "limitations": [
+    "The observed success message is reported by the user; no direct target execution or independently captured log is available.",
+    "The installer command was not reprinted in this report, so its exact commit and hash are linked through conversation context rather than independently captured target evidence.",
+    "The report does not include the recovery journal or separate verification of account and filesystem recovery mutations.",
+    "The terminal success output does not establish browser connectivity, CA trust, completed frontend setup, accepted license, saved password, reboot behavior or hardware operation.",
+    "LAN address, certificate fingerprint value and setup code are deliberately omitted."
+  ]
+}
