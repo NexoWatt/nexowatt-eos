@@ -25,7 +25,7 @@ HOST = "api.github.com"
 SYSTEM_CA = Path("/etc/ssl/certs/ca-certificates.crt")
 API_PREFIX = "/repos/" + REPOSITORY + "/git/blobs/"
 KIND = "eos-private-github-test-install"
-DELIVERY = "delivery/test-pi-0.2.0-test.3-r3"
+DELIVERY = "delivery/test-pi-0.2.0-test.3-r4"
 ASSETS = ("installer-kit.zip", "node-v24.21.0-linux-arm64.tar.xz",
           "eos-0.2.0-test.3-linux-arm64.tar.gz")
 # The raw Git blob API supports at most 100 MB; larger artifacts need a separately

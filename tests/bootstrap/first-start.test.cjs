@@ -197,3 +197,42 @@ test('preflight refusal preserves its fixed error code and known failed check ID
     assert.match(message, /ports-free, postgresql:postgres/);
     assert.equal(message.includes(secretCode), false); assert.equal(f.ttyWrites.length, 0);
 });
+
+test('host failure preserves fixed installation phase through the real runner without disclosure or retries', t => {
+    for (const phase of ['accounts', 'directories', 'certificates', 'first-start-security', 'initdb', 'release-state',
+        'units', 'schema', 'live-database-gate', 'controller', 'first-start-identity-context']) {
+        const f = fixture(t), reads = [], read = f.dependencies.read;
+        let installs = 0;
+        f.dependencies.read = (...args) => { reads.push(args[0]); return read(...args); };
+        f.dependencies.install = () => {
+            installs++;
+            throw Object.assign(new Error(secretCode), { code: 'PG_HOST_COMMAND_FAILED', phase,
+                stdout: secretCode, stderr: secretCode, command: ['/private/' + secretCode], token: secretCode });
+        };
+        let failure;
+        try { f.run(); } catch (error) { failure = error; }
+        assert.ok(failure);
+        const result = safeFailure(failure), message = formatFailure(failure);
+        assert.equal(result.code, 'PG_HOST_COMMAND_FAILED');
+        assert.equal(result.phase, phase);
+        assert.deepEqual(Object.keys(result).sort(), ['code', 'message', 'ok', 'phase']);
+        assert.ok(message.includes(`Installationsphase: ${phase}\n`));
+        assert.equal(JSON.stringify(result).includes(secretCode), false);
+        assert.equal(message.includes(secretCode), false);
+        assert.equal(installs, 1); assert.equal(f.closed(), 1); assert.equal(f.ttyWrites.length, 0);
+        assert.equal(reads.includes('/etc/nexowatt-eos/setup-code.txt'), false);
+    }
+});
+test('unknown or malformed installation phases are omitted while existing code and preflight checks remain', () => {
+    for (const phase of [undefined, null, [], {}, 1, secretCode, '../accounts', 'accounts\n' + secretCode,
+        'ACCOUNTS', 'accounts\u001b[2J', 'accounts-private', 'x'.repeat(4096)]) {
+        const failure = { code: 'CHECKOUT_HOST_PREFLIGHT_REJECTED', phase, message: secretCode,
+            failedChecks: ['ports-free', secretCode, 'ports-free'] };
+        assert.deepEqual(safeFailure(failure), { ok: false, code: 'CHECKOUT_HOST_PREFLIGHT_REJECTED',
+            message: 'Installation angehalten; bestehende Daten und Fehlernachweise erhalten.', failedChecks: ['ports-free'] });
+        const message = formatFailure(failure);
+        assert.equal(message.includes('Installationsphase:'), false);
+        assert.equal(message.includes(secretCode), false);
+        assert.match(message, /Nicht erfuellte Pruefungen: ports-free/);
+    }
+});

@@ -8,7 +8,15 @@ on:
       - tasks.js
       - versions.json
       - package.json
+      - '**/package-lock.json'
+      - AGENTS.md
+      - CLAUDE.md
+      - PARAMETERS.md
+      - README.md
       - core/**
+      - runtime/**
+      - components/**
+      - delivery/**
       - security/**
       - lib-npx/**
       - install/**
@@ -24,7 +32,15 @@ on:
       - tasks.js
       - versions.json
       - package.json
+      - '**/package-lock.json'
+      - AGENTS.md
+      - CLAUDE.md
+      - PARAMETERS.md
+      - README.md
       - core/**
+      - runtime/**
+      - components/**
+      - delivery/**
       - security/**
       - lib-npx/**
       - install/**
@@ -105,6 +121,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Use the target Node.js release
+        # actions/setup-node v7; official tag resolved 2026-10-03.
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+
       - name: Record source and tool versions
         run: |
           git rev-parse HEAD
@@ -138,4 +161,80 @@ jobs:
           These checks cover the local build, shell syntax and focused isolated security regression tests.
           No full installation, operating-system update, live SFTP deployment, EOS device integration or hardware test is performed by this job.
           This workflow does not constitute a product release approval or CRA/IEC conformity assessment.
+          SUMMARY
+
+  product-contract-checks:
+    name: Node 24 bootstrap, onboarding and transport contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Use the target Node.js release
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+
+      - name: Record source and verify fixture tools
+        run: |
+          git rev-parse HEAD
+          node -e 'if (process.version !== "v24.21.0" || process.platform !== "linux") process.exit(1); console.log(process.version, process.arch)'
+          python3 --version
+          /usr/bin/openssl version
+          /bin/bash --version
+
+      - name: Run selected dependency-free product contracts and local TLS tests
+        # The list is deliberate. Other integration suites need native drivers,
+        # signed delivery archives or a real target host; do not replace with a glob.
+        run: |
+          node --test \
+            tests/bootstrap/build-download.test.cjs \
+            tests/bootstrap/build-github-download.test.cjs \
+            tests/bootstrap/first-start.test.cjs \
+            tests/bootstrap/stability-entry.test.cjs \
+            tests/onboarding/configuration.test.cjs \
+            tests/onboarding/enrollment.test.cjs \
+            tests/onboarding/frontend.test.cjs \
+            tests/onboarding/issue-code.test.cjs \
+            tests/onboarding/server.test.cjs \
+            tests/onboarding/shutdown.test.cjs \
+            tests/postgresql/store.test.cjs \
+            tests/postgresql/store-channel-hardening.test.cjs \
+            tests/postgresql/states.test.cjs \
+            tests/postgresql/provision-permissions.test.cjs \
+            tests/adapter-channel/channel.test.cjs
+
+      - name: Run isolated ownership and sudo denial contracts
+        # These reviewed fixtures write temporary /root trees. Host commands and
+        # service operations are stubbed; this is a disposable GitHub-hosted runner.
+        run: |
+          sudo -- "$(command -v node)" --test \
+            tests/system/sudo-policy.test.cjs \
+            tests/system/preflight-installation.test.cjs
+
+      - name: Run download, host preparation and recovery guard fixtures
+        run: |
+          python3 tests/bootstrap/github-download.test.py
+          python3 tests/bootstrap/prepare-host.test.py
+          # ArchivedPinTests is a separate signed-R2 delivery verification.
+          # This source-fixture job does not execute or claim that archive check.
+          python3 tests/bootstrap/recover-sudo-abort.test.py PayloadTests GuardTests MutationTests
+
+      - name: State product contract verification scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          This job selects source-only bootstrap, onboarding, sudo/preflight and PostgreSQL contract fixtures, plus real loopback TLS tests.
+          PostgreSQL contract tests use doubles; no native database, ARM64 runtime, APT transaction, systemd installation or plant is exercised.
+          Recovery archive-signature verification, full artifact publication and native Debian 13 / Pi first-start acceptance remain separate OPEN gates.
+          A green result is not a production approval. The historical upstream Linux/macOS/FreeBSD/Windows workflows remain separate.
           SUMMARY

@@ -19,6 +19,11 @@ const ROOT = path.resolve(__dirname, '../..');
 const CODE_FILE = '/etc/nexowatt-eos/setup-code.txt';
 const CA_FILE = '/etc/nexowatt-eos/web/ca.crt';
 const fail = code => { throw Object.assign(new Error(code), { code }); };
+// Only fixed installer stages may reach the terminal. Never forward downstream
+// command lines, stderr, paths or exception messages to diagnose a host failure.
+const INSTALL_PHASES = new Set(['accounts', 'directories', 'certificates', 'first-start-security',
+    'initdb', 'release-state', 'units', 'schema', 'live-database-gate', 'controller',
+    'first-start-identity-context']);
 const CHECK_IDS = new Set(['os', 'root', 'architecture', 'systemd-running', 'hostname', 'node-exact-version',
     'systemd-manager', 'no-distribution-clusters', 'openssl-tls13', 'ports-free', 'fresh-unit-namespace', 'free-space',
     ...REQUIRED.map(file => `tool:${file}`), ...FRESH_PATHS.map(file => `fresh-path:${file}`),
@@ -167,7 +172,8 @@ function safeFailure(error) {
         'Installation angehalten; bestehende Daten und Fehlernachweise erhalten.';
     const failedChecks = code === 'CHECKOUT_HOST_PREFLIGHT_REJECTED' && Array.isArray(error?.failedChecks) ?
         [...new Set(error.failedChecks.filter(id => CHECK_IDS.has(id)))].slice(0, 32) : [];
-    return { ok: false, code, message, ...(failedChecks.length ? { failedChecks } : {}) };
+    const phase = typeof error?.phase === 'string' && INSTALL_PHASES.has(error.phase) ? error.phase : null;
+    return { ok: false, code, message, ...(phase ? { phase } : {}), ...(failedChecks.length ? { failedChecks } : {}) };
 }
 function formatSuccess(result) {
     return `EOS: Geschuetzter Erststart ist bereit.\nIm Browser oeffnen: ${result.setupUrl}\n` +
@@ -178,6 +184,7 @@ function formatSuccess(result) {
 function formatFailure(error) {
     const failure = safeFailure(error);
     return `EOS: ${failure.message}\nFehlercode: ${failure.code}\n` +
+        (failure.phase ? `Installationsphase: ${failure.phase}\n` : '') +
         (failure.failedChecks ? `Nicht erfuellte Pruefungen: ${failure.failedChecks.join(', ')}\n` : '');
 }
 module.exports = { parseBootstrap, validateLicenseTrust, routableIPv4, selectIPv4, openPossessionTty, main,

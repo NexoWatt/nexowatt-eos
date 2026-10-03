@@ -10,7 +10,34 @@ const { digestArchive, DELIVERY_DIRECTORY, DELIVERY_REVISION, RELEASE_SEQUENCE }
 const product = require('../../runtime/product/scope.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const ARCHIVE = 'eos-0.2.0-test.3-linux-arm64.tar.gz';
-const REPORT = path.join(ROOT, 'reports/integration/installable-test3-r3-20261003');
+const REPORT = path.join(ROOT, 'reports/integration/installable-test3-r4-20261003');
+// These two compiled entrypoints are in the signed R3 app but absent from the
+// tracked checkout. Preserve their authenticated bytes; do not pretend that
+// this delivery rebuilt them. Other missing source files remain fatal.
+const REUSED_ENTRYPOINTS = Object.freeze({
+    'components/eebus/build/main.js': Object.freeze({
+        target: 'app/node_modules/iobroker.eebus/build/main.js', bytes: 6549,
+        sha256: 'f541960fb8e120129a95416f9eaf142ac57b73f9ee7364576da3f3de167a9e84',
+        source: 'components/eebus/src/main.ts',
+        sourceSha256: '5841852412dc7aec584db61deb48ad73519a4a026e1dd10b60de048a7a98ab57',
+    }),
+    'components/backitup/build/main.js': Object.freeze({
+        target: 'app/node_modules/iobroker.nexowatt-backup/build/main.js', bytes: 102398,
+        sha256: 'd33c83ac75877b0b234739cb0c6282292d17a6ac52d4279de672a6ce21a3320c',
+        source: 'components/backitup/src/main.ts',
+        sourceSha256: '6813028d9c908a1965c543c735678edeeea6ddee0e555fef3d4925933e23d419',
+    }),
+});
+function reusedEntrypointBinding(source, target, row, sourceDigest) {
+    const pin = REUSED_ENTRYPOINTS[source];
+    if (!pin || pin.target !== target || !row || row.sha256 !== pin.sha256 || row.size !== pin.bytes ||
+        sourceDigest !== pin.sourceSha256) throw new Error('SOURCE_REUSED_ENTRYPOINT_MISMATCH');
+    return { source, target, sha256: row.sha256, bytes: row.size,
+        transformation: 'unchanged-compiled-entrypoint-from-signed-r3-app',
+        currentTypeScript: pin.source, currentTypeScriptSha256: sourceDigest,
+        priorEvidence: 'reports/integration/installable-test3-r3-20261003/signed-source-binding.json',
+        rebuiltInThisRevision: false };
+}
 function deliver(directory) {
     trustedDirectory(ROOT);
     const base = trustedDirectory(path.resolve(directory));
@@ -61,7 +88,14 @@ function deliver(directory) {
         const source = 'components/' + spec.source;
         const pkg = JSON.parse(readFileLimited(path.join(ROOT, source, 'package.json')).bytes);
         if (pkg.name !== spec.package || pkg.version !== spec.version || pkg.main !== spec.main) throw new Error('SOURCE_PACKAGE_IDENTITY');
-        for (const relative of ['package.json', 'io-package.json', pkg.main, 'LICENSE']) bind(source + '/' + relative, 'app/node_modules/' + spec.package + '/' + relative);
+        for (const relative of ['package.json', 'io-package.json', pkg.main, 'LICENSE']) {
+            const from = source + '/' + relative, target = 'app/node_modules/' + spec.package + '/' + relative;
+            if (!fs.existsSync(path.join(ROOT, from)) && REUSED_ENTRYPOINTS[from]) {
+                const pin = REUSED_ENTRYPOINTS[from];
+                sources.push(reusedEntrypointBinding(from, target, byPath.get(target),
+                    sha256(readFileLimited(path.join(ROOT, pin.source)).bytes)));
+            } else bind(from, target);
+        }
     }
     for (const name of ['store', 'db-objects-postgresql', 'db-states-postgresql']) {
         const source = 'runtime/postgresql/packages/' + name;
@@ -90,7 +124,7 @@ function deliver(directory) {
     save('signed-source-binding.json', { schemaVersion: 1, kind: 'final-workspace-to-signed-runtime-source-binding',
         deliveryRevision: DELIVERY_REVISION, releaseSequence: checked.manifest.sequence,
         releaseId: checked.releaseId, archiveSha256: checked.archiveSha256, files: sources, allMatched: true,
-        scope: 'Expected runtime/system file sets, fixed tools, license texts, package identities/entrypoints and changed license UI functions. Not target execution.' });
+        scope: 'Expected runtime/system file sets, fixed tools, license texts, package identities/entrypoints and changed license UI functions. Two explicitly pinned missing compiled entrypoints reuse the R3 artifact and are not freshly rebuilt. Not target execution.' });
     save('archive-delivery-verification.json', { schemaVersion: 1, deliveryRevision: DELIVERY_REVISION, releaseSequence: checked.manifest.sequence,
         releaseId: checked.releaseId, archiveSha256: checked.archiveSha256,
         archiveBytes: checked.archiveBytes, signingPublicKeySha256: delivery.signingPublicKeySha256,
@@ -99,7 +133,7 @@ function deliver(directory) {
         targetExecutionPerformed: false, hardwareTested: false, productionReleaseApproved: false });
     return { destination, releaseId: checked.releaseId, archiveSha256: checked.archiveSha256, sourceFilesMatched: sources.length };
 }
-module.exports = { deliver };
+module.exports = { deliver, REUSED_ENTRYPOINTS, reusedEntrypointBinding };
 if (require.main === module) {
     try {
         if (process.argv.length !== 3) throw new Error('DELIVERY_USAGE');

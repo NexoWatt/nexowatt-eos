@@ -7,13 +7,29 @@
     const show = state => {
         $('claim').hidden = state !== 'claim'; $('setup-form').hidden = state !== 'setup'; $('finished').hidden = state !== 'finished';
     };
-    async function request(url, data) {
-        const response = await fetch(url, { method: data ? 'POST' : 'GET', credentials: 'same-origin', cache: 'no-store', redirect: 'error',
-            headers: data ? { 'content-type': 'application/json', 'x-eos-setup': '1', ...(csrf ? { 'x-eos-csrf': csrf } : {}) } : {},
-            ...(data ? { body: JSON.stringify(data) } : {}) });
-        const result = await response.json();
-        if (!response.ok) throw Object.assign(new Error('request'), { status: response.status, code: result.code });
-        return result;
+    const REQUEST_BUDGET_MS = 5000, POLL_BUDGET_MS = 180000;
+    // One monotonic budget covers both response headers and the complete JSON body.
+    // The race also settles the UI when an interrupted transport fails to settle.
+    async function request(url, data, budgetMs = REQUEST_BUDGET_MS) {
+        const controller = new AbortController(), deadline = performance.now() + budgetMs;
+        const timeoutError = Object.assign(new Error('request-timeout'), { code: 'SETUP_TIMEOUT' });
+        let timer, timedOut = false;
+        const timeout = new Promise((_, reject) => {
+            timer = setTimeout(() => { timedOut = true; controller.abort(); reject(timeoutError); }, budgetMs);
+        });
+        try {
+            return await Promise.race([(async () => {
+                const response = await fetch(url, { method: data ? 'POST' : 'GET', credentials: 'same-origin', cache: 'no-store', redirect: 'error',
+                    signal: controller.signal,
+                    headers: data ? { 'content-type': 'application/json', 'x-eos-setup': '1', ...(csrf ? { 'x-eos-csrf': csrf } : {}) } : {},
+                    ...(data ? { body: JSON.stringify(data) } : {}) });
+                const result = await response.json();
+                if (performance.now() >= deadline) { timedOut = true; controller.abort(); throw timeoutError; }
+                if (!response.ok) throw Object.assign(new Error('request'), { status: response.status, code: result.code });
+                return result;
+            })(), timeout]);
+        } catch (error) { throw timedOut ? timeoutError : error; }
+        finally { clearTimeout(timer); }
     }
     function failure(error) {
         const messages = {
@@ -21,6 +37,7 @@
             SETUP_SESSION: 'Diese Einrichtungssitzung ist abgelaufen. Der lokale Gerätezugang ist für einen neuen Versuch erforderlich.',
             SETUP_INPUT_REJECTED: 'Die Angaben sind unvollständig oder ungültig. Prüfen Sie Lizenz, Anschlusswerte, Messpunkte, Gerätevorgaben und übereinstimmende Passwörter.',
             SETUP_RATE_LIMIT: 'Zu viele Anfragen. Bitte warten Sie eine Minute.',
+            SETUP_TIMEOUT: 'Das Gerät antwortet nicht rechtzeitig. Es ist noch kein erfolgreicher Abschluss bestätigt. Prüfen Sie die Verbindung und den Gerätestatus.',
         };
         message(messages[error.code] || 'Die Einrichtung ist derzeit gesperrt oder das Gerät nicht erreichbar. Prüfen Sie den lokalen Gerätestatus.');
     }
@@ -175,12 +192,44 @@
         $('finished').querySelector('p').textContent = 'Melden Sie sich mit Ihrem neuen Servicepasswort an. Den gespeicherten Konfigurations- und Lizenzstatus prüfen Sie dort. Die Anlagenabnahme bleibt offen; Gerätebefehle bleiben gesperrt.';
         loginLink('Zur NexoWatt-Anmeldung');
     }
-    let polls = 0;
+    let polls = 0, pollDeadline = 0, pollTimer = null, polling = false, finishSubmitted = false;
+    function stopPolling() {
+        polling = false; clearTimeout(pollTimer); pollTimer = null;
+        $('finish-status').textContent = 'Der Abschluss dauert länger. Prüfen Sie den lokalen Gerätestatus; ein Verbindungsabbruch bestätigt keinen erfolgreichen Start.';
+    }
     async function poll() {
-        if (++polls > 90) { $('finish-status').textContent = 'Der Abschluss dauert länger. Prüfen Sie den lokalen Gerätestatus; ein Verbindungsabbruch bestätigt keinen erfolgreichen Start.'; return; }
-        try { await request('/api/session'); }
-        catch (error) { if (error.code === 'SETUP_CLOSED') { completed(); return; } }
-        setTimeout(poll, 2000);
+        const remaining = pollDeadline - performance.now();
+        if (!polling || ++polls > 90 || remaining <= 0) { stopPolling(); return; }
+        try { await request('/api/session', undefined, Math.min(REQUEST_BUDGET_MS, remaining)); }
+        catch (error) { if (error.code === 'SETUP_CLOSED') { polling = false; completed(); return; } }
+        if (performance.now() >= pollDeadline) { stopPolling(); return; }
+        pollTimer = setTimeout(poll, Math.min(2000, pollDeadline - performance.now()));
+    }
+    function startPolling() {
+        if (polling) return;
+        polls = 0; pollDeadline = performance.now() + POLL_BUDGET_MS; polling = true; poll();
+    }
+    function clearFinishSecrets(form) {
+        form.elements.password.value = ''; form.elements.passwordRepeat.value = ''; $('license-token').value = '';
+    }
+    // A lost finish response is ambiguous: the server may already be committing.
+    // Only a fresh authenticated, uncommitted server state permits a manual retry.
+    // Never resend passwords or a finish request automatically.
+    async function reconcileFinish(error) {
+        csrf = null; show('finished'); loginLink('Anmeldeseite zur Statusprüfung öffnen');
+        message('Abschlussstatus wird geprüft. Die Einrichtung wird nicht automatisch erneut abgesendet.');
+        try {
+            const state = await request('/api/session');
+            if (state.state === 'claimed' && state.authenticated === true && typeof state.csrf === 'string' && state.csrf) {
+                csrf = state.csrf; finishSubmitted = false; show('setup'); failure(error);
+                $('review-status').textContent = 'Das Gerät bestätigt eine noch nicht abgeschlossene Einrichtung. Prüfen Sie die Angaben und geben Sie Passwort und gegebenenfalls Lizenz erneut ein, bevor Sie bewusst absenden.';
+                return;
+            }
+        } catch (statusError) {
+            if (statusError.code === 'SETUP_CLOSED') { completed(); return; }
+        }
+        message('Der Abschluss ist noch nicht bestätigt. Es wird ausschließlich der Gerätestatus abgefragt; prüfen Sie bei anhaltendem Fehler den lokalen Gerätezugang.');
+        startPolling();
     }
     $('claim-form').addEventListener('submit', async event => {
         event.preventDefault(); const button = event.target.querySelector('button'); button.disabled = true;
@@ -189,19 +238,21 @@
         catch (error) { failure(error); } finally { button.disabled = false; }
     });
     $('setup-form').addEventListener('submit', async event => {
-        event.preventDefault(); const form = event.target, button = $('finish-button'); button.disabled = true;
+        event.preventDefault(); if (finishSubmitted) return;
+        const form = event.target, button = $('finish-button'); finishSubmitted = true; button.disabled = true;
         try {
             const data = new FormData(form);
             const result = await request('/api/finish', { ...collect(form), password: data.get('password'), passwordRepeat: data.get('passwordRepeat') });
-            form.elements.password.value = ''; form.elements.passwordRepeat.value = ''; $('license-token').value = ''; csrf = null;
+            clearFinishSecrets(form); csrf = null;
             show('finished'); message('Übergabe gespeichert. Ein Verbindungsabbruch bestätigt keinen erfolgreichen Start.');
-            $('finish-status').textContent = summary(result); loginLink('Anmeldeseite zur Statusprüfung öffnen'); poll();
-        } catch (error) { failure(error); } finally { button.disabled = false; }
+            $('finish-status').textContent = summary(result); loginLink('Anmeldeseite zur Statusprüfung öffnen'); startPolling();
+        } catch (error) { clearFinishSecrets(form); await reconcileFinish(error); }
+        finally { button.disabled = finishSubmitted; }
     });
     updateFields();
     request('/api/session').then(async result => {
         if (result.authenticated) { csrf = result.csrf; await loadCatalog(); show('setup'); }
-        else if (result.state === 'committing') { show('finished'); loginLink('Anmeldeseite zur Statusprüfung öffnen'); poll(); }
+        else if (result.state === 'committing') { finishSubmitted = true; show('finished'); loginLink('Anmeldeseite zur Statusprüfung öffnen'); startPolling(); }
         else if (result.state !== 'awaiting-code') { show('claim'); message('Die begonnene Einrichtung benötigt einen neuen Code vom lokalen Gerätezugang.'); }
     }).catch(error => { if (error.code === 'SETUP_CLOSED') completed(); else failure(error); });
 })();

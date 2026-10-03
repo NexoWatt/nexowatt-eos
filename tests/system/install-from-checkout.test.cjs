@@ -18,15 +18,15 @@ test('checkout install requires explicit public inputs and independent trust has
         good.map(x => x === '--origin' ? '--license-trust' : x), good.map(x => x === 'a'.repeat(64) ? 'latest' : x),
         good.map(x => x === path.resolve('hosts.json') ? '../hosts.json' : x)]) assert.throws(() => parse(args), /CHECKOUT_/);
 });
-test('delivery selection binds test3 revision3, sequence6, platform, archive basename and independent public key digest', () => {
+test('delivery selection binds test3 revision4, sequence7, platform, archive basename and independent public key digest', () => {
     const keys = crypto.generateKeyPairSync('ed25519');
     const key = keys.publicKey.export({ type: 'spki', format: 'pem' });
     const pin = sha256(key);
-    const data = { runtimeVersion: '0.2.0-test.3', deliveryRevision: 3, releaseSequence: 6,
+    const data = { runtimeVersion: '0.2.0-test.3', deliveryRevision: 4, releaseSequence: 7,
         platform: 'linux-arm64', archive: 'eos-0.2.0-test.3-linux-arm64.tar.gz',
         releaseId: 'a'.repeat(64), sha256: 'b'.repeat(64), signingPublicKeySha256: pin, productionReleaseApproved: false };
     assert.equal(deliveryIdentity(data, key, pin, 'linux-arm64'), data);
-    assert.equal(DELIVERY_DIRECTORY, 'delivery/test-pi-0.2.0-test.3-r3');
+    assert.equal(DELIVERY_DIRECTORY, 'delivery/test-pi-0.2.0-test.3-r4');
     assert.equal(DELIVERY_REVISION, data.deliveryRevision);
     assert.equal(RELEASE_SEQUENCE, data.releaseSequence);
     const manifest = releaseMetadata('linux-arm64');
@@ -35,8 +35,8 @@ test('delivery selection binds test3 revision3, sequence6, platform, archive bas
     assert.deepEqual(manifest.platforms, [data.platform]);
     assert.throws(() => releaseMetadata('win32-arm64'), /PG_PRODUCT_ASSEMBLY_REQUIRED/);
     for (const override of [{ archive: '../untrusted.tar.gz' }, { runtimeVersion: '0.2.0-test.2' },
-        { deliveryRevision: undefined }, { deliveryRevision: 2 }, { deliveryRevision: 4 },
-        { releaseSequence: undefined }, { releaseSequence: 5 }, { releaseSequence: 7 },
+        { deliveryRevision: undefined }, { deliveryRevision: 3 }, { deliveryRevision: 5 },
+        { releaseSequence: undefined }, { releaseSequence: 6 }, { releaseSequence: 8 },
         { platform: 'linux-x64' }, { productionReleaseApproved: true }, { signingPublicKeySha256: 'c'.repeat(64) },
         { releaseId: '' }, { sha256: '' }]) assert.throws(() => deliveryIdentity({ ...data, ...override }, key, pin, 'linux-arm64'));
     assert.throws(() => deliveryIdentity(data, key, 'd'.repeat(64), 'linux-arm64'), /TRUST/);

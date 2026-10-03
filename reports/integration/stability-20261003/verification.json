@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-03T17:59:18.301272+00:00",
+  "basisCommit": "66a3762f75e9e0ffc56159fe7142f6059dd550b3",
+  "kind": "local-source-stabilization-evidence",
+  "intendedDeliveryRevision": 4,
+  "intendedReleaseSequence": 7,
+  "host": {
+    "os": "linux",
+    "arch": "x64",
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "openssl": "3.0.13"
+  },
+  "tests": {
+    "ciNodeUnprivileged": {
+      "passed": 174,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ciRootFixtures": {
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ciPythonUnprivileged": {
+      "passed": 80,
+      "failed": 0,
+      "skipped": 0
+    },
+    "packagingContracts": {
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    "publicationScope": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "finalEntryAfterDocumentationBinding": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "countingNote": "Individual onboarding, diagnostic, PG and entry subsets overlap CI totals; final entry is a repeat after documentation generation was added. Do not sum overlapping runs.",
+  "sources": {
+    "runtime/postgresql/host.cjs": "87d6cbd124da5e1dda0ab3a0525a4dfac6994935b14bdbe3d7a725701dccf5fa",
+    "runtime/onboarding/public/app.js": "52ba17278a703150b59249ae4919e369efa72dca2d096b598fc603132c29570c",
+    "tools/bootstrap/first-start.cjs": "09bc26f36840d6f35bae9bb3c0f6cab1ba7a3e9ff2e4ec1b7e29af7d7cbfb51b",
+    "tools/bootstrap/github-download.py": "64f500e3df22e7cbde730c7136f68296aaabdaea3a02e1cb45bfe37416377ca3",
+    "tools/bootstrap/prepare-host.py": "3832bfcc5ddd5dfc13d4314e1119f9eb9fb76e7b5e534a3ab07ad6627b78ccff",
+    "tools/bootstrap/build-stability-entry.cjs": "80404a38443a47bcd1f96f0170677dc81659df7a5b5c5214c083dc2fca385a1f",
+    "tools/system/install-from-checkout.cjs": "5d94ee9d57afa75b5e37ec30883545d7e3de82037a3267b834a24acddcd90e1d",
+    "tools/integration/deliver-postgresql-test.cjs": "d3933842670599853100d04e9d215b40ae2bb1a41791fc143e72e5f78d4b048d",
+    ".github/workflows/security-review.yml": "9f284fe41ad2cff6e403b4578d3ef8d2817ba4be485c75258c95bcc309030817",
+    ".github/workflows/eos-r4-test-delivery.yml": "72a46c0f3f7b68307b43182864b726c4e79f7038a24d15b9aa96a2a000f286f0"
+  },
+  "logs": {
+    "ci-node.tap": "532e2078ee3d61a79a9a1f48ede35a08668746c50025705aef7e6a190de8a290",
+    "ci-root-fixtures.tap": "2a72f7fd66d4d278607472c30f5917d7434dcfc76c4c8f397d55025e92f9806d",
+    "ci-python.log": "ace6c9897619c767eb05e839c19afee6c92a179182b9537210b2777ea66906ce",
+    "raw/installer-diagnostics.tap": "5d70afde8dca26547773c2ef4cd0b79e612f129e234946f33e1600931e0ec06a",
+    "raw/pg-provision-permissions.tap": "16c65c3cb58d6eb0a06ec16c9fd54c4992bae2393c61a86a98d515d4800ea10c",
+    "raw/stability-entry-final.tap": "1943296ee3f5c609664dd8e6c22626dab29ccb0d910504567b8570706faf3085",
+    "raw/r4-build-contract.tap": "7474a50a5724d160646a3e3a7c45801b33fbba37437000e36e81b6798806409e",
+    "raw/r4-publication-scope.log": "5d8a174d448d59185fd227bcbab9c964e39b10a9c2e28965972cfb0c833dd854"
+  },
+  "buildStatus": "PENDING_ACTIONS",
+  "publicationStatus": "PENDING",
+  "artifactBuildEvidence": "../installable-test3-r4-20261003/build-verification.json",
+  "artifactSbom": "../installable-test3-r4-20261003/runtime.cdx.json",
+  "appSbomMode": "exact authenticated R3 application reuse; no npm dependency change",
+  "targetNode": "24.21.0",
+  "nativePiInstallationExecuted": false,
+  "targetHardwareAccepted": false,
+  "productionReleaseApproved": false,
+  "craConformityClaimed": false,
+  "openGates": [
+    "native Debian 13 ARM64 installation and recovery",
+    "browser setup and reboot",
+    "backup/restore and interrupted APT recovery",
+    "certificate rotation/revocation",
+    "per-adapter isolation and JavaScript approval",
+    "full UI Mesh timing gate",
+    "CodeQL repository enablement and legacy platform jobs"
+  ]
+}

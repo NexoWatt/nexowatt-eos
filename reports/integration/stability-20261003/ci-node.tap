@@ -1,0 +1,1054 @@
+TAP version 13
+# Subtest: real TLS1.3 mutual channel reads only public state fields
+ok 1 - real TLS1.3 mutual channel reads only public state fields
+  ---
+  duration_ms: 77.694823
+  type: 'test'
+  ...
+# Subtest: separate certificates send/receive authenticated messages, with no sender spoofing
+ok 2 - separate certificates send/receive authenticated messages, with no sender spoofing
+  ---
+  duration_ms: 29.380367
+  type: 'test'
+  ...
+# Subtest: telemetry writes force ack=true and server-derived sender identity
+ok 3 - telemetry writes force ack=true and server-derived sender identity
+  ---
+  duration_ms: 14.347933
+  type: 'test'
+  ...
+# Subtest: logic writes only a bounded request namespace, ack=false
+ok 4 - logic writes only a bounded request namespace, ack=false
+  ---
+  duration_ms: 20.919826
+  type: 'test'
+  ...
+# Subtest: invalid control value -1 is denied before backend
+ok 5 - invalid control value -1 is denied before backend
+  ---
+  duration_ms: 10.828457
+  type: 'test'
+  ...
+# Subtest: invalid control value 4201 is denied before backend
+ok 6 - invalid control value 4201 is denied before backend
+  ---
+  duration_ms: 13.080232
+  type: 'test'
+  ...
+# Subtest: invalid control value "100" is denied before backend
+ok 7 - invalid control value "100" is denied before backend
+  ---
+  duration_ms: 8.398639
+  type: 'test'
+  ...
+# Subtest: invalid control value null is denied before backend
+ok 8 - invalid control value null is denied before backend
+  ---
+  duration_ms: 7.58581
+  type: 'test'
+  ...
+# Subtest: invalid control value {"val":100} is denied before backend
+ok 9 - invalid control value {"val":100} is denied before backend
+  ---
+  duration_ms: 8.633146
+  type: 'test'
+  ...
+# Subtest: private data, unknown message commands and host messages are denied
+ok 10 - private data, unknown message commands and host messages are denied
+  ---
+  duration_ms: 21.420896
+  type: 'test'
+  ...
+# Subtest: additional identity fields cannot replace authenticated sender
+ok 11 - additional identity fields cannot replace authenticated sender
+  ---
+  duration_ms: 10.108084
+  type: 'test'
+  ...
+# Subtest: valid CA certificate without policy pin is denied
+ok 12 - valid CA certificate without policy pin is denied
+  ---
+  duration_ms: 5.59533
+  type: 'test'
+  ...
+# Subtest: expired certificate cannot authenticate
+ok 13 - expired certificate cannot authenticate
+  ---
+  duration_ms: 5.670752
+  type: 'test'
+  ...
+# Subtest: no client certificate cannot authenticate
+ok 14 - no client certificate cannot authenticate
+  ---
+  duration_ms: 4.653941
+  type: 'test'
+  ...
+# Subtest: wrong server name fails certificate verification
+ok 15 - wrong server name fails certificate verification
+  ---
+  duration_ms: 6.453067
+  type: 'test'
+  ...
+# Subtest: wrong trust anchor fails certificate verification
+ok 16 - wrong trust anchor fails certificate verification
+  ---
+  duration_ms: 5.626347
+  type: 'test'
+  ...
+# Subtest: TLS1.2 is rejected instead of downgraded
+ok 17 - TLS1.2 is rejected instead of downgraded
+  ---
+  duration_ms: 2.564876
+  type: 'test'
+  ...
+# Subtest: plaintext HTTP is refused
+ok 18 - plaintext HTTP is refused
+  ---
+  duration_ms: 1.968997
+  type: 'test'
+  ...
+# Subtest: replayed RPC identifier cannot perform a second write
+ok 19 - replayed RPC identifier cannot perform a second write
+  ---
+  duration_ms: 12.168525
+  type: 'test'
+  ...
+# Subtest: expired or future-dated requests never reach backend
+ok 20 - expired or future-dated requests never reach backend
+  ---
+  duration_ms: 11.872168
+  type: 'test'
+  ...
+# Subtest: expired queued messages are discarded before delivery
+ok 21 - expired queued messages are discarded before delivery
+  ---
+  duration_ms: 166.957465
+  type: 'test'
+  ...
+# Subtest: bounded mailbox rejects overflow and does not silently replace messages
+ok 22 - bounded mailbox rejects overflow and does not silently replace messages
+  ---
+  duration_ms: 136.580116
+  type: 'test'
+  ...
+# Subtest: policy revocation also invalidates live sessions and queued commands
+ok 23 - policy revocation also invalidates live sessions and queued commands
+  ---
+  duration_ms: 18.082436
+  type: 'test'
+  ...
+# Subtest: policy changes during asynchronous work deny its late completion
+ok 24 - policy changes during asynchronous work deny its late completion
+  ---
+  duration_ms: 7.950868
+  type: 'test'
+  ...
+# Subtest: unknown operations and oversized requests are rejected
+ok 25 - unknown operations and oversized requests are rejected
+  ---
+  duration_ms: 7.956496
+  type: 'test'
+  ...
+# Subtest: malformed backend values fail closed and backend error content is hidden
+ok 26 - malformed backend values fail closed and backend error content is hidden
+  ---
+  duration_ms: 7.398353
+  type: 'test'
+  ...
+# Subtest: client budgets the full session plus RPC to five seconds and does not retry
+ok 27 - client budgets the full session plus RPC to five seconds and does not retry
+  ---
+  duration_ms: 5001.866391
+  type: 'test'
+  ...
+# Subtest: closed clients cannot create another socket
+ok 28 - closed clients cannot create another socket
+  ---
+  duration_ms: 1.755432
+  type: 'test'
+  ...
+# Subtest: policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers
+ok 29 - policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers
+  ---
+  duration_ms: 0.414432
+  type: 'test'
+  ...
+# Subtest: strict request parser rejects duplicate keys, non-finite numbers and excess nesting
+ok 30 - strict request parser rejects duplicate keys, non-finite numbers and excess nesting
+  ---
+  duration_ms: 17.296947
+  type: 'test'
+  ...
+# Subtest: new gateway epoch rejects a request from an earlier service instance
+ok 31 - new gateway epoch rejects a request from an earlier service instance
+  ---
+  duration_ms: 9.119524
+  type: 'test'
+  ...
+# Subtest: null state remains null and is not reinterpreted as a zero reading
+ok 32 - null state remains null and is not reinterpreted as a zero reading
+  ---
+  duration_ms: 7.722231
+  type: 'test'
+  ...
+# Subtest: rate limiting bounds authenticated requests
+ok 33 - rate limiting bounds authenticated requests
+  ---
+  duration_ms: 258.436433
+  type: 'test'
+  ...
+# Subtest: client concurrent calls are bounded and cancelled on close
+ok 34 - client concurrent calls are bounded and cancelled on close
+  ---
+  duration_ms: 10.795238
+  type: 'test'
+  ...
+# Subtest: pin cannot authenticate a different certificate subject
+ok 35 - pin cannot authenticate a different certificate subject
+  ---
+  duration_ms: 5.114791
+  type: 'test'
+  ...
+# Subtest: download endpoint excludes shell, auth, query, redirect and path injection syntax
+ok 36 - download endpoint excludes shell, auth, query, redirect and path injection syntax
+  ---
+  duration_ms: 1.392726
+  type: 'test'
+  ...
+# Subtest: manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+ok 37 - manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+  ---
+  duration_ms: 18.914866
+  type: 'test'
+  ...
+# Subtest: kit cannot ship changed or omitted signed helpers or extra runtime code
+ok 38 - kit cannot ship changed or omitted signed helpers or extra runtime code
+  ---
+  duration_ms: 2.006233
+  type: 'test'
+  ...
+# Subtest: one command checks a separately delivered script pin before execution; script data survive exact embedding
+ok 39 - one command checks a separately delivered script pin before execution; script data survive exact embedding
+  ---
+  duration_ms: 1.496149
+  type: 'test'
+  ...
+# Subtest: canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+ok 40 - canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+  ---
+  duration_ms: 190.859904
+  type: 'test'
+  ...
+# Subtest: build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+ok 41 - build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+  ---
+  duration_ms: 0.606996
+  type: 'test'
+  ...
+# Subtest: Git blob identity hashes the canonical Git header as well as exact bytes
+ok 42 - Git blob identity hashes the canonical Git header as well as exact bytes
+  ---
+  duration_ms: 1.568675
+  type: 'test'
+  ...
+# Subtest: manufacturer inputs require authentic public trust and pins; arbitrary repository credentials are not CLI options
+ok 43 - manufacturer inputs require authentic public trust and pins; arbitrary repository credentials are not CLI options
+  ---
+  duration_ms: 0.83261
+  type: 'test'
+  ...
+# Subtest: target command keeps token out of argv, history, URLs, disk and child environment
+ok 44 - target command keeps token out of argv, history, URLs, disk and child environment
+  ---
+  duration_ms: 0.67069
+  type: 'test'
+  ...
+# Subtest: only pinned fixed-repository code executes, after complete bounded HTTPS download and SHA256 check
+ok 45 - only pinned fixed-repository code executes, after complete bounded HTTPS download and SHA256 check
+  ---
+  duration_ms: 0.409675
+  type: 'test'
+  ...
+# Subtest: copyable here-document parses in real Bash including protected token descriptor handoff
+ok 46 - copyable here-document parses in real Bash including protected token descriptor handoff
+  ---
+  duration_ms: 7.424201
+  type: 'test'
+  ...
+# Subtest: inherited export and allexport cannot copy the new token into child environments; FD3 survives exec
+ok 47 - inherited export and allexport cannot copy the new token into child environments; FD3 survives exec
+  ---
+  duration_ms: 9.840168
+  type: 'test'
+  ...
+# Subtest: IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+ok 48 - IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+  ---
+  duration_ms: 8.036565
+  type: 'test'
+  ...
+# Subtest: one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+ok 49 - one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+  ---
+  duration_ms: 0.578614
+  type: 'test'
+  ...
+# Subtest: bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+ok 50 - bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+  ---
+  duration_ms: 1.67972
+  type: 'test'
+  ...
+# Subtest: license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+ok 51 - license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+  ---
+  duration_ms: 4.356162
+  type: 'test'
+  ...
+# Subtest: TTY must be an actual character terminal before it can receive any possession code
+ok 52 - TTY must be an actual character terminal before it can receive any possession code
+  ---
+  duration_ms: 0.674436
+  type: 'test'
+  ...
+# Subtest: successful runner uses all existing installer flags and emits possession only through opened TTY
+ok 53 - successful runner uses all existing installer flags and emits possession only through opened TTY
+  ---
+  duration_ms: 5.551211
+  type: 'test'
+  ...
+# Subtest: missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+ok 54 - missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+  ---
+  duration_ms: 7.463028
+  type: 'test'
+  ...
+# Subtest: installer failures never read or output code and sanitized error excludes downstream secret messages
+ok 55 - installer failures never read or output code and sanitized error excludes downstream secret messages
+  ---
+  duration_ms: 5.05286
+  type: 'test'
+  ...
+# Subtest: unsafe code permissions and existing input directory fail closed without TTY disclosure
+ok 56 - unsafe code permissions and existing input directory fail closed without TTY disclosure
+  ---
+  duration_ms: 9.76065
+  type: 'test'
+  ...
+# Subtest: CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+ok 57 - CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+  ---
+  duration_ms: 1.567234
+  type: 'test'
+  ...
+# Subtest: TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+ok 58 - TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+  ---
+  duration_ms: 0.253264
+  type: 'test'
+  ...
+# Subtest: ambiguous address errors give a bounded corrective message without addresses or secrets
+ok 59 - ambiguous address errors give a bounded corrective message without addresses or secrets
+  ---
+  duration_ms: 0.327834
+  type: 'test'
+  ...
+# Subtest: terminal success is readable and includes public browser trust instructions without arbitrary result properties
+ok 60 - terminal success is readable and includes public browser trust instructions without arbitrary result properties
+  ---
+  duration_ms: 2.078618
+  type: 'test'
+  ...
+# Subtest: preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+ok 61 - preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+  ---
+  duration_ms: 1.854598
+  type: 'test'
+  ...
+# Subtest: host failure preserves fixed installation phase through the real runner without disclosure or retries
+ok 62 - host failure preserves fixed installation phase through the real runner without disclosure or retries
+  ---
+  duration_ms: 13.284814
+  type: 'test'
+  ...
+# Subtest: unknown or malformed installation phases are omitted while existing code and preflight checks remain
+ok 63 - unknown or malformed installation phases are omitted while existing code and preflight checks remain
+  ---
+  duration_ms: 0.368354
+  type: 'test'
+  ...
+# Subtest: one pasteable command validates downloaded code before execution and keeps recovery conditional
+ok 64 - one pasteable command validates downloaded code before execution and keeps recovery conditional
+  ---
+  duration_ms: 6.282255
+  type: 'test'
+  ...
+# Subtest: invalid or injected recovery pins are refused before generating a command
+ok 65 - invalid or injected recovery pins are refused before generating a command
+  ---
+  duration_ms: 0.837867
+  type: 'test'
+  ...
+# Subtest: shipped template choices are exact, hash-bound projections of the existing Devices source
+ok 66 - shipped template choices are exact, hash-bound projections of the existing Devices source
+  ---
+  duration_ms: 32.889212
+  type: 'test'
+  ...
+# Subtest: configured plant persists sourced limits and input-only mappings without enabling control
+ok 67 - configured plant persists sourced limits and input-only mappings without enabling control
+  ---
+  duration_ms: 17.950432
+  type: 'test'
+  ...
+# Subtest: explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+ok 68 - explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+  ---
+  duration_ms: 1.927917
+  type: 'test'
+  ...
+# Subtest: real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+ok 69 - real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+  ---
+  duration_ms: 4.58543
+  type: 'test'
+  ...
+# Subtest: EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+ok 70 - EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+  ---
+  duration_ms: 0.417897
+  type: 'test'
+  ...
+# Subtest: planned device counts and canonical product adapter names must fit the authenticated license
+ok 71 - planned device counts and canonical product adapter names must fit the authenticated license
+  ---
+  duration_ms: 0.809906
+  type: 'test'
+  ...
+# Subtest: first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+ok 72 - first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+  ---
+  duration_ms: 27.299535
+  type: 'test'
+  ...
+# Subtest: configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+ok 73 - configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+  ---
+  duration_ms: 4.212139
+  type: 'test'
+  ...
+# Subtest: every partial object-store write keeps the start gate closed and refuses unsafe replay
+ok 74 - every partial object-store write keeps the start gate closed and refuses unsafe replay
+  ---
+  duration_ms: 15.914486
+  type: 'test'
+  ...
+# Subtest: configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+ok 75 - configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+  ---
+  duration_ms: 2.720627
+  type: 'test'
+  ...
+# Subtest: first-run marker and safety policy drift block subsequent enrollment verification
+ok 76 - first-run marker and safety policy drift block subsequent enrollment verification
+  ---
+  duration_ms: 13.045711
+  type: 'test'
+  ...
+# Subtest: frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+ok 77 - frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+  ---
+  duration_ms: 23.929269
+  type: 'test'
+  ...
+# Subtest: authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+ok 78 - authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+  ---
+  duration_ms: 11.870095
+  type: 'test'
+  ...
+# Subtest: copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+ok 79 - copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+  ---
+  duration_ms: 5.199306
+  type: 'test'
+  ...
+# Subtest: Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+ok 80 - Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+  ---
+  duration_ms: 14.065366
+  type: 'test'
+  ...
+# Subtest: missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+ok 81 - missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+  ---
+  duration_ms: 52.006031
+  type: 'test'
+  ...
+# Subtest: actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema
+ok 82 - actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema
+  ---
+  duration_ms: 52.156709
+  type: 'test'
+  ...
+# Subtest: configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields
+ok 83 - configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields
+  ---
+  duration_ms: 45.75369
+  type: 'test'
+  ...
+# Subtest: 202 handoff and lost setup connection never claim completed installation
+ok 84 - 202 handoff and lost setup connection never claim completed installation
+  ---
+  duration_ms: 9.469431
+  type: 'test'
+  ...
+# Subtest: only explicit root completion shows access success; plant acceptance remains open
+ok 85 - only explicit root completion shows access success; plant acceptance remains open
+  ---
+  duration_ms: 13.797561
+  type: 'test'
+  ...
+# Subtest: claim header timeout aborts at five seconds, releases the button and never retries or exposes the code
+ok 86 - claim header timeout aborts at five seconds, releases the button and never retries or exposes the code
+  ---
+  duration_ms: 4.740579
+  type: 'test'
+  ...
+# Subtest: one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup
+ok 87 - one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup
+  ---
+  duration_ms: 6.05811
+  type: 'test'
+  ...
+# Subtest: initial session JSON timeout is bounded and successful requests clear their deadline timers
+ok 88 - initial session JSON timeout is bounded and successful requests clear their deadline timers
+  ---
+  duration_ms: 10.806735
+  type: 'test'
+  ...
+# Subtest: ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff
+ok 89 - ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff
+  ---
+  duration_ms: 18.369441
+  type: 'test'
+  ...
+# Subtest: a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials
+ok 90 - a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials
+  ---
+  duration_ms: 14.145504
+  type: 'test'
+  ...
+# Subtest: lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts
+ok 91 - lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts
+  ---
+  duration_ms: 12.331386
+  type: 'test'
+  ...
+# Subtest: reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker
+ok 92 - reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker
+  ---
+  duration_ms: 11.447381
+  type: 'test'
+  ...
+# Subtest: local reissue CLI refuses password arguments and never prints the argument
+ok 93 - local reissue CLI refuses password arguments and never prints the argument
+  ---
+  duration_ms: 49.857639
+  type: 'test'
+  ...
+# Subtest: local reissue engine produces new state; owner restoration uses only its validated open descriptor
+ok 94 - local reissue engine produces new state; owner restoration uses only its validated open descriptor
+  ---
+  duration_ms: 4.516157
+  type: 'test'
+  ...
+# Subtest: previous state must be regular, singly linked, private and owned by the expected setup identity
+ok 95 - previous state must be regular, singly linked, private and owned by the expected setup identity
+  ---
+  duration_ms: 1.224287
+  type: 'test'
+  ...
+# Subtest: replacement between lstat and open is rejected before any ownership change
+ok 96 - replacement between lstat and open is rejected before any ownership change
+  ---
+  duration_ms: 0.889353
+  type: 'test'
+  ...
+# Subtest: symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive
+ok 97 - symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive
+  ---
+  duration_ms: 0.692102
+  type: 'test'
+  ...
+# Subtest: replacement after descriptor validation cannot redirect fchown to the new path
+ok 98 - replacement after descriptor validation cannot redirect fchown to the new path
+  ---
+  duration_ms: 1.028719
+  type: 'test'
+  ...
+# Subtest: verified TLS only; endpoint validates CA, hostname, expiry and trust
+ok 99 - verified TLS only; endpoint validates CA, hostname, expiry and trust
+  ---
+  duration_ms: 40.95439
+  type: 'test'
+  ...
+# Subtest: catalog UUID licenses this device before password setup and stays private to the live claimed session
+ok 100 - catalog UUID licenses this device before password setup and stays private to the live claimed session
+  ---
+  duration_ms: 41.006902
+  type: 'test'
+  ...
+# Subtest: HTTPS configuration and signed license are checked against installed identity/trust before one private handoff
+ok 101 - HTTPS configuration and signed license are checked against installed identity/trust before one private handoff
+  ---
+  duration_ms: 69.620353
+  type: 'test'
+  ...
+# Subtest: license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF
+ok 102 - license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF
+  ---
+  duration_ms: 38.31579
+  type: 'test'
+  ...
+# Subtest: possession is required; wrong, expired, reused and missing codes fail
+ok 103 - possession is required; wrong, expired, reused and missing codes fail
+  ---
+  duration_ms: 24.627695
+  type: 'test'
+  ...
+# Subtest: persistent attempt limit survives reboot
+ok 104 - persistent attempt limit survives reboot
+  ---
+  duration_ms: 35.800776
+  type: 'test'
+  ...
+# Subtest: real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation
+ok 105 - real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation
+  ---
+  duration_ms: 1312.992693
+  type: 'test'
+  ...
+# Subtest: host, origin, CSRF, proxy, URL and role manipulation are rejected
+ok 106 - host, origin, CSRF, proxy, URL and role manipulation are rejected
+  ---
+  duration_ms: 41.390158
+  type: 'test'
+  ...
+# Subtest: session cookie, cache and content policy are restrictive; password hash handoff contains no secrets
+ok 107 - session cookie, cache and content policy are restrictive; password hash handoff contains no secrets
+  ---
+  duration_ms: 20.839868
+  type: 'test'
+  ...
+# Subtest: parallel finalization derives once and only one handoff wins
+ok 108 - parallel finalization derives once and only one handoff wins
+  ---
+  duration_ms: 92.030414
+  type: 'test'
+  ...
+# Subtest: abort during commit and restart retain closed state with no handoff or administrative access
+ok 109 - abort during commit and restart retain closed state with no handoff or administrative access
+  ---
+  duration_ms: 16.552799
+  type: 'test'
+  ...
+# Subtest: expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code
+ok 110 - expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code
+  ---
+  duration_ms: 21.696283
+  type: 'test'
+  ...
+# Subtest: local reissue immediately revokes a still-valid live session and rollback does not extend it
+ok 111 - local reissue immediately revokes a still-valid live session and rollback does not extend it
+  ---
+  duration_ms: 19.40546
+  type: 'test'
+  ...
+# Subtest: body, request rate and settings bounds fail closed
+ok 112 - body, request rate and settings bounds fail closed
+  ---
+  duration_ms: 247.456417
+  type: 'test'
+  ...
+# Subtest: storage rejects replacement preparation, hardlinks, tampering and pending mutation locks
+ok 113 - storage rejects replacement preparation, hardlinks, tampering and pending mutation locks
+  ---
+  duration_ms: 5.875154
+  type: 'test'
+  ...
+# Subtest: ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion
+ok 114 - ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion
+  ---
+  duration_ms: 1.836341
+  type: 'test'
+  ...
+# Subtest: cleanup failure logs fixed code only and makes shutdown non-successful
+ok 115 - cleanup failure logs fixed code only and makes shutdown non-successful
+  ---
+  duration_ms: 0.300914
+  type: 'test'
+  ...
+# Subtest: asynchronous main rejects arbitrary config and password CLI arguments
+ok 116 - asynchronous main rejects arbitrary config and password CLI arguments
+  ---
+  duration_ms: 0.770297
+  type: 'test'
+  ...
+# Subtest: PostgreSQL provisioning preserves service traversal and private keys under umask 22
+ok 117 - PostgreSQL provisioning preserves service traversal and private keys under umask 22
+  ---
+  duration_ms: 162.570568
+  type: 'test'
+  ...
+# Subtest: PostgreSQL provisioning preserves service traversal and private keys under umask 77
+ok 118 - PostgreSQL provisioning preserves service traversal and private keys under umask 77
+  ---
+  duration_ms: 132.098159
+  type: 'test'
+  ...
+# Subtest: plugin exports native backend identity and complete inspected 7.2.2 API
+ok 119 - plugin exports native backend identity and complete inspected 7.2.2 API
+  ---
+  duration_ms: 5.577885
+  type: 'test'
+  ...
+# Subtest: setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input
+ok 120 - setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input
+  ---
+  duration_ms: 2.525839
+  type: 'test'
+  ...
+# Subtest: primitive values, explicit lc/q and Async aliases preserve contract
+ok 121 - primitive values, explicit lc/q and Async aliases preserve contract
+  ---
+  duration_ms: 1.05681
+  type: 'test'
+  ...
+# Subtest: ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound
+ok 122 - ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound
+  ---
+  duration_ms: 2.034834
+  type: 'test'
+  ...
+# Subtest: raw restore keeps exact JSON and emits no event
+ok 123 - raw restore keeps exact JSON and emits no event
+  ---
+  duration_ms: 6.910443
+  type: 'test'
+  ...
+# Subtest: system/user subscription isolation, wildcards and unsubscribe
+ok 124 - system/user subscription isolation, wildcards and unsubscribe
+  ---
+  duration_ms: 3.009913
+  type: 'test'
+  ...
+# Subtest: escaped glob literals and negated classes do not become regular-expression expressions
+ok 125 - escaped glob literals and negated classes do not become regular-expression expressions
+  ---
+  duration_ms: 2.082485
+  type: 'test'
+  ...
+# Subtest: state deletion and TTL expiration emit null; reads exclude expired values
+ok 126 - state deletion and TTL expiration emit null; reads exclude expired values
+  ---
+  duration_ms: 2.408516
+  type: 'test'
+  ...
+# Subtest: sessions expire, can be destroyed, and retain upstream one-argument success callback
+ok 127 - sessions expire, can be destroyed, and retain upstream one-argument success callback
+  ---
+  duration_ms: 1.136247
+  type: 'test'
+  ...
+# Subtest: messages/logs preserve prefixed channels and event buffers, without storing/replaying commands
+ok 128 - messages/logs preserve prefixed channels and event buffers, without storing/replaying commands
+  ---
+  duration_ms: 1.095538
+  type: 'test'
+  ...
+# Subtest: Buffer state read matches upstream JSON shape while change event revives Buffer
+ok 129 - Buffer state read matches upstream JSON shape while change event revives Buffer
+  ---
+  duration_ms: 0.918697
+  type: 'test'
+  ...
+# Subtest: callbacks are asynchronous and return id/error in their existing slots
+ok 130 - callbacks are asynchronous and return id/error in their existing slots
+  ---
+  duration_ms: 0.792149
+  type: 'test'
+  ...
+# Subtest: destroyDB is limited to state namespace and leaves sessions/protocol intact
+ok 131 - destroyDB is limited to state namespace and leaves sessions/protocol intact
+  ---
+  duration_ms: 0.888802
+  type: 'test'
+  ...
+# Subtest: disconnect fails writes closed and reconnect resumes live subscriptions without replay
+ok 132 - disconnect fails writes closed and reconnect resumes live subscriptions without replay
+  ---
+  duration_ms: 1.445684
+  type: 'test'
+  ...
+# Subtest: unexpected protocol version disconnects and prevents writes
+ok 133 - unexpected protocol version disconnects and prevents writes
+  ---
+  duration_ms: 1.633227
+  type: 'test'
+  ...
+# Subtest: autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error
+ok 134 - autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error
+  ---
+  duration_ms: 2.322444
+  type: 'test'
+  ...
+# Subtest: invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing
+ok 135 - invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing
+  ---
+  duration_ms: 0.998975
+  type: 'test'
+  ...
+# Subtest: bounded events reject oversized writes and preserve previous value
+ok 136 - bounded events reject oversized writes and preserve previous value
+  ---
+  duration_ms: 7.332055
+  type: 'test'
+  ...
+# Subtest: malformed stored JSON and malformed buffer event fail closed without raw diagnostics
+ok 137 - malformed stored JSON and malformed buffer event fail closed without raw diagnostics
+  ---
+  duration_ms: 1.580484
+  type: 'test'
+  ...
+# Subtest: simultaneous updates preserve latest value when later metadata-only write follows
+ok 138 - simultaneous updates preserve latest value when later metadata-only write follows
+  ---
+  duration_ms: 1.106503
+  type: 'test'
+  ...
+# Subtest: closed client cannot reopen, read, publish or write
+ok 139 - closed client cannot reopen, read, publish or write
+  ---
+  duration_ms: 0.370787
+  type: 'test'
+  ...
+# Subtest: overlapping subscriptions preserve normal duplicate delivery but expiry delivers once
+ok 140 - overlapping subscriptions preserve normal duplicate delivery but expiry delivers once
+  ---
+  duration_ms: 0.775165
+  type: 'test'
+  ...
+# Subtest: queued events are discarded across disconnect rather than executing stale commands
+ok 141 - queued events are discarded across disconnect rather than executing stale commands
+  ---
+  duration_ms: 0.513498
+  type: 'test'
+  ...
+# Subtest: event fanout and subscription count are bounded and overload disconnects visibly
+ok 142 - event fanout and subscription count are bounded and overload disconnects visibly
+  ---
+  duration_ms: 94.116153
+  type: 'test'
+  ...
+# Subtest: malformed UTF-8 stored data is rejected rather than normalized silently
+ok 143 - malformed UTF-8 stored data is rejected rather than normalized silently
+  ---
+  duration_ms: 0.567478
+  type: 'test'
+  ...
+# Subtest: namespace globs and overlapping domains are rejected before opening a store
+ok 144 - namespace globs and overlapping domains are rejected before opening a store
+  ---
+  duration_ms: 0.255377
+  type: 'test'
+  ...
+# Subtest: quote-shaped state ids remain literal data at the Store boundary
+ok 145 - quote-shaped state ids remain literal data at the Store boundary
+  ---
+  duration_ms: 0.424207
+  type: 'test'
+  ...
+# Subtest: non-ASCII ids and Redis byte-wise question-mark globs remain compatible
+ok 146 - non-ASCII ids and Redis byte-wise question-mark globs remain compatible
+  ---
+  duration_ms: 1.797784
+  type: 'test'
+  ...
+# Subtest: aggregate complex-glob work is bounded per incoming event
+ok 147 - aggregate complex-glob work is bounded per incoming event
+  ---
+  duration_ms: 0.997543
+  type: 'test'
+  ...
+# Subtest: working connection verifier requires encryption, authorization and actual TLS1.3
+ok 148 - working connection verifier requires encryption, authorization and actual TLS1.3
+  ---
+  duration_ms: 2.031299
+  type: 'test'
+  ...
+# Subtest: pre-reconnect watermark rejects retained event IDs and alternate numeric encodings
+ok 149 - pre-reconnect watermark rejects retained event IDs and alternate numeric encodings
+  ---
+  duration_ms: 5.864688
+  type: 'test'
+  ...
+# Subtest: replay remains rejected after duplicate cache eviction
+ok 150 - replay remains rejected after duplicate cache eviction
+  ---
+  duration_ms: 70.209006
+  type: 'test'
+  ...
+# Subtest: queued lower sequence cannot be delivered after newer committed notification
+ok 151 - queued lower sequence cannot be delivered after newer committed notification
+  ---
+  duration_ms: 0.335015
+  type: 'test'
+  ...
+# Subtest: connection requires verified TLS1.3 mTLS with fixed time budgets
+ok 152 - connection requires verified TLS1.3 mTLS with fixed time budgets
+  ---
+  duration_ms: 8.87028
+  type: 'test'
+  ...
+# Subtest: configuration rejects cleartext
+ok 153 - configuration rejects cleartext
+  ---
+  duration_ms: 1.356853
+  type: 'test'
+  ...
+# Subtest: configuration rejects invalid cert input
+ok 154 - configuration rejects invalid cert input
+  ---
+  duration_ms: 0.17661
+  type: 'test'
+  ...
+# Subtest: configuration rejects disabled peer check
+ok 155 - configuration rejects disabled peer check
+  ---
+  duration_ms: 0.275107
+  type: 'test'
+  ...
+# Subtest: configuration rejects downgrade
+ok 156 - configuration rejects downgrade
+  ---
+  duration_ms: 0.243349
+  type: 'test'
+  ...
+# Subtest: configuration rejects custom identity verifier
+ok 157 - configuration rejects custom identity verifier
+  ---
+  duration_ms: 0.1831
+  type: 'test'
+  ...
+# Subtest: configuration rejects SNI override
+ok 158 - configuration rejects SNI override
+  ---
+  duration_ms: 0.945866
+  type: 'test'
+  ...
+# Subtest: configuration rejects connection string
+ok 159 - configuration rejects connection string
+  ---
+  duration_ms: 0.248907
+  type: 'test'
+  ...
+# Subtest: configuration rejects password
+ok 160 - configuration rejects password
+  ---
+  duration_ms: 0.256799
+  type: 'test'
+  ...
+# Subtest: configuration rejects unix socket
+ok 161 - configuration rejects unix socket
+  ---
+  duration_ms: 0.300494
+  type: 'test'
+  ...
+# Subtest: configuration rejects invalid port
+ok 162 - configuration rejects invalid port
+  ---
+  duration_ms: 0.238623
+  type: 'test'
+  ...
+# Subtest: configuration rejects superuser
+ok 163 - configuration rejects superuser
+  ---
+  duration_ms: 0.146346
+  type: 'test'
+  ...
+# Subtest: configuration rejects cross domain role
+ok 164 - configuration rejects cross domain role
+  ---
+  duration_ms: 0.172976
+  type: 'test'
+  ...
+# Subtest: configuration rejects query config override
+ok 165 - configuration rejects query config override
+  ---
+  duration_ms: 0.178153
+  type: 'test'
+  ...
+# Subtest: configuration rejects bad database
+ok 166 - configuration rejects bad database
+  ---
+  duration_ms: 0.177091
+  type: 'test'
+  ...
+# Subtest: TLS environment bypass rejected
+ok 167 - TLS environment bypass rejected
+  ---
+  duration_ms: 0.251291
+  type: 'test'
+  ...
+# Subtest: glob contract includes wildcards, literal escapes and ranges without regex execution
+ok 168 - glob contract includes wildcards, literal escapes and ranges without regex execution
+  ---
+  duration_ms: 0.953798
+  type: 'test'
+  ...
+# Subtest: input resembling SQL remains bound data; never concatenated into statement
+ok 169 - input resembling SQL remains bound data; never concatenated into statement
+  ---
+  duration_ms: 1.169416
+  type: 'test'
+  ...
+# Subtest: batch preserves order and missing slots; SQL enforces aggregate value limit
+ok 170 - batch preserves order and missing slots; SQL enforces aggregate value limit
+  ---
+  duration_ms: 0.816846
+  type: 'test'
+  ...
+# Subtest: key-list and complex glob work are bounded; broad star is supported
+ok 171 - key-list and complex glob work are bounded; broad star is supported
+  ---
+  duration_ms: 18.914665
+  type: 'test'
+  ...
+# Subtest: read batch and key control bytes reject before querying
+ok 172 - read batch and key control bytes reject before querying
+  ---
+  duration_ms: 1.301502
+  type: 'test'
+  ...
+# Subtest: transaction error rolls back and releases once; no commit/event
+ok 173 - transaction error rolls back and releases once; no commit/event
+  ---
+  duration_ms: 0.930104
+  type: 'test'
+  ...
+# Subtest: long session TTL accepted while nonsensical TTL and large events fail closed
+ok 174 - long session TTL accepted while nonsensical TTL and large events fail closed
+  ---
+  duration_ms: 1.244898
+  type: 'test'
+  ...
+1..174
+# tests 174
+# suites 0
+# pass 174
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6143.43203

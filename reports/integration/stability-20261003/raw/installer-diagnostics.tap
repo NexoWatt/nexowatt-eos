@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+ok 1 - IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+  ---
+  duration_ms: 5.456459
+  type: 'test'
+  ...
+# Subtest: one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+ok 2 - one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+  ---
+  duration_ms: 0.213766
+  type: 'test'
+  ...
+# Subtest: bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+ok 3 - bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+  ---
+  duration_ms: 0.966288
+  type: 'test'
+  ...
+# Subtest: license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+ok 4 - license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+  ---
+  duration_ms: 3.962673
+  type: 'test'
+  ...
+# Subtest: TTY must be an actual character terminal before it can receive any possession code
+ok 5 - TTY must be an actual character terminal before it can receive any possession code
+  ---
+  duration_ms: 0.515391
+  type: 'test'
+  ...
+# Subtest: successful runner uses all existing installer flags and emits possession only through opened TTY
+ok 6 - successful runner uses all existing installer flags and emits possession only through opened TTY
+  ---
+  duration_ms: 3.374153
+  type: 'test'
+  ...
+# Subtest: missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+ok 7 - missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+  ---
+  duration_ms: 5.775811
+  type: 'test'
+  ...
+# Subtest: installer failures never read or output code and sanitized error excludes downstream secret messages
+ok 8 - installer failures never read or output code and sanitized error excludes downstream secret messages
+  ---
+  duration_ms: 3.644493
+  type: 'test'
+  ...
+# Subtest: unsafe code permissions and existing input directory fail closed without TTY disclosure
+ok 9 - unsafe code permissions and existing input directory fail closed without TTY disclosure
+  ---
+  duration_ms: 3.811179
+  type: 'test'
+  ...
+# Subtest: CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+ok 10 - CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+  ---
+  duration_ms: 1.03634
+  type: 'test'
+  ...
+# Subtest: TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+ok 11 - TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+  ---
+  duration_ms: 0.179645
+  type: 'test'
+  ...
+# Subtest: ambiguous address errors give a bounded corrective message without addresses or secrets
+ok 12 - ambiguous address errors give a bounded corrective message without addresses or secrets
+  ---
+  duration_ms: 0.2029
+  type: 'test'
+  ...
+# Subtest: terminal success is readable and includes public browser trust instructions without arbitrary result properties
+ok 13 - terminal success is readable and includes public browser trust instructions without arbitrary result properties
+  ---
+  duration_ms: 1.686311
+  type: 'test'
+  ...
+# Subtest: preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+ok 14 - preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+  ---
+  duration_ms: 1.642826
+  type: 'test'
+  ...
+# Subtest: host failure preserves fixed installation phase through the real runner without disclosure or retries
+ok 15 - host failure preserves fixed installation phase through the real runner without disclosure or retries
+  ---
+  duration_ms: 17.037594
+  type: 'test'
+  ...
+# Subtest: unknown or malformed installation phases are omitted while existing code and preflight checks remain
+ok 16 - unknown or malformed installation phases are omitted while existing code and preflight checks remain
+  ---
+  duration_ms: 0.449885
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93.347295

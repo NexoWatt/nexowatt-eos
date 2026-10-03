@@ -14,6 +14,7 @@ const catalog = require('../../runtime/onboarding/device-catalog.json');
 // This is deliberately a logic test, not a claim of browser rendering acceptance.
 function fixture(respond, browser = {}) {
     const requests = [], timers = [];
+    let clock = 0, timerId = 0;
     class Element {
         constructor(tag) { this.tagName = tag; this.children = []; this.handlers = {}; this.hidden = false; this.disabled = false;
             this.required = false; this.checked = false; this.readOnly = false; this._value = undefined; this._text = ''; this.id = ''; this.name = ''; }
@@ -59,14 +60,26 @@ function fixture(respond, browser = {}) {
         get(name) { return this.values[name] ?? null; }
     }
     const context = vm.createContext({ document: { getElementById: element, createElement: tag => new Element(tag) },
-        location: { origin: 'https://eos.test:8443' }, navigator: browser.navigator, URL, FormData, Date, Map, Number,
+        location: { origin: 'https://eos.test:8443' }, navigator: browser.navigator, URL, FormData, Date, Map, Number, AbortController,
+        performance: { now: () => clock },
         fetch: async (url, options) => { requests.push({ url, options }); return respond(url, options, requests.length); },
-        setTimeout: callback => { timers.push(callback); } });
+        setTimeout: (callback, delay = 0) => { const timer = { id: ++timerId, callback, due: clock + delay }; timers.push(timer); return timer.id; },
+        clearTimeout: id => { const index = timers.findIndex(timer => timer.id === id); if (index !== -1) timers.splice(index, 1); } });
     vm.runInContext(script, context);
     function set(name, value) { const input = element('setup-form').elements[name]; assert.ok(input, name);
         if (input.type === 'checkbox') input.checked = value; else input.value = value;
         input.handlers.change?.(); return input; }
-    return { element, requests, timers, set, disabled, descendants, formData: form => new FormData(form) };
+    async function advance(milliseconds) {
+        const target = clock + milliseconds; let count = 0;
+        for (;;) {
+            const next = timers.filter(timer => timer.due <= target).sort((a, b) => a.due - b.due)[0];
+            if (!next) break;
+            if (++count > 1000) throw new Error('fixture timer bound');
+            timers.splice(timers.indexOf(next), 1); clock = next.due; next.callback(); await flush();
+        }
+        clock = target; await flush();
+    }
+    return { element, requests, timers, set, disabled, descendants, advance, formData: form => new FormData(form) };
 }
 const response = (status, data) => ({ ok: status < 400, status, json: async () => data });
 const flush = () => new Promise(resolve => setImmediate(resolve));
@@ -215,10 +228,115 @@ test('only explicit root completion shows access success; plant acceptance remai
     assert.equal(pending.element('login').hidden, false);
     assert.notEqual(pending.element('finished').querySelector('h2').textContent, 'Geschützter Zugang eingerichtet');
 });
+const never = () => new Promise(() => {});
+test('claim header timeout aborts at five seconds, releases the button and never retries or exposes the code', async () => {
+    const f = fixture(url => url === '/api/claim' ? never() : response(200, { state: 'awaiting-code', authenticated: false }));
+    await flush(); const form = f.element('claim-form'); f.element('code').value = 'synthetic-secret-possession-code';
+    const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
+    const sent = f.requests.find(row => row.url === '/api/claim');
+    assert.ok(sent.options.signal instanceof AbortSignal);
+    await f.advance(4999); assert.equal(form.querySelector('button').disabled, true); assert.equal(sent.options.signal.aborted, false);
+    await f.advance(1); await pending;
+    assert.equal(sent.options.signal.aborted, true); assert.equal(form.querySelector('button').disabled, false);
+    assert.match(f.element('message').textContent, /nicht rechtzeitig/);
+    assert.equal(f.element('message').textContent.includes('synthetic-secret-possession-code'), false);
+    assert.equal(f.requests.filter(row => row.url === '/api/claim').length, 1); assert.equal(f.timers.length, 0);
+});
+test('one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup', async () => {
+    let sendHeaders, sendBody;
+    const f = fixture(url => url === '/api/claim' ? new Promise(resolve => { sendHeaders = resolve; }) : response(200, { state: 'awaiting-code', authenticated: false }));
+    await flush(); const form = f.element('claim-form'); f.element('code').value = 'synthetic-code';
+    const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
+    await f.advance(4000);
+    sendHeaders({ ok: true, status: 200, json: () => new Promise(resolve => { sendBody = resolve; }) }); await flush();
+    await f.advance(999); assert.equal(form.querySelector('button').disabled, true);
+    await f.advance(1); await pending;
+    assert.equal(f.requests.find(row => row.url === '/api/claim').options.signal.aborted, true);
+    assert.equal(form.querySelector('button').disabled, false); assert.equal(f.element('setup-form').hidden, true);
+    sendBody({ authenticated: true, csrf: 'late-token' }); await flush();
+    assert.equal(f.element('setup-form').hidden, true); assert.equal(f.requests.some(row => row.url === '/api/catalog'), false);
+    assert.equal(f.timers.length, 0);
+});
+test('initial session JSON timeout is bounded and successful requests clear their deadline timers', async () => {
+    const stalled = fixture(() => ({ ok: true, status: 200, json: never })); await flush();
+    await stalled.advance(5000);
+    assert.equal(stalled.requests[0].options.signal.aborted, true); assert.match(stalled.element('message').textContent, /nicht rechtzeitig/);
+    assert.equal(stalled.timers.length, 0);
+    const ok = fixture(defaultResponse); await flush();
+    assert.equal(ok.timers.length, 0); assert.ok(ok.requests.every(row => row.options.signal.aborted === false));
+});
+test('ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff', async () => {
+    let finished = false;
+    const f = fixture(url => {
+        if (url === '/api/finish') { finished = true; return never(); }
+        if (url === '/api/session' && finished) return response(200, { state: 'committing', authenticated: false });
+        return defaultResponse(url);
+    });
+    await flush(); deferredForm(f); const form = f.element('setup-form');
+    const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
+    await form.handlers.submit({ preventDefault() {}, target: form });
+    assert.equal(f.requests.filter(row => row.url === '/api/finish').length, 1);
+    await f.advance(5000); await pending;
+    assert.equal(f.requests.find(row => row.url === '/api/finish').options.signal.aborted, true);
+    assert.equal(f.element('finish-button').disabled, true); assert.equal(form.hidden, true);
+    assert.equal(form.elements.password.value, ''); assert.equal(form.elements.passwordRepeat.value, ''); assert.equal(f.element('license-token').value, '');
+    assert.deepEqual(f.requests.slice(2, 4).map(row => row.url), ['/api/finish', '/api/session']);
+    assert.match(f.element('message').textContent, /ausschließlich der Gerätestatus/);
+    await form.handlers.submit({ preventDefault() {}, target: form });
+    await f.advance(180000);
+    assert.equal(f.requests.filter(row => row.url === '/api/finish').length, 1);
+    assert.equal(f.timers.length, 0); assert.match(f.element('finish-status').textContent, /dauert länger/);
+    assert.notEqual(f.element('finished').querySelector('h2').textContent, 'Geschützter Zugang eingerichtet');
+});
+test('a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials', async () => {
+    let finishes = 0;
+    const f = fixture(url => {
+        if (url === '/api/finish') return ++finishes === 1 ? never() : response(202, { state: 'committing' });
+        if (url === '/api/session' && finishes === 1) return response(200, { state: 'claimed', authenticated: true, csrf: 'fresh-token' });
+        return defaultResponse(url);
+    });
+    await flush(); deferredForm(f); const form = f.element('setup-form');
+    const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
+    await f.advance(5000); await pending;
+    assert.equal(finishes, 1); assert.equal(form.hidden, false); assert.equal(f.element('finish-button').disabled, false);
+    assert.equal(form.elements.password.value, ''); assert.match(f.element('review-status').textContent, /bewusst absenden/);
+    deferredForm(f); await submit(f);
+    assert.equal(finishes, 2); assert.equal(f.requests.filter(row => row.url === '/api/finish')[1].options.headers['x-eos-csrf'], 'fresh-token');
+});
+test('lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts', async () => {
+    let finished = false;
+    const f = fixture(url => {
+        if (url === '/api/finish') { finished = true; return never(); }
+        if (url === '/api/session' && finished) return never();
+        return defaultResponse(url);
+    });
+    await flush(); deferredForm(f); const form = f.element('setup-form');
+    const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
+    await f.advance(10000); await pending;
+    assert.equal(f.element('finish-button').disabled, true); assert.equal(form.hidden, true);
+    await f.advance(180000); const requestCount = f.requests.length;
+    await f.advance(60000);
+    assert.equal(f.requests.length, requestCount); assert.equal(f.timers.length, 0);
+    assert.equal(f.requests.filter(row => row.url === '/api/finish').length, 1);
+    assert.ok(f.requests.filter(row => row.url === '/api/session').length <= 30);
+    assert.match(f.element('finish-status').textContent, /dauert länger/);
+    assert.notEqual(f.element('finished').querySelector('h2').textContent, 'Geschützter Zugang eingerichtet');
+});
+test('reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker', async () => {
+    let sessions = 0;
+    const f = fixture(() => ++sessions === 1 ? response(200, { state: 'committing', authenticated: false }) : never());
+    await flush(); await f.advance(180000);
+    assert.equal(f.timers.length, 0); assert.ok(sessions <= 28);
+    assert.match(f.element('finish-status').textContent, /dauert länger/);
+    let completedSessions = 0;
+    const completed = fixture(() => ++completedSessions === 1 ? response(200, { state: 'committing', authenticated: false }) : response(410, { code: 'SETUP_CLOSED' }));
+    await flush();
+    assert.equal(completed.element('finished').querySelector('h2').textContent, 'Geschützter Zugang eingerichtet');
+    assert.equal(completed.timers.length, 0);
+});
 test('local reissue CLI refuses password arguments and never prints the argument', () => {
     const secret = 'ThisMustNeverAppearInProcessOutput';
     const result = spawnSync(process.execPath, [path.join(__dirname, '../../runtime/onboarding/issue-code.cjs'), '--password', secret], { encoding: 'utf8' });
     assert.notEqual(result.status, 0); assert.equal(result.stdout.includes(secret), false); assert.equal(result.stderr.includes(secret), false);
     assert.match(result.stderr, /SETUP_CODE_REISSUE_FAILED/);
 });
-

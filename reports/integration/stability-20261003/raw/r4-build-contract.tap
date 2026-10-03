@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: accepts only the fixed published R3 identity
+ok 1 - accepts only the fixed published R3 identity
+  ---
+  duration_ms: 1.247642
+  type: 'test'
+  ...
+# Subtest: app comparison ignores other payload areas but detects every file difference
+ok 2 - app comparison ignores other payload areas but detects every file difference
+  ---
+  duration_ms: 0.970012
+  type: 'test'
+  ...
+# Subtest: only the two byte-pinned historical entrypoints can be reused
+ok 3 - only the two byte-pinned historical entrypoints can be reused
+  ---
+  duration_ms: 1.001789
+  type: 'test'
+  ...
+# Subtest: catalog hashes the actual prepared payload while preserving three nested npm helpers in source
+ok 4 - catalog hashes the actual prepared payload while preserving three nested npm helpers in source
+  ---
+  duration_ms: 52.625804
+  type: 'test'
+  ...
+# Subtest: canonical archive signs in-memory keys, validates payload and verifies all readback members
+ok 5 - canonical archive signs in-memory keys, validates payload and verifies all readback members
+  ---
+  duration_ms: 151.661665
+  type: 'test'
+  ...
+# Subtest: actual product validation cannot be skipped by the public archive API
+ok 6 - actual product validation cannot be skipped by the public archive API
+  ---
+  duration_ms: 6.524723
+  type: 'test'
+  ...
+# Subtest: test-only profile, exact Node contract and single platform are mandatory
+ok 7 - test-only profile, exact Node contract and single platform are mandatory
+  ---
+  duration_ms: 8.890808
+  type: 'test'
+  ...
+# Subtest: wrong architecture cannot become executable through a manifest mode
+ok 8 - wrong architecture cannot become executable through a manifest mode
+  ---
+  duration_ms: 6.719762
+  type: 'test'
+  ...
+# Subtest: unknown native addon prevents signing
+ok 9 - unknown native addon prevents signing
+  ---
+  duration_ms: 6.21759
+  type: 'test'
+  ...
+# Subtest: outputs cannot overwrite files or reside inside the authenticated payload
+ok 10 - outputs cannot overwrite files or reside inside the authenticated payload
+  ---
+  duration_ms: 88.550379
+  type: 'test'
+  ...
+# Subtest: readback rejects changed payload, modes, owners, links, extras, duplicates and traversal
+ok 11 - readback rejects changed payload, modes, owners, links, extras, duplicates and traversal
+  ---
+  duration_ms: 1026.135528
+  type: 'test'
+  ...
+# Subtest: signature and out-of-band signer fingerprint remain independent trust checks
+ok 12 - signature and out-of-band signer fingerprint remain independent trust checks
+  ---
+  duration_ms: 216.128533
+  type: 'test'
+  ...
+# Subtest: truncated gzip and unconsumed trailing archive content are rejected
+ok 13 - truncated gzip and unconsumed trailing archive content are rejected
+  ---
+  duration_ms: 223.525475
+  type: 'test'
+  ...
+# Subtest: oversized hidden PAX extension is rejected before tarfile parses its body
+ok 14 - oversized hidden PAX extension is rejected before tarfile parses its body
+  ---
+  duration_ms: 141.457713
+  type: 'test'
+  ...
+# Subtest: canonical archive bytes repeat for identical payload, manifest and signature
+ok 15 - canonical archive bytes repeat for identical payload, manifest and signature
+  ---
+  duration_ms: 138.9388
+  type: 'test'
+  ...
+# Subtest: source hardlink and directory junction cannot feed bytes outside the payload
+ok 16 - source hardlink and directory junction cannot feed bytes outside the payload
+  ---
+  duration_ms: 8.149883
+  type: 'test'
+  ...
+# Subtest: signing requires the validator report for the exact platform and original native bytes
+ok 17 - signing requires the validator report for the exact platform and original native bytes
+  ---
+  duration_ms: 39.416209
+  type: 'test'
+  ...
+# Subtest: second byte inventory rejects ordinary and native mutations after validation
+ok 18 - second byte inventory rejects ordinary and native mutations after validation
+  ---
+  duration_ms: 14.803829
+  type: 'test'
+  ...
+# Subtest: checkout install requires explicit public inputs and independent trust hashes, never password arguments
+ok 19 - checkout install requires explicit public inputs and independent trust hashes, never password arguments
+  ---
+  duration_ms: 1.534806
+  type: 'test'
+  ...
+# Subtest: delivery selection binds test3 revision4, sequence7, platform, archive basename and independent public key digest
+ok 20 - delivery selection binds test3 revision4, sequence7, platform, archive basename and independent public key digest
+  ---
+  duration_ms: 3.947899
+  type: 'test'
+  ...
+# Subtest: archive digest streams exact bytes and rejects hardlinks, directories and missing files
+ok 21 - archive digest streams exact bytes and rejects hardlinks, directories and missing files
+  ---
+  duration_ms: 7.133584
+  type: 'test'
+  ...
+# Subtest: target native probe requires successful fixed child, matching host and no device I/O before installation
+ok 22 - target native probe requires successful fixed child, matching host and no device I/O before installation
+  ---
+  duration_ms: 1.781089
+  type: 'test'
+  ...
+# Subtest: deployment restores the operator umask on failure (process API fixture; POSIX filesystem acceptance remains open)
+ok 23 - deployment restores the operator umask on failure (process API fixture; POSIX filesystem acceptance remains open)
+  ---
+  duration_ms: 0.740804
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2164.519876

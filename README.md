@@ -1,88 +1,13 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# EOS per SSH auf einem neuen Pi installieren
+# EOS-Testinstallation: neuer Stand wird geprüft
 
-Verbindlicher Projektzweig für neue Arbeiten und Installationsanleitungen ist
-[`main`](https://github.com/NexoWatt/nexowatt-eos/tree/main).
+Revision 3 enthält einen bestätigten PostgreSQL-Verzeichnisfehler unter umask 077.
+Der korrigierte Stand test.3 Revision 4 wird mit SBOM, Signatur und Prüfbelegen
+gebaut. Der neue Installationsbefehl wird hier erst mit der geprüften Lieferung
+eingetragen. [Änderungen und Grenzen](reports/integration/stability-20261003/README.md).
 
-**Der Testinstaller enthält jetzt den öffentlichen Prüfschlüssel eurer vorhandenen
-EOS-Lizenzverwaltung.** Auf dem Pi genügt die einmalige verdeckte Eingabe des
-GitHub-Tokens. Git und eine manuelle Übertragung der Schlüsseldatei sind nicht nötig.
-
-1. Per SSH am frischen Debian-13-/Raspberry-Pi-OS-13-Pi mit **ARM64** anmelden.
-   Falls die Sitzung noch nicht als `root` läuft, zuerst `sudo -i` ausführen.
-2. Den **gesamten folgenden Block** zusammen kopieren und in die SSH-Sitzung einfügen.
-   Den GitHub-Token erst bei der verdeckten Abfrage eingeben und Enter drücken.
-   Er benötigt Leserecht auf `NexoWatt/nexowatt-eos`.
-3. Die automatische Installation abwarten und anschließend die im Terminal
-   angezeigte HTTPS-Adresse für den Erststart verwenden.
-
-Das Basisabbild benötigt `bash`, `curl`, `python3`, laufendes systemd, eine
-korrekte Uhr und mindestens 6 GiB freien Platz. Node und PostgreSQL werden
-bei Bedarf automatisch vorbereitet. Vorhandene EOS-Daten oder PostgreSQL-
-Cluster werden nicht überschrieben.
-
-**Bei `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING`:** Du verwendest noch
-den alten, fest gebundenen Befehl. Er bleibt gesperrt. Ersetze ihn vollständig
-durch diesen aktuellen Block; ändere keine Hashes oder Manifestdateien von Hand.
-
-**Korrektur für `BOOTSTRAP_APT_SOURCE_OPTIONS` (03.10.2026):** Der aktuelle
-Installer akzeptiert auch die `.pgp`-Schlüsseldateien der offiziellen
-Raspberry-Pi-OS-Paketquellen. Bei diesem Fehler den **gesamten neuen Block**
-kopieren und erneut starten. Der alte Befehl lädt weiterhin den alten Installer.
-Falls erneut ein APT-Fehler erscheint, den vollständigen Fehlercode zur Prüfung
-weitergeben. Paketquellen und Signaturprüfungen müssen dafür nicht verändert werden.
-
-
-**Nach `PG_SUDO_POLICY_REJECTED`:** Revision 3 korrigiert die Sudo-Abfrage
-für neue Dienstkonten. Für den diagnostizierten Abbruch der Revision 2 gibt
-es einen [eigenen Wiederanlauf-Befehl mit einmaliger Tokenabfrage](docs/operations/SUDO_ABORT_RECOVERY_DE.md).
-Er prüft die alte Bereitstellung vollständig, erhält sie in Quarantäne und
-startet anschließend Revision 3. Der folgende normale Installationsblock
-bleibt für einen frischen Host.
-
-```bash
-/bin/bash <<'EOS_INSTALL'
-# EOS_GITHUB_BOOTSTRAP_VERSION=2026-10-03
-set +x
-set -euo pipefail
-export PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
-umask 077
-[[ $EUID -eq 0 ]] || { echo 'EOS: Bitte zuerst sudo -i ausfuehren.' >&2; exit 1; }
-[[ -x /usr/bin/curl && -x /usr/bin/python3 ]] || { echo 'EOS: curl und python3 werden im Basisabbild benoetigt.' >&2; exit 1; }
-[[ -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1
-(( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1
-set +a
-unset eos_token
-read -r -s -p 'GitHub-Token: ' eos_token </dev/tty
-printf '\n' >/dev/tty
-[[ $eos_token =~ ^[A-Za-z0-9_]{20,512}$ ]] || { echo 'EOS: Tokenformat ungueltig.' >&2; exit 1; }
-eos_stage=$(/usr/bin/mktemp -d /root/eos-download-XXXXXXXX)
-printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14631 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/ea168948332e365f59c1798a79d8439863b8e098' -o "$eos_stage/github-download.py"
-printf '%s  %s\n' '89194c388e023bad6dca7347a132d24f45927d3710a635cf7ba9e4ea491177c6' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
-exec 3< <(printf '%s\n' "$eos_token")
-unset eos_token
-exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 03a04702f31571814021f3de5ebd0586859c1404 --manifest-sha256 3fe525dbcca620709e7767e6d474842650b50406d3a0ae8ae2a4aedd82b7ad2b
-EOS_INSTALL
-```
-
-Nach erfolgreichem Start zeigt das Terminal die konkrete Browseradresse,
-den öffentlichen CA-Pfad mit Fingerabdruck und den kurzlebigen Einrichtungscode.
-Die Geräte-CA über den vertrauenswürdigen Zugang übernehmen und im Browser
-vertrauen. Dann den Assistenten öffnen und den Einrichtungscode eingeben.
-Die **UUID ist vor Lizenzaktivierung und Passwortvergabe sichtbar und kopierbar**.
-Die dafür erzeugte Lizenz im Assistenten eintragen; Benutzerpasswörter werden
-ausschließlich im Frontend vergeben. Lizenzbereiche und Kontingente bleiben
-serverseitig geprüft.
-
-[Anleitung und Voraussetzungen](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
-[Sicherheitsgrenzen](docs/security/PRIVATE_GITHUB_BOOTSTRAP_DE.md) ·
-[Sudo-Korrektur und aktuelle Paketnachweise](reports/integration/github-bootstrap-sudo-20261003/README.md) ·
-[Prüfschlüsselzuordnung](reports/integration/github-bootstrap-ready-20261003/README.md).
-
-**Vollständige Pi-Installation und Hardwaretests: OFFEN, nicht ausgeführt.**
-Dieser Einstieg ist für die Testumgebung; Anlagensteuerung bleibt gesperrt.
-Er ist kein Flotten-Updater.
-
+Bitte bis dahin keinen alten Installationsbefehl erneut ausführen. Vorhandene
+Dateien und abgebrochene Installationen bleiben für die Diagnose erhalten.
 <!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
 
 ---

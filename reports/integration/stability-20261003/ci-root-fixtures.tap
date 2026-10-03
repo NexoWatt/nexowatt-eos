@@ -1,0 +1,400 @@
+TAP version 13
+# Subtest: valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host
+ok 1 - valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host
+  ---
+  duration_ms: 74.432214
+  type: 'test'
+  ...
+# Subtest: tampered signed payload and wrong signer fail before target commands or credential validation
+ok 2 - tampered signed payload and wrong signer fail before target commands or credential validation
+  ---
+  duration_ms: 35.958865
+  type: 'test'
+  ...
+# Subtest: wrong signing public key is rejected even when all host prerequisites are ready
+ok 3 - wrong signing public key is rejected even when all host prerequisites are ready
+  ---
+  duration_ms: 23.958126
+  type: 'test'
+  ...
+# Subtest: a valid signature never promotes a pending catalog entry
+ok 4 - a valid signature never promotes a pending catalog entry
+  ---
+  duration_ms: 27.302584
+  type: 'test'
+  ...
+# Subtest: current release must declare the observed target architecture and exact Node version
+ok 5 - current release must declare the observed target architecture and exact Node version
+  ---
+  duration_ms: 23.139948
+  type: 'test'
+  ...
+# Subtest: duplicate service and installer credentials or browser-selected admin role fail before target commands
+ok 6 - duplicate service and installer credentials or browser-selected admin role fail before target commands
+  ---
+  duration_ms: 48.797573
+  type: 'test'
+  ...
+# Subtest: secret modes, symlinks and invalid certificate hosts are rejected before target commands
+ok 7 - secret modes, symlinks and invalid certificate hosts are rejected before target commands
+  ---
+  duration_ms: 61.8193
+  type: 'test'
+  ...
+# Subtest: occupied integrated UI port yields a non-mutating rejected report
+ok 8 - occupied integrated UI port yields a non-mutating rejected report
+  ---
+  duration_ms: 34.084638
+  type: 'test'
+  ...
+# Subtest: CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+ok 9 - CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors
+  ---
+  duration_ms: 131.606246
+  type: 'test'
+  ...
+# Subtest: direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+ok 10 - direct signed installer cannot skip integrated web port gate by omitting standalone preflight
+  ---
+  duration_ms: 54.302827
+  type: 'test'
+  ...
+# Subtest: actual Redis admission hold prevents direct signed installation before staging, accounts or services
+ok 11 - actual Redis admission hold prevents direct signed installation before staging, accounts or services
+  ---
+  duration_ms: 85.08275
+  type: 'test'
+  ...
+# Subtest: verified installer forwards the same catalog port profile to the privileged host recheck
+ok 12 - verified installer forwards the same catalog port profile to the privileged host recheck
+  ---
+  duration_ms: 49.64254
+  type: 'test'
+  ...
+# Subtest: successful root sudo listing with no privileges is accepted for each EOS account
+ok 13 - successful root sudo listing with no privileges is accepted for each EOS account
+  ---
+  duration_ms: 4.665449
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects failed list
+ok 14 - sudo listing rejects failed list
+  ---
+  duration_ms: 0.119176
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects timeout
+ok 15 - sudo listing rejects timeout
+  ---
+  duration_ms: 0.068882
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects truncated response
+ok 16 - sudo listing rejects truncated response
+  ---
+  duration_ms: 0.109762
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects password required
+ok 17 - sudo listing rejects password required
+  ---
+  duration_ms: 0.077655
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects policy warning despite denial
+ok 18 - sudo listing rejects policy warning despite denial
+  ---
+  duration_ms: 1.254963
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects host lookup warning
+ok 19 - sudo listing rejects host lookup warning
+  ---
+  duration_ms: 0.09439
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects granted root command
+ok 20 - sudo listing rejects granted root command
+  ---
+  duration_ms: 0.081571
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects granted unprivileged command
+ok 21 - sudo listing rejects granted unprivileged command
+  ---
+  duration_ms: 0.117804
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects different account
+ok 22 - sudo listing rejects different account
+  ---
+  duration_ms: 0.283609
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects appended commands
+ok 23 - sudo listing rejects appended commands
+  ---
+  duration_ms: 0.139115
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects prefixed custom text
+ok 24 - sudo listing rejects prefixed custom text
+  ---
+  duration_ms: 0.050975
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects duplicated denial
+ok 25 - sudo listing rejects duplicated denial
+  ---
+  duration_ms: 0.030395
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects extra blank line
+ok 26 - sudo listing rejects extra blank line
+  ---
+  duration_ms: 0.027631
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects denial on stderr
+ok 27 - sudo listing rejects denial on stderr
+  ---
+  duration_ms: 0.033219
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects localized response
+ok 28 - sudo listing rejects localized response
+  ---
+  duration_ms: 0.030264
+  type: 'test'
+  ...
+# Subtest: sudo listing rejects empty success
+ok 29 - sudo listing rejects empty success
+  ---
+  duration_ms: 0.024807
+  type: 'test'
+  ...
+# Subtest: missing or malformed subprocess fields never establish absent privileges
+ok 30 - missing or malformed subprocess fields never establish absent privileges
+  ---
+  duration_ms: 0.105246
+  type: 'test'
+  ...
+# Subtest: postgresql installer reaches directories only after every real account sudo branch passes
+ok 31 - postgresql installer reaches directories only after every real account sudo branch passes
+  ---
+  duration_ms: 19.985359
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for failed list
+ok 32 - postgresql installer stops at accounts for failed list
+  ---
+  duration_ms: 4.292067
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for timeout
+ok 33 - postgresql installer stops at accounts for timeout
+  ---
+  duration_ms: 3.239754
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for truncated response
+ok 34 - postgresql installer stops at accounts for truncated response
+  ---
+  duration_ms: 3.910905
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for password required
+ok 35 - postgresql installer stops at accounts for password required
+  ---
+  duration_ms: 3.483604
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for policy warning despite denial
+ok 36 - postgresql installer stops at accounts for policy warning despite denial
+  ---
+  duration_ms: 3.555219
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for host lookup warning
+ok 37 - postgresql installer stops at accounts for host lookup warning
+  ---
+  duration_ms: 2.687959
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for granted root command
+ok 38 - postgresql installer stops at accounts for granted root command
+  ---
+  duration_ms: 2.887895
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for granted unprivileged command
+ok 39 - postgresql installer stops at accounts for granted unprivileged command
+  ---
+  duration_ms: 2.811532
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for different account
+ok 40 - postgresql installer stops at accounts for different account
+  ---
+  duration_ms: 3.052227
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for appended commands
+ok 41 - postgresql installer stops at accounts for appended commands
+  ---
+  duration_ms: 2.489986
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for prefixed custom text
+ok 42 - postgresql installer stops at accounts for prefixed custom text
+  ---
+  duration_ms: 2.736751
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for duplicated denial
+ok 43 - postgresql installer stops at accounts for duplicated denial
+  ---
+  duration_ms: 3.404978
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for extra blank line
+ok 44 - postgresql installer stops at accounts for extra blank line
+  ---
+  duration_ms: 3.422023
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for denial on stderr
+ok 45 - postgresql installer stops at accounts for denial on stderr
+  ---
+  duration_ms: 2.635191
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for localized response
+ok 46 - postgresql installer stops at accounts for localized response
+  ---
+  duration_ms: 3.383736
+  type: 'test'
+  ...
+# Subtest: postgresql installer stops at accounts for empty success
+ok 47 - postgresql installer stops at accounts for empty success
+  ---
+  duration_ms: 3.100247
+  type: 'test'
+  ...
+# Subtest: redis installer reaches directories only after every real account sudo branch passes
+ok 48 - redis installer reaches directories only after every real account sudo branch passes
+  ---
+  duration_ms: 3.198884
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for failed list
+ok 49 - redis installer stops at accounts for failed list
+  ---
+  duration_ms: 2.771342
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for timeout
+ok 50 - redis installer stops at accounts for timeout
+  ---
+  duration_ms: 2.902591
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for truncated response
+ok 51 - redis installer stops at accounts for truncated response
+  ---
+  duration_ms: 1.980275
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for password required
+ok 52 - redis installer stops at accounts for password required
+  ---
+  duration_ms: 1.807379
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for policy warning despite denial
+ok 53 - redis installer stops at accounts for policy warning despite denial
+  ---
+  duration_ms: 1.922198
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for host lookup warning
+ok 54 - redis installer stops at accounts for host lookup warning
+  ---
+  duration_ms: 2.296101
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for granted root command
+ok 55 - redis installer stops at accounts for granted root command
+  ---
+  duration_ms: 1.896641
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for granted unprivileged command
+ok 56 - redis installer stops at accounts for granted unprivileged command
+  ---
+  duration_ms: 2.813154
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for different account
+ok 57 - redis installer stops at accounts for different account
+  ---
+  duration_ms: 1.897621
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for appended commands
+ok 58 - redis installer stops at accounts for appended commands
+  ---
+  duration_ms: 1.829582
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for prefixed custom text
+ok 59 - redis installer stops at accounts for prefixed custom text
+  ---
+  duration_ms: 2.679106
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for duplicated denial
+ok 60 - redis installer stops at accounts for duplicated denial
+  ---
+  duration_ms: 1.915489
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for extra blank line
+ok 61 - redis installer stops at accounts for extra blank line
+  ---
+  duration_ms: 1.796112
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for denial on stderr
+ok 62 - redis installer stops at accounts for denial on stderr
+  ---
+  duration_ms: 2.355408
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for localized response
+ok 63 - redis installer stops at accounts for localized response
+  ---
+  duration_ms: 2.042466
+  type: 'test'
+  ...
+# Subtest: redis installer stops at accounts for empty success
+ok 64 - redis installer stops at accounts for empty success
+  ---
+  duration_ms: 1.968387
+  type: 'test'
+  ...
+# Subtest: full-product PostgreSQL installer also checks the final eos-setup account
+ok 65 - full-product PostgreSQL installer also checks the final eos-setup account
+  ---
+  duration_ms: 3.057084
+  type: 'test'
+  ...
+1..65
+# tests 65
+# suites 0
+# pass 65
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 742.945454

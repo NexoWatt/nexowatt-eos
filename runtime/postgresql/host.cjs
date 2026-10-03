@@ -45,6 +45,11 @@ function provision({ directory = CONFIG } = {}) {
     if (!path.isAbsolute(directory) || path.resolve(directory) !== directory || fs.existsSync(directory)) fail('PG_FRESH_CONFIG_REQUIRED');
     rootOwned(path.dirname(directory));
     fs.mkdirSync(directory, { mode: 0o755 });
+    // The root bootstrap intentionally uses umask 077. PostgreSQL runs under
+    // a separate account and must traverse this directory to read its public
+    // configuration and certificates. Private keys retain their own 0600/0640
+    // modes; the CA authority subdirectory remains root-only.
+    fs.chmodSync(directory, 0o755);
     const authority = path.join(directory, 'authority'); fs.mkdirSync(authority, { mode: 0o700 });
     const openssl = args => execute('/usr/bin/openssl', args);
     const caKey = path.join(authority, 'ca.key'), ca = path.join(directory, 'ca.crt');

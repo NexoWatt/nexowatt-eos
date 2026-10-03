@@ -1,0 +1,143 @@
+name: EOS R4 signed test delivery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - runtime/**
+      - tools/**
+      - system/**
+      - tests/**
+      - reports/integration/installable-test3-r4-20261003/*.cjs
+      - reports/integration/installable-test3-r4-20261003/*.py
+      - .github/workflows/eos-r4-test-delivery.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eos-r4-delivery-main
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    outputs:
+      ready: ${{ steps.fresh.outputs.ready }}
+      artifact_id: ${{ steps.archive.outputs.artifact-id }}
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout the exact authorized main commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Keep already signed R4 deliveries immutable
+        id: fresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -e delivery/test-pi-0.2.0-test.3-r4 || test -e delivery/bootstrap-test3-r4; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'R4 already exists. A further change requires a new delivery revision; historical signatures stay unchanged.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select the pinned build runtime
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Build and fully reread the signed test archive
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node reports/integration/installable-test3-r4-20261003/build-revision.cjs
+          node tools/bootstrap/build-stability-entry.cjs
+      - name: Retain exact generated candidate and build evidence
+        id: archive
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-r4-candidate-${{ github.sha }}
+          path: |
+            delivery/test-pi-0.2.0-test.3-r4/
+            delivery/bootstrap-test3-r4/
+            reports/integration/installable-test3-r4-20261003/
+            README.md
+            system/product.json
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - name: Record the actual acceptance scope
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          Build-only Linux x64 execution: preserves the authenticated R3 ARM64 app and its bound SBOM, rebuilds the host/runtime payload, and uses a new in-memory Ed25519 TEST signer.
+          Full archive/signature/source readback is required before publication. No manufacturer license private key is available to this workflow.
+          No Raspberry Pi installation, systemd/PostgreSQL target boot, hardware control or CRA/IEC conformity approval is established here.
+          The 30-day Actions artifact is a transfer copy; successful publication retains the signed files and evidence in the private repository.
+          SCOPE
+
+  publish:
+    needs: build
+    if: needs.build.outputs.ready == 'true' && github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the same reviewed source without stored credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Download only this build job's immutable artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: ${{ runner.temp }}/eos-r4-candidate
+          merge-multiple: true
+          digest-mismatch: error
+      - name: Validate candidate scope and copy generated files only
+        env:
+          EOS_CANDIDATE: ${{ runner.temp }}/eos-r4-candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B reports/integration/installable-test3-r4-20261003/publish-candidate.py "$EOS_CANDIDATE" "$GITHUB_SHA"
+          git add -- delivery/test-pi-0.2.0-test.3-r4 delivery/bootstrap-test3-r4 reports/integration/installable-test3-r4-20261003 README.md system/product.json
+          git diff --cached --check
+      - name: Publish to unchanged main with a normal fast-forward push
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-git-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$GITHUB_SHA" || { echo 'main advanced during the build; refusing to overwrite concurrent work.' >&2; exit 1; }
+          test -n "$(git diff --cached --name-only)"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: publish signed EOS test.3 revision 4 and bound evidence'
+          git push origin HEAD:refs/heads/main
+          printf 'Published test delivery commit: `%s`\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
