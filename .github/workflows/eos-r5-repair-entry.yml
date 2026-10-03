@@ -1,0 +1,114 @@
+name: EOS R5 public repair entry
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - tools/bootstrap/build-public-repair-entry.cjs
+      - tools/bootstrap/prepare-public-repair-publication.cjs
+      - tests/bootstrap/public-repair-entry.test.cjs
+      - tests/bootstrap/public-repair-publication.test.cjs
+      - .github/workflows/eos-r5-repair-entry.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eos-r5-repair-entry-main
+  cancel-in-progress: false
+
+jobs:
+  prepare-and-publish:
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the exact authorized main commit without stored credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          submodules: false
+      - name: Require published R5 and preserve any existing entry
+        id: fresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test ! -d delivery/test-pi-0.2.0-test.3-r5 || test -L delivery/test-pi-0.2.0-test.3-r5; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'R5 archive is not yet published; no repair entry created.' >> "$GITHUB_STEP_SUMMARY"
+          elif test -e delivery/public-repair-test3-r5 || test -L delivery/public-repair-test3-r5; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'Repair entry already exists and remains immutable.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select the pinned build runtime
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Verify transport and narrow publication boundaries
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/bootstrap/public-repair-entry.test.cjs tests/bootstrap/public-repair-publication.test.cjs
+      - name: Build from signed archive and independently reread public assets
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          node tools/bootstrap/build-public-repair-entry.cjs --asset-commit "$GITHUB_SHA"
+          node tools/bootstrap/prepare-public-repair-publication.cjs --readback "$GITHUB_SHA"
+          git add -- delivery/public-repair-test3-r5/repair.sh delivery/public-repair-test3-r5/preparation.json delivery/public-repair-test3-r5/remote-readback.json
+          git diff --cached --check
+          node tools/bootstrap/prepare-public-repair-publication.cjs --check-stage entry "$GITHUB_SHA"
+      - name: Create two local immutable commits with a command pinned to the entry commit
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: publish pinned EOS R5 public repair entry and asset readback'
+          eos_entry_commit=$(git rev-parse HEAD)
+          node tools/bootstrap/build-public-repair-entry.cjs --entry-commit "$eos_entry_commit"
+          node tools/bootstrap/prepare-public-repair-publication.cjs --command-report "$eos_entry_commit"
+          git add -- delivery/public-repair-test3-r5/REPAIR_COMMAND.txt delivery/public-repair-test3-r5/command-verification.json
+          git diff --cached --check
+          node tools/bootstrap/prepare-public-repair-publication.cjs --check-stage command "$eos_entry_commit"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'docs: publish EOS R5 repair command bound to the immutable entry'
+          test "$(git rev-parse HEAD~2)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+      - name: Publish both commits only to unchanged main by normal fast-forward
+        if: steps.fresh.outputs.ready == 'true'
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-r5-entry-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$GITHUB_SHA" || { echo 'main advanced; concurrent work is preserved and nothing is pushed.' >&2; exit 1; }
+          test "$(git rev-parse HEAD~2)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          git push origin HEAD:refs/heads/main
+          printf 'Repair entry commit: `%s`\nCommand commit: `%s`\n' "$(git rev-parse HEAD~1)" "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Public assets were reread byte-for-byte. No target repair, real systemd interruption, Pi login or plant acceptance is established by this workflow.' >> "$GITHUB_STEP_SUMMARY"

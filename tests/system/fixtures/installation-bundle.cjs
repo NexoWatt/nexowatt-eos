@@ -35,6 +35,7 @@ function fixture(t) {
     };
     for (const [name, target] of Object.entries(originals)) write(`payload/app/node_modules/${target}`, fs.readFileSync(path.join(REPO, 'tests/system/controller-profile-fixtures', `${name}.original.txt`)));
     write('payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicenseCore.js', fs.readFileSync(path.join(REPO, 'components/admin/src/lib/eosLicenseCore.js')));
+    write('payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicensePolicy.js', fs.readFileSync(path.join(REPO, 'components/admin/src/lib/eosLicensePolicy.js')));
     const transformation = applyToBuild(app, SPECS.map(spec => ({ package: `iobroker.${spec.name}`, version: spec.version, main: spec.main })));
     const appPackage = { name: 'eos-install-preflight-contract-fixture', version: '0.2.1-test.1', dependencies: deps };
     write('payload/app/package.json', appPackage);

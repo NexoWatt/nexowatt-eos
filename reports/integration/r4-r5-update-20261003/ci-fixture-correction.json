@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-03T20:35:50.484863+00:00",
+  "failedRun": 37151915615,
+  "failedJob": 111287372952,
+  "sourceCommit": "1a1a1003da76999dca473a5e6c832ddcef091935",
+  "failure": "test installation bundle copied license core but omitted its newly introduced policy dependency",
+  "correction": "include actual policy file in signed synthetic test bundle; production R5 overlay already includes the file",
+  "runtimeChange": false,
+  "command": "node --test tests/system/preflight-installation.test.cjs tests/system/sudo-policy.test.cjs tests/system/update-test-r4-to-r5.test.cjs",
+  "passed": 87,
+  "failed": 0,
+  "nativeTarget": false,
+  "sha256": {
+    "tests/system/fixtures/installation-bundle.cjs": "1d4c8149b10c7bb91b7c3499c54f687d7fb4f57fe883ba12d67325d736ff9d38",
+    "reports/integration/r4-r5-update-20261003/ci-fixture-correction.tap": "700b906ed464e150b318b23fa073bdd3b90b6e439730f574e82c206bed0f4bcf",
+    "reports/integration/r4-r5-update-20261003/source-ci-first-attempt.log": "6fffb003eb6825690e6d8eaea526d5317904cb1b3a911598df1ef98d1928ceb1"
+  }
+}

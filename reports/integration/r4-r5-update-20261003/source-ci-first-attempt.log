@@ -1,0 +1,735 @@
+﻿2026-10-03T20:32:45.2849940Z Current runner version: '2.337.0'
+2026-10-03T20:32:45.2875780Z ##[group]Runner Image Provisioner
+2026-10-03T20:32:45.2876875Z Hosted Compute Agent
+2026-10-03T20:32:45.2877486Z Version: 20260901.588
+2026-10-03T20:32:45.2878118Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-03T20:32:45.2878905Z Build Date: 2026-09-01T19:56:44Z
+2026-10-03T20:32:45.2879599Z Worker ID: {ef1c9303-1f0d-40e6-b91d-e140bbed5ffc}
+2026-10-03T20:32:45.2880342Z Azure Region: westus
+2026-10-03T20:32:45.2881004Z ##[endgroup]
+2026-10-03T20:32:45.2882658Z ##[group]Operating System
+2026-10-03T20:32:45.2883413Z Ubuntu
+2026-10-03T20:32:45.2883969Z 24.04.5
+2026-10-03T20:32:45.2884829Z LTS
+2026-10-03T20:32:45.2885427Z ##[endgroup]
+2026-10-03T20:32:45.2885991Z ##[group]Runner Image
+2026-10-03T20:32:45.2886637Z Image: ubuntu-24.04
+2026-10-03T20:32:45.2887240Z Version: 20260927.320.1
+2026-10-03T20:32:45.2889007Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-03T20:32:45.2890681Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-03T20:32:45.2891738Z ##[endgroup]
+2026-10-03T20:32:45.2892873Z ##[group]GITHUB_TOKEN Permissions
+2026-10-03T20:32:45.2895392Z Contents: read
+2026-10-03T20:32:45.2896015Z Metadata: read
+2026-10-03T20:32:45.2896559Z ##[endgroup]
+2026-10-03T20:32:45.2898759Z Secret source: Actions
+2026-10-03T20:32:45.2899753Z Cache mode: write
+2026-10-03T20:32:45.2900561Z Prepare workflow directory
+2026-10-03T20:32:45.3331656Z Prepare all required actions
+2026-10-03T20:32:45.3381935Z Getting action download info
+2026-10-03T20:32:45.6867310Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-03T20:32:45.8090347Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-10-03T20:32:45.9920392Z Complete job name: Node 24 bootstrap, onboarding and transport contracts
+2026-10-03T20:32:46.0699151Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-03T20:32:46.0700224Z with:
+2026-10-03T20:32:46.0700672Z   persist-credentials: false
+2026-10-03T20:32:46.0701212Z   repository: NexoWatt/nexowatt-eos
+2026-10-03T20:32:46.0705645Z   token: ***
+2026-10-03T20:32:46.0706079Z   ssh-strict: true
+2026-10-03T20:32:46.0706510Z   ssh-user: git
+2026-10-03T20:32:46.0706926Z   clean: true
+2026-10-03T20:32:46.0707368Z   sparse-checkout-cone-mode: true
+2026-10-03T20:32:46.0707897Z   fetch-depth: 1
+2026-10-03T20:32:46.0708319Z   fetch-tags: false
+2026-10-03T20:32:46.0708764Z   show-progress: true
+2026-10-03T20:32:46.0709209Z   lfs: false
+2026-10-03T20:32:46.0709614Z   submodules: false
+2026-10-03T20:32:46.0710068Z   set-safe-directory: true
+2026-10-03T20:32:46.0710579Z   allow-unsafe-pr-checkout: false
+2026-10-03T20:32:46.0711358Z env:
+2026-10-03T20:32:46.0711796Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T20:32:46.0712294Z ##[endgroup]
+2026-10-03T20:32:46.1722439Z Syncing repository: NexoWatt/nexowatt-eos
+2026-10-03T20:32:46.1724583Z ##[group]Getting Git version info
+2026-10-03T20:32:46.1725840Z Working directory is '/home/runner/work/nexowatt-eos/nexowatt-eos'
+2026-10-03T20:32:46.1727580Z [command]/usr/bin/git version
+2026-10-03T20:32:46.1979803Z git version 2.55.0
+2026-10-03T20:32:46.2005563Z ##[endgroup]
+2026-10-03T20:32:46.2018188Z Temporarily overriding HOME='/home/runner/work/_temp/5d5e6a30-fe41-4b1e-93da-d030a47beb77' before making global git config changes
+2026-10-03T20:32:46.2020749Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-03T20:32:46.2025150Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T20:32:46.2087479Z Deleting the contents of '/home/runner/work/nexowatt-eos/nexowatt-eos'
+2026-10-03T20:32:46.2091615Z ##[group]Determining repository object format
+2026-10-03T20:32:46.2093413Z ##[endgroup]
+2026-10-03T20:32:46.2095013Z ##[group]Initializing the repository
+2026-10-03T20:32:46.2099272Z [command]/usr/bin/git init /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T20:32:46.2224651Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-03T20:32:46.2226447Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-03T20:32:46.2228073Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-03T20:32:46.2229620Z hint: call:
+2026-10-03T20:32:46.2230675Z hint:
+2026-10-03T20:32:46.2231850Z hint: 	git config --global init.defaultBranch <name>
+2026-10-03T20:32:46.2233101Z hint:
+2026-10-03T20:32:46.2234230Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-03T20:32:46.2236512Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-03T20:32:46.2238165Z hint:
+2026-10-03T20:32:46.2238961Z hint: 	git branch -m <name>
+2026-10-03T20:32:46.2239886Z hint:
+2026-10-03T20:32:46.2241233Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-03T20:32:46.2243230Z Initialized empty Git repository in /home/runner/work/nexowatt-eos/nexowatt-eos/.git/
+2026-10-03T20:32:46.2246535Z [command]/usr/bin/git remote add origin https://github.com/NexoWatt/nexowatt-eos
+2026-10-03T20:32:46.2298990Z ##[endgroup]
+2026-10-03T20:32:46.2300453Z ##[group]Disabling automatic garbage collection
+2026-10-03T20:32:46.2303665Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-03T20:32:46.2343083Z ##[endgroup]
+2026-10-03T20:32:46.2345957Z ##[group]Setting up auth
+2026-10-03T20:32:46.2347079Z Removing SSH command configuration
+2026-10-03T20:32:46.2349860Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T20:32:46.2391380Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T20:32:46.2786729Z Removing HTTP extra header
+2026-10-03T20:32:46.2793234Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T20:32:46.2831688Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T20:32:46.3055460Z Removing includeIf entries pointing to credentials config files
+2026-10-03T20:32:46.3060749Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T20:32:46.3105944Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T20:32:46.3339550Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-03T20:32:46.3381579Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path /home/runner/work/_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:32:46.3427909Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:32:46.3469839Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:32:46.3520075Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:32:46.3555796Z ##[endgroup]
+2026-10-03T20:32:46.3557427Z ##[group]Fetching the repository
+2026-10-03T20:32:46.3563026Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +1a1a1003da76999dca473a5e6c832ddcef091935:refs/remotes/origin/main
+2026-10-03T20:33:31.1960895Z From https://github.com/NexoWatt/nexowatt-eos
+2026-10-03T20:33:31.1970943Z  * [new ref]         1a1a1003da76999dca473a5e6c832ddcef091935 -> origin/main
+2026-10-03T20:33:31.1976547Z [command]/usr/bin/git branch --list --remote origin/main
+2026-10-03T20:33:31.2001143Z   origin/main
+2026-10-03T20:33:31.2009791Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-10-03T20:33:31.2036879Z 1a1a1003da76999dca473a5e6c832ddcef091935
+2026-10-03T20:33:31.2041742Z ##[endgroup]
+2026-10-03T20:33:31.2042763Z ##[group]Determining the checkout info
+2026-10-03T20:33:31.2048461Z ##[endgroup]
+2026-10-03T20:33:31.2049121Z [command]/usr/bin/git sparse-checkout disable
+2026-10-03T20:33:31.2103924Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-03T20:33:31.2137387Z ##[group]Checking out the ref
+2026-10-03T20:33:31.2143167Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-10-03T20:33:33.0605812Z Updating files:  74% (4912/6609)
+2026-10-03T20:33:33.0659967Z Updating files:  75% (4957/6609)
+2026-10-03T20:33:33.0710138Z Updating files:  76% (5023/6609)
+2026-10-03T20:33:33.1547543Z Updating files:  77% (5089/6609)
+2026-10-03T20:33:33.1793270Z Updating files:  78% (5156/6609)
+2026-10-03T20:33:33.1920366Z Updating files:  79% (5222/6609)
+2026-10-03T20:33:33.2077669Z Updating files:  80% (5288/6609)
+2026-10-03T20:33:33.2113415Z Updating files:  81% (5354/6609)
+2026-10-03T20:33:33.2164865Z Updating files:  82% (5420/6609)
+2026-10-03T20:33:33.2211086Z Updating files:  83% (5486/6609)
+2026-10-03T20:33:33.2245426Z Updating files:  84% (5552/6609)
+2026-10-03T20:33:33.2276655Z Updating files:  84% (5577/6609)
+2026-10-03T20:33:33.2332709Z Updating files:  85% (5618/6609)
+2026-10-03T20:33:33.2434064Z Updating files:  86% (5684/6609)
+2026-10-03T20:33:33.2542574Z Updating files:  87% (5750/6609)
+2026-10-03T20:33:33.2590688Z Updating files:  88% (5816/6609)
+2026-10-03T20:33:33.2666179Z Updating files:  89% (5883/6609)
+2026-10-03T20:33:33.2761332Z Updating files:  90% (5949/6609)
+2026-10-03T20:33:33.2840187Z Updating files:  91% (6015/6609)
+2026-10-03T20:33:33.2889580Z Updating files:  92% (6081/6609)
+2026-10-03T20:33:33.2969614Z Updating files:  93% (6147/6609)
+2026-10-03T20:33:33.3002563Z Updating files:  94% (6213/6609)
+2026-10-03T20:33:33.3067325Z Updating files:  95% (6279/6609)
+2026-10-03T20:33:33.3109907Z Updating files:  96% (6345/6609)
+2026-10-03T20:33:33.3154663Z Updating files:  97% (6411/6609)
+2026-10-03T20:33:33.3223504Z Updating files:  98% (6477/6609)
+2026-10-03T20:33:33.3283634Z Updating files:  99% (6543/6609)
+2026-10-03T20:33:33.3284730Z Updating files: 100% (6609/6609)
+2026-10-03T20:33:33.3285420Z Updating files: 100% (6609/6609), done.
+2026-10-03T20:33:33.3361936Z Switched to a new branch 'main'
+2026-10-03T20:33:33.3368946Z branch 'main' set up to track 'origin/main'.
+2026-10-03T20:33:33.3499169Z ##[endgroup]
+2026-10-03T20:33:33.3558799Z [command]/usr/bin/git log -1 --format=%H
+2026-10-03T20:33:33.3589271Z 1a1a1003da76999dca473a5e6c832ddcef091935
+2026-10-03T20:33:33.3600240Z ##[group]Removing auth
+2026-10-03T20:33:33.3600743Z Removing SSH command configuration
+2026-10-03T20:33:33.3605129Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T20:33:33.3641467Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T20:33:33.3909205Z Removing HTTP extra header
+2026-10-03T20:33:33.3915089Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T20:33:33.3958188Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T20:33:33.4222504Z Removing includeIf entries pointing to credentials config files
+2026-10-03T20:33:33.4226238Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T20:33:33.4258152Z includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path
+2026-10-03T20:33:33.4259139Z includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path
+2026-10-03T20:33:33.4259921Z includeif.gitdir:/github/workspace/.git.path
+2026-10-03T20:33:33.4260522Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-03T20:33:33.4267456Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path
+2026-10-03T20:33:33.4295999Z /home/runner/work/_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:33:33.4306392Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-1e0f4bf8\-e55d\-4bf3\-9ebf\-0f083a757142\.config
+2026-10-03T20:33:33.4365766Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path
+2026-10-03T20:33:33.4394964Z /home/runner/work/_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:33:33.4406889Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-1e0f4bf8\-e55d\-4bf3\-9ebf\-0f083a757142\.config
+2026-10-03T20:33:33.4450401Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-03T20:33:33.4479998Z /github/runner_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:33:33.4488295Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-1e0f4bf8\-e55d\-4bf3\-9ebf\-0f083a757142\.config
+2026-10-03T20:33:33.4525386Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-03T20:33:33.4552276Z /github/runner_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config
+2026-10-03T20:33:33.4559849Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-1e0f4bf8\-e55d\-4bf3\-9ebf\-0f083a757142\.config
+2026-10-03T20:33:33.4596796Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T20:33:33.4827659Z Removing credentials config '/home/runner/work/_temp/git-credentials-1e0f4bf8-e55d-4bf3-9ebf-0f083a757142.config'
+2026-10-03T20:33:33.4837853Z ##[endgroup]
+2026-10-03T20:33:33.5158016Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-10-03T20:33:33.5158434Z with:
+2026-10-03T20:33:33.5158639Z   node-version: 24.21.0
+2026-10-03T20:33:33.5158880Z   package-manager-cache: false
+2026-10-03T20:33:33.5159145Z   check-latest: false
+2026-10-03T20:33:33.5161828Z   token: ***
+2026-10-03T20:33:33.5162056Z env:
+2026-10-03T20:33:33.5162261Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T20:33:33.5162501Z ##[endgroup]
+2026-10-03T20:33:33.6448159Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-10-03T20:33:33.6451146Z ##[group]Environment details
+2026-10-03T20:33:34.0908476Z node: v24.21.0
+2026-10-03T20:33:34.0909114Z npm: 11.19.0
+2026-10-03T20:33:34.0909626Z yarn: 1.22.22
+2026-10-03T20:33:34.0911372Z ##[endgroup]
+2026-10-03T20:33:34.1053073Z ##[group]Run git rev-parse HEAD
+2026-10-03T20:33:34.1053456Z [36;1mgit rev-parse HEAD[0m
+2026-10-03T20:33:34.1054078Z [36;1mnode -e 'if (process.version !== "v24.21.0" || process.platform !== "linux") process.exit(1); console.log(process.version, process.arch)'[0m
+2026-10-03T20:33:34.1055109Z [36;1mpython3 --version[0m
+2026-10-03T20:33:34.1055376Z [36;1m/usr/bin/openssl version[0m
+2026-10-03T20:33:34.1055644Z [36;1m/bin/bash --version[0m
+2026-10-03T20:33:34.1356404Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T20:33:34.1357168Z env:
+2026-10-03T20:33:34.1357474Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T20:33:34.1357830Z ##[endgroup]
+2026-10-03T20:33:34.1491648Z 1a1a1003da76999dca473a5e6c832ddcef091935
+2026-10-03T20:33:34.1731192Z v24.21.0 x64
+2026-10-03T20:33:34.1793854Z Python 3.12.3
+2026-10-03T20:33:34.1818890Z OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+2026-10-03T20:33:34.1832285Z GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)
+2026-10-03T20:33:34.1833044Z Copyright (C) 2022 Free Software Foundation, Inc.
+2026-10-03T20:33:34.1834256Z License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+2026-10-03T20:33:34.1835264Z 
+2026-10-03T20:33:34.1835902Z This is free software; you are free to change and redistribute it.
+2026-10-03T20:33:34.1837052Z There is NO WARRANTY, to the extent permitted by law.
+2026-10-03T20:33:34.1875969Z ##[group]Run node --test \
+2026-10-03T20:33:34.1876314Z [36;1mnode --test \[0m
+2026-10-03T20:33:34.1876637Z [36;1m  tests/bootstrap/build-download.test.cjs \[0m
+2026-10-03T20:33:34.1877034Z [36;1m  tests/bootstrap/build-github-download.test.cjs \[0m
+2026-10-03T20:33:34.1877430Z [36;1m  tests/bootstrap/first-start.test.cjs \[0m
+2026-10-03T20:33:34.1877792Z [36;1m  tests/bootstrap/stability-entry.test.cjs \[0m
+2026-10-03T20:33:34.1878145Z [36;1m  tests/bootstrap/public-entry.test.cjs \[0m
+2026-10-03T20:33:34.1878504Z [36;1m  tests/bootstrap/public-repair-entry.test.cjs \[0m
+2026-10-03T20:33:34.1878880Z [36;1m  tests/onboarding/configuration.test.cjs \[0m
+2026-10-03T20:33:34.1879215Z [36;1m  tests/onboarding/enrollment.test.cjs \[0m
+2026-10-03T20:33:34.1879539Z [36;1m  tests/onboarding/frontend.test.cjs \[0m
+2026-10-03T20:33:34.1879861Z [36;1m  tests/onboarding/issue-code.test.cjs \[0m
+2026-10-03T20:33:34.1880179Z [36;1m  tests/onboarding/server.test.cjs \[0m
+2026-10-03T20:33:34.1880532Z [36;1m  tests/onboarding/shutdown.test.cjs \[0m
+2026-10-03T20:33:34.1880921Z [36;1m  components/admin/test/eos-session-security.test.cjs \[0m
+2026-10-03T20:33:34.1881333Z [36;1m  components/admin/test/eos-license-core.test.cjs \[0m
+2026-10-03T20:33:34.1881733Z [36;1m  components/admin/test/eos-license-service.test.cjs \[0m
+2026-10-03T20:33:34.1882143Z [36;1m  components/admin/test/eos-license-client.test.cjs \[0m
+2026-10-03T20:33:34.1882551Z [36;1m  components/admin/test/eos-license-http.test.cjs \[0m
+2026-10-03T20:33:34.1882944Z [36;1m  components/admin/test/eos-license-trust.test.cjs \[0m
+2026-10-03T20:33:34.1883388Z [36;1m  components/admin/test/eos-license-build-parity.test.cjs \[0m
+2026-10-03T20:33:34.1883827Z [36;1m  tests/system/admin-startup-branding.test.cjs \[0m
+2026-10-03T20:33:34.1884178Z [36;1m  tests/postgresql/store.test.cjs \[0m
+2026-10-03T20:33:34.1884956Z [36;1m  tests/postgresql/store-channel-hardening.test.cjs \[0m
+2026-10-03T20:33:34.1885333Z [36;1m  tests/postgresql/states.test.cjs \[0m
+2026-10-03T20:33:34.1885688Z [36;1m  tests/postgresql/provision-permissions.test.cjs \[0m
+2026-10-03T20:33:34.1886070Z [36;1m  tests/adapter-channel/channel.test.cjs[0m
+2026-10-03T20:33:34.1953326Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T20:33:34.1953682Z env:
+2026-10-03T20:33:34.1953892Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T20:33:34.1954141Z ##[endgroup]
+2026-10-03T20:33:34.3377750Z ✔ shipped licensing JavaScript includes the exact reviewed source and policy (3.984114ms)
+2026-10-03T20:33:34.3397697Z ✔ actual shipped verifier accepts NWL3 under the same issuer and rejects injected limits (13.621206ms)
+2026-10-03T20:33:34.3538605Z ✔ starts denied, permits signed-service decision and sends no license key (4.853907ms)
+2026-10-03T20:33:34.3540414Z ✔ a new request uses a new nonce and rejects replay from an older request (0.841911ms)
+2026-10-03T20:33:34.3542013Z ✔ Home and Pro quantity limits and features are checked independently (5.331806ms)
+2026-10-03T20:33:34.3543441Z ✔ malformed, stale, future, oversized and missing entitlements fail closed (3.739296ms)
+2026-10-03T20:33:34.3545900Z ✔ timeout invalidates an existing lease; late and duplicate callbacks cannot reopen it (22.438837ms)
+2026-10-03T20:33:34.3547760Z ✔ throws and rejected transport promises settle denied without an unhandled rejection (0.756562ms)
+2026-10-03T20:33:34.3898853Z ✔ lease expires autonomously, onLost is once per denial episode, then recovery is possible (35.562691ms)
+2026-10-03T20:33:34.4258340Z ✔ wall clock rollback does not extend monotonic lease and a forward jump immediately denies (35.618567ms)
+2026-10-03T20:33:34.4305869Z ✔ stop cancels in-flight request and prevents late callback activation (1.399408ms)
+2026-10-03T20:33:34.4340937Z ✔ concurrent callers coalesce safely and status mutation cannot change entitlement (0.52695ms)
+2026-10-03T20:33:34.4353322Z ✔ failed safe-state callback latches denial and sanitizes logs (6.59569ms)
+2026-10-03T20:33:34.4413200Z ✔ asynchronous safe-state transition must finish before a fresh grant is accepted (1.356067ms)
+2026-10-03T20:33:34.4437953Z ✔ invalid configuration cannot create a permissive guard (0.802738ms)
+2026-10-03T20:33:34.4445978Z ✔ one shared lease gates each Home/Pro feature without extra messages or rights after loss (1.163045ms)
+2026-10-03T20:33:34.5049478Z ✔ NWL3 derives immutable Home and Pro system rights without adapter or quota claims (7.971363ms)
+2026-10-03T20:33:34.5086603Z ✔ NWL3 rejects even correctly signed custom grants, unknown scopes and nonperpetual variants (10.12927ms)
+2026-10-03T20:33:34.5110819Z ✔ NWL3 signatures bind version, edition and device while retaining the existing trust key (7.012924ms)
+2026-10-03T20:33:34.5136015Z ✔ NWL2 keeps narrower adapter and quantity restrictions after NWL3 support is added (1.161541ms)
+2026-10-03T20:33:34.5137998Z ✔ NWL3 persists encrypted across store reload without changing the device storage key (33.464868ms)
+2026-10-03T20:33:34.5140310Z ✔ UUID normalizes case/space while preserving canonical and direct vendor-prefix identity (1.143658ms)
+2026-10-03T20:33:34.5142423Z ✔ Home license authenticates UUID, explicit adapters, limits and immutable derived features (1.104795ms)
+2026-10-03T20:33:34.5144517Z ✔ Pro license enables Pro features only from signed edition and caps 10 batteries (2.205153ms)
+2026-10-03T20:33:34.5146397Z ✔ expiry and notBefore use exact millisecond boundaries without coercion or grace (3.136632ms)
+2026-10-03T20:33:34.5148447Z ✔ forged or edited signature, foreign signing key, unknown kid and legacy format fail closed (2.295112ms)
+2026-10-03T20:33:34.5150134Z ✔ trust accepts only bounded explicit Ed25519 public SPKI keys (87.052972ms)
+2026-10-03T20:33:34.5151996Z ✔ schema rejects wildcard adapters, duplicate adapters, unsafe limits and unknown signed fields (14.307345ms)
+2026-10-03T20:33:34.5155758Z ✔ malformed/oversized tokens and noncanonical base64 cannot reach successful verification (1.037259ms)
+2026-10-03T20:33:34.5353301Z ✔ encrypted storage roundtrips across restart with fresh nonce and no plaintext on disk (30.370018ms)
+2026-10-03T20:33:34.5715861Z ✔ GCM binds UUID and fails after ciphertext/tag/nonce corruption (34.457025ms)
+2026-10-03T20:33:34.5943608Z ✔ missing/wrong/short storage key never silently regenerates existing encrypted license (23.996154ms)
+2026-10-03T20:33:34.6308726Z ✔ storage high water mark cannot decrease; serialized operations preserve monotonic value (36.703795ms)
+2026-10-03T20:33:34.6559207Z ✔ clear removes only license, keeps device encryption key and permits fresh install (25.160119ms)
+2026-10-03T20:33:34.6816030Z ✔ storage rejects symlink files, symlink directory/ancestor and hard linked secrets (25.195087ms)
+2026-10-03T20:33:34.6948097Z ✔ storage rejects permissive POSIX modes and unsafe directory roots (13.999088ms)
+2026-10-03T20:33:34.7265836Z ✔ storage bounds files and rejects malformed data/envelopes without destructive overwrite (28.939531ms)
+2026-10-03T20:33:34.7507722Z ✔ license endpoints authorize before body parser, service calls and static files (2.990437ms)
+2026-10-03T20:33:34.7536420Z ✔ secure admin activation invokes parser after authorization and returns no submitted token (2.907461ms)
+2026-10-03T20:33:34.7540025Z ✔ cross-origin, missing origin/header and cross-site writes fail before parser (1.127488ms)
+2026-10-03T20:33:34.7545839Z ✔ forwarded host/proto headers do not establish origin or TLS trust (0.431862ms)
+2026-10-03T20:33:34.7547459Z ✔ plaintext LAN is denied for every route; explicit socket loopback can perform setup (0.411022ms)
+2026-10-03T20:33:34.7549015Z ✔ malformed activation/removal bodies are rejected without reaching service (5.451843ms)
+2026-10-03T20:33:34.7550444Z ✔ parser size/syntax errors are sanitized and cannot reach activation (0.621347ms)
+2026-10-03T20:33:34.7551953Z ✔ authorization and asynchronous service failures return sanitized bounded errors (0.752484ms)
+2026-10-03T20:33:34.7553380Z ✔ per-address write and read rate budgets deny excess operations (4.161076ms)
+2026-10-03T20:33:34.7555135Z ✔ license page has restrictive CSP and safe no-cache headers (0.724621ms)
+2026-10-03T20:33:34.7556448Z ✔ origin matching uses scheme, hostname and port exactly (0.327776ms)
+2026-10-03T20:33:34.7791989Z ✔ NWL3 system grant uses edition policy and enabled sender checks without an adapter claim list (86.765452ms)
+2026-10-03T20:33:34.7806060Z ✔ replacement by old NWL2 restores its narrower list and quotas after a system license (37.38712ms)
+2026-10-03T20:33:34.7808236Z ✔ NWL3 activation survives service restart and rejects forged upgrades without replacing stored rights (22.486279ms)
+2026-10-03T20:33:34.7809920Z ✔ startup without provisioned trust denies and creates no license (2.942416ms)
+2026-10-03T20:33:34.7811106Z ✔ startup with empty trust configuration denies (3.64641ms)
+2026-10-03T20:33:34.7812165Z ✔ trusted service without stored license denies (3.016236ms)
+2026-10-03T20:33:34.7813520Z ✔ Home allows licensed adapter and published Home limits with bounded lease (23.160555ms)
+2026-10-03T20:33:34.7815169Z ✔ Home rejects Pro feature and over-limit resource counts (40.137495ms)
+2026-10-03T20:33:34.7816656Z ✔ Pro grants its feature set only to listed adapter and within signed limits (32.539583ms)
+2026-10-03T20:33:34.7950600Z ✔ licensed second adapter receives grants only when enabled (17.042133ms)
+2026-10-03T20:33:34.8197743Z ✔ missing, disabled, renamed or non-instance senders cannot obtain grants (23.37603ms)
+2026-10-03T20:33:34.8332198Z ✔ sender mismatch, unknown feature, extra keys and invalid quota types reject (14.630041ms)
+2026-10-03T20:33:34.8467987Z ✔ malformed or untrusted import preserves existing encrypted license (13.688352ms)
+2026-10-03T20:33:34.8632813Z ✔ explicit license removal denies checks and remains removed after restart (16.420776ms)
+2026-10-03T20:33:34.8776712Z ✔ external license deletion invalidates previously cached grant eligibility (14.13911ms)
+2026-10-03T20:33:34.8946013Z ✔ tampered authenticated ciphertext invalidates cached license (15.370295ms)
+2026-10-03T20:33:34.9065736Z ✔ encrypted license and edition persist over clean service restart (12.609395ms)
+2026-10-03T20:33:34.9153285Z ✔ changed system UUID denies while running (8.143585ms)
+2026-10-03T20:33:34.9272267Z ✔ lease is capped at expiry and license expires at exact boundary (13.590789ms)
+2026-10-03T20:33:34.9380519Z ✔ expiry is rechecked after delayed adapter object lookup (10.199038ms)
+2026-10-03T20:33:34.9449669Z ✔ wall clock rollback relative to monotonic time fails closed until restart (7.565511ms)
+2026-10-03T20:33:34.9549389Z ✔ frequent sub-tolerance checks cannot keep a frozen wall clock licensed (10.028317ms)
+2026-10-03T20:33:34.9645932Z ✔ small cumulative backward steps cannot reset the monotonic clock anchor (9.628535ms)
+2026-10-03T20:33:34.9754859Z ✔ persisted high-water mark detects ordinary rollback across restart (10.852577ms)
+2026-10-03T20:33:35.0261549Z ✔ sender rate cap denies excess requests and renews after window (50.137088ms)
+2026-10-03T20:33:35.0287088Z ✔ queue cap rejects excess work without preventing earlier jobs completing (2.862306ms)
+2026-10-03T20:33:35.0373608Z ✔ new checks and mutations after stop are denied (8.724538ms)
+2026-10-03T20:33:35.0441182Z ✔ check queued before stop cannot grant or restore cached validity after stop (6.569859ms)
+2026-10-03T20:33:35.0541412Z ✔ check already in adapter lookup cannot grant after stop (10.08258ms)
+2026-10-03T20:33:35.0823057Z ✔ database timeout clears validity, bounds outstanding reads and ignores late results (28.035412ms)
+2026-10-03T20:33:35.1113083Z ✔ timeout during adapter identity lookup clears a previously valid license view (28.939192ms)
+2026-10-03T20:33:35.1196837Z ✔ serialized deletion ahead of a check prevents an intervening grant (8.357328ms)
+2026-10-03T20:33:35.1278683Z ✔ status rechecks expiry after delayed UUID lookup (8.118891ms)
+2026-10-03T20:33:35.1376256Z ✔ import expiring during UUID lookup preserves the previous valid license (9.533047ms)
+2026-10-03T20:33:35.1447426Z ✔ production directory resolver works without an assumed adapter instance method (7.139601ms)
+2026-10-03T20:33:35.1468999Z ✔ directory resolver failure is contained and keeps authority denied (1.477896ms)
+2026-10-03T20:33:35.1594022Z ✔ trusted root-owned complete directory chain accepts bounded public keys (11.588158ms)
+2026-10-03T20:33:35.1596080Z ✔ writable, foreign-owned or symbolic-link ancestor is denied before file open (9.633286ms)
+2026-10-03T20:33:35.1597476Z ✔ unsafe trust file and inode swap fail closed (10.954167ms)
+2026-10-03T20:33:35.1598918Z ✔ read remains bounded after growth and rejects malformed contents with close (7.727867ms)
+2026-10-03T20:33:35.1600604Z ✔ Windows and noncanonical paths require explicit supported provisioning (7.185165ms)
+2026-10-03T20:33:40.1709871Z (node:2524) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+2026-10-03T20:33:40.1712624Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-03T20:33:40.1714100Z ✔ pinned upstream password login, token pair and refresh work with security binding (14.030806ms)
+2026-10-03T20:33:40.1716406Z ✔ actual controller group view display keys do not replace canonical object identities (0.724721ms)
+2026-10-03T20:33:40.1718463Z ✔ malformed or duplicate canonical group objects fail closed before credential verification (2.461483ms)
+2026-10-03T20:33:40.1720630Z ✔ all devices access and refresh tokens reject changed password without waiting for object event (5.419843ms)
+2026-10-03T20:33:40.1722703Z ✔ disable, deletion and changed group ACL independently invalidate both token classes (11.8938ms)
+2026-10-03T20:33:40.1725713Z ✔ observed disable then re-enable cannot resurrect old token after snapshot returns to original (2.276286ms)
+2026-10-03T20:33:40.1727483Z ✔ legacy and unbound external tokens are rejected and direct internal minting is denied (1.64477ms)
+2026-10-03T20:33:40.1729234Z ✔ proof cannot be forged by passing a user-shaped object or copied authenticated identity (0.689184ms)
+2026-10-03T20:33:40.1730968Z ✔ password mutation during credential verification and before token save fails closed (1.564649ms)
+2026-10-03T20:33:40.1732595Z ✔ refresh credential cannot cross revocation between lookup and save (2.093513ms)
+2026-10-03T20:33:40.1734008Z ✔ restart generation does not accept previously saved capabilities (1.032409ms)
+2026-10-03T20:33:40.1735947Z ✔ session database failures and bounded stalled reads fail closed without unbounded backlog (77.179305ms)
+2026-10-03T20:33:40.1737827Z ✔ socket revocation synchronously blocks commands, clears subscriptions and closes every connection (1.040174ms)
+2026-10-03T20:33:40.1739442Z ✔ metadata-only account updates do not revoke established capabilities (0.941849ms)
+2026-10-03T20:33:40.1740323Z ✔ expired access and refresh capabilities fail closed in the common session reader (1.879963ms)
+2026-10-03T20:33:40.1741129Z ✔ late socket authentication cannot reopen a connection after revocation (0.493346ms)
+2026-10-03T20:33:40.1741990Z ✔ real five-second watchdog closes a socket after a missed credential object event (5250.859287ms)
+2026-10-03T20:33:40.2726143Z ✔ password verification has a separate budget without relaxing database reads (101.506685ms)
+2026-10-03T20:33:40.2987889Z ✔ timed-out authentication retains two work slots, refuses backlog and never grants late proof (26.346673ms)
+2026-10-03T20:33:40.3999324Z ✔ bad passwords and revocation during slow verification still cannot receive proofs (101.179295ms)
+2026-10-03T20:33:40.7938797Z ✔ real TLS1.3 mutual channel reads only public state fields (62.420594ms)
+2026-10-03T20:33:40.7940709Z ✔ separate certificates send/receive authenticated messages, with no sender spoofing (35.637281ms)
+2026-10-03T20:33:40.7942550Z ✔ telemetry writes force ack=true and server-derived sender identity (15.869028ms)
+2026-10-03T20:33:40.7944077Z ✔ logic writes only a bounded request namespace, ack=false (19.310684ms)
+2026-10-03T20:33:40.7945793Z ✔ invalid control value -1 is denied before backend (10.866799ms)
+2026-10-03T20:33:40.7947095Z ✔ invalid control value 4201 is denied before backend (11.276522ms)
+2026-10-03T20:33:40.7947945Z ✔ invalid control value "100" is denied before backend (9.284551ms)
+2026-10-03T20:33:40.7948875Z ✔ invalid control value null is denied before backend (9.089564ms)
+2026-10-03T20:33:40.7949740Z ✔ invalid control value {"val":100} is denied before backend (9.453768ms)
+2026-10-03T20:33:40.7950702Z ✔ private data, unknown message commands and host messages are denied (18.526831ms)
+2026-10-03T20:33:40.7951662Z ✔ additional identity fields cannot replace authenticated sender (8.937749ms)
+2026-10-03T20:33:40.7952277Z ✔ valid CA certificate without policy pin is denied (5.32869ms)
+2026-10-03T20:33:40.7952815Z ✔ expired certificate cannot authenticate (4.717302ms)
+2026-10-03T20:33:40.7953307Z ✔ no client certificate cannot authenticate (4.145156ms)
+2026-10-03T20:33:40.7953820Z ✔ wrong server name fails certificate verification (5.93582ms)
+2026-10-03T20:33:40.7954772Z ✔ wrong trust anchor fails certificate verification (5.095421ms)
+2026-10-03T20:33:40.7955717Z ✔ TLS1.2 is rejected instead of downgraded (2.746178ms)
+2026-10-03T20:33:40.7956202Z ✔ plaintext HTTP is refused (2.362308ms)
+2026-10-03T20:33:40.7956724Z ✔ replayed RPC identifier cannot perform a second write (18.156626ms)
+2026-10-03T20:33:40.7957307Z ✔ expired or future-dated requests never reach backend (19.959071ms)
+2026-10-03T20:33:40.7957887Z ✔ expired queued messages are discarded before delivery (173.911148ms)
+2026-10-03T20:33:40.7958560Z ✔ bounded mailbox rejects overflow and does not silently replace messages (210.867276ms)
+2026-10-03T20:33:40.7959327Z ✔ policy revocation also invalidates live sessions and queued commands (21.929492ms)
+2026-10-03T20:33:40.7960026Z ✔ policy changes during asynchronous work deny its late completion (10.430593ms)
+2026-10-03T20:33:40.7960652Z ✔ unknown operations and oversized requests are rejected (9.787716ms)
+2026-10-03T20:33:40.7961317Z ✔ malformed backend values fail closed and backend error content is hidden (8.925807ms)
+2026-10-03T20:33:40.7962068Z ✔ client budgets the full session plus RPC to five seconds and does not retry (5003.177448ms)
+2026-10-03T20:33:40.7970266Z ✔ closed clients cannot create another socket (1.726397ms)
+2026-10-03T20:33:40.7972155Z ✔ policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers (0.876469ms)
+2026-10-03T20:33:40.8207426Z ✔ strict request parser rejects duplicate keys, non-finite numbers and excess nesting (23.718457ms)
+2026-10-03T20:33:40.8302848Z ✔ new gateway epoch rejects a request from an earlier service instance (9.642786ms)
+2026-10-03T20:33:40.8395651Z ✔ null state remains null and is not reinterpreted as a zero reading (9.121827ms)
+2026-10-03T20:33:41.1492351Z ✔ rate limiting bounds authenticated requests (309.300218ms)
+2026-10-03T20:33:41.1591915Z ✔ client concurrent calls are bounded and cancelled on close (10.067696ms)
+2026-10-03T20:33:41.1637657Z ✔ pin cannot authenticate a different certificate subject (5.284699ms)
+2026-10-03T20:33:41.1773783Z ✔ download endpoint excludes shell, auth, query, redirect and path injection syntax (1.582242ms)
+2026-10-03T20:33:41.1775922Z ✔ manufacturer must supply real-shaped Ed25519 public trust with separate exact pin (77.145491ms)
+2026-10-03T20:33:41.1778109Z ✔ kit cannot ship changed or omitted signed helpers or extra runtime code (0.609595ms)
+2026-10-03T20:33:41.1780118Z ✔ one command checks a separately delivered script pin before execution; script data survive exact embedding (1.476944ms)
+2026-10-03T20:33:41.1782383Z ✔ canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit (347.273885ms)
+2026-10-03T20:33:41.1784676Z ✔ build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords (0.61243ms)
+2026-10-03T20:33:41.1786497Z ✔ Git blob identity hashes the canonical Git header as well as exact bytes (1.507371ms)
+2026-10-03T20:33:41.1788520Z ✔ manufacturer inputs require authentic public trust and pins; arbitrary repository credentials are not CLI options (0.747113ms)
+2026-10-03T20:33:41.1790682Z ✔ target command keeps token out of argv, history, URLs, disk and child environment (0.551747ms)
+2026-10-03T20:33:41.1792571Z ✔ only pinned fixed-repository code executes, after complete bounded HTTPS download and SHA256 check (0.389431ms)
+2026-10-03T20:33:41.1796964Z ✔ copyable here-document parses in real Bash including protected token descriptor handoff (8.055271ms)
+2026-10-03T20:33:41.1798860Z ✔ inherited export and allexport cannot copy the new token into child environments; FD3 survives exec (6.773463ms)
+2026-10-03T20:33:41.1800712Z ✔ IP selection prefers a validated SSH local destination only when present on an active noninternal interface (6.535456ms)
+2026-10-03T20:33:41.1802491Z ✔ one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible (0.297438ms)
+2026-10-03T20:33:41.1804592Z ✔ bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets (1.406422ms)
+2026-10-03T20:33:41.1806629Z ✔ license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash (4.111744ms)
+2026-10-03T20:33:41.1808379Z ✔ TTY must be an actual character terminal before it can receive any possession code (0.728699ms)
+2026-10-03T20:33:41.1810052Z ✔ successful runner uses all existing installer flags and emits possession only through opened TTY (4.997577ms)
+2026-10-03T20:33:41.1811856Z ✔ missing TTY, ambiguous IP and changed pins fail before host installation or input creation (6.184217ms)
+2026-10-03T20:33:41.1813602Z ✔ installer failures never read or output code and sanitized error excludes downstream secret messages (6.029687ms)
+2026-10-03T20:33:41.1815629Z ✔ unsafe code permissions and existing input directory fail closed without TTY disclosure (4.957463ms)
+2026-10-03T20:33:41.1817419Z ✔ CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties (0.996853ms)
+2026-10-03T20:33:41.1819219Z ✔ TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file (0.20777ms)
+2026-10-03T20:33:41.1821016Z ✔ ambiguous address errors give a bounded corrective message without addresses or secrets (0.266501ms)
+2026-10-03T20:33:41.1822972Z ✔ terminal success is readable and includes public browser trust instructions without arbitrary result properties (2.855244ms)
+2026-10-03T20:33:41.1825335Z ✔ preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets (2.8854ms)
+2026-10-03T20:33:41.1827343Z ✔ host failure preserves fixed installation phase through the real runner without disclosure or retries (26.496111ms)
+2026-10-03T20:33:41.1829218Z ✔ unknown or malformed installation phases are omitted while existing code and preflight checks remain (0.453992ms)
+2026-10-03T20:33:41.1830739Z ✔ public transport retains all three pinned assets and a fixed repository commit (1.722205ms)
+2026-10-03T20:33:41.1832275Z ✔ public transport rejects mutable refs, foreign repositories and malformed asset sets (0.913956ms)
+2026-10-03T20:33:41.1833809Z ✔ generated entry contains exact preparer bytes and bounded R2 recovery before normal preparation (6.75575ms)
+2026-10-03T20:33:41.1836319Z ✔ one-line curl entry verifies full size and hash in a protected directory before execution (3.692486ms)
+2026-10-03T20:33:41.1837706Z ✔ R5 repair transport binds immutable commit, key, archive and exact test scope (2.63517ms)
+2026-10-03T20:33:41.1839062Z ✔ malformed metadata, key substitution, old release and broad admission are rejected (1.865114ms)
+2026-10-03T20:33:41.1840684Z ✔ entry embeds exact reviewed extractors, authenticates assets, and supervises updater (27.547886ms)
+2026-10-03T20:33:41.1842363Z ✔ outer one-line command checks protected root, complete size and digest before execution (3.995806ms)
+2026-10-03T20:33:41.1843854Z ✔ only a complete hash-matching download reaches the execution boundary (11.555616ms)
+2026-10-03T20:33:41.1845645Z ✔ download hash failure never reaches the execution boundary (9.373097ms)
+2026-10-03T20:33:41.1847219Z ✔ download size failure never reaches the execution boundary (8.088243ms)
+2026-10-03T20:33:41.1848596Z ✔ download failure failure never reaches the execution boundary (3.880479ms)
+2026-10-03T20:33:41.1849883Z ✔ download symlink failure never reaches the execution boundary (4.501545ms)
+2026-10-03T20:33:41.1851129Z ✔ download hardlink failure never reaches the execution boundary (5.627871ms)
+2026-10-03T20:33:41.1852272Z ✔ download refuses to overwrite existing data (2.790612ms)
+2026-10-03T20:33:41.1853683Z ✔ embedded extractor works as packaged and rejects hash, traversal, links and existing output (379.0971ms)
+2026-10-03T20:33:41.1855629Z ✔ supervisor rejects absent/malformed invocation and clears inherited Node/Python options (93.337486ms)
+2026-10-03T20:33:41.1857493Z ✔ one pasteable command validates downloaded code before execution and keeps recovery conditional (7.187552ms)
+2026-10-03T20:33:41.1859013Z ✔ invalid or injected recovery pins are refused before generating a command (0.892256ms)
+2026-10-03T20:33:41.1860620Z ✔ shipped template choices are exact, hash-bound projections of the existing Devices source (29.898241ms)
+2026-10-03T20:33:41.1861861Z ✔ configured plant persists sourced limits and input-only mappings without enabling control (43.192543ms)
+2026-10-03T20:33:41.1863257Z ✔ explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated (1.772509ms)
+2026-10-03T20:33:41.1864568Z ✔ real model restrictions, serial fields, template/role mismatch and unknown fields fail closed (4.858046ms)
+2026-10-03T20:33:41.1865576Z ✔ EEBUS/OCPP identities and source-backed limits are captured with no connections or commands (0.546757ms)
+2026-10-03T20:33:41.1866489Z ✔ planned device counts and canonical product adapter names must fit the authenticated license (1.363952ms)
+2026-10-03T20:33:41.1867409Z ✔ minimal v3 creates a deferred commissioning record without inventing site or installation values (0.536628ms)
+2026-10-03T20:33:41.1868444Z ✔ minimal v3 rejects forged commissioning/UUID/settings, unsupported schemas and bypass of signed-license selection (0.592704ms)
+2026-10-03T20:33:41.1869512Z ✔ minimal password and handoff validation retain password policy, exact schemas and legacy record compatibility (3.228525ms)
+2026-10-03T20:33:41.1870597Z ✔ first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices (25.273554ms)
+2026-10-03T20:33:41.1871624Z ✔ configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan (5.086033ms)
+2026-10-03T20:33:41.1872544Z ✔ every partial object-store write keeps the start gate closed and refuses unsafe replay (20.589105ms)
+2026-10-03T20:33:41.1873525Z ✔ configuration, running controller, unknown password hash and different replay handoff are rejected before mutation (3.328212ms)
+2026-10-03T20:33:41.1874793Z ✔ first-run marker and safety policy drift block subsequent enrollment verification (13.356789ms)
+2026-10-03T20:33:41.1875742Z ✔ minimal first start enrolls admin only and preserves host defaults without inventing plant settings (2.130331ms)
+2026-10-03T20:33:41.1877178Z ✔ frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage (11.973841ms)
+2026-10-03T20:33:41.1878181Z ✔ authenticated catalog UUID is visible, read-only and selectable before any license or password entry (3.998511ms)
+2026-10-03T20:33:41.1879244Z ✔ copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves (2.430836ms)
+2026-10-03T20:33:41.1880390Z ✔ Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success (7.574348ms)
+2026-10-03T20:33:41.1881441Z ✔ missing or invalid catalog UUID never enables copying, displays response text, or creates an identity (15.074627ms)
+2026-10-03T20:33:41.1882642Z ✔ minimal delivered form sends only schema, signed license and admin passwords, never commissioning data or device identity (8.686888ms)
+2026-10-03T20:33:41.1883702Z ✔ check uses the same minimal contract and license result shows edition without adapter/count restrictions (3.200672ms)
+2026-10-03T20:33:41.1884881Z ✔ 202 handoff and lost setup connection never claim completed installation (2.476522ms)
+2026-10-03T20:33:41.1885660Z ✔ only explicit root completion shows access success; plant acceptance remains open (4.179551ms)
+2026-10-03T20:33:41.1886550Z ✔ claim header timeout aborts at five seconds, releases the button and never retries or exposes the code (6.974301ms)
+2026-10-03T20:33:41.1887492Z ✔ one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup (2.364733ms)
+2026-10-03T20:33:41.1888434Z ✔ initial session JSON timeout is bounded and successful requests clear their deadline timers (3.125391ms)
+2026-10-03T20:33:41.1889347Z ✔ ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff (6.501212ms)
+2026-10-03T20:33:41.1890295Z ✔ a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials (4.601504ms)
+2026-10-03T20:33:41.1891271Z ✔ lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts (4.951832ms)
+2026-10-03T20:33:41.1892305Z ✔ reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker (4.730756ms)
+2026-10-03T20:33:41.1893618Z ✔ local reissue CLI refuses password arguments and never prints the argument (46.143657ms)
+2026-10-03T20:33:41.1895459Z ✔ local reissue engine produces new state; owner restoration uses only its validated open descriptor (8.422681ms)
+2026-10-03T20:33:41.1897143Z ✔ previous state must be regular, singly linked, private and owned by the expected setup identity (1.26167ms)
+2026-10-03T20:33:41.1898617Z ✔ replacement between lstat and open is rejected before any ownership change (1.078456ms)
+2026-10-03T20:33:41.1899638Z ✔ symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive (0.888018ms)
+2026-10-03T20:33:41.1900544Z ✔ replacement after descriptor validation cannot redirect fchown to the new path (1.861176ms)
+2026-10-03T20:33:41.1901299Z ✔ verified TLS only; endpoint validates CA, hostname, expiry and trust (49.768446ms)
+2026-10-03T20:33:41.1902159Z ✔ catalog UUID licenses this device before password setup and stays private to the live claimed session (42.396388ms)
+2026-10-03T20:33:41.1903183Z ✔ HTTPS configuration and signed license are checked against installed identity/trust before one private handoff (72.394086ms)
+2026-10-03T20:33:41.1904238Z ✔ minimal HTTPS setup accepts signed system edition without plant or adapter selections and commits exactly once (46.395029ms)
+2026-10-03T20:33:41.1905668Z ✔ license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF (40.549569ms)
+2026-10-03T20:33:41.1906510Z ✔ possession is required; wrong, expired, reused and missing codes fail (28.480188ms)
+2026-10-03T20:33:41.1907098Z ✔ persistent attempt limit survives reboot (49.53626ms)
+2026-10-03T20:33:41.1907845Z ✔ real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation (1472.377318ms)
+2026-10-03T20:33:41.1908832Z ✔ host, origin, CSRF, proxy, URL and role manipulation are rejected (53.241596ms)
+2026-10-03T20:33:41.1909672Z ✔ session cookie, cache and content policy are restrictive; password hash handoff contains no secrets (28.686535ms)
+2026-10-03T20:33:41.1910446Z ✔ parallel finalization derives once and only one handoff wins (96.909881ms)
+2026-10-03T20:33:41.1911229Z ✔ abort during commit and restart retain closed state with no handoff or administrative access (22.002703ms)
+2026-10-03T20:33:41.1912160Z ✔ expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code (31.75743ms)
+2026-10-03T20:33:41.1913078Z ✔ local reissue immediately revokes a still-valid live session and rollback does not extend it (24.054984ms)
+2026-10-03T20:33:41.1913907Z ✔ body, request rate and settings bounds fail closed (297.295119ms)
+2026-10-03T20:33:41.1915205Z ✔ storage rejects replacement preparation, hardlinks, tampering and pending mutation locks (9.198781ms)
+2026-10-03T20:33:41.1916474Z ✔ ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion (1.589149ms)
+2026-10-03T20:33:41.1917326Z ✔ cleanup failure logs fixed code only and makes shutdown non-successful (0.270569ms)
+2026-10-03T20:33:41.1918042Z ✔ asynchronous main rejects arbitrary config and password CLI arguments (0.637369ms)
+2026-10-03T20:33:41.1918838Z ✔ PostgreSQL provisioning preserves service traversal and private keys under umask 22 (136.442125ms)
+2026-10-03T20:33:41.1919679Z ✔ PostgreSQL provisioning preserves service traversal and private keys under umask 77 (125.102734ms)
+2026-10-03T20:33:41.1920444Z ✔ plugin exports native backend identity and complete inspected 7.2.2 API (4.440923ms)
+2026-10-03T20:33:41.1921346Z ✔ setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input (5.068292ms)
+2026-10-03T20:33:41.1922172Z ✔ primitive values, explicit lc/q and Async aliases preserve contract (1.075312ms)
+2026-10-03T20:33:41.1923008Z ✔ ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound (1.728351ms)
+2026-10-03T20:33:41.1923709Z ✔ raw restore keeps exact JSON and emits no event (8.200784ms)
+2026-10-03T20:33:41.1924523Z ✔ system/user subscription isolation, wildcards and unsubscribe (3.333039ms)
+2026-10-03T20:33:41.1925312Z ✔ escaped glob literals and negated classes do not become regular-expression expressions (1.380517ms)
+2026-10-03T20:33:41.1926083Z ✔ state deletion and TTL expiration emit null; reads exclude expired values (2.773366ms)
+2026-10-03T20:33:41.1926854Z ✔ sessions expire, can be destroyed, and retain upstream one-argument success callback (1.340471ms)
+2026-10-03T20:33:41.1927731Z ✔ messages/logs preserve prefixed channels and event buffers, without storing/replaying commands (1.557009ms)
+2026-10-03T20:33:41.1928562Z ✔ Buffer state read matches upstream JSON shape while change event revives Buffer (0.918768ms)
+2026-10-03T20:33:41.1929309Z ✔ callbacks are asynchronous and return id/error in their existing slots (1.023675ms)
+2026-10-03T20:33:41.1930032Z ✔ destroyDB is limited to state namespace and leaves sessions/protocol intact (0.661664ms)
+2026-10-03T20:33:41.1930827Z ✔ disconnect fails writes closed and reconnect resumes live subscriptions without replay (1.480114ms)
+2026-10-03T20:33:41.1931540Z ✔ unexpected protocol version disconnects and prevents writes (0.601251ms)
+2026-10-03T20:33:41.1932328Z ✔ autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error (1.428988ms)
+2026-10-03T20:33:41.1933227Z ✔ invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing (0.996684ms)
+2026-10-03T20:33:41.1933989Z ✔ bounded events reject oversized writes and preserve previous value (7.85285ms)
+2026-10-03T20:33:41.1935103Z ✔ malformed stored JSON and malformed buffer event fail closed without raw diagnostics (1.935099ms)
+2026-10-03T20:33:41.1936127Z ✔ simultaneous updates preserve latest value when later metadata-only write follows (0.573679ms)
+2026-10-03T20:33:41.1936796Z ✔ closed client cannot reopen, read, publish or write (0.286158ms)
+2026-10-03T20:33:41.1937525Z ✔ overlapping subscriptions preserve normal duplicate delivery but expiry delivers once (1.172897ms)
+2026-10-03T20:33:41.1938345Z ✔ queued events are discarded across disconnect rather than executing stale commands (0.593927ms)
+2026-10-03T20:33:41.1939135Z ✔ event fanout and subscription count are bounded and overload disconnects visibly (87.563655ms)
+2026-10-03T20:33:41.1939902Z ✔ malformed UTF-8 stored data is rejected rather than normalized silently (0.530307ms)
+2026-10-03T20:33:41.1940637Z ✔ namespace globs and overlapping domains are rejected before opening a store (0.236725ms)
+2026-10-03T20:33:41.1941468Z ✔ quote-shaped state ids remain literal data at the Store boundary (0.35608ms)
+2026-10-03T20:33:41.1942157Z ✔ non-ASCII ids and Redis byte-wise question-mark globs remain compatible (2.382421ms)
+2026-10-03T20:33:41.1942815Z ✔ aggregate complex-glob work is bounded per incoming event (1.683807ms)
+2026-10-03T20:33:41.1943539Z ✔ working connection verifier requires encryption, authorization and actual TLS1.3 (1.295346ms)
+2026-10-03T20:33:41.1944635Z ✔ pre-reconnect watermark rejects retained event IDs and alternate numeric encodings (5.09363ms)
+2026-10-03T20:33:41.1945463Z ✔ replay remains rejected after duplicate cache eviction (53.905005ms)
+2026-10-03T20:33:41.1946158Z ✔ queued lower sequence cannot be delivered after newer committed notification (0.376679ms)
+2026-10-03T20:33:41.1946868Z ✔ connection requires verified TLS1.3 mTLS with fixed time budgets (5.677047ms)
+2026-10-03T20:33:41.1947391Z ✔ configuration rejects cleartext (1.332236ms)
+2026-10-03T20:33:41.1947838Z ✔ configuration rejects invalid cert input (0.28697ms)
+2026-10-03T20:33:41.1948332Z ✔ configuration rejects disabled peer check (0.203372ms)
+2026-10-03T20:33:41.1948764Z ✔ configuration rejects downgrade (0.31943ms)
+2026-10-03T20:33:41.1949244Z ✔ configuration rejects custom identity verifier (0.182222ms)
+2026-10-03T20:33:41.1949710Z ✔ configuration rejects SNI override (0.213692ms)
+2026-10-03T20:33:41.1950152Z ✔ configuration rejects connection string (0.144421ms)
+2026-10-03T20:33:41.1950571Z ✔ configuration rejects password (0.281699ms)
+2026-10-03T20:33:41.1950987Z ✔ configuration rejects unix socket (0.389353ms)
+2026-10-03T20:33:41.1951433Z ✔ configuration rejects invalid port (0.225093ms)
+2026-10-03T20:33:41.1951845Z ✔ configuration rejects superuser (0.175861ms)
+2026-10-03T20:33:41.1952285Z ✔ configuration rejects cross domain role (0.165581ms)
+2026-10-03T20:33:41.1952774Z ✔ configuration rejects query config override (0.166083ms)
+2026-10-03T20:33:41.1953229Z ✔ configuration rejects bad database (0.185219ms)
+2026-10-03T20:33:41.1953645Z ✔ TLS environment bypass rejected (0.234892ms)
+2026-10-03T20:33:41.1954517Z ✔ glob contract includes wildcards, literal escapes and ranges without regex execution (0.951439ms)
+2026-10-03T20:33:41.1955483Z ✔ input resembling SQL remains bound data; never concatenated into statement (1.129564ms)
+2026-10-03T20:33:41.1956227Z ✔ batch preserves order and missing slots; SQL enforces aggregate value limit (0.628802ms)
+2026-10-03T20:33:41.1956936Z ✔ key-list and complex glob work are bounded; broad star is supported (12.546808ms)
+2026-10-03T20:33:41.1957552Z ✔ read batch and key control bytes reject before querying (1.128532ms)
+2026-10-03T20:33:41.1958160Z ✔ transaction error rolls back and releases once; no commit/event (0.986656ms)
+2026-10-03T20:33:41.1958863Z ✔ long session TTL accepted while nonsensical TTL and large events fail closed (1.441882ms)
+2026-10-03T20:33:41.1959579Z ✔ startup branding is preloaded identically in source and delivered HTML (1.645856ms)
+2026-10-03T20:33:41.1960307Z ✔ replacement reuses the existing local NexoWatt image with no remote asset (1.642039ms)
+2026-10-03T20:33:41.1961026Z ✔ all six upstream loader shapes and its halo have scoped replacement rules (10.25572ms)
+2026-10-03T20:33:41.1961640Z ℹ tests 308
+2026-10-03T20:33:41.1961848Z ℹ suites 0
+2026-10-03T20:33:41.1962052Z ℹ pass 308
+2026-10-03T20:33:41.1962249Z ℹ fail 0
+2026-10-03T20:33:41.1962461Z ℹ cancelled 0
+2026-10-03T20:33:41.1962673Z ℹ skipped 0
+2026-10-03T20:33:41.1962872Z ℹ todo 0
+2026-10-03T20:33:41.1963105Z ℹ duration_ms 6945.075754
+2026-10-03T20:33:41.2019785Z ##[group]Run sudo -- "$(command -v node)" --test \
+2026-10-03T20:33:41.2020192Z [36;1msudo -- "$(command -v node)" --test \[0m
+2026-10-03T20:33:41.2020529Z [36;1m  tests/system/sudo-policy.test.cjs \[0m
+2026-10-03T20:33:41.2020882Z [36;1m  tests/system/preflight-installation.test.cjs \[0m
+2026-10-03T20:33:41.2021256Z [36;1m  tests/system/update-test-r4-to-r5.test.cjs[0m
+2026-10-03T20:33:41.2088219Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T20:33:41.2088607Z env:
+2026-10-03T20:33:41.2088845Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T20:33:41.2089113Z ##[endgroup]
+2026-10-03T20:33:42.3343253Z ✖ valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host (136.853304ms)
+2026-10-03T20:33:42.3346088Z ✔ tampered signed payload and wrong signer fail before target commands or credential validation (59.674037ms)
+2026-10-03T20:33:42.3348493Z ✔ wrong signing public key is rejected even when all host prerequisites are ready (49.294052ms)
+2026-10-03T20:33:42.3350157Z ✔ a valid signature never promotes a pending catalog entry (71.222892ms)
+2026-10-03T20:33:42.3351940Z ✔ current release must declare the observed target architecture and exact Node version (33.897094ms)
+2026-10-03T20:33:42.3352976Z ✔ duplicate service and installer credentials or browser-selected admin role fail before target commands (76.2806ms)
+2026-10-03T20:33:42.3353926Z ✔ secret modes, symlinks and invalid certificate hosts are rejected before target commands (90.031981ms)
+2026-10-03T20:33:42.3361201Z ✖ occupied integrated UI port yields a non-mutating rejected report (46.846509ms)
+2026-10-03T20:33:42.3363799Z ✔ CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors (143.473701ms)
+2026-10-03T20:33:42.3370678Z ✔ direct signed installer cannot skip integrated web port gate by omitting standalone preflight (66.716742ms)
+2026-10-03T20:33:42.3372013Z ✔ actual Redis admission hold prevents direct signed installation before staging, accounts or services (103.974959ms)
+2026-10-03T20:33:42.3373737Z ✔ verified installer forwards the same catalog port profile to the privileged host recheck (59.446645ms)
+2026-10-03T20:33:42.3376064Z ✔ orchestrator fixture keeps the actual ancestor guard and rejects a writable target before staging (50.434051ms)
+2026-10-03T20:33:42.3608199Z ✔ successful root sudo listing with no privileges is accepted for each EOS account (3.914412ms)
+2026-10-03T20:33:42.3609121Z ✔ sudo listing rejects failed list (0.226646ms)
+2026-10-03T20:33:42.3620585Z ✔ sudo listing rejects timeout (0.155352ms)
+2026-10-03T20:33:42.3626966Z ✔ sudo listing rejects truncated response (0.340611ms)
+2026-10-03T20:33:42.3627846Z ✔ sudo listing rejects password required (0.1806ms)
+2026-10-03T20:33:42.3628702Z ✔ sudo listing rejects policy warning despite denial (0.200808ms)
+2026-10-03T20:33:42.3629765Z ✔ sudo listing rejects host lookup warning (2.018426ms)
+2026-10-03T20:33:42.3630536Z ✔ sudo listing rejects granted root command (0.159299ms)
+2026-10-03T20:33:42.3631152Z ✔ sudo listing rejects granted unprivileged command (0.883572ms)
+2026-10-03T20:33:42.3631712Z ✔ sudo listing rejects different account (0.604006ms)
+2026-10-03T20:33:42.3632219Z ✔ sudo listing rejects appended commands (0.2711ms)
+2026-10-03T20:33:42.3632749Z ✔ sudo listing rejects prefixed custom text (0.109927ms)
+2026-10-03T20:33:42.3633263Z ✔ sudo listing rejects duplicated denial (0.094568ms)
+2026-10-03T20:33:42.3633757Z ✔ sudo listing rejects extra blank line (0.078127ms)
+2026-10-03T20:33:42.3634246Z ✔ sudo listing rejects denial on stderr (0.115457ms)
+2026-10-03T20:33:42.3635018Z ✔ sudo listing rejects localized response (0.09033ms)
+2026-10-03T20:33:42.3635934Z ✔ sudo listing rejects empty success (0.08521ms)
+2026-10-03T20:33:42.3636663Z ✔ missing or malformed subprocess fields never establish absent privileges (0.184317ms)
+2026-10-03T20:33:42.3637621Z ✔ postgresql installer reaches directories only after every real account sudo branch passes (43.13557ms)
+2026-10-03T20:33:42.3638658Z ✔ postgresql installer stops at accounts for failed list (9.851058ms)
+2026-10-03T20:33:42.3639775Z ✔ postgresql installer stops at accounts for timeout (8.125373ms)
+2026-10-03T20:33:42.3640760Z ✔ postgresql installer stops at accounts for truncated response (8.260435ms)
+2026-10-03T20:33:42.3641507Z ✔ postgresql installer stops at accounts for password required (7.33216ms)
+2026-10-03T20:33:42.3642205Z ✔ postgresql installer stops at accounts for policy warning despite denial (9.382328ms)
+2026-10-03T20:33:42.3642880Z ✔ postgresql installer stops at accounts for host lookup warning (6.6569ms)
+2026-10-03T20:33:42.3643538Z ✔ postgresql installer stops at accounts for granted root command (8.936708ms)
+2026-10-03T20:33:42.3644241Z ✔ postgresql installer stops at accounts for granted unprivileged command (7.96469ms)
+2026-10-03T20:33:42.3645390Z ✔ postgresql installer stops at accounts for different account (9.919074ms)
+2026-10-03T20:33:42.3646053Z ✔ postgresql installer stops at accounts for appended commands (7.180748ms)
+2026-10-03T20:33:42.3646695Z ✔ postgresql installer stops at accounts for prefixed custom text (8.003553ms)
+2026-10-03T20:33:42.3647341Z ✔ postgresql installer stops at accounts for duplicated denial (9.467607ms)
+2026-10-03T20:33:42.3647951Z ✔ postgresql installer stops at accounts for extra blank line (5.449618ms)
+2026-10-03T20:33:42.3648735Z ✔ postgresql installer stops at accounts for denial on stderr (8.621356ms)
+2026-10-03T20:33:42.3649920Z ✔ postgresql installer stops at accounts for localized response (7.264333ms)
+2026-10-03T20:33:42.3650776Z ✔ postgresql installer stops at accounts for empty success (7.424885ms)
+2026-10-03T20:33:42.3651528Z ✔ redis installer reaches directories only after every real account sudo branch passes (7.735209ms)
+2026-10-03T20:33:42.3652207Z ✔ redis installer stops at accounts for failed list (3.474004ms)
+2026-10-03T20:33:42.3652725Z ✔ redis installer stops at accounts for timeout (4.76941ms)
+2026-10-03T20:33:42.3653285Z ✔ redis installer stops at accounts for truncated response (6.48112ms)
+2026-10-03T20:33:42.3653875Z ✔ redis installer stops at accounts for password required (4.376802ms)
+2026-10-03T20:33:42.3654825Z ✔ redis installer stops at accounts for policy warning despite denial (6.054488ms)
+2026-10-03T20:33:42.3655499Z ✔ redis installer stops at accounts for host lookup warning (8.943864ms)
+2026-10-03T20:33:42.3656295Z ✔ redis installer stops at accounts for granted root command (3.249692ms)
+2026-10-03T20:33:42.3656944Z ✔ redis installer stops at accounts for granted unprivileged command (4.771825ms)
+2026-10-03T20:33:42.3657559Z ✔ redis installer stops at accounts for different account (7.165887ms)
+2026-10-03T20:33:42.3658139Z ✔ redis installer stops at accounts for appended commands (4.583862ms)
+2026-10-03T20:33:42.3658727Z ✔ redis installer stops at accounts for prefixed custom text (3.822119ms)
+2026-10-03T20:33:42.3659748Z ✔ redis installer stops at accounts for duplicated denial (4.483964ms)
+2026-10-03T20:33:42.3660419Z ✔ redis installer stops at accounts for extra blank line (5.930915ms)
+2026-10-03T20:33:42.3661003Z ✔ redis installer stops at accounts for denial on stderr (4.999363ms)
+2026-10-03T20:33:42.3661582Z ✔ redis installer stops at accounts for localized response (6.293237ms)
+2026-10-03T20:33:42.3662157Z ✔ redis installer stops at accounts for empty success (4.138193ms)
+2026-10-03T20:33:42.3662824Z ✔ full-product PostgreSQL installer also checks the final eos-setup account (6.517057ms)
+2026-10-03T20:33:42.3663597Z ✔ CLI requires explicit absolute input paths and both independent new trust pins (2.906386ms)
+2026-10-03T20:33:42.3664649Z ✔ baseline must exactly match R4 release, sequence, key, runtime, profile and schema (0.806788ms)
+2026-10-03T20:33:42.3665856Z ✔ transition rejects schema/unit mutation, new service, admission expansion and stale sequence (1.875678ms)
+2026-10-03T20:33:42.3666912Z ✔ successful update preserves configuration, first-start provenance and old release; checks readiness before unlock (39.60892ms)
+2026-10-03T20:33:42.3667839Z ✔ wrong new key pin fails before stage or stop (6.910728ms)
+2026-10-03T20:33:42.3668447Z ✔ installed unit drift fails before runtime mutation (7.378446ms)
+2026-10-03T20:33:42.3669102Z ✔ existing maintenance lock is not removed or overwritten (5.976942ms)
+2026-10-03T20:33:42.3669962Z ✔ native failure removes only its own pre-transition lock and does not stop running controller (15.029307ms)
+2026-10-03T20:33:42.3670996Z ✔ readiness failure restores only old pointer/state, retains lock, never restarts old controller (23.46339ms)
+2026-10-03T20:33:42.3671930Z ✔ foreign state change during trial is not overwritten; stop and retain lock (20.569342ms)
+2026-10-03T20:33:42.3672630Z ✔ foreign pointer during trial is not overwritten (17.826897ms)
+2026-10-03T20:33:42.3673381Z ✔ initial failed controller is repairable without database reinitialization (17.768302ms)
+2026-10-03T20:33:42.3674240Z ✔ pre-activation configuration race is detected; credentials are not written back (14.618352ms)
+2026-10-03T20:33:42.3675447Z ✔ failed stop leaves lock and reports recovery required without claiming restored service (17.492423ms)
+2026-10-03T20:33:42.3676393Z ✔ journal failure during trial still attempts physical restoration and preserves the lock (18.451123ms)
+2026-10-03T20:33:42.3677269Z ✔ signature rejection does not acquire maintenance lock or execute candidate code (5.684602ms)
+2026-10-03T20:33:42.3678220Z ✔ directory fsync failure after successful unlock recreates gate before restoring old release (21.647963ms)
+2026-10-03T20:33:42.3679146Z ✔ repair requires systemd invocation identity; unsupervised CLI cannot start maintenance (4.350252ms)
+2026-10-03T20:33:42.3679986Z ✔ false executable trust result is rejected before any service command or staging (4.350002ms)
+2026-10-03T20:33:42.3681003Z ✔ ExecStopPost quiesces only its own incomplete repair, including a failed permit revocation (0.6539ms)
+2026-10-03T20:33:42.3682757Z ✔ malformed protected lock falls back only to its own bounded journal; valid foreign lock wins (1.173296ms)
+2026-10-03T20:33:42.3683628Z ℹ tests 87
+2026-10-03T20:33:42.3683850Z ℹ suites 0
+2026-10-03T20:33:42.3684058Z ℹ pass 85
+2026-10-03T20:33:42.3684481Z ℹ fail 2
+2026-10-03T20:33:42.3684819Z ℹ cancelled 0
+2026-10-03T20:33:42.3685038Z ℹ skipped 0
+2026-10-03T20:33:42.3685236Z ℹ todo 0
+2026-10-03T20:33:42.3685477Z ℹ duration_ms 1107.234558
+2026-10-03T20:33:42.3685655Z 
+2026-10-03T20:33:42.3685771Z ✖ failing tests:
+2026-10-03T20:33:42.3685892Z 
+2026-10-03T20:33:42.3686151Z test at tests/system/preflight-installation.test.cjs:14:1
+2026-10-03T20:33:42.3686947Z ✖ valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host (136.853304ms)
+2026-10-03T20:33:42.3687553Z   Error: Cannot find module './eosLicensePolicy'
+2026-10-03T20:33:42.3687858Z   Require stack:
+2026-10-03T20:33:42.3688457Z   - /root/eos-install-preflight-fixture-qPCYOk/bundle/payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicenseCore.js
+2026-10-03T20:33:42.3689290Z   - /root/eos-install-preflight-fixture-qPCYOk/bundle/payload/app/package.json
+2026-10-03T20:33:42.3689876Z       at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+2026-10-03T20:33:42.3690392Z       at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+2026-10-03T20:33:42.3690956Z       at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+2026-10-03T20:33:42.3691516Z       at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+2026-10-03T20:33:42.3691990Z       at Module._load (node:internal/modules/cjs/loader:1341:5)
+2026-10-03T20:33:42.3692423Z       at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+2026-10-03T20:33:42.3693064Z       at Module.require (node:internal/modules/cjs/loader:1674:12)
+2026-10-03T20:33:42.3693484Z       at require (node:internal/modules/helpers:157:16)
+2026-10-03T20:33:42.3694559Z       at Object.<anonymous> (/root/eos-install-preflight-fixture-qPCYOk/bundle/payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicenseCore.js:10:27)
+2026-10-03T20:33:42.3695540Z       at Module._compile (node:internal/modules/cjs/loader:1929:14) {
+2026-10-03T20:33:42.3695911Z     code: 'MODULE_NOT_FOUND',
+2026-10-03T20:33:42.3696961Z     requireStack: [ '/root/eos-install-preflight-fixture-qPCYOk/bundle/payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicenseCore.js', '/root/eos-install-preflight-fixture-qPCYOk/bundle/payload/app/package.json' ]
+2026-10-03T20:33:42.3697891Z   }
+2026-10-03T20:33:42.3697990Z 
+2026-10-03T20:33:42.3698232Z test at tests/system/preflight-installation.test.cjs:59:1
+2026-10-03T20:33:42.3698884Z ✖ occupied integrated UI port yields a non-mutating rejected report (46.846509ms)
+2026-10-03T20:33:42.3699379Z   Error: Cannot find module './eosLicensePolicy'
+2026-10-03T20:33:42.3699682Z   Require stack:
+2026-10-03T20:33:42.3700275Z   - /root/eos-install-preflight-fixture-ceg8Co/bundle/payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicenseCore.js
+2026-10-03T20:33:42.3701063Z   - /root/eos-install-preflight-fixture-ceg8Co/bundle/payload/app/package.json
+2026-10-03T20:33:42.3701625Z       at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+2026-10-03T20:33:42.3702175Z       at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+2026-10-03T20:33:42.3702729Z       at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+2026-10-03T20:33:42.3703282Z       at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+2026-10-03T20:33:42.3703751Z       at Module._load (node:internal/modules/cjs/loader:1341:5)
+2026-10-03T20:33:42.3704180Z       at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+2026-10-03T20:33:42.3704877Z       at Module.require (node:internal/modules/cjs/loader:1674:12)
+2026-10-03T20:33:42.3705295Z       at require (node:internal/modules/helpers:157:16)
+2026-10-03T20:33:42.3706172Z       at Object.<anonymous> (/root/eos-install-preflight-fixture-ceg8Co/bundle/payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicenseCore.js:10:27)
+2026-10-03T20:33:42.3707082Z       at Module._compile (node:internal/modules/cjs/loader:1929:14) {
+2026-10-03T20:33:42.3707730Z     code: 'MODULE_NOT_FOUND',
+2026-10-03T20:33:42.3709545Z     requireStack: [ '/root/eos-install-preflight-fixture-ceg8Co/bundle/payload/app/node_modules/iobroker.eos-admin/build/lib/eosLicenseCore.js', '/root/eos-install-preflight-fixture-ceg8Co/bundle/payload/app/package.json' ]
+2026-10-03T20:33:42.3711214Z   }
+2026-10-03T20:33:42.3734967Z ##[error]Process completed with exit code 1.
+2026-10-03T20:33:42.3789108Z ##[group]Run cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+2026-10-03T20:33:42.3789544Z [36;1mcat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'[0m
+2026-10-03T20:33:42.3790195Z [36;1mThis job selects source-only bootstrap, onboarding, sudo/preflight and PostgreSQL contract fixtures, plus real loopback TLS tests.[0m
+2026-10-03T20:33:42.3791162Z [36;1mPostgreSQL contract tests use doubles; no native database, ARM64 runtime, APT transaction, systemd installation or plant is exercised.[0m
+2026-10-03T20:33:42.3792149Z [36;1mRecovery archive-signature verification, full artifact publication and native Debian 13 / Pi first-start acceptance remain separate OPEN gates.[0m
+2026-10-03T20:33:42.3793113Z [36;1mA green result is not a production approval. The historical upstream Linux/macOS/FreeBSD/Windows workflows remain separate.[0m
+2026-10-03T20:33:42.3793680Z [36;1mSUMMARY[0m
+2026-10-03T20:33:42.3857756Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T20:33:42.3858156Z env:
+2026-10-03T20:33:42.3858370Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T20:33:42.3858626Z ##[endgroup]
+2026-10-03T20:33:42.4087499Z Post job cleanup.
+2026-10-03T20:33:42.4959446Z [command]/usr/bin/git version
+2026-10-03T20:33:42.5001931Z git version 2.55.0
+2026-10-03T20:33:42.5047412Z Temporarily overriding HOME='/home/runner/work/_temp/ecee123a-a79e-46f0-a480-d6d68778c788' before making global git config changes
+2026-10-03T20:33:42.5048966Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-03T20:33:42.5055447Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T20:33:42.5089388Z Removing SSH command configuration
+2026-10-03T20:33:42.5097688Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T20:33:42.5135889Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T20:33:42.5398562Z Removing HTTP extra header
+2026-10-03T20:33:42.5405381Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T20:33:42.5443239Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T20:33:42.5703400Z Removing includeIf entries pointing to credentials config files
+2026-10-03T20:33:42.5712174Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T20:33:42.5754001Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T20:33:42.6162468Z Cleaning up orphan processes

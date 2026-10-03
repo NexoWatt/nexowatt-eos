@@ -70,6 +70,19 @@ Der Generator überschreibt keine bereits erzeugten Lieferdateien. Ein geändert
 Reparaturstand benötigt einen neuen, ausdrücklich benannten Ausgabepfad und neue
 Pins. Die ursprünglichen R4-Lieferdateien bleiben erhalten.
 
+Der Workflow `.github/workflows/eos-r5-repair-entry.yml` kann diese Schritte nach
+der R5-Veröffentlichung ausführen. Er liest Archiv, öffentlichen Schlüssel und
+Liefermetadaten zusätzlich über ihre unveränderlichen öffentlichen HTTPS-URLs
+zurück und vergleicht die vollständigen Bytes mit dem geprüften Checkout.
+`remote-readback.json` hält die tatsächlich gelesenen URLs und Hashes fest.
+Er erstellt zunächst einen lokalen Commit mit dem Einstieg und anschließend
+einen zweiten mit dem darauf gepinnten Befehl und `command-verification.json`.
+Nur die fünf ausdrücklich benannten neuen Lieferdateien dürfen veröffentlicht
+werden; Änderungen an Quellen, historischen Dateien oder sonstige unversionierte
+Dateien führen zum Abbruch. Ein normaler Push erfolgt nur, wenn `main` weiterhin
+auf dem ursprünglichen Checkout-Commit steht. Bei konkurrierenden Änderungen
+wird nichts erzwungen. Vorhandene Einstiegslieferungen werden übersprungen.
+
 ## Prüfstand und Grenzen
 
 Die Transportprüfungen liegen in `tests/bootstrap/public-repair-entry.test.cjs`.
