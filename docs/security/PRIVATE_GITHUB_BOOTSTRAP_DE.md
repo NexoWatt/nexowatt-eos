@@ -6,7 +6,7 @@ separaten SHA-256. Ein ersetzter README-Befehl wäre selbst ein neuer
 Vertrauensanker; ein Hash allein authentifiziert keine beliebige Downloadquelle.
 GitHub-/Repository-Zugriffsrechte und Herstellerfreigabe bleiben deshalb relevant.
 
-Die aktuelle Testlieferung liegt unter `delivery/bootstrap-test3-r2` und bindet
+Die aktuelle Testlieferung liegt unter `delivery/bootstrap-test3-r2-apt` und bindet
 den öffentlichen NWL2-Trustexport des vorhandenen lokalen Lizenzgenerators ein.
 Der normale Aufruf `node cli.js trust <Ausgabedatei>` erzeugte einen neuen
 öffentlichen Export mit `kid: nexowattEOS`, bytegleich mit der zuvor vorliegenden
@@ -53,6 +53,28 @@ vor Entpacken oder APT. Kein Skip-/Force-/Offline-CLI-Schalter wurde ergänzt.
 Vorhandene EOS-Daten und PostgreSQL-Cluster bleiben geschützt; ein abgebrochener
 Teillauf ist zu prüfen und wird nicht automatisch überschrieben.
 
+Die APT-Korrektur ergänzt ausschließlich `.pgp` neben `.gpg` und `.asc` für
+einzelne Keyring-Dateinamen unter `/usr/share/keyrings/`. Das deckt die
+[offizielle Raspberry-Pi-OS-ARM64-Vorlage](https://raw.githubusercontent.com/RPi-Distro/pi-gen/4d8ee447dd3d37e8b0ef8752e460d9082d9d435d/stage0/00-configure-apt/files/raspi.sources)
+ab. Erlaubte Quellen, Distributionen, Komponenten, ARM64-Beschränkung,
+Dateirechte und APT-Signaturprüfung bleiben bestehen. Inline-Schlüssel,
+zusätzliche Trust-Optionen, andere Keyring-Verzeichnisse und zusätzliche
+Architekturen werden dadurch nicht zugelassen.
+
+Ungültige Deb822-Optionen liefern die festen Fehlercodes
+`BOOTSTRAP_APT_SOURCE_OPTIONS_FIELDS`, `BOOTSTRAP_APT_SOURCE_OPTIONS_ENABLED`,
+`BOOTSTRAP_APT_SOURCE_OPTIONS_ARCHITECTURES`,
+`BOOTSTRAP_APT_SOURCE_OPTIONS_SIGNED_BY` oder
+`BOOTSTRAP_APT_SOURCE_OPTIONS_COMPONENTS`. Die Diagnose enthält keine frei
+übernommenen Inhalte der Paketquellen. Die tatsächliche Konfiguration des
+gemeldeten Pi ist noch unbekannt; die allgemeine Kompatibilitätskorrektur
+belegt deshalb nicht die konkrete Fehlerursache dieses Geräts.
+
+Die bisherigen Lieferordner bleiben unverändert. Der neue README-Block bindet
+den geänderten Bootstrap und sein neues Manifest; alte, bereits kopierte
+Blöcke laden weiterhin die jeweils alte Version. Die signierte Runtime
+test.3 Revision 2 mit Sequenz 5 bleibt unverändert.
+
 Der GitHub-PAT ersetzt weder den öffentlichen NWL2-Lizenzprüfschlüssel noch eine
 Gerätelizenz. Die Schlüsselzuordnung erfolgt vor dem Paketbau; auf dem Pi wird
 sie nicht erneut erfragt. Die belegte Herkunft aus dem lokalen Generator ist
@@ -69,4 +91,7 @@ Geräte-/Hardwaretests bleiben **OFFEN**. Neuinstallation ist kein Flottenupdate
 eine dauerhafte Signatur-/Update-/Rollbackkette wird damit nicht bereitgestellt.
 
 Die Nachweise zur aktuellen Lieferung stehen im
-[Prüfbericht zum freigeschalteten GitHub-Einstieg](../../reports/integration/github-bootstrap-ready-20261003/README.md).
+[Prüfbericht zur APT-Kompatibilitätskorrektur](../../reports/integration/github-bootstrap-apt-20261003/).
+Die einmalige Herstellertrust-Zuordnung ist im
+[vorherigen GitHub-Prüfbericht](../../reports/integration/github-bootstrap-ready-20261003/README.md)
+dokumentiert.

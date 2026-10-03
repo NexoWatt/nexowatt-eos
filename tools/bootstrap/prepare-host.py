@@ -53,6 +53,10 @@ OFFICIAL_REPOS = {"deb.debian.org": {"/debian", "/debian-security"},
                   "archive.raspberrypi.com": {"/debian"}, "archive.raspberrypi.org": {"/debian"},
                   "raspbian.raspberrypi.com": {"/raspbian"}, "raspbian.raspberrypi.org": {"/raspbian"}}
 SUITES = {"trixie", "trixie-updates", "trixie-security", "trixie-backports"}
+# Current Debian/Raspberry Pi images use .pgp; older package aliases use .gpg.
+# This only recognizes the protected distro keyring location. APT still verifies
+# repository signatures and the source files retain their root ownership checks.
+APT_SIGNED_BY = r"/usr/share/keyrings/[A-Za-z0-9_.-]+\.(?:gpg|asc|pgp)"
 
 
 class Rejected(Exception):
@@ -244,7 +248,7 @@ def validate_apt_sources(text, *, deb822):
                 fail("BOOTSTRAP_APT_SOURCE_SYNTAX")
             if match[1]:
                 for option in match[1].split():
-                    if not re.fullmatch(r"(?:arch=arm64|signed-by=/usr/share/keyrings/[A-Za-z0-9_.-]+\.(?:gpg|asc))", option):
+                    if not re.fullmatch(r"(?:arch=arm64|signed-by=" + APT_SIGNED_BY + r")", option):
                         fail("BOOTSTRAP_APT_SOURCE_OPTIONS")
             check_repo_url(match[2], [match[3]])
             if not set(match[4].split()) <= {"main", "contrib", "non-free", "non-free-firmware", "rpi"}:
@@ -259,19 +263,21 @@ def validate_apt_sources(text, *, deb822):
             if not paragraph:
                 continue
             if set(paragraph) - {"Types", "URIs", "Suites", "Components", "Architectures", "Signed-By", "Enabled"}:
-                fail("BOOTSTRAP_APT_SOURCE_OPTIONS")
+                fail("BOOTSTRAP_APT_SOURCE_OPTIONS_FIELDS")
             if paragraph.get("Enabled", "yes") != "yes":
                 if paragraph["Enabled"] == "no":
                     paragraph = {}
                     continue
-                fail("BOOTSTRAP_APT_SOURCE_OPTIONS")
+                fail("BOOTSTRAP_APT_SOURCE_OPTIONS_ENABLED")
             if not set(paragraph.get("Types", "").split()) or not set(paragraph["Types"].split()) <= {"deb", "deb-src"}:
                 fail("BOOTSTRAP_APT_SOURCE_SYNTAX")
-            if (paragraph.get("Architectures", "arm64") != "arm64"
-                    or not re.fullmatch(r"/usr/share/keyrings/[A-Za-z0-9_.-]+\.(?:gpg|asc)", paragraph.get("Signed-By", ""))
-                    or not set(paragraph.get("Components", "").split())
+            if paragraph.get("Architectures", "arm64") != "arm64":
+                fail("BOOTSTRAP_APT_SOURCE_OPTIONS_ARCHITECTURES")
+            if not re.fullmatch(APT_SIGNED_BY, paragraph.get("Signed-By", "")):
+                fail("BOOTSTRAP_APT_SOURCE_OPTIONS_SIGNED_BY")
+            if (not set(paragraph.get("Components", "").split())
                     or not set(paragraph["Components"].split()) <= {"main", "contrib", "non-free", "non-free-firmware", "rpi"}):
-                fail("BOOTSTRAP_APT_SOURCE_OPTIONS")
+                fail("BOOTSTRAP_APT_SOURCE_OPTIONS_COMPONENTS")
             uris = paragraph.get("URIs", "").split()
             if not uris:
                 fail("BOOTSTRAP_APT_SOURCE_SYNTAX")

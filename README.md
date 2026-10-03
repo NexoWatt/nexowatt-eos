@@ -25,6 +25,13 @@ Cluster werden nicht überschrieben.
 den alten, fest gebundenen Befehl. Er bleibt gesperrt. Ersetze ihn vollständig
 durch diesen aktuellen Block; ändere keine Hashes oder Manifestdateien von Hand.
 
+**Korrektur für `BOOTSTRAP_APT_SOURCE_OPTIONS` (03.10.2026):** Der aktuelle
+Installer akzeptiert auch die `.pgp`-Schlüsseldateien der offiziellen
+Raspberry-Pi-OS-Paketquellen. Bei diesem Fehler den **gesamten neuen Block**
+kopieren und erneut starten. Der alte Befehl lädt weiterhin den alten Installer.
+Falls erneut ein APT-Fehler erscheint, den vollständigen Fehlercode zur Prüfung
+weitergeben. Paketquellen und Signaturprüfungen müssen dafür nicht verändert werden.
+
 ```bash
 /bin/bash <<'EOS_INSTALL'
 # EOS_GITHUB_BOOTSTRAP_VERSION=2026-10-03
@@ -42,11 +49,11 @@ read -r -s -p 'GitHub-Token: ' eos_token </dev/tty
 printf '\n' >/dev/tty
 [[ $eos_token =~ ^[A-Za-z0-9_]{20,512}$ ]] || { echo 'EOS: Tokenformat ungueltig.' >&2; exit 1; }
 eos_stage=$(/usr/bin/mktemp -d /root/eos-download-XXXXXXXX)
-printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14301 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/00de8f6fdc938fa6e85742d176e20a520c231069' -o "$eos_stage/github-download.py"
-printf '%s  %s\n' '6faf6bf09aaaf3faf92a1e64d49f8ba822dbb3ea6dd10fdee4c8f8617a5c41bc' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
+printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14631 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/4667218fc6c46c0e9469e8cc4e699816a9a56d2d' -o "$eos_stage/github-download.py"
+printf '%s  %s\n' '44e007193e77315025e73227be1113166eae1d9901e9655eeacea7fa91a83e28' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
 exec 3< <(printf '%s\n' "$eos_token")
 unset eos_token
-exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 5e7d8cf35f503fbd6e03b49bfe2cebcad682a04d --manifest-sha256 ae63c4a4dce5d96a28364a37e871ed88c0c051607651ce7d78a36a9aeb541e00
+exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 50d93fc576ddff78cac458b0d702d128e5634064 --manifest-sha256 1f2132c9e39b5604bd6368549d8cf1a22daa9016921ecb607a538f9937ce899e
 EOS_INSTALL
 ```
 
@@ -61,7 +68,8 @@ serverseitig geprüft.
 
 [Anleitung und Voraussetzungen](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/PRIVATE_GITHUB_BOOTSTRAP_DE.md) ·
-[Prüfschlüsselzuordnung und Paketnachweise](reports/integration/github-bootstrap-ready-20261003/README.md).
+[APT-Korrektur und aktuelle Paketnachweise](reports/integration/github-bootstrap-apt-20261003/README.md) ·
+[Prüfschlüsselzuordnung](reports/integration/github-bootstrap-ready-20261003/README.md).
 
 **Vollständige Pi-Installation und Hardwaretests: OFFEN, nicht ausgeführt.**
 Dieser Einstieg ist für die Testumgebung; Anlagensteuerung bleibt gesperrt.

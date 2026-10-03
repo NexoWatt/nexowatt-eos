@@ -9,7 +9,7 @@ Eigenes Webhosting, npm-Zugang und manuell erstellte Setup-Dateien entfallen.
 **Aktueller Status:** Der öffentliche NWL2-Prüfschlüssel mit der Schlüsselkennung
 `nexowattEOS` wurde über den normalen öffentlichen Trustexport des vorhandenen
 lokalen Lizenzgenerators zugeordnet und in
-[`delivery/bootstrap-test3-r2`](../../delivery/bootstrap-test3-r2/)
+[`delivery/bootstrap-test3-r2-apt`](../../delivery/bootstrap-test3-r2-apt/)
 eingebunden. Das neue Manifest ist für den Installationsversuch freigeschaltet
 (`ready: true`). Auf dem Pi ist keine manuelle Schlüsseldatei mehr erforderlich.
 Die vollständige Pi-Installation, systemd-/PostgreSQL-/TLS-Abnahme, der
@@ -22,6 +22,15 @@ beendet sich vor der Paketinstallation. Den **gesamten Block** erneut aus der
 [aktuellen README auf main](https://github.com/NexoWatt/nexowatt-eos/blob/main/README.md)
 kopieren und in der SSH-Root-Sitzung ausführen. Einzelne Hashes oder Dateien auf
 dem Pi müssen dafür nicht geändert werden.
+
+Die aktuelle Bootstrap-Lieferung berücksichtigt außerdem die `.pgp`-Keyring-
+Dateien der offiziellen Raspberry-Pi-OS-ARM64-Paketquellen. Die frühere
+Vorprüfung akzeptierte hier nur `.gpg` und `.asc`. Diese Kompatibilitätslücke
+ist korrigiert; die tatsächliche APT-Konfiguration des gemeldeten Test-Pi liegt
+noch nicht vor und ist damit nicht als Fehlerursache bestätigt. Auch für diese
+Korrektur den **gesamten aktuellen README-Block** kopieren: Ein bereits
+gespeicherter Befehl lädt wegen seiner festen Hashbindung weiterhin die alte
+Bootstrap-Version.
 
 ## So läuft der Teststart ab
 
@@ -87,6 +96,30 @@ Nach erfolgreicher Downloadprüfung folgen die bestehenden Installationsschritte
   bleiben die privaten Download-/Prüfbelege erhalten. Eine teilweise begonnene
   EOS-Installation wird nicht automatisch überschrieben oder wiederholt.
 
+Die Prüfung der Paketquellen erlaubt einzelne Keyring-Dateien unter
+`/usr/share/keyrings/` mit `.gpg`, `.asc` oder `.pgp`. Die offizielle
+[Raspberry-Pi-OS-Quelle](https://raw.githubusercontent.com/RPi-Distro/pi-gen/4d8ee447dd3d37e8b0ef8752e460d9082d9d435d/stage0/00-configure-apt/files/raspi.sources)
+verwendet ebenso wie die zugehörige
+[Debian-Quelle](https://raw.githubusercontent.com/RPi-Distro/pi-gen/4d8ee447dd3d37e8b0ef8752e460d9082d9d435d/stage0/00-configure-apt/files/debian.sources)
+die Endung `.pgp`. APT-Signaturprüfung, erlaubte Quellen und ARM64-Beschränkung
+gelten unverändert. Zusätzliche Trust-Optionen werden nicht zugelassen.
+
+Bei ungültigen Deb822-Optionen nennt der neue Bootstrap den betroffenen
+Bereich, ohne den Inhalt der Quelldatei auszugeben:
+
+| Fehler | Betroffener Bereich |
+| --- | --- |
+| `BOOTSTRAP_APT_SOURCE_OPTIONS_FIELDS` | Nicht erlaubtes zusätzliches Feld |
+| `BOOTSTRAP_APT_SOURCE_OPTIONS_ENABLED` | Ungültiger Wert für `Enabled` |
+| `BOOTSTRAP_APT_SOURCE_OPTIONS_ARCHITECTURES` | Andere Architektur als `arm64` |
+| `BOOTSTRAP_APT_SOURCE_OPTIONS_SIGNED_BY` | Nicht erlaubter Keyring-Pfad oder Dateityp |
+| `BOOTSTRAP_APT_SOURCE_OPTIONS_COMPONENTS` | Fehlende oder nicht erlaubte Komponenten |
+
+Bei einem erneuten Abbruch den genauen Fehler und die betroffene öffentliche
+Paketquellen-Konfiguration prüfen; keine Signatur- oder Quellenprüfung abschalten.
+Die Runtime bleibt test.3 Revision 2, signierte Sequenz 5. Die Korrektur betrifft
+ausschließlich den Bootstrap.
+
 ## Browser: UUID, Lizenz und Passwort
 
 Das öffentliche Geräte-CA-Zertifikat `/etc/nexowatt-eos/web/ca.crt` über den
@@ -135,7 +168,7 @@ node tools/bootstrap/build-github-download.cjs \
   --license-trust /ABSOLUTER/PFAD/license-trust.json \
   --license-trust-sha256 BESTAETIGTER_LIZENZTRUST_SHA256 \
   --release-public-key-sha256 BESTAETIGTER_RELEASEKEY_SHA256 \
-  --output /ABSOLUTER/REPOSITORYPFAD/delivery/bootstrap-test3-r2
+  --output /ABSOLUTER/REPOSITORYPFAD/delivery/bootstrap-neue-lieferung
 ```
 
 Die Ausgabe muss ein **neuer direkter Unterordner von `delivery/`** im
@@ -162,6 +195,7 @@ Laufzeitverzeichnis ist kein Updateverfahren. Vollständige Pi-Installation,
 systemd, Browser-Gesamtlauf, Reboot, Recovery und Hardwareabnahme bleiben bis
 zur tatsächlichen Ausführung **OFFEN**.
 
-Prüfbelege: [Freigeschalteter privater GitHub-Einstieg](../../reports/integration/github-bootstrap-ready-20261003/README.md),
+Prüfbelege: [Aktuelle APT-Kompatibilitätskorrektur](../../reports/integration/github-bootstrap-apt-20261003/),
+[Herstellertrust und vorheriger GitHub-Einstieg](../../reports/integration/github-bootstrap-ready-20261003/README.md),
 [Bootstrap-Prüfbericht](../../reports/integration/bootstrap-20261003/README.md)
 und [signierte Revision 2](../../reports/integration/installable-test3-r2-20261003/README.md).

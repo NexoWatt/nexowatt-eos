@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "observedDate": "2026-10-03",
+  "purpose": "Primary-source provenance and isolated parser reproduction for BOOTSTRAP_APT_SOURCE_OPTIONS on supported Debian/Raspberry Pi OS 13 sources.",
+  "collection": {
+    "networkReadsExecuted": true,
+    "networkReads": "Public HTTPS upstream files read in memory with certificate verification; no package installation or archive extraction to disk. Existing observed results reused to write this report; no repeat network download for report creation.",
+    "gitHubCommitApi": "https://api.github.com/repos/RPi-Distro/pi-gen/commits/arm64",
+    "piGenCommitObserved": "4d8ee447dd3d37e8b0ef8752e460d9082d9d435d",
+    "evidenceType": "Observed upstream source/package bytes and actual local parser executions, not a user-Pi result."
+  },
+  "piGenTemplates": [
+    {
+      "name": "debian.sources",
+      "url": "https://raw.githubusercontent.com/RPi-Distro/pi-gen/4d8ee447dd3d37e8b0ef8752e460d9082d9d435d/stage0/00-configure-apt/files/debian.sources",
+      "bytes": 381,
+      "sha256": "d6d4b2c75284d9680e22361d1f7c5d7aa01a42e2d5b50863423c0559a99d66aa",
+      "encoding": "UTF-8",
+      "lineEndings": "LF",
+      "terminalNewline": true,
+      "content": "Types: deb\nURIs: http://deb.debian.org/debian/\nSuites: RELEASE RELEASE-updates\nComponents: main contrib non-free non-free-firmware\nSigned-By: /usr/share/keyrings/debian-archive-keyring.pgp\n\nTypes: deb\nURIs: http://deb.debian.org/debian-security/\nSuites: RELEASE-security\nComponents: main contrib non-free non-free-firmware\nSigned-By: /usr/share/keyrings/debian-archive-keyring.pgp\n",
+      "fixtureTransformation": {
+        "operation": "literal replace",
+        "from": "RELEASE",
+        "to": "trixie",
+        "otherChanges": false
+      },
+      "trixieContent": "Types: deb\nURIs: http://deb.debian.org/debian/\nSuites: trixie trixie-updates\nComponents: main contrib non-free non-free-firmware\nSigned-By: /usr/share/keyrings/debian-archive-keyring.pgp\n\nTypes: deb\nURIs: http://deb.debian.org/debian-security/\nSuites: trixie-security\nComponents: main contrib non-free non-free-firmware\nSigned-By: /usr/share/keyrings/debian-archive-keyring.pgp\n",
+      "trixieBytes": 378,
+      "trixieSha256": "cd9384975dec7576394558a0d8ca3a62d880cbb3926577cdb4f32ac690273662"
+    },
+    {
+      "name": "raspi.sources",
+      "url": "https://raw.githubusercontent.com/RPi-Distro/pi-gen/4d8ee447dd3d37e8b0ef8752e460d9082d9d435d/stage0/00-configure-apt/files/raspi.sources",
+      "bytes": 152,
+      "sha256": "a89b8865d4866d3afe3ae9944c40874b763d20e7a032afca588347766f2d5029",
+      "encoding": "UTF-8",
+      "lineEndings": "LF",
+      "terminalNewline": true,
+      "content": "Types: deb\nURIs: http://archive.raspberrypi.com/debian/\nSuites: RELEASE\nComponents: main\nSigned-By: /usr/share/keyrings/raspberrypi-archive-keyring.pgp\n",
+      "fixtureTransformation": {
+        "operation": "literal replace",
+        "from": "RELEASE",
+        "to": "trixie",
+        "otherChanges": false
+      },
+      "trixieContent": "Types: deb\nURIs: http://archive.raspberrypi.com/debian/\nSuites: trixie\nComponents: main\nSigned-By: /usr/share/keyrings/raspberrypi-archive-keyring.pgp\n",
+      "trixieBytes": 151,
+      "trixieSha256": "cd35efa63b2d00325996a86383c49bb0e03e914427b5568bcbdbc453605b512c"
+    }
+  ],
+  "debianReleaseNotes": {
+    "url": "https://www.debian.org/releases/trixie/release-notes/upgrading.html",
+    "retrieval": "Browsed the official Debian 13 release notes.",
+    "finding": "Trixie uses canonical .pgp keyring paths; .gpg paths are backward-compatibility symlinks scheduled for eventual removal.",
+    "scope": "Documents Debian keyrings. Raspberry Pi compatibility was verified separately from its actual source and binary packages."
+  },
+  "raspberryPiArchiveKeyring": {
+    "version": "2025.1+rpt1",
+    "sourcePackage": {
+      "url": "https://archive.raspberrypi.com/debian/pool/main/r/raspberrypi-archive-keyring/raspberrypi-archive-keyring_2025.1+rpt1.tar.xz",
+      "bytes": 8704,
+      "sha256": "8c88c304646075f5c27896de1c9b2a97b681aec95f778607575d832a93eaf9da",
+      "inspection": "Python tarfile read of Makefile and debian installation metadata in memory.",
+      "observedBuildAndInstall": {
+        "Makefile": "Builds keyrings/raspberrypi-archive-keyring.pgp, creates relative .gpg symlink to .pgp, installs .pgp and copies .gpg preserving the link into /usr/share/keyrings/.",
+        "debian/raspberrypi-archive-keyring.install": "Includes usr/share/keyrings/* and etc/apt/trusted.gpg.d/*."
+      }
+    },
+    "binaryPackage": {
+      "url": "https://archive.raspberrypi.com/debian/pool/main/r/raspberrypi-archive-keyring/raspberrypi-archive-keyring_2025.1+rpt1_all.deb",
+      "bytes": 7372,
+      "sha256": "2e727149d7acb8cc7f604e66d0049161039c8aa1eaf1175e54f9e69d963d60e4",
+      "inspection": "Parsed ar container and data.tar members in memory. No extraction, maintainer-script execution or installation.",
+      "members": [
+        {
+          "name": "./usr/share/keyrings/raspberrypi-archive-keyring.pgp",
+          "type": "regular",
+          "uid": 0,
+          "gid": 0,
+          "mode": "0644",
+          "bytes": 1229
+        },
+        {
+          "name": "./usr/share/keyrings/raspberrypi-archive-keyring.gpg",
+          "type": "symlink",
+          "uid": 0,
+          "gid": 0,
+          "mode": "0777",
+          "bytes": 0,
+          "target": "raspberrypi-archive-keyring.pgp"
+        }
+      ]
+    },
+    "conclusion": "The distributed package supplies the .gpg compatibility symlink. This does not prove it exists or is protected on the user Pi."
+  },
+  "isolatedParserReproduction": {
+    "executed": true,
+    "hostPlatform": "win32",
+    "pythonVersion": "3.14.0",
+    "method": "Read old source with git show and current source from workspace; extract only parser class/functions/constants by Python AST; execute validate_apt_sources on exact upstream contents with RELEASE replaced by trixie. No preflight or installation entry point imported/executed.",
+    "selectedAstNames": [
+      "APT_SIGNED_BY",
+      "OFFICIAL_REPOS",
+      "Rejected",
+      "SUITES",
+      "check_repo_url",
+      "fail",
+      "validate_apt_sources"
+    ],
+    "deb822": true,
+    "results": [
+      {
+        "version": "before",
+        "sourcePath": "tools/bootstrap/prepare-host.py",
+        "gitCommit": "d7aa023026708b0790495726ef5b0c8217b1cdb2",
+        "workingTreeSnapshot": false,
+        "sourceBytes": 28584,
+        "sourceSha256": "bc3422502f0f3c28d8c4a5176e487b5d9f6b4d340014cb1709b8f0993c85386f",
+        "observations": [
+          {
+            "case": "debian.sources",
+            "accepted": false,
+            "errorCode": "BOOTSTRAP_APT_SOURCE_OPTIONS"
+          },
+          {
+            "case": "raspi.sources",
+            "accepted": false,
+            "errorCode": "BOOTSTRAP_APT_SOURCE_OPTIONS"
+          },
+          {
+            "case": "combined-official-templates",
+            "accepted": false,
+            "errorCode": "BOOTSTRAP_APT_SOURCE_OPTIONS"
+          }
+        ]
+      },
+      {
+        "version": "after",
+        "sourcePath": "tools/bootstrap/prepare-host.py",
+        "gitCommit": null,
+        "workingTreeSnapshot": true,
+        "sourceBytes": 29629,
+        "sourceSha256": "0c208b3025ee40e6131882c78b266e82d213033435d9d421dcbb58828e71ceaa",
+        "observations": [
+          {
+            "case": "debian.sources",
+            "accepted": true,
+            "sourceStanzas": 2
+          },
+          {
+            "case": "raspi.sources",
+            "accepted": true,
+            "sourceStanzas": 1
+          },
+          {
+            "case": "combined-official-templates",
+            "accepted": true,
+            "sourceStanzas": 3
+          }
+        ]
+      }
+    ],
+    "conclusion": "Both official .pgp templates reproduce BOOTSTRAP_APT_SOURCE_OPTIONS before the fix and are accepted by the corrected parser."
+  },
+  "limits": {
+    "userPiAptConfiguration": "UNKNOWN: requested diagnostic has not been received. These are upstream default templates, not readback of that Pi.",
+    "otherTestFixtureProvenance": "The separate repository unit-test fixture using security.debian.org is a valid compatibility fixture, not a byte-identical copy of pi-gen debian.sources; official pi-gen uses deb.debian.org/debian-security/.",
+    "aptTransactionExecuted": false,
+    "targetPiExecution": false,
+    "hostConfigurationMutated": false,
+    "hardwareTests": "OFFEN",
+    "fullInstallation": "OFFEN",
+    "upstreamPackageSignatureChainVerified": false,
+    "transportAuthentication": "OS HTTPS certificate verification; recorded SHA256 fingerprints bind bytes read but do not independently verify the upstream APT signature chain."
+  }
+}

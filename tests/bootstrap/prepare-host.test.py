@@ -58,6 +58,20 @@ def write_node_tar(path, *, machine=183, kind=tarfile.REGTYPE, duplicate=False):
     return bytes(content)
 
 
+DEBIAN_PGP_SOURCES = (
+    "Types: deb\nURIs: http://deb.debian.org/debian/\nSuites: trixie trixie-updates\n"
+    "Components: main contrib non-free non-free-firmware\n"
+    "Signed-By: /usr/share/keyrings/debian-archive-keyring.pgp\n\n"
+    "Types: deb\nURIs: http://security.debian.org/debian-security/\nSuites: trixie-security\n"
+    "Components: main contrib non-free non-free-firmware\n"
+    "Signed-By: /usr/share/keyrings/debian-archive-keyring.pgp\n"
+)
+RASPBERRY_PI_PGP_SOURCE = (
+    "Types: deb\nURIs: http://archive.raspberrypi.com/debian/\nSuites: trixie\n"
+    "Components: main\nSigned-By: /usr/share/keyrings/raspberrypi-archive-keyring.pgp\n"
+)
+
+
 class HostPreparation(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix="eos-bootstrap-test-")
@@ -306,6 +320,84 @@ class HostPreparation(unittest.TestCase):
                            ("deb [trusted=yes] http://deb.debian.org/debian trixie main", False),
                            ("deb https://deb.nodesource.com/node_24.x nodistro main", False)):
             self.rejected(lambda: subject.validate_apt_sources(text, deb822=mode), "BOOTSTRAP_APT_")
+
+    def test_official_debian_deb822_pgp_sources_accept_both_release_stanzas(self):
+        self.assertEqual(subject.validate_apt_sources(DEBIAN_PGP_SOURCES, deb822=True), 2)
+
+    def test_official_raspberry_pi_deb822_pgp_source_is_accepted(self):
+        self.assertEqual(subject.validate_apt_sources(RASPBERRY_PI_PGP_SOURCE, deb822=True), 1)
+
+    def test_legacy_pgp_signed_by_with_arm64_remains_bounded(self):
+        for name, uri in (("debian", "http://deb.debian.org/debian"),
+                          ("raspberrypi", "http://archive.raspberrypi.com/debian/")):
+            with self.subTest(repository=name):
+                text = ("deb [arch=arm64 signed-by=/usr/share/keyrings/" + name
+                        + "-archive-keyring.pgp] " + uri + " trixie main\n")
+                self.assertEqual(subject.validate_apt_sources(text, deb822=False), 1)
+
+    def test_pgp_keyring_cannot_escape_the_existing_protected_directory(self):
+        for value in ("/tmp/vendor.pgp", "/etc/apt/keyrings/vendor.pgp", "/root/vendor.pgp",
+                      "/usr/share/keyrings/../vendor.pgp", "/usr/share/keyrings/sub/vendor.pgp",
+                      "/usr/share/keyrings/vendor.pgp/", "/usr/share/keyrings/vendor.pgp.backup",
+                      "/usr/share/keyrings/vendor.pgp,other.pgp"):
+            for mode in (True, False):
+                with self.subTest(path=value, deb822=mode):
+                    text = (RASPBERRY_PI_PGP_SOURCE.replace("/usr/share/keyrings/raspberrypi-archive-keyring.pgp", value)
+                            if mode else "deb [signed-by=" + value + "] http://archive.raspberrypi.com/debian trixie main")
+                    self.rejected(lambda: subject.validate_apt_sources(text, deb822=mode),
+                                  "BOOTSTRAP_APT_SOURCE_OPTIONS")
+
+    def test_older_gpg_and_asc_source_forms_are_preserved(self):
+        for extension in ("gpg", "asc"):
+            with self.subTest(extension=extension):
+                self.assertEqual(subject.validate_apt_sources(
+                    DEBIAN_PGP_SOURCES.replace(".pgp", "." + extension), deb822=True), 2)
+                text = ("deb [signed-by=/usr/share/keyrings/debian-archive-keyring." + extension
+                        + "] http://deb.debian.org/debian trixie main")
+                self.assertEqual(subject.validate_apt_sources(text, deb822=False), 1)
+
+    def test_pgp_support_preserves_signature_and_validity_bypass_rejections(self):
+        for field in ("Trusted: yes", "Allow-Insecure: yes", "Check-Valid-Until: no",
+                      "Allow-Weak: yes", "Allow-Downgrade-To-Insecure: yes"):
+            with self.subTest(field=field):
+                self.rejected(lambda: subject.validate_apt_sources(
+                    RASPBERRY_PI_PGP_SOURCE + field + "\n", deb822=True),
+                    "BOOTSTRAP_APT_SOURCE_OPTIONS_FIELDS")
+        for option in ("trusted=yes", "allow-insecure=yes", "check-valid-until=no", "allow-weak=yes"):
+            with self.subTest(option=option):
+                text = ("deb [signed-by=/usr/share/keyrings/raspberrypi-archive-keyring.pgp "
+                        + option + "] http://archive.raspberrypi.com/debian trixie main")
+                self.rejected(lambda: subject.validate_apt_sources(text, deb822=False),
+                              "BOOTSTRAP_APT_SOURCE_OPTIONS$")
+
+    def test_deb822_option_diagnostics_use_only_fixed_reason_codes(self):
+        cases = (
+            (RASPBERRY_PI_PGP_SOURCE + "X-Secret-Value: do-not-print\n", "FIELDS"),
+            (RASPBERRY_PI_PGP_SOURCE + "Enabled: do-not-print\n", "ENABLED"),
+            (RASPBERRY_PI_PGP_SOURCE + "Architectures: arm64 armhf\n", "ARCHITECTURES"),
+            (RASPBERRY_PI_PGP_SOURCE.replace("/usr/share/keyrings/raspberrypi-archive-keyring.pgp",
+                                             "https://user:do-not-print@example.com/key.pgp"), "SIGNED_BY"),
+            (RASPBERRY_PI_PGP_SOURCE.replace("Components: main", "Components: do-not-print"), "COMPONENTS"),
+        )
+        for text, reason in cases:
+            with self.subTest(reason=reason):
+                with self.assertRaises(subject.Rejected) as caught:
+                    subject.validate_apt_sources(text, deb822=True)
+                self.assertEqual(str(caught.exception), "BOOTSTRAP_APT_SOURCE_OPTIONS_" + reason)
+                self.assertNotIn("do-not-print", str(caught.exception))
+
+    def test_pgp_sources_still_require_fixed_official_origins_suites_and_architecture(self):
+        for text in (RASPBERRY_PI_PGP_SOURCE.replace("archive.raspberrypi.com", "untrusted.example"),
+                     RASPBERRY_PI_PGP_SOURCE.replace("archive.raspberrypi.com", "user:secret@archive.raspberrypi.com"),
+                     RASPBERRY_PI_PGP_SOURCE.replace("Suites: trixie", "Suites: stable"),
+                     RASPBERRY_PI_PGP_SOURCE.replace("Components: main", "Components: custom"),
+                     RASPBERRY_PI_PGP_SOURCE + "Architectures: armhf\n",
+                     RASPBERRY_PI_PGP_SOURCE + "Architectures: arm64 armhf\n"):
+            with self.subTest(text=text):
+                self.rejected(lambda: subject.validate_apt_sources(text, deb822=True), "BOOTSTRAP_APT_")
+        text = ("deb [arch=arm64,armhf signed-by=/usr/share/keyrings/raspberrypi-archive-keyring.pgp] "
+                "http://archive.raspberrypi.com/debian trixie main")
+        self.rejected(lambda: subject.validate_apt_sources(text, deb822=False), "BOOTSTRAP_APT_SOURCE_OPTIONS$")
 
     def test_stock_createcluster_preserved_and_only_effective_setting_disabled(self):
         before = ("# default\ncreate_main_cluster = true\nssl = on\ncluster_name = '%v/%c'\n"
