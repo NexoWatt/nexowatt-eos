@@ -77,6 +77,17 @@ Die zuvor dokumentierten Plattformgrenzen und Fehlläufe der R3-Prüfung bleiben
 [unverändert nachvollziehbar](../github-bootstrap-sudo-20261003/README.md).
 Dieser Nachweis ersetzt sie nicht durch eine pauschale Gesamtfreigabe.
 
+## Veröffentlichung
+
+Der Wiederanlauf ist mit Commit `efc99d2` direkt auf `main` veröffentlicht.
+Der [tatsächliche authentifizierte GitHub-Download](private-github-readback.json)
+hat Helfer, Kopierbefehl sowie den unveränderten R3-Loader und dessen Manifest
+zurückgelesen. Alle vier Dateien stimmen nach Größe, SHA-256 und Git-Blob-ID
+überein. Der [Veröffentlichungsnachweis](publication.json) bindet den vollständigen
+Commit und den Rücklesebericht. Es wurde kein Token ausgegeben oder gespeichert.
+Dieser Download verwendete den Windows-Zertifikatsspeicher des Prüfhosts;
+die Debian-Zielumgebung wurde dadurch nicht getestet.
+
 **Tatsächliche Recovery, native Linux-Konto-/Rename-/fsync-Prüfung, vollständige
 Pi-Installation, Browser-Ersteinrichtung, echte Lizenzannahme und Passwortvergabe,
 Reboot und Hardware-/Anlagentests: OFFEN.** Keine Produktions- oder Anlagenfreigabe.
