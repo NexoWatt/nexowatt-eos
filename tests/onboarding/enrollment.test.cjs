@@ -99,3 +99,22 @@ test('first-run marker and safety policy drift block subsequent enrollment verif
     c.docs.get('system.config').common.siteName = 'Authorized later site';
     assert.equal((await enrollment.verify(c)).physicalControlEnabled, false);
 });
+
+test('minimal first start enrolls admin only and preserves host defaults without inventing plant settings', async () => {
+    const c = fixture();
+    c.settings = { schemaVersion: 3, licenseMode: 'verified', deviceMode: 'disabled-pending-acceptance',
+        commissioning: { status: 'deferred', reason: 'customer-plant-not-connected' } };
+    const common = c.docs.get('system.config').common;
+    Object.assign(common, { language: 'de', timeZone: 'Europe/Berlin' });
+    const before = structuredClone(common);
+    const result = await enrollment.enrollFirstRun(c);
+    assert.equal(result.physicalControlEnabled, false);
+    assert.deepEqual(c.docs.get('system.config').common, before);
+    assert.equal(c.docs.get('system.config').common.siteName, undefined);
+    const ui = c.docs.get('system.adapter.nexowatt-ui.0');
+    assert.equal(ui.native.installerConfig, undefined);
+    assert.equal(ui.common.enabled, false);
+    assert.deepEqual(c.docs.get(enrollment.FIRST_START_MARKER).native.settings, c.settings);
+    assert.equal([...c.docs.values()].filter(doc => doc.type === 'user').length, 1);
+    assert.equal((await enrollment.verify(c)).physicalControlEnabled, false);
+});

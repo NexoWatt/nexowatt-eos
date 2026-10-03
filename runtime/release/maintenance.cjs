@@ -8,7 +8,7 @@ const { rootOwned } = require('./installed-check.cjs');
 const { readFileLimited } = require('./bundle.cjs');
 const DEFAULT_DIRECTORY = '/etc/nexowatt-eos';
 const LOCK = '.activation.lock', PERMIT = 'maintenance-start.json';
-const OPERATIONS = new Set(['ui-onboarding', 'additive-release', 'certificate-rotation', 'web-certificate-rotation']);
+const OPERATIONS = new Set(['ui-onboarding', 'additive-release', 'certificate-rotation', 'web-certificate-rotation', 'test-release-repair']);
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 function processIdentity(pid) {
     if (pid !== undefined && (!Number.isSafeInteger(pid) || pid < 2)) fail('MAINTENANCE_PID');

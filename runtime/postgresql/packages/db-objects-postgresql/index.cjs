@@ -24,21 +24,32 @@ class Client extends UpstreamClient {
         this.eventQueue = Promise.resolve();
         this.eventBacklog = 0;
         this.eventBytes = 0;
+        this.eventGeneration = 0;
         this.fatalEventFailure = () => {
             if (this.stop) return;
+            this.eventGeneration++;
             this.stop = true; this.client = null;
             this.settings.disconnected?.(); this.store.close().catch(() => {});
         };
         this.onStoreEvent = event => {
+            const generation = this.eventGeneration;
+            if (!this.eventCurrent(generation)) return;
             if (!event || typeof event.channel !== 'string' || Buffer.byteLength(event.channel) > 1024 || !Buffer.isBuffer(event.payload) || event.payload.length > 1024 * 1024) { this.fatalEventFailure(); return; }
             if (this.eventBacklog >= 1000 || this.eventBytes + event.payload.length > 16 * 1024 * 1024) { this.fatalEventFailure(); return; }
             this.eventBacklog++; this.eventBytes += event.payload.length;
-            this.eventQueue = this.eventQueue.then(() => this.handleEvent(event)).catch(this.fatalEventFailure).finally(() => { this.eventBacklog--; this.eventBytes -= event.payload.length; });
+            this.eventQueue = this.eventQueue.then(() => this.handleEvent(event, generation)).catch(() => {
+                if (this.eventCurrent(generation)) this.fatalEventFailure();
+            }).finally(() => { this.eventBacklog--; this.eventBytes -= event.payload.length; });
         };
-        this.onDisconnected = () => this.settings.disconnected?.();
+        this.onDisconnected = () => { this.eventGeneration++; this.settings.disconnected?.(); };
         this.onReconnected = () => {
             if (!this.client || this.stop) return;
-            this._determineProtocolVersion().then(() => this.settings.connected?.(), () => this.settings.disconnected?.());
+            const generation = ++this.eventGeneration;
+            this._determineProtocolVersion().then(() => {
+                if (this.eventCurrent(generation)) this.settings.connected?.();
+            }, () => {
+                if (this.eventCurrent(generation)) this.settings.disconnected?.();
+            });
         };
         this.store.on('event', this.onStoreEvent);
         this.store.on('disconnected', this.onDisconnected);
@@ -91,6 +102,7 @@ class Client extends UpstreamClient {
         }, error => callback?.(error));
     }
     async destroy() {
+        this.eventGeneration++;
         this.stop = true;
         this.store.removeListener('event', this.onStoreEvent);
         this.store.removeListener('disconnected', this.onDisconnected);
@@ -170,8 +182,12 @@ class Client extends UpstreamClient {
         return applyView(view, documents);
     }
 
-    async handleEvent(event) {
-        if (this.stop) return;
+    eventCurrent(generation) {
+        return !this.stop && !!this.client && this.store.connected && this.eventGeneration === generation;
+    }
+
+    async handleEvent(event, generation = this.eventGeneration) {
+        if (!this.eventCurrent(generation)) return;
         const channel = event.channel;
         const payload = Buffer.isBuffer(event.payload) ? event.payload.toString('utf8') : String(event.payload);
         let workBudget = 2000000;
@@ -199,17 +215,20 @@ class Client extends UpstreamClient {
             for (const [pattern, user] of this.systemSubscriptionContexts) {
                 if (!matches(pattern)) continue;
                 const options = await auth.resolve(this.store, this.objNamespace, { user }).catch(() => null);
+                if (!this.eventCurrent(generation)) return;
                 if (options && options.acl.object.read && (object ? auth.objectRight(object, options, 'read') : auth.admin(options))) { this.settings.change?.(id, object); break; }
             }
             for (const [pattern, user] of this.userSubscriptionContexts) {
                 if (!matches(pattern)) continue;
                 const options = await auth.resolve(this.store, this.objNamespace, { user }).catch(() => null);
+                if (!this.eventCurrent(generation)) return;
                 if (options && options.acl.object.read && (object ? auth.objectRight(object, options, 'read') : auth.admin(options))) { this.settings.changeUser?.(id, object); break; }
             }
         } else if (channel.startsWith(this.fileNamespace)) {
             for (const [pattern, user] of this.userSubscriptionContexts) {
                 if (!matches(pattern)) continue;
                 const options = await auth.resolve(this.store, this.objNamespace, { user }).catch(() => null);
+                if (!this.eventCurrent(generation)) return;
                 if (!options?.acl.file.read) continue;
                 const raw = channel.slice(this.fileNamespace.length);
                 const separator = raw.indexOf('$%$');
@@ -217,6 +236,7 @@ class Client extends UpstreamClient {
                 const id = raw.slice(0, separator), name = raw.slice(separator + 3).replace(/\$%\$data$/, '');
                 // checkFileRights re-evaluates the current metadata ACL.
                 const allowed = await new Promise(resolve => this.checkFileRights(id, name, options, 4, error => resolve(!error)));
+                if (!this.eventCurrent(generation)) return;
                 if (allowed) this.settings.changeFileUser?.(id, name, payload === 'null' ? null : Number.parseInt(payload, 10));
                 break;
             }

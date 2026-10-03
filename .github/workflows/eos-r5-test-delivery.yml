@@ -1,0 +1,161 @@
+name: EOS R5 signed repair candidate
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - runtime/**
+      - components/admin/**
+      - tools/**
+      - system/**
+      - tests/**
+      - reports/integration/installable-test3-r5-20261003/*.cjs
+      - reports/integration/installable-test3-r5-20261003/*.py
+      - .github/workflows/eos-r5-test-delivery.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eos-r5-delivery-main
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    outputs:
+      ready: ${{ steps.fresh.outputs.ready }}
+      artifact_id: ${{ steps.archive.outputs.artifact-id }}
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout the exact authorized main commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Preserve signed historical deliveries
+        id: fresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -e delivery/test-pi-0.2.0-test.3-r5; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'R5 already exists; new bytes require a new revision.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select the pinned build runtime
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Check derivative and publication contracts
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test reports/integration/installable-test3-r5-20261003/build-revision.test.cjs tests/integration/r5-derivative-sbom.test.cjs
+          python3 -I -B reports/integration/installable-test3-r5-20261003/publish-candidate.test.py
+          node --test tests/bootstrap/public-repair-entry.test.cjs
+          node --test tests/onboarding/*.test.cjs components/admin/test/eos-license-*.test.cjs components/admin/test/eos-session-security.test.cjs tests/system/admin-startup-branding.test.cjs
+          sudo -- "$(command -v node)" --test tests/system/update-test-r4-to-r5.test.cjs
+      - name: Build, sign and reread the derivative archive
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node reports/integration/installable-test3-r5-20261003/build-revision.cjs
+      - name: Exercise the assembled Admin and Objects backend
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NODE_PATH="$GITHUB_WORKSPACE/.work/runtime-test3-r5-20261003/app/node_modules"
+          export EOS_ADMIN_DEPENDENCIES="$NODE_PATH"
+          export EOS_TEST_SESSION_MODULE="$NODE_PATH/iobroker.eos-admin/build/lib/eosSessionSecurity.js"
+          export EOS_TEST_OBJECTS_MODULE="$NODE_PATH/@iobroker/db-objects-postgresql/index.cjs"
+          node --test --test-reporter=tap components/admin/test/eos-appliance-oauth.integration.cjs > reports/integration/installable-test3-r5-20261003/assembled-admin-oauth.tap
+          node --test --test-reporter=tap tests/postgresql/objects-lifecycle.test.cjs > reports/integration/installable-test3-r5-20261003/assembled-objects-lifecycle.tap
+      - name: Retain exact generated candidate and evidence
+        id: archive
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-r5-candidate-${{ github.sha }}
+          path: |
+            delivery/test-pi-0.2.0-test.3-r5/
+            reports/integration/installable-test3-r5-20261003/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - name: Record acceptance scope
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          Linux x64 derivative assembly from a signature-verified R4 ARM64 app with explicit, source-bound overlays.
+          Changed bytes receive a new file table, catalog digests, derivative SBOM and ephemeral TEST signature. No fresh npm dependency rebuild is claimed.
+          Archive rereading is required. No Pi installation, real systemd repair, password login or plant acceptance is established here.
+          Publication retains immutable signed files and evidence; it does not activate devices or constitute CRA conformity.
+          SCOPE
+
+  publish:
+    needs: build
+    if: needs.build.outputs.ready == 'true' && github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the same reviewed source without stored credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Download only this build's immutable artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: ${{ runner.temp }}/eos-r5-candidate
+          merge-multiple: true
+          digest-mismatch: error
+      - name: Validate and copy only new generated files
+        env:
+          EOS_CANDIDATE: ${{ runner.temp }}/eos-r5-candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B reports/integration/installable-test3-r5-20261003/publish-candidate.py "$EOS_CANDIDATE" "$GITHUB_SHA"
+          git add -- delivery/test-pi-0.2.0-test.3-r5 reports/integration/installable-test3-r5-20261003
+          git diff --cached --check
+      - name: Publish only to unchanged main by normal fast-forward
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-git-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$GITHUB_SHA" || { echo 'main advanced during build; concurrent work is preserved.' >&2; exit 1; }
+          test -n "$(git diff --cached --name-only)"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: publish immutable EOS test.3 revision 5 repair candidate'
+          git push origin HEAD:refs/heads/main
+          printf 'Published test delivery commit: `%s`\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"

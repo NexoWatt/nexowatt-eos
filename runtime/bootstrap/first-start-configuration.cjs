@@ -27,11 +27,12 @@ function validateLicenseSelection(selection, { uuid, publicKeys, now = Date.now(
     selectionShape(selection);
     const normalized = core.normalizeUuid(uuid);
     if (selection.mode === 'unlicensed') return Object.freeze({ mode: 'unlicensed', valid: false,
-        code: 'LICENSE_MISSING', uuid: normalized, edition: null, expiresAt: null,
+        code: 'LICENSE_MISSING', uuid: normalized, edition: null, scope: null, expiresAt: null,
         limits: null, features: Object.freeze([]), adapters: Object.freeze([]) });
     const claims = core.verifyLicense(selection.token, { uuid: normalized, publicKeys, now });
+    if (!['system', 'adapters'].includes(claims.scope)) fail('FIRST_START_LICENSE_SCOPE');
     return Object.freeze({ mode: 'activate', valid: true, code: 'LICENSE_VALID', uuid: normalized,
-        edition: claims.edition, expiresAt: claims.expiresAt, limits: Object.freeze({ ...claims.limits }),
+        edition: claims.edition, scope: claims.scope, expiresAt: claims.expiresAt, limits: Object.freeze({ ...claims.limits }),
         features: Object.freeze([...claims.features]), adapters: Object.freeze([...claims.adapters]) });
 }
 

@@ -77,7 +77,8 @@ function signedLicense(now, overrides = {}, key) {
     const claims = { v: 2, kid: 'fixture', licenseId: 'fixture-only', uuid: licenseContext.uuid, edition: 'home',
         issuedAt: now - 1000, notBefore: now - 1000, expiresAt: now + 60000,
         adapters: ['nexowatt-ui', 'nexowatt-devices'], limits: { chargePoints: 3, batteries: 2 }, ...overrides };
-    const message = 'NWL2.' + Buffer.from(JSON.stringify(claims)).toString('base64url');
+    if (claims.v === 3) { delete claims.adapters; delete claims.limits; claims.scope = 'system'; }
+    const message = `NWL${claims.v}.` + Buffer.from(JSON.stringify(claims)).toString('base64url');
     return { token: message + '.' + crypto.sign(null, Buffer.from(message), issuer.privateKey).toString('base64url'),
         context: { ...licenseContext, publicKeys: { fixture: issuer.publicKey.export({ type: 'spki', format: 'pem' }).toString() } }, issuer };
 }
@@ -139,6 +140,30 @@ test('HTTPS configuration and signed license are checked against installed ident
     assert.deepEqual(handoff.settings, candidate.settings); assert.equal(handoff.license.token, signed.token);
     assert.equal(JSON.stringify(handoff.settings).includes(signed.token), false);
     assert.equal(fs.readFileSync(path.join(f.directory, 'state.json'), 'utf8').includes(signed.token), false);
+});
+test('minimal HTTPS setup accepts signed system edition without plant or adapter selections and commits exactly once', async t => {
+    const signed = signedLicense(Date.now(), { v: 3, expiresAt: null }); let hashes = 0;
+    const f = await fixture(t, { licenseContext: signed.context, hashPassword: async () => { hashes++; return hashed; } });
+    const auth = await f.claim();
+    const candidate = { schemaVersion: 3, license: { mode: 'activate', token: signed.token } };
+    const verified = await f.request('/api/license/verify', { token: signed.token }, auth);
+    assert.equal(verified.status, 200); assert.equal(verified.data.scope, 'system');
+    assert.deepEqual(verified.data.adapters, []); assert.equal(verified.data.edition, 'home');
+    const checked = await f.request('/api/configuration/check', candidate, auth);
+    assert.equal(checked.status, 200); assert.equal(checked.data.deviceCount, 0);
+    assert.equal(checked.data.commissioningStatus, 'deferred'); assert.equal(checked.data.physicalControlEnabled, false);
+    for (const fields of [{ uuid: licenseContext.uuid }, { settings: configuredSettings }, { role: 'admin' }]) {
+        assert.equal((await f.request('/api/finish', { ...candidate, ...fields, password, passwordRepeat: password }, auth)).status, 400);
+    }
+    assert.equal(hashes, 0);
+    assert.equal((await f.request('/api/finish', { ...candidate, password, passwordRepeat: password }, auth)).status, 202);
+    const handoff = storage.readHandoff(f.directory, releaseId);
+    assert.equal(handoff.schemaVersion, 3); assert.deepEqual(handoff.settings, policy.minimalSettings());
+    assert.equal(handoff.passwordHash, hashed); assert.equal(handoff.license.token, signed.token); assert.equal(hashes, 1);
+    const serialized = JSON.stringify(handoff.settings);
+    for (const field of ['siteName', 'plant', 'devicePlan', 'timeZone']) assert.equal(Object.hasOwn(handoff.settings, field), false);
+    assert.equal(serialized.includes(signed.token), false);
+    assert.equal((await f.request('/api/finish', { ...candidate, password, passwordRepeat: password }, auth)).status, 403);
 });
 test('license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF', async t => {
     const signed = signedLicense(Date.now()); let hashes = 0;

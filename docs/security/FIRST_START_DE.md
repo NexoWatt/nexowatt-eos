@@ -86,3 +86,24 @@ erteilen keine Rechte. Anlagen- und Gerätefreigaben bleiben davon unabhängig.
 Aktuelle, vor und nach den jeweiligen Tests gebundene Quellen und Rohlogs:
 [`installable-test3-20261003`](../../reports/integration/installable-test3-20261003/).
 Die obigen früheren Liefernachweise werden dadurch nicht umgedeutet.
+
+
+## Ergänzung: minimaler Erststart und Admin-Anmeldung
+
+Der Schema-3-Vertrag nimmt ausschließlich eine signierte Lizenz und das neue
+Adminpasswort entgegen. UUID und Herstellervertrauen stammen vom Server.
+Kundeninbetriebnahme bleibt ausdrücklich zurückgestellt; keine technischen
+Anlagenwerte werden erfunden. Schema-2-Übergaben behalten ihre frühere Prüfung.
+NWL3 umfasst das System mit serverseitiger Home-/Pro-Matrix. NWL2 behält seine
+signierte Adapterliste und engere Kontingente. Lizenzierung ersetzt keine
+Ausführungs-, Netzwerk- oder Anlagenfreigabe.
+
+Die echte Passwortprüfung verwendet jetzt eine eigene 15-Sekunden-Frist und
+maximal zwei gleichzeitig laufende Ableitungen. Ein Timeout gibt den Platz erst
+nach Ende der nativen Berechnung frei; verspätete Ergebnisse erhalten keine
+Sitzungsberechtigung. Datenbankfristen bleiben zwei Sekunden. Das beseitigt den
+nachgestellten Fehler, bei dem ein gültiges Passwort wegen langsamer Ableitung
+abgelehnt wurde. Ein vom Nutzer gemeldeter Admin-Prozessabsturz ist dadurch noch
+nicht als erklärt oder auf dem Pi behoben nachgewiesen.
+
+[Geprüfte Änderung und offene Zielabnahme](../../reports/integration/minimal-first-start-20261003/README.md).

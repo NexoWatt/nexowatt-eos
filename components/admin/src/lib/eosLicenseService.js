@@ -288,7 +288,10 @@ class EosLicenseService {
                 // An adapter with database/OS compromise is outside this boundary.
                 const instance = await this.readObject(sender);
                 if (!instance || instance.type !== 'instance' || instance.common?.enabled !== true || instance.common?.name !== match[1]) return deny('LICENSE_ADAPTER_DISABLED');
-                if (!claims.adapters.includes(match[1])) return deny('LICENSE_ADAPTER');
+                // Scope is produced only by the authenticated strict verifier.
+                // A system license covers enabled local adapters; their OS and
+                // admission permissions remain independent of licensing.
+                if (claims.scope !== 'system' && (claims.scope !== 'adapters' || !claims.adapters.includes(match[1]))) return deny('LICENSE_ADAPTER');
                 if (!claims.features.includes(request.feature)) return deny('LICENSE_FEATURE');
                 if (Object.keys(required).some(key => required[key] > claims.limits[key])) return deny('LICENSE_LIMIT');
                 const now = this.clock();

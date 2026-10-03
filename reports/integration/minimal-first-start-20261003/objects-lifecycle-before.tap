@@ -1,0 +1,212 @@
+TAP version 13
+# Subtest: queued object change is not delivered after database disconnect
+not ok 1 - queued object change is not delivered after database disconnect
+  ---
+  duration_ms: 7.135527
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:42:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     id: 'meter.power',
+    +     value: {
+    +       common: {},
+    +       native: {},
+    +       type: 'state'
+    +     }
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      id: 'meter.power'
+      value:
+        type: 'state'
+        common:
+        native:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:44:39)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: late ACL result cannot deliver an object from the disconnected generation
+not ok 2 - late ACL result cannot deliver an object from the disconnected generation
+  ---
+  duration_ms: 1.23231
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:46:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     id: 'meter.power',
+    +     value: {
+    +       common: {},
+    +       native: {},
+    +       type: 'state'
+    +     }
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      id: 'meter.power'
+      value:
+        type: 'state'
+        common:
+        native:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:49:39)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: reconnect drops old queued changes and delivers only new changes
+not ok 3 - reconnect drops old queued changes and delivers only new changes
+  ---
+  duration_ms: 4.620432
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:51:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'old',
+        'new'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'new'
+  actual:
+    0: 'old'
+    1: 'new'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:54:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: destroy invalidates an asynchronous ACL result
+not ok 4 - destroy invalidates an asynchronous ACL result
+  ---
+  duration_ms: 1.284737
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:57:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     id: 'meter.power',
+    +     value: {
+    +       common: {},
+    +       native: {},
+    +       type: 'state'
+    +     }
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      id: 'meter.power'
+      value:
+        type: 'state'
+        common:
+        native:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:60:39)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: late file ACL callback does not notify after disconnect
+not ok 5 - late file ACL callback does not notify after disconnect
+  ---
+  duration_ms: 0.956903
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:62:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   [
+    +     'test',
+    +     'asset.png',
+    +     12
+    +   ]
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      0: 'test'
+      1: 'asset.png'
+      2: 12
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:70:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: late protocol check cannot report an already disconnected client as connected
+not ok 6 - late protocol check cannot report an already disconnected client as connected
+  ---
+  duration_ms: 1.78083
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:72:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/tests/postgresql/objects-lifecycle.test.cjs:76:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 0
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 301.356473

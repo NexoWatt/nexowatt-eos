@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-adapter-runtime-focused-verification",
+  "at": "2026-10-03T20:20:17.161855+00:00",
+  "sourceBase": "6ee690e7503f7f609de1f7c1db1689a6ca39aec3",
+  "finding": "EOS-PG-OBJECTS-STALE-20261003",
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "24.19.0",
+    "nodeOpenSSL": "3.5.7",
+    "nativePostgresql": false,
+    "targetPi": false
+  },
+  "sourceSha256": {
+    "runtime/postgresql/packages/db-objects-postgresql/index.cjs": "2985820882a8195f421e6cdd9d245b1ea07b41c4e6777aa5b91b2c6d68bd58c2",
+    "runtime/postgresql/packages/db-objects-postgresql/auth.cjs": "acd7e7fad0f3fb974df7df5c989b9b157ea04dcb1d6443225bdb1af580b6056b",
+    "runtime/postgresql/packages/db-objects-postgresql/facade.cjs": "c5af1ed63dc25d0f2d3655c1ecfbdb7a98ab9418330c79689dac0ba84a2aa26a",
+    "runtime/postgresql/packages/db-objects-postgresql/views.cjs": "53c339eff8692c167c41a71356d74d5b18ccd2de27a871c7705b33e572919881",
+    "tests/postgresql/objects-lifecycle.test.cjs": "79888057df835a8c42fd9fc9c90abee8ffd83d946ebb5c8433fcfecd0212e187",
+    "runtime/postgresql/packages/store/index.cjs": "901f4a37df2d9ef69d8bd81903dc232eec1871e99f4fb243b6d9880e04651cab",
+    "runtime/postgresql/packages/db-states-postgresql/index.cjs": "28038ebfe48b6d76446c70906a2ae60026a92856bdfd78bbf14742fa78987b83",
+    "runtime/adapter-channel/client.cjs": "2aed4695246eb1f966dde453fdc375ea828f5256343f3a407c7c54afa523fb2c",
+    "runtime/adapter-channel/server.cjs": "fd2954aacfb8e5f738b5de28915c2835e81dfacefbf123540e24a478a1d130d5",
+    "runtime/product/scope.cjs": "644e3b14b2bd806371aafe9d7f6bac426401cf336e4fc3ba0b1f75c94fa082b9"
+  },
+  "rawSha256": {
+    "adapter-runtime-tests.tap": "a58a71ff4e2b6df240861cd09d5afad16f867c23c29d773805b8191eb5120a41",
+    "objects-lifecycle-before.tap": "ba7cb0ae6df968b7a247165625bc548780a3e87709c2a31cca602942a3c7e84b",
+    "objects-lifecycle-after.tap": "e9893a3558afef16cf5114623ea3d66d689a0d5c55db47ce99f0a503fafd2074"
+  },
+  "originalR4ObjectsIndexSha256": "2943b0bfa077fe17d64538d909a3a8c248657cbd64162f2a5023a401b4106c52",
+  "upstream": {
+    "package": "@iobroker/db-objects-redis",
+    "version": "7.2.2",
+    "origin": "application extracted from pinned R4 archive",
+    "archiveSha256": "c1d418a66b3678fb19f4487ece9871da81cf7a583af59a6d889c799d7c6dd1b3"
+  },
+  "results": [
+    {
+      "suite": "existing transport/postgresql contracts",
+      "passed": 93,
+      "failed": 0,
+      "skipped": 0,
+      "store": "test doubles",
+      "channelTLS": "real loopback TLS1.3"
+    },
+    {
+      "suite": "objects lifecycle before",
+      "passed": 0,
+      "failed": 6,
+      "expectedNegative": true
+    },
+    {
+      "suite": "objects lifecycle after",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "upstreamClient": "real 7.2.2",
+      "store": "test double"
+    }
+  ],
+  "commands": [
+    "node --test tests/postgresql/store.test.cjs tests/postgresql/store-channel-hardening.test.cjs tests/postgresql/states.test.cjs tests/postgresql/provision-permissions.test.cjs tests/adapter-channel/channel.test.cjs",
+    "NODE_PATH=<verified-R4-app>/node_modules EOS_TEST_OBJECTS_MODULE=<R4-runtime-objects>/index.cjs node --test --test-reporter=tap tests/postgresql/objects-lifecycle.test.cjs",
+    "NODE_PATH=<verified-R4-app>/node_modules node --test --test-reporter=tap tests/postgresql/objects-lifecycle.test.cjs"
+  ],
+  "open": [
+    "native PostgreSQL/controller restart recovery",
+    "full Admin login crash target diagnosis",
+    "native ARM64 Node24.21.0",
+    "systemd/reboot/load",
+    "physical device protocols",
+    "backup/restore"
+  ],
+  "runtimeReleased": false,
+  "productionApproved": false,
+  "craConformityClaimed": false
+}

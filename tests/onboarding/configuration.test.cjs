@@ -66,11 +66,62 @@ test('EEBUS/OCPP identities and source-backed limits are captured with no connec
 });
 test('planned device counts and canonical product adapter names must fit the authenticated license', () => {
     const plan = configuredSettings.devicePlan;
-    assert.equal(c.licenseCapacity(plan, { valid: true, limits: { chargePoints: 3, batteries: 1 }, adapters: ['nexowatt-devices'] }), true);
-    for (const claims of [{ valid: false }, { valid: true, limits: { chargePoints: 3, batteries: 0 }, adapters: ['nexowatt-devices'] },
-        { valid: true, limits: { chargePoints: 3, batteries: 1 }, adapters: ['eos-devices'] }]) assert.throws(() => c.licenseCapacity(plan, claims));
+    assert.equal(c.licenseCapacity(plan, { valid: true, scope: 'adapters', limits: { chargePoints: 3, batteries: 1 }, adapters: ['nexowatt-devices'] }), true);
+    assert.equal(c.licenseCapacity(plan, { valid: true, scope: 'system', limits: { chargePoints: 3, batteries: 1 }, adapters: [] }), true);
+    for (const claims of [{ valid: false }, { valid: true, scope: 'adapters', limits: { chargePoints: 3, batteries: 0 }, adapters: ['nexowatt-devices'] },
+        { valid: true, scope: 'adapters', limits: { chargePoints: 3, batteries: 1 }, adapters: ['eos-devices'] },
+        { valid: true, scope: 'system', limits: { chargePoints: 3, batteries: 0 }, adapters: [] },
+        { valid: true, scope: 'unknown', limits: { chargePoints: 3, batteries: 1 }, adapters: ['nexowatt-devices'] }]) assert.throws(() => c.licenseCapacity(plan, claims));
     assert.throws(() => c.devicePlan({ ...plan, devices: [plan.devices[0], plan.devices[0]] }));
     assert.throws(() => c.devicePlan({ ...plan, devices: [] }));
     assert.throws(() => c.devicePlan({ ...plan, status: 'none' }));
     assert.throws(() => policy.validateConfiguration({ settings, license: { mode: 'activate', token: 'NWL2.fake' } }));
+});
+
+test('minimal v3 creates a deferred commissioning record without inventing site or installation values', () => {
+    const candidate = { schemaVersion: 3, license: { mode: 'activate', token: 'NWL2.syntax-only-fixture' } };
+    const validated = policy.validateConfiguration(candidate);
+    assert.deepEqual(validated.settings, { schemaVersion: 3, licenseMode: 'verified', deviceMode: 'disabled-pending-acceptance',
+        commissioning: { status: 'deferred', reason: 'customer-plant-not-connected' } });
+    assert.deepEqual(c.summarize(validated.settings, validated.license), { plantConfigurationComplete: false,
+        devicesConfigurationComplete: false, deviceCount: 0, licenseConfigured: true, commissioningStatus: 'deferred',
+        liveMeasurementsVerified: false, physicalControlEnabled: false });
+    assert.doesNotThrow(() => policy.validateSettings(validated.settings));
+    for (const field of ['siteName', 'language', 'timeZone', 'plant', 'devicePlan', 'safetyAcknowledged']) {
+        assert.equal(Object.hasOwn(validated.settings, field), false, field);
+    }
+    validated.settings.commissioning.status = 'configured';
+    assert.equal(policy.validateConfiguration(candidate).settings.commissioning.status, 'deferred');
+});
+test('minimal v3 rejects forged commissioning/UUID/settings, unsupported schemas and bypass of signed-license selection', () => {
+    const candidate = { schemaVersion: 3, license: { mode: 'activate', token: 'NWL2.syntax-only-fixture' } };
+    for (const update of [{ settings }, { uuid: 'attacker-selected-identity' }, { plant: configuredSettings.plant },
+        { commissioning: { status: 'complete' } }, { schemaVersion: 4 }, { schemaVersion: '3' },
+        { license: { mode: 'unlicensed', token: '' } }, { license: { mode: 'activate', token: '' } }]) {
+        assert.throws(() => policy.validateConfiguration({ ...candidate, ...update }));
+    }
+    for (const mutate of [s => s.commissioning.status = 'configured', s => s.commissioning.reason = 'accepted',
+        s => s.deviceMode = 'enabled', s => s.siteName = 'Hidden site', s => s.plant = configuredSettings.plant,
+        s => s.devicePlan = configuredSettings.devicePlan, s => s.commissioning.physicalControlEnabled = true,
+        s => s.safetyAcknowledged = true, s => s.licenseMode = 'unlicensed']) {
+        const s = policy.minimalSettings(); mutate(s); assert.throws(() => policy.validateSettings(s));
+    }
+});
+test('minimal password and handoff validation retain password policy, exact schemas and legacy record compatibility', () => {
+    const selection = { mode: 'activate', token: 'NWL2.syntax-only-fixture' };
+    const finish = { schemaVersion: 3, license: selection, password: 'A long fixture-only password', passwordRepeat: 'A long fixture-only password' };
+    assert.deepEqual(policy.validateFinish(finish), { password: finish.password, settings: policy.minimalSettings(), license: selection });
+    for (const update of [{ password: 'short', passwordRepeat: 'short' }, { passwordRepeat: 'different' }, { uuid: 'forged' },
+        { settings }, { password: 'A long fixture-only password\n', passwordRepeat: 'A long fixture-only password\n' }]) {
+        assert.throws(() => policy.validateFinish({ ...finish, ...update }));
+    }
+    const releaseId = 'a'.repeat(64), handoff = { schemaVersion: 3, releaseId, setupId: 'b'.repeat(32),
+        passwordHash: `pbkdf2$600000$${'ab'.repeat(256)}$${'12'.repeat(16)}`, settings: policy.minimalSettings(), license: selection };
+    assert.deepEqual(policy.validateHandoff(handoff, releaseId), handoff);
+    assert.throws(() => policy.validateHandoff({ ...handoff, schemaVersion: 2 }, releaseId));
+    assert.throws(() => policy.validateHandoff({ ...handoff, settings }, releaseId));
+    assert.throws(() => policy.validateHandoff({ ...handoff, passwordHash: finish.password }, releaseId));
+    const legacy = { ...handoff, schemaVersion: 2, settings, license };
+    assert.deepEqual(policy.validateHandoff(legacy, releaseId), legacy);
+    assert.deepEqual(policy.validateSettings(configuredSettings), configuredSettings);
 });

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-public-test-repair-entry-verification",
+  "date": "2026-10-03",
+  "sourceBaseCommit": "6ee690e7503f7f609de1f7c1db1689a6ca39aec3",
+  "sourceIdentity": "working files bound by sha256; final commit pending",
+  "environment": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "node": "v24.19.0",
+    "python": "3.12.14"
+  },
+  "command": "node --test --test-reporter=tap tests/bootstrap/public-repair-entry.test.cjs",
+  "tests": 13,
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "scope": "local transport and extraction boundary tests; systemd/Node supervisor execve capture",
+  "networkDownloadExecuted": false,
+  "targetRepairExecuted": false,
+  "systemdKillTestExecuted": false,
+  "hardwareAcceptance": "OPEN",
+  "productionReleaseApproved": false,
+  "files": [
+    {
+      "path": "tools/bootstrap/build-public-repair-entry.cjs",
+      "bytes": 12740,
+      "sha256": "2c3d13f02f7cd1164f89b2e665a39711cdbd57299a00470ad2f135461f0848ca"
+    },
+    {
+      "path": "tests/bootstrap/public-repair-entry.test.cjs",
+      "bytes": 11612,
+      "sha256": "ad426e0bec26d651cae1d82829941b5cf64f9d469be105607296889bc93f2a9b"
+    },
+    {
+      "path": "tools/system/extract-test-bundle.py",
+      "bytes": 6567,
+      "sha256": "84958e5adb16cabf556b5b48b7f4791a3540921e98bfc75967a0717492a3610f"
+    },
+    {
+      "path": "tools/integration/test-archive.py",
+      "bytes": 11773,
+      "sha256": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b"
+    },
+    {
+      "path": "docs/operations/TEST_R4_R5_REPAIR_ENTRY_DE.md",
+      "bytes": 4626,
+      "sha256": "dc8c0ef3b935c351cf864ee8a6aa76e72fd067a60eb43bff5056e5c90b8017ba"
+    },
+    {
+      "path": "reports/integration/minimal-first-start-20261003/public-repair-entry-tests.tap",
+      "bytes": 2892,
+      "sha256": "d3741be947ed41b1b2594d64bf272bfe4c638a9438843685d5a98896b60d80fe"
+    }
+  ]
+}

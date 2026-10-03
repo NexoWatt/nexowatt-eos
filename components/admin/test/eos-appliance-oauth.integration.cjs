@@ -1,6 +1,7 @@
 'use strict';
 // Real HTTPS/Express/Webserver1.4.0 + maintained OAuth5.3.0 and EOS session
-// binding. The ioBroker database adapter is an explicit in-memory fixture.
+// binding, real enrolled PBKDF2 and the native EOS States session API. The
+// underlying PostgreSQL store is an explicit in-memory fixture, not a live DB test.
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -8,6 +9,9 @@ const path = require('node:path');
 const os = require('node:os');
 const https = require('node:https');
 const { spawnSync } = require('node:child_process');
+const { EventEmitter } = require('node:events');
+const { passwordHash } = require('../../../runtime/bootstrap/enrollment.cjs');
+const { Client: StatesClient } = require('../../../runtime/postgresql/packages/db-states-postgresql/index.cjs');
 const deps = process.env.EOS_ADMIN_DEPENDENCIES;
 if (!deps || !path.isAbsolute(deps)) throw new Error('EOS_ADMIN_DEPENDENCIES required');
 const express = require(path.join(deps, 'express'));
@@ -16,25 +20,44 @@ const resolvedOAuth = require.resolve('oauth2-server', { paths: [webserverRoot] 
 const oauthPackage = JSON.parse(fs.readFileSync(path.join(path.dirname(resolvedOAuth), 'package.json')));
 assert.equal(oauthPackage.name, '@node-oauth/oauth2-server'); assert.equal(oauthPackage.version, '5.3.0');
 const { createOAuth2Server } = require(path.join(webserverRoot, 'build/lib/oauth2'));
-const { EosSessionSecurity } = require('../build/lib/eosSessionSecurity');
+const { password: upstreamPassword } = require(path.join(deps, '@iobroker/js-controller-common-db/build/cjs/lib/common/password.js'));
+class SessionStore extends EventEmitter {
+    constructor() { super(); this.connected = false; this.values = new Map(); }
+    async connect() { this.connected = true; }
+    async close() { this.connected = false; }
+    async get(id) { return this.values.has(id) ? Buffer.from(this.values.get(id)) : null; }
+    async set(id, value) { this.values.set(id, Buffer.from(value)); }
+    async delete(id) { this.values.delete(id); }
+    async update(id, operation) { const change = await operation(await this.get(id)); await this.set(id, change.value); return change.result; }
+}
+const { EosSessionSecurity } = require(process.env.EOS_TEST_SESSION_MODULE || '../build/lib/eosSessionSecurity');
 const { validateTlsMaterial } = require('../build/lib/eosApplianceProfile');
 test('maintained OAuth serves TLS password login, refresh, revocation and denied alternate grants', async t => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-oauth-test-'));
-    let server, security;
+    let server, security, states;
     try {
         assert.equal(spawnSync('openssl', ['req', '-x509', '-newkey', 'ec', '-pkeyopt', 'ec_paramgen_curve:prime256v1',
             '-nodes', '-keyout', path.join(directory, 'key'), '-out', path.join(directory, 'cert'), '-days', '1',
             '-subj', '/CN=localhost', '-addext', 'subjectAltName=DNS:localhost', '-addext', 'basicConstraints=critical,CA:FALSE'], { stdio: 'ignore' }).status, 0);
         const cert = fs.readFileSync(path.join(directory, 'cert')); const key = fs.readFileSync(path.join(directory, 'key'));
-        const sessions = new Map(); const user = { type: 'user', common: { enabled: true, password: 'test-revision-a' }, native: {} };
+        states = new StatesClient({ autoConnect: false }, { store: new SessionStore() });
+        await states.connectDb();
+        const testPassword = 'ephemeral-only-test-password';
+        const user = { type: 'user', common: { enabled: true, password: await passwordHash(testPassword) }, native: {} };
+        let verificationDelayMs = 0;
         const clone = value => value === undefined ? undefined : JSON.parse(JSON.stringify(value));
         const adapter = { config: {}, log: { warn() {}, info() {}, debug() {}, error() {} },
-            getSession(id, cb) { cb(clone(sessions.get(id))); },
-            setSession(id, _ttl, value, cb) { sessions.set(id, clone(value)); cb?.(null); },
-            async destroySession(id) { sessions.delete(id); },
+            getSession: states.getSession.bind(states),
+            setSession: states.setSession.bind(states),
+            destroySession: states.destroySession.bind(states),
             async getForeignObjectAsync(id) { return id === 'system.user.admin' ? clone(user) : null; },
             async getObjectViewAsync() { return { rows: [{ id: { en: 'Administrator', de: 'Administrator' }, value: { _id: 'system.group.administrator', type: 'group', common: { members: ['system.user.admin'], acl: {} } } }] }; },
-            checkPassword(name, password, cb) { cb(name === 'admin' && password === 'ephemeral-only-test-password', 'system.user.admin'); },
+            checkPassword(name, password, cb) {
+                upstreamPassword(password).check(user.common.password, (error, valid) => {
+                    const finish = () => cb(name === 'admin' && !error && valid, 'system.user.admin');
+                    if (verificationDelayMs) setTimeout(finish, verificationDelayMs); else finish();
+                });
+            },
         };
         security = new EosSessionSecurity(adapter);
         const app = express(); app.use(express.urlencoded({ extended: false, limit: '16kb' }));
@@ -57,7 +80,7 @@ test('maintained OAuth serves TLS password login, refresh, revocation and denied
                 let data = ''; res.on('data', chunk => { data += chunk; if (data.length > 16384) req.destroy(new Error('reply limit')); });
                 res.on('end', () => { let body; try { body = JSON.parse(data); } catch { body = { error: 'non-json-response' }; } resolve({ status: res.statusCode, headers: res.headers, body }); });
             });
-            req.setTimeout(3000, () => req.destroy(new Error('timeout'))); req.on('error', reject); req.end(data);
+            req.setTimeout(5000, () => req.destroy(new Error('timeout'))); req.on('error', reject); req.end(data);
         });
         let token, refreshed;
         await t.test('password login issues cookie flags and usable access token', async () => {
@@ -66,6 +89,13 @@ test('maintained OAuth serves TLS password login, refresh, revocation and denied
             assert.match(response.headers['set-cookie'][0], /HttpOnly/); assert.match(response.headers['set-cookie'][0], /Secure/);
             assert.match(response.headers['set-cookie'][0], /SameSite=Strict/); token = response.body;
             assert.equal((await request('/private', null, token.access_token)).status, 200);
+        });
+        await t.test('correct first-start password still logs in after the previous two-second deadline', async () => {
+            verificationDelayMs = 2100;
+            const response = await request('/oauth/token', { grant_type: 'password', client_id: 'ioBroker', username: 'admin', password: testPassword });
+            verificationDelayMs = 0;
+            assert.equal(response.status, 200);
+            assert.equal((await request('/private', null, response.body.access_token)).status, 200);
         });
         await t.test('invalid credentials cannot issue a token', async () => {
             const response = await request('/oauth/token', { grant_type: 'password', client_id: 'ioBroker', username: 'admin', password: 'incorrect-ephemeral-password' });
@@ -88,7 +118,8 @@ test('maintained OAuth serves TLS password login, refresh, revocation and denied
             assert.ok(response.status >= 400); assert.equal(response.body.access_token, undefined);
         });
     } finally {
-        security?.stop(); if (server) await new Promise(resolve => server.close(resolve));
+        security?.stop(); await states?.destroy(); if (server) await new Promise(resolve => server.close(resolve));
         fs.rmSync(directory, { recursive: true, force: true });
     }
 });
+

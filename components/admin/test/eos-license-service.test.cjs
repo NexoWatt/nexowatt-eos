@@ -58,13 +58,63 @@ async function fixture(t, options = {}) {
         return `${signed}.${crypto.sign(null, Buffer.from(signed), pair.privateKey).toString('base64url')}`;
     };
     const request = (overrides = {}) => ({ v: 1, nonce: crypto.randomBytes(16).toString('hex'), adapter: 'nexowatt-ui', feature: 'energy', ...overrides });
+    const systemToken = (overrides = {}) => {
+        const payload = { v: 3, kid: 'test_issuer', licenseId: 'system-license', uuid: UUID, edition: 'home',
+            issuedAt: BASE_TIME - 1000, notBefore: BASE_TIME - 1000, expiresAt: null, scope: 'system', ...overrides };
+        const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+        const signed = `NWL3.${body}`;
+        return `${signed}.${crypto.sign(null, Buffer.from(signed), pair.privateKey).toString('base64url')}`;
+    };
     const advance = milliseconds => { clock.wall += milliseconds; clock.mono += milliseconds; };
     t.after(async () => {
         for (const item of services) item.stop();
         await fs.rm(directory, { recursive: true, force: true });
     });
-    return { directory, publicKeys, clock, objects, adapter, logs, service, createService, token, request, advance };
+    return { directory, publicKeys, clock, objects, adapter, logs, service, createService, token, systemToken, request, advance };
 }
+
+test('NWL3 system grant uses edition policy and enabled sender checks without an adapter claim list', async t => {
+    const f = await fixture(t); await f.service.start();
+    const second = 'system.adapter.nexowatt-devices.0';
+    await f.service.activate(f.systemToken());
+    const request = () => f.request({ adapter: 'nexowatt-devices', required: { chargePoints: 3, batteries: 2 } });
+    assert.equal((await f.service.check(second, request())).valid, true);
+    denied(await f.service.check(second, { ...request(), feature: 'billing' }), 'LICENSE_FEATURE');
+    denied(await f.service.check(second, { ...request(), required: { chargePoints: 4 } }), 'LICENSE_LIMIT');
+    f.objects.get(second).common.enabled = false;
+    denied(await f.service.check(second, request()), 'LICENSE_ADAPTER_DISABLED');
+    f.objects.get(second).common.enabled = true;
+    await f.service.activate(f.systemToken({ edition: 'pro' }));
+    const pro = await f.service.check(second, { ...request(), feature: 'billing', required: { chargePoints: 50, batteries: 10 } });
+    assert.equal(pro.valid, true); assert.deepEqual(pro.limits, { chargePoints: 50, batteries: 10 });
+    denied(await f.service.check(second, { ...request(), required: { chargePoints: 51 } }), 'LICENSE_LIMIT');
+    denied(await f.service.check('system.adapter.unknown.0', f.request({ adapter: 'unknown' })), 'LICENSE_ADAPTER_DISABLED');
+});
+
+test('replacement by old NWL2 restores its narrower list and quotas after a system license', async t => {
+    const f = await fixture(t); await f.service.start();
+    await f.service.activate(f.systemToken({ edition: 'pro' }));
+    assert.equal((await f.service.check('system.adapter.nexowatt-devices.0', f.request({ adapter: 'nexowatt-devices' }))).valid, true);
+    await f.service.activate(f.token({ edition: 'pro', limits: { chargePoints: 1, batteries: 0 } }));
+    denied(await f.service.check('system.adapter.nexowatt-devices.0', f.request({ adapter: 'nexowatt-devices' })), 'LICENSE_ADAPTER');
+    denied(await f.service.check(SENDER, f.request({ required: { chargePoints: 2 } })), 'LICENSE_LIMIT');
+    assert.equal((await f.service.check(SENDER, f.request({ required: { chargePoints: 1 } }))).valid, true);
+});
+
+test('NWL3 activation survives service restart and rejects forged upgrades without replacing stored rights', async t => {
+    const f = await fixture(t); await f.service.start();
+    const raw = f.systemToken(); await f.service.activate(raw);
+    f.service.stop(); const restarted = f.createService();
+    assert.equal((await restarted.start()).edition, 'home');
+    const before = await fs.readFile(path.join(f.directory, 'license.enc'));
+    const [prefix, body, signature] = raw.split('.');
+    const payload = JSON.parse(Buffer.from(body, 'base64url')); payload.edition = 'pro';
+    await assert.rejects(restarted.activate(`${prefix}.${Buffer.from(JSON.stringify(payload)).toString('base64url')}.${signature}`), { code: 'LICENSE_SIGNATURE_INVALID' });
+    await assert.rejects(restarted.activate(f.systemToken({ uuid: OTHER_UUID })), { code: 'LICENSE_UUID_MISMATCH' });
+    assert.deepEqual(await fs.readFile(path.join(f.directory, 'license.enc')), before);
+    assert.equal((await restarted.status()).edition, 'home');
+    assert.ok(!JSON.stringify(f.logs).includes(raw));
+});
 
 function denied(response, code) {
     assert.equal(response.valid, false);

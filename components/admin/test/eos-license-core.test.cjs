@@ -25,15 +25,77 @@ function claims(overrides = {}) {
     };
 }
 
-function sign(payload = claims(), key = issuer.privateKey) {
+function sign(payload = claims(), key = issuer.privateKey, prefix = 'NWL2') {
     const encoded = Buffer.from(JSON.stringify(payload)).toString('base64url');
-    const message = `NWL2.${encoded}`;
+    const message = `${prefix}.${encoded}`;
     return `${message}.${crypto.sign(null, Buffer.from(message, 'ascii'), key).toString('base64url')}`;
 }
 
 function verify(token = sign(), options = {}) {
     return verifyLicense(token, { uuid, publicKeys, now, ...options });
 }
+
+function systemClaims(overrides = {}) {
+    return { v: 3, kid: 'test-issuer', licenseId: 'system-license', uuid, edition: 'home',
+        issuedAt: now - 1000, notBefore: now - 1000, expiresAt: null, scope: 'system', ...overrides };
+}
+
+test('NWL3 derives immutable Home and Pro system rights without adapter or quota claims', () => {
+    for (const [edition, limits] of [['home', { chargePoints: 3, batteries: 2 }], ['pro', { chargePoints: 50, batteries: 10 }]]) {
+        const result = verify(sign(systemClaims({ edition }), issuer.privateKey, 'NWL3'));
+        assert.equal(result.v, 3); assert.equal(result.scope, 'system');
+        assert.equal(result.edition, edition); assert.equal(result.expiresAt, null);
+        assert.deepEqual(result.adapters, []); assert.deepEqual(result.limits, limits);
+        assert.equal(result.features.includes('billing'), edition === 'pro');
+        assert.ok(Object.isFrozen(result) && Object.isFrozen(result.adapters) && Object.isFrozen(result.limits) && Object.isFrozen(result.features));
+        assert.throws(() => { result.limits.chargePoints = 1000; }, TypeError);
+    }
+});
+
+test('NWL3 rejects even correctly signed custom grants, unknown scopes and nonperpetual variants', () => {
+    for (const mutation of [{ v: 2 }, { scope: 'adapters' }, { scope: '*' }, { scope: null }, { edition: 'unknown' },
+        { adapters: ['nexowatt-ui'] }, { limits: { chargePoints: 1000, batteries: 10 } }, { features: ['billing'] },
+        { notBefore: now }, { expiresAt: now + 10000 }, { expiresAt: 0 }]) {
+        throwsCode(() => verify(sign(systemClaims(mutation), issuer.privateKey, 'NWL3')), 'LICENSE_CLAIMS_INVALID');
+    }
+    const missing = systemClaims(); delete missing.scope;
+    throwsCode(() => verify(sign(missing, issuer.privateKey, 'NWL3')), 'LICENSE_CLAIMS_INVALID');
+});
+
+test('NWL3 signatures bind version, edition and device while retaining the existing trust key', () => {
+    const token = sign(systemClaims(), issuer.privateKey, 'NWL3');
+    throwsCode(() => verify(token.replace(/^NWL3/, 'NWL2')), 'LICENSE_SIGNATURE_INVALID');
+    throwsCode(() => verify(sign(systemClaims(), issuer.privateKey, 'NWL2')), 'LICENSE_CLAIMS_INVALID');
+    throwsCode(() => verify(sign(claims(), issuer.privateKey, 'NWL3')), 'LICENSE_CLAIMS_INVALID');
+    throwsCode(() => verify(token, { uuid: otherUuid }), 'LICENSE_UUID_MISMATCH');
+    throwsCode(() => verify(token, { now: now - 1001 }), 'LICENSE_NOT_YET_VALID');
+    throwsCode(() => verify(sign(systemClaims(), otherIssuer.privateKey, 'NWL3')), 'LICENSE_SIGNATURE_INVALID');
+    throwsCode(() => verify(sign(systemClaims({ kid: 'unknown' }), issuer.privateKey, 'NWL3')), 'LICENSE_KEY_UNKNOWN');
+    const [prefix, payload, signature] = token.split('.');
+    const edited = JSON.parse(Buffer.from(payload, 'base64url')); edited.edition = 'pro';
+    throwsCode(() => verify(`${prefix}.${Buffer.from(JSON.stringify(edited)).toString('base64url')}.${signature}`), 'LICENSE_SIGNATURE_INVALID');
+});
+
+test('NWL2 keeps narrower adapter and quantity restrictions after NWL3 support is added', () => {
+    const result = verify(sign(claims({ edition: 'pro', adapters: ['nexowatt-ui'], limits: { chargePoints: 1, batteries: 0 } })));
+    assert.equal(result.v, 2); assert.equal(result.scope, 'adapters');
+    assert.deepEqual(result.adapters, ['nexowatt-ui']);
+    assert.deepEqual(result.limits, { chargePoints: 1, batteries: 0 });
+    throwsCode(() => verify(sign(claims({ scope: 'system' }))), 'LICENSE_CLAIMS_INVALID');
+});
+
+test('NWL3 persists encrypted across store reload without changing the device storage key', async t => {
+    const f = await fixture(t);
+    await f.store.save({ token: f.token, highWaterMark: now });
+    const originalKey = await fs.readFile(f.keyPath);
+    const token = sign(systemClaims(), issuer.privateKey, 'NWL3');
+    await f.store.save({ token, highWaterMark: now + 1 });
+    const restored = await new EncryptedLicenseStore({ directory: f.directory, uuid }).load();
+    assert.equal(restored.token, token); assert.equal(verify(restored.token).scope, 'system');
+    assert.deepEqual(await fs.readFile(f.keyPath), originalKey);
+    const encrypted = await fs.readFile(f.licensePath, 'utf8');
+    assert.equal(encrypted.includes(token), false); assert.equal(encrypted.includes(uuid), false);
+});
 
 function throwsCode(fn, code) {
     assert.throws(fn, error => error.code === code && error.message === code);
@@ -62,6 +124,7 @@ test('UUID normalizes case/space while preserving canonical and direct vendor-pr
 
 test('Home license authenticates UUID, explicit adapters, limits and immutable derived features', () => {
     const result = verify();
+    assert.equal(result.scope, 'adapters');
     assert.equal(result.edition, 'home');
     assert.deepEqual(result.limits, { chargePoints: 3, batteries: 2 });
     assert.deepEqual(result.features, ['energy', 'wallet', 'smartHome', 'microgridSlave']);

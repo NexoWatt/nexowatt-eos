@@ -56,8 +56,11 @@ Zertifikate benötigen vor Dauerbetrieb einen separat abgenommenen Erneuerungswe
 Der neue Installationspfad verlangt Controller und sämtliche sechs Produktadapter
 als tatsächliche Laufzeitpakete. Die HTTPS-Ersteinrichtung verwendet einen
 kurzlebigen lokalen Besitzcode; Benutzer vergeben ihre Passwörter im Frontend.
-Der Assistent führt durch Standort, signierte Lizenz, Anlagenwerte und Geräteplan.
-Nicht verfügbare Anlagenangaben bleiben ausdrücklich als offen markiert.
+Die neue Quellfassung beschränkt den Assistenten auf Geräte-UUID, signierte
+Home-/Pro-Lizenz und Adminpasswort. Anlagenwerte und Geräte folgen bei der
+Kundenanbindung. Sie korrigiert außerdem die zu kurze Passwortprüffrist.
+[Änderung, Tests und offener Pi-Loginbefund](reports/integration/minimal-first-start-20261003/README.md).
+Die signierten R4-Dateien enthalten diese nachfolgenden Änderungen noch nicht.
 Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 
 [**Aktuelle Pi-Testinstallation**](docs/operations/STABILITY_TEST4_DE.md) ·

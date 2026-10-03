@@ -2,6 +2,11 @@
 
 Entwicklungsprofil `0.2.0-dev.8`, Backendpakete `0.1.0-dev.2`.
 Aktueller Änderungsnachweis: `docs/security/ADAPTER_CHANNEL_DEV8_DE.md`.
+Nachtrag 03.10.2026: Der Objects-Client verwirft Objekt-/Dateiänderungen aus
+einer getrennten Verbindung auch dann, wenn sie bereits eingereiht sind oder
+ihre Rechteprüfung verspätet endet. Dieser Quellfix gehört in eine neue signierte
+Lieferung; vorhandene R4-Archive bleiben unverändert. Prüfungen und Grenzen:
+`reports/integration/minimal-first-start-20261003/adapter-runtime.md`.
 Das enthaltene signierte test.2-Archiv bleibt unverändert und enthält diese dev8-Änderungen nicht.
 **Keine Installations- oder Anlagenfreigabe.** Der bisherige Installer wird
 hier nicht auf ein ungeprüftes PostgreSQL-Profil umgestellt.

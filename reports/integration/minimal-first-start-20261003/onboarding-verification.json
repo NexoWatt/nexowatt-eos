@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "finding": "EOS-MINIMAL-FIRST-START-01",
+  "baseCommit": "6ee690e7503f7f609de1f7c1db1689a6ca39aec3",
+  "scope": "Source-level onboarding frontend, schema policy and deferred commissioning summary",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "command": "node --test --test-reporter=tap tests/onboarding/frontend.test.cjs tests/onboarding/configuration.test.cjs",
+  "tests": {
+    "total": 26,
+    "passed": 26,
+    "failed": 0,
+    "skipped": 0
+  },
+  "source": [
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "sha256": "824958cf4cba92bdf2369a3f2ae4e234a8817c16ebe06c49c1b0b27901622a8c"
+    },
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "sha256": "318ec56848e5779cc958522ce9d7a0b7d64dda64357e0befdf0b65f0facd1da5"
+    },
+    {
+      "path": "runtime/onboarding/policy.cjs",
+      "sha256": "c5ee7fd6f827d9a907f9b048689072d54f9876983ac047c4509530acf9b1d3a7"
+    },
+    {
+      "path": "runtime/onboarding/configuration.cjs",
+      "sha256": "a157555e7175355eec7cc52064415e70ac44e8808a9197e64f32dea2f6b2ac15"
+    },
+    {
+      "path": "tests/onboarding/frontend.test.cjs",
+      "sha256": "1fe0bb17610c05cc1681b6952d303b9c161a6cb0e082033c1af7caae67c76ec6"
+    },
+    {
+      "path": "tests/onboarding/configuration.test.cjs",
+      "sha256": "ed514dfc9d1f9ea9aac0228ebf2975a92863ad528bbcd36c54278b9f55c9c46e"
+    }
+  ],
+  "evidence": {
+    "path": "reports/integration/minimal-first-start-20261003/onboarding-tests.tap",
+    "sha256": "7012820259e11d4b689e9c6553a10a7001386b5a4e408eb2e0ae756d7a8b5eac"
+  },
+  "limits": [
+    "Frontend tested in deterministic DOM/FormData model, not a real browser",
+    "Server signature/UUID verification covered separately in server integration tests",
+    "Native Raspberry Pi installation and browser acceptance OPEN",
+    "No changes to signed R4 artifacts or its SBOM; next delivery requires a new signed source/build binding",
+    "No production, physical-control or CRA conformity claim"
+  ],
+  "verifiedAt": "2026-10-03T20:24:26.320470+00:00"
+}

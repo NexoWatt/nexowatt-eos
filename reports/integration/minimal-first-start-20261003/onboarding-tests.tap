@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: shipped template choices are exact, hash-bound projections of the existing Devices source
+ok 1 - shipped template choices are exact, hash-bound projections of the existing Devices source
+  ---
+  duration_ms: 24.040155
+  type: 'test'
+  ...
+# Subtest: configured plant persists sourced limits and input-only mappings without enabling control
+ok 2 - configured plant persists sourced limits and input-only mappings without enabling control
+  ---
+  duration_ms: 15.461763
+  type: 'test'
+  ...
+# Subtest: explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+ok 3 - explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+  ---
+  duration_ms: 1.451322
+  type: 'test'
+  ...
+# Subtest: real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+ok 4 - real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+  ---
+  duration_ms: 4.172629
+  type: 'test'
+  ...
+# Subtest: EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+ok 5 - EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+  ---
+  duration_ms: 0.919537
+  type: 'test'
+  ...
+# Subtest: planned device counts and canonical product adapter names must fit the authenticated license
+ok 6 - planned device counts and canonical product adapter names must fit the authenticated license
+  ---
+  duration_ms: 0.939777
+  type: 'test'
+  ...
+# Subtest: minimal v3 creates a deferred commissioning record without inventing site or installation values
+ok 7 - minimal v3 creates a deferred commissioning record without inventing site or installation values
+  ---
+  duration_ms: 0.417135
+  type: 'test'
+  ...
+# Subtest: minimal v3 rejects forged commissioning/UUID/settings, unsupported schemas and bypass of signed-license selection
+ok 8 - minimal v3 rejects forged commissioning/UUID/settings, unsupported schemas and bypass of signed-license selection
+  ---
+  duration_ms: 0.464165
+  type: 'test'
+  ...
+# Subtest: minimal password and handoff validation retain password policy, exact schemas and legacy record compatibility
+ok 9 - minimal password and handoff validation retain password policy, exact schemas and legacy record compatibility
+  ---
+  duration_ms: 2.584425
+  type: 'test'
+  ...
+# Subtest: frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+ok 10 - frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+  ---
+  duration_ms: 9.232918
+  type: 'test'
+  ...
+# Subtest: authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+ok 11 - authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+  ---
+  duration_ms: 3.462502
+  type: 'test'
+  ...
+# Subtest: copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+ok 12 - copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+  ---
+  duration_ms: 2.258854
+  type: 'test'
+  ...
+# Subtest: Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+ok 13 - Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+  ---
+  duration_ms: 5.485647
+  type: 'test'
+  ...
+# Subtest: missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+ok 14 - missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+  ---
+  duration_ms: 18.021811
+  type: 'test'
+  ...
+# Subtest: minimal delivered form sends only schema, signed license and admin passwords, never commissioning data or device identity
+ok 15 - minimal delivered form sends only schema, signed license and admin passwords, never commissioning data or device identity
+  ---
+  duration_ms: 5.399931
+  type: 'test'
+  ...
+# Subtest: check uses the same minimal contract and license result shows edition without adapter/count restrictions
+ok 16 - check uses the same minimal contract and license result shows edition without adapter/count restrictions
+  ---
+  duration_ms: 4.320427
+  type: 'test'
+  ...
+# Subtest: 202 handoff and lost setup connection never claim completed installation
+ok 17 - 202 handoff and lost setup connection never claim completed installation
+  ---
+  duration_ms: 1.999962
+  type: 'test'
+  ...
+# Subtest: only explicit root completion shows access success; plant acceptance remains open
+ok 18 - only explicit root completion shows access success; plant acceptance remains open
+  ---
+  duration_ms: 2.657393
+  type: 'test'
+  ...
+# Subtest: claim header timeout aborts at five seconds, releases the button and never retries or exposes the code
+ok 19 - claim header timeout aborts at five seconds, releases the button and never retries or exposes the code
+  ---
+  duration_ms: 2.798481
+  type: 'test'
+  ...
+# Subtest: one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup
+ok 20 - one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup
+  ---
+  duration_ms: 2.600268
+  type: 'test'
+  ...
+# Subtest: initial session JSON timeout is bounded and successful requests clear their deadline timers
+ok 21 - initial session JSON timeout is bounded and successful requests clear their deadline timers
+  ---
+  duration_ms: 4.855336
+  type: 'test'
+  ...
+# Subtest: ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff
+ok 22 - ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff
+  ---
+  duration_ms: 7.204154
+  type: 'test'
+  ...
+# Subtest: a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials
+ok 23 - a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials
+  ---
+  duration_ms: 2.52653
+  type: 'test'
+  ...
+# Subtest: lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts
+ok 24 - lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts
+  ---
+  duration_ms: 4.865291
+  type: 'test'
+  ...
+# Subtest: reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker
+ok 25 - reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker
+  ---
+  duration_ms: 3.090542
+  type: 'test'
+  ...
+# Subtest: local reissue CLI refuses password arguments and never prints the argument
+ok 26 - local reissue CLI refuses password arguments and never prints the argument
+  ---
+  duration_ms: 57.227682
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 222.049734

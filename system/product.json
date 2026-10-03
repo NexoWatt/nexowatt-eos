@@ -97,7 +97,7 @@
     "sourceImplemented": true,
     "fullProductProfile": "eos-full-install-first-start-v1",
     "requirementStatus": "implemented-awaiting-target-acceptance",
-    "implementedScope": "full-product-build-and-installer-path; protected-first-account-site-license-and-device-plan-setup; subsequent-account-invitations",
+    "implementedScope": "full-product-build-and-installer-path; minimal UUID, signed system edition license and admin password; subsequent customer commissioning",
     "licenseWizard": "signed-frontend-verification-and-encrypted-runtime-store",
     "licenseUuidDisplay": {
       "source": "installed-system.meta.uuid.native.uuid",
@@ -108,7 +108,7 @@
       "manualCopyFallback": true,
       "documentation": "docs/requirements/EOS-REQ-ONBOARD-UUID-20261003.md"
     },
-    "deviceWizard": "typed-product-catalog-plan; live-device-acceptance-open",
+    "deviceWizard": "deferred-to-customer-commissioning; existing schema2 handoffs preserved",
     "passwordEntry": "https-frontend-only",
     "setupIdentity": "eos-setup",
     "setupPort": 8443,
@@ -125,7 +125,7 @@
     "documentation": "docs/operations/FIRST_START_INSTALLATION_DE.md",
     "gitInstallDocumentation": "docs/operations/GIT_TEST3_INSTALLATION_DE.md",
     "nativeTargetProbe": "mandatory-before-host-installation; revision4 target acceptance open",
-    "licenseEntitlements": "existing Home/Pro matrix with narrower signed device quotas",
+    "licenseEntitlements": "NWL3 system edition from trusted Home/Pro policy; legacy NWL2 signed adapter and capacity restrictions preserved",
     "oneCommandInstallation": {
       "requirement": "EOS-REQ-ONE-COMMAND-20261003",
       "sourceImplemented": true,
@@ -166,9 +166,10 @@
       "publicRepositoryBootstrapReadbackPassed": true,
       "publicRepositoryBootstrapPublication": "reports/integration/recovery-pg-owner-20261003/publication.json",
       "bootstrapEntryRevision": 2,
-      "lastUserTargetResult": "HTTPS_FIRST_START_READY reported by user after corrected entry; browser completion and reboot pending",
+      "lastUserTargetResult": "HTTPS_FIRST_START_READY and completed wizard reported by user; normal Admin login fails, SSH remains available; repair target acceptance pending",
       "userReportedFirstStartReady": true
-    }
+    },
+    "sourceCorrection": "reports/integration/minimal-first-start-20261003/README.md"
   },
   "installationScope": "fresh-isolated-Debian13-ARM64-test-host; explicit public trust pins; required target load probe"
 }

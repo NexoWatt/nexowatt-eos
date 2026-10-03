@@ -1,0 +1,38 @@
+▶ maintained OAuth serves TLS password login, refresh, revocation and denied alternate grants
+  ✔ password login issues cookie flags and usable access token (702.401556ms)
+  ✖ correct first-start password still logs in after the previous two-second deadline (2009.666181ms)
+  ✔ invalid credentials cannot issue a token (666.426189ms)
+  ✔ refresh retains proof and issues usable successor token (10.013626ms)
+  ✔ credential change invalidates access and refresh token (7.151198ms)
+  ✔ SSO and authorization-code grants remain unavailable (8.155972ms)
+✖ maintained OAuth serves TLS password login, refresh, revocation and denied alternate grants (4126.918274ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 5
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4398.087693
+
+✖ failing tests:
+
+test at components/admin/test/eos-appliance-oauth.integration.cjs:93:17
+✖ correct first-start password still logs in after the previous two-second deadline (2009.666181ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  400 !== 200
+  
+      at TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/components/admin/test/eos-appliance-oauth.integration.cjs:97:20)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-audit/snapshot/components/admin/test/eos-appliance-oauth.integration.cjs:93:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 400,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

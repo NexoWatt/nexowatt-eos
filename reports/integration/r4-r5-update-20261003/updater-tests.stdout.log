@@ -1,0 +1,29 @@
+✔ CLI requires explicit absolute input paths and both independent new trust pins (1.485415ms)
+✔ baseline must exactly match R4 release, sequence, key, runtime, profile and schema (0.324069ms)
+✔ transition rejects schema/unit mutation, new service, admission expansion and stale sequence (1.140025ms)
+✔ successful update preserves configuration, first-start provenance and old release; checks readiness before unlock (14.140963ms)
+✔ wrong new key pin fails before stage or stop (2.8887ms)
+✔ installed unit drift fails before runtime mutation (3.099462ms)
+✔ existing maintenance lock is not removed or overwritten (2.754252ms)
+✔ native failure removes only its own pre-transition lock and does not stop running controller (3.668923ms)
+✔ readiness failure restores only old pointer/state, retains lock, never restarts old controller (4.993972ms)
+✔ foreign state change during trial is not overwritten; stop and retain lock (5.353134ms)
+✔ foreign pointer during trial is not overwritten (4.811533ms)
+✔ initial failed controller is repairable without database reinitialization (4.274559ms)
+✔ pre-activation configuration race is detected; credentials are not written back (4.786826ms)
+✔ failed stop leaves lock and reports recovery required without claiming restored service (3.67345ms)
+✔ journal failure during trial still attempts physical restoration and preserves the lock (4.17406ms)
+✔ signature rejection does not acquire maintenance lock or execute candidate code (1.78629ms)
+✔ directory fsync failure after successful unlock recreates gate before restoring old release (4.966652ms)
+✔ repair requires systemd invocation identity; unsupervised CLI cannot start maintenance (1.767472ms)
+✔ false executable trust result is rejected before any service command or staging (1.98887ms)
+✔ ExecStopPost quiesces only its own incomplete repair, including a failed permit revocation (0.3923ms)
+✔ malformed protected lock falls back only to its own bounded journal; valid foreign lock wins (0.283649ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 169.163575

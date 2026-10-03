@@ -180,7 +180,7 @@ async function finalize() {
                 if (identity.schemaVersion !== 1 || identity.uuid !== licenseUuid || identity.releaseId !== installed.releaseId) fail('FIRST_START_DEVICE_IDENTITY');
                 const licenseStatus = licensing.validateLicenseSelection(handoff.license, { uuid: licenseUuid,
                     publicKeys: await readTrustFile(DIRECTORY + '/license-trust.json'), core });
-                if (handoff.license.mode === 'activate') require('../../runtime/onboarding/configuration.cjs').licenseCapacity(handoff.settings.devicePlan, licenseStatus);
+                if (handoff.settings.schemaVersion !== 3 && handoff.license.mode === 'activate') require('../../runtime/onboarding/configuration.cjs').licenseCapacity(handoff.settings.devicePlan, licenseStatus);
                 const pinned = readPinnedApp(app);
                 await enrollment.enrollFirstRun({ objects, states, config, app,
                     passwordHash: handoff.passwordHash, settings: handoff.settings,

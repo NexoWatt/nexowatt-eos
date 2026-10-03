@@ -143,7 +143,9 @@ async function verifyFirstRun({ objects, allowPending = false }) {
     const common = (await objects.getObjectAsync('system.config'))?.common;
     // This marker records the accepted initial configuration, not an immutable
     // forever-snapshot: authorized setting changes must survive later reboots.
-    validateSettings({ ...marker.native.settings, siteName: common?.siteName, language: common?.language, timeZone: common?.timeZone });
+    if (marker.native.settings.schemaVersion !== 3) {
+        validateSettings({ ...marker.native.settings, siteName: common?.siteName, language: common?.language, timeZone: common?.timeZone });
+    }
     return { state: marker.native.state, configurationValidated: true, physicalControlEnabled: false };
 }
 async function enrollFirstRun({ objects, states, config, app, passwordHash: hashed, settings, verifyFresh }) {
@@ -181,11 +183,13 @@ async function enrollFirstRun({ objects, states, config, app, passwordHash: hash
     await objects.setObjectAsync(FIRST_START_MARKER, firstStart);
     for (const item of packages) {
         const doc = instanceDocument(item, config.system.hostname);
-        if (item.spec.name === 'nexowatt-ui') configuration.applyPlant(doc.native, settings.plant);
+        if (item.spec.name === 'nexowatt-ui' && settings.schemaVersion !== 3) configuration.applyPlant(doc.native, settings.plant);
         await objects.setObjectAsync(doc._id, doc);
     }
-    Object.assign(system.common, { siteName: settings.siteName, language: settings.language, timeZone: settings.timeZone });
-    await objects.setObjectAsync(system._id, system);
+    if (settings.schemaVersion !== 3) {
+        Object.assign(system.common, { siteName: settings.siteName, language: settings.language, timeZone: settings.timeZone });
+        await objects.setObjectAsync(system._id, system);
+    }
     admin.common = { ...admin.common, enabled: true, password: hashed, name: 'NexoWatt Service' };
     admin.acl = { ...accountsPolicy.PRIVATE_ACL };
     await objects.setObjectAsync(admin._id, admin);

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-03",
+  "basisCommit": "6ee690e7503f7f609de1f7c1db1689a6ca39aec3",
+  "signedRuntime": {
+    "releaseId": "15d65328b06e5d4d3a72b2ee440159aa36e07ce300d45888762519b66652ffa8",
+    "sha256": "c1d418a66b3678fb19f4487ece9871da81cf7a583af59a6d889c799d7c6dd1b3",
+    "immutable": true
+  },
+  "executedEnvironment": {
+    "platform": "Linux",
+    "architecture": "x86_64",
+    "node": "v24.19.0"
+  },
+  "observedDefect": "valid OAuth password verification lasting over 2000ms is rejected by the generic session timeout",
+  "userReportedAdminCrashRootCause": "OPEN: no target service or child-process evidence yet",
+  "tests": {
+    "sourceSession": {
+      "passed": 20
+    },
+    "builtSession": {
+      "passed": 20,
+      "failed": 0
+    },
+    "httpsBefore": {
+      "passed": 5,
+      "failed": 2,
+      "note": "one failing delayed-login subtest plus its containing parent; expected regression reproduction, not two independent defects"
+    },
+    "httpsAfter": {
+      "passed": 7,
+      "failed": 0
+    },
+    "minimalAndLegacyEnrollment": {
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "scope": {
+    "realTLS13": true,
+    "actualEnrolledPBKDF2": true,
+    "bundledPasswordVerifier": true,
+    "bundledMaintainedOAuth": true,
+    "nativeEOSStatesSessionAPI": true,
+    "postgresqlStore": "in-memory test double",
+    "nativeArm64": false,
+    "fullAdminBrowser": false,
+    "hardware": false,
+    "productionApproved": false
+  },
+  "sourceSha256": {
+    "components/admin/src/lib/eosSessionSecurity.js": "bf05680b31210159a6fa4469c83715a8edda1ab03e48c37d563ca4d4de6043d0",
+    "components/admin/build/lib/eosSessionSecurity.js": "bf05680b31210159a6fa4469c83715a8edda1ab03e48c37d563ca4d4de6043d0",
+    "components/admin/test/eos-session-security.test.cjs": "e75a84e54395596d1a6f0ec8d8c6f122cb2454ac592414e0ed375f4954a4aa3d",
+    "components/admin/test/eos-appliance-oauth.integration.cjs": "4272247f7a1ee1114593fb0c30ac56c8afa3a5b8a93571bcce4c0dbbc2f06415",
+    "runtime/bootstrap/enrollment.cjs": "85f2e50c8e3efc8fafd4c0443fe9c3197675bd462dfe9e1fc9794bd3ff5187ab",
+    "tests/onboarding/enrollment.test.cjs": "3e53834974074c833a0a67d0efe3ea0e5faecab8f43828deb1971493050235a1"
+  },
+  "rawSha256": {
+    "reports/integration/minimal-first-start-20261003/raw/admin-first-start-https.tap": "182dee765b7f14158dcd4b045b47c0401738e59400bdb1db662e60859943b63d",
+    "reports/integration/minimal-first-start-20261003/raw/admin-session-built.tap": "6fec6a01e70c4fc8a510787dddbb812a2f7545ea29c88b1e5624deeeb3b1303d",
+    "reports/integration/minimal-first-start-20261003/raw/admin-enrollment.tap": "141e066e08f783c9b87c48fd9d9f351cb1649b47afaccbaa9ac6d6d39f223172",
+    "reports/integration/minimal-first-start-20261003/raw/admin-session-source.tap": "661426e29b58096c48313ca7c76e8795f3dee98fb6ee63355648e12b47a81241",
+    "reports/integration/minimal-first-start-20261003/raw/admin-first-start-https-before.tap": "34a62b405881cddf6092b9a46cd440a5c7af57359f8ca6cdc84fdacaa70b0ec9"
+  }
+}

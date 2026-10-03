@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -7,7 +7,6 @@ const vm = require('node:vm');
 const { spawnSync } = require('node:child_process');
 const script = fs.readFileSync(path.join(__dirname, '../../runtime/onboarding/public/app.js'), 'utf8');
 const html = fs.readFileSync(path.join(__dirname, '../../runtime/onboarding/public/index.html'), 'utf8');
-const { configuredSettings } = require('./fixtures.cjs');
 const policy = require('../../runtime/onboarding/policy.cjs');
 const catalog = require('../../runtime/onboarding/device-catalog.json');
 // Parse the actual delivered HTML and model disabled fieldset/FormData behavior.
@@ -85,10 +84,9 @@ const response = (status, data) => ({ ok: status < 400, status, json: async () =
 const flush = () => new Promise(resolve => setImmediate(resolve));
 const uuid = '550e8400-e29b-41d4-a716-446655440000';
 function defaultResponse(url) { return response(200, url === '/api/catalog' ? { templates: catalog.templates, uuid } : { state: 'claimed', authenticated: true, csrf: 'token' }); }
-function deferredForm(f) {
+function minimalForm(f) {
     for (const [key, value] of Object.entries({ password: 'A long frontend fixture password', passwordRepeat: 'A long frontend fixture password',
-        siteName: 'Test', language: 'de', timeZone: 'UTC', licenseMode: 'unlicensed', plantMode: 'deferred', deferredReason: 'site-data-unavailable',
-        deviceStatus: 'deferred', devicesConfirmed: true, safetyAcknowledged: true })) f.set(key, value);
+        licenseToken: 'NWL2.frontend-fixture' })) f.set(key, value);
 }
 async function submit(f) { const form = f.element('setup-form'); await form.handlers.submit({ preventDefault() {}, target: form }); await flush(); }
 
@@ -113,14 +111,8 @@ test('authenticated catalog UUID is visible, read-only and selectable before any
     assert.equal(button.type, 'button'); assert.equal(button.disabled, false); assert.equal(input.value, uuid);
     for (let node = input; node; node = node.parent) assert.equal(node.hidden, false);
     assert.equal(form.elements.password.value, ''); assert.equal(f.element('license-token').value, '');
-    assert.equal(f.element('license-mode').value, ''); assert.equal(f.element('license-fields').hidden, true);
     assert.deepEqual(f.requests.map(row => row.url), ['/api/session', '/api/catalog']);
     input.focus(); assert.equal(input.selectionStart, 0); assert.equal(input.selectionEnd, uuid.length);
-    for (const mode of ['activate', 'unlicensed']) {
-        f.set('licenseMode', mode);
-        for (let node = input; node; node = node.parent) assert.equal(node.hidden, false);
-        assert.equal(input.value, uuid); assert.equal(button.disabled, false);
-    }
     assert.equal(f.formData(form).get('uuid'), null); assert.equal(f.formData(form).get('license-uuid'), null);
 });
 test('copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves', async () => {
@@ -157,55 +149,41 @@ test('missing or invalid catalog UUID never enables copying, displays response t
         assert.equal(f.element('license-uuid').focused, undefined);
     }
 });
-test('actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema', async () => {
-    const f = fixture(async url => url === '/api/finish' ? response(202, { state: 'committing' }) : defaultResponse(url));
-    await flush(); deferredForm(f);
-    for (const id of ['plant-fields', 'license-fields', 'device-fields']) { assert.equal(f.element(id).hidden, true); assert.equal(f.element(id).disabled, true); }
+test('minimal delivered form sends only schema, signed license and admin passwords, never commissioning data or device identity', async () => {
+    const f = fixture(async url => url === '/api/finish' ? response(202, { state: 'committing', licenseConfigured: true }) : defaultResponse(url));
+    await flush(); minimalForm(f);
     const active = f.descendants(f.element('setup-form')).filter(n => n.required && !f.disabled(n)).map(n => n.name).filter(Boolean);
-    for (const name of ['gridConnectionPowerW', 'phase2', 'phase3', 'paraSignal', 'licenseToken']) assert.equal(active.includes(name), false, name);
+    assert.deepEqual(active.sort(), ['licenseToken', 'password', 'passwordRepeat']);
+    assert.deepEqual(Object.keys(f.element('setup-form').elements).sort(), active);
     await submit(f);
     const payload = JSON.parse(f.requests.find(r => r.url === '/api/finish').options.body);
-    assert.doesNotThrow(() => policy.validateFinish(payload)); assert.equal(payload.settings.plant.mode, 'deferred');
-    assert.equal(Object.hasOwn(payload, 'uuid'), false); assert.equal(Object.hasOwn(payload.settings, 'uuid'), false);
+    const accepted = policy.validateFinish(payload);
+    assert.deepEqual(Object.keys(payload).sort(), ['license', 'password', 'passwordRepeat', 'schemaVersion']);
+    assert.equal(payload.schemaVersion, 3); assert.equal(payload.license.mode, 'activate');
+    assert.deepEqual(accepted.settings.commissioning, { status: 'deferred', reason: 'customer-plant-not-connected' });
+    assert.equal(Object.hasOwn(payload, 'uuid'), false); assert.equal(Object.hasOwn(payload, 'settings'), false);
     assert.equal(Object.hasOwn(payload.license, 'uuid'), false); assert.equal(JSON.stringify(payload).includes(uuid), false);
-    assert.equal(payload.settings.devicePlan.status, 'deferred'); assert.equal(payload.license.mode, 'unlicensed');
     assert.equal(f.element('login').href, 'https://eos.test:8081/'); assert.equal(f.element('login').hidden, false);
     assert.match(f.element('login').textContent, /Statusprüfung/);
     assert.equal(f.element('setup-form').elements.password.value, ''); assert.equal(f.element('license-token').value, '');
     assert.match(f.element('finish-status').textContent, /OFFEN/);
+    assert.doesNotMatch(html, /name="(?:siteName|language|timeZone|plantMode|deviceStatus|licenseMode|safetyAcknowledged)"/);
 });
-test('configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields', async () => {
-    const f = fixture(async url => ['/api/configuration/check', '/api/finish'].includes(url) ? response(url === '/api/finish' ? 202 : 200, { plantConfigurationComplete: true,
-        devicesConfigurationComplete: true, deviceCount: 1, licenseConfigured: false }) : defaultResponse(url));
-    await flush(); deferredForm(f); f.set('plantMode', 'configured');
-    const p = configuredSettings.plant;
-    for (const name of ['gridConnectionPowerW', 'gridPhaseCount', 'nominalVoltageV', 'maxPhaseCurrentA', 'safetyMarginW', 'safetyMeterTimeoutSec', 'safetyEnvelopeMaxAgeSec']) f.set(name, p[name]);
-    f.set('measurementMode', 'signed'); f.set('gridPointPower', p.measurements.gridPointPower);
-    for (const [i, id] of p.measurements.phaseCurrents.entries()) f.set('phase' + (i + 1), id);
-    f.set('paraMode', 'disabled'); f.set('valuesConfirmed', true); f.set('deviceStatus', 'configured');
-    f.element('add-device').handlers.click();
-    const card = f.element('devices').children[0], inputs = card.querySelectorAll('input, select');
-    // Exact order follows the delivered generated card; a blank template must fail.
-    const values = ['battery1', 'Fixture storage', 'modbusTcp', 'ess.varta.element.modbusTcpV14', '192.0.2.2', '502', '255', '1000', '3000', '0', 'be', 'be'];
-    assert.equal(inputs.length, values.length); inputs.forEach((input, i) => input.value = values[i]);
+test('check uses the same minimal contract and license result shows edition without adapter/count restrictions', async () => {
+    const f = fixture(async url => url === '/api/configuration/check' ? response(200, { licenseConfigured: true }) :
+        url === '/api/license/verify' ? response(200, { edition: 'home', expiresAt: null,
+            limits: { chargePoints: 3, batteries: 2 }, adapters: ['sensitive-internal-scope'] }) : defaultResponse(url));
+    await flush(); minimalForm(f);
     await f.element('check-configuration').handlers.click();
     const payload = JSON.parse(f.requests.find(r => r.url === '/api/configuration/check').options.body);
-    assert.doesNotThrow(() => policy.validateConfiguration(payload)); assert.deepEqual(payload.settings.plant, p);
-    assert.deepEqual(payload.settings.devicePlan, configuredSettings.devicePlan);
-    assert.match(f.element('review-status').textContent, /Hardwareabnahme: OFFEN/);
-    await submit(f);
-    const completedPayload = JSON.parse(f.requests.find(r => r.url === '/api/finish').options.body);
-    assert.doesNotThrow(() => policy.validateFinish(completedPayload));
-    assert.deepEqual(completedPayload.settings.plant, p);
-    inputs[3].value = ''; await f.element('check-configuration').handlers.click();
-    const emptyTemplate = JSON.parse(f.requests.at(-1).options.body);
-    assert.throws(() => policy.validateConfiguration(emptyTemplate));
-    f.set('gridPhaseCount', 1); assert.equal(f.element('phase2').disabled, true); assert.equal(f.element('phase3').disabled, true);
-    f.set('measurementMode', 'split'); assert.equal(f.element('signed-fields').disabled, true); assert.equal(f.element('split-fields').disabled, false);
-    f.set('paraMode', 'ems'); assert.equal(f.element('para-fields').disabled, false); assert.equal(f.element('para-setpoint').disabled, false);
-    f.set('paraMode', 'disabled'); assert.equal(f.element('para-fields').disabled, true); assert.equal(f.element('para-setpoint').disabled, true);
-    f.set('licenseMode', 'activate'); assert.equal(f.element('license-fields').disabled, false);
-    f.set('licenseMode', 'unlicensed'); assert.equal(f.element('license-fields').disabled, true);
+    assert.deepEqual(Object.keys(payload).sort(), ['license', 'schemaVersion']);
+    assert.doesNotThrow(() => policy.validateConfiguration(payload));
+    assert.match(f.element('review-status').textContent, /Kundenanlage wird später eingerichtet/);
+    await f.element('verify-license').handlers.click();
+    assert.match(f.element('license-status').textContent, /HOME-Lizenz/);
+    assert.match(f.element('license-status').textContent, /unbefristet/);
+    assert.doesNotMatch(f.element('license-status').textContent, /1970/);
+    assert.doesNotMatch(f.element('license-status').textContent, /Ladepunkte|Speicher|Adapter|sensitive-internal-scope/);
 });
 test('202 handoff and lost setup connection never claim completed installation', async () => {
     let handedOff = false;
@@ -214,7 +192,7 @@ test('202 handoff and lost setup connection never claim completed installation',
         if (url === '/api/session' && handedOff) throw new Error('server stopped');
         return defaultResponse(url);
     });
-    await flush(); deferredForm(f); await submit(f);
+    await flush(); minimalForm(f); await submit(f);
     assert.equal(f.element('login').hidden, false);
     assert.notEqual(f.element('finished').querySelector('h2').textContent, 'Geschützter Zugang eingerichtet');
     assert.match(f.element('message').textContent, /bestätigt keinen erfolgreichen Start/);
@@ -272,7 +250,7 @@ test('ambiguous finish aborts, clears secrets, checks server state and never res
         if (url === '/api/session' && finished) return response(200, { state: 'committing', authenticated: false });
         return defaultResponse(url);
     });
-    await flush(); deferredForm(f); const form = f.element('setup-form');
+    await flush(); minimalForm(f); const form = f.element('setup-form');
     const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
     await form.handlers.submit({ preventDefault() {}, target: form });
     assert.equal(f.requests.filter(row => row.url === '/api/finish').length, 1);
@@ -295,12 +273,12 @@ test('a confirmed authenticated claimed state permits only an explicit new finis
         if (url === '/api/session' && finishes === 1) return response(200, { state: 'claimed', authenticated: true, csrf: 'fresh-token' });
         return defaultResponse(url);
     });
-    await flush(); deferredForm(f); const form = f.element('setup-form');
+    await flush(); minimalForm(f); const form = f.element('setup-form');
     const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
     await f.advance(5000); await pending;
     assert.equal(finishes, 1); assert.equal(form.hidden, false); assert.equal(f.element('finish-button').disabled, false);
     assert.equal(form.elements.password.value, ''); assert.match(f.element('review-status').textContent, /bewusst absenden/);
-    deferredForm(f); await submit(f);
+    minimalForm(f); await submit(f);
     assert.equal(finishes, 2); assert.equal(f.requests.filter(row => row.url === '/api/finish')[1].options.headers['x-eos-csrf'], 'fresh-token');
 });
 test('lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts', async () => {
@@ -310,7 +288,7 @@ test('lost finish and unreachable state stay closed to resubmission and end boun
         if (url === '/api/session' && finished) return never();
         return defaultResponse(url);
     });
-    await flush(); deferredForm(f); const form = f.element('setup-form');
+    await flush(); minimalForm(f); const form = f.element('setup-form');
     const pending = form.handlers.submit({ preventDefault() {}, target: form }); await flush();
     await f.advance(10000); await pending;
     assert.equal(f.element('finish-button').disabled, true); assert.equal(form.hidden, true);

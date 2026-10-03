@@ -1,0 +1,39 @@
+/* NexoWatt EOS startup branding, 2026-10-03.
+ * The reviewed shared React Loader draws the upstream mark with six CSS shapes.
+ * Replace only that decorative mark, before React's deferred bootstrap starts.
+ * React keeps ownership of the DOM; authentication, errors and legal notices
+ * are never hidden or rewritten. More specific selectors win even when the
+ * shared Loader injects its own stylesheet later.
+ */
+html.eos-native-shell .logo-back > .logo-div {
+    overflow: visible;
+    border-radius: 0;
+    background: transparent url('../img/eos/nexowatt-192.png') center / 160px 160px no-repeat;
+}
+
+html.eos-native-shell .logo-back > .logo-div > .logo-top,
+html.eos-native-shell .logo-back > .logo-div > .logo-border,
+html.eos-native-shell .logo-back > .logo-div > .logo-i,
+html.eos-native-shell .logo-back > .logo-div > .logo-i-top,
+html.eos-native-shell .logo-back > .logo-animate-grow {
+    display: none;
+    animation: none;
+}
+
+/* A static caption stays readable with reduced motion and without JavaScript
+ * observers, and remains limited to the existing decorative loader container. */
+html.eos-native-shell .logo-back > .logo-div::after {
+    content: 'NexoWatt EOS';
+    display: block;
+    position: absolute;
+    top: calc(50% + 92px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    font: 600 18px/1.4 system-ui, sans-serif;
+    letter-spacing: 0.02em;
+    color: #f0f7f6;
+    background: #020914;
+    padding: 3px 10px;
+    border-radius: 5px;
+}

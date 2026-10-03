@@ -67,10 +67,16 @@ function devicePlan(value) {
 }
 function licenseInput(value) {
     if (!exact(value, ['mode', 'token']) || !['activate', 'unlicensed'].includes(value.mode) || typeof value.token !== 'string' ||
-        (value.mode === 'activate' ? !value.token.startsWith('NWL2.') || value.token.length > 16384 : value.token !== '')) fail();
+        (value.mode === 'activate' ? !/^NWL[23]\./.test(value.token) || value.token.length > 16384 : value.token !== '')) fail();
     return structuredClone(value);
 }
 function summarize(settings, license) {
+    if (settings.schemaVersion === 3) {
+        require('./policy.cjs').validateSettings(settings);
+        return { plantConfigurationComplete: false, devicesConfigurationComplete: false, deviceCount: 0,
+            licenseConfigured: license.mode === 'activate', commissioningStatus: 'deferred',
+            liveMeasurementsVerified: false, physicalControlEnabled: false };
+    }
     return { plantConfigurationComplete: settings.plant.mode === 'configured',
         devicesConfigurationComplete: settings.devicePlan.status !== 'deferred', deviceCount: settings.devicePlan.devices.length,
         licenseConfigured: license.mode === 'activate', liveMeasurementsVerified: false, physicalControlEnabled: false };
@@ -86,7 +92,8 @@ function licenseCapacity(plan, claims) {
         plan.devices.filter(d => d.role === 'storage').length > claims.limits.batteries) fail();
     const required = new Set(plan.devices.map(row => product.SPECS.find(s => s.source ===
         (row.protocol === 'eebus' ? 'eebus' : row.protocol === 'ocpp21' ? 'ocpp21' : 'devices')).id));
-    if (![...required].every(id => claims.adapters.includes(id))) fail();
+    if (claims.scope !== 'system' && claims.scope !== 'adapters') fail();
+    if (claims.scope === 'adapters' && ![...required].every(id => claims.adapters.includes(id))) fail();
     return true;
 }
 // Only known read-side mappings and existing envelope fields are copied. All

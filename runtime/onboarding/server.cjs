@@ -27,7 +27,7 @@ function createSetupServer({ stateDirectory, releaseId, origin, completionFile, 
     let session = null; let inflight = false;
     function verifySelection(selection, settings) {
         const result = require('../bootstrap/first-start-configuration.cjs').validateLicenseSelection(selection, { ...licenseContext, now: now() });
-        if (settings && selection.mode === 'activate') configuration.licenseCapacity(settings.devicePlan, result);
+        if (settings && settings.schemaVersion !== 3 && selection.mode === 'activate') configuration.licenseCapacity(settings.devicePlan, result);
         return result;
     }
     let budgetAt = now(), budget = 0;
@@ -121,7 +121,7 @@ function createSetupServer({ stateDirectory, releaseId, origin, completionFile, 
                 // session, CSRF, schema and exclusive commit have all passed.
                 res.setTimeout(120000, () => res.destroy());
                 const hashed = await hashPassword(password);
-                const handoff = { schemaVersion: 2, releaseId, setupId: state.setupId, passwordHash: hashed, settings, license };
+                const handoff = { schemaVersion: settings.schemaVersion === 3 ? 3 : 2, releaseId, setupId: state.setupId, passwordHash: hashed, settings, license };
                 require('./policy.cjs').validateHandoff(handoff, releaseId);
                 storage.write(stateDirectory, 'handoff.json', handoff);
                 return send(res, 202, { state: 'committing', ...configuration.summarize(settings, license) }, {

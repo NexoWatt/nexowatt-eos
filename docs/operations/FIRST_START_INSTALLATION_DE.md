@@ -7,16 +7,13 @@ Die unten beschriebenen früheren Laufzeitnachweise enthalten diese spätere
 Lizenzänderung noch nicht. Eine Einrichtung ohne Aktivierungsschlüssel ersetzt
 die erforderliche Nutzungserlaubnis nicht.
 
-UUID-Ergänzung: Im Schritt **„3 · Lizenz prüfen“** zeigt das schreibgeschützte
-Feld **„Geräte-UUID für die Lizenzerstellung“** nach Eingabe des Einrichtungscodes
-die Kennung dieses Systems. Das Servicepasswort muss dafür noch nicht gespeichert
-und eine Lizenz noch nicht eingegeben sein. Mit **„UUID kopieren“** übernimmst du
-die vollständige Kennung für die Lizenzerzeugung. Ist der Zwischenablagezugriff
-gesperrt, lässt sich die markierte Kennung manuell kopieren. Auch ein vorhandenes
-zweistelliges Präfix gehört zur UUID und muss übernommen werden. Anschließend
-kann die erzeugte signierte NWL2-Lizenz im selben Schritt geprüft werden.
-Der Server verwendet für diese Prüfung die installierte Systemkennung; das Feld
-ändert sie nicht. [Anforderung und Prüfgrenzen](../requirements/EOS-REQ-ONBOARD-UUID-20261003.md).
+Quellkorrektur vom 03.10.2026: Der neue Assistent erledigt ausschließlich
+**Geräte-UUID, Home-/Pro-Lizenz und Adminpasswort**. Die UUID erscheint nach dem
+Besitzcode schreibgeschützt und lässt sich vor der Passwortvergabe kopieren.
+Ein vorhandenes zweistelliges Präfix gehört zur vollständigen Kennung.
+Standort, Anlagenwerte und Geräte werden bei der späteren Kundenanbindung erfasst.
+Diese Änderung ist nicht rückwirkend Bestandteil der signierten R4-Dateien.
+[Änderung und Prüfungen](../../reports/integration/minimal-first-start-20261003/README.md).
 
 Verbindlicher Ausgangstext: [übernommene Anforderungsdatei](../requirements/EOS-REQ-ONBOARD-20261002.txt).
 Die lokal vorhandene Datei trug keinen Namenszusatz `(1)`. Die darin erwähnte
@@ -111,44 +108,28 @@ gestartet. Fehler werden als begrenzte Codes protokolliert, ohne Passwort-/Codew
    lokal anzeigen und im Formular eingeben. Der zufällige 192-Bit-Code gilt
    zehn Minuten. Er ist ein Besitznachweis, kein Benutzerpasswort, und gehört
    niemals in eine URL, ein Ticket, einen Bericht oder ein normales Log.
-3. Standortname, Sprache und IANA-Zeitzone eintragen. Im Lizenzschritt die
-   gerätegebundene signierte Lizenz eingeben und prüfen lassen. Die angezeigte
-   UUID stammt aus der initialisierten Datenbank. Signatur, UUID, Gültigkeit,
-   Edition, Adapter und Geräteanzahlen werden gegen den authentischen lokalen
-   Herstellervertrauensanker geprüft. Alternativ ausdrücklich ohne Lizenz
-   fortfahren; das erteilt keine Nutzungs- oder Steuerrechte.
-4. Die vorhandenen Anlagenwerte und Messpunkt-IDs eingeben: Anschlussleistung,
-   Phasen, Nennspannung, Phasenstromgrenze, Sicherheitsreserve, Datenalter und
-   gegebenenfalls die vorgesehenen Steuersignale. Die Form prüft technische
-   Bereiche aus dem Produktcode. Diese Prüfung ersetzt keine elektrische
-   Auslegung oder Messung. Fehlende Anlagendaten ausdrücklich als offen angeben;
-   sie werden nicht durch erfundene Werte ergänzt.
-5. Den Geräteplan aus den unterstützten Produktvorlagen und Verbindungsfeldern
-   erfassen; bis zu 16 Positionen sind im Erststartplan möglich. Modbus-, EEBUS-
-   und OCPP-Angaben werden validiert, jedoch nicht verbunden oder aktiviert.
-   Keine Geräte beziehungsweise eine spätere Konfiguration müssen ausdrücklich
-   gewählt werden. Lizenzkapazitäten und zugelassene Adapter werden auch beim
-   Root-Abschluss erneut geprüft. Geräteprüfung und Anlagenfreigabe bleiben offen.
-   Der noch deaktivierte Plan wird geschützt in `system.meta.eosFirstStart`
-   gespeichert; die bekannten Messpunkt-/Hüllkurvenfelder werden in die UI-
-   Konfiguration übernommen. Physische Adapterinstanzen werden dabei nicht erzeugt.
-6. Das eigene Passwort für das feste erste Konto `admin` (NexoWatt Service)
-   zweimal eingeben: 15–128 Unicode-Zeichen, maximal 256 UTF-8-Bytes, keine
-   Steuerzeichen. Eine frei wählbare Administratorrolle gibt es im Formular nicht.
-7. Abschluss absenden. Der Webdienst übergibt Passwort-Hash, validierte
-   Einstellungen und gegebenenfalls die signierte Lizenz in einer geschützten
-   Übergabedatei an den festen Root-Abschlussdienst. Dieser prüft
-   das signierte Release erneut, legt Konten/Konfiguration an, lädt die festen
-   Webassets und startet ausschließlich Admin/UI. Die Lizenz speichert ein
-   separater Dienst unter `eos-runtime` im vorhandenen verschlüsselten Admin-
-   Lizenzstore; sie landet weder in Objektmetadaten noch in Kommandoargumenten.
-   Erst nach authentisierten
-   HTTPS-Startprüfungen werden Abschluss und Autostart gespeichert und Setup
-   beendet. Ein Verbindungsabbruch im Browser beweist keinen erfolgreichen Start.
-8. Die angezeigte HTTPS-Anmeldeseite auf Port 8081 öffnen und das eigene Passwort
-   verwenden. UI liegt auf Port 8188. Unter Benutzer persönliche Installateur-/
-   Benutzerkonten einladen. Die Empfänger vergeben über einen kurzlebigen Code
-   ihr eigenes Passwort; Details im [Kontenbericht](../security/ONBOARDING_ACCOUNTS_REVIEW_DE.md).
+3. Die vollständige Geräte-UUID kopieren und damit im Keygen 1.0.2 eine
+   Home- oder Pro-Lizenz erstellen. NWL3 lizenziert das System ohne Adapterliste
+   oder frei wählbare Mengen. Die bestehende Editionsmatrix bleibt im Backend
+   wirksam. Bestehende NWL2-Lizenzen werden mit ihren ursprünglichen Grenzen
+   weiter geprüft. Der öffentliche Vertrauensanker muss zum bestehenden
+   Hersteller-Tresor passen; keinen neuen Issuerschlüssel erzeugen.
+4. Lizenz einfügen und prüfen. Die Signatur, tatsächliche Geräte-UUID und Edition
+   werden serverseitig kontrolliert. Die neue Oberfläche verlangt eine gültige
+   Lizenz. Der alte Schema-2-Vertrag bleibt für vorhandene Übergaben lesbar.
+5. Das eigene Passwort für das feste Konto `admin` zweimal eingeben:
+   15–128 Unicode-Zeichen, maximal 256 UTF-8-Bytes, keine Steuerzeichen.
+   Anlagen- und Geräteangaben gehören nicht mehr in diesen Schritt.
+6. Abschluss absenden. Die geschützte Schema-3-Übergabe enthält Passwort-Hash,
+   Lizenz und einen serverseitigen Vermerk für die spätere Kundeninbetriebnahme.
+   Es werden keine Standort-/Anlagendaten erfunden. Der Root-Abschluss prüft das
+   signierte Release und die Lizenz erneut. Der feste Runtime-Lizenzschreiber
+   speichert die Lizenz verschlüsselt; Passwort und Token gehören nicht in Logs.
+   Erst nach HTTPS-Startprüfungen werden Abschluss und Autostart gespeichert.
+7. Auf Port 8081 als `admin` mit dem gerade vergebenen Passwort anmelden.
+   Die UI liegt auf Port 8188. Persönliche Installateur-/Benutzerkonten können
+   anschließend eingeladen werden. Anlagenwerte und Geräte folgen bei der
+   Kundenanbindung samt gesonderter Abnahme.
 
 Die Zustände bleiben ausdrücklich getrennt: **installiert**, **eingerichtet**,
 **für Anlagenbefehle freigegeben**. Der Abschluss dieses Kandidaten lässt den
@@ -204,3 +185,4 @@ ist noch auf dem Zielhost nachzuweisen.
 
 Diese Punkte sind **offen, nicht ausgeführt**. Lokale Modultests, echte Loopback-
 TLS-Tests und Dienstvertragstests ersetzen sie nicht. Keine Produktionsfreigabe.
+

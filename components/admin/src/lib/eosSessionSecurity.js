@@ -55,6 +55,11 @@ class EosSessionSecurity {
         this.maxPending = options.maxPending || 32;
         this.timeoutMs = options.timeoutMs || 2000;
         this.pending = 0;
+        // PBKDF2 is local CPU work, not a database read. Its 600k-round,
+        // 256-byte upstream format needs a separate bounded budget on ARM.
+        this.authenticationTimeoutMs = options.authenticationTimeoutMs || 15000;
+        this.maxPendingAuthentications = options.maxPendingAuthentications || 2;
+        this.pendingAuthentications = 0;
         this.stopped = false;
         this.getOriginal = adapter.getSession.bind(adapter);
         this.setOriginal = adapter.setSession.bind(adapter);
@@ -97,6 +102,21 @@ class EosSessionSecurity {
         });
     }
 
+    authenticate(operation) {
+        const failure = code => Object.assign(new Error(code), { code });
+        if (this.stopped || this.pendingAuthentications >= this.maxPendingAuthentications) {
+            return Promise.reject(failure('EOS_AUTHENTICATION_BUSY'));
+        }
+        this.pendingAuthentications++;
+        // Node's PBKDF2 callback cannot cancel submitted native work. Retain
+        // its slot after a timeout until it truly settles; never queue retries.
+        const work = Promise.resolve().then(operation).finally(() => { this.pendingAuthentications--; });
+        return new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(failure('EOS_AUTHENTICATION_TIMEOUT')), this.authenticationTimeoutMs);
+            work.then(value => { clearTimeout(timer); resolve(value); }, error => { clearTimeout(timer); reject(error); });
+        });
+    }
+
     async snapshot(candidate) {
         const userId = normalizeUser(candidate);
         if (!userId || this.stopped) throw failure();
@@ -126,14 +146,23 @@ class EosSessionSecurity {
         const save = model.saveToken.bind(model);
         model.getUser = async (name, password) => {
             try {
-                return await this.bounded(async () => {
-                    const before = await this.snapshot(name);
+                const result = await this.authenticate(async () => {
+                    const before = await this.bounded(() => this.snapshot(name));
                     const user = await getUser(name, password);
-                    if (!user || !this.matches(before, await this.snapshot(user.id))) return null;
-                    this.proofs.set(user, before);
-                    return user;
+                    if (!user || !this.matches(before, await this.bounded(() => this.snapshot(user.id)))) return null;
+                    return { user, before };
                 });
-            } catch { return null; }
+                if (!result || !this.matches(result.before, result.before)) return null;
+                // Only a still-live request receives the proof. A hash callback
+                // arriving after the authentication deadline cannot mint tokens.
+                this.proofs.set(result.user, result.before);
+                return result.user;
+            } catch (error) {
+                if (['EOS_AUTHENTICATION_TIMEOUT', 'EOS_AUTHENTICATION_BUSY'].includes(error?.code)) {
+                    try { this.adapter.log?.warn?.(error.code); } catch { /* Logging must not reopen authentication. */ }
+                }
+                return null;
+            }
         };
         model.getRefreshToken = async token => {
             try {
@@ -229,3 +258,4 @@ class EosSessionSecurity {
     stop() { this.stopped = true; clearInterval(this.timer); this.revoke(); }
 }
 module.exports = { EosSessionSecurity, securityProjection, readGroupRows };
+

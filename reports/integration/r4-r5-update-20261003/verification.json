@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-03T20:29:58.921117+00:00",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/system/update-test-r4-to-r5.test.cjs"
+      ],
+      "exitCode": 0,
+      "tests": 21,
+      "passed": 21
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/integration/r5-derivative-sbom.test.cjs",
+        "reports/integration/installable-test3-r5-20261003/build-revision.test.cjs"
+      ],
+      "exitCode": 0,
+      "tests": 7,
+      "passed": 7
+    }
+  ],
+  "host": "linux-x64",
+  "node": "v24.19.0",
+  "scope": "filesystem transaction and injected service/signature/native fault fixtures; SBOM derivation and build contracts; not target installation",
+  "nativeTargetExecutionPerformed": false,
+  "piUpdatePerformed": false,
+  "passwordLoginTestPerformed": false,
+  "productionReleaseApproved": false,
+  "files": [
+    {
+      "path": "tools/system/update-test-r4-to-r5.cjs",
+      "bytes": 22362,
+      "sha256": "da84940bbef31f0c37b7bddba43ba19530a7832b1a887fa7da9ff24366b7c8ae"
+    },
+    {
+      "path": "tests/system/update-test-r4-to-r5.test.cjs",
+      "bytes": 18890,
+      "sha256": "2bacdddefefd70a6fa7f5b17513865bb11ab7af777da71f7a5e6643780bfc833"
+    },
+    {
+      "path": "tools/integration/bind-r5-derivative-sbom.cjs",
+      "bytes": 6422,
+      "sha256": "7c366ec3e8069b253675005016fd0dc9b7b0c0851aea088c7816a64894014d86"
+    },
+    {
+      "path": "tests/integration/r5-derivative-sbom.test.cjs",
+      "bytes": 3652,
+      "sha256": "f0d0e0644d13bbf6b011bab6d7f8ec110701550792c5df40208d48df4c29aaff"
+    },
+    {
+      "path": "reports/integration/installable-test3-r5-20261003/build-revision.cjs",
+      "bytes": 13873,
+      "sha256": "b44b2f047276e13b22d1006733e62c83181f5537c5e5807cddd6d9ec1751196c"
+    },
+    {
+      "path": "reports/integration/installable-test3-r5-20261003/build-revision.test.cjs",
+      "bytes": 2251,
+      "sha256": "dc59ca454ca5f85d660985dd8586367a3f8bf52962989f1523a2cb946cbea9c0"
+    },
+    {
+      "path": "reports/integration/r4-r5-update-20261003/payload-smoke.cjs",
+      "bytes": 3972,
+      "sha256": "bee673c8506f32472b868458d211c7520678c0e5f7614982232b7b15a605007a"
+    }
+  ]
+}

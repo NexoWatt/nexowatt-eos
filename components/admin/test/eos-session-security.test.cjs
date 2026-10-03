@@ -227,3 +227,49 @@ test('real five-second watchdog closes a socket after a missed credential object
     assert.equal(closed, true); assert.equal(x.security.isSocketAllowed(client), false);
     x.security.stop();
 });
+
+
+test('password verification has a separate budget without relaxing database reads', async () => {
+    const x = await setup({ timeoutMs: 25, authenticationTimeoutMs: 250 });
+    x.adapter.checkPassword = (_name, _password, cb) => setTimeout(() => cb(true, 'system.user.operator'), 75);
+    const user = await x.model.getUser('operator', 'test-only-passphrase');
+    assert.equal(user.id, 'operator');
+    const pair = await x.issue(user);
+    assert.ok(await x.model.getAccessToken(pair.accessToken));
+    x.adapter.getForeignObjectAsync = () => new Promise(() => {});
+    assert.equal(await x.model.getUser('operator', 'test-only-passphrase'), null);
+    assert.equal(x.security.pending, 1, 'timed-out DB work retains its separate pending slot');
+    x.security.stop();
+});
+
+test('timed-out authentication retains two work slots, refuses backlog and never grants late proof', async () => {
+    const x = await setup({ authenticationTimeoutMs: 25, maxPendingAuthentications: 2 });
+    const callbacks = []; const warnings = [];
+    x.adapter.log.warn = code => warnings.push(code);
+    x.adapter.checkPassword = (_name, _password, cb) => callbacks.push(cb);
+    const attempts = [x.model.getUser('operator', 'test-only-passphrase'), x.model.getUser('operator', 'test-only-passphrase')];
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(callbacks.length, 2);
+    assert.equal(await x.model.getUser('operator', 'test-only-passphrase'), null);
+    assert.deepEqual(await Promise.all(attempts), [null, null]);
+    assert.equal(x.security.pendingAuthentications, 2);
+    assert.equal(await x.model.getUser('operator', 'test-only-passphrase'), null);
+    assert.equal(callbacks.length, 2);
+    callbacks.forEach(cb => cb(true, 'system.user.operator'));
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(x.security.pendingAuthentications, 0);
+    await assert.rejects(x.model.saveToken({}, {}, { id: 'operator' }), /REAUTHENTICATION/);
+    assert.ok(warnings.includes('EOS_AUTHENTICATION_TIMEOUT'));
+    assert.ok(warnings.includes('EOS_AUTHENTICATION_BUSY'));
+    assert.ok(warnings.every(code => /^EOS_AUTHENTICATION_(TIMEOUT|BUSY)$/.test(code)));
+    x.security.stop();
+});
+
+test('bad passwords and revocation during slow verification still cannot receive proofs', async () => {
+    const x = await setup({ timeoutMs: 25, authenticationTimeoutMs: 250 });
+    x.adapter.checkPassword = (_name, _password, cb) => setTimeout(() => cb(false, 'system.user.operator'), 50);
+    assert.equal(await x.model.getUser('operator', 'wrong-test-passphrase'), null);
+    x.adapter.checkPassword = (_name, _password, cb) => setTimeout(() => { x.security.revoke(); cb(true, 'system.user.operator'); }, 50);
+    assert.equal(await x.model.getUser('operator', 'test-only-passphrase'), null);
+    x.security.stop();
+});

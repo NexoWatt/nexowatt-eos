@@ -1,57 +1,28 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NexoWatt EOS · Ersteinrichtung</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
 <body><main><header><span class="brand">NEXOWATT <b>EOS</b></span><p>Geschützte Ersteinrichtung</p></header>
-<h1>Willkommen bei Ihrer Energiezentrale.</h1><p>Richten Sie Zugang, Lizenz und die vorliegenden Anlagendaten geführt ein.</p>
+<h1>Willkommen bei NexoWatt EOS.</h1><p>Geräte-UUID kopieren, Home- oder Pro-Lizenz aktivieren und Ihr Admin-Passwort festlegen. Die Kundenanlage richten Sie später ein.</p>
 <p id="message" role="status" aria-live="polite"></p>
 <section id="claim"><h2>1 · Gerät übernehmen</h2>
 <p>Verwenden Sie den kurzlebigen Einrichtungscode vom vertrauenswürdigen lokalen Gerätezugang. Prüfen Sie dort Adresse, CA-Zertifikat und Fingerabdruck und übernehmen Sie das Zertifikat vor der Eingabe in Ihren Browser. Zertifikatswarnungen dürfen nicht übergangen werden.</p>
 <form id="claim-form"><label>Einrichtungscode<input id="code" name="code" type="password" autocomplete="off" required maxlength="128" spellcheck="false"></label>
 <button type="submit">Gerät übernehmen</button></form></section>
-<form id="setup-form" hidden><section><h2>2 · Standort</h2>
-<label>Name des Standorts<input name="siteName" required maxlength="120" autocomplete="organization"></label>
-<label>Sprache<select name="language"><option value="de">Deutsch</option><option value="en">English</option></select></label>
-<label>Zeitzone<input name="timeZone" value="Europe/Berlin" required maxlength="64" list="timezones"></label>
-<datalist id="timezones"><option value="Europe/Berlin"><option value="Europe/Vienna"><option value="Europe/Zurich"><option value="UTC"></datalist></section>
-<section><h2>3 · Lizenz prüfen</h2>
+<form id="setup-form" hidden><section><h2>2 · UUID und Lizenz</h2>
 <label for="license-uuid">Geräte-UUID für die Lizenzerstellung</label>
 <div class="uuid-copy"><input id="license-uuid" type="text" readonly autocomplete="off" spellcheck="false" placeholder="wird geladen" aria-describedby="uuid-help uuid-copy-status"><button id="copy-uuid" type="button" disabled>UUID kopieren</button></div>
-<p id="uuid-help" class="hint">Geben Sie diese vollständige Geräte-UUID für die Erstellung Ihrer Lizenz an. Sie wird vom Gerät bereitgestellt und ist nicht bearbeitbar.</p>
+<p id="uuid-help" class="hint">Geben Sie diese vollständige Geräte-UUID im Lizenzgenerator an und wählen Sie Home oder Pro. Die UUID wird vom Gerät bereitgestellt und ist nicht bearbeitbar.</p>
 <p id="uuid-copy-status" role="status" aria-live="polite">Die UUID wird nach der Geräteübernahme geladen.</p>
-<label>Lizenzierung<select id="license-mode" name="licenseMode" required><option value="">Bitte auswählen</option><option value="activate">Signierte Gerätelizenz jetzt prüfen und übernehmen</option><option value="unlicensed">Ohne Lizenz einrichten · Lizenzierung bleibt offen</option></select></label>
-<fieldset id="license-fields" hidden disabled><label>Signierte NWL2-Lizenz<textarea id="license-token" name="licenseToken" maxlength="16384" autocomplete="off" spellcheck="false" required></textarea></label><button id="verify-license" type="button">Lizenz prüfen</button></fieldset>
-<p id="license-status" role="status">Vertrauensanker und Gerätekennung werden ausschließlich durch die geprüfte Installation vorgegeben.</p></section>
-<section><h2>4 · Anschluss und Messpunkte</h2>
-<p>Übernehmen Sie Werte aus der geprüften Anlagendokumentation. Technische Wertebereiche prüfen die Eingabeform, nicht die elektrische Eignung. Messpunktnamen bestätigen weder vorhandene Messungen noch Aktualität, Vorzeichen oder Zuordnung.</p>
-<label>Anlagendaten<select id="plant-mode" name="plantMode" required><option value="">Bitte auswählen</option><option value="configured">Anschlussdaten und Messpunktzuordnung erfassen</option><option value="deferred">Anlagendaten fehlen · Konfiguration bleibt offen</option></select></label>
-<fieldset id="deferred-fields" hidden disabled><label>Grund<select name="deferredReason"><option value="site-data-unavailable">Verbindliche Anlagendaten liegen noch nicht vor</option><option value="no-plant-connected">Noch keine Anlage angeschlossen</option></select></label></fieldset>
-<fieldset id="plant-fields" hidden disabled><div class="fields">
-<label>Vertragliche Anschlussleistung (W)<input name="gridConnectionPowerW" type="number" min="1" max="1000000000000" step="1" required></label>
-<label>Anzahl Netzphasen<select id="phase-count" name="gridPhaseCount" required><option value="">Bitte auswählen</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
-<label>Nennspannung je Phase (V)<input name="nominalVoltageV" type="number" min="200" max="260" step="any" required></label>
-<label>Freigegebene Stromgrenze je Phase / Sicherung (A)<input name="maxPhaseCurrentA" type="number" min="0.000001" max="20000" step="any" required></label>
-<label>Leistungsreserve am Netzanschluss (W)<input name="safetyMarginW" type="number" min="0" max="999999999999" step="1" required></label>
-<label>Maximales Messwertalter (s, 5–120)<input name="safetyMeterTimeoutSec" type="number" min="5" max="120" step="1" required></label>
-<label>Maximales Alter der Regelgrenzen (s, 1–30)<input name="safetyEnvelopeMaxAgeSec" type="number" min="1" max="30" step="1" required></label></div>
-<label>Netzleistungsmessung<select id="measurement-mode" name="measurementMode"><option value="signed">Ein Messpunkt mit Vorzeichen</option><option value="split">Getrennte Bezugs- und Einspeisemessung</option></select></label>
-<fieldset id="signed-fields"><label>Datenpunkt Netzleistung mit Vorzeichen<input name="gridPointPower" maxlength="256" required spellcheck="false"></label></fieldset>
-<fieldset id="split-fields" hidden disabled><label>Datenpunkt Netzbezug<input name="gridBuyPower" maxlength="256" required spellcheck="false"></label><label>Datenpunkt Einspeisung<input name="gridSellPower" maxlength="256" required spellcheck="false"></label></fieldset>
-<div class="fields"><label>Strommessung L1 · Datenpunkt<input name="phase1" maxlength="256" required spellcheck="false"></label><label id="phase2-label" hidden>Strommessung L2 · Datenpunkt<input id="phase2" name="phase2" maxlength="256" required disabled spellcheck="false"></label><label id="phase3-label" hidden>Strommessung L3 · Datenpunkt<input id="phase3" name="phase3" maxlength="256" required disabled spellcheck="false"></label></div>
-<label>§14a-Signalführung<select id="para-mode" name="paraMode" required><option value="">Bitte auswählen</option><option value="disabled">Für diese Anlage nicht vorgesehen</option><option value="direct">Direktsteuerung · Aktivsignal erfassen</option><option value="ems">EMS · Aktivsignal und Sollwert erfassen</option></select></label>
-<fieldset id="para-fields" hidden disabled><label>Datenpunkt Aktivsignal<input name="paraSignal" maxlength="256" required spellcheck="false"></label><label id="para-setpoint-label" hidden>Datenpunkt EMS-Sollwert (W)<input id="para-setpoint" name="paraSetpoint" maxlength="256" required disabled spellcheck="false"></label></fieldset>
-<label class="check"><input name="valuesConfirmed" type="checkbox" required> Ich habe diese Werte und Zuordnungen aus verbindlichen Unterlagen übernommen. Die elektrische Abnahme und Messwertprüfung erfolgen gesondert.</label></fieldset></section>
-<section><h2>5 · Geräte planen</h2>
-<p>Erfassen Sie jede unabhängige Speicher- oder Ladepunkteinheit einmal. Jede entsprechende Planposition wird gegen das Lizenzkontingent gezählt. Installierte Schnittstellen bleiben gesperrt; eine gespeicherte Verbindung ist keine getestete Verbindung.</p>
-<label>Gerätebestand<select id="device-status" name="deviceStatus" required><option value="">Bitte auswählen</option><option value="configured">Geräte und Anschlüsse jetzt erfassen</option><option value="none">An diesem Standort sind keine Geräte vorgesehen</option><option value="deferred">Geräteangaben fehlen / anderer Treiber · Konfiguration bleibt offen</option></select></label>
-<fieldset id="device-fields" hidden disabled><p>Geführte Anschlüsse: Modbus TCP/RTU/ASCII mit vorhandener Vorlage, EEBUS und OCPP. Bei seriellen Anschlüssen bietet dieser Assistent die in Produktvorlagen belegten 9600 und 38400 Baud. Andere Protokolle und Herstellerfreigaben bleiben gesondert offen.</p><div id="devices"></div><button id="add-device" type="button">Gerät hinzufügen</button></fieldset>
-<label class="check"><input name="devicesConfirmed" type="checkbox" required> Gerätebestand und gewählter Bearbeitungsstatus sind bewusst angegeben.</label></section>
-<section><h2>6 · Prüfen und Zugang sichern</h2>
-<button id="check-configuration" type="button">Konfiguration serverseitig prüfen</button><p id="review-status" role="status">Prüfen Sie die Angaben vor dem verbindlichen Abschluss. Fehlende Daten bleiben ausdrücklich offen.</p>
-<p>Erstes Konto: <strong>admin · NexoWatt Service</strong>. Dieses Konto kann anschließend persönliche Konten einladen. Jeder Benutzer setzt sein eigenes Passwort.</p>
-<label>Eigenes Passwort<input name="password" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
-<label>Passwort wiederholen<input name="passwordRepeat" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
+<label>Home-/Pro-Lizenz<textarea id="license-token" name="licenseToken" maxlength="16384" autocomplete="off" spellcheck="false" required></textarea></label>
+<button id="verify-license" type="button">Lizenz prüfen</button>
+<p id="license-status" role="status">Fügen Sie die signierte Lizenz für dieses Gerät ein.</p></section>
+<section><h2>3 · Admin-Passwort</h2>
+<p>Benutzername: <strong>admin</strong>. Dieses Konto kann anschließend persönliche Konten einladen. Jeder Benutzer setzt sein eigenes Passwort.</p>
+<label>Admin-Passwort<input name="password" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
+<label>Admin-Passwort wiederholen<input name="passwordRepeat" type="password" autocomplete="new-password" minlength="15" maxlength="128" required></label>
 <p class="hint">15–128 Zeichen, höchstens 256 UTF-8-Bytes. Keine Kennwörter oder Tokens werden im Browser dauerhaft gespeichert.</p>
-<label class="check"><input name="safetyAcknowledged" type="checkbox" required> Ich bestätige den Betrieb ohne Anlagensteuerung. Lizenzierung, Konfiguration und fachliche Freigabe sind getrennte Voraussetzungen.</label>
-<button id="finish-button" type="submit">Zugang und Angaben verbindlich speichern</button></section></form>
+<button id="check-configuration" type="button">Angaben prüfen</button><p id="review-status" role="status">Lizenz und Passwort werden vor dem Speichern auf dem Gerät geprüft.</p>
+<p>Standort, Anschlusswerte und Geräte richten Sie erst beim Anschluss der Kundenanlage ein. Dieser Schritt gibt keine Anlagensteuerung frei.</p>
+<button id="finish-button" type="submit">Lizenz und Admin-Zugang speichern</button></section></form>
 <section id="finished" hidden><h2>Zugang wird eingerichtet</h2><p>Der geschützte Geräteprozess prüft und speichert die Übergabe. Lassen Sie das Gerät eingeschaltet. Ein Verbindungsabbruch bestätigt keinen erfolgreichen Start.</p><p id="finish-status"></p><a id="login" hidden>Zur NexoWatt-Anmeldung</a></section>
-<footer>Installiert · Zugang eingerichtet · Anlagendaten erfasst · Für Anlagenbefehle freigegeben — getrennte Zustände</footer></main></body></html>
+<footer>Die Ersteinrichtung schafft den geschützten Zugang. Die Inbetriebnahme der Kundenanlage folgt gesondert.</footer></main></body></html>
