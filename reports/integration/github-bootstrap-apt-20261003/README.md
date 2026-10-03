@@ -71,6 +71,21 @@ Identität mit dem jeweiligen kanonischen `HEAD`-Git-Blob nachgewiesen.
 Diese Dateien enthalten keine neue Git-Inhaltsänderung; die Signatur- und
 Quellbindung wurde nicht gelockert.
 
+## Veröffentlichung auf main und tatsächlicher Download
+
+Das Paket wurde mit Commit `1f7faccc6f27cc7ed8715e86b5b1920f157204da` direkt
+auf `main` veröffentlicht. Anschließend wurden **alle acht Dateien** über
+die authentifizierte private GitHub-Blob-API vollständig zurückgelesen:
+Loader, Manifest, Hosthelfer, Installer-ZIP, öffentlicher Trust, SSH-Befehl,
+Node- und EOS-Archiv. Bytezahlen, Git-Blob-IDs und SHA-256 stimmen mit den
+geprüften Dateien überein.
+[Downloadprotokoll](private-github-readback.json),
+[Veröffentlichungsnachweis](publication.json) und
+[README-/Quell-/Rohlogabgleich](documentation-verification.json).
+Der vorhandene Git-Zugang wurde nur im Prozessspeicher verwendet, nicht
+ausgegeben oder gespeichert. Der Herstellerlauf nutzt den Windows-
+Zertifikatsspeicher; der native Debian-CA-Pfad wurde hier nicht ausgeführt.
+
 ## Noch offen
 
 **Nicht ausgeführt, OFFEN:** vollständige Pi-Neuinstallation, echte APT-
