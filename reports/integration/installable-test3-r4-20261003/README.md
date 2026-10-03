@@ -1,4 +1,4 @@
-# Test.3 Revision 4: reproduzierbarer signierter Testbau
+# Test.3 Revision 4: wiederholbarer signierter Testbau
 
 Stand: 03.10.2026. Ziel: `0.2.0-test.3`, Lieferrevision 4, Sequenz 7,
 Debian 13 ARM64. Der tatsächliche Buildstatus steht erst nach erfolgreichem Bau
@@ -25,6 +25,12 @@ seinem bestehenden Fingerabdruck übernommen. Der neue Ed25519-Testsignierer
 wird ausschließlich im Speicher erzeugt; sein privater Schlüssel wird nicht
 exportiert oder gespeichert.
 
+Wiederholbar ist der geprüfte Bauablauf. Ein neuer flüchtiger Testschlüssel
+ändert den öffentlichen Schlüssel, die Signatur und damit den Archivhash;
+bitidentische Gesamtarchive werden nicht zugesagt. Die bytegenaue
+Wiederverwendung betrifft ausdrücklich den authentisierten R3-App-Baum und
+seine übernommenen SBOM-/Buildbelege.
+
 Zwei bisherige kompilierte Einstiegspunkte (`eebus/build/main.js` und
 `nexowatt-backup/build/main.js`) sind im signierten R3-App-Baum vorhanden,
 fehlen aber im Git-Quellbaum. Ihre Wiederverwendung ist ausdrücklich auf zwei
@@ -33,6 +39,18 @@ beschränkt. Der neue Beleg bezeichnet sie als wiederverwendete R3-Builddateien,
 nicht als neu kompiliert. Weitere fehlende Quelldateien bleiben ein Bauabbruch.
 Die Ausführung dieser physischen bzw. Backup-Adapter bleibt durch das bisherige
 Testprofil gesperrt.
+
+Der erste Actions-Bau (Commit `2679eee2e659f21d18a700cbd6e6db832fe4fe93`,
+Lauf `37142596770`) bestand die Regressionen und den Paketbau, brach aber vor
+der Auslieferung bei der Quellbindung ab. Der anschließende Abgleich mit dem
+authentisierten R3-Manifest zeigte sechs Zeilenendungsunterschiede: ausschließlich
+`package.json` und `LICENSE` der drei PostgreSQL-Backendpakete liegen in Git
+mit LF, im unverändert wiederverwendeten Windows-App-Bau mit CRLF vor. Für
+genau diese sechs Metadatendateien wird die vollständige LF-zu-CRLF-Transformation
+gegen signierte SHA-256 und Größe geprüft und mit getrenntem Quell-/Zielhash
+dokumentiert. Ausführbarer Code und andere Dateien erhalten keine Ausnahme.
+Die ursprünglichen App-Bytes und deren SBOM bleiben unverändert. Ein Nachlauf
+des vollständigen Actions-Baus ist dafür weiterhin erforderlich.
 
 Die Workflowdatei `.github/workflows/eos-r4-test-delivery.yml` baut nur im
 ursprünglichen Repository auf `main`. Der Buildjob besitzt Leserechte. Ein

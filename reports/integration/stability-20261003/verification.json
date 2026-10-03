@@ -42,6 +42,19 @@
       "passed": 2,
       "failed": 0,
       "skipped": 0
+    },
+    "runnerFixtureCorrection": {
+      "passed": 66,
+      "failed": 0,
+      "skipped": 0,
+      "runtime": "Node24.19.0",
+      "scope": "real guard against controlled root-owned target path; privileged writes remain mocked"
+    },
+    "legacyMetadataByteBinding": {
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "only six declared backend JSON/license LF to CRLF bindings; executable source transformations rejected"
     }
   },
   "countingNote": "Individual onboarding, diagnostic, PG and entry subsets overlap CI totals; final entry is a repeat after documentation generation was added. Do not sum overlapping runs.",
@@ -53,9 +66,9 @@
     "tools/bootstrap/prepare-host.py": "3832bfcc5ddd5dfc13d4314e1119f9eb9fb76e7b5e534a3ab07ad6627b78ccff",
     "tools/bootstrap/build-stability-entry.cjs": "80404a38443a47bcd1f96f0170677dc81659df7a5b5c5214c083dc2fca385a1f",
     "tools/system/install-from-checkout.cjs": "5d94ee9d57afa75b5e37ec30883545d7e3de82037a3267b834a24acddcd90e1d",
-    "tools/integration/deliver-postgresql-test.cjs": "d3933842670599853100d04e9d215b40ae2bb1a41791fc143e72e5f78d4b048d",
+    "tools/integration/deliver-postgresql-test.cjs": "cff86ca152636d48b5b51132ee467da5edbf4916d0b0ab68d63a86856fcd252a",
     ".github/workflows/security-review.yml": "9f284fe41ad2cff6e403b4578d3ef8d2817ba4be485c75258c95bcc309030817",
-    ".github/workflows/eos-r4-test-delivery.yml": "72a46c0f3f7b68307b43182864b726c4e79f7038a24d15b9aa96a2a000f286f0"
+    ".github/workflows/eos-r4-test-delivery.yml": "8de579f129e6df19b725e60bae4729fdc45255548c21c44921a393d313fea6e6"
   },
   "logs": {
     "ci-node.tap": "532e2078ee3d61a79a9a1f48ede35a08668746c50025705aef7e6a190de8a290",
@@ -65,9 +78,12 @@
     "raw/pg-provision-permissions.tap": "16c65c3cb58d6eb0a06ec16c9fd54c4992bae2393c61a86a98d515d4800ea10c",
     "raw/stability-entry-final.tap": "1943296ee3f5c609664dd8e6c22626dab29ccb0d910504567b8570706faf3085",
     "raw/r4-build-contract.tap": "7474a50a5724d160646a3e3a7c45801b33fbba37437000e36e81b6798806409e",
-    "raw/r4-publication-scope.log": "5d8a174d448d59185fd227bcbab9c964e39b10a9c2e28965972cfb0c833dd854"
+    "raw/r4-publication-scope.log": "5d8a174d448d59185fd227bcbab9c964e39b10a9c2e28965972cfb0c833dd854",
+    "raw/r4-metadata-binding-observation.json": "54c75f6d9833cc49de7f99f65786289c703ffa0205c70d1ef8b734f3a5acdc7f",
+    "raw/r4-metadata-binding.tap": "01e802a5f1495f331886f7a1d2d1bac512cef952ec4480309b748c65a1968d1a",
+    "ci-root-fixtures-runner-fix.tap": "761d3e2fdb4374e1f1a9f0811ba8da758fe4d3c1da721608e7e08018206d2d25"
   },
-  "buildStatus": "PENDING_ACTIONS",
+  "buildStatus": "CORRECTED_SOURCE_BINDING_PENDING_ACTIONS_RETEST",
   "publicationStatus": "PENDING",
   "artifactBuildEvidence": "../installable-test3-r4-20261003/build-verification.json",
   "artifactSbom": "../installable-test3-r4-20261003/runtime.cdx.json",
@@ -85,5 +101,11 @@
     "per-adapter isolation and JavaScript approval",
     "full UI Mesh timing gate",
     "CodeQL repository enablement and legacy platform jobs"
-  ]
+  ],
+  "firstSourceCommit": "2679eee2e659f21d18a700cbd6e6db832fe4fe93",
+  "firstCiRun": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/37142596812",
+  "firstBuildRun": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/37142596770",
+  "firstBuildResult": "archive packaging passed; source-to-app delivery binding failed; no publication",
+  "runnerFixtureCorrection": "ci-runner-fixture.json",
+  "buildSourceBindingCorrection": "raw/r4-metadata-binding-observation.json"
 }

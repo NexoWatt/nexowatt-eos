@@ -1,0 +1,40 @@
+{
+  "sourceCommitBeforeFixtureCorrection": "2679eee2e659f21d18a700cbd6e6db832fe4fe93",
+  "githubRun": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/37142596812",
+  "githubResult": "failure",
+  "githubNode": "24.21.0",
+  "githubJobs": {
+    "architecture": {
+      "passed": 112,
+      "conclusion": "success"
+    },
+    "existingSecurity": {
+      "nodePassed": 41,
+      "pythonPassed": 57,
+      "conclusion": "success"
+    },
+    "product": {
+      "nodePassed": 174,
+      "rootFixturePassed": 64,
+      "rootFixtureFailed": 1,
+      "pythonExecuted": false,
+      "conclusion": "failure"
+    }
+  },
+  "failedTest": "verified installer forwards the same catalog port profile to the privileged host recheck",
+  "failureCode": "UNTRUSTED_INSTALL_PARENT",
+  "cause": "Synthetic orchestrator used the real runner /opt ancestor metadata; host write boundaries were already mocked. The real directory guard correctly refused the runner path.",
+  "correction": "Map only /opt/nexowatt/eos guard checks to the controlled root-owned fixture target and retain the real guard. Add a writable-target rejection before staging. No production guard changed.",
+  "localRetest": {
+    "node": "24.19.0",
+    "tests": 66,
+    "passed": 66,
+    "failed": 0,
+    "skipped": 0,
+    "raw": "ci-root-fixtures-runner-fix.tap"
+  },
+  "testSourceSha256": "60645d3100531dfaa50b78c6c5f460f51855ea52a69db3adc234973847591d89",
+  "rawSha256": "761d3e2fdb4374e1f1a9f0811ba8da758fe4d3c1da721608e7e08018206d2d25",
+  "githubRetestOfFixtureFix": "PENDING_AFTER_COMMIT",
+  "nativeTargetAcceptance": "OPEN"
+}

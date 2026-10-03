@@ -75,6 +75,16 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
+      - name: Retain bounded stage diagnostics if the build fails
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-r4-failure-${{ github.sha }}
+          path: |
+            reports/integration/installable-test3-r4-20261003/*.log
+            reports/integration/installable-test3-r4-20261003/*.command.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Record the actual acceptance scope
         if: always()
         shell: bash

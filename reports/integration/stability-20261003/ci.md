@@ -88,3 +88,32 @@ das ist kein umfassender Geheimnis- oder Sicherheitstest.
 
 Ein grüner fokussierter Lauf stellt keine Produktionsfreigabe, keine
 Hardwareabnahme und keine CRA-/IEC-Konformitätsbewertung dar.
+
+## Nachtrag: erster echter GitHub-Lauf und Runner-Fixture-Korrektur
+
+Der [EOS-Lauf 37142596812](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37142596812)
+für Commit `2679eee2e659f21d18a700cbd6e6db832fe4fe93` benutzte erfolgreich
+**Node.js 24.21.0**. Architekturtests: 112 bestanden. Bestehende
+Securitytests: 41 Node- und 57 Python-Tests bestanden. Neue unprivilegierte
+Produkttests: 174 bestanden. Die anschließenden Root-Fixtures ergaben
+64 bestanden und **1 fehlgeschlagen**; die folgenden 80 Python-Produkttests
+wurden deshalb in diesem GitHub-Lauf nicht ausgeführt.
+
+Der Fehler `UNTRUSTED_INSTALL_PARENT` entstand in einem synthetischen
+Orchestrator-Test. Dieser mockte bereits Schreib-/Dienstaktionen, prüfte aber
+weiterhin die echten `/opt`-Ancestor-Metadaten des GitHub-Runners. Die
+unveränderte Produktionsprüfung verweigerte diesen Pfad korrekt. Dieser
+Fehler ist kein Nachweis einer fehlgeschlagenen Pi-Installation.
+
+Die Fixture bildet jetzt ausschließlich den Prüfort `/opt/nexowatt/eos` auf
+ihren bestehenden root-eigenen temporären Zielbaum ab und ruft **weiterhin
+die echte unveränderte Ancestor-Prüfung** auf. Ein zusätzlicher Negativtest
+weist nach, dass ein schreibbares Fixture-Ziel vor Staging, Hostinstallation
+und Schreibaktionen abgewiesen wird. Produktionscode und Schutzregeln
+wurden für diese CI-Korrektur nicht geändert.
+
+Gezielter lokaler Nachtest: **66/66 bestanden**, 0 übersprungen, Node.js
+24.19.0. Siehe `ci-root-fixtures-runner-fix.tap` und
+`ci-runner-fixture.json`. Der GitHub-Nachtest dieser Fixture-Korrektur ist
+bis zu deren Veröffentlichung ausdrücklich **OFFEN**. Frühere Logs und
+deren Quellbezug bleiben als historische Belege erhalten.

@@ -53,6 +53,11 @@ Ein flüchtiger Test-Signaturschlüssel ersetzt keine Produktionsschlüsselverwa
 Der authentisierte öffentliche Lizenzprüfanker wird unverändert weiterverwendet;
 private Lizenzschlüssel werden weder benötigt noch veröffentlicht.
 
+Die wiederverwendete App-SBOM ist keine Bestandsliste des späteren Pi-Basissystems.
+Die tatsächlich installierten Debian-/PostgreSQL-/Node-Versionen und deren
+Lieferkettennachweise gehören zusätzlich zur Zielhost-Abnahme. Ein Payload-
+Dateiinventar ersetzt diese Betriebssystem-Komponentenliste nicht.
+
 ## Noch offene Freigaben
 
 - Native Installation auf Debian 13 ARM64 mit PostgreSQL 17, Node 24.21.0 und

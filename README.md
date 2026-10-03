@@ -21,15 +21,17 @@ Der Assistent führt durch Standort, signierte Lizenz, Anlagenwerte und Gerätep
 Nicht verfügbare Anlagenangaben bleiben ausdrücklich als offen markiert.
 Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 
-[**Aus Git installieren und testen**](docs/operations/GIT_TEST3_INSTALLATION_DE.md) ·
+[**Aktuelle Pi-Testinstallation**](docs/operations/STABILITY_TEST4_DE.md) ·
 [Ein-Befehl-Download vorbereiten](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
 [Ersteinrichtung und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
-[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r3-20261003/).
+[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r4-20261003/).
 
-**Der signierte vollständige ARM64-Installationskandidat `0.2.0-test.3`, Revision 3, ist enthalten.**
-[Lieferung und Fingerabdrücke](delivery/test-pi-0.2.0-test.3-r3/README.md). UUID-Anzeige,
-Frontend-Passwortvergabe und Home-/Pro-Lizenzgrenzen sind umgesetzt.
+**Der aktuelle Bauplan gilt für den vollständigen ARM64-Testkandidaten
+`0.2.0-test.3`, Revision 4.** Ob Paket und Download tatsächlich bereitstehen,
+zeigen der Installationsblock oben und der Buildbericht. Revision 3 bleibt
+historisch erhalten. UUID-Anzeige, Frontend-Passwortvergabe und
+Home-/Pro-Lizenzgrenzen sind umgesetzt.
 
 **Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**
 Die historischen signierten Pakete test.1/test.2 enthalten die neuen Quellen

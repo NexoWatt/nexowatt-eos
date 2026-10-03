@@ -38,6 +38,24 @@ function reusedEntrypointBinding(source, target, row, sourceDigest) {
         priorEvidence: 'reports/integration/installable-test3-r3-20261003/signed-source-binding.json',
         rebuiltInThisRevision: false };
 }
+function legacyBackendMetadata(source, target, bytes, signed) {
+    // R3 was assembled on Windows. Git stores these six metadata/license
+    // sources with LF; the unchanged signed app contains exactly CRLF bytes.
+    // Match the complete transformed byte sequence, never normalize hashes or
+    // allow this transformation for executable JavaScript/TypeScript.
+    const matched = /^runtime\/postgresql\/packages\/(store|db-objects-postgresql|db-states-postgresql)\/(package\.json|LICENSE)$/.exec(source);
+    const names = { store: '@nexowatt/eos-postgresql-store',
+        'db-objects-postgresql': '@iobroker/db-objects-postgresql',
+        'db-states-postgresql': '@iobroker/db-states-postgresql' };
+    if (!matched || target !== 'app/node_modules/' + names[matched[1]] + '/' + matched[2] ||
+        !Buffer.isBuffer(bytes) || !signed || bytes.includes(13)) throw new Error('SOURCE_LEGACY_METADATA_MISMATCH');
+    const text = bytes.toString('utf8');
+    if (!Buffer.from(text).equals(bytes)) throw new Error('SOURCE_LEGACY_METADATA_MISMATCH');
+    const transformed = Buffer.from(text.replaceAll('\n', '\r\n'));
+    if (signed.size !== transformed.length || signed.sha256 !== sha256(transformed))
+        throw new Error('SOURCE_LEGACY_METADATA_MISMATCH');
+    return transformed;
+}
 function deliver(directory) {
     trustedDirectory(ROOT);
     const base = trustedDirectory(path.resolve(directory));
@@ -56,10 +74,11 @@ function deliver(directory) {
         sha256(key) !== delivery.signingPublicKeySha256) throw new Error('DELIVERY_MISMATCH');
     const byPath = new Map(checked.manifest.files.map(row => [row.path, row]));
     const sources = [];
-    function bind(source, target, transformed) {
+    function bind(source, target, transformed, transformation = 'runtime-notice-paths') {
         const row = byPath.get(target), bytes = transformed ?? readFileLimited(path.join(ROOT, source)).bytes;
         if (!row || row.sha256 !== sha256(bytes) || row.size !== Buffer.byteLength(bytes)) throw new Error('SOURCE_DELIVERY_MISMATCH ' + source);
-        sources.push({ source, target, sha256: row.sha256, bytes: row.size, ...(transformed ? { transformation: 'runtime-notice-paths' } : {}) });
+        sources.push({ source, target, sha256: row.sha256, bytes: row.size,
+            ...(transformed ? { transformation, sourceSha256: sha256(readFileLimited(path.join(ROOT, source)).bytes) } : {}) });
     }
     function subtree(source, target = source) {
         const expected = inventory(path.join(ROOT, source)).map(row => row.path);
@@ -100,7 +119,13 @@ function deliver(directory) {
     for (const name of ['store', 'db-objects-postgresql', 'db-states-postgresql']) {
         const source = 'runtime/postgresql/packages/' + name;
         const pkg = JSON.parse(readFileLimited(path.join(ROOT, source, 'package.json')).bytes);
-        for (const relative of ['package.json', pkg.main, 'LICENSE']) bind(source + '/' + relative, 'app/node_modules/' + pkg.name + '/' + relative);
+        for (const relative of ['package.json', pkg.main, 'LICENSE']) {
+            const from = source + '/' + relative, target = 'app/node_modules/' + pkg.name + '/' + relative;
+            const bytes = readFileLimited(path.join(ROOT, from)).bytes, row = byPath.get(target);
+            if (row && row.sha256 === sha256(bytes) && row.size === bytes.length) bind(from, target);
+            else bind(from, target, legacyBackendMetadata(from, target, bytes, row),
+                'legacy-r3-app-metadata-lf-to-crlf');
+        }
     }
     for (const relative of ['www/ems-apps.js', 'ems/module-manager.js', 'ems/modules/storage-control.js', 'ems/services/feature-flags.js',
         'lib/eos-integrated.js', 'lib/license-bootstrap-access.js', 'packages/eos-license-client/index.js',
@@ -124,7 +149,7 @@ function deliver(directory) {
     save('signed-source-binding.json', { schemaVersion: 1, kind: 'final-workspace-to-signed-runtime-source-binding',
         deliveryRevision: DELIVERY_REVISION, releaseSequence: checked.manifest.sequence,
         releaseId: checked.releaseId, archiveSha256: checked.archiveSha256, files: sources, allMatched: true,
-        scope: 'Expected runtime/system file sets, fixed tools, license texts, package identities/entrypoints and changed license UI functions. Two explicitly pinned missing compiled entrypoints reuse the R3 artifact and are not freshly rebuilt. Not target execution.' });
+        scope: 'Expected runtime/system file sets, fixed tools, license texts, package identities/entrypoints and changed license UI functions. Two explicitly pinned missing compiled entrypoints reuse the R3 artifact and are not freshly rebuilt. Six backend metadata/license files may bind through an exact declared LF-to-CRLF transformation. Not target execution.' });
     save('archive-delivery-verification.json', { schemaVersion: 1, deliveryRevision: DELIVERY_REVISION, releaseSequence: checked.manifest.sequence,
         releaseId: checked.releaseId, archiveSha256: checked.archiveSha256,
         archiveBytes: checked.archiveBytes, signingPublicKeySha256: delivery.signingPublicKeySha256,
@@ -133,7 +158,7 @@ function deliver(directory) {
         targetExecutionPerformed: false, hardwareTested: false, productionReleaseApproved: false });
     return { destination, releaseId: checked.releaseId, archiveSha256: checked.archiveSha256, sourceFilesMatched: sources.length };
 }
-module.exports = { deliver, REUSED_ENTRYPOINTS, reusedEntrypointBinding };
+module.exports = { deliver, REUSED_ENTRYPOINTS, reusedEntrypointBinding, legacyBackendMetadata };
 if (require.main === module) {
     try {
         if (process.argv.length !== 3) throw new Error('DELIVERY_USAGE');

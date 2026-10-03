@@ -68,6 +68,19 @@ Bei Installationsabbruch zusätzlich den Fehlercode und die neu angezeigte Phase
 melden. Nicht eigenständig Reste löschen, Konten entfernen, Sperren umgehen oder
 den Installer als Reparaturtool wiederholen.
 
+Für die ergänzende Bestandsaufnahme des tatsächlichen Pi-Basissystems nach
+erfolgreicher Installation:
+
+```bash
+dpkg-query -W -f='${binary:Package}\t${Version}\t${Architecture}\n' > eos-host-packages.tsv
+```
+
+Das liest ausschließlich die installierten Debian-Paketversionen aus und
+schreibt sie in eine lokale Texttabelle. Zusammen mit Release-ID, OS- und
+Node-Version dem Zielhostbericht zuordnen. Die Tabelle ergänzt die gebundene
+App-SBOM; sie ist selbst keine vollständige CycloneDX-SBOM oder
+Schwachstellenprüfung des Betriebssystems.
+
 Der PostgreSQL-Zertifikatsprüfer erneuert keine Zertifikate. Für längere Tests ist
 der 90-Tage-Lebenszyklus zu berücksichtigen; vor Dauerbetrieb muss der separate
 Rotations-/Wiederherstellungsweg implementiert und abgenommen sein.

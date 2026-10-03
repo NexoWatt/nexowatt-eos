@@ -67,6 +67,15 @@ function main() {
         const record = { name, program, args, started, finished: new Date().toISOString(),
             exitCode: result.status, errorCode: result.error?.code || null };
         commands.push(record); save(name + '.command.json', record);
+        if (result.error || result.status !== 0) {
+            // These are fixed offline build stages. Expose only a diagnostic
+            // code and optional repository-relative source name in console;
+            // the bounded raw stage logs remain in the dedicated report.
+            const line = String(result.stderr || '').trim();
+            if (/^[A-Z][A-Z0-9_]{2,80}(?: [A-Za-z0-9_./@-]{1,240})?$/.test(line))
+                process.stderr.write(name + ': ' + line + '\n');
+            else process.stderr.write(name + ': details retained in stage report logs\n');
+        }
         requireThat(!result.error && result.status === 0, 'REVISION_STAGE_FAILED ' + name);
         process.stdout.write(name + ' passed\n');
         return result.stdout;

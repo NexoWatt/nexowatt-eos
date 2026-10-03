@@ -71,7 +71,7 @@ test('CLI bounds exact path-only arguments, requires root, and never dumps raw p
     assert.equal(result.status, 1); assert.equal(result.stdout, ''); assert.equal(result.stderr.includes('never-print-this'), false);
     assert.deepEqual(JSON.parse(result.stderr), { ready: false, changesPerformed: false, code: 'PREFLIGHT_INSTALLATION_FAILED' });
 });
-function orchestratorFixture(ready) {
+function orchestratorFixture(ready, targetRoot) {
     // Execute the actual orchestrator and real signature/catalog/SBOM validation.
     // Only privileged write/host command boundaries are mocked; this is not a
     // systemd or installation acceptance test and never touches /opt or /etc.
@@ -84,7 +84,17 @@ function orchestratorFixture(ready) {
             events.push({ kind: 'host', options });
             return typeof ready === 'function' ? ready(options) : { ready };
         } };
-        if (name === './install-host.cjs') return { ...original, privateWrite: target => { events.push({ kind: 'write', target }); },
+        if (name === './install-host.cjs') return { ...original,
+            assertNoSymlinkAncestors: target => {
+                // /opt belongs to the disposable runner, not to this synthetic
+                // host. Keep the real guard, but inspect our controlled target.
+                if (target === '/opt/nexowatt/eos') {
+                    assert.ok(typeof targetRoot === 'string' && targetRoot.startsWith('/root/eos-install-preflight-fixture-'));
+                    return original.assertNoSymlinkAncestors(path.join(targetRoot, 'opt/nexowatt/eos'));
+                }
+                return original.assertNoSymlinkAncestors(target);
+            },
+            privateWrite: target => { events.push({ kind: 'write', target }); },
             installHost: options => { events.push({ kind: 'installHost', options }); return { phase: 'FIXTURE_ONLY' }; } };
         if (name === '../../runtime/release/bundle.cjs') return { ...original, stageBundle: options => {
             events.push({ kind: 'stage' }); const verified = original.verifyBundle(options);
@@ -128,10 +138,18 @@ test('actual Redis admission hold prevents direct signed installation before sta
     assert.deepEqual(inventory(f.target).filter(row => row.path !== 'etc/os-release'), before.filter(row => row.path !== 'etc/os-release'));
 });
 test('verified installer forwards the same catalog port profile to the privileged host recheck', t => {
-    const f = fixture(t); f.sign(); const harness = orchestratorFixture(true);
+    const f = fixture(t); f.sign(); const harness = orchestratorFixture(true, f.target);
     const result = harness.install({ bundleDirectory: f.options['--bundle'], keyFile: f.options['--public-key'], start: true });
     assert.equal(result.phase, 'FIXTURE_ONLY');
     const first = harness.events.find(row => row.kind === 'host'), last = harness.events.find(row => row.kind === 'installHost');
     assert.deepEqual(first.options.webPorts, [8081, 8188]); assert.deepEqual(last.options.webPorts, first.options.webPorts);
     assert.equal(harness.events.findIndex(row => row.kind === 'stage') > harness.events.findIndex(row => row.kind === 'host'), true);
+});
+
+test('orchestrator fixture keeps the actual ancestor guard and rejects a writable target before staging', t => {
+    const f = fixture(t); f.sign(); const harness = orchestratorFixture(true, f.target);
+    fs.chmodSync(f.target, 0o777);
+    assert.throws(() => harness.install({ bundleDirectory: f.options['--bundle'], keyFile: f.options['--public-key'], start: true }),
+        /UNTRUSTED_INSTALL_PARENT/);
+    assert.equal(harness.events.some(row => row.kind === 'stage' || row.kind === 'installHost' || row.kind === 'write'), false);
 });
