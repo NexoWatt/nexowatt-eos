@@ -1,0 +1,369 @@
+﻿2026-10-03T18:21:50.0161701Z Current runner version: '2.337.0'
+2026-10-03T18:21:50.0183530Z ##[group]Runner Image Provisioner
+2026-10-03T18:21:50.0184321Z Hosted Compute Agent
+2026-10-03T18:21:50.0184848Z Version: 20260901.588
+2026-10-03T18:21:50.0185369Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-03T18:21:50.0186039Z Build Date: 2026-09-01T19:56:44Z
+2026-10-03T18:21:50.0186644Z Worker ID: {f9a516e9-d532-4816-8fd9-b872a05fb574}
+2026-10-03T18:21:50.0187275Z Azure Region: westus3
+2026-10-03T18:21:50.0187788Z ##[endgroup]
+2026-10-03T18:21:50.0188946Z ##[group]Operating System
+2026-10-03T18:21:50.0189546Z Ubuntu
+2026-10-03T18:21:50.0189979Z 24.04.5
+2026-10-03T18:21:50.0190597Z LTS
+2026-10-03T18:21:50.0191072Z ##[endgroup]
+2026-10-03T18:21:50.0191535Z ##[group]Runner Image
+2026-10-03T18:21:50.0192103Z Image: ubuntu-24.04
+2026-10-03T18:21:50.0192566Z Version: 20260927.320.1
+2026-10-03T18:21:50.0193720Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-03T18:21:50.0195049Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-03T18:21:50.0195916Z ##[endgroup]
+2026-10-03T18:21:50.0196789Z ##[group]GITHUB_TOKEN Permissions
+2026-10-03T18:21:50.0198932Z Contents: read
+2026-10-03T18:21:50.0199429Z Metadata: read
+2026-10-03T18:21:50.0199937Z ##[endgroup]
+2026-10-03T18:21:50.0202014Z Secret source: Actions
+2026-10-03T18:21:50.0202913Z Cache mode: write
+2026-10-03T18:21:50.0203672Z Prepare workflow directory
+2026-10-03T18:21:50.0524544Z Prepare all required actions
+2026-10-03T18:21:50.0579221Z Getting action download info
+2026-10-03T18:21:50.3734048Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-03T18:21:50.5342285Z Complete job name: Architecture contracts and partial source SBOM
+2026-10-03T18:21:50.6000114Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-03T18:21:50.6001438Z with:
+2026-10-03T18:21:50.6001822Z   persist-credentials: false
+2026-10-03T18:21:50.6002270Z   repository: NexoWatt/nexowatt-eos
+2026-10-03T18:21:50.6005522Z   token: ***
+2026-10-03T18:21:50.6005867Z   ssh-strict: true
+2026-10-03T18:21:50.6006226Z   ssh-user: git
+2026-10-03T18:21:50.6006568Z   clean: true
+2026-10-03T18:21:50.6006928Z   sparse-checkout-cone-mode: true
+2026-10-03T18:21:50.6007346Z   fetch-depth: 1
+2026-10-03T18:21:50.6007698Z   fetch-tags: false
+2026-10-03T18:21:50.6008050Z   show-progress: true
+2026-10-03T18:21:50.6008398Z   lfs: false
+2026-10-03T18:21:50.6008726Z   submodules: false
+2026-10-03T18:21:50.6009084Z   set-safe-directory: true
+2026-10-03T18:21:50.6009487Z   allow-unsafe-pr-checkout: false
+2026-10-03T18:21:50.6010035Z env:
+2026-10-03T18:21:50.6010522Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T18:21:50.6010920Z ##[endgroup]
+2026-10-03T18:21:50.6810179Z Syncing repository: NexoWatt/nexowatt-eos
+2026-10-03T18:21:50.6812404Z ##[group]Getting Git version info
+2026-10-03T18:21:50.6813292Z Working directory is '/home/runner/work/nexowatt-eos/nexowatt-eos'
+2026-10-03T18:21:50.6814571Z [command]/usr/bin/git version
+2026-10-03T18:21:50.6883159Z git version 2.55.0
+2026-10-03T18:21:50.6899539Z ##[endgroup]
+2026-10-03T18:21:50.6908617Z Temporarily overriding HOME='/home/runner/work/_temp/092c801a-ccbb-4a91-9af0-20dd502ec691' before making global git config changes
+2026-10-03T18:21:50.6910529Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-03T18:21:50.6916116Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T18:21:50.6961427Z Deleting the contents of '/home/runner/work/nexowatt-eos/nexowatt-eos'
+2026-10-03T18:21:50.6962675Z ##[group]Determining repository object format
+2026-10-03T18:21:50.6963381Z ##[endgroup]
+2026-10-03T18:21:50.6963987Z ##[group]Initializing the repository
+2026-10-03T18:21:50.6965009Z [command]/usr/bin/git init /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T18:21:50.7081488Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-03T18:21:50.7083018Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-03T18:21:50.7084160Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-03T18:21:50.7085062Z hint: call:
+2026-10-03T18:21:50.7085542Z hint:
+2026-10-03T18:21:50.7086176Z hint: 	git config --global init.defaultBranch <name>
+2026-10-03T18:21:50.7086922Z hint:
+2026-10-03T18:21:50.7087659Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-03T18:21:50.7088821Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-03T18:21:50.7089759Z hint:
+2026-10-03T18:21:50.7090267Z hint: 	git branch -m <name>
+2026-10-03T18:21:50.7090968Z hint:
+2026-10-03T18:21:50.7091771Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-03T18:21:50.7093315Z Initialized empty Git repository in /home/runner/work/nexowatt-eos/nexowatt-eos/.git/
+2026-10-03T18:21:50.7095513Z [command]/usr/bin/git remote add origin https://github.com/NexoWatt/nexowatt-eos
+2026-10-03T18:21:50.7134028Z ##[endgroup]
+2026-10-03T18:21:50.7135001Z ##[group]Disabling automatic garbage collection
+2026-10-03T18:21:50.7136201Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-03T18:21:50.7167426Z ##[endgroup]
+2026-10-03T18:21:50.7168710Z ##[group]Setting up auth
+2026-10-03T18:21:50.7169801Z Removing SSH command configuration
+2026-10-03T18:21:50.7171758Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T18:21:50.7200809Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T18:21:50.7486690Z Removing HTTP extra header
+2026-10-03T18:21:50.7492958Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T18:21:50.7527241Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T18:21:50.7712726Z Removing includeIf entries pointing to credentials config files
+2026-10-03T18:21:50.7718661Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T18:21:50.7746861Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T18:21:50.7944626Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-03T18:21:50.7977183Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path /home/runner/work/_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:21:50.8005618Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:21:50.8036365Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:21:50.8065747Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:21:50.8092385Z ##[endgroup]
+2026-10-03T18:21:50.8092977Z ##[group]Fetching the repository
+2026-10-03T18:21:50.8097656Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ea3439ee6cb837ae42441dcdea89f9a454fd3c6c:refs/remotes/origin/main
+2026-10-03T18:22:12.9912499Z From https://github.com/NexoWatt/nexowatt-eos
+2026-10-03T18:22:12.9913714Z  * [new ref]         ea3439ee6cb837ae42441dcdea89f9a454fd3c6c -> origin/main
+2026-10-03T18:22:12.9920540Z [command]/usr/bin/git branch --list --remote origin/main
+2026-10-03T18:22:12.9946122Z   origin/main
+2026-10-03T18:22:12.9952818Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-10-03T18:22:12.9974846Z ea3439ee6cb837ae42441dcdea89f9a454fd3c6c
+2026-10-03T18:22:12.9978377Z ##[endgroup]
+2026-10-03T18:22:12.9978991Z ##[group]Determining the checkout info
+2026-10-03T18:22:12.9981466Z ##[endgroup]
+2026-10-03T18:22:12.9982547Z [command]/usr/bin/git sparse-checkout disable
+2026-10-03T18:22:13.0026229Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-03T18:22:13.0054332Z ##[group]Checking out the ref
+2026-10-03T18:22:13.0057218Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-10-03T18:22:14.1119384Z Updating files:  75% (4907/6467)
+2026-10-03T18:22:14.3121609Z Updating files:  76% (4915/6467)
+2026-10-03T18:22:14.3155270Z Updating files:  77% (4980/6467)
+2026-10-03T18:22:14.3884164Z Updating files:  78% (5045/6467)
+2026-10-03T18:22:14.4043228Z Updating files:  79% (5109/6467)
+2026-10-03T18:22:14.4132188Z Updating files:  80% (5174/6467)
+2026-10-03T18:22:14.4232148Z Updating files:  81% (5239/6467)
+2026-10-03T18:22:14.4367527Z Updating files:  82% (5303/6467)
+2026-10-03T18:22:14.4407241Z Updating files:  83% (5368/6467)
+2026-10-03T18:22:14.4435573Z Updating files:  84% (5433/6467)
+2026-10-03T18:22:14.4489280Z Updating files:  85% (5497/6467)
+2026-10-03T18:22:14.4528161Z Updating files:  86% (5562/6467)
+2026-10-03T18:22:14.4667500Z Updating files:  87% (5627/6467)
+2026-10-03T18:22:14.4719476Z Updating files:  88% (5691/6467)
+2026-10-03T18:22:14.4782043Z Updating files:  89% (5756/6467)
+2026-10-03T18:22:14.4851656Z Updating files:  90% (5821/6467)
+2026-10-03T18:22:14.4930027Z Updating files:  91% (5885/6467)
+2026-10-03T18:22:14.4960645Z Updating files:  92% (5950/6467)
+2026-10-03T18:22:14.5022229Z Updating files:  93% (6015/6467)
+2026-10-03T18:22:14.5047324Z Updating files:  94% (6079/6467)
+2026-10-03T18:22:14.5082195Z Updating files:  95% (6144/6467)
+2026-10-03T18:22:14.5134996Z Updating files:  96% (6209/6467)
+2026-10-03T18:22:14.5169688Z Updating files:  97% (6273/6467)
+2026-10-03T18:22:14.5223948Z Updating files:  98% (6338/6467)
+2026-10-03T18:22:14.5270795Z Updating files:  99% (6403/6467)
+2026-10-03T18:22:14.5271214Z Updating files: 100% (6467/6467)
+2026-10-03T18:22:14.5271576Z Updating files: 100% (6467/6467), done.
+2026-10-03T18:22:14.5335924Z Switched to a new branch 'main'
+2026-10-03T18:22:14.5340782Z branch 'main' set up to track 'origin/main'.
+2026-10-03T18:22:14.5435856Z ##[endgroup]
+2026-10-03T18:22:14.5480022Z [command]/usr/bin/git log -1 --format=%H
+2026-10-03T18:22:14.5504696Z ea3439ee6cb837ae42441dcdea89f9a454fd3c6c
+2026-10-03T18:22:14.5513176Z ##[group]Removing auth
+2026-10-03T18:22:14.5513550Z Removing SSH command configuration
+2026-10-03T18:22:14.5516325Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T18:22:14.5544369Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T18:22:14.5736772Z Removing HTTP extra header
+2026-10-03T18:22:14.5739625Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T18:22:14.5768248Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T18:22:14.5960217Z Removing includeIf entries pointing to credentials config files
+2026-10-03T18:22:14.5963128Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T18:22:14.5990107Z includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path
+2026-10-03T18:22:14.5991216Z includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path
+2026-10-03T18:22:14.5992332Z includeif.gitdir:/github/workspace/.git.path
+2026-10-03T18:22:14.5993126Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-03T18:22:14.5997529Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path
+2026-10-03T18:22:14.6021292Z /home/runner/work/_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:22:14.6032070Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-57abcea9\-2598\-4d60\-8ea5\-a4d272908253\.config
+2026-10-03T18:22:14.6063721Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path
+2026-10-03T18:22:14.6088171Z /home/runner/work/_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:22:14.6103366Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-57abcea9\-2598\-4d60\-8ea5\-a4d272908253\.config
+2026-10-03T18:22:14.6133088Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-03T18:22:14.6158761Z /github/runner_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:22:14.6174527Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-57abcea9\-2598\-4d60\-8ea5\-a4d272908253\.config
+2026-10-03T18:22:14.6200666Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-03T18:22:14.6224433Z /github/runner_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config
+2026-10-03T18:22:14.6231913Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-57abcea9\-2598\-4d60\-8ea5\-a4d272908253\.config
+2026-10-03T18:22:14.6268191Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T18:22:14.6477278Z Removing credentials config '/home/runner/work/_temp/git-credentials-57abcea9-2598-4d60-8ea5-a4d272908253.config'
+2026-10-03T18:22:14.6486273Z ##[endgroup]
+2026-10-03T18:22:14.6648964Z ##[group]Run python3 -c 'import platform, sys; assert sys.version_info[:2] == (3, 12) and platform.machine() == "x86_64"'
+2026-10-03T18:22:14.6649624Z [36;1mpython3 -c 'import platform, sys; assert sys.version_info[:2] == (3, 12) and platform.machine() == "x86_64"'[0m
+2026-10-03T18:22:14.6650085Z [36;1mpython3 -m venv "$RUNNER_TEMP/eos-architecture-venv"[0m
+2026-10-03T18:22:14.6651000Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" -m pip install --require-hashes --only-binary=:all: --no-deps -r tools/architecture/requirements-linux-x86_64-py312.txt[0m
+2026-10-03T18:22:14.6651663Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" -m pip check[0m
+2026-10-03T18:22:14.6849232Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T18:22:14.6849524Z env:
+2026-10-03T18:22:14.6849711Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T18:22:14.6849941Z ##[endgroup]
+2026-10-03T18:22:17.6151973Z Collecting attrs==26.1.0 (from -r tools/architecture/requirements-linux-x86_64-py312.txt (line 4))
+2026-10-03T18:22:17.6544642Z   Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-10-03T18:22:17.6622476Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 67.5/67.5 kB 9.7 MB/s eta 0:00:00
+2026-10-03T18:22:17.7030311Z Collecting jsonschema==4.26.0 (from -r tools/architecture/requirements-linux-x86_64-py312.txt (line 5))
+2026-10-03T18:22:17.7058848Z   Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+2026-10-03T18:22:17.7121880Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 90.6/90.6 kB 16.3 MB/s eta 0:00:00
+2026-10-03T18:22:17.7307196Z Collecting jsonschema-specifications==2025.9.1 (from -r tools/architecture/requirements-linux-x86_64-py312.txt (line 6))
+2026-10-03T18:22:17.7336454Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-10-03T18:22:17.7641318Z Collecting referencing==0.37.0 (from -r tools/architecture/requirements-linux-x86_64-py312.txt (line 7))
+2026-10-03T18:22:17.7669019Z   Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-10-03T18:22:18.0100731Z Collecting rpds-py==2026.6.3 (from -r tools/architecture/requirements-linux-x86_64-py312.txt (line 8))
+2026-10-03T18:22:18.0131055Z   Downloading rpds_py-2026.6.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (366 kB)
+2026-10-03T18:22:18.0234245Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 366.2/366.2 kB 40.6 MB/s eta 0:00:00
+2026-10-03T18:22:18.0454331Z Collecting typing-extensions==4.16.0 (from -r tools/architecture/requirements-linux-x86_64-py312.txt (line 9))
+2026-10-03T18:22:18.0484014Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-03T18:22:18.0514532Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 21.2 MB/s eta 0:00:00
+2026-10-03T18:22:18.0557700Z Installing collected packages: typing-extensions, rpds-py, referencing, jsonschema-specifications, jsonschema, attrs
+2026-10-03T18:22:18.1920249Z Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.6.3 typing-extensions-4.16.0
+2026-10-03T18:22:18.4849682Z No broken requirements found.
+2026-10-03T18:22:18.5246433Z ##[group]Run for test_script in tests/architecture/*.test.py; do
+2026-10-03T18:22:18.5246813Z [36;1mfor test_script in tests/architecture/*.test.py; do[0m
+2026-10-03T18:22:18.5247156Z [36;1m  "$RUNNER_TEMP/eos-architecture-venv/bin/python" "$test_script"[0m
+2026-10-03T18:22:18.5247438Z [36;1mdone[0m
+2026-10-03T18:22:18.5308626Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T18:22:18.5308905Z env:
+2026-10-03T18:22:18.5309091Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T18:22:18.5309315Z ##[endgroup]
+2026-10-03T18:22:18.6112058Z test_current_admin_seven_baseline_cannot_change_silently (__main__.BlueprintTests.test_current_admin_seven_baseline_cannot_change_silently) ... ok
+2026-10-03T18:22:18.6124804Z test_current_design_links_are_consistent_without_security_claim (__main__.BlueprintTests.test_current_design_links_are_consistent_without_security_claim) ... ok
+2026-10-03T18:22:18.6137590Z test_duplicate_module_id_is_rejected (__main__.BlueprintTests.test_duplicate_module_id_is_rejected) ... ok
+2026-10-03T18:22:18.6150792Z test_duplicate_test_within_threat_rejected (__main__.BlueprintTests.test_duplicate_test_within_threat_rejected) ... ok
+2026-10-03T18:22:18.6451409Z test_fifo_is_rejected_without_waiting_for_a_writer (__main__.BlueprintTests.test_fifo_is_rejected_without_waiting_for_a_writer) ... ok
+2026-10-03T18:22:18.6465771Z test_final_component_symlink_is_not_followed (__main__.BlueprintTests.test_final_component_symlink_is_not_followed) ... ok
+2026-10-03T18:22:18.6478448Z test_finite_json_numbers_remain_valid (__main__.BlueprintTests.test_finite_json_numbers_remain_valid) ... ok
+2026-10-03T18:22:18.6774303Z test_input_error_is_sanitized_and_read_only (__main__.BlueprintTests.test_input_error_is_sanitized_and_read_only) ... ok
+2026-10-03T18:22:18.6791639Z test_invalid_utf8_is_rejected (__main__.BlueprintTests.test_invalid_utf8_is_rejected) ... ok
+2026-10-03T18:22:18.6815481Z test_json_nesting_limit_and_parser_recursion_rejected (__main__.BlueprintTests.test_json_nesting_limit_and_parser_recursion_rejected) ... ok
+2026-10-03T18:22:18.6828939Z test_missing_modelled_module_is_rejected (__main__.BlueprintTests.test_missing_modelled_module_is_rejected) ... ok
+2026-10-03T18:22:18.6851877Z test_model_cannot_claim_runtime_validation_or_conformity (__main__.BlueprintTests.test_model_cannot_claim_runtime_validation_or_conformity) ... ok
+2026-10-03T18:22:18.6864371Z test_model_evaluation_cannot_omit_an_open_claim (__main__.BlueprintTests.test_model_evaluation_cannot_omit_an_open_claim) ... ok
+2026-10-03T18:22:18.6876846Z test_model_must_remain_a_design (__main__.BlueprintTests.test_model_must_remain_a_design) ... ok
+2026-10-03T18:22:18.6889372Z test_non_regular_directory_rejected (__main__.BlueprintTests.test_non_regular_directory_rejected) ... ok
+2026-10-03T18:22:18.6902292Z test_planned_test_kind_must_match_its_identifier (__main__.BlueprintTests.test_planned_test_kind_must_match_its_identifier) ... ok
+2026-10-03T18:22:18.6914849Z test_planned_test_must_belong_to_threat_requirement (__main__.BlueprintTests.test_planned_test_must_belong_to_threat_requirement) ... ok
+2026-10-03T18:22:18.6927346Z test_planned_test_scenario_must_match_requirement (__main__.BlueprintTests.test_planned_test_scenario_must_match_requirement) ... ok
+2026-10-03T18:22:18.6939677Z test_release_cannot_be_declared_approved_in_design_plan (__main__.BlueprintTests.test_release_cannot_be_declared_approved_in_design_plan) ... ok
+2026-10-03T18:22:18.6952390Z test_removing_negative_acceptance_is_rejected (__main__.BlueprintTests.test_removing_negative_acceptance_is_rejected) ... ok
+2026-10-03T18:22:18.6965049Z test_requirement_implementation_cannot_be_claimed (__main__.BlueprintTests.test_requirement_implementation_cannot_be_claimed) ... ok
+2026-10-03T18:22:18.6977275Z test_requirement_without_threat_is_rejected (__main__.BlueprintTests.test_requirement_without_threat_is_rejected) ... ok
+2026-10-03T18:22:18.6992184Z test_source_observation_does_not_approve_runtime_isolation (__main__.BlueprintTests.test_source_observation_does_not_approve_runtime_isolation) ... ok
+2026-10-03T18:22:18.7126538Z test_strict_bounded_json_duplicate_and_nonfinite (__main__.BlueprintTests.test_strict_bounded_json_duplicate_and_nonfinite) ... ok
+2026-10-03T18:22:18.7145243Z test_target_principals_cannot_use_root_or_shared_legacy_identity (__main__.BlueprintTests.test_target_principals_cannot_use_root_or_shared_legacy_identity) ... ok
+2026-10-03T18:22:18.7156680Z test_target_principals_must_be_distinct_in_design (__main__.BlueprintTests.test_target_principals_must_be_distinct_in_design) ... ok
+2026-10-03T18:22:18.7167935Z test_ui_and_admin_major_preservation_required (__main__.BlueprintTests.test_ui_and_admin_major_preservation_required) ... ok
+2026-10-03T18:22:18.7179621Z test_unimplemented_test_cannot_be_declared_passed (__main__.BlueprintTests.test_unimplemented_test_cannot_be_declared_passed) ... ok
+2026-10-03T18:22:18.7190649Z test_unknown_interface_endpoint_is_rejected (__main__.BlueprintTests.test_unknown_interface_endpoint_is_rejected) ... ok
+2026-10-03T18:22:18.7201551Z test_unknown_root_field_rejected (__main__.BlueprintTests.test_unknown_root_field_rejected) ... ok
+2026-10-03T18:22:18.7214830Z test_unsafe_defaults_and_weakened_transport_rejected (__main__.BlueprintTests.test_unsafe_defaults_and_weakened_transport_rejected) ... ok
+2026-10-03T18:22:18.7215442Z 
+2026-10-03T18:22:18.7215629Z ----------------------------------------------------------------------
+2026-10-03T18:22:18.7216038Z Ran 31 tests in 0.112s
+2026-10-03T18:22:18.7216207Z 
+2026-10-03T18:22:18.7216305Z OK
+2026-10-03T18:22:19.8144737Z .............................
+2026-10-03T18:22:19.8145066Z ----------------------------------------------------------------------
+2026-10-03T18:22:19.8145361Z Ran 29 tests in 0.983s
+2026-10-03T18:22:19.8145478Z 
+2026-10-03T18:22:19.8145555Z OK
+2026-10-03T18:22:19.9329584Z test_all_examples_and_schemas_valid (__main__.ContractTests.test_all_examples_and_schemas_valid) ... ok
+2026-10-03T18:22:19.9595067Z test_all_top_level_objects_closed (__main__.ContractTests.test_all_top_level_objects_closed) ... ok
+2026-10-03T18:22:19.9924883Z test_command_action_routes_are_restricted (__main__.ContractTests.test_command_action_routes_are_restricted) ... ok
+2026-10-03T18:22:20.0326530Z test_command_backup_valid_and_profile_is_not_a_path (__main__.ContractTests.test_command_backup_valid_and_profile_is_not_a_path) ... ok
+2026-10-03T18:22:20.0490338Z test_command_license_valid_and_subject_bound (__main__.ContractTests.test_command_license_valid_and_subject_bound) ... ok
+2026-10-03T18:22:20.0654011Z test_command_payload_objects_closed (__main__.ContractTests.test_command_payload_objects_closed) ... ok
+2026-10-03T18:22:20.1441403Z test_deadline_order_and_maximum (__main__.ContractTests.test_deadline_order_and_maximum) ... ok
+2026-10-03T18:22:20.2232634Z test_entitlement_allows_only_subject_rights_and_matching_audience (__main__.ContractTests.test_entitlement_allows_only_subject_rights_and_matching_audience) ... ok
+2026-10-03T18:22:20.2571623Z test_entitlement_deny_contains_no_grants (__main__.ContractTests.test_entitlement_deny_contains_no_grants) ... ok
+2026-10-03T18:22:20.3144598Z test_entitlement_no_license_or_keys (__main__.ContractTests.test_entitlement_no_license_or_keys) ... ok
+2026-10-03T18:22:20.3472065Z test_finite_signed_power_and_syntax_boundaries (__main__.ContractTests.test_finite_signed_power_and_syntax_boundaries) ... ok
+2026-10-03T18:22:20.4025320Z test_manifest_arrays_and_artifact_links (__main__.ContractTests.test_manifest_arrays_and_artifact_links) ... ok
+2026-10-03T18:22:20.4927546Z test_manifest_exact_hash_size_and_version (__main__.ContractTests.test_manifest_exact_hash_size_and_version) ... ok
+2026-10-03T18:22:20.5277058Z test_manifest_hardware_and_required_verification (__main__.ContractTests.test_manifest_hardware_and_required_verification) ... ok
+2026-10-03T18:22:20.5624759Z test_manifest_no_urls_scripts_or_paths (__main__.ContractTests.test_manifest_no_urls_scripts_or_paths) ... ok
+2026-10-03T18:22:20.6375471Z test_power_no_coercion_and_unit_required (__main__.ContractTests.test_power_no_coercion_and_unit_required) ... ok
+2026-10-03T18:22:20.6456356Z test_schema_does_not_authenticate_or_check_current_time (__main__.ContractTests.test_schema_does_not_authenticate_or_check_current_time) ... ok
+2026-10-03T18:22:20.6862201Z test_sequence_rejects_types_negative_and_overflow (__main__.ContractTests.test_sequence_rejects_types_negative_and_overflow) ... ok
+2026-10-03T18:22:20.7351520Z test_timestamp_semantics_calendar_timezone_and_precision (__main__.ContractTests.test_timestamp_semantics_calendar_timezone_and_precision) ... ok
+2026-10-03T18:22:20.7677940Z test_uuid_canonical_required (__main__.ContractTests.test_uuid_canonical_required) ... ok
+2026-10-03T18:22:20.8431289Z test_cli_bad_arguments_do_not_echo_values (__main__.ParserAndCliTests.test_cli_bad_arguments_do_not_echo_values) ... ok
+2026-10-03T18:22:20.9481842Z test_cli_examples_pass_and_output_is_json (__main__.ParserAndCliTests.test_cli_examples_pass_and_output_is_json) ... ok
+2026-10-03T18:22:21.0391617Z test_cli_invalid_values_keys_and_filenames_never_printed (__main__.ParserAndCliTests.test_cli_invalid_values_keys_and_filenames_never_printed) ... ok
+2026-10-03T18:22:21.0414868Z test_depth_and_node_count_limits (__main__.ParserAndCliTests.test_depth_and_node_count_limits) ... ok
+2026-10-03T18:22:21.0419951Z test_duplicate_keys_rejected_including_nested (__main__.ParserAndCliTests.test_duplicate_keys_rejected_including_nested) ... ok
+2026-10-03T18:22:21.0424079Z test_fifos_and_symlinks_rejected_without_reading (__main__.ParserAndCliTests.test_fifos_and_symlinks_rejected_without_reading) ... ok
+2026-10-03T18:22:21.0426504Z test_huge_integer_rejected (__main__.ParserAndCliTests.test_huge_integer_rejected) ... ok
+2026-10-03T18:22:21.0434518Z test_invalid_json_unicode_and_bom_rejected (__main__.ParserAndCliTests.test_invalid_json_unicode_and_bom_rejected) ... ok
+2026-10-03T18:22:21.0442916Z test_nonfinite_numbers_rejected (__main__.ParserAndCliTests.test_nonfinite_numbers_rejected) ... ok
+2026-10-03T18:22:21.0443798Z test_remote_schema_retrieval_is_refused (__main__.ParserAndCliTests.test_remote_schema_retrieval_is_refused) ... ok
+2026-10-03T18:22:21.0449821Z test_size_limit (__main__.ParserAndCliTests.test_size_limit) ... ok
+2026-10-03T18:22:21.0450277Z 
+2026-10-03T18:22:21.0450627Z ----------------------------------------------------------------------
+2026-10-03T18:22:21.0451007Z Ran 31 tests in 1.142s
+2026-10-03T18:22:21.0451160Z 
+2026-10-03T18:22:21.0451256Z OK
+2026-10-03T18:22:21.2465043Z test_cli_errors_do_not_echo_input_secrets (__main__.SourceSbomTests.test_cli_errors_do_not_echo_input_secrets) ... ok
+2026-10-03T18:22:21.4303072Z test_cli_generation_and_validation (__main__.SourceSbomTests.test_cli_generation_and_validation) ... ok
+2026-10-03T18:22:21.4498453Z test_complete_claim_rejected (__main__.SourceSbomTests.test_complete_claim_rejected) ... ok
+2026-10-03T18:22:21.4646069Z test_dependency_ranges_are_not_resolved_components (__main__.SourceSbomTests.test_dependency_ranges_are_not_resolved_components) ... ok
+2026-10-03T18:22:21.4991389Z test_deterministic_manifest_scope_and_head_comparison (__main__.SourceSbomTests.test_deterministic_manifest_scope_and_head_comparison) ... ok
+2026-10-03T18:22:21.5151518Z test_existing_output_and_symlink_target_unchanged (__main__.SourceSbomTests.test_existing_output_and_symlink_target_unchanged) ... ok
+2026-10-03T18:22:21.5329645Z test_fabricated_inventory_rejected (__main__.SourceSbomTests.test_fabricated_inventory_rejected) ... ok
+2026-10-03T18:22:21.5494149Z test_git_clean_filter_not_executed (__main__.SourceSbomTests.test_git_clean_filter_not_executed) ... ok
+2026-10-03T18:22:21.5685196Z test_inconsistent_manifest_hash_rejected (__main__.SourceSbomTests.test_inconsistent_manifest_hash_rejected) ... ok
+2026-10-03T18:22:21.5851933Z test_invalid_metadata_and_declared_dependencies_rejected (__main__.SourceSbomTests.test_invalid_metadata_and_declared_dependencies_rejected) ... ok
+2026-10-03T18:22:21.5952747Z test_malformed_json_and_duplicate_keys_rejected (__main__.SourceSbomTests.test_malformed_json_and_duplicate_keys_rejected) ... ok
+2026-10-03T18:22:21.6035865Z test_missing_package_rejected (__main__.SourceSbomTests.test_missing_package_rejected) ... ok
+2026-10-03T18:22:21.6132380Z test_new_output_is_private_valid_json (__main__.SourceSbomTests.test_new_output_is_private_valid_json) ... ok
+2026-10-03T18:22:21.6311804Z test_operational_lifecycle_rejected (__main__.SourceSbomTests.test_operational_lifecycle_rejected) ... ok
+2026-10-03T18:22:21.6414066Z test_oversized_and_symlink_package_rejected (__main__.SourceSbomTests.test_oversized_and_symlink_package_rejected) ... ok
+2026-10-03T18:22:21.6540760Z test_schema_tamper_rejected (__main__.SourceSbomTests.test_schema_tamper_rejected) ... ok
+2026-10-03T18:22:21.6686066Z test_secret_metadata_and_url_values_not_exported (__main__.SourceSbomTests.test_secret_metadata_and_url_values_not_exported) ... ok
+2026-10-03T18:22:21.6769734Z test_symlink_output_parent_rejected (__main__.SourceSbomTests.test_symlink_output_parent_rejected) ... ok
+2026-10-03T18:22:21.6937507Z test_tampered_metadata_rejected (__main__.SourceSbomTests.test_tampered_metadata_rejected) ... ok
+2026-10-03T18:22:21.7133622Z test_valid_official_cyclonedx_17 (__main__.SourceSbomTests.test_valid_official_cyclonedx_17) ... ok
+2026-10-03T18:22:21.7308814Z test_validation_has_no_network_dependency (__main__.SourceSbomTests.test_validation_has_no_network_dependency) ... ok
+2026-10-03T18:22:21.7309197Z 
+2026-10-03T18:22:21.7309328Z ----------------------------------------------------------------------
+2026-10-03T18:22:21.7309654Z Ran 21 tests in 0.583s
+2026-10-03T18:22:21.7309766Z 
+2026-10-03T18:22:21.7309838Z OK
+2026-10-03T18:22:21.7499379Z ##[group]Run "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/architecture/check-blueprint.py
+2026-10-03T18:22:21.7499926Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/architecture/check-blueprint.py[0m
+2026-10-03T18:22:21.7500663Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/architecture/validate-contracts.py --examples[0m
+2026-10-03T18:22:21.7501264Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/source_sbom.py --validate sbom/eos-installer-source.cdx.json[0m
+2026-10-03T18:22:21.7501774Z [36;1msbom_directory="$(mktemp -d "$RUNNER_TEMP/eos-source-sbom.XXXXXX")"[0m
+2026-10-03T18:22:21.7502411Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/source_sbom.py --repo . --output "$sbom_directory/source.cdx.json" --coverage "$sbom_directory/source.coverage.json"[0m
+2026-10-03T18:22:21.7503367Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/source_sbom.py --validate "$sbom_directory/source.cdx.json"[0m
+2026-10-03T18:22:21.7504069Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/component_sources.py --inventory system/components/source-inventory.json --check-only[0m
+2026-10-03T18:22:21.7504906Z [36;1m"$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/sbom/component_sources.py --inventory system/components/source-inventory.json --output "$sbom_directory/components.cdx.json"[0m
+2026-10-03T18:22:21.7559947Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T18:22:21.7560223Z env:
+2026-10-03T18:22:21.7560526Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T18:22:21.7560734Z ##[endgroup]
+2026-10-03T18:22:21.7868663Z {
+2026-10-03T18:22:21.7868981Z   "status": "DESIGN_REFERENCES_CONSISTENT",
+2026-10-03T18:22:21.7869347Z   "errors": [],
+2026-10-03T18:22:21.7869603Z   "moduleCount": 12,
+2026-10-03T18:22:21.7869904Z   "requirementCount": 20,
+2026-10-03T18:22:21.7870200Z   "threatCount": 15,
+2026-10-03T18:22:21.7870697Z   "plannedRuntimeTestCount": 40,
+2026-10-03T18:22:21.7871062Z   "runtimeSecurityVerified": false,
+2026-10-03T18:22:21.7871433Z   "functionalBaselineVerified": false,
+2026-10-03T18:22:21.7871808Z   "craConformityDeclared": false
+2026-10-03T18:22:21.7872115Z }
+2026-10-03T18:22:21.8851683Z {"ok": true, "scope": "offline-contract-validation", "results": [{"contract": "service-command", "ok": true, "errors": []}, {"contract": "entitlement-response", "ok": true, "errors": []}, {"contract": "update-manifest", "ok": true, "errors": []}]}
+2026-10-03T18:22:21.9686514Z SOURCE_SBOM_VALID
+2026-10-03T18:22:22.0596478Z PARTIAL_SOURCE_SBOM_CREATED
+2026-10-03T18:22:22.1446504Z SOURCE_SBOM_VALID
+2026-10-03T18:22:22.2349382Z PARTIAL_COMPONENT_SOURCE_INVENTORY_VALID
+2026-10-03T18:22:22.3266574Z PARTIAL_COMPONENT_SOURCE_SBOM_CREATED
+2026-10-03T18:22:22.3413682Z ##[group]Run cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+2026-10-03T18:22:22.3414021Z [36;1mcat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'[0m
+2026-10-03T18:22:22.3414454Z [36;1mArchitecture checks validate document consistency, offline JSON contracts and a partial pre-build source SBOM.[0m
+2026-10-03T18:22:22.3415074Z [36;1mThey do not verify runtime TLS, module isolation, license signatures, installation, UI compatibility or hardware behavior.[0m
+2026-10-03T18:22:22.3415572Z [36;1mProduct tests and CRA/IEC assessment remain separate release gates.[0m
+2026-10-03T18:22:22.3415864Z [36;1mSUMMARY[0m
+2026-10-03T18:22:22.3471132Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T18:22:22.3471397Z env:
+2026-10-03T18:22:22.3471572Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T18:22:22.3471773Z ##[endgroup]
+2026-10-03T18:22:22.3642279Z Post job cleanup.
+2026-10-03T18:22:22.4280545Z [command]/usr/bin/git version
+2026-10-03T18:22:22.4314339Z git version 2.55.0
+2026-10-03T18:22:22.4347532Z Temporarily overriding HOME='/home/runner/work/_temp/a0754cf1-fb2c-436f-9839-563a167414c8' before making global git config changes
+2026-10-03T18:22:22.4348574Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-03T18:22:22.4350663Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T18:22:22.4376759Z Removing SSH command configuration
+2026-10-03T18:22:22.4382120Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T18:22:22.4410168Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T18:22:22.4625711Z Removing HTTP extra header
+2026-10-03T18:22:22.4631545Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T18:22:22.4654551Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T18:22:22.4871025Z Removing includeIf entries pointing to credentials config files
+2026-10-03T18:22:22.4877802Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T18:22:22.4911341Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T18:22:22.5243318Z Cleaning up orphan processes
