@@ -4,6 +4,11 @@ Quellbasis: `6ee690e7503f7f609de1f7c1db1689a6ca39aec3` vom 03.10.2026.
 Dieser Vermerk beschreibt die nachfolgende Korrektur. Die signierten R4-Dateien
 bleiben unverändert; ein Quellcommit aktualisiert keinen installierten Pi.
 
+**R5 ist inzwischen signiert und veröffentlicht.**
+[Veröffentlichung und Rückleseprüfung](publication.json),
+[gepinnten Reparaturbefehl herunterladen](../../../delivery/public-repair-test3-r5/REPAIR_COMMAND.txt).
+Das ist noch kein auf dem Pi ausgeführter Reparatur- oder Login-Test.
+
 ## Anlass und nachgewiesene Korrekturen
 
 Der Nutzer meldet einen abgeschlossenen Einrichtungsassistenten, einen Fehler
@@ -65,8 +70,8 @@ und SBOM-Bindung; die R4-SBOM allein deckt die geänderten Bytes nicht ab.
 
 1. Admin-/Controllerzustand nach dem gemeldeten Fehler feststellen; keine
    Passwörter, Hashes, Tokens oder vollständigen Sitzungsprotokolle veröffentlichen.
-2. Den gesonderten, gepinnten R4-Reparaturweg verwenden, sobald sein signiertes
-   R5-Artefakt samt Nachweis veröffentlicht ist. Der bisherige frische Installer
+2. Den gesonderten, gepinnten R4-Reparaturweg verwenden, für das veröffentlichte,
+   signierte R5-Artefakt. Der bisherige frische Installer
    ist kein Bestandsupdater.
 3. Mit dem vorhandenen Adminpasswort anmelden, Admin und UI bedienen, abmelden,
    erneut anmelden und anschließend neu starten. Passwort und Lizenz müssen

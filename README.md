@@ -1,52 +1,41 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# EOS auf dem Debian-13-Test-Pi installieren
+# Aktuell: R5-Testreparatur für den bereits eingerichteten Pi
 
-**Signierter ARM64-Teststand: test.3 Revision 4, Sequenz 7.** Das Paket und
-der öffentliche Ein-Befehl-Download sind veröffentlicht und zurückgelesen.
-Ein GitHub-Token wird für diesen Einstieg nicht benötigt.
-**Einstiegsrevision 2** korrigiert den bestätigten `RECOVERY_PATH_OWNER`-Abbruch
-bei leeren PostgreSQL-Verzeichnissen im Eigentum von `postgres`.
-[Fehlerkorrektur und Nachprüfung](reports/integration/recovery-pg-owner-20261003/README.md).
+**test.3 Revision 5, Sequenz 8 ist signiert, veröffentlicht und vollständig
+zurückgelesen.** Sie korrigiert die zu kurze Admin-Passwortprüffrist und veraltete
+PostgreSQL-Objektmeldungen nach Verbindungsabbruch. Der neue Erststart enthält
+UUID, Home-/Pro-Lizenz und Adminpasswort; Standort und Geräte folgen später.
 
-1. Mit PuTTY/SSH als Benutzer mit sudo-Recht am Pi anmelden.
-2. Den folgenden vollständigen Befehl einmal einfügen. Bei Bedarf wird das
-   persönliche sudo-Passwort abgefragt.
-3. Nach erfolgreicher Installation die angezeigte HTTPS-Adresse öffnen.
-   Geräte-CA und Fingerabdruck über die vertrauenswürdige SSH-Verbindung
-   übernehmen und den Erststart-Assistenten mit dem Einrichtungscode starten.
-   UUID, Lizenz und persönliche Benutzerpasswörter werden im Frontend behandelt.
+Dieser Befehl ist für den **vollständig eingerichteten R4-Teststand** auf
+Debian 13/ARM64 mit Node 24.21.0. Passwort, Lizenz, UUID, Datenbank und
+Gerätezertifikate bleiben erhalten. Er startet keinen neuen Assistenten.
 
 ```bash
-/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-installer-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 75499 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/23e1598223b13eb83fac0860079db4d0964f99ce/delivery/public-entry-test3-r4-recovery2/install.sh -o "$d/install.sh"; [[ $(/usr/bin/stat -c %s "$d/install.sh") == 75499 ]] || exit 1; printf '\''%s  %s\n'\'' '\''4f08637c9c2b4de5a233f7e310e67c69c79f2293f1dc4461ce4ea79ce3a478d4'\'' "$d/install.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/install.sh"'
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-repair-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29746 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/b3ab994a631000e1700fbd4353efc067ad7c8cdb/delivery/public-repair-test3-r5/repair.sh -o "$d/repair.sh"; [[ -f "$d/repair.sh" && ! -L "$d/repair.sh" && $(/usr/bin/stat -c %h "$d/repair.sh") == 1 && $(/usr/bin/stat -c %u "$d/repair.sh") == 0 && $(/usr/bin/stat -c %s "$d/repair.sh") == 29746 ]] || exit 1; printf '\''%s  %s\n'\'' '\''6047c790eecd72a8c418ce7f5747123a7e0792940abd389e93a3d40707ae9604'\'' "$d/repair.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/repair.sh"'
 ```
 
-Der Befehl lädt das vollständige Installationsskript mit curl in ein neues,
-geschütztes Verzeichnis. Größe und SHA-256 werden vor dessen Ausführung geprüft.
-Skript und Dateien sind an feste Git-Commits gebunden. Die nachfolgenden
-Paket-, Signatur-, Betriebssystem- und Lizenzprüfungen bleiben erhalten.
-Node 24.21.0, PostgreSQL 17, EOS und der Erststartdienst werden vorbereitet.
+Der Befehl prüft Größe und SHA-256 vor Ausführung, lädt das signierte Archiv
+über feste Commit-URLs und lässt den Wechsel durch systemd überwachen.
+Nach Erfolg als `admin` mit dem vorhandenen Passwort auf der bisherigen
+HTTPS-Adresse anmelden und anschließend den Neustart prüfen. Ein Fehlercode
+ist ein Diagnoseergebnis; Sperrdateien nicht löschen oder den frischen Installer
+über die vorhandene Installation starten.
 
-Voraussetzung: Debian 13/Raspberry Pi OS 13, ARM64, laufendes systemd, korrekte Uhr,
-bash, sudo, curl, python3 und mindestens 6 GiB freier Speicher. Dieser Einstieg
-funktioniert, solange das Repository öffentlich verfügbar ist; der lokale
-EOS-Betrieb benötigt keine GitHub-Anbindung.
+[Reparaturbefehl als Textdatei](delivery/public-repair-test3-r5/REPAIR_COMMAND.txt) ·
+[Was der Befehl macht und wie geprüft wird](docs/operations/TEST_R4_R5_REPAIR_ENTRY_DE.md) ·
+[Änderungen, Tests und offene Punkte](reports/integration/minimal-first-start-20261003/README.md) ·
+[Build und Signaturbindung](reports/integration/installable-test3-r5-20261003/build-verification.json) ·
+[Aktualisierte App-SBOM](reports/integration/installable-test3-r5-20261003/runtime.cdx.json) ·
+[Öffentliche Rückleseprüfung](delivery/public-repair-test3-r5/remote-readback.json).
 
-Unterstützt werden ein frischer Host und ausschließlich der bereits
-diagnostizierte R2-Sudo-Abbruch. Dessen Dateien und numerische Kontoidentität
-werden erhalten. Andere bestehende Installationen werden abgewiesen; dieser
-Befehl ist kein Updater und keine allgemeine Reparaturfunktion. Alte R2-/R3-
-Befehle und signierte Dateien bleiben als historische Belege erhalten.
+**Die echte R4→R5-Reparatur, Admin-Anmeldung, Reboot und Anlagenabnahme auf dem
+Pi bleiben offen.** Der gemeldete Admin-Prozessabbruch ist ohne Zielprotokolle
+noch nicht eindeutig erklärt. Geräteadapter bleiben separat freizugeben.
+Dies ist ein Testkandidat, keine Produktions- oder CRA-Konformitätsfreigabe.
 
-[Befehl als Textdatei](delivery/public-entry-test3-r4-recovery2/INSTALL_COMMAND.txt) ·
-[Installation und Pi-Abnahme](docs/operations/STABILITY_TEST4_DE.md) ·
-[Änderungen und offene Punkte](reports/integration/stability-20261003/README.md) ·
-[Veröffentlichungsnachweis](reports/integration/recovery-pg-owner-20261003/publication.json) ·
-[Gebundene App-SBOM](reports/integration/installable-test3-r4-20261003/runtime.cdx.json).
-
-**Die tatsächliche Pi-Vollinstallation, Browser-, Reboot-, Backup-/Restore- und
-Geräteabnahme bleiben OFFEN.** Anlagenbefehle bleiben gesperrt. Dieser Stand ist
-kein Produktionsrelease und keine CRA-/IEC-Konformitätserklärung. PostgreSQL-
-Zertifikate benötigen vor Dauerbetrieb einen separat abgenommenen Erneuerungsweg.
+Der [historische R4-Erstinstallationsweg](docs/operations/STABILITY_TEST4_DE.md)
+bleibt dokumentiert. Er enthält die neuen R5-Korrekturen nicht und ist kein
+Reparaturbefehl. Ein öffentlicher R5-Erstinstallationsbefehl wird hier nicht behauptet.
 <!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
 
 ---
@@ -60,7 +49,7 @@ Die neue Quellfassung beschränkt den Assistenten auf Geräte-UUID, signierte
 Home-/Pro-Lizenz und Adminpasswort. Anlagenwerte und Geräte folgen bei der
 Kundenanbindung. Sie korrigiert außerdem die zu kurze Passwortprüffrist.
 [Änderung, Tests und offener Pi-Loginbefund](reports/integration/minimal-first-start-20261003/README.md).
-Die signierten R4-Dateien enthalten diese nachfolgenden Änderungen noch nicht.
+R5 enthält diese Änderungen. Die historischen R4-Dateien bleiben unverändert.
 Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 
 [**Aktuelle Pi-Testinstallation**](docs/operations/STABILITY_TEST4_DE.md) ·
@@ -69,10 +58,10 @@ Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 [Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
 [Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r4-20261003/).
 
-**Der signierte ARM64-Testkandidat `0.2.0-test.3`, Revision 4, ist veröffentlicht.**
-Installationsbefehl, SBOM und konkrete Nachweise stehen oben. Revision 3 bleibt
-historisch erhalten. UUID-Anzeige, Frontend-Passwortvergabe und
-Home-/Pro-Lizenzgrenzen sind umgesetzt.
+**Der signierte ARM64-Testkandidat `0.2.0-test.3`, Revision 5, ist veröffentlicht.**
+Reparaturbefehl, SBOM und konkrete Nachweise stehen oben. Die alten Revisionen
+bleiben historisch erhalten. NWL3 lizenziert Home/Pro für das System; bestehende
+NWL2-Lizenzen behalten ihre ursprünglichen Grenzen.
 
 **Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**
 Die historischen signierten Pakete test.1/test.2 enthalten die neuen Quellen

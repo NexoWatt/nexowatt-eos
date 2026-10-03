@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-03T20:47:13.099814+00:00",
+  "sourceCommit": "1a1a1003da76999dca473a5e6c832ddcef091935",
+  "artifactPublicationCommit": "a6db1d43fc6101afa14a48a103cabec0d937a499",
+  "entrySourceCommit": "a1933d9bdd63c92179444772937292191e1e9d01",
+  "entryCommit": "b3ab994a631000e1700fbd4353efc067ad7c8cdb",
+  "commandPublicationCommit": "019a48eee7ab9fbd1233eb37186d2510cb3974c2",
+  "runtimeVersion": "0.2.0-test.3",
+  "deliveryRevision": 5,
+  "releaseSequence": 8,
+  "releaseId": "6afb22793667514f76bbcceb785ba84b00757105577a9909c182f8fc41e45061",
+  "archive": {
+    "bytes": 88366802,
+    "sha256": "a2956eef2da94b4fd85dc218326e1bcbeeb57c833506ada1411378e624676695",
+    "gitBlob": "f3e53b05fa807900d606bcb7f29a716320838e53"
+  },
+  "signingPublicKeySha256": "dc73b3399c8c3790051d86461588f4cd716cd44aec1b64f70aa121f0175ab082",
+  "script": {
+    "bytes": 29746,
+    "sha256": "6047c790eecd72a8c418ce7f5747123a7e0792940abd389e93a3d40707ae9604"
+  },
+  "command": {
+    "bytes": 992,
+    "sha256": "5591a5dd894c82ee7f450b0c84831a517feebdc886aa607e967ec93653b05c71"
+  },
+  "commandPath": "delivery/public-repair-test3-r5/REPAIR_COMMAND.txt",
+  "ci": {
+    "signedBuildAndPublish": {
+      "runId": 37151915683,
+      "conclusion": "success"
+    },
+    "publicAssetReadbackAndEntryPublish": {
+      "runId": 37152448704,
+      "conclusion": "success"
+    },
+    "securityRegression": {
+      "runId": 37152448669,
+      "conclusion": "success",
+      "jobs": [
+        "architecture and partial source SBOM",
+        "build, syntax and isolated security regression",
+        "Node24 bootstrap, onboarding and transport contracts"
+      ],
+      "productNodeTests": 316,
+      "rootFixtureTests": 87,
+      "bootstrapPythonTests": 94
+    }
+  },
+  "assembledApplicationTests": {
+    "adminOAuth": {
+      "passed": 7,
+      "failed": 0
+    },
+    "objectsLifecycle": {
+      "passed": 6,
+      "failed": 0
+    },
+    "node": "24.21.0",
+    "platform": "linux-x64",
+    "postgresqlStore": "explicit test doubles"
+  },
+  "readback": {
+    "publicArchiveKeyMetadata": "delivery/public-repair-test3-r5/remote-readback.json",
+    "entryAndCommandRetrievedThroughGitHub": true,
+    "scriptAndCommandSizeSha256AndSyntaxVerified": true,
+    "signedSourceRowsComparedToLocalSource": 116,
+    "signedSourceMismatches": 0
+  },
+  "sbom": {
+    "path": "reports/integration/installable-test3-r5-20261003/runtime.cdx.json",
+    "gitBlob": "ddcd60ad18745cb1b79ade527c71bbc818080145",
+    "scope": "authenticated R4 app inventory with exact R5 derivative bindings; OS/firmware and fresh vulnerability scan excluded"
+  },
+  "preservedHistoricalFiles": 95,
+  "originalVendorLogo": {
+    "repository": "NexoWatt/vendor-nexowatt",
+    "retrieval": "GitHub connector 404",
+    "originalAssetAccepted": false,
+    "currentReplacement": "existing local NexoWatt PNG; Admin loader only"
+  },
+  "targetRepairExecuted": false,
+  "adminCrashRootCauseProven": false,
+  "targetLoginAccepted": false,
+  "hardwareAccepted": false,
+  "productionReleaseApproved": false,
+  "craConformityClaimed": false
+}

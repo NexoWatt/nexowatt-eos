@@ -2,9 +2,10 @@
 
 Stand: 03.10.2026. Dieser Einstieg dient ausschließlich dem vorhandenen,
 vollständig eingerichteten R4-Testsystem. Er ersetzt keinen Erstinstallationslauf.
-Der Hersteller erstellt den konkreten Einzeiler erst aus dem gebauten,
-signaturgeprüften R5-Archiv und dessen veröffentlichtem Commit. Dieses Dokument
-enthält deshalb keinen vorläufigen Befehl mit erfundenen Hashwerten.
+Der konkrete [Reparaturbefehl](../../delivery/public-repair-test3-r5/REPAIR_COMMAND.txt)
+ist veröffentlicht. Den gesamten Inhalt einmal ins SSH-Terminal kopieren.
+[Prüfsummen, feste Commits und Rücklesebeleg](../../reports/integration/minimal-first-start-20261003/publication.json)
+beziehen sich auf das tatsächlich gebaute R5-Archiv.
 
 ## Was der Reparaturbefehl macht
 
@@ -93,3 +94,25 @@ und der echte R4→R5-Wechsel müssen zusätzlich auf dem Zielsystem geprüft we
 Der Transport erweitert weder Adapterfreigaben noch physische Anlagensteuerung.
 SBOM und Signaturbindung stammen aus dem echten R5-Build; dieser Einzeiler erzeugt
 keine neue Laufzeit-SBOM und begründet keine Produktions- oder CRA-Freigabe.
+
+
+## Nach der Reparatur
+
+Als `admin` mit dem bisher eingerichteten Passwort auf Port 8081 anmelden,
+Admin und UI auf Port 8188 prüfen, abmelden und erneut anmelden. Das Passwort
+wird durch die Reparatur nicht zurückgesetzt. Danach einen normalen Neustart
+prüfen und die erhaltene Anmeldung/Lizenz bestätigen. Falls der Fehler bleibt,
+zunächst diese lesenden Befehle ausführen und ihre Ausgabe melden:
+
+```sh
+uptime
+free -m
+systemctl show nexowatt-eos-controller.service nexowatt-eos-postgresql.service \
+  --property=Id,ActiveState,SubState,Result,ExecMainCode,ExecMainStatus,NRestarts,MemoryCurrent,MemoryPeak,MemoryMax
+```
+
+`uptime` zeigt Laufzeit und Last, `free -m` den Speicherzustand. `systemctl show`
+zeigt Dienststatus, Exit-Status und Neustartzähler, ohne Konfiguration oder
+Geheimnisse auszugeben. Der Admin ist ein Kindprozess des Controllers; ein
+unauffälliger Dienststatus schließt einen einzelnen Admin-Absturz noch nicht aus.
+Vollständige Logs, Passwörter und Lizenz-/Sitzungstokens nicht veröffentlichen.
