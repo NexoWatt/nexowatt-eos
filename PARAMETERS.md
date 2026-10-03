@@ -1,5 +1,17 @@
 # NexoWatt EOS review profile — parameters
 
+## Prepared one-command TEST download
+
+`tools/bootstrap/build-download.cjs` runs only on the manufacturer build host.
+It requires exactly `--base-url` (fixed HTTPS directory), `--license-trust`
+(absolute authentic public NWL2 export), `--license-trust-sha256`,
+`--release-public-key-sha256` (independently authenticated pins), and `--output`
+(absolute fresh directory). It does not publish or accept private keys.
+Its generated root install command verifies the complete downloaded script
+before execution; no target flags disable host, signature or license checks.
+The target runner `tools/bootstrap/first-start.cjs` accepts no arguments.
+See [scope, prerequisites and still missing deployment inputs](docs/operations/ONE_COMMAND_INSTALLATION_DE.md).
+
 ## Browser first-start profile (dev9 / candidate test.3)
 
 The PostgreSQL full-product candidate requires `--setup-input` with `eos-base.cjs install`.

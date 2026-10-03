@@ -18,6 +18,26 @@ const FRESH_PATHS = Object.freeze(['/etc/nexowatt-eos', '/var/lib/nexowatt-eos',
     '/opt/nexowatt/eos/current', '/opt/nexowatt-eos', '/opt/iobroker', '/etc/nexowatt-eos-os-updates',
     '/var/lib/nexowatt-eos-os-updates', '/etc/systemd/system/nexowatt-eos.service', '/run/nexowatt-eos-postgresql',
     ...UNITS.map(name => `/etc/systemd/system/${name}`)]);
+// systemd257 returns exit 1 for a successful filtered list with no matches.
+// Query the complete table instead: absence must follow a successful command,
+// never reinterpret a generic command failure as an empty EOS namespace.
+// These columns are the C-locale systemd257 unit-file table, with --full to
+// prevent ellipsized names. Unrecognized or incomplete output fails closed.
+const UNIT_FILE_ROW = /^((?:[A-Za-z0-9:_.@-]|\\x[0-9A-Fa-f]{2})+\.(?:service|socket|device|mount|automount|swap|target|path|timer|slice|scope))[ \t]+(enabled|enabled-runtime|linked|linked-runtime|alias|masked|masked-runtime|static|disabled|indirect|generated|transient|bad)[ \t]+(enabled|disabled|ignored|unknown|n\/a|-)[ \t]*$/;
+function inspectUnitNamespace(result) {
+    const names = [], lines = result.stdout.split(/\r?\n/).filter(line => line.trim());
+    let valid = lines.length > 0;
+    for (const line of lines) {
+        const match = UNIT_FILE_ROW.exec(line);
+        if (!match || match[1].length > 255) { valid = false; continue; }
+        names.push(match[1]);
+    }
+    const conflicts = names.filter(name => /^(?:nexowatt-eos|iobroker)/.test(name));
+    return { ok: result.status === 0 && !result.error && !result.stderr?.trim() && valid && conflicts.length === 0,
+        detail: { requirement: 'No existing EOS/ioBroker unit may be replaced.', queryStatus: result.status,
+            queryError: result.error || null, outputValid: valid, stderrPresent: Boolean(result.stderr?.trim()),
+            conflictingUnits: conflicts } };
+}
 function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, root = '/', exec = command,
     uid = process.getuid?.(), hostname = osInfo.hostname().split('.')[0] } = {}) {
     const at = name => path.join(root, name), checks = [];
@@ -77,8 +97,8 @@ function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, r
         let exists = true; try { fs.lstatSync(at(file)); } catch (e) { if (e.code === 'ENOENT') exists = false; }
         add(`fresh-path:${file}`, !exists, 'Existing installation must be preserved; use a fresh test image.');
     }
-    const units = run('/usr/bin/systemctl', ['list-unit-files', '--no-legend', '--no-pager', 'nexowatt-eos*', 'iobroker*']);
-    add('fresh-unit-namespace', units.status === 0 && !units.error && units.stdout.trim() === '', 'No existing EOS/ioBroker unit may be replaced.');
+    const units = inspectUnitNamespace(run('/usr/bin/systemctl', ['list-unit-files', '--no-legend', '--no-pager', '--full']));
+    add('fresh-unit-namespace', units.ok, units.detail);
     let space = 0; try { const stat = fs.statfsSync(at('/')); space = Number(stat.bavail) * Number(stat.bsize); } catch { /* fail */ }
     add('free-space', space >= 6 * 1024 ** 3, { bytes: space, minimumBytes: 6 * 1024 ** 3 });
     const ready = checks.every(row => row.status === 'pass');
@@ -87,4 +107,4 @@ function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, r
         targetHardwareAccepted: false, productionReleaseApproved: false,
         scope: 'Read-only fresh Debian13 test-host admission. Live TLS/schema/controller/HTTPS gates must still pass on the target.' };
 }
-module.exports = { ACCOUNTS, UNITS, REQUIRED, FRESH_PATHS, inspectPostgresqlHost };
+module.exports = { ACCOUNTS, UNITS, REQUIRED, FRESH_PATHS, inspectUnitNamespace, inspectPostgresqlHost };

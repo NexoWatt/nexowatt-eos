@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "kind": "bootstrap-generated-shell-independent-review",
+  "at": "2026-10-03T13:32:04.662Z",
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "24.21.0"
+  },
+  "bash": {
+    "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "sha256": "61d6189c05e2f8465b6c03a809fc4d75b043f21eecb9196117a0426683429ddc",
+    "version": "GNU bash, version 5.2.37(1)-release (x86_64-pc-msys)",
+    "invocationPrefix": [
+      "--noprofile",
+      "--norc"
+    ]
+  },
+  "sourceFiles": [
+    {
+      "path": "tools/bootstrap/build-download.cjs",
+      "bytes": 10923,
+      "sha256": "7749167b0180813ded1e64f3182bf255c6326257c6641354c2625ad4e8d1636f"
+    },
+    {
+      "path": "tools/bootstrap/build-kit.py",
+      "bytes": 2626,
+      "sha256": "355ea3fbaa09d723d60ffa4b9e77aadcb57880143b4790e8285613cad87beffa"
+    },
+    {
+      "path": "tools/bootstrap/prepare-host.py",
+      "bytes": 27931,
+      "sha256": "c0befc2d5202e5c3c7e4f935b534e0888ece7437f22a3545d097c58d4d3b4b92"
+    }
+  ],
+  "sourcesUnchangedDuringRun": true,
+  "fixture": {
+    "config": {
+      "schemaVersion": 1,
+      "baseUrl": "https://download.example.com/eos-r2",
+      "assets": [],
+      "deliveryDirectory": "delivery/test-pi-0.2.0-test.3-r2"
+    },
+    "pythonSource": "print(\"review fixture only\")\n",
+    "renderedScriptSha256": "aad7064199e455e385f5ee821d476fc4c36367a3fec529d158ec94ef4a503d2f",
+    "renderedScriptBytes": 1274,
+    "installCommand": "/bin/bash -c 'set -eu; umask 077; d=$(mktemp -d /root/eos-installer-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 1274 '\\''https://download.example.com/eos-r2/install.sh'\\'' -o \"$d/install.sh\"; printf '\\''%s  %s\\n'\\'' '\\''aad7064199e455e385f5ee821d476fc4c36367a3fec529d158ec94ef4a503d2f'\\'' \"$d/install.sh\" | /usr/bin/sha256sum --check --status; /bin/bash \"$d/install.sh\"'",
+    "installCommandSha256": "9b43333da9670c2c444690d79afda2bb18c1fe4415d0069d20afc2aa134e5e35",
+    "decodedInnerBodySha256": "428534ee0284486130433ca94c02fe23e3473917c9e6fb2a69eba81864f43f37"
+  },
+  "checks": {
+    "outerCommandSyntax": {
+      "argv": [
+        "-n"
+      ],
+      "exitCode": 0,
+      "stderr": ""
+    },
+    "embeddedScriptSyntax": {
+      "argv": [
+        "-n"
+      ],
+      "exitCode": 0,
+      "stderr": ""
+    },
+    "decodedInnerBodySyntax": {
+      "argv": [
+        "-n"
+      ],
+      "exitCode": 0,
+      "stderr": ""
+    },
+    "actualHashVerification": {
+      "scope": "Decoded generated printf | sha256sum --check --status segment executed with d assigned to a new temporary fixture directory. Entire generated script bytes written as install.sh; repeat after appending mutation.",
+      "segment": "printf '%s  %s\\n' 'aad7064199e455e385f5ee821d476fc4c36367a3fec529d158ec94ef4a503d2f' \"$d/install.sh\" | /usr/bin/sha256sum --check --status",
+      "unchangedFileExitCode": 0,
+      "modifiedFileExitCode": 1,
+      "stdoutEmpty": true,
+      "stderrEmpty": true
+    }
+  },
+  "passed": true,
+  "downloadsPerformed": false,
+  "rootInstallationPerformed": false,
+  "fixturePythonExecuted": false,
+  "plantOrHardwareTested": false,
+  "limits": [
+    "Git Bash on Windows is not Debian Bash/systemd/POSIX ownership acceptance.",
+    "Fixture configuration deliberately has no assets; embedded Python is inert fixture text.",
+    "Actual HTTPS hosting/download and customer Pi installation were not executed."
+  ],
+  "productionReleaseApproved": false
+}

@@ -5,7 +5,8 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
-const { parse, digestArchive, deliveryIdentity } = require('../../tools/system/install-from-checkout.cjs');
+const { DELIVERY_DIRECTORY, DELIVERY_REVISION, RELEASE_SEQUENCE, parse, digestArchive, deliveryIdentity } = require('../../tools/system/install-from-checkout.cjs');
+const { releaseMetadata } = require('../../tools/integration/package-postgresql-test.cjs');
 const { sha256 } = require('../../runtime/release/bundle.cjs');
 const { probeNativeForInstallation, withDeploymentUmask } = require('../../tools/system/eos-base.cjs');
 function input() { return ['install', '--origin', 'https://eos.test:8443', '--release-public-key-sha256', 'a'.repeat(64),
@@ -17,14 +18,25 @@ test('checkout install requires explicit public inputs and independent trust has
         good.map(x => x === '--origin' ? '--license-trust' : x), good.map(x => x === 'a'.repeat(64) ? 'latest' : x),
         good.map(x => x === path.resolve('hosts.json') ? '../hosts.json' : x)]) assert.throws(() => parse(args), /CHECKOUT_/);
 });
-test('delivery selection binds exact test3 platform, archive basename and independently supplied public key digest', () => {
+test('delivery selection binds test3 revision2, sequence5, platform, archive basename and independent public key digest', () => {
     const keys = crypto.generateKeyPairSync('ed25519');
     const key = keys.publicKey.export({ type: 'spki', format: 'pem' });
     const pin = sha256(key);
-    const data = { runtimeVersion: '0.2.0-test.3', platform: 'linux-arm64', archive: 'eos-0.2.0-test.3-linux-arm64.tar.gz',
+    const data = { runtimeVersion: '0.2.0-test.3', deliveryRevision: 2, releaseSequence: 5,
+        platform: 'linux-arm64', archive: 'eos-0.2.0-test.3-linux-arm64.tar.gz',
         releaseId: 'a'.repeat(64), sha256: 'b'.repeat(64), signingPublicKeySha256: pin, productionReleaseApproved: false };
     assert.equal(deliveryIdentity(data, key, pin, 'linux-arm64'), data);
+    assert.equal(DELIVERY_DIRECTORY, 'delivery/test-pi-0.2.0-test.3-r2');
+    assert.equal(DELIVERY_REVISION, data.deliveryRevision);
+    assert.equal(RELEASE_SEQUENCE, data.releaseSequence);
+    const manifest = releaseMetadata('linux-arm64');
+    assert.equal(manifest.sequence, data.releaseSequence); assert.equal(manifest.releaseVersion, data.runtimeVersion);
+    assert.equal(manifest.profile, 'test'); assert.equal(manifest.nodeVersion, '24.21.0');
+    assert.deepEqual(manifest.platforms, [data.platform]);
+    assert.throws(() => releaseMetadata('win32-arm64'), /PG_PRODUCT_ASSEMBLY_REQUIRED/);
     for (const override of [{ archive: '../untrusted.tar.gz' }, { runtimeVersion: '0.2.0-test.2' },
+        { deliveryRevision: undefined }, { deliveryRevision: 1 }, { deliveryRevision: 3 },
+        { releaseSequence: undefined }, { releaseSequence: 4 }, { releaseSequence: 6 },
         { platform: 'linux-x64' }, { productionReleaseApproved: true }, { signingPublicKeySha256: 'c'.repeat(64) },
         { releaseId: '' }, { sha256: '' }]) assert.throws(() => deliveryIdentity({ ...data, ...override }, key, pin, 'linux-arm64'));
     assert.throws(() => deliveryIdentity(data, key, 'd'.repeat(64), 'linux-arm64'), /TRUST/);

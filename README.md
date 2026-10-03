@@ -8,12 +8,13 @@ Nicht verfügbare Anlagenangaben bleiben ausdrücklich als offen markiert.
 Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 
 [**Aus Git installieren und testen**](docs/operations/GIT_TEST3_INSTALLATION_DE.md) ·
+[Ein-Befehl-Download vorbereiten](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
 [Ersteinrichtung und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
-[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-20261003/).
+[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r2-20261003/).
 
-**Der signierte vollständige ARM64-Installationskandidat `0.2.0-test.3` ist enthalten.**
-[Lieferung und Fingerabdrücke](delivery/test-pi-0.2.0-test.3/README.md). UUID-Anzeige,
+**Der signierte vollständige ARM64-Installationskandidat `0.2.0-test.3`, Revision 2, ist enthalten.**
+[Lieferung und Fingerabdrücke](delivery/test-pi-0.2.0-test.3-r2/README.md). UUID-Anzeige,
 Frontend-Passwortvergabe und Home-/Pro-Lizenzgrenzen sind umgesetzt.
 
 **Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**

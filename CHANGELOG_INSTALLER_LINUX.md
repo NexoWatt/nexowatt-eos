@@ -1,5 +1,9 @@
 # Changelog for Linux-Installer-Script
 
+## 2026-10-03
+* Prepare a fixed, hash-pinned one-command TEST download with automatic Debian/Node/PostgreSQL prerequisites and protected browser-first setup; generated `BOOTSTRAP_VERSION=2026-10-03`. Hosting, authentic manufacturer license trust, browser certificate distribution and real Pi acceptance remain open.
+* Correct systemd257 fresh-unit admission using a successful complete unit table; ship a newly signed test.3 revision2 instead of modifying the original signed archive.
+
 ## 2026-09-30
 * Introduce the Linux/systemd EOS review profile with local bundled sources, no runtime sudo grants, protected CLI, TLS configuration start gate, unprivileged npm lifecycle scripts and stopped provisioning; reject legacy Redis automation.
 

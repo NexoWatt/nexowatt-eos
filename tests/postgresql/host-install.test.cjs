@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const cp = require('node:child_process');
+const vm = require('node:vm');
 const pg = require('../../runtime/postgresql/host.cjs');
 const { backend, validatePostgresql, clients } = require('../../runtime/transport/databases.cjs');
 const { assertRuntimeConfig } = require('../../runtime/bootstrap/initialize.cjs');
@@ -23,6 +24,7 @@ function goodExec(file, args) {
     let stdout = '', status = 0;
     if (file.endsWith('/node')) stdout = 'v24.21.0\n';
     if (file.endsWith('/systemctl') && args[0] === 'show') stdout = 'Version=257.13\nSystemState=running\n';
+    if (file.endsWith('/systemctl') && args[0] === 'list-unit-files') stdout = 'ssh.service enabled enabled\nsystemd-journald.service static -\n';
     if (file.endsWith('/postgres')) stdout = 'postgres (PostgreSQL) 17.11 (Debian 17.11-1)\n';
     if (file.endsWith('/psql')) stdout = 'psql (PostgreSQL) 17.11 (Debian 17.11-1)\n';
     if (file.endsWith('/getent')) status = 2;
@@ -37,11 +39,90 @@ function host(t) {
     f.write('/usr/share/keyrings/debian-archive-keyring.gpg', 'fixture');
     return { ...f, inspect: exec => inspectPostgresqlHost({ root: f.root, uid: 0, expectedNodeVersion: '24.21.0', platform: 'arm64', exec: exec || goodExec }) };
 }
+function unitNamespaceHost(t) {
+    const f = host(t), fixtureModule = { exports: {} };
+    // Command-double regression, runnable on Windows as well as POSIX. Model
+    // only the already-checked tool trust boundary; execute the real preflight
+    // source, command selection and table parser. This does not prove Linux
+    // ownership/modes or a native systemd invocation. Production is unchanged.
+    const source = fs.readFileSync(path.join(REPO, 'tools/system/postgresql-host-preflight.cjs'), 'utf8');
+    const fixtureRequire = name => name === './host-preflight.cjs' ? {
+        ...require('../../tools/system/host-preflight.cjs'),
+        toolTrust: file => ({ trusted: true, resolved: file }),
+    } : require(name);
+    vm.runInThisContext(`(function(require,module){${source}\n})`, { filename: 'postgresql-host-preflight-command-fixture.cjs' })(fixtureRequire, fixtureModule);
+    return { ...f, inspect: exec => fixtureModule.exports.inspectPostgresqlHost({ root: f.root, uid: 0,
+        expectedNodeVersion: '24.21.0', platform: 'arm64', exec }) };
+}
 test('PostgreSQL prerequisite fixture passes independently of preserved Redis hold', t => {
     const f = host(t), r = f.inspect();
     assert.equal(r.ready, true, JSON.stringify(r.checks.filter(row => row.status === 'fail')));
     assert.equal(r.targetHardwareAccepted, false); assert.equal(r.redisRequired, false);
     assert.equal(r.changesPerformed, false);
+});
+test('fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1', t => {
+    const f = unitNamespaceHost(t), calls = [];
+    const report = f.inspect((file, args) => {
+        if (file.endsWith('/systemctl') && args[0] === 'list-unit-files') {
+            calls.push(args);
+            if (args.some(arg => arg.includes('*'))) return { status: 1, stdout: '', stderr: '' };
+        }
+        return goodExec(file, args);
+    });
+    assert.equal(report.ready, true);
+    assert.deepEqual(calls, [['list-unit-files', '--no-legend', '--no-pager', '--full']]);
+    const check = report.checks.find(row => row.id === 'fresh-unit-namespace');
+    assert.equal(check.status, 'pass'); assert.equal(check.detail.queryStatus, 0);
+    assert.deepEqual(check.detail.conflictingUnits, []);
+});
+test('unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent', t => {
+    const f = unitNamespaceHost(t);
+    const states = ['enabled', 'enabled-runtime', 'linked', 'linked-runtime', 'alias', 'masked', 'masked-runtime',
+        'static', 'disabled', 'indirect', 'generated', 'transient', 'bad'];
+    for (const name of ['nexowatt-eos-old.service', 'nexowatt-eos-redis@.service', 'iobroker.service', 'iobroker-backup.timer']) {
+        for (const state of states) {
+            const report = f.inspect((p, a) => p.endsWith('/systemctl') && a[0] === 'list-unit-files' ?
+                { status: 0, stdout: `ssh.service enabled enabled\n${name} ${state} -\n`, stderr: '' } : goodExec(p, a));
+            assert.equal(report.ready, false, `${name} ${state}`);
+            const check = report.checks.find(row => row.id === 'fresh-unit-namespace');
+            assert.equal(check.status, 'fail'); assert.equal(check.detail.outputValid, true);
+            assert.deepEqual(check.detail.conflictingUnits, [name]);
+            assert.equal(report.checks.filter(row => row.id.startsWith('fresh-path:')).every(row => row.status === 'pass'), true);
+            assert.equal(report.changesPerformed, false);
+        }
+    }
+});
+test('unit namespace accepts full names, instances, escaped names and known C-locale table columns', t => {
+    const f = unitNamespaceHost(t);
+    const stdout = ['ssh.service enabled enabled', 'getty@.service enabled enabled',
+        'dev-disk-by\\x2duuid-abcd.device static -', '-.mount generated -', 'system.slice static -',
+        'a'.repeat(180) + '.service disabled disabled', 'custom.path indirect ignored',
+        'custom.socket linked n/a', 'custom.target alias -', 'custom.timer static unknown'].join('\n') + '\n';
+    const report = f.inspect((p, a) => p.endsWith('/systemctl') && a[0] === 'list-unit-files' ?
+        { status: 0, stdout, stderr: '' } : goodExec(p, a));
+    assert.equal(report.ready, true);
+});
+test('unit namespace rejects empty, malformed, incomplete or failed unit listings', t => {
+    const f = unitNamespaceHost(t), good = 'ssh.service enabled enabled\n';
+    const failures = [
+        { status: 1, stdout: '', stderr: '' },
+        { status: 1, stdout: good, stderr: '' },
+        { status: 0, stdout: good, stderr: 'Failed to list all unit files.' },
+        { status: null, stdout: good, stderr: '', error: 'ETIMEDOUT' },
+        { status: 0, stdout: good, stderr: '', error: 'ENOBUFS' },
+        ...['', ' \n', 'UNIT FILE STATE PRESET\n', '0 unit files listed.\n',
+            'nexowatt-eos-old.service disabled\n', 'ssh.service unexpected enabled\n',
+            'ssh.service enabled unexpected\n', 'ssh.service enabled enabled extra\n',
+            'nexowatt-eos-old…service disabled enabled\n', 'ssh.service enabled enabled\ntruncated',
+            '\u001b[31mssh.service enabled enabled\n', 'a'.repeat(256) + '.service static -\n']
+            .map(stdout => ({ status: 0, stdout, stderr: '' })),
+    ];
+    for (const result of failures) {
+        const report = f.inspect((p, a) => p.endsWith('/systemctl') && a[0] === 'list-unit-files' ? result : goodExec(p, a));
+        assert.equal(report.ready, false, JSON.stringify(result));
+        assert.equal(report.checks.find(row => row.id === 'fresh-unit-namespace').status, 'fail');
+        assert.equal(report.changesPerformed, false);
+    }
 });
 for (const version of ['17.10', '16.11', '18.1']) test(`unsupported PostgreSQL ${version} rejected`, t => {
     const f = host(t); assert.equal(f.inspect((p,a) => p.endsWith('/postgres') ? { status: 0, stdout: `postgres (PostgreSQL) ${version}\n` } : goodExec(p,a)).ready, false);

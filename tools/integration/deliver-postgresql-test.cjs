@@ -6,11 +6,11 @@ const path = require('node:path');
 const { verifyTestArchive } = require('./create-test-archive.cjs');
 const { inventory, readFileLimited, trustedDirectory, sha256 } = require('../../runtime/release/bundle.cjs');
 const { runtimeLicenseNotices } = require('../system/build-bundle.cjs');
-const { digestArchive } = require('../system/install-from-checkout.cjs');
+const { digestArchive, DELIVERY_DIRECTORY, DELIVERY_REVISION, RELEASE_SEQUENCE } = require('../system/install-from-checkout.cjs');
 const product = require('../../runtime/product/scope.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const ARCHIVE = 'eos-0.2.0-test.3-linux-arm64.tar.gz';
-const REPORT = path.join(ROOT, 'reports/integration/installable-test3-20261003');
+const REPORT = path.join(ROOT, 'reports/integration/installable-test3-r2-20261003');
 function deliver(directory) {
     trustedDirectory(ROOT);
     const base = trustedDirectory(path.resolve(directory));
@@ -18,10 +18,12 @@ function deliver(directory) {
     const delivery = JSON.parse(metadata);
     const key = readFileLimited(path.join(base, 'release-public.pem'), 16384).bytes;
     if (delivery.archive !== ARCHIVE || delivery.runtimeVersion !== '0.2.0-test.3' || delivery.platform !== 'linux-arm64' ||
+        delivery.deliveryRevision !== DELIVERY_REVISION || delivery.releaseSequence !== RELEASE_SEQUENCE ||
         delivery.productionReleaseApproved !== false || delivery.physicalControlEnabled !== false) throw new Error('DELIVERY_PROFILE');
     const checked = verifyTestArchive({ archivePath: path.join(base, ARCHIVE), publicKey: key,
         expectedReleaseId: delivery.releaseId, platform: 'linux-arm64' });
     if (checked.manifest.releaseVersion !== '0.2.0-test.3' || checked.manifest.profile !== 'test' || checked.manifest.nodeVersion !== '24.21.0' ||
+        checked.manifest.sequence !== RELEASE_SEQUENCE ||
         JSON.stringify(checked.manifest.platforms) !== '["linux-arm64"]' || delivery.releaseId !== checked.releaseId ||
         delivery.signedFiles !== checked.manifest.files.length || checked.archiveSha256 !== delivery.sha256 || checked.archiveBytes !== delivery.bytes ||
         sha256(key) !== delivery.signingPublicKeySha256) throw new Error('DELIVERY_MISMATCH');
@@ -73,7 +75,7 @@ function deliver(directory) {
     for (const relative of ['build/lib/web.js', 'build/lib/eosLicenseCore.js', 'build/lib/eosLicenseService.js', 'build/lib/eosLicenseHttp.js',
         'public/nexowatt-invitation.html', 'public/nexowatt-invitation.js'])
         bind('components/admin/' + relative, 'app/node_modules/iobroker.eos-admin/' + relative);
-    const destination = path.join(ROOT, 'delivery/test-pi-0.2.0-test.3');
+    const destination = path.join(ROOT, DELIVERY_DIRECTORY);
     trustedDirectory(path.dirname(destination));
     trustedDirectory(REPORT);
     fs.mkdirSync(destination); // exclusive; existing deliveries are never replaced
@@ -86,9 +88,11 @@ function deliver(directory) {
     fs.writeFileSync(path.join(destination, 'bundle.sha256'), checked.archiveSha256 + '  ' + ARCHIVE + '\n', { flag: 'wx' });
     const save = (name, value) => fs.writeFileSync(path.join(REPORT, name), JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
     save('signed-source-binding.json', { schemaVersion: 1, kind: 'final-workspace-to-signed-runtime-source-binding',
+        deliveryRevision: DELIVERY_REVISION, releaseSequence: checked.manifest.sequence,
         releaseId: checked.releaseId, archiveSha256: checked.archiveSha256, files: sources, allMatched: true,
         scope: 'Expected runtime/system file sets, fixed tools, license texts, package identities/entrypoints and changed license UI functions. Not target execution.' });
-    save('archive-delivery-verification.json', { schemaVersion: 1, releaseId: checked.releaseId, archiveSha256: checked.archiveSha256,
+    save('archive-delivery-verification.json', { schemaVersion: 1, deliveryRevision: DELIVERY_REVISION, releaseSequence: checked.manifest.sequence,
+        releaseId: checked.releaseId, archiveSha256: checked.archiveSha256,
         archiveBytes: checked.archiveBytes, signingPublicKeySha256: delivery.signingPublicKeySha256,
         signedFiles: checked.manifest.files.length, archiveReadbackVerified: true, signatureVerified: true,
         copiedBytesMatchVerifiedHashes: true, sourceFilesMatched: sources.length,

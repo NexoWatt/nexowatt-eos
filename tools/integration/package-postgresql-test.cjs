@@ -6,6 +6,13 @@ const { componentTreeDigest } = require('../../runtime/policy/admission.cjs');
 const { preparePayload, componentRows } = require('../system/build-bundle.cjs');
 const { createTestArchive } = require('./create-test-archive.cjs');
 const product = require('../../runtime/product/scope.cjs');
+const DELIVERY_REVISION = 2;
+const RELEASE_SEQUENCE = 5;
+function releaseMetadata(platform) {
+    if (!['linux-arm64', 'linux-x64'].includes(platform)) throw new Error('PG_PRODUCT_ASSEMBLY_REQUIRED');
+    return { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: RELEASE_SEQUENCE,
+        profile: 'test', nodeVersion: '24.21.0', platforms: [platform] };
+}
 function prepareCatalogPayload({ app, payload, catalogFile, sbomFile, catalog }) {
     // An incomplete catalog is only unsigned build input. In particular npm's
     // nested .bin helpers belong to the source tree, not the delivered payload.
@@ -34,8 +41,7 @@ function packageTest(directory) {
                 network: 'declared-endpoints-and-discovery', shellExec: false, additionalNpmModules: [], arbitraryCode: false },
             communication: 'eos-postgresql-mtls13-v1' })) };
     const save = (file, value) => fs.writeFileSync(path.join(base, file), JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
-    const metadata = { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: 4,
-        profile: 'test', nodeVersion: '24.21.0', platforms: [assembly.platform] };
+    const metadata = releaseMetadata(assembly.platform);
     save('release-metadata.json', metadata);
     const archive = path.join(base, `eos-0.2.0-test.3-${assembly.platform}.tar.gz`);
     // This payload is build input, not a POSIX bundle installed from Windows.
@@ -45,7 +51,8 @@ function packageTest(directory) {
         catalogFile: path.join(base, 'catalog.json'), sbomFile: path.join(base, 'runtime.cdx.json') });
     const result = createTestArchive({ payloadDirectory: payload, archivePath: archive,
         publicKeyPath: path.join(base, 'release-public.pem'), metadata });
-    const delivery = { schemaVersion: 1, sourceVersion: '0.2.0-dev.9', runtimeVersion: metadata.releaseVersion, releaseId: result.releaseId,
+    const delivery = { schemaVersion: 1, sourceVersion: '0.2.0-dev.9', runtimeVersion: metadata.releaseVersion,
+        deliveryRevision: DELIVERY_REVISION, releaseSequence: metadata.sequence, releaseId: result.releaseId,
         signingPublicKeySha256: result.signingPublicKeySha256, archive: path.basename(archive),
         sha256: result.archiveSha256, bytes: result.archiveBytes,
         signedFiles: result.manifest.files.length, platform: assembly.platform, database: 'postgresql',
@@ -57,7 +64,7 @@ function packageTest(directory) {
         configured: false, physicalControlEnabled: false, targetTestRequired: true, productionReleaseApproved: false };
     save('delivery.json', delivery); return delivery;
 }
-module.exports = { packageTest, prepareCatalogPayload };
+module.exports = { DELIVERY_REVISION, RELEASE_SEQUENCE, releaseMetadata, packageTest, prepareCatalogPayload };
 if (require.main === module) {
     try { if(process.argv.length!==3) throw new Error('PG_PACKAGE_USAGE'); process.stdout.write(JSON.stringify(packageTest(process.argv[2])) + '\n'); }
     catch(error) { process.stderr.write((error.code || error.message) + '\n'); process.exitCode = 1; }

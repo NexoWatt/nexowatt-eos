@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: download endpoint excludes shell, auth, query, redirect and path injection syntax
+ok 1 - download endpoint excludes shell, auth, query, redirect and path injection syntax
+  ---
+  duration_ms: 2.7556
+  type: 'test'
+  ...
+# Subtest: manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+ok 2 - manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+  ---
+  duration_ms: 48.0169
+  type: 'test'
+  ...
+# Subtest: kit cannot ship changed or omitted signed helpers or extra runtime code
+ok 3 - kit cannot ship changed or omitted signed helpers or extra runtime code
+  ---
+  duration_ms: 0.4964
+  type: 'test'
+  ...
+# Subtest: one command checks a separately delivered script pin before execution; script data survive exact embedding
+ok 4 - one command checks a separately delivered script pin before execution; script data survive exact embedding
+  ---
+  duration_ms: 1.5379
+  type: 'test'
+  ...
+# Subtest: canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+ok 5 - canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+  ---
+  duration_ms: 870.7369
+  type: 'test'
+  ...
+# Subtest: build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+ok 6 - build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+  ---
+  duration_ms: 1.2899
+  type: 'test'
+  ...
+# Subtest: IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+ok 7 - IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+  ---
+  duration_ms: 8.2778
+  type: 'test'
+  ...
+# Subtest: one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+ok 8 - one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+  ---
+  duration_ms: 0.3594
+  type: 'test'
+  ...
+# Subtest: bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+ok 9 - bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+  ---
+  duration_ms: 1.4393
+  type: 'test'
+  ...
+# Subtest: license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+ok 10 - license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+  ---
+  duration_ms: 10.5728
+  type: 'test'
+  ...
+# Subtest: TTY must be an actual character terminal before it can receive any possession code
+ok 11 - TTY must be an actual character terminal before it can receive any possession code
+  ---
+  duration_ms: 1.0153
+  type: 'test'
+  ...
+# Subtest: successful runner uses all existing installer flags and emits possession only through opened TTY
+ok 12 - successful runner uses all existing installer flags and emits possession only through opened TTY
+  ---
+  duration_ms: 20.3108
+  type: 'test'
+  ...
+# Subtest: missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+ok 13 - missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+  ---
+  duration_ms: 40.6039
+  type: 'test'
+  ...
+# Subtest: installer failures never read or output code and sanitized error excludes downstream secret messages
+ok 14 - installer failures never read or output code and sanitized error excludes downstream secret messages
+  ---
+  duration_ms: 33.8362
+  type: 'test'
+  ...
+# Subtest: unsafe code permissions and existing input directory fail closed without TTY disclosure
+ok 15 - unsafe code permissions and existing input directory fail closed without TTY disclosure
+  ---
+  duration_ms: 26.0222
+  type: 'test'
+  ...
+# Subtest: CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+ok 16 - CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+  ---
+  duration_ms: 6.8147
+  type: 'test'
+  ...
+# Subtest: TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+ok 17 - TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+  ---
+  duration_ms: 0.3476
+  type: 'test'
+  ...
+# Subtest: ambiguous address errors give a bounded corrective message without addresses or secrets
+ok 18 - ambiguous address errors give a bounded corrective message without addresses or secrets
+  ---
+  duration_ms: 0.3623
+  type: 'test'
+  ...
+# Subtest: terminal success is readable and includes public browser trust instructions without arbitrary result properties
+ok 19 - terminal success is readable and includes public browser trust instructions without arbitrary result properties
+  ---
+  duration_ms: 14.3601
+  type: 'test'
+  ...
+# Subtest: preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+ok 20 - preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+  ---
+  duration_ms: 15.3303
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1130.1921

@@ -13,6 +13,9 @@ const { validatePublicInput } = require('./prepare-onboarding.cjs');
 const { command } = require('./host-preflight.cjs');
 const eos = require('./eos-base.cjs');
 const ROOT = path.resolve(__dirname, '../..');
+const DELIVERY_DIRECTORY = 'delivery/test-pi-0.2.0-test.3-r2';
+const DELIVERY_REVISION = 2;
+const RELEASE_SEQUENCE = 5;
 const FLAGS = ['--release-public-key-sha256', '--origin', '--hosts-file', '--license-trust', '--license-trust-sha256'];
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 function parse(argv) {
@@ -46,6 +49,7 @@ function digestArchive(file) {
 function deliveryIdentity(delivery, keyBytes, expectedKey, platform) {
     validatePublicKey(keyBytes);
     if (!['linux-arm64', 'linux-x64'].includes(platform) || delivery?.runtimeVersion !== '0.2.0-test.3' ||
+        delivery.deliveryRevision !== DELIVERY_REVISION || delivery.releaseSequence !== RELEASE_SEQUENCE ||
         delivery.platform !== platform || delivery.archive !== `eos-0.2.0-test.3-${platform}.tar.gz` ||
         !/^[a-f0-9]{64}$/.test(delivery.releaseId || '') || !/^[a-f0-9]{64}$/.test(delivery.sha256 || '') ||
         delivery.productionReleaseApproved !== false) fail('CHECKOUT_DELIVERY');
@@ -60,7 +64,7 @@ function main(argv) {
     const preflight = inspectPostgresqlHost({ expectedNodeVersion: '24.21.0', platform: process.arch });
     if (args.action === 'preflight') return preflight;
     if (!preflight.ready) return { ok: false, code: 'CHECKOUT_HOST_PREFLIGHT_REJECTED', preflight, changesPerformed: false };
-    const directory = path.join(ROOT, 'delivery/test-pi-0.2.0-test.3');
+    const directory = path.join(ROOT, DELIVERY_DIRECTORY);
     const metadata = path.join(directory, 'delivery.json'), key = path.join(directory, 'release-public.pem');
     rootOwned(metadata); rootOwned(key);
     const keyBytes = readFileLimited(key, 16384).bytes;
@@ -82,14 +86,15 @@ function main(argv) {
     if (extracted.status !== 0 || extracted.error) fail('CHECKOUT_EXTRACT_FAILED');
     const bundle = path.join(unpacked, 'bundle');
     const verification = eos.main(['verify', '--bundle', bundle, '--public-key', key]);
-    if (!verification.ok || verification.releaseId !== delivery.releaseId) fail('CHECKOUT_RELEASE_CHANGED');
+    if (!verification.ok || verification.releaseId !== delivery.releaseId || verification.sequence !== RELEASE_SEQUENCE)
+        fail('CHECKOUT_RELEASE_CHANGED');
     const setupFile = path.join(staging, 'setup.json'); privateWrite(setupFile, JSON.stringify(setup) + '\n', 0o600);
     const installed = eos.main(['install', '--bundle', bundle, '--public-key', key, '--start', 'yes', '--setup-input', setupFile]);
     return { ...installed, source: 'authenticated-git-checkout', stagingDirectory: staging,
         setupOrigin: setup.origin, passwordEntry: 'https-frontend-only', uuidLocation: 'first-start-license-step',
         setupCodeFile: '/etc/nexowatt-eos/setup-code.txt', hardwareAcceptance: 'OPEN', productionReleaseApproved: false };
 }
-module.exports = { parse, digestArchive, deliveryIdentity, main };
+module.exports = { DELIVERY_DIRECTORY, DELIVERY_REVISION, RELEASE_SEQUENCE, parse, digestArchive, deliveryIdentity, main };
 if (require.main === module) {
     try { const result = main(process.argv.slice(2)); process.stdout.write(JSON.stringify(result, null, 2) + '\n');
         if (result.ok === false || result.ready === false) process.exitCode = 1; }

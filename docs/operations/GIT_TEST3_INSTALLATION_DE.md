@@ -1,6 +1,16 @@
-# EOS test.3 aus Git installieren
+# EOS test.3 Revision 2 aus Git installieren
 
 Stand: 03.10.2026. Für einen **frischen, isolierten Debian-13-/Raspberry-Pi-OS-13-Testhost mit ARM64**. Das Paket enthält Controller, Admin, UI, Devices, EEBUS, OCPP21, Backup und die PostgreSQL-Backends. Es ist ein Installationskandidat für eure Tests. Ein vollständiger Lauf auf dem Pi und sämtliche Hardwaretests sind **offen, nicht ausgeführt**.
+
+Der feste Einstieg verwendet jetzt `delivery/test-pi-0.2.0-test.3-r2/`,
+Lieferrevision 2 mit signierter Sequenz 5. Die Runtime-Version bleibt
+`0.2.0-test.3`. Diese Revision korrigiert die Vorprüfung des systemd-
+Unitnamensraums: Eine erfolgreiche vollständige Unitliste wird ausgewertet.
+Der vorherige gefilterte Aufruf konnte bei einem leeren Namensraum mit Exitcode
+1 enden und dadurch einen frischen Host ablehnen.
+Vorhandene EOS-/ioBroker-Units und nicht auswertbare Antworten führen weiterhin
+zum Abbruch. Der App-Baum ist bytegleich zur vorherigen Lieferung; das alte
+test.3-Archiv und seine Nachweise bleiben unverändert erhalten.
 
 ## 1. Voraussetzungen und Repository
 
@@ -52,7 +62,7 @@ Das Beispiel beschreibt nur die Form. Den tatsächlichen Export übernehmen;
 die Kennung muss zum `kid` der erzeugten NWL2-Lizenz passen. Zulässig sind
 1 bis 32 öffentliche Schlüssel, kein Array, zusätzlicher Wrapper oder Zertifikat.
 
-Den öffentlichen **Release**-Schlüssel zusätzlich anhand des getrennt bestätigten Fingerabdrucks abgleichen. Der Fingerabdruck dieses Kandidaten steht in [der Lieferung](../../delivery/test-pi-0.2.0-test.3/README.md). Ein Schlüssel und Hash aus derselben unbestätigten Quelle beweisen keine Herstellerherkunft.
+Den öffentlichen **Release**-Schlüssel zusätzlich anhand des getrennt bestätigten Fingerabdrucks abgleichen. Der Fingerabdruck dieses Kandidaten steht in [der Lieferung Revision 2](../../delivery/test-pi-0.2.0-test.3-r2/README.md). Ein Schlüssel und Hash aus derselben unbestätigten Quelle beweisen keine Herstellerherkunft. Der neue Testsignierer hat einen anderen öffentlichen Schlüssel; nicht den alten test.3-Fingerabdruck verwenden.
 
 ## 3. Prüfen und installieren
 
