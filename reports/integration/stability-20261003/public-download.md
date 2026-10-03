@@ -54,7 +54,20 @@ feste Commit- und Assetbindung, Ablehnung manipulierten Inputs, unveränderte
 eingebettete Vorbereitungsbytes mit begrenztem Recoverypfad und Prüfung des
 vollständigen Skripts vor Ausführung. Beide erzeugten Bash-Formen wurden mit
 `bash -n` geprüft. Rohbeleg: `raw/public-entry.tap`. Die Tests sind in die EOS-CI
-aufgenommen; deren nächster Lauf wird separat festgehalten.
+aufgenommen. [Actions 37144888505](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37144888505)
+bestand am öffentlichen Quellstand `cad6268e5d0e442fa576fa224babc630f326cb58`
+alle drei EOS-Jobs; der Produktjob meldet **178 Node-, 66 Root-Fixture- und
+80 Python-Tests**, keine fehlgeschlagen oder übersprungen. Rohbeleg:
+`raw/github-public-product-success.log`.
+
+Der erzeugte echte Installer wurde zusätzlich mit `bash -n` und durch
+Rücklesen der eingebetteten Python-/Konfigurationsbytes geprüft. Der tatsächliche
+Hostvorbereiter akzeptiert diese Konfiguration. Die erneute vollständige
+Archivprüfung bestätigte die vorhandene R4-Signatur. Danach wurden Installer,
+Kit, Node und Runtime anonym von ihren öffentlichen, festen Commit-URLs geladen:
+alle vier Bytezahlen, SHA-256- und Git-Blob-Hashes stimmen. Rohbeleg:
+`public-network-readback.json`; wiederholbar mit
+`python3 -I -B reports/integration/stability-20261003/verify-public-download.py 16a947182badf052e9866f7cd167056e994ba914`.
 
 Maßgeblich für tatsächlich veröffentlichte Einstiegspins und Rückleseprüfung
 ist der abschließende maschinenlesbare Veröffentlichungsnachweis. Ein Quell-

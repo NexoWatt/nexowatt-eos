@@ -117,3 +117,19 @@ Gezielter lokaler Nachtest: **66/66 bestanden**, 0 übersprungen, Node.js
 `ci-runner-fixture.json`. Der GitHub-Nachtest dieser Fixture-Korrektur ist
 bis zu deren Veröffentlichung ausdrücklich **OFFEN**. Frühere Logs und
 deren Quellbezug bleiben als historische Belege erhalten.
+
+## Erfolgreiche Wiederholung und öffentlicher Einstieg
+
+Nach der vom Nutzer vorgenommenen öffentlichen Repositoryfreigabe bestand
+Actions `37143231830` am Quellstand `ea3439ee6cb837ae42441dcdea89f9a454fd3c6c`
+alle drei EOS-Jobs. Der korrigierte Root-Fixture bestand 66/66; die zuvor
+übersprungenen nachfolgenden Python-Prüfungen wurden jetzt tatsächlich
+ausgeführt (80/80). Produkt-Node 174/174, Security 41 Node + 57 Python,
+Architektur 112/112. Rohbelege: `raw/github-*-success.log`.
+
+Der öffentliche Einstieg wurde anschließend mit vier zusätzlichen Prüfungen
+in Actions `37144888505` am Quellstand `cad6268e5d0e442fa576fa224babc630f326cb58`
+geprüft: 178 Produkt-Node-, 66 Root-Fixture- und 80 Python-Tests bestanden.
+Alle drei EOS-Jobs sind erfolgreich. Die bisherigen fehlgeschlagenen Läufe
+bleiben als zeitlich getrennte Befunde erhalten; Ergebnisse und Rohbelege
+werden nicht rückwirkend umgeschrieben. Native Abnahme bleibt offen.

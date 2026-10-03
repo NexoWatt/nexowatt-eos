@@ -7,8 +7,14 @@ und SBOM. Autorisierte Änderungen erfolgen gemäß `AGENTS.md` auf `main`.
 
 ## Ergebnis und Grenzen
 
-Dieser Stand korrigiert konkrete Installations- und Erststartfehler und bereitet
-den signierten ARM64-Kandidaten **test.3 Revision 4, Sequenz 7** vor. Ein neues
+**Aktualisierung:** R4 ist gebaut, veröffentlicht und zusammen mit dem
+tokenfreien öffentlichen Download vollständig zurückgelesen. Der konkrete
+[Veröffentlichungsnachweis](publication.json) nennt den Produktquellstand,
+die Commits für Dateien und Einstieg, Signatur, SBOM-Hash und tatsächliche Tests.
+[Öffentlicher Download und Wiederholung der GitHub-Prüfungen](public-download.md).
+
+Dieser Stand korrigiert konkrete Installations- und Erststartfehler und liefert
+den signierten ARM64-Kandidaten **test.3 Revision 4, Sequenz 7**. Ein neues
 Artefakt gilt erst mit dem erfolgreichen Buildbericht als erzeugt; Veröffentlichung
 und Rücklesen werden getrennt dokumentiert. Die bloße Aufnahme der Quellen oder
 ein grüner Teiltest ist keine bestandene Gesamtinstallation.

@@ -1,5 +1,20 @@
 # NexoWatt EOS review profile — parameters
 
+## Active public one-command TEST download
+
+The user made the repository public on 03.10.2026. The active README entry uses
+`delivery/public-entry-test3-r4/INSTALL_COMMAND.txt` without a GitHub token.
+`tools/bootstrap/build-public-entry.cjs` generates a complete, pinned script
+from the exact published R4 host preparer and diagnosed R2 recovery helper.
+The command verifies its size and SHA-256 before execution in a root-owned
+temporary directory. Both script and unchanged asset mirror use complete Git
+commit IDs. Runtime signatures, host admission and license gates are retained.
+The public command is for a fresh test host or exactly the diagnosed R2 abort,
+never arbitrary existing installations. Making the repository private again
+causes a closed download failure. The authenticated route below is historical.
+See [publication/readback](reports/integration/stability-20261003/publication.json)
+and [target procedure](docs/operations/STABILITY_TEST4_DE.md).
+
 ## Prepared one-command TEST download
 
 The private GitHub route uses `tools/bootstrap/build-github-download.cjs` on the

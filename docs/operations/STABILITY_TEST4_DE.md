@@ -6,17 +6,22 @@ Die tatsächliche Pi-Abnahme ist noch offen.
 
 ## Installation
 
-Den aktuellen vollständigen Kopierblock in der [README auf main](../../README.md)
-verwenden. Er beginnt mit `sudo /bin/bash`, verlangt bei Bedarf das persönliche
-sudo-Passwort und anschließend einmal einen GitHub-Token mit Leserecht auf das
-private Repository. Der Token wird verdeckt eingelesen, nicht als Argument oder
-Umgebungsvariable an den Installer weitergegeben und nicht in Dateien gespeichert.
+Den aktuellen vollständigen Einzeiler in der [README auf main](../../README.md)
+verwenden. Er beginnt mit `/usr/bin/sudo /usr/bin/env -i`, verlangt bei Bedarf
+das persönliche sudo-Passwort und setzt eine kontrollierte Ausführungsumgebung.
+Das öffentlich bereitgestellte R4-Paket benötigt keinen GitHub-Token. Skript
+und Downloadverzeichnis sind an feste Git-Commit-IDs gebunden. Wird das
+Repository wieder privat, bricht dieser Downloadweg ab.
 
 `curl` lädt die fest gebundenen Bestandteile. Vor ihrer Ausführung werden die
 Bytezahl und SHA-256-Pins kontrolliert; das Laufzeitpaket besitzt zusätzlich ein
 signiertes Manifest. APT bereitet die benötigten Debian-Pakete vor. Der eigene
 PostgreSQL-Cluster und die EOS-Dienste werden durch den Hostinstaller eingerichtet.
 Keine manuelle Eingabe von Benutzerpasswörtern im Terminal erforderlich.
+
+Der Einzeiler ist kein Updater. Eine bereits erfolgreich installierte R4-Version
+nicht damit überschreiben. Alte Token-/R3-Befehle bleiben historische Nachweise;
+für die neue Testinstallation gilt ausschließlich der aktuelle README-Einstieg.
 
 Für den bekannten R2-Sudo-Abbruch erkennt derselbe Einstieg die vorhandene
 Bereitstellung und schaltet den eng begrenzten Wiederherstellungshelfer vor.
