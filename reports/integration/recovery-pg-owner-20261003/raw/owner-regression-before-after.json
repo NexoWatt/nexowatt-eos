@@ -1,0 +1,32 @@
+{
+  "kind": "eos-pg-owner-preflight-regression",
+  "results": [
+    {
+      "source": "before",
+      "sha256": "66104780fda7c92368e21d5baf88528ba7788a8055ccfc091d919c3a161efce4",
+      "expected": "RECOVERY_PATH_OWNER",
+      "actual": "RECOVERY_PATH_OWNER",
+      "passed": true
+    },
+    {
+      "source": "after",
+      "sha256": "d1c4739bfa1c9d3b144a3abef7715a05c212cc062a0da72a9d16ca588095ba06",
+      "expected": "REACHED_CLUSTER_CHECK",
+      "actual": "REACHED_CLUSTER_CHECK",
+      "passed": true
+    }
+  ],
+  "modelledMetadata": {
+    "paths": [
+      "/etc/postgresql",
+      "/var/lib/postgresql"
+    ],
+    "uid": 102,
+    "gid": 106,
+    "mode": "0755",
+    "empty": true
+  },
+  "osCommandsExecuted": false,
+  "accountMutationsExecuted": false,
+  "piInstallationExecuted": false
+}

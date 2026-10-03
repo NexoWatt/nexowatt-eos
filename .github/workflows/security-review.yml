@@ -228,7 +228,7 @@ jobs:
           python3 tests/bootstrap/prepare-host.test.py
           # ArchivedPinTests is a separate signed-R2 delivery verification.
           # This source-fixture job does not execute or claim that archive check.
-          python3 tests/bootstrap/recover-sudo-abort.test.py PayloadTests GuardTests MutationTests
+          python3 tests/bootstrap/recover-sudo-abort.test.py PayloadTests GuardTests PostgresIdentityTests PostgresDirectoryTests MutationTests
 
       - name: State product contract verification scope
         if: always()

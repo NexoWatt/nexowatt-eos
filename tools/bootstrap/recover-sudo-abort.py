@@ -257,6 +257,75 @@ def parse_table(text, columns):
     return rows
 
 
+def validate_postgres_identity(passwd_text, group_text):
+    """Bind the directory exception to the real, unaliased package account."""
+    users, groups = parse_table(passwd_text, 7), parse_table(group_text, 4)
+    target = [row for row in users if row[0] == "postgres"]
+    target_group = [row for row in groups if row[0] == "postgres"]
+    if (len(target) != 1 or len(target_group) != 1
+            or any(not re.fullmatch(r"[0-9]{1,10}", row[2])
+                   or not re.fullmatch(r"[0-9]{1,10}", row[3]) for row in users)
+            or any(not re.fullmatch(r"[0-9]{1,10}", row[2]) for row in groups)):
+        fail("RECOVERY_POSTGRES_IDENTITY")
+    user, group = target[0], target_group[0]
+    uid, gid = int(user[2]), int(group[2])
+    if (not 0 < uid < 2**32 - 1 or not 0 < gid < 2**32 - 1
+            or uid == UID or gid == GID or int(user[3]) != gid
+            or sum(int(row[2]) == uid for row in users) != 1
+            or sum(int(row[2]) == gid for row in groups) != 1):
+        fail("RECOVERY_POSTGRES_IDENTITY")
+    return user, group
+
+
+def postgres_identity():
+    for path in ("/etc/passwd", "/etc/group"):
+        trusted_path(path)
+    local = validate_postgres_identity(Path("/etc/passwd").read_text(encoding="utf-8"),
+                                       Path("/etc/group").read_text(encoding="utf-8"))
+    resolved = validate_postgres_identity(command(["/usr/bin/getent", "passwd"]),
+                                          command(["/usr/bin/getent", "group"]))
+    if local != resolved:
+        fail("RECOVERY_POSTGRES_IDENTITY")
+    return int(local[0][2]), int(local[1][2])
+
+
+def check_empty_postgresql_directory(path, identity):
+    """Only PG's empty container directories may use its package UID/GID.
+
+    No files inside these directories are trusted or read. Tool, account-file
+    and ancestor ownership checks remain root-only. Neither path is changed.
+    """
+    path = Path(path)
+    trusted_path(path.parent)
+    before = path.lstat()
+    if (not stat.S_ISDIR(before.st_mode) or before.st_mode & 0o7022
+            or (before.st_uid, before.st_gid) not in {(0, 0), identity}):
+        fail("RECOVERY_POSTGRES_DIRECTORY")
+    descriptor = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        opened = os.fstat(descriptor)
+        expected = (before.st_dev, before.st_ino, before.st_mode, before.st_uid, before.st_gid)
+        if (opened.st_dev, opened.st_ino, opened.st_mode, opened.st_uid, opened.st_gid) != expected:
+            fail("RECOVERY_POSTGRES_DIRECTORY_CHANGED")
+        with os.scandir(descriptor) as entries:
+            if next(entries, None) is not None:
+                fail("RECOVERY_EXISTING_CLUSTER_DATA")
+        after = path.lstat()
+        if (after.st_dev, after.st_ino, after.st_mode, after.st_uid, after.st_gid) != expected:
+            fail("RECOVERY_POSTGRES_DIRECTORY_CHANGED")
+    finally:
+        os.close(descriptor)
+
+
+def check_postgresql_directories():
+    paths = [path for path in (Path("/etc/postgresql"), Path("/var/lib/postgresql"))
+             if os.path.lexists(path)]
+    if paths:
+        identity = postgres_identity()
+        for path in paths:
+            check_empty_postgresql_directory(path, identity)
+
+
 def validate_accounts(passwd_text, group_text, shadow_text, *, account=ACCOUNT, group=ACCOUNT):
     users, groups = parse_table(passwd_text, 7), parse_table(group_text, 4)
     target = [row for row in users if row[0] == account]
@@ -382,11 +451,7 @@ def preflight():
     for path in EOS_PATHS:
         if os.path.lexists(path):
             fail("RECOVERY_EXISTING_EOS_DATA")
-    for path in (Path("/etc/postgresql"), Path("/var/lib/postgresql")):
-        if os.path.lexists(path):
-            trusted_path(path)
-            if path.is_symlink() or not path.is_dir() or any(path.iterdir()):
-                fail("RECOVERY_EXISTING_CLUSTER_DATA")
+    check_postgresql_directories()
     if command(["/usr/bin/pg_lsclusters", "--no-header"]).strip():
         fail("RECOVERY_EXISTING_CLUSTER")
     check_units(command(["/usr/bin/systemctl", "list-unit-files", "--no-legend", "--no-pager", "--full"]))

@@ -2,7 +2,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { spawnSync } = require('node:child_process');
-const { assetConfig, render, commandFor } = require('../../tools/bootstrap/build-public-entry.cjs');
+const { assetConfig, render, commandFor, OUTPUT } = require('../../tools/bootstrap/build-public-entry.cjs');
 const pinnedCommit = 'a'.repeat(40);
 function manifest() {
     return { schemaVersion: 1, kind: 'eos-private-github-test-install', repository: 'NexoWatt/nexowatt-eos',
@@ -32,6 +32,8 @@ test('generated entry contains exact preparer bytes and bounded R2 recovery befo
     const script = render(assetConfig(pinnedCommit, manifest()), preparer, recovery).toString();
     const encoded = script.split("<<'EOS_PYTHON_BASE64'\n")[1].split('\nEOS_PYTHON_BASE64')[0];
     assert.deepEqual(Buffer.from(encoded, 'base64'), preparer);
+    const encodedRecovery = script.split("<<'EOS_RECOVERY_BASE64'\n")[1].split('\nEOS_RECOVERY_BASE64')[0];
+    assert.deepEqual(Buffer.from(encodedRecovery, 'base64'), recovery);
     assert.match(script, /if \[\[ -e \/opt\/nexowatt\/eos \|\| -L \/opt\/nexowatt\/eos \]\]; then/);
     assert.ok(script.indexOf('sha256sum --check --status') < script.indexOf('recover-sudo-abort.py" --recover'));
     assert.ok(script.indexOf('recover-sudo-abort.py" --recover') < script.lastIndexOf('prepare-host.py" "$eos_stage/download.json"'));
@@ -47,6 +49,8 @@ test('one-line curl entry verifies full size and hash in a protected directory b
     assert.match(value, /\/usr\/bin\/mktemp -d \/root\/eos-installer-XXXXXXXX/);
     assert.match(value, /\/usr\/bin\/curl -q --proto =https --tlsv1.2 --fail/);
     assert.match(value, /--max-time 120 --max-filesize 19/);
+    assert.equal(OUTPUT, 'delivery/public-entry-test3-r4-recovery2');
+    assert.ok(value.includes(`/${pinnedCommit}/${OUTPUT}/install.sh`));
     assert.ok(value.indexOf('sha256sum --check --status') < value.indexOf('/bin/bash "$d/install.sh"'));
     assert.doesNotMatch(value, /--location|--insecure|Authorization|Bearer|GitHub-Token|curl[^;]*\|[^;]*bash/);
     assert.throws(() => commandFor('main', bytes), /PUBLIC_ENTRY_REJECTED/);

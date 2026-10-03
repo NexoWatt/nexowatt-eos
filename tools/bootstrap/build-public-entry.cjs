@@ -10,7 +10,9 @@ const ROOT = path.resolve(__dirname, '../..');
 const DELIVERY = 'delivery/test-pi-0.2.0-test.3-r4';
 const BOOTSTRAP = 'delivery/bootstrap-test3-r4';
 const ASSETS = 'delivery/public-assets-test3-r4';
-const OUTPUT = 'delivery/public-entry-test3-r4';
+// Entry revision 2 fixes the diagnosed PostgreSQL directory recovery guard.
+// The original published entry and signed R4 payload remain immutable.
+const OUTPUT = 'delivery/public-entry-test3-r4-recovery2';
 const NAMES = ['installer-kit.zip', 'node-v24.21.0-linux-arm64.tar.xz', 'eos-0.2.0-test.3-linux-arm64.tar.gz'];
 const fail = () => { throw new Error('PUBLIC_ENTRY_REJECTED'); };
 function commit(value) { if (!/^[a-f0-9]{40}$/.test(value || '')) fail(); return value; }
@@ -77,8 +79,8 @@ function build(assetCommit) {
     const preparer = checkedBytes(`${BOOTSTRAP}/prepare-host.py`, manifest.prepareHost);
     const recovery = fs.readFileSync(path.join(ROOT, 'tools/bootstrap/recover-sudo-abort.py'));
     const recoveryPin = identity(recovery);
-    // The recovery helper was already reviewed and published with the R2 guard.
-    if (recoveryPin.sha256 !== '66104780fda7c92368e21d5baf88528ba7788a8055ccfc091d919c3a161efce4') fail();
+    // Reviewed empty-PG-directory fix; keep the accepted R2 state and all other guards pinned.
+    if (recoveryPin.sha256 !== 'd1c4739bfa1c9d3b144a3abef7715a05c212cc062a0da72a9d16ca588095ba06') fail();
     const script = render(config, preparer, recovery);
     const destination = path.join(ROOT, OUTPUT);
     fs.mkdirSync(destination); // Exclusive; published entries are never rewritten.
@@ -86,7 +88,7 @@ function build(assetCommit) {
     const report = { schemaVersion: 1, kind: 'eos-public-test-entry', assetCommit, config,
         sourceManifest: identity(fs.readFileSync(path.join(ROOT, BOOTSTRAP, 'github-manifest.json'))),
         preparer: identity(preparer), recovery: recoveryPin, installer: identity(script),
-        releaseId: delivery.releaseId, deliveryRevision: 4, releaseSequence: 7,
+        releaseId: delivery.releaseId, deliveryRevision: 4, releaseSequence: 7, entryRevision: 2,
         signedArchiveSha256: archive.archiveSha256, archiveSignatureVerified: true,
         runtimeArchiveRebuilt: false, appSbomChanged: false, tokenRequired: false,
         targetInstallationExecuted: false, productionReleaseApproved: false };

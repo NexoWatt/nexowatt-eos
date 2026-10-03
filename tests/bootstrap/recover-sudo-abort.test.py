@@ -5,6 +5,7 @@ The real published r2 signature is separately verified with local OpenSSL when
 available. Native UID/GID, crash durability and ARM64 hardware acceptance OPEN.
 """
 import copy
+from contextlib import ExitStack, nullcontext
 import hashlib
 import importlib.util
 import io
@@ -266,6 +267,221 @@ class GuardTests(unittest.TestCase):
             with self.subTest(result=result), patch.object(r, "trusted_path"), patch.object(r.subprocess, "run", return_value=result):
                 with self.assertRaisesRegex(r.Rejected, "RECOVERY_COMMAND_REJECTED"):
                     r.command(["/usr/bin/getent", "passwd"])
+
+
+def postgres_accounts(uid=102, gid=106):
+    passwd, groups, _ = accounts()
+    return (passwd + f"postgres:x:{uid}:{gid}:PostgreSQL administrator,,,:/var/lib/postgresql:/bin/bash\n",
+            groups + f"postgres:x:{gid}:\nssl-cert:x:105:postgres\n")
+
+
+class ReachedClusterCheck(Exception):
+    pass
+
+
+def observed_preflight_until_cluster_check(recovery):
+    """Model the reported Pi metadata, stopping before any recovery mutation.
+
+    This same fixture can be run against the archived original helper to
+    demonstrate RECOVERY_PATH_OWNER, then against the corrected source.
+    No host accounts, systemd commands, mounts or real target files are used.
+    """
+    pg_paths = {"/etc/postgresql": 41, "/var/lib/postgresql": 42}
+    directories = {"/", "/etc", "/var", "/var/lib", "/opt", "/opt/nexowatt", "/usr", "/usr/bin", "/usr/sbin"}
+    account_text = postgres_accounts()
+
+    def info(path, *args, **kwargs):
+        name = str(path)
+        pg = name in pg_paths
+        return types.SimpleNamespace(st_mode=(stat.S_IFDIR if pg or name in directories else stat.S_IFREG) | 0o755,
+                                     st_uid=102 if pg else 0, st_gid=106 if pg else 0,
+                                     st_dev=1, st_ino=pg_paths.get(name, 1))
+
+    def read(path, *args, **kwargs):
+        return {"/etc/os-release": 'ID=debian\nVERSION_ID="13"\n',
+                "/etc/passwd": account_text[0], "/etc/group": account_text[1]}[str(path)]
+
+    def command(argv):
+        if argv == ["/usr/bin/systemctl", "show", "--property=Version", "--property=SystemState"]:
+            return "Version=257\nSystemState=running\n"
+        if argv[:2] == ["/usr/bin/getent", "passwd"]:
+            return account_text[0]
+        if argv[:2] == ["/usr/bin/getent", "group"]:
+            return account_text[1]
+        if argv == ["/usr/bin/pg_lsclusters", "--no-header"]:
+            raise ReachedClusterCheck("passed observed owner guard; no cluster or mutation command executed")
+        raise AssertionError("unexpected command: " + repr(argv))
+
+    with ExitStack() as stack:
+        for item in (patch.object(recovery.os, "geteuid", return_value=0),
+                     patch.object(recovery.platform, "system", return_value="Linux"),
+                     patch.object(recovery.platform, "machine", return_value="aarch64"),
+                     patch.object(Path, "lstat", info), patch.object(Path, "stat", info),
+                     patch.object(Path, "read_text", read), patch.object(Path, "iterdir", return_value=iter(())),
+                     patch.object(recovery.os.path, "lexists", side_effect=lambda path: str(path) in pg_paths),
+                     patch.object(recovery, "command", side_effect=command),
+                     patch.object(recovery.os, "open", side_effect=lambda path, flags: pg_paths[str(path)]),
+                     patch.object(recovery.os, "fstat", side_effect=lambda fd: info(next(path for path, inode in pg_paths.items() if inode == fd))),
+                     patch.object(recovery.os, "scandir", side_effect=lambda fd: nullcontext(iter(()))),
+                     patch.object(recovery.os, "close")):
+            stack.enter_context(item)
+        recovery.preflight()
+
+
+class PostgresIdentityTests(unittest.TestCase):
+    def test_observed_and_different_package_ids_are_accepted(self):
+        for uid, gid in ((102, 106), (110, 117)):
+            with self.subTest(uid=uid, gid=gid):
+                user, group = r.validate_postgres_identity(*postgres_accounts(uid, gid))
+                self.assertEqual((int(user[2]), int(group[2])), (uid, gid))
+
+    def test_root_and_eos_identity_collisions_are_rejected(self):
+        for uid, gid in ((0, 106), (102, 0), (999, 106), (102, 985), (2**32 - 1, 106)):
+            with self.subTest(uid=uid, gid=gid), self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_IDENTITY"):
+                r.validate_postgres_identity(*postgres_accounts(uid, gid))
+
+    def test_missing_alias_malformed_or_mismatched_identity_is_rejected(self):
+        passwd, groups = postgres_accounts()
+        variants = ((accounts()[0], groups), (passwd, accounts()[1]),
+                    (passwd + "alias:x:102:107::/nonexistent:/usr/sbin/nologin\n", groups),
+                    (passwd, groups + "alias:x:106:\n"),
+                    (passwd.replace(":102:106:", ":102:107:"), groups),
+                    (passwd.replace(":102:106:", ":bad:106:"), groups),
+                    (passwd, groups.replace("postgres:x:106:", "postgres:x:bad:")))
+        for values in variants:
+            with self.subTest(values=values), self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_IDENTITY"):
+                r.validate_postgres_identity(*values)
+
+    def test_local_and_nss_identity_must_match(self):
+        local = postgres_accounts()
+        for resolved in (local, postgres_accounts(110, 117)):
+            with patch.object(r, "trusted_path") as trust, patch.object(Path, "read_text", side_effect=local), \
+                    patch.object(r, "command", side_effect=resolved) as command:
+                if resolved == local:
+                    self.assertEqual(r.postgres_identity(), (102, 106))
+                else:
+                    with self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_IDENTITY"):
+                        r.postgres_identity()
+                self.assertEqual([call.args[0] for call in trust.call_args_list], ["/etc/passwd", "/etc/group"])
+                self.assertEqual([call.args[0] for call in command.call_args_list],
+                                 [["/usr/bin/getent", "passwd"], ["/usr/bin/getent", "group"]])
+
+    def test_exception_is_applied_only_to_existing_fixed_pg_paths(self):
+        with patch.object(r.os.path, "lexists", return_value=True), \
+                patch.object(r, "postgres_identity", return_value=(102, 106)), \
+                patch.object(r, "check_empty_postgresql_directory") as check:
+            r.check_postgresql_directories()
+        self.assertEqual([call.args for call in check.call_args_list],
+                         [(Path("/etc/postgresql"), (102, 106)), (Path("/var/lib/postgresql"), (102, 106))])
+        with patch.object(r.os.path, "lexists", return_value=False), \
+                patch.object(r, "postgres_identity") as identity:
+            r.check_postgresql_directories()
+        identity.assert_not_called()
+
+
+class PostgresDirectoryTests(PosixFixture):
+    """Real directory contents/FD operations with explicitly modelled POSIX IDs."""
+    def setUp(self):
+        super().setUp()
+        self.pg = self.root / "postgresql"
+        self.pg.mkdir()
+        self.overrides[str(self.pg)] = {"st_uid": 102, "st_gid": 106}
+        original_fstat = os.fstat
+
+        def synthetic_fstat(fd):
+            info = original_fstat(fd)
+            leaf = self.pg.lstat()
+            return leaf if (info.st_dev, info.st_ino) == (leaf.st_dev, leaf.st_ino) else info
+
+        item = patch.object(r.os, "fstat", side_effect=synthetic_fstat)
+        item.start()
+        self.addCleanup(item.stop)
+
+    def test_observed_empty_postgres_owned_directory_passes(self):
+        r.check_empty_postgresql_directory(self.pg, (102, 106))
+        self.assertEqual(list(self.pg.iterdir()), [])
+        self.assertEqual((self.pg.lstat().st_uid, self.pg.lstat().st_gid), (102, 106))
+
+    def test_preflight_observed_pg_ownership_reaches_cluster_check(self):
+        with self.assertRaises(ReachedClusterCheck):
+            observed_preflight_until_cluster_check(r)
+
+    def test_root_owned_and_alternate_postgres_identity_pass(self):
+        for uid, gid, mode in ((0, 0, 0o755), (110, 117, 0o750), (110, 117, 0o700)):
+            with self.subTest(uid=uid, gid=gid, mode=mode):
+                self.overrides[str(self.pg)] = {"st_uid": uid, "st_gid": gid}
+                self.modes[str(self.pg)] = mode
+                r.check_empty_postgresql_directory(self.pg, (110, 117))
+
+    def test_unrelated_or_mixed_owners_and_special_or_writable_modes_fail(self):
+        changes = ({"st_uid": 103}, {"st_gid": 107}, {"st_uid": 0}, {"st_gid": 0})
+        for change in changes:
+            with self.subTest(change=change), self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_DIRECTORY"):
+                self.overrides[str(self.pg)] = {"st_uid": 102, "st_gid": 106, **change}
+                r.check_empty_postgresql_directory(self.pg, (102, 106))
+        self.overrides[str(self.pg)] = {"st_uid": 102, "st_gid": 106}
+        for mode in (0o775, 0o757, 0o4755, 0o2755, 0o1755):
+            with self.subTest(mode=oct(mode)), self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_DIRECTORY"):
+                self.modes[str(self.pg)] = mode
+                r.check_empty_postgresql_directory(self.pg, (102, 106))
+
+    def test_nonempty_directory_and_hidden_file_fail_without_removal(self):
+        for name in ("17", ".hidden"):
+            child = self.pg / name
+            child.write_bytes(b"preserve")
+            with self.subTest(name=name), self.assertRaisesRegex(r.Rejected, "RECOVERY_EXISTING_CLUSTER_DATA"):
+                r.check_empty_postgresql_directory(self.pg, (102, 106))
+            self.assertEqual(child.read_bytes(), b"preserve")
+            child.unlink()
+
+    def test_symlink_and_regular_file_are_rejected(self):
+        self.pg.rmdir()
+        self.pg.symlink_to(self.root, target_is_directory=True)
+        with self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_DIRECTORY"):
+            r.check_empty_postgresql_directory(self.pg, (102, 106))
+        self.pg.unlink()
+        self.pg.write_bytes(b"preserve")
+        with self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_DIRECTORY"):
+            r.check_empty_postgresql_directory(self.pg, (102, 106))
+        self.assertEqual(self.pg.read_bytes(), b"preserve")
+
+    def test_unsafe_parent_and_generic_postgres_tool_path_still_fail(self):
+        with self.assertRaisesRegex(r.Rejected, "RECOVERY_PATH_OWNER"):
+            r.trusted_path(self.pg)
+        for change in ({"st_uid": 102}, {"st_mode": stat.S_IFDIR | 0o777}):
+            self.overrides[str(self.root)] = change
+            with self.subTest(change=change), self.assertRaisesRegex(r.Rejected, "RECOVERY_PATH_(OWNER|MODE)"):
+                r.check_empty_postgresql_directory(self.pg, (102, 106))
+
+    def test_opened_directory_change_is_rejected_and_fd_closed(self):
+        before = self.pg.lstat()
+        changed = types.SimpleNamespace(**vars(before))
+        changed.st_ino += 1
+        with patch.object(r.os, "fstat", return_value=changed), patch.object(r.os, "close", wraps=os.close) as close:
+            with self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_DIRECTORY_CHANGED"):
+                r.check_empty_postgresql_directory(self.pg, (102, 106))
+        close.assert_called_once()
+
+    def test_path_substitution_after_scan_is_rejected(self):
+        before = self.pg.lstat()
+        changed = types.SimpleNamespace(**vars(before))
+        changed.st_ino += 1
+        original = Path.lstat
+        leaf_calls = 0
+
+        def substitute(path):
+            nonlocal leaf_calls
+            if path == self.pg:
+                leaf_calls += 1
+                # First leaf read is lstat, second is the modelled FD metadata,
+                # third is the final path check after scanning the open FD.
+                return changed if leaf_calls >= 3 else before
+            return original(path)
+
+        with patch.object(Path, "lstat", substitute), patch.object(r.os, "close", wraps=os.close) as close:
+            with self.assertRaisesRegex(r.Rejected, "RECOVERY_POSTGRES_DIRECTORY_CHANGED"):
+                r.check_empty_postgresql_directory(self.pg, (102, 106))
+        close.assert_called_once()
 
 
 class MutationTests(PosixFixture):

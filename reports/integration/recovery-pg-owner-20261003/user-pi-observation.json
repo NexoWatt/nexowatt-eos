@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "findingId": "NW-EOS-261003-RECOVERY-PG-OWNER",
+  "reportedDate": "2026-10-03",
+  "source": "User-pasted terminal transcript in this conversation; not an agent-executed SSH session",
+  "hostLabel": "NexoWatt",
+  "commandExitStatusesRecorded": false,
+  "failedInstaller": {
+    "commit": "16a947182badf052e9866f7cd167056e994ba914",
+    "path": "delivery/public-entry-test3-r4/install.sh",
+    "bytes": 71463,
+    "sha256": "f6ad2f72f5c50d99dc91097867a83b83790512290fd4a64e1c3c80744e968c84",
+    "embeddedRecoverySha256": "66104780fda7c92368e21d5baf88528ba7788a8055ccfc091d919c3a161efce4",
+    "errorCode": "RECOVERY_PATH_OWNER",
+    "reportedOutput": "EOS: Sicherung angehalten: RECOVERY_PATH_OWNER. Daten und Konten wurden nicht geloescht. Vorhandene .eos-r2-abort-Verzeichnisse und deren Journal vor weiteren Schritten pruefen.",
+    "completedPreflightMessageObserved": false,
+    "createdQuarantineMessageObserved": false
+  },
+  "diagnosticCommands": [
+    "stat -c '%n | Besitzer=%U:%G (%u:%g) | Rechte=%a | Typ=%F' /etc /etc/postgresql /var /var/lib /var/lib/postgresql",
+    "id postgres",
+    "pg_lsclusters",
+    "find /opt/nexowatt -maxdepth 1 -type d -name '.eos-r2-abort-*' -printf '%f\\n'"
+  ],
+  "reportedDiagnosticOutput": "/etc | Besitzer=root:root (0:0) | Rechte=755 | Typ=directory\n/etc/postgresql | Besitzer=postgres:postgres (102:106) | Rechte=755 | Typ=directory\n/var | Besitzer=root:root (0:0) | Rechte=755 | Typ=directory\n/var/lib | Besitzer=root:root (0:0) | Rechte=755 | Typ=directory\n/var/lib/postgresql | Besitzer=postgres:postgres (102:106) | Rechte=755 | Typ=directory\nuid=102(postgres) gid=106(postgres) groups=106(postgres),105(ssl-cert)\nVer Cluster Port Status Owner Data directory Log file\n",
+  "directoryMetadata": [
+    {
+      "path": "/etc",
+      "owner": "root",
+      "group": "root",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0755",
+      "type": "directory"
+    },
+    {
+      "path": "/etc/postgresql",
+      "owner": "postgres",
+      "group": "postgres",
+      "uid": 102,
+      "gid": 106,
+      "mode": "0755",
+      "type": "directory"
+    },
+    {
+      "path": "/var",
+      "owner": "root",
+      "group": "root",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0755",
+      "type": "directory"
+    },
+    {
+      "path": "/var/lib",
+      "owner": "root",
+      "group": "root",
+      "uid": 0,
+      "gid": 0,
+      "mode": "0755",
+      "type": "directory"
+    },
+    {
+      "path": "/var/lib/postgresql",
+      "owner": "postgres",
+      "group": "postgres",
+      "uid": 102,
+      "gid": 106,
+      "mode": "0755",
+      "type": "directory"
+    }
+  ],
+  "postgresIdentity": {
+    "uid": 102,
+    "primaryGid": 106,
+    "groups": [
+      {
+        "name": "postgres",
+        "gid": 106
+      },
+      {
+        "name": "ssl-cert",
+        "gid": 105
+      }
+    ]
+  },
+  "pgLsclusters": {
+    "headerObserved": true,
+    "clusterRowsObserved": 0
+  },
+  "quarantineDirectorySearch": {
+    "parent": "/opt/nexowatt",
+    "maxDepth": 1,
+    "type": "directory",
+    "namePattern": ".eos-r2-abort-*",
+    "outputLinesObserved": 0
+  },
+  "limitations": [
+    "The terminal transcript is user-reported; no remote agent access or independently captured target log is available.",
+    "Command exit statuses were not included.",
+    "No cluster rows does not establish that PostgreSQL directories contain no files or subdirectories.",
+    "The find command targets directories at depth one; absent output is not a comprehensive path, mount, or recovery-journal check.",
+    "The directory metadata query did not include the filesystem root or all paths checked by recovery.",
+    "No independent complete before/after filesystem comparison establishes whether any earlier attempt changed the host."
+  ],
+  "assessment": {
+    "cause": "The affected helper calls its root-only trusted_path guard on both PostgreSQL directories before checking their emptiness; the observed UID 102 therefore triggers RECOVERY_PATH_OWNER.",
+    "fixStatus": "source-corrected-and-locally-tested; target-retest-pending",
+    "nativeRecoveryPassed": false,
+    "fullTargetInstallationPassed": false,
+    "productionReleaseApproved": false
+  }
+}
