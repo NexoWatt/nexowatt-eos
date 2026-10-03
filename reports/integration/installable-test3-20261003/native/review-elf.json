@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent-static-elf-review",
+  "passed": true,
+  "policySha256": "206c91ef814ec548b2489e54163493c814e239c355fd92423e5fb3f42b719cc2",
+  "reviewerSourceSha256": "1fd3943f76db7c4f030013bbf30d9125738c8160ed281f0c2f07420b8b5cdc9f",
+  "targetCodeExecuted": false,
+  "deviceIoPerformed": false,
+  "hardwareAccepted": false,
+  "scope": "ELF64 ARM64 section parsing and exact policy comparison only; no dlopen or target-library availability proof.",
+  "packages": [
+    {
+      "version": "12.0.1",
+      "packagePath": "node_modules/@serialport/bindings-cpp",
+      "native": "prebuilds/linux-arm64/node.napi.armv8.node",
+      "sha256": "2341a58d2c3d99f827a411c65cb1c9c9f00a80b62e9bbbde58b2f29625fd56d9",
+      "bytes": 146744,
+      "needed": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libpthread.so.0",
+        "libc.so.6"
+      ],
+      "versionRequirements": [
+        {
+          "library": "libgcc_s.so.1",
+          "version": "GCC_3.0"
+        },
+        {
+          "library": "libpthread.so.0",
+          "version": "GLIBC_2.17"
+        },
+        {
+          "library": "libc.so.6",
+          "version": "GLIBC_2.17"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.8"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.9"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4.21"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4"
+        }
+      ],
+      "uvImports": [
+        "uv_close",
+        "uv_default_loop",
+        "uv_poll_init",
+        "uv_poll_start",
+        "uv_poll_stop",
+        "uv_strerror",
+        "uv_unref"
+      ],
+      "nodeV8CppImports": [],
+      "rpaths": [],
+      "policyMatchesIndependentParse": true
+    },
+    {
+      "version": "13.0.0",
+      "packagePath": "node_modules/modbus-serial/node_modules/@serialport/bindings-cpp",
+      "native": "prebuilds/linux-arm64/@serialport+bindings-cpp.armv8.glibc.node",
+      "sha256": "a92389bed45b1ea7f9613e6c01de18e60cf58d484cddf065d8603c9143876f8f",
+      "bytes": 134312,
+      "needed": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "versionRequirements": [
+        {
+          "library": "libgcc_s.so.1",
+          "version": "GCC_3.0"
+        },
+        {
+          "library": "libc.so.6",
+          "version": "GLIBC_2.28"
+        },
+        {
+          "library": "libc.so.6",
+          "version": "GLIBC_2.17"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.8"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.9"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4.21"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4"
+        }
+      ],
+      "uvImports": [
+        "uv_close",
+        "uv_default_loop",
+        "uv_poll_init",
+        "uv_poll_start",
+        "uv_poll_stop",
+        "uv_strerror",
+        "uv_unref"
+      ],
+      "nodeV8CppImports": [],
+      "rpaths": [],
+      "policyMatchesIndependentParse": true
+    }
+  ]
+}

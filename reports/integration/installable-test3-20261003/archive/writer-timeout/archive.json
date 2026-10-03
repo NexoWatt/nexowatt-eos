@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "kind": "build-archive-writer-timeout-regression",
+  "startedAt": "2026-10-03T08:18:49.150Z",
+  "finishedAt": "2026-10-03T08:19:03.265Z",
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "24.21.0"
+  },
+  "command": "node --test --test-concurrency=1 --test-reporter=tap tests/integration/test-archive.test.cjs",
+  "exitCode": 0,
+  "passed": true,
+  "counts": {
+    "tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0
+  },
+  "additionalInjectedSubprocessAssertions": 2,
+  "subprocessAssertionScope": "Actual helper module loaded with only child_process.spawnSync replaced: Python timeout exactly1200000ms, shell false, -I -B preserved; ETIMEDOUT maps TEST_ARCHIVE_TIMEOUT, ENOENT maps TEST_ARCHIVE_IO. No twenty-minute wait or operating-system timeout performed.",
+  "sourcesUnchangedDuringRun": true,
+  "files": [
+    {
+      "path": "tools/integration/create-test-archive.cjs",
+      "bytes": 8073,
+      "sha256": "6cfcb40f15a02804acaa06e3dbcc4b2c2b3fd505e4522d555e221408a890c5b7"
+    },
+    {
+      "path": "tools/integration/test-archive.py",
+      "bytes": 11773,
+      "sha256": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b"
+    },
+    {
+      "path": "tests/integration/test-archive.test.cjs",
+      "bytes": 13631,
+      "sha256": "3ccc214b723ae3dab813a3e1d8fe246459e457fb677e3a2ecb0900ece57c4005"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "bytes": 14347,
+      "sha256": "a2db7123d4849ccfb5235136e8e48d97079ee0d1b27095e13e1534780fe8d5b3"
+    },
+    {
+      "path": "tools/system/extract-test-bundle.py",
+      "bytes": 6567,
+      "sha256": "84958e5adb16cabf556b5b48b7f4791a3540921e98bfc75967a0717492a3610f"
+    },
+    {
+      "path": "runtime/release/bundle.cjs",
+      "bytes": 12364,
+      "sha256": "9c3c8f38672d84d7adbb6b05eb4b13e3c35483ced63a427697370aeb7c5c2e3b"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "bytes": 20596,
+      "sha256": "596f37a333412090eca17249270343549344b036efcbf6fe2695a1c040582817"
+    }
+  ],
+  "tapSha256": "93ad97f572d8a2e67d69e05321ac458894e6377af9aa94abcff1faf741cdbf24",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "changeScope": "Build-only Python archive creation/readback timeout increased from300s to1200s. Runtime verification and target extraction budgets unchanged.",
+  "notPerformed": [
+    "Full payload packaging in this scoped run",
+    "Actual OS process termination after20 minutes",
+    "Linux extraction or target runtime",
+    "Pi/browser/device/hardware acceptance"
+  ],
+  "productionReleaseApproved": false
+}

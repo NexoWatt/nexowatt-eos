@@ -117,6 +117,7 @@ function buildHomeAppCenterHtml() {
     edition: 'hems',
     editionLabel: 'Home',
     maxWallboxes: 3,
+    maxStorages: 2,
     maxStoragePowerW: 50_000,
     storagePowerProfile: { id: 'home', label: 'Home', maxCommandW: 50_000, unrestricted: false },
     features: {
@@ -187,7 +188,9 @@ window.fetch = async function(input, init) {
   } else if (url.indexOf('/api/installer/config') === 0) {
     data = { ok: true, license: window.__nwHomeLicense, config: window.__nwConfig };
   } else if (url.indexOf('/api/license/features') === 0) {
-    data = Object.assign({ ok: true }, window.__nwHomeLicense);
+    // Der Browser vertraut nur aktuellen zentralen Leases, nie dem alten
+    // Lizenzobjekt in der Config-Antwort. Produktive Matrix bleibt unverändert.
+    data = Object.assign({ ok: true }, window.__nwHomeLicense, { validUntil: Date.now() + 15000 });
   } else if (url.indexOf('/api/netoperator/drivers') === 0) {
     status = 403;
     data = { ok: false, error: 'eos_required', message: 'EOS Pro erforderlich.' };

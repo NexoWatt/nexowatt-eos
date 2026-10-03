@@ -238,3 +238,7 @@ npm test
 ```
 
 Vor einem Produktivbetrieb bleibt ein Feldtest mit der konkreten Stations-Firmware erforderlich. Dabei sollten konstante Last, Sollwertänderungen, Ladeschluss, OCPP-Neuverbindung und ein mindestens mehrstündiger Dauerlauf geprüft werden.
+
+## Lizenz
+
+Die aktuelle NexoWatt-spezifische Distribution ist proprietär und setzt eine vorherige schriftliche Erlaubnis von NexoWatt voraus. Für Drittanbieter-Code und OCA-Schemas gelten deren eigene Bedingungen; unter früheren MIT-Distributionen wirksam eingeräumte Rechte bleiben unberührt. Siehe [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) und den bytegenau erhaltenen [bisherigen MIT-Hinweis](LICENSES/PREVIOUS-MIT.txt).

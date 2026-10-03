@@ -4,6 +4,7 @@
 // it does not reconstruct frontend bundles or claim OS/firmware coverage.
 const path = require('node:path');
 const { readFileLimited, sha256 } = require('./bundle.cjs');
+const serialport = require('../native/serialport-contract.cjs');
 const PACKAGE = '(?:@[a-z0-9._~-]+/)?[a-z0-9._~-]+';
 const PACKAGE_PATH = new RegExp(`^(?:node_modules/${PACKAGE}/)*node_modules/${PACKAGE}$`);
 const PACKAGE_OWNER = new RegExp(`^((?:node_modules/${PACKAGE}/)*node_modules/${PACKAGE})(?:/|$)`);
@@ -87,6 +88,25 @@ function verifySbomBinding(payload, files, profile) {
             !Object.hasOwn(lock.packages, owner) || !rows.has(`app/${owner}/package.json`)) reject('SBOM_UNLISTED_PACKAGE');
     }
     if (identities.size !== installed.size || [...identities].some(id => !installed.has(id))) reject('SBOM_COMPONENT_NOT_INSTALLED');
+    const hasNativeDerivative = serialport.policy.packages.some(pin => rows.has(`app/${pin.packagePath}/eos-native-loader.cjs`));
+    if (hasNativeDerivative) {
+        const evidenceHash = sha256(Buffer.from(JSON.stringify(serialport.normalizationEvidence(), null, 2) + '\n'));
+        for (const pin of serialport.policy.packages) {
+            const checked = serialport.assertPackage({ app: path.join(payload, 'app'), pin,
+                lockEntry: lock.packages[pin.packagePath], platform: serialport.policy.target.platform, nodeVersion: serialport.policy.target.nodeVersion });
+            const components = bom.components.filter(row => row.name === pin.package && row.version === pin.version);
+            if (components.length !== 1) reject('SBOM_NATIVE_COMPONENT');
+            const component = components[0], ancestors = component.pedigree?.ancestors, cp = properties(component.properties || []);
+            const hashes = [{ alg: 'SHA-512', content: Buffer.from(pin.integrity.slice(7), 'base64').toString('hex') }];
+            const expected = { profile: serialport.policy.profile, 'installed-path': pin.packagePath,
+                'original-tree-sha256': checked.originalTreeSha256, 'normalized-tree-sha256': checked.normalizedTreeSha256,
+                'evidence-sha256': evidenceHash, 'target-load-probe-required': 'true' };
+            if (component.modified !== true || Object.hasOwn(component, 'hashes') || !Array.isArray(ancestors) || ancestors.length !== 1 ||
+                ancestors[0]?.name !== pin.package || ancestors[0]?.version !== pin.version ||
+                JSON.stringify(ancestors[0]?.hashes) !== JSON.stringify(hashes) ||
+                Object.entries(expected).some(([name, value]) => cp[`eos:native:${name}`] !== value)) reject('SBOM_NATIVE_BINDING');
+        }
+    }
     for (const [relative, name] of Object.entries(EMBEDDED)) {
         const filename = `app/${relative}/package.json`, declared = embedded.get(relative);
         const present = files.some(row => row.path.startsWith(`app/${relative}/`));

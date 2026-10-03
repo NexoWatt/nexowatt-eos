@@ -1,0 +1,807 @@
+
+> iobroker.nexowatt-ui@1.0.21 test:all
+> npm run publish:check && npm run test:types && npm run check:ts-source-syntax && npm run test:ems-shadow-runtime && npm run test:ai-advisor-runtime-typing && npm run test:history-runtime-typing && npm run test:smarthome-runtime-typing && npm run test:smarthome-config-runtime-typing && npm run test:ems-apps-runtime-typing && npm run test:app-runtime-typing && npm run test:main-runtime-typing && npm run test:rc57-ocpp-stability && npm run test:rc58-ocpp-compact-mapping && npm run test:rc59-ocpp21-native-storage-safety && npm run test:rc60-universal-auto-orchestrator && npm run test:rc60-universal-auto-wallbox && npm run test:rc61-heating-night-lock && npm run test:rc61-evcs-hardening && npm run test:rc63-availability-storage-grid-gate && npm run test:rc64-storage-grid-charge-policy && npm run test:rc65-nt-price-target-override && npm run test:dc-station-display && npm run test:rc66-station-display-stable && npm run test:rc66-station-display-browser && npm run test:rc67-license-bootstrap-access && npm run test:rc68-para14a-communication-fallback && npm run test:dashboard-lp-status-typing && npm run test:rc69-dashboard-lp-feedback && npm run test:rc70-dashboard-lp-status-polish && npm run test:rc72-weather-pv-forecast-auto && npm run test:rc73-ems-admin-overview && npm run test:rc74-pv-forecast-customer-ui && npm run test:rc75-pv-forecast-admin-location && npm run test:rc76-pv-forecast-runtime-hardening && npm run test:rc77-pv-forecast-state-cache-bridge && npm run test:rc78-import-only-grid-budget && npm run test:rc79-import-soft-hard-zero-export && npm run test:rc80-soft-limit-fixed-ten-percent && npm run test:rc81-nvp-assignment-single-source && npm run test:rc82-permanent-grid-protection && npm run test:rc83-storage-cheap-only-log-object && npm run test:rc85 && npm run test:rc86 && npm run test:rc87 && npm run test:rc88 && npm run test:rc89 && npm run test:rc90 && npm run test:rc91 && npm run test:rc92 && npm run test:rc93 && npm run test:stable-1.0.2-health && npm run test:stable-1.0.3-home-appcenter && npm run test:stable-1.0.4-auto-pv && npm run test:stable-1.0.5-storage-protection && npm run test:stable-1.0.6-dc && npm run test:stable-1.0.7-notifications && npm run test:stable-1.0.8-storage-licenses && npm run test:stable-1.0.9-access && npm run test:eos-auth-security && npm run test:eos-os-update-status && npm run test:eos-account-roles && npm run test:stable-1.0.10-security && npm run test:stable-1.0.11-documentation && npm run test:stable-1.0.12-publish && npm run test:stable-release && npm run test:mesh-coordinator && npm run test:zero-export-pv && npm run test:stable-1.0.18-charging && npm run test:stable-1.0.19-grid-share && npm run test:stable-1.0.20-storage && npm run test:zero-export-inverter-mapping
+
+
+> iobroker.nexowatt-ui@1.0.21 publish:check
+> node scripts/verify-release-artifact.js
+
+[secret-guard] OK: 2327 files; no findings in the supported rules.
+[release-artifact] Quellcode-Dokumentation aktuell: 237 Dateien.
+[release-artifact] OK: iobroker.nexowatt-ui@1.0.21, 405 geprüfte Paketdateien, Produkt-Runtime unverändert.
+[release-artifact] OK: Keine Installation oder Aktualisierung von npm/TypeScript erforderlich.
+
+> iobroker.nexowatt-ui@1.0.21 test:types
+> npm run check:tsconfig-modern && npm run check:ts-source-syntax && npm run check:ts-source-integrity && npm run check:ts-canonical && npm run verify:ts-scaffold && npm run test:ts-script-mirrors && npm run test:ts-frontend-mirrors && npm run test:ts-backend-mirrors && npm run test:ts-adapter-mirrors && npm run test:frontend-mirror-runtime && npm run test:api-state-feature && npm run test:api-state-feature-runtime && npm run test:backend-api-state && npm run test:energy-flow-utils && npm run test:energy-flow-resolver && npm run test:energy-flow-mirrors && npm run test:energy-flow-regression && npm run test:energy-flow-regression-runtime && npm run test:ems-budget-heating-rod && npm run test:ems-budget-heating-rod-runtime && npm run test:ems-mirrors && npm run test:core-limits-reservations && npm run test:adapter-state-api && npm run test:adapter-state-api-runtime && npm run test:adapter-mirrors && npm run test:backend-api-state && npm run test:backend-api-state-runtime && npm run test:feature-visibility-resolver && npm run test:feature-visibility-resolver-runtime && npm run test:feature-visibility-shadow && npm run test:feature-visibility-shadow-runtime && npm run test:frontend-display && npm run test:feature-visibility-resolver && npm run test:feature-visibility-resolver-runtime && npm run test:feature-visibility-shadow && npm run test:feature-visibility-shadow-runtime && npm run test:frontend-display-runtime && npm run test:customer-feature-visibility && npm run test:customer-feature-visibility-runtime && npm run test:main-helpers && npm run typecheck && npm run typecheck:runtime-mirrors && npm run test:runtime-mirrors && npm run test:core-limits-runtime-typing && npm run test:heating-rod-runtime-typing && npm run test:shadow-bridges && npm run test:contracts && npm run test:feature-visibility-effective-runtime && npm run test:ai-advisor-runtime-typing && npm run test:history-runtime-typing && npm run test:smarthome-runtime-typing && npm run test:smarthome-config-runtime-typing && npm run test:ems-apps-runtime-typing && npm run test:app-runtime-typing && npm run test:main-runtime-typing && npm run test:adapter-helpers-mirrors && npm run test:main-runtime-helpers && npm run test:api-state-set-shadow && npm run test:live-dashboard-format-productive && npm run test:heating-rod-legacy-removal-candidate
+
+
+> iobroker.nexowatt-ui@1.0.21 check:tsconfig-modern
+> node scripts/verify-tsconfig-modern.js
+
+[tsconfig-modern] OK: TypeScript-Resolver sind NodeNext/Bundler-kompatibel und ohne Deprecation-Unterdrückung.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-source-syntax
+> node scripts/verify-ts-source-syntax.js
+
+[ts-source-syntax] OK: 770 TypeScript-Quelldateien syntaktisch gültig.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-source-integrity
+> node scripts/verify-ts-source-integrity.js
+
+[ts-source-integrity] OK: TypeScript-Quellen wirken vollständig und konfliktfrei.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-canonical
+> node scripts/verify-ts-canonical-structure.js
+
+[ts-canonical] OK: TS-Quellstruktur ist kanonisch, ohne JS-Artefakte in src-ts und ohne doppelte Feature-Sichtbarkeitslogik.
+
+> iobroker.nexowatt-ui@1.0.21 verify:ts-scaffold
+> node scripts/verify-ts-scaffold.js
+
+[ts-scaffold-check] OK: 770 TypeScript files checked; 21 required scaffold files present.
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-script-mirrors
+> node scripts/verify-ts-script-mirrors.js && npm run check:ts-scripts
+
+[verify-ts-script-mirrors] OK: TS->JS-Spiegelstrategie für Wartungsskripte ist synchron.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-scripts
+> node scripts/build-ts-script-mirrors.js --check
+
+[build-ts-script-mirrors] OK: JS-Spiegel ist synchron.
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-frontend-mirrors
+> node scripts/verify-ts-frontend-mirrors.js && npm run check:ts-frontend-mirrors
+
+[verify-ts-frontend-mirrors] OK: Frontend-TS->MJS-Spiegel sind synchron und importierbar.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-frontend-mirrors
+> node scripts/build-ts-frontend-mirrors.js --check
+
+[build-ts-frontend-mirrors] OK: Frontend-MJS-Spiegel sind synchron.
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-backend-mirrors
+> node scripts/verify-ts-backend-mirrors.js && npm run check:ts-backend-mirrors
+
+[verify-ts-backend-mirrors] OK: Backend-TS->JS-Spiegel sind synchron und lauffähig.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-backend-mirrors
+> node scripts/build-ts-backend-mirrors.js --check
+
+[build-ts-backend-mirrors] OK: Backend-CJS-Spiegel sind synchron.
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-adapter-mirrors
+> node scripts/verify-ts-adapter-mirrors.js && node scripts/verify-ts-adapter-mirror-runtime.js
+
+[verify-ts-adapter-mirrors] OK: Adapter-CJS-Spiegel sind vorhanden, kommentiert und synchron.
+[verify-ts-adapter-mirror-runtime] OK: Adapter-CJS-Spiegel sind importierbar und zentrale 0/false-Regeln stimmen.
+
+> iobroker.nexowatt-ui@1.0.21 test:frontend-mirror-runtime
+> node scripts/verify-ts-frontend-mirror-runtime.js
+
+[verify-ts-frontend-mirror-runtime] OK: Frontend-MJS-Spiegel liefern erwartete Runtime-Ergebnisse.
+
+> iobroker.nexowatt-ui@1.0.21 test:api-state-feature
+> node scripts/verify-ts-api-state-feature.js
+
+[ts-api-state-feature] OK: API-State- und Feature-Sichtbarkeits-TS-Struktur vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:api-state-feature-runtime
+> npm run clean:ts && tsc -p tsconfig.api-state-feature.json && node build-ts/api-state-feature/tests/api-state-feature-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-api-state-feature] OK: 3 API-State-Fälle und 6 Feature-Sichtbarkeitsfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:backend-api-state
+> node scripts/verify-ts-backend-api-state.js
+
+[ts-backend-api-state] OK: Backend-API-/StateCache-Struktur und Kommentare vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:energy-flow-utils
+> node scripts/verify-ts-energy-flow-utils.js
+
+[ts-energy-flow-utils] OK: TypeScript-Energiefluss-Helfer und Kommentare vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:energy-flow-resolver
+> node scripts/verify-ts-energy-flow-resolver.js
+
+[ts-energy-flow-resolver] OK
+
+> iobroker.nexowatt-ui@1.0.21 test:energy-flow-mirrors
+> npm run test:ts-energy-flow-mirrors
+
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-energy-flow-mirrors
+> node scripts/verify-ts-energy-flow-mirrors.js && npm run check:ts-energy-flow-mirrors
+
+[verify-ts-energy-flow-mirrors] OK: Energiefluss-TS->JS-Spiegel sind synchron und fachlich lauffähig.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-energy-flow-mirrors
+> node scripts/build-ts-energy-flow-mirrors.js --check
+
+[build-ts-energy-flow-mirrors] OK: Energiefluss-CJS-Spiegel sind synchron.
+
+> iobroker.nexowatt-ui@1.0.21 test:energy-flow-regression
+> node scripts/verify-ts-energy-flow-regression.js
+
+[energy-flow-regression-check] OK: TypeScript energy-flow regression cases are present and documented.
+
+> iobroker.nexowatt-ui@1.0.21 test:energy-flow-regression-runtime
+> npm run clean:ts && tsc -p tsconfig.energy-flow-regression.json && node build-ts/energy-flow-regression/tests/energy-flow-regression-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-energy-flow-regression] OK: 8 produktionsnahe Energieflussfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:ems-budget-heating-rod
+> node scripts/verify-ts-ems-budget-heating-rod.js
+
+[ts-ems-budget-heating-rod] OK: TypeScript EMS-Budget-/Heizstabstruktur und Kommentare vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:ems-budget-heating-rod-runtime
+> npm run clean:ts && tsc -p tsconfig.ems-budget-heating-rod.json && node build-ts/ems-budget-heating-rod/tests/ems-budget-heating-rod-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-ems-budget-heating-rod] OK: 6 Core-Limits-/Heizstabfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:ems-mirrors
+> npm run test:ts-ems-mirrors
+
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-ems-mirrors
+> node scripts/verify-ts-ems-mirrors.js && npm run check:ts-ems-mirrors
+
+[verify-ts-ems-mirrors] OK: EMS-TS->JS-Spiegel sind synchron und lauffähig.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-ems-mirrors
+> node scripts/build-ts-ems-mirrors.js --check
+
+[build-ts-ems-mirrors] OK: EMS-CJS-Spiegel sind synchron.
+
+> iobroker.nexowatt-ui@1.0.21 test:core-limits-reservations
+> node scripts/verify-ts-core-limits-reservations.js
+
+[ts-core-limits-reservations] OK: Core-Limits Consumer-Reservierungen laufen produktiv über die typisierte Phase-2-Core-Runtime.
+
+> iobroker.nexowatt-ui@1.0.21 test:adapter-state-api
+> node scripts/verify-ts-adapter-state-api.js
+
+[ts-adapter-state-api-check] OK: Adapter-State-/API-TypeScript-Vorbereitung vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:adapter-state-api-runtime
+> npm run clean:ts && tsc -p tsconfig.adapter-state-api.json && node build-ts/adapter-state-api/tests/adapter-state-api-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-adapter-state-api] OK: 7 Adapter-State-/API-Fälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:adapter-mirrors
+> npm run test:ts-adapter-mirrors
+
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-adapter-mirrors
+> node scripts/verify-ts-adapter-mirrors.js && node scripts/verify-ts-adapter-mirror-runtime.js
+
+[verify-ts-adapter-mirrors] OK: Adapter-CJS-Spiegel sind vorhanden, kommentiert und synchron.
+[verify-ts-adapter-mirror-runtime] OK: Adapter-CJS-Spiegel sind importierbar und zentrale 0/false-Regeln stimmen.
+
+> iobroker.nexowatt-ui@1.0.21 test:backend-api-state
+> node scripts/verify-ts-backend-api-state.js
+
+[ts-backend-api-state] OK: Backend-API-/StateCache-Struktur und Kommentare vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:backend-api-state-runtime
+> npm run clean:ts && tsc -p tsconfig.backend-api-state.json && node build-ts/backend-api-state/tests/backend-api-state-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-backend-api-state-runtime] OK: Backend-API-/StateCache-Fälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-resolver
+> node scripts/verify-ts-feature-visibility-resolver.js
+
+[ts-feature-visibility-resolver] OK: Feature-Sichtbarkeitsresolver und Regressionen vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-resolver-runtime
+> npm run clean:ts && tsc -p tsconfig.feature-visibility-resolver.json && node build-ts/feature-visibility-resolver/tests/feature-visibility-resolver-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-feature-visibility-resolver] OK: 8 Sichtbarkeitsfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-shadow
+> node scripts/verify-ts-feature-visibility-shadow.js
+
+[verify-ts-feature-visibility-shadow] OK: Feature-Visibility-Shadow-Schicht ist vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-shadow-runtime
+> npm run clean:ts && tsc -p tsconfig.feature-visibility-shadow.json && node build-ts/feature-visibility-shadow/tests/feature-visibility-shadow-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[feature-visibility-shadow-runtime] OK: Feature-Sichtbarkeits-Shadowfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:frontend-display
+> node scripts/verify-ts-frontend-display.js
+
+[ts-frontend-display-check] OK: Frontend-TS-Helfer und Kommentare vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-resolver
+> node scripts/verify-ts-feature-visibility-resolver.js
+
+[ts-feature-visibility-resolver] OK: Feature-Sichtbarkeitsresolver und Regressionen vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-resolver-runtime
+> npm run clean:ts && tsc -p tsconfig.feature-visibility-resolver.json && node build-ts/feature-visibility-resolver/tests/feature-visibility-resolver-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-feature-visibility-resolver] OK: 8 Sichtbarkeitsfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-shadow
+> node scripts/verify-ts-feature-visibility-shadow.js
+
+[verify-ts-feature-visibility-shadow] OK: Feature-Visibility-Shadow-Schicht ist vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-shadow-runtime
+> npm run clean:ts && tsc -p tsconfig.feature-visibility-shadow.json && node build-ts/feature-visibility-shadow/tests/feature-visibility-shadow-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[feature-visibility-shadow-runtime] OK: Feature-Sichtbarkeits-Shadowfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:frontend-display-runtime
+> npm run clean:ts && tsc -p tsconfig.frontend-display.json && node build-ts/frontend-display/tests/frontend-display-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-frontend-display] OK: Frontend-Display-Helfer bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:customer-feature-visibility
+> node scripts/verify-ts-customer-feature-visibility.js
+
+[ts-customer-feature-visibility-check] OK: Feature-Visibility-Vorbereitung vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:customer-feature-visibility-runtime
+> npm run clean:ts && tsc -p tsconfig.customer-feature-visibility.json && node build-ts/customer-feature-visibility/tests/customer-feature-visibility-runtime.js
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+[ts-customer-feature-visibility] OK: 10 Sichtbarkeitsfälle bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:main-helpers
+> node scripts/verify-ts-main-helpers.js && npm run check:ts-main-helpers
+
+[verify-ts-main-helpers] OK: Main-TS-Helfer sind synchron und fachlich plausibel.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-main-helpers
+> node scripts/build-ts-main-helpers.js --check
+
+[build-ts-main-helpers] OK: Main-Helfer-Spiegel sind synchron.
+
+> iobroker.nexowatt-ui@1.0.21 typecheck
+> tsc -p tsconfig.json --noEmit
+
+
+> iobroker.nexowatt-ui@1.0.21 typecheck:runtime-mirrors
+> tsc -p tsconfig.runtime-mirrors.json --noEmit
+
+
+> iobroker.nexowatt-ui@1.0.21 test:runtime-mirrors
+> npm run test:ts-runtime-mirrors
+
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-runtime-mirrors
+> node scripts/verify-ts-runtime-mirrors.js && npm run check:ts-runtime-mirrors
+
+[ts-runtime-mirrors] OK: 500 Runtime-TS-/TSX-Parallelspiegel geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-runtime-mirrors
+> node scripts/build-ts-runtime-mirrors.js --check
+
+[ts-runtime-mirrors] OK: 500 JS-/JSX-Dateien als TS-/TSX-Parallelspiegel geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:core-limits-runtime-typing
+> node scripts/verify-ts-core-limits-runtime-typing.js
+
+[ts-core-limits-runtime-typing] OK: Core-Limits-Spiegel ist gezielt typisiert und in gelockertem Migrationsmodus kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:heating-rod-runtime-typing
+> node scripts/verify-ts-heating-rod-runtime-typing.js
+
+[ts-heating-rod-runtime-typing] OK: Heizstab-Spiegel ist gezielt typisiert und in gelockertem Migrationsmodus kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:shadow-bridges
+> node scripts/verify-ts-shadow-bridges.js && npm run check:ts-shadow-bridges
+
+[verify-ts-shadow-bridges] OK: Shadow-Bridge-Spiegel ist synchron und lauffähig.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-shadow-bridges
+> node scripts/build-ts-shadow-bridges.js --check
+
+[build-ts-shadow-bridges] OK: Shadow-Bridge-Spiegel sind synchron.
+
+> iobroker.nexowatt-ui@1.0.21 test:contracts
+> node scripts/verify-ts-contracts.js
+
+[ts-contracts] OK: TypeScript-Vertragsdateien vorhanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:feature-visibility-effective-runtime
+> node scripts/verify-ts-feature-visibility-effective-runtime.js
+
+[ts-feature-visibility-effective] OK: authoritative feature visibility runtime wiring looks valid.
+
+> iobroker.nexowatt-ui@1.0.21 test:ai-advisor-runtime-typing
+> node scripts/verify-ts-ai-advisor-runtime-typing.js
+
+[ts-ai-advisor-runtime-typing] OK: AI-Advisor-Spiegel ist gezielt typisiert und in gelockertem Migrationsmodus kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:history-runtime-typing
+> node scripts/verify-ts-history-runtime-typing.js
+
+[ts-history-runtime-typing] OK: History-Spiegel ist gezielt typisiert und in gelockertem Migrationsmodus kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:smarthome-runtime-typing
+> node scripts/verify-ts-smarthome-runtime-typing.js
+
+[ts-smarthome-runtime-typing] OK: SmartHome-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:smarthome-config-runtime-typing
+> node scripts/verify-ts-smarthome-config-runtime-typing.js
+
+[ts-smarthome-config-runtime-typing] OK: SmartHome-Config-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:ems-apps-runtime-typing
+> node scripts/verify-ts-ems-apps-runtime-typing.js
+
+[ts-ems-apps-runtime-typing] OK: App-Center-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:app-runtime-typing
+> node scripts/verify-ts-app-runtime-typing.js
+
+[ts-app-runtime-typing] OK: LIVE-App-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:main-runtime-typing
+> node scripts/verify-ts-main-runtime-typing.js
+
+[ts-main-runtime-typing] OK: Main-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:adapter-helpers-mirrors
+> node scripts/verify-ts-adapter-helpers.js && npm run check:ts-adapter-helpers
+
+[verify-ts-adapter-helpers] OK: Adapter-Helfer-Spiegel sind synchron und fachlich plausibel.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-adapter-helpers
+> node scripts/build-ts-adapter-helpers.js --check
+
+[build-ts-adapter-helpers] OK: Adapter-Helfer-Spiegel sind synchron.
+
+> iobroker.nexowatt-ui@1.0.21 test:main-runtime-helpers
+> node scripts/verify-ts-main-runtime-helpers.js
+
+[verify-ts-main-runtime-helpers] OK: main.js nutzt den ersten TS-Helfer kontrolliert mit Fallback.
+
+> iobroker.nexowatt-ui@1.0.21 test:api-state-set-shadow
+> node scripts/verify-ts-api-state-set-shadow.js
+
+[verify-ts-api-state-set-shadow] OK: /api/state nutzt TS-Builder mit redigierter Kundenantwort und vollständiger Installerdiagnose; /api/set-Shadow bleibt kompatibel.
+
+> iobroker.nexowatt-ui@1.0.21 test:live-dashboard-format-productive
+> node scripts/verify-ts-live-dashboard-format-productive.js
+
+[ts-live-dashboard-format-productive] OK: LIVE-Dashboard nutzt TS-Formatter produktiv mit JS-Fallback.
+
+> iobroker.nexowatt-ui@1.0.21 test:heating-rod-legacy-removal-candidate
+> node scripts/verify-ts-heating-rod-legacy-removal-candidate.js
+
+[heating-rod-legacy-removal-candidate] OK: alter JS-Heizstabpfad ist als Entfernungs-Kandidat markiert.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-source-syntax
+> node scripts/verify-ts-source-syntax.js
+
+[ts-source-syntax] OK: 770 TypeScript-Quelldateien syntaktisch gültig.
+
+> iobroker.nexowatt-ui@1.0.21 test:ems-shadow-runtime
+> node scripts/verify-ts-ems-shadow-runtime.js
+
+[ts-ems-shadow] OK: Core-Limits-/Heizstab-Shadow-Runtime geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:ai-advisor-runtime-typing
+> node scripts/verify-ts-ai-advisor-runtime-typing.js
+
+[ts-ai-advisor-runtime-typing] OK: AI-Advisor-Spiegel ist gezielt typisiert und in gelockertem Migrationsmodus kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:history-runtime-typing
+> node scripts/verify-ts-history-runtime-typing.js
+
+[ts-history-runtime-typing] OK: History-Spiegel ist gezielt typisiert und in gelockertem Migrationsmodus kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:smarthome-runtime-typing
+> node scripts/verify-ts-smarthome-runtime-typing.js
+
+[ts-smarthome-runtime-typing] OK: SmartHome-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:smarthome-config-runtime-typing
+> node scripts/verify-ts-smarthome-config-runtime-typing.js
+
+[ts-smarthome-config-runtime-typing] OK: SmartHome-Config-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:ems-apps-runtime-typing
+> node scripts/verify-ts-ems-apps-runtime-typing.js
+
+[ts-ems-apps-runtime-typing] OK: App-Center-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:app-runtime-typing
+> node scripts/verify-ts-app-runtime-typing.js
+
+[ts-app-runtime-typing] OK: LIVE-App-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:main-runtime-typing
+> node scripts/verify-ts-main-runtime-typing.js
+
+[ts-main-runtime-typing] OK: Main-Spiegel ist gezielt typisiert und der Vertragsbereich ist kompilierbar.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc57-ocpp-stability
+> node scripts/verify-rc57-ocpp-stability.js
+
+[rc57-ocpp-stability] OK: socketConnected, telemetry freshness, OCPP event order and start latency are safely separated.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc58-ocpp-compact-mapping
+> node scripts/verify-rc58-ocpp-compact-mapping.js
+
+[rc58-ocpp-compact-mapping] OK: historical alias/0.3 mappings migrate to the direct native OCPP21 0.4 contract.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc59-ocpp21-native-storage-safety
+> node scripts/verify-rc59-ocpp21-native-storage-safety.js
+
+[rc59-ocpp21-native-storage-safety] OK: direct OCPP21 mapping, charging tick diagnostics and storage-farm safety recovery are consistent.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc60-universal-auto-orchestrator
+> node scripts/verify-rc60-universal-auto-orchestrator.js
+
+[rc60-universal-auto-orchestrator] OK: Auto/PV/Min+PV/Zeit-Ziel/Tarif funktionieren mit Alfen Mode 3, OCPP21 und generischen EVCS-Zuordnungen.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc60-universal-auto-wallbox
+> node scripts/verify-rc60-universal-auto-wallbox.js
+
+[rc60-universal-auto-wallbox] OK: nexowatt-devices/Alfen, OCPP21, freie Hersteller, AC/DC, Auto, PV, Min+PV, Zeit-Ziel und Tarif nutzen einen gemeinsamen sicheren Startvertrag.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc61-heating-night-lock
+> node scripts/verify-rc61-heating-rod-night-manual-release.js
+
+[rc61-heating-rod-night-manual-release] OK: PV-Auto ist nachts gesperrt; Manual/Boost/externe Handfreigabe bleiben vorgeordnet zulässig.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc61-evcs-hardening
+> node scripts/verify-rc61-evcs-hardening.js
+
+[rc61-evcs-hardening] OK: Alfen/Device-Keepalive, OCPP21-Bestätigung, sicherer 0-W-Vertrag und lokale Startfehler-Isolierung sind abgesichert.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc63-availability-storage-grid-gate
+> node scripts/verify-rc63-availability-storage-grid-gate.js
+
+[rc63-availability-storage-grid-gate] OK: availability only customer/RFID; storage grid charge only with fresh cheap dynamic tariff and, when enabled, active NT; PV charging unaffected.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc64-storage-grid-charge-policy
+> node scripts/verify-rc64-storage-grid-charge-policy.js
+
+[rc64-storage-grid-charge-policy] OK: storage grid charging requires a fresh cheap dynamic tariff; active variable net fee additionally requires the configured NT window.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc65-nt-price-target-override
+> node scripts/verify-rc65-nt-price-target-override.js
+
+[rc65-nt-price-target-override] OK: storage requires fresh cheap tariff plus active NT when configured; urgent EVCS Auto time-target override remains active.
+
+> iobroker.nexowatt-ui@1.0.21 test:dc-station-display
+> node scripts/verify-dc-station-display.js
+
+[dc-station-display] OK: Display-API, Watchdog, Layout, Wartungsmodus und Session-/Betreiberbasis und herstelleroffene Steuerbrücke sind abgesichert.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc66-station-display-stable
+> node scripts/verify-rc66-station-display-stable.js
+
+[rc66-station-display] OK: modernes Vollbildlayout, NexoWatt-Branding, Mehr-LP-Raster, Status-/Entscheidungsdiagnose, kein CSV-UI und Single-Writer-Vertrag sind abgesichert (1000x303, 187933 Byte).
+
+> iobroker.nexowatt-ui@1.0.21 test:rc66-station-display-browser
+> node scripts/verify-rc66-station-display-browser.js
+
+[rc66-station-display-browser] SKIP: Chromium/Chrome nicht gefunden; statische RC66-Prüfung bleibt aktiv.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc67-license-bootstrap-access
+> node scripts/verify-rc67-license-bootstrap-access.js
+
+[rc67-license-bootstrap-access] OK: Exakte Account-Recovery-Pfade bleiben erreichbar; Lizenzstatus ist rollen-geschützt und zentral verwaltet, übrige EOS-Bereiche benötigen eine zentrale Freigabe.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc68-para14a-communication-fallback
+> node scripts/verify-rc68-para14a-communication-fallback.js
+
+[rc68-para14a-communication-fallback] OK: Pmin-Fallback, GZF-Verteilung, Grid-Safety und lokaler PV-Zuschlag arbeiten zusammen.
+
+> iobroker.nexowatt-ui@1.0.21 test:dashboard-lp-status-typing
+> tsc -p tsconfig.dashboard-lp-status.json --noEmit
+
+
+> iobroker.nexowatt-ui@1.0.21 test:rc69-dashboard-lp-feedback
+> node scripts/verify-rc69-dashboard-lp-feedback.js
+
+[rc69-dashboard-lp-feedback] OK (statisch); Browsertest übersprungen, Chromium nicht gefunden.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc70-dashboard-lp-status-polish
+> node scripts/verify-rc70-dashboard-lp-status-polish.js
+
+[rc70-dashboard-lp-status-polish] OK (statisch); Browsertest übersprungen, Chromium nicht gefunden.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc72-weather-pv-forecast-auto
+> node scripts/verify-rc72-weather-pv-forecast-auto.cjs
+
+[rc72-weather-pv-forecast-auto] OK: Einstellungen, Open-Meteo, AppCenter-Fallback, Multi-LP-Planer und Browseranzeige geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc73-ems-admin-overview
+> node scripts/verify-rc73-ems-admin-overview.js
+
+[RC73] OK: read-only EMS overview contract, optional-module fallback and lifecycle verified.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc74-pv-forecast-customer-ui
+> node scripts/verify-rc74-pv-forecast-customer-ui.cjs
+
+[rc74-pv-forecast-customer-ui] OK: Scriptpfad, PV-Flächentabelle, Richtungswahl, Standortauflösung, Open-Meteo-Werte und Statusdiagnose geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc75-pv-forecast-admin-location
+> node scripts/verify-rc75-pv-forecast-admin-location.cjs
+
+[rc75] Browser-Smoke übersprungen: Chromium nicht gefunden.
+[rc75-pv-forecast-admin-location] OK: EOS-Admin-Standort, direkte GTI-Abfragen, sichtbare PV-Flächentabelle, Prognosewerte und zentrale EMS-Verknüpfung geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc76-pv-forecast-runtime-hardening
+> node scripts/verify-rc76-pv-forecast-runtime-hardening.cjs
+
+[rc76] Browser-Smoke übersprungen: Chromium nicht gefunden.
+[rc76-pv-forecast-runtime-hardening] OK: GTI-Fallbackkette, Nachtprognose, Standortname, Fehlerdiagnose und überlappungsfreie PV-Flächenansicht geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc77-pv-forecast-state-cache-bridge
+> node scripts/verify-rc77-pv-forecast-state-cache-bridge.cjs
+
+[rc77-pv-forecast-state-cache-bridge] OK: Provider-/EMS-Statecache, dynamische Subscription, Fehlerdiagnose, Restart-Fallback, Ablaufgrenzen, Kompatibilitätswerte und Browser-Cache geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc78-import-only-grid-budget
+> node scripts/verify-rc78-import-only-grid-budget.cjs && npm run test:charging-grid-cap-safe && npm run test:charging-grid-cap-clamp && npm run test:loadmanagement-grid-cap-sanity && npm run test:core-limits-typed-runtime-phase1 && npm run test:core-limits-typed-runtime-phase2 && npm run test:safety-envelope-final-write
+
+[rc78-import-only-grid-budget] OK: signed NVP, central budget, EVCS cap and final writer treat the connection limit as import-only.
+
+> iobroker.nexowatt-ui@1.0.21 test:charging-grid-cap-safe
+> node scripts/verify-charging-grid-cap-safe.js
+
+OK: EVCS grid cap uses signed NVP plus fresh EVCS actual power; export increases import-only headroom and reservations stay excluded.
+
+> iobroker.nexowatt-ui@1.0.21 test:charging-grid-cap-clamp
+> node scripts/verify-charging-grid-cap-clamp.js
+
+[charging-grid-cap-clamp] OK: signed NVP import-only cap covers export, import and active shedding.
+
+> iobroker.nexowatt-ui@1.0.21 test:loadmanagement-grid-cap-sanity
+> node scripts/verify-loadmanagement-grid-cap-sanity.js
+
+[grid-cap-sanity] OK: NVP-Einspeisung erhöht die Lastfreigabe; die Anschlussgrenze begrenzt ausschließlich Netzbezug.
+
+> iobroker.nexowatt-ui@1.0.21 test:core-limits-typed-runtime-phase1
+> node scripts/verify-core-limits-typed-runtime-phase1.js
+
+[core-limits-typed-runtime-phase1] OK: zentraler Core rechnet PV, Grants, Headroom und Snapshots produktiv typisiert mit Legacy-Fallback.
+
+> iobroker.nexowatt-ui@1.0.21 test:core-limits-typed-runtime-phase2
+> node scripts/verify-core-limits-typed-runtime-phase2.js
+
+[core-limits-typed-runtime-phase2] OK: Quellenübergabe, Grants, Reservierungen, Restbudgetmutation und State-Publikation laufen typisiert mit Legacy-Fallback.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc79-import-soft-hard-zero-export
+> node scripts/verify-rc79-import-soft-hard-zero-export-feedforward.cjs && npm run test:safety-module-deactivate && npm run test:zero-export-sink-priority && npm run test:zero-export-commissioning && npm run test:zero-export-fast-path && npm run test:zero-export-sink-ack-history && npm run test:safety-envelope-final-write
+
+[RC79] OK: Import Soft-/Hard-Limit, signierter NVP, 0-Einspeise-PV-Feed-forward, Speicher-Konfliktschutz, AppCenter-Platzierung und Cold-Start-Objektinitialisierung geprueft.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-module-deactivate
+> node scripts/verify-safety-module-deactivate.js
+
+[safety-module-deactivate] OK: Cold-Start/App-AUS stoppt EVCS, Speicher, Thermik, Heizstab, MultiUse, NexoLogic und Threshold physisch; States werden vor dem Safe-Stop initialisiert und Fehler bleiben kritisch verriegelt.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-sink-priority
+> node scripts/verify-zero-export-sink-priority.js
+
+OK: 0-Einspeise Senkenreihenfolge ist Verbrauch → freigegebene Ladepunkte → flexible Verbraucher → Speicher → Mesh/Microgrid → WR-Abregelung und baut keine zweite Regelung.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-commissioning
+> node scripts/verify-zero-export-commissioning.js
+
+OK: 0-Einspeise Inbetriebnahme-Assistent ist diagnostisch, nicht doppelt geregelt und app-center-konform vorbereitet.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-fast-path
+> node scripts/verify-zero-export-fast-path.js
+
+OK: 0-Einspeise Fast-Path nutzt gespeicherte Freigaben/ACKs und keinen Schreibtest pro Regel-Tick.
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-sink-ack-history
+> node scripts/verify-zero-export-sink-ack-history.js
+
+OK: 0-Einspeise Senken-ACK-Verlauf/Feldprotokoll ist vorhanden und ohne Schreibtest pro Regel-Tick abgesichert.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc80-soft-limit-fixed-ten-percent
+> node scripts/verify-rc80-soft-limit-fixed-ten-percent.cjs && npm run test:safety-envelope-final-write
+
+[RC80] OK: Soft-Reserve immer exakt 10 %, Soft-Limit immer 90 %, keine Mindest-/Maximalgrenze und keine Legacy-Uebersteuerung.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc81-nvp-assignment-single-source
+> node scripts/verify-rc81-nvp-assignment-single-source.cjs && npm run test:safety-envelope-final-write
+
+[RC81] OK: Zuordnung ist alleinige Quelle fuer Anschlussleistung und NVP; Legacy-Overrides ignoriert; RLM nur absenkend.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc82-permanent-grid-protection
+> node scripts/verify-rc82-permanent-grid-protection.cjs && npm run test:nvp-coordinator-storage-pv && npm run test:safety-envelope-final-write
+
+[RC82] OK: Netzlimits dauerhaft aktiv und nicht abschaltbar; Home/Pro, Single Source, 10-%-Policy und optionale 0-Einspeisung geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:nvp-coordinator-storage-pv
+> node scripts/verify-nvp-coordinator-storage-pv.js
+
+[nvp-coordinator-storage-pv] OK: Speicher/Farm regelt zuerst; PV erhält nur den belastbaren Rest-NVP, ohne Doppelwriter oder 0-W-Richtungswechselrunde.
+
+> iobroker.nexowatt-ui@1.0.21 test:safety-envelope-final-write
+> node scripts/verify-safety-envelope-final-write.js
+
+[safety-envelope-final-write] OK: Inbetriebnahme, NVP, Phasen, §14a, Summenreserve, finaler Hardware-Write und Fehlerverriegelung arbeiten fail-closed.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc83-storage-cheap-only-log-object
+> node scripts/verify-rc83-storage-cheap-only-log-object.cjs
+
+[rc83-storage-cheap-only-log-object] OK: Netzladen nur bei frischem günstigen Tarif; außerhalb günstig wird jeder Ladepfad physikalisch auf lokalen PV-Überschuss begrenzt; sinkFieldProtocolJson wird vor dem ersten Write angelegt.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc85
+> node scripts/verify-rc85-stability-contract.cjs
+
+[RC85] stability contract passed
+
+> iobroker.nexowatt-ui@1.0.21 test:rc86
+> node scripts/verify-rc86-gate-a-demand-binding.cjs
+
+[RC86] Gate A demand binding, signed hard headroom and partial-offline isolation passed
+
+> iobroker.nexowatt-ui@1.0.21 test:rc87
+> node scripts/verify-rc87-monitoring-display-only.cjs
+
+[RC87] Monitoring-only NVP/no-demand display and real soft/hard/export limit states passed
+
+> iobroker.nexowatt-ui@1.0.21 test:rc88
+> node scripts/verify-rc88-memory-stability.cjs
+
+[RC88/1.0.1] SSE backpressure, healthy-client retention, 10-second critical recovery and ratio-based heap guard passed
+
+> iobroker.nexowatt-ui@1.0.21 test:rc89
+> node scripts/verify-rc89-admin-overview-health.cjs
+
+[RC89] Adapter-, EMS-Tick- und Diagnose-Publisher-Status getrennt; I/O-Timeouts und Heartbeat-Recovery bestanden.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc90
+> node test/rc90-sse-resync.test.cjs
+
+[RC90 SSE resync] OK (1 runtime callback(s))
+
+> iobroker.nexowatt-ui@1.0.21 test:rc91
+> node scripts/verify-rc91-cross-app-catalog.js
+
+[rc91-cross-app-catalog] OK: 20 sichtbare Apps und 21 Backend-Apps bleiben über Start, Save und Backup konsistent.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc92
+> node scripts/verify-rc92-history-mobile.cjs
+
+[rc92-history-mobile] OK (statisch); Browsertest übersprungen, Chromium nicht gefunden.
+
+> iobroker.nexowatt-ui@1.0.21 test:rc93
+> node scripts/verify-rc93-certified-export-authority.cjs
+
+[rc93-certified-export-authority] OK: EZA-/Parkregler-Priorität, alleiniger Export-Guard-Writer, lokale Obergrenze, TTL/Fail-Safe, Senkenfolge und Hash-Audit geprüft.
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.2-health
+> node scripts/verify-stable-1.0.2-health-heartbeat.cjs
+
+[Stable 1.0.2 baseline on 1.0.21] OK: 25-s field cycle remains online; scheduler stall and genuine offline state stay distinguishable.
+[Stable 1.0.2 baseline on 1.0.21] OK: independent 4-s adapter, scheduler and overview heartbeat lifecycle verified.
+
+> iobroker.nexowatt-ui@1.0.21 test:stable-1.0.3-home-appcenter
+> node scripts/verify-stable-1.0.3-home-appcenter-access.cjs
+
+node:internal/assert/utils:77
+    throw err;
+    ^
+
+AssertionError [ERR_ASSERTION]: Chromium/Chrome für den Home-AppCenter-Regressionsstest wurde nicht gefunden.
+    at Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\.work\ui-developer-gates-cache-20261003\scripts\verify-stable-1.0.3-home-appcenter-access.cjs:27:8)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

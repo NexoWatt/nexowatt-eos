@@ -5,6 +5,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const serialport = require('../../runtime/native/serialport-contract.cjs');
 const LIMITS = Object.freeze({ files: 50000, directories: 15000, depth: 40, bytes: 512 * 1024 ** 2,
     manifestBytes: 1024 ** 2, lockBytes: 8 * 1024 ** 2, nativeBytes: 32 * 1024 ** 2, prefixBytes: 65536, issues: 256 });
 const BARE = Object.freeze({ 'bare-fs': '4.8.2', 'bare-url': '2.5.4', 'bare-path': '3.1.2' });
@@ -114,7 +115,7 @@ function checkRuntimeArchitecture(options) {
     if (options.nodeVersion !== undefined && !/^24\.\d{1,3}\.\d{1,3}$/.test(options.nodeVersion)) reject('ARCH_NODE_CONTRACT');
     const root = path.resolve(options.app);
     if (!fs.lstatSync(root).isDirectory() || fs.realpathSync(root) !== root) reject('ARCH_APP_DIRECTORY');
-    const cpu = options.platform.slice(6), files = new Map(), links = [], packages = new Map();
+    const cpu = options.platform.slice(6), files = new Map(), links = [], packages = new Map(), reviewedSerialport = new Map();
     const report = { schemaVersion: 1, kind: 'eos-runtime-architecture-static-check', platform: options.platform,
         target: { os: 'linux', cpu, bits: 64, endianness: 'little', nodeVersion: options.nodeVersion || null, nodeRuntimeIncluded: false, libc: 'glibc' },
         checkedAt: new Date().toISOString(), executedTargetCode: false, hardwareQualified: false,
@@ -160,11 +161,21 @@ function checkRuntimeArchitecture(options) {
         if (!plain(lock.packages[packagePath]) || lock.packages[packagePath].link || lock.packages[packagePath].version !== manifest.version) issue('ARCH_PACKAGE_LOCK_MISMATCH', relative);
         if (typeof manifest.name !== 'string' || manifest.name.length > 214 || typeof manifest.version !== 'string' || manifest.version.length > 80) reject('ARCH_MANIFEST_IDENTITY');
         packages.set(packagePath, manifest);
+        if (manifest.name === '@serialport/bindings-cpp') {
+            const pin = serialport.policy.packages.find(row => row.packagePath === packagePath && row.version === manifest.version);
+            try {
+                if (!pin) reject('ARCH_SERIALPORT_POLICY');
+                const evidence = serialport.assertPackage({ app: root, pin, lockEntry: lock.packages[packagePath],
+                    platform: options.platform, nodeVersion: options.nodeVersion });
+                reviewedSerialport.set(packagePath, pin);
+                report.exceptions.push({ ...evidence, reason: 'Exact upstream SRI and original file inventory; foreign prebuilds removed; fixed loader and pinned ARM64/glibc Node-API library. Actual target dlopen/export probe required before installation; no hardware acceptance.' });
+            } catch { issue('ARCH_SERIALPORT_POLICY', relative); }
+        }
         if (manifest.cpu !== undefined || manifest.os !== undefined || manifest.libc !== undefined) {
             report.packageConstraints.push({ path: packagePath, name: manifest.name, version: manifest.version, cpu: manifest.cpu, os: manifest.os, libc: manifest.libc });
             if (!platformAllows(cpu, manifest.cpu) || !platformAllows('linux', manifest.os) || !platformAllows('glibc', manifest.libc)) issue('ARCH_PACKAGE_PLATFORM_MISMATCH', relative);
         }
-        if (manifest.gypfile) {
+        if (manifest.gypfile && !reviewedSerialport.has(packagePath)) {
             const loader = `${packagePath}/index.js`;
             if (manifest.name !== 'diskusage' || !packagePathMatches(packagePath, 'diskusage') || manifest.version !== '1.2.0' || !files.has(loader) || sha(readRegular(path.join(root, loader), LIMITS.manifestBytes)) !== DISKUSAGE_LOADER_SHA256) issue('ARCH_UNREVIEWED_NATIVE_BUILD', relative);
             else report.exceptions.push({ package: manifest.name, version: manifest.version, path: loader, sha256: DISKUSAGE_LOADER_SHA256,
@@ -204,7 +215,12 @@ function checkRuntimeArchitecture(options) {
         const [packagePath, manifest] = ownerOf(relative), local = path.posix.relative(packagePath || '.', relative);
         const item = { path: relative, package: manifest?.name || null, version: manifest?.version || null, ...header,
             bytes: size, sha256: sha(readRegular(absolute, LIMITS.nativeBytes)), disposition: 'unreviewed' };
-        if (/\.node$/i.test(relative)) issue('ARCH_NODE_ADDON_ABI_UNREVIEWED', relative);
+        if (/\.node$/i.test(relative)) {
+            const pin = reviewedSerialport.get(packagePath);
+            if (!pin || local !== pin.native || item.sha256 !== pin.nativeSha256 || item.bytes !== pin.nativeBytes ||
+                !headerMatches(header, 'arm64', 'linux') || header.type !== 3 || !header.dynamic || header.interpreter !== null) issue('ARCH_NODE_ADDON_ABI_UNREVIEWED', relative);
+            else item.disposition = 'target-pinned-node-api-library';
+        }
         else if (manifest?.name === `@esbuild/linux-${cpu}` && local === 'bin/esbuild') {
             if (!packagePathMatches(packagePath, manifest.name) || JSON.stringify(manifest.cpu) !== JSON.stringify([cpu]) || JSON.stringify(manifest.os) !== '["linux"]') issue('ARCH_ESBUILD_PACKAGE_CONTRACT', relative);
             else if (!headerMatches(header, cpu, 'linux') || header.dynamic || header.interpreter) issue('ARCH_ESBUILD_ABI_MISMATCH', relative);
@@ -237,7 +253,7 @@ function checkRuntimeArchitecture(options) {
     report.symlinkCount = links.length;
     report.passed = report.issues.length === 0;
     report.limitations = ['No target binary executed; target OS/kernel/libc/Node/Redis and hardware validation remain required.',
-        'Headers cannot prove native Node ABI compatibility. All .node addons fail pending explicit ABI contract.',
+        'Headers alone cannot prove native Node ABI compatibility. Only the exact reviewed Serialport Node-API6/8 ARM64/glibc contract is accepted; a target dlopen/export probe remains mandatory before installation. Other .node addons fail.',
         'Known .bare variants are retained as other-runtime assets, not approved Node addons; no claim they are mathematically unreachable.',
         'The input tree must be quiescent and access-controlled; this is not a filesystem snapshot or concurrent-writer isolation mechanism.',
         'Recognized executable headers and native suffixes are scanned; opaque, encrypted or embedded payload discovery is outside this gate.',

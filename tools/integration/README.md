@@ -1,5 +1,36 @@
 # Integration bauen und SBOM erzeugen
 
+## Aktueller vollständiger test.3-Pfad (03.10.2026)
+
+Der Vollbau erfolgt mit `assemble-postgresql-test.cjs --output <NEUES_EXTERNES_VERZEICHNIS> --platform linux-arm64`.
+Er benötigt die unten beschriebene exakte Node-/npm-Werkzeugkette und den vorbereiteten
+Offlinecache. npm-Lifecycle-Skripte und Onlineauflösung bleiben gesperrt. Der erzeugte
+integrierte Lock wird als Buildnachweis gebunden; ohne identischen Cache-/Lockeingang
+wird keine beliebige Wiederholung als identischer Abhängigkeitsbau behauptet.
+
+Anschließend im erzeugten `app` mit derselben npm-CLI `sbom --sbom-format cyclonedx
+--omit=dev --offline` erfassen. Bei `bind-sbom.py` sowohl
+`--transform-evidence <BUILD>/controller-transform.json` als auch
+`--native-evidence <BUILD>/native-transform.json` übergeben. Die native Ableitung
+entfernt fremde Serialport-Prebuilds und bindet zwei exakt geprüfte ARM64-Bibliotheken
+mit festem Loader. Upstream-Archivhashes beschreiben deren Vorgänger; die geänderten
+Dateibäume erhalten eigene Digests. Die CycloneDX-Schemaprüfung erfolgt weiter offline.
+
+`node tools/integration/package-postgresql-test.cjs <BUILD>` erzeugt nach allen
+Produkt-/SBOM-/Architekturgates das TEST-Archiv. Der kurzlebige Ed25519-Schlüssel
+bleibt als KeyObject im Arbeitsspeicher; kein privater Schlüssel wird geschrieben
+oder an Python übergeben. Archivpfade, Reihenfolge, Zeiten und POSIX-Rechte werden
+kanonisch erstellt und alle Mitglieder einschließlich Signatur erneut geprüft.
+Windows-Dateirechte werden damit nicht als Linux-Rechte ausgegeben. Ein neuer
+zufälliger Testsignierer ändert Schlüssel, Signatur und Archivhash. Die aus
+dem Manifest gebildete Release-ID bleibt bei identischem Manifest gleich.
+
+Der Linux-Installer prüft weiterhin die tatsächlichen POSIX-Rechte und verlangt
+vor Hoständerungen den nativen `RTLD_NOW`-Ladeversuch auf dem Zielgerät. Es gibt
+keinen Schalter zum Überspringen. [Installation aus Git](../../docs/operations/GIT_TEST3_INSTALLATION_DE.md).
+Nachweise des neuen Durchlaufs: `reports/integration/installable-test3-20261003/`.
+Die folgenden älteren Lieferangaben bleiben historische Buildkontexte.
+
 Diese Werkzeuge laufen ausschließlich auf einem getrennten Buildhost. Sie sind keine Laufzeit-Installationsschnittstelle und starten keine Adapter. Ein erfolgreicher Build erteilt keine Adapterfreigabe.
 
 ## Voraussetzungen

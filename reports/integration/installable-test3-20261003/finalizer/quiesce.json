@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-first-start-finalizer-quiesce-contract",
+  "createdAt": "2026-10-03T07:27:05.934Z",
+  "host": "win32-x64",
+  "node": "24.21.0",
+  "exitCode": 0,
+  "passed": true,
+  "tests": 28,
+  "tapSha256": "d4f3f21e2f87e5ab9ae452583f7dd985337f23d723caa5d91c49fa8f1b433d69",
+  "files": [
+    {
+      "path": "tools/system/finalize-onboarding.cjs",
+      "bytes": 16575,
+      "sha256": "9dc562b6347b478830b676eae27651d516b96e72b1c8226fc64a162348ee0b21"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup-finalize.service",
+      "bytes": 1490,
+      "sha256": "09ea6dd262b849ef7a5955f476f0f80b0e3398585cc7851ca86fd5b4f59904d5"
+    },
+    {
+      "path": "tests/system/first-start-finalizer.test.cjs",
+      "bytes": 2070,
+      "sha256": "f858d8fdabf5fba09426a5dfddf432718797237e57db79a282bdd90539d364ea"
+    },
+    {
+      "path": "tests/system/first-start-finalizer-quiesce.test.cjs",
+      "bytes": 4822,
+      "sha256": "1f3efa065e8caafda2e065b058fd984e4e9291efa75d8cd4f1e88ced3cd1e5ae"
+    },
+    {
+      "path": "tests/system/first-start-integration-contract.test.cjs",
+      "bytes": 5059,
+      "sha256": "8c8d35641c353e994cb1bf834730f92e971918138a9f5e7df43f6a86b8fd1fcb"
+    }
+  ],
+  "scope": "Real helper ordering with injected host effects; fixed actual systemd unit inspected. No systemd process was executed.",
+  "open": [
+    "Live Linux systemd TimeoutStartSec, SIGTERM and SIGKILL behavior",
+    "Actual controller stop and reboot recovery on Pi",
+    "Hardware/physical acceptance"
+  ],
+  "productionReleaseApproved": false
+}

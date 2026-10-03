@@ -1,0 +1,763 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-first-start-central-regression",
+  "startedAt": "2026-10-03T07:32:05.435Z",
+  "finishedAt": "2026-10-03T07:32:44.947Z",
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "24.21.0"
+  },
+  "argv": [
+    "--test",
+    "--test-concurrency=1",
+    "--test-reporter=tap",
+    "tests/onboarding/configuration.test.cjs",
+    "tests/onboarding/enrollment.test.cjs",
+    "tests/onboarding/frontend.test.cjs",
+    "tests/onboarding/issue-code.test.cjs",
+    "tests/onboarding/server.test.cjs",
+    "tests/onboarding/shutdown.test.cjs",
+    "tests/system/first-start-cleanup.test.cjs",
+    "tests/system/first-start-finalizer-quiesce.test.cjs",
+    "tests/system/first-start-finalizer.test.cjs",
+    "tests/system/first-start-integration-contract.test.cjs",
+    "tests/system/first-start-license.test.cjs",
+    "tests/integration/accounts.test.cjs",
+    "tests/postgresql/full-product.test.cjs",
+    "tests/postgresql/unit-grammar.test.cjs",
+    "tests/system/install-from-checkout.test.cjs",
+    "tests/integration/build-runtime.test.cjs",
+    "components/admin/test/eos-license-core.test.cjs",
+    "components/admin/test/eos-license-service.test.cjs",
+    "components/admin/test/eos-license-trust.test.cjs",
+    "components/admin/test/eos-license-http.test.cjs"
+  ],
+  "exitCode": 0,
+  "errorCode": null,
+  "counts": {
+    "tests": 210,
+    "pass": 207,
+    "fail": 0,
+    "skipped": 3,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "passed": true,
+  "sourcesStable": true,
+  "sourcesBefore": [
+    {
+      "path": "components/admin/src/lib/eosLicenseCore.js",
+      "bytes": 17183,
+      "sha256": "8f7913edeba380744aed8fb2131f0b8cf9d5bf9152d25e4441d5f0ff4063246f"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseHttp.js",
+      "bytes": 3869,
+      "sha256": "03e1861f375087cfa53c519b554103d8d045aa662e7abdd6da3307faa9350b7e"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseService.js",
+      "bytes": 15886,
+      "sha256": "0f954e57aeb58bfc8fe9371cbc343a3cc674a8cafa98cf542bb4c89ce8cb7818"
+    },
+    {
+      "path": "components/admin/test/eos-license-core.test.cjs",
+      "bytes": 15569,
+      "sha256": "d2770a05b657e4ecaa37dae08d60698b6be0276e639db337924fc2d616f4c19f"
+    },
+    {
+      "path": "components/admin/test/eos-license-http.test.cjs",
+      "bytes": 12156,
+      "sha256": "80880ce61c40eebff6b7c3394463c030a7a2723326391b0cc1795f4063d39c38"
+    },
+    {
+      "path": "components/admin/test/eos-license-service.test.cjs",
+      "bytes": 23397,
+      "sha256": "d90821f3f2fe9ff0f7eaec874bf1c6b131e6793e146ee8a3bac880869b898046"
+    },
+    {
+      "path": "components/admin/test/eos-license-trust.test.cjs",
+      "bytes": 5010,
+      "sha256": "e859f6d102ed2cffa665451bcdff9325dffc4472b865d3d3e1b07c30b48ce7d3"
+    },
+    {
+      "path": "runtime/bootstrap/accounts.cjs",
+      "bytes": 8686,
+      "sha256": "f729b4cc33be5e81f7a85a1e0550a3c562e212c8f5831294e6aa1851d8185cfe"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "bytes": 17058,
+      "sha256": "c637f97177c4260023876590157d3d18481431f79aeadd35c83b5a48b4005220"
+    },
+    {
+      "path": "runtime/bootstrap/first-start-configuration.cjs",
+      "bytes": 9046,
+      "sha256": "cb32ac84ce73bf4dd2802c7f3466fe461db302293eff1c905587d1922a2ad7c8"
+    },
+    {
+      "path": "runtime/bootstrap/initialize.cjs",
+      "bytes": 16528,
+      "sha256": "68940009090a94e1502b802a20363c3ca3b048a6eb9d91c2bee56f2cd351ec30"
+    },
+    {
+      "path": "runtime/native/serialport-acceptance.cjs",
+      "bytes": 2197,
+      "sha256": "ab02923fa09c335b4bc5b24312e3ed64dc50e1bc4882ea29f9baf61b5ec77654"
+    },
+    {
+      "path": "runtime/native/serialport-contract.cjs",
+      "bytes": 8674,
+      "sha256": "4909a37aab9e1a7b53f60dbdf9352b430a70ec27608604fc988a1ee2d8873525"
+    },
+    {
+      "path": "runtime/native/serialport-policy.json",
+      "bytes": 22811,
+      "sha256": "206c91ef814ec548b2489e54163493c814e239c355fd92423e5fb3f42b719cc2"
+    },
+    {
+      "path": "runtime/onboarding/cleanup.cjs",
+      "bytes": 3686,
+      "sha256": "1fd9ecbc191f047f0b00c4a0f6b1a7cc6a350682eff28f87a8a57eccd03fcde0"
+    },
+    {
+      "path": "runtime/onboarding/configuration.cjs",
+      "bytes": 9114,
+      "sha256": "f30234624c86a09a2935db7947e381994bf6599d51b666300f5afaf8c3075c40"
+    },
+    {
+      "path": "runtime/onboarding/device-catalog.json",
+      "bytes": 36105,
+      "sha256": "d181f40df7a603084c8daabf600e09998359455adb31304a356abc807f7aa6a0"
+    },
+    {
+      "path": "runtime/onboarding/issue-code.cjs",
+      "bytes": 4472,
+      "sha256": "0d7c36b580e786516cc9666ab6f93517d350a86efb153d4002ec2b7b7b958164"
+    },
+    {
+      "path": "runtime/onboarding/main.cjs",
+      "bytes": 3293,
+      "sha256": "fa09a7fc4db8a4e892180bed798a640a263622daacbbf269577021182520d7dd"
+    },
+    {
+      "path": "runtime/onboarding/policy.cjs",
+      "bytes": 3100,
+      "sha256": "7c1ce7527ce9df41e3773ac9a3ca4122cc1af263b6ad5bf749ec1815abc595b1"
+    },
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "bytes": 17107,
+      "sha256": "bc405c0be936c5a03439b18cd4338df918b7fde4ddd8bf69e633eff1c21bf5f9"
+    },
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "bytes": 10096,
+      "sha256": "067d28312b94efe3e566ce424759afea303bdca1db9e0fcd233ad92a314f7a64"
+    },
+    {
+      "path": "runtime/onboarding/public/style.css",
+      "bytes": 2117,
+      "sha256": "266b691a3e5908dd34c2644d280a2aaf2b3954d17b12677745e9691a50cc3777"
+    },
+    {
+      "path": "runtime/onboarding/server.cjs",
+      "bytes": 11320,
+      "sha256": "2c59c6876734be1c806112b84d96b0892d1013aee507667dd5a8485f034f590a"
+    },
+    {
+      "path": "runtime/onboarding/state.cjs",
+      "bytes": 5391,
+      "sha256": "aefc0b7608922c750e244d7232af16df04ab812942bb3dd6cc30496c9b6b3229"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "bytes": 4009,
+      "sha256": "644e3b14b2bd806371aafe9d7f6bac426401cf336e4fc3ba0b1f75c94fa082b9"
+    },
+    {
+      "path": "runtime/release/maintenance.cjs",
+      "bytes": 4596,
+      "sha256": "0a189e8fd4247dd9031b3d8bc5bd70d3461bb49a7cb6dd6a66fb1a998e76083d"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-controller.service",
+      "bytes": 2278,
+      "sha256": "749c16f23ed96cdd272d53c3172c4d07c9676ae4adae576e9ec2e485d9d5785c"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-initialize.service",
+      "bytes": 2133,
+      "sha256": "dbff424d17a90d4cb0be755506344737bdaf74e423b1a982ff38f1b9332fd3c2"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.service",
+      "bytes": 1158,
+      "sha256": "d7de6e00051469b69f71eef5dd2326ae92744d9e9dd91404141e0d9454bb7065"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.timer",
+      "bytes": 319,
+      "sha256": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-pg-certificates.service",
+      "bytes": 874,
+      "sha256": "fc909da911c8a3f350074dbde30e0ea6d297008212319545e54ac3183a546306"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-pg-certificates.timer",
+      "bytes": 218,
+      "sha256": "a9ea138bd87d313efb328676c44d2a623266eb37f5919d031d86fb80be345b61"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-postgresql.service",
+      "bytes": 1825,
+      "sha256": "75bca060ad7114e8fc93d6cf7d6b1010ae673ad7fbc3118269dcccf002c25e72"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup-finalize.path",
+      "bytes": 313,
+      "sha256": "950576e0ef58087c4f77828cc0c5dd3282a2ac1eaef29f8f59acb16c02352b80"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup-finalize.service",
+      "bytes": 1490,
+      "sha256": "09ea6dd262b849ef7a5955f476f0f80b0e3398585cc7851ca86fd5b4f59904d5"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup-license.service",
+      "bytes": 1681,
+      "sha256": "3235a10aed4d295690fcb8c6ad797142174cc60115c42cf25c6d001fec63c14f"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup.service",
+      "bytes": 1908,
+      "sha256": "212c4458c34847befddcb6a168ab09b45239dbc9fd019468faeb7b25cb1735c0"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup.target",
+      "bytes": 270,
+      "sha256": "7502263c4aa8f97a14582dd50d95c0c036fae8cdad99d37642e27e6d383beca9"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-upload.service",
+      "bytes": 2081,
+      "sha256": "8685af43580ec39a0bcdd12ec566345a8cafb1bae507a2792b1359882b342547"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos.target",
+      "bytes": 236,
+      "sha256": "06553f2eedbaeaeb2528d012219ffd9a4dc2f9841c5445e891c0e3b15ba0e346"
+    },
+    {
+      "path": "tests/integration/accounts.test.cjs",
+      "bytes": 7300,
+      "sha256": "5d7c09d1796c27340500ac4737dbdf3028a87ba571b2223b371906e1443c3964"
+    },
+    {
+      "path": "tests/integration/build-runtime.test.cjs",
+      "bytes": 6213,
+      "sha256": "d7bf020a275e22b99d7059b1e9a59b5bcdbbef76c6b365d15c7aa3bbcb4c0863"
+    },
+    {
+      "path": "tests/onboarding/configuration.test.cjs",
+      "bytes": 7130,
+      "sha256": "e8425bd450aa704c4f6829c3d951f77e6b8bcd2bd033a1cdce7e153bed6aa08b"
+    },
+    {
+      "path": "tests/onboarding/enrollment.test.cjs",
+      "bytes": 7913,
+      "sha256": "da2c6f3695fe2391043e7e759f09476c5086d709aeed37a465c31e5e4dcef983"
+    },
+    {
+      "path": "tests/onboarding/fixtures.cjs",
+      "bytes": 1460,
+      "sha256": "146c50cdba71a781086597f7017bef43177fb23fc29d8abd304c6f89aa953898"
+    },
+    {
+      "path": "tests/onboarding/frontend.test.cjs",
+      "bytes": 18588,
+      "sha256": "29d1bff6ae367842a390e632a0f52c4314dfba0eef54981b13c4fa96e7a36167"
+    },
+    {
+      "path": "tests/onboarding/issue-code.test.cjs",
+      "bytes": 4452,
+      "sha256": "975b0d81bbf17bf86bb4724790befc5eb36c31c048e509ab959240dc8171229c"
+    },
+    {
+      "path": "tests/onboarding/server.test.cjs",
+      "bytes": 22306,
+      "sha256": "97c8d1982b80ff5a291eacf1e74a58bcdbe734b56a4ce5e09b3925e5069d3027"
+    },
+    {
+      "path": "tests/onboarding/shutdown.test.cjs",
+      "bytes": 1807,
+      "sha256": "871ec1c1de2558dedca47991bb34aabcf86ad0400f4e2234eaf4b02670a1cb75"
+    },
+    {
+      "path": "tests/postgresql/full-product.test.cjs",
+      "bytes": 8864,
+      "sha256": "756b33f75e1f41bc6f826ba7ec583e7fd5ae5d1877d7f5e9f957d15bce785094"
+    },
+    {
+      "path": "tests/postgresql/unit-grammar.test.cjs",
+      "bytes": 1540,
+      "sha256": "229d208d579ded1afaaf029c937330cd8d8f0422e95eade6be6f366e2c90ce4a"
+    },
+    {
+      "path": "tests/system/first-start-cleanup.test.cjs",
+      "bytes": 7764,
+      "sha256": "b6e305d5d44be10a74b68ae8b8bb04aa3c60401f419b5af55c61608a51e78edb"
+    },
+    {
+      "path": "tests/system/first-start-finalizer-quiesce.test.cjs",
+      "bytes": 4822,
+      "sha256": "1f3efa065e8caafda2e065b058fd984e4e9291efa75d8cd4f1e88ced3cd1e5ae"
+    },
+    {
+      "path": "tests/system/first-start-finalizer.test.cjs",
+      "bytes": 2070,
+      "sha256": "f858d8fdabf5fba09426a5dfddf432718797237e57db79a282bdd90539d364ea"
+    },
+    {
+      "path": "tests/system/first-start-integration-contract.test.cjs",
+      "bytes": 5059,
+      "sha256": "8c8d35641c353e994cb1bf834730f92e971918138a9f5e7df43f6a86b8fd1fcb"
+    },
+    {
+      "path": "tests/system/first-start-license.test.cjs",
+      "bytes": 9649,
+      "sha256": "241e59866acbe3c9d418ffecd7ce421fb66a1ff2eb0f3da5146d2d54f63ab551"
+    },
+    {
+      "path": "tests/system/install-from-checkout.test.cjs",
+      "bytes": 5479,
+      "sha256": "8628b235484e66744b1c6cff9125a53f9b8b11160b523669e5c908f79807512e"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "bytes": 13628,
+      "sha256": "37c2ac5d84ac447c47f5d5d2dd0d78a25c7b32b379baab6d33161af46d3801a3"
+    },
+    {
+      "path": "tools/integration/create-test-archive.cjs",
+      "bytes": 7044,
+      "sha256": "235f951e38444df01aaac28af7dc7e14cdbac182c9263750e76d7348daa0686d"
+    },
+    {
+      "path": "tools/integration/package-postgresql-test.cjs",
+      "bytes": 4813,
+      "sha256": "96707b826538c7468ea7d605ce356e3f3fc616e7b90a6541d3a0d20ed9d25f85"
+    },
+    {
+      "path": "tools/integration/test-archive.py",
+      "bytes": 11773,
+      "sha256": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "bytes": 12290,
+      "sha256": "ba5af752e10ec6cd98c024f0903c9843be7fb51c550d87c431196bf83fb8f150"
+    },
+    {
+      "path": "tools/system/extract-test-bundle.py",
+      "bytes": 6567,
+      "sha256": "84958e5adb16cabf556b5b48b7f4791a3540921e98bfc75967a0717492a3610f"
+    },
+    {
+      "path": "tools/system/finalize-onboarding.cjs",
+      "bytes": 16575,
+      "sha256": "9dc562b6347b478830b676eae27651d516b96e72b1c8226fc64a162348ee0b21"
+    },
+    {
+      "path": "tools/system/install-from-checkout.cjs",
+      "bytes": 7123,
+      "sha256": "e60d0fe32612003685b5b7db2be83c25864b6b80865afd9ca4d3dc20968bd4ef"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "bytes": 15647,
+      "sha256": "de064e9a4c53b8e05d5d0a1eca91e63a3196a66cbcfaf1138550c2c12d8aa160"
+    },
+    {
+      "path": "tools/system/postgresql-host-preflight.cjs",
+      "bytes": 8348,
+      "sha256": "a2e65ff5f1774a37ee63bf86967e118094ea19f84698c746da9cca4cc37cb845"
+    },
+    {
+      "path": "tools/system/prepare-first-start-context.cjs",
+      "bytes": 6187,
+      "sha256": "a25a5faf892fea13f6b4f7c02dbbac46b2a7203c35c8199e7ef1446ce94dd34d"
+    },
+    {
+      "path": "tools/system/prepare-onboarding.cjs",
+      "bytes": 3915,
+      "sha256": "d56104b714fb3b2e861aa9866a5f83edf571dbd3fe66ff70cd50881cb48413ca"
+    }
+  ],
+  "sourcesAfter": [
+    {
+      "path": "components/admin/src/lib/eosLicenseCore.js",
+      "bytes": 17183,
+      "sha256": "8f7913edeba380744aed8fb2131f0b8cf9d5bf9152d25e4441d5f0ff4063246f"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseHttp.js",
+      "bytes": 3869,
+      "sha256": "03e1861f375087cfa53c519b554103d8d045aa662e7abdd6da3307faa9350b7e"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseService.js",
+      "bytes": 15886,
+      "sha256": "0f954e57aeb58bfc8fe9371cbc343a3cc674a8cafa98cf542bb4c89ce8cb7818"
+    },
+    {
+      "path": "components/admin/test/eos-license-core.test.cjs",
+      "bytes": 15569,
+      "sha256": "d2770a05b657e4ecaa37dae08d60698b6be0276e639db337924fc2d616f4c19f"
+    },
+    {
+      "path": "components/admin/test/eos-license-http.test.cjs",
+      "bytes": 12156,
+      "sha256": "80880ce61c40eebff6b7c3394463c030a7a2723326391b0cc1795f4063d39c38"
+    },
+    {
+      "path": "components/admin/test/eos-license-service.test.cjs",
+      "bytes": 23397,
+      "sha256": "d90821f3f2fe9ff0f7eaec874bf1c6b131e6793e146ee8a3bac880869b898046"
+    },
+    {
+      "path": "components/admin/test/eos-license-trust.test.cjs",
+      "bytes": 5010,
+      "sha256": "e859f6d102ed2cffa665451bcdff9325dffc4472b865d3d3e1b07c30b48ce7d3"
+    },
+    {
+      "path": "runtime/bootstrap/accounts.cjs",
+      "bytes": 8686,
+      "sha256": "f729b4cc33be5e81f7a85a1e0550a3c562e212c8f5831294e6aa1851d8185cfe"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "bytes": 17058,
+      "sha256": "c637f97177c4260023876590157d3d18481431f79aeadd35c83b5a48b4005220"
+    },
+    {
+      "path": "runtime/bootstrap/first-start-configuration.cjs",
+      "bytes": 9046,
+      "sha256": "cb32ac84ce73bf4dd2802c7f3466fe461db302293eff1c905587d1922a2ad7c8"
+    },
+    {
+      "path": "runtime/bootstrap/initialize.cjs",
+      "bytes": 16528,
+      "sha256": "68940009090a94e1502b802a20363c3ca3b048a6eb9d91c2bee56f2cd351ec30"
+    },
+    {
+      "path": "runtime/native/serialport-acceptance.cjs",
+      "bytes": 2197,
+      "sha256": "ab02923fa09c335b4bc5b24312e3ed64dc50e1bc4882ea29f9baf61b5ec77654"
+    },
+    {
+      "path": "runtime/native/serialport-contract.cjs",
+      "bytes": 8674,
+      "sha256": "4909a37aab9e1a7b53f60dbdf9352b430a70ec27608604fc988a1ee2d8873525"
+    },
+    {
+      "path": "runtime/native/serialport-policy.json",
+      "bytes": 22811,
+      "sha256": "206c91ef814ec548b2489e54163493c814e239c355fd92423e5fb3f42b719cc2"
+    },
+    {
+      "path": "runtime/onboarding/cleanup.cjs",
+      "bytes": 3686,
+      "sha256": "1fd9ecbc191f047f0b00c4a0f6b1a7cc6a350682eff28f87a8a57eccd03fcde0"
+    },
+    {
+      "path": "runtime/onboarding/configuration.cjs",
+      "bytes": 9114,
+      "sha256": "f30234624c86a09a2935db7947e381994bf6599d51b666300f5afaf8c3075c40"
+    },
+    {
+      "path": "runtime/onboarding/device-catalog.json",
+      "bytes": 36105,
+      "sha256": "d181f40df7a603084c8daabf600e09998359455adb31304a356abc807f7aa6a0"
+    },
+    {
+      "path": "runtime/onboarding/issue-code.cjs",
+      "bytes": 4472,
+      "sha256": "0d7c36b580e786516cc9666ab6f93517d350a86efb153d4002ec2b7b7b958164"
+    },
+    {
+      "path": "runtime/onboarding/main.cjs",
+      "bytes": 3293,
+      "sha256": "fa09a7fc4db8a4e892180bed798a640a263622daacbbf269577021182520d7dd"
+    },
+    {
+      "path": "runtime/onboarding/policy.cjs",
+      "bytes": 3100,
+      "sha256": "7c1ce7527ce9df41e3773ac9a3ca4122cc1af263b6ad5bf749ec1815abc595b1"
+    },
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "bytes": 17107,
+      "sha256": "bc405c0be936c5a03439b18cd4338df918b7fde4ddd8bf69e633eff1c21bf5f9"
+    },
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "bytes": 10096,
+      "sha256": "067d28312b94efe3e566ce424759afea303bdca1db9e0fcd233ad92a314f7a64"
+    },
+    {
+      "path": "runtime/onboarding/public/style.css",
+      "bytes": 2117,
+      "sha256": "266b691a3e5908dd34c2644d280a2aaf2b3954d17b12677745e9691a50cc3777"
+    },
+    {
+      "path": "runtime/onboarding/server.cjs",
+      "bytes": 11320,
+      "sha256": "2c59c6876734be1c806112b84d96b0892d1013aee507667dd5a8485f034f590a"
+    },
+    {
+      "path": "runtime/onboarding/state.cjs",
+      "bytes": 5391,
+      "sha256": "aefc0b7608922c750e244d7232af16df04ab812942bb3dd6cc30496c9b6b3229"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "bytes": 4009,
+      "sha256": "644e3b14b2bd806371aafe9d7f6bac426401cf336e4fc3ba0b1f75c94fa082b9"
+    },
+    {
+      "path": "runtime/release/maintenance.cjs",
+      "bytes": 4596,
+      "sha256": "0a189e8fd4247dd9031b3d8bc5bd70d3461bb49a7cb6dd6a66fb1a998e76083d"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-controller.service",
+      "bytes": 2278,
+      "sha256": "749c16f23ed96cdd272d53c3172c4d07c9676ae4adae576e9ec2e485d9d5785c"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-initialize.service",
+      "bytes": 2133,
+      "sha256": "dbff424d17a90d4cb0be755506344737bdaf74e423b1a982ff38f1b9332fd3c2"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.service",
+      "bytes": 1158,
+      "sha256": "d7de6e00051469b69f71eef5dd2326ae92744d9e9dd91404141e0d9454bb7065"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.timer",
+      "bytes": 319,
+      "sha256": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-pg-certificates.service",
+      "bytes": 874,
+      "sha256": "fc909da911c8a3f350074dbde30e0ea6d297008212319545e54ac3183a546306"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-pg-certificates.timer",
+      "bytes": 218,
+      "sha256": "a9ea138bd87d313efb328676c44d2a623266eb37f5919d031d86fb80be345b61"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-postgresql.service",
+      "bytes": 1825,
+      "sha256": "75bca060ad7114e8fc93d6cf7d6b1010ae673ad7fbc3118269dcccf002c25e72"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup-finalize.path",
+      "bytes": 313,
+      "sha256": "950576e0ef58087c4f77828cc0c5dd3282a2ac1eaef29f8f59acb16c02352b80"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup-finalize.service",
+      "bytes": 1490,
+      "sha256": "09ea6dd262b849ef7a5955f476f0f80b0e3398585cc7851ca86fd5b4f59904d5"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup-license.service",
+      "bytes": 1681,
+      "sha256": "3235a10aed4d295690fcb8c6ad797142174cc60115c42cf25c6d001fec63c14f"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup.service",
+      "bytes": 1908,
+      "sha256": "212c4458c34847befddcb6a168ab09b45239dbc9fd019468faeb7b25cb1735c0"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-setup.target",
+      "bytes": 270,
+      "sha256": "7502263c4aa8f97a14582dd50d95c0c036fae8cdad99d37642e27e6d383beca9"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-upload.service",
+      "bytes": 2081,
+      "sha256": "8685af43580ec39a0bcdd12ec566345a8cafb1bae507a2792b1359882b342547"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos.target",
+      "bytes": 236,
+      "sha256": "06553f2eedbaeaeb2528d012219ffd9a4dc2f9841c5445e891c0e3b15ba0e346"
+    },
+    {
+      "path": "tests/integration/accounts.test.cjs",
+      "bytes": 7300,
+      "sha256": "5d7c09d1796c27340500ac4737dbdf3028a87ba571b2223b371906e1443c3964"
+    },
+    {
+      "path": "tests/integration/build-runtime.test.cjs",
+      "bytes": 6213,
+      "sha256": "d7bf020a275e22b99d7059b1e9a59b5bcdbbef76c6b365d15c7aa3bbcb4c0863"
+    },
+    {
+      "path": "tests/onboarding/configuration.test.cjs",
+      "bytes": 7130,
+      "sha256": "e8425bd450aa704c4f6829c3d951f77e6b8bcd2bd033a1cdce7e153bed6aa08b"
+    },
+    {
+      "path": "tests/onboarding/enrollment.test.cjs",
+      "bytes": 7913,
+      "sha256": "da2c6f3695fe2391043e7e759f09476c5086d709aeed37a465c31e5e4dcef983"
+    },
+    {
+      "path": "tests/onboarding/fixtures.cjs",
+      "bytes": 1460,
+      "sha256": "146c50cdba71a781086597f7017bef43177fb23fc29d8abd304c6f89aa953898"
+    },
+    {
+      "path": "tests/onboarding/frontend.test.cjs",
+      "bytes": 18588,
+      "sha256": "29d1bff6ae367842a390e632a0f52c4314dfba0eef54981b13c4fa96e7a36167"
+    },
+    {
+      "path": "tests/onboarding/issue-code.test.cjs",
+      "bytes": 4452,
+      "sha256": "975b0d81bbf17bf86bb4724790befc5eb36c31c048e509ab959240dc8171229c"
+    },
+    {
+      "path": "tests/onboarding/server.test.cjs",
+      "bytes": 22306,
+      "sha256": "97c8d1982b80ff5a291eacf1e74a58bcdbe734b56a4ce5e09b3925e5069d3027"
+    },
+    {
+      "path": "tests/onboarding/shutdown.test.cjs",
+      "bytes": 1807,
+      "sha256": "871ec1c1de2558dedca47991bb34aabcf86ad0400f4e2234eaf4b02670a1cb75"
+    },
+    {
+      "path": "tests/postgresql/full-product.test.cjs",
+      "bytes": 8864,
+      "sha256": "756b33f75e1f41bc6f826ba7ec583e7fd5ae5d1877d7f5e9f957d15bce785094"
+    },
+    {
+      "path": "tests/postgresql/unit-grammar.test.cjs",
+      "bytes": 1540,
+      "sha256": "229d208d579ded1afaaf029c937330cd8d8f0422e95eade6be6f366e2c90ce4a"
+    },
+    {
+      "path": "tests/system/first-start-cleanup.test.cjs",
+      "bytes": 7764,
+      "sha256": "b6e305d5d44be10a74b68ae8b8bb04aa3c60401f419b5af55c61608a51e78edb"
+    },
+    {
+      "path": "tests/system/first-start-finalizer-quiesce.test.cjs",
+      "bytes": 4822,
+      "sha256": "1f3efa065e8caafda2e065b058fd984e4e9291efa75d8cd4f1e88ced3cd1e5ae"
+    },
+    {
+      "path": "tests/system/first-start-finalizer.test.cjs",
+      "bytes": 2070,
+      "sha256": "f858d8fdabf5fba09426a5dfddf432718797237e57db79a282bdd90539d364ea"
+    },
+    {
+      "path": "tests/system/first-start-integration-contract.test.cjs",
+      "bytes": 5059,
+      "sha256": "8c8d35641c353e994cb1bf834730f92e971918138a9f5e7df43f6a86b8fd1fcb"
+    },
+    {
+      "path": "tests/system/first-start-license.test.cjs",
+      "bytes": 9649,
+      "sha256": "241e59866acbe3c9d418ffecd7ce421fb66a1ff2eb0f3da5146d2d54f63ab551"
+    },
+    {
+      "path": "tests/system/install-from-checkout.test.cjs",
+      "bytes": 5479,
+      "sha256": "8628b235484e66744b1c6cff9125a53f9b8b11160b523669e5c908f79807512e"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "bytes": 13628,
+      "sha256": "37c2ac5d84ac447c47f5d5d2dd0d78a25c7b32b379baab6d33161af46d3801a3"
+    },
+    {
+      "path": "tools/integration/create-test-archive.cjs",
+      "bytes": 7044,
+      "sha256": "235f951e38444df01aaac28af7dc7e14cdbac182c9263750e76d7348daa0686d"
+    },
+    {
+      "path": "tools/integration/package-postgresql-test.cjs",
+      "bytes": 4813,
+      "sha256": "96707b826538c7468ea7d605ce356e3f3fc616e7b90a6541d3a0d20ed9d25f85"
+    },
+    {
+      "path": "tools/integration/test-archive.py",
+      "bytes": 11773,
+      "sha256": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "bytes": 12290,
+      "sha256": "ba5af752e10ec6cd98c024f0903c9843be7fb51c550d87c431196bf83fb8f150"
+    },
+    {
+      "path": "tools/system/extract-test-bundle.py",
+      "bytes": 6567,
+      "sha256": "84958e5adb16cabf556b5b48b7f4791a3540921e98bfc75967a0717492a3610f"
+    },
+    {
+      "path": "tools/system/finalize-onboarding.cjs",
+      "bytes": 16575,
+      "sha256": "9dc562b6347b478830b676eae27651d516b96e72b1c8226fc64a162348ee0b21"
+    },
+    {
+      "path": "tools/system/install-from-checkout.cjs",
+      "bytes": 7123,
+      "sha256": "e60d0fe32612003685b5b7db2be83c25864b6b80865afd9ca4d3dc20968bd4ef"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "bytes": 15647,
+      "sha256": "de064e9a4c53b8e05d5d0a1eca91e63a3196a66cbcfaf1138550c2c12d8aa160"
+    },
+    {
+      "path": "tools/system/postgresql-host-preflight.cjs",
+      "bytes": 8348,
+      "sha256": "a2e65ff5f1774a37ee63bf86967e118094ea19f84698c746da9cca4cc37cb845"
+    },
+    {
+      "path": "tools/system/prepare-first-start-context.cjs",
+      "bytes": 6187,
+      "sha256": "a25a5faf892fea13f6b4f7c02dbbac46b2a7203c35c8199e7ef1446ce94dd34d"
+    },
+    {
+      "path": "tools/system/prepare-onboarding.cjs",
+      "bytes": 3915,
+      "sha256": "d56104b714fb3b2e861aa9866a5f83edf571dbd3fe66ff70cd50881cb48413ca"
+    }
+  ],
+  "tapSha256": "45f5e681036ce514d78f89090022259cee90585b22b7ac9bd36984feeedb766d",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scope": "Portable actual onboarding HTTPS tests, first-start contracts, license core/encrypted store/service/route harnesses, account contracts, full-product/build contracts and checkout gate harnesses. Injected POSIX metadata/host effects are explicit in test sources.",
+  "open": [
+    "Actual Linux systemd and UID/mount behavior",
+    "Actual PostgreSQL initialization/controller integration",
+    "Target native dlopen and hardware/device I/O",
+    "Real browser rendering and password interaction",
+    "Full Pi installation and reboot acceptance"
+  ],
+  "productionReleaseApproved": false
+}

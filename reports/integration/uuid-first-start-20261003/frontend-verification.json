@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-first-start-device-uuid-frontend-verification",
+  "startedAtUtc": "2026-10-03T06:53:29.219838+00:00",
+  "completedAtUtc": "2026-10-03T06:53:29.873316+00:00",
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/onboarding/frontend.test.cjs"
+  ],
+  "exitCode": 0,
+  "syntaxCheck": {
+    "command": [
+      "node",
+      "--check",
+      "runtime/onboarding/public/app.js"
+    ],
+    "exitCode": 0
+  },
+  "host": {
+    "os": "Windows",
+    "machine": "AMD64",
+    "node": "v24.21.0"
+  },
+  "result": {
+    "tests": 10,
+    "pass": 10,
+    "fail": 0,
+    "skipped": 0
+  },
+  "sourceBindingsBefore": [
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "sha256": "067d28312b94efe3e566ce424759afea303bdca1db9e0fcd233ad92a314f7a64"
+    },
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "sha256": "bc405c0be936c5a03439b18cd4338df918b7fde4ddd8bf69e633eff1c21bf5f9"
+    },
+    {
+      "path": "runtime/onboarding/public/style.css",
+      "sha256": "266b691a3e5908dd34c2644d280a2aaf2b3954d17b12677745e9691a50cc3777"
+    },
+    {
+      "path": "tests/onboarding/frontend.test.cjs",
+      "sha256": "29d1bff6ae367842a390e632a0f52c4314dfba0eef54981b13c4fa96e7a36167"
+    }
+  ],
+  "sourceBindingsAfter": [
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "sha256": "067d28312b94efe3e566ce424759afea303bdca1db9e0fcd233ad92a314f7a64"
+    },
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "sha256": "bc405c0be936c5a03439b18cd4338df918b7fde4ddd8bf69e633eff1c21bf5f9"
+    },
+    {
+      "path": "runtime/onboarding/public/style.css",
+      "sha256": "266b691a3e5908dd34c2644d280a2aaf2b3954d17b12677745e9691a50cc3777"
+    },
+    {
+      "path": "tests/onboarding/frontend.test.cjs",
+      "sha256": "29d1bff6ae367842a390e632a0f52c4314dfba0eef54981b13c4fa96e7a36167"
+    }
+  ],
+  "sourceChangedDuringTests": false,
+  "evidence": [
+    {
+      "path": "reports/integration/uuid-first-start-20261003/frontend.tap",
+      "sha256": "0e4e0cbe34b9bacd43b6147366edf2b722fe898df603ceaaace69fd5cbdfc542"
+    },
+    {
+      "path": "reports/integration/uuid-first-start-20261003/frontend.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": [
+    "Actual shipped HTML is parsed into the existing lightweight DOM logic fixture.",
+    "UUID display appears after authenticated catalog retrieval and before token/password input, independent of activation mode.",
+    "Readonly unnamed field, complete selection, canonical UUID and optional two-letter vendor prefix.",
+    "Clipboard success is reported only after resolution; missing/denied API selects text and explains manual copying.",
+    "Empty/invalid catalog identifiers cannot enable copying or generate replacement identities.",
+    "UUID is not submitted in configuration/finish payload and creates no new network call."
+  ],
+  "limitations": [
+    "No real browser rendering, clipboard permission, browser certificate import or mobile interaction acceptance executed by this test.",
+    "No hardware, Pi, native host installation, systemd or production release acceptance performed."
+  ],
+  "browserAcceptanceExecuted": false,
+  "hardwareTestsExecuted": false,
+  "productionReleaseApproved": false
+}

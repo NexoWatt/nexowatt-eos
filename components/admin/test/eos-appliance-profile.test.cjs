@@ -60,7 +60,17 @@ test('repository, certificate, host, identity and recursive deletion changes req
     assert.equal(policy.socketCommandAllowed('delObjects', ['system', {}], objects), false);
     assert.equal(policy.socketCommandAllowed('delObject', ['0_userdata.0.obsolete', {}], objects), true);
     assert.equal(policy.socketCommandAllowed('setState', ['system.host.local.messagebox', {}], objects), false);
-    assert.equal(policy.socketCommandAllowed('setState', ['nexowatt-ui.0.normal-data', {}], objects), true);
+    assert.equal(policy.socketCommandAllowed('setState', ['nexowatt-ui.0.normal-data', {}], objects), false);
+});
+test('setup profile denies direct plant commands and activation even to an authenticated Service socket', () => {
+    for (const command of ['setState', 'setBinaryState', 'createState', 'delState']) {
+        assert.equal(policy.socketCommandAllowed(command, ['ocpp21.0.station.start', { val: true }]), false);
+    }
+    assert.equal(policy.socketCommandAllowed('sendTo', ['ocpp21.0', 'startTransaction', {}]), false);
+    assert.equal(policy.socketCommandAllowed('sendTo', ['eos-admin.0', 'eos.license.check', {}]), true);
+    const physical = { ...old, _id: 'system.adapter.ocpp21.0', common: { ...old.common, enabled: false } };
+    assert.equal(policy.socketCommandAllowed('extendObject', [physical._id, { common: { enabled: true } }], { [physical._id]: physical }), false);
+    assert.equal(policy.socketCommandAllowed('extendObject', [physical._id, { common: { enabled: false } }], { [physical._id]: physical }), true);
 });
 test('raw account edits are denied even when the old password hash is preserved', () => {
     const id = 'system.user.operator'; const value = { type: 'user', common: { enabled: true, password: 'existing-test-hash' } };
@@ -85,7 +95,7 @@ test('upload rejection ends before any parser or filesystem write', () => {
     policy.blockUnsignedUpload({}, { status(v) { status = v; return this; }, json(v) { value = v; } });
     assert.equal(status, 403); assert.equal(value.error, policy.ERROR);
 });
-test('protected certificate reader rejects writable parent chains and relative paths', () => {
+test('protected certificate reader rejects writable parent chains and relative paths', { skip: process.platform !== 'linux' ? 'Linux UID/mode boundary requires target Linux host' : false }, () => {
     const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-admin-profile-'));
     try {
         const file = path.join(temporary, 'fixture'); fs.writeFileSync(file, 'non-secret-test-data', { mode: 0o600 });

@@ -1,0 +1,51 @@
+
+> iobroker.nexowatt-ui@1.0.21 test:all
+> npm run publish:check && npm run test:types && npm run check:ts-source-syntax && npm run test:ems-shadow-runtime && npm run test:ai-advisor-runtime-typing && npm run test:history-runtime-typing && npm run test:smarthome-runtime-typing && npm run test:smarthome-config-runtime-typing && npm run test:ems-apps-runtime-typing && npm run test:app-runtime-typing && npm run test:main-runtime-typing && npm run test:rc57-ocpp-stability && npm run test:rc58-ocpp-compact-mapping && npm run test:rc59-ocpp21-native-storage-safety && npm run test:rc60-universal-auto-orchestrator && npm run test:rc60-universal-auto-wallbox && npm run test:rc61-heating-night-lock && npm run test:rc61-evcs-hardening && npm run test:rc63-availability-storage-grid-gate && npm run test:rc64-storage-grid-charge-policy && npm run test:rc65-nt-price-target-override && npm run test:dc-station-display && npm run test:rc66-station-display-stable && npm run test:rc66-station-display-browser && npm run test:rc67-license-bootstrap-access && npm run test:rc68-para14a-communication-fallback && npm run test:dashboard-lp-status-typing && npm run test:rc69-dashboard-lp-feedback && npm run test:rc70-dashboard-lp-status-polish && npm run test:rc72-weather-pv-forecast-auto && npm run test:rc73-ems-admin-overview && npm run test:rc74-pv-forecast-customer-ui && npm run test:rc75-pv-forecast-admin-location && npm run test:rc76-pv-forecast-runtime-hardening && npm run test:rc77-pv-forecast-state-cache-bridge && npm run test:rc78-import-only-grid-budget && npm run test:rc79-import-soft-hard-zero-export && npm run test:rc80-soft-limit-fixed-ten-percent && npm run test:rc81-nvp-assignment-single-source && npm run test:rc82-permanent-grid-protection && npm run test:rc83-storage-cheap-only-log-object && npm run test:rc85 && npm run test:rc86 && npm run test:rc87 && npm run test:rc88 && npm run test:rc89 && npm run test:rc90 && npm run test:rc91 && npm run test:rc92 && npm run test:rc93 && npm run test:stable-1.0.2-health && npm run test:stable-1.0.3-home-appcenter && npm run test:stable-1.0.4-auto-pv && npm run test:stable-1.0.5-storage-protection && npm run test:stable-1.0.6-dc && npm run test:stable-1.0.7-notifications && npm run test:stable-1.0.8-storage-licenses && npm run test:stable-1.0.9-access && npm run test:eos-auth-security && npm run test:eos-os-update-status && npm run test:eos-account-roles && npm run test:stable-1.0.10-security && npm run test:stable-1.0.11-documentation && npm run test:stable-1.0.12-publish && npm run test:stable-release && npm run test:mesh-coordinator && npm run test:zero-export-pv && npm run test:stable-1.0.18-charging && npm run test:stable-1.0.19-grid-share && npm run test:stable-1.0.20-storage && npm run test:zero-export-inverter-mapping
+
+
+> iobroker.nexowatt-ui@1.0.21 publish:check
+> node scripts/verify-release-artifact.js
+
+[secret-guard] OK: 2327 files; no findings in the supported rules.
+[release-artifact] Quellcode-Dokumentation aktuell: 237 Dateien.
+[release-artifact] OK: iobroker.nexowatt-ui@1.0.21, 405 geprüfte Paketdateien, Produkt-Runtime unverändert.
+[release-artifact] OK: Keine Installation oder Aktualisierung von npm/TypeScript erforderlich.
+
+> iobroker.nexowatt-ui@1.0.21 test:types
+> npm run check:tsconfig-modern && npm run check:ts-source-syntax && npm run check:ts-source-integrity && npm run check:ts-canonical && npm run verify:ts-scaffold && npm run test:ts-script-mirrors && npm run test:ts-frontend-mirrors && npm run test:ts-backend-mirrors && npm run test:ts-adapter-mirrors && npm run test:frontend-mirror-runtime && npm run test:api-state-feature && npm run test:api-state-feature-runtime && npm run test:backend-api-state && npm run test:energy-flow-utils && npm run test:energy-flow-resolver && npm run test:energy-flow-mirrors && npm run test:energy-flow-regression && npm run test:energy-flow-regression-runtime && npm run test:ems-budget-heating-rod && npm run test:ems-budget-heating-rod-runtime && npm run test:ems-mirrors && npm run test:core-limits-reservations && npm run test:adapter-state-api && npm run test:adapter-state-api-runtime && npm run test:adapter-mirrors && npm run test:backend-api-state && npm run test:backend-api-state-runtime && npm run test:feature-visibility-resolver && npm run test:feature-visibility-resolver-runtime && npm run test:feature-visibility-shadow && npm run test:feature-visibility-shadow-runtime && npm run test:frontend-display && npm run test:feature-visibility-resolver && npm run test:feature-visibility-resolver-runtime && npm run test:feature-visibility-shadow && npm run test:feature-visibility-shadow-runtime && npm run test:frontend-display-runtime && npm run test:customer-feature-visibility && npm run test:customer-feature-visibility-runtime && npm run test:main-helpers && npm run typecheck && npm run typecheck:runtime-mirrors && npm run test:runtime-mirrors && npm run test:core-limits-runtime-typing && npm run test:heating-rod-runtime-typing && npm run test:shadow-bridges && npm run test:contracts && npm run test:feature-visibility-effective-runtime && npm run test:ai-advisor-runtime-typing && npm run test:history-runtime-typing && npm run test:smarthome-runtime-typing && npm run test:smarthome-config-runtime-typing && npm run test:ems-apps-runtime-typing && npm run test:app-runtime-typing && npm run test:main-runtime-typing && npm run test:adapter-helpers-mirrors && npm run test:main-runtime-helpers && npm run test:api-state-set-shadow && npm run test:live-dashboard-format-productive && npm run test:heating-rod-legacy-removal-candidate
+
+
+> iobroker.nexowatt-ui@1.0.21 check:tsconfig-modern
+> node scripts/verify-tsconfig-modern.js
+
+[tsconfig-modern] OK: TypeScript-Resolver sind NodeNext/Bundler-kompatibel und ohne Deprecation-Unterdrückung.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-source-syntax
+> node scripts/verify-ts-source-syntax.js
+
+[ts-source-syntax] OK: 770 TypeScript-Quelldateien syntaktisch gültig.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-source-integrity
+> node scripts/verify-ts-source-integrity.js
+
+[ts-source-integrity] OK: TypeScript-Quellen wirken vollständig und konfliktfrei.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-canonical
+> node scripts/verify-ts-canonical-structure.js
+
+[ts-canonical] OK: TS-Quellstruktur ist kanonisch, ohne JS-Artefakte in src-ts und ohne doppelte Feature-Sichtbarkeitslogik.
+
+> iobroker.nexowatt-ui@1.0.21 verify:ts-scaffold
+> node scripts/verify-ts-scaffold.js
+
+[ts-scaffold-check] OK: 770 TypeScript files checked; 21 required scaffold files present.
+
+> iobroker.nexowatt-ui@1.0.21 test:ts-script-mirrors
+> node scripts/verify-ts-script-mirrors.js && npm run check:ts-scripts
+
+[verify-ts-script-mirrors] OK: TS->JS-Spiegelstrategie für Wartungsskripte ist synchron.
+
+> iobroker.nexowatt-ui@1.0.21 check:ts-scripts
+> node scripts/build-ts-script-mirrors.js --check
+
+[build-ts-script-mirrors] ERROR: TypeScript-Build für Script-Spiegel fehlgeschlagen. Falls tsc fehlt: npm install oder npm ci ausführen.

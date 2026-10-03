@@ -217,3 +217,7 @@ npm test
 ```
 
 A field test with the exact charging-station firmware remains mandatory before production use.
+
+## License
+
+The current NexoWatt-specific distribution is proprietary and requires prior written permission from NexoWatt. Third-party code and OCA schemas retain their own terms; rights validly granted under earlier MIT distributions remain unaffected. See [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) and the byte-preserved [previous MIT notice](LICENSES/PREVIOUS-MIT.txt).

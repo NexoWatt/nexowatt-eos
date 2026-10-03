@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+not ok 1 - PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+  ---
+  duration_ms: 85.4014
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\postgresql\\host-install.test.cjs:57:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    [{"id":"tool:/usr/bin/node","status":"fail","detail":null},{"id":"tool:/usr/bin/systemctl","status":"fail","detail":null},{"id":"tool:/usr/sbin/useradd","status":"fail","detail":null},{"id":"tool:/usr/sbin/groupadd","status":"fail","detail":null},{"id":"tool:/usr/sbin/getcap","status":"fail","detail":null},{"id":"tool:/usr/bin/openssl","status":"fail","detail":null},{"id":"tool:/usr/bin/getent","status":"fail","detail":null},{"id":"tool:/usr/bin/chown","status":"fail","detail":null},{"id":"tool:/usr/bin/ss","status":"fail","detail":null},{"id":"tool:/usr/bin/id","status":"fail","detail":null},{"id":"tool:/usr/sbin/nologin","status":"fail","detail":null},{"id":"tool:/usr/sbin/runuser","status":"fail","detail":null},{"id":"tool:/usr/lib/postgresql/17/bin/postgres","status":"fail","detail":null},{"id":"tool:/usr/lib/postgresql/17/bin/initdb","status":"fail","detail":null},{"id":"tool:/usr/lib/postgresql/17/bin/psql","status":"fail","detail":null},{"id":"tool:/usr/lib/postgresql/17/bin/pg_isready","status":"fail","detail":null},{"id":"tool:/usr/bin/python3","status":"fail","detail":null},{"id":"tool:/usr/bin/apt-get","status":"fail","detail":null},{"id":"tool:/usr/bin/apt-mark","status":"fail","detail":null},{"id":"tool:/usr/bin/dpkg","status":"fail","detail":null},{"id":"tool:/usr/bin/dpkg-query","status":"fail","detail":null},{"id":"tool:/usr/bin/unattended-upgrade","status":"fail","detail":null},{"id":"tool:/usr/sbin/needrestart","status":"fail","detail":null},{"id":"tool:/usr/bin/pg_lsclusters","status":"fail","detail":null},{"id":"node-exact-version","status":"fail","detail":{"expected":"24.21.0","observed":""}},{"id":"systemd-manager","status":"fail","detail":"systemd257+ manager must answer."},{"id":"no-distribution-clusters","status":"fail","detail":"Dedicated fresh host only. Preserve existing PostgreSQL clusters; do not delete them to pass this check."},{"id":"postgresql:postgres","status":"fail","detail":{"observed":"","minimumMinor":"17.11","patchSecurityClearance":false}},{"id":"postgresql:psql","status":"fail","detail":{"observed":"","minimumMinor":"17.11","patchSecurityClearance":false}},{"id":"package:python3","status":"fail","detail":{"installedVersion":null}},{"id":"package:python3-apt","status":"fail","detail":{"installedVersion":null}},{"id":"package:unattended-upgrades","status":"fail","detail":{"installedVersion":null}},{"id":"package:needrestart","status":"fail","detail":{"installedVersion":null}},{"id":"package:debian-archive-keyring","status":"fail","detail":{"installedVersion":null}},{"id":"package:ca-certificates","status":"fail","detail":{"installedVersion":null}},{"id":"package:postgresql-17","status":"fail","detail":{"installedVersion":null}},{"id":"package:postgresql-client-17","status":"fail","detail":{"installedVersion":null}},{"id":"keyring:/usr/share/keyrings/debian-archive-keyring.gpg","status":"fail","detail":"Distribution update trust, no added repositories."},{"id":"openssl-tls13","status":"fail","detail":"Real database TLS handshakes run before controller startup."},{"id":"no-capabilities:/usr/bin/node","status":"fail","detail":"No file capabilities."},{"id":"no-capabilities:/usr/lib/postgresql/17/bin/postgres","status":"fail","detail":"No file capabilities."},{"id":"ports-free","status":"fail","detail":"PostgreSQL15432, Admin8081, UI8188, Setup8443 must be unused."},{"id":"fresh-passwd:eos-runtime","status":"fail","detail":"No account takeover or migration."},{"id":"fresh-group:eos-runtime","status":"fail","detail":"No account takeover or migration."},{"id":"fresh-passwd:eos-postgres","status":"fail","detail":"No account takeover or migration."},{"id":"fresh-group:eos-postgres","status":"fail","detail":"No account takeover or migration."},{"id":"fresh-passwd:eos-setup","status":"fail","detail":"No account takeover or migration."},{"id":"fresh-group:eos-setup","status":"fail","detail":"No account takeover or migration."},{"id":"fresh-unit-namespace","status":"fail","detail":{"requirement":"No existing EOS/ioBroker unit may be replaced.","queryStatus":null,"queryError":"UNTRUSTED_TOOL","outputValid":false,"stderrPresent":false,"conflictingUnits":[]}}]
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:59:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+ok 2 - fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+  ---
+  duration_ms: 33.3611
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+ok 3 - unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+  ---
+  duration_ms: 206.7181
+  type: 'test'
+  ...
+# Subtest: unit namespace accepts full names, instances, escaped names and known C-locale table columns
+ok 4 - unit namespace accepts full names, instances, escaped names and known C-locale table columns
+  ---
+  duration_ms: 75.5483
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects empty, malformed, incomplete or failed unit listings
+ok 5 - unit namespace rejects empty, malformed, incomplete or failed unit listings
+  ---
+  duration_ms: 146.6554
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 17.10 rejected
+ok 6 - unsupported PostgreSQL 17.10 rejected
+  ---
+  duration_ms: 54.7106
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 16.11 rejected
+ok 7 - unsupported PostgreSQL 16.11 rejected
+  ---
+  duration_ms: 59.6521
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 18.1 rejected
+ok 8 - unsupported PostgreSQL 18.1 rejected
+  ---
+  duration_ms: 55.6769
+  type: 'test'
+  ...
+# Subtest: every protected existing path, including old standalone EOS, rejects without mutations
+ok 9 - every protected existing path, including old standalone EOS, rejects without mutations
+  ---
+  duration_ms: 281.1032
+  type: 'test'
+  ...
+# Subtest: malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+ok 10 - malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+  ---
+  duration_ms: 90.4972
+  type: 'test'
+  ...
+# Subtest: real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions
+ok 11 - real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions # SKIP
+  ---
+  duration_ms: 0.1573
+  type: 'test'
+  ...
+# Subtest: backend rejects mixtures, injected loader names and TLS downgrade
+ok 12 - backend rejects mixtures, injected loader names and TLS downgrade
+  ---
+  duration_ms: 1.8414
+  type: 'test'
+  ...
+# Subtest: database and runtime service boundaries retain network discovery without root privileges
+ok 13 - database and runtime service boundaries retain network discovery without root privileges
+  ---
+  duration_ms: 1.5193
+  type: 'test'
+  ...
+# Subtest: installer command-double starts schema and live gate before controller; never invokes Redis/npm
+not ok 14 - installer command-double starts schema and live gate before controller; never invokes Redis/npm
+  ---
+  duration_ms: 53.256
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\postgresql\\host-install.test.cjs:201:1'
+  failureType: 'testCodeFailure'
+  error: 'PG_INVALID_RELEASE_LAYOUT'
+  code: 'PG_INVALID_RELEASE_LAYOUT'
+  stack: |-
+    fail (C:\Users\User\Desktop\Nexowatt-EOS\tools\system\install-postgresql-host.cjs:13:44)
+    installPostgresqlHost (C:\Users\User\Desktop\Nexowatt-EOS\tools\system\install-postgresql-host.cjs:53:87)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:202:39)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: failed live gate preserves data and stops owned services without killing apt
+not ok 15 - failed live gate preserves data and stops owned services without killing apt
+  ---
+  duration_ms: 46.7184
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\postgresql\\host-install.test.cjs:210:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /PG_LIVE_DATABASE_GATE_FAILED/. Input:
+    
+    'Error: PG_INVALID_RELEASE_LAYOUT'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'PG_INVALID_RELEASE_LAYOUT'
+  stack: |-
+    fail (C:\Users\User\Desktop\Nexowatt-EOS\tools\system\install-postgresql-host.cjs:13:44)
+    installPostgresqlHost (C:\Users\User\Desktop\Nexowatt-EOS\tools\system\install-postgresql-host.cjs:53:87)
+    C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:213:23
+    getActual (node:assert:611:5)
+    strict.throws (node:assert:759:24)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:213:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:213:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: failed admission or implicit start performs no command or persistent write
+ok 16 - failed admission or implicit start performs no command or persistent write
+  ---
+  duration_ms: 35.7774
+  type: 'test'
+  ...
+# Subtest: failed structured target checks are retained before fail-closed cleanup
+not ok 17 - failed structured target checks are retained before fail-closed cleanup
+  ---
+  duration_ms: 34.5312
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\postgresql\\host-install.test.cjs:225:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /PG_LIVE_DATABASE_GATE_FAILED/. Input:
+    
+    'Error: PG_INVALID_RELEASE_LAYOUT'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'PG_INVALID_RELEASE_LAYOUT'
+  stack: |-
+    fail (C:\Users\User\Desktop\Nexowatt-EOS\tools\system\install-postgresql-host.cjs:13:44)
+    installPostgresqlHost (C:\Users\User\Desktop\Nexowatt-EOS\tools\system\install-postgresql-host.cjs:53:87)
+    C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:229:23
+    getActual (node:assert:611:5)
+    strict.throws (node:assert:759:24)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:229:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\postgresql\host-install.test.cjs:229:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: existing distribution database cluster is never adopted or deleted
+ok 18 - existing distribution database cluster is never adopted or deleted
+  ---
+  duration_ms: 28.2668
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 13
+# fail 4
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 1434.6746

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "kind": "runtime-license-packaging-fixture-tests",
+  "executedAt": "2026-10-03T06:42:45.417Z",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--test",
+    "--test-reporter=tap",
+    "tests/integration/build-runtime.test.cjs",
+    "tests/system/os-updates-host-contract.test.cjs"
+  ],
+  "host": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "exitCode": 0,
+  "errorCode": null,
+  "tests": 15,
+  "pass": 15,
+  "fail": 0,
+  "sourceHashes": [
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "sha256": "952c73c07d6c23e05d0a0e649e45c87203e98da9f1c432949667297b677fc572"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "8e88c70607f9f6db8b35a5405ce4c59aca64049c438c1ad6dadfc0ac5cdcf726"
+    },
+    {
+      "path": "tests/integration/build-runtime.test.cjs",
+      "sha256": "d7bf020a275e22b99d7059b1e9a59b5bcdbbef76c6b365d15c7aa3bbcb4c0863"
+    },
+    {
+      "path": "tests/system/os-updates-host-contract.test.cjs",
+      "sha256": "bbd3479e57810dafa040f94169c2285c2136af008d66c2c05d8875336a324ece"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "28de8559aae8bbbb4e0105b8d669087ac3688f64695d9239623e6e1bb7c9766c"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "07562324cbc5176e264b6430980fa11815993467e2195bf335de03d609806c14"
+    },
+    {
+      "path": "licenses/upstream/LICENSE.ioBroker-Installer.txt",
+      "sha256": "296f291911109c3a9cc0549ab40363b1375dc2934bbf1656a89e1dc3d2ddd7c7"
+    }
+  ],
+  "fullRuntimeRebuilt": false,
+  "signedRuntimeBuilt": false,
+  "hardwareTestsExecuted": false,
+  "limitations": [
+    "Fixtures exercise license copying, runtime-relative notices, inventory binding and existing build/host-copy guards only.",
+    "A fresh full runtime assembly, SBOM and signed package for the changed license metadata remain open.",
+    "No historical delivery artifact or prior build evidence was changed."
+  ]
+}

@@ -2,7 +2,7 @@
  * AUTO-GENERATED RUNTIME FILE - NICHT MANUELL BEARBEITEN.
  *
  * Quelle: src-ts/runtime-executables/ems/modules/storage-control.ts
- * Quell-Hash: sha256:f5cbe42b911b6931ea6fd11b6784afa10e9394cc68ed91d2f949366fe3c90458
+ * Quell-Hash: sha256:de32f57a5527a998bf9c75f3d225281f351ed6089e873d20e29c835b0c53ae0e
  * Erzeugung: npm run sync:ts-runtime-executables
  *
  * Zweck:
@@ -424,22 +424,17 @@ function resolveStoragePvOnlyChargeSafetyGate({
 }
 
 /**
- * Ermittelt die interne Lizenzedition. `eos` bleibt der Legacy-/Key-Name für
- * das Pro-Profil. Isolierte Modultests ohne Lizenzobjekt laufen weiterhin mit
- * Pro-Fallback; im echten Adapter verhindert der ModuleManager einen Tick ohne
- * gültige Lizenz.
+ * Ermittelt das Leistungsprofil aus der aktuellen zentralen Adapterfreigabe.
+ * Alte Lizenzfelder und fehlende Prüfer sperren; auch isolierte Tests müssen
+ * die zentrale Grenze ausdrücklich bereitstellen. Kein Pro-Notfallprofil.
  */
 function resolveStorageLicenseEdition(adapter) {
-    const info = adapter && adapter._nwLicenseInfo && typeof adapter._nwLicenseInfo === 'object'
-        ? adapter._nwLicenseInfo
-        : {};
-    const raw = String(info.edition || '').trim();
-    if (info.ok === true || (adapter && adapter._nwLicenseOk === true) || raw) {
-        try { return storageFeatureFlags.normalizeEdition(raw || 'eos'); } catch (_e) {}
-        const e = raw.toLowerCase();
-        return (e === 'hems' || e === 'home') ? 'hems' : 'eos';
-    }
-    return 'eos';
+    try {
+        if (adapter?._nwIsFeatureLicensed?.('storageControl') === true) {
+            return storageFeatureFlags.normalizeEdition(adapter._nwCurrentLicenseEdition());
+        }
+    } catch (_e) {}
+    return 'none';
 }
 
 /**
@@ -474,8 +469,8 @@ function resolveStorageLicensePowerProfile(adapter, cfg = {}, farmRows = [], sel
     } catch (_e) {}
     return {
         edition,
-        id: edition === 'hems' ? 'home' : 'pro',
-        label: edition === 'hems' ? 'Home' : 'Pro',
+        id: edition === 'hems' ? 'home' : (edition === 'eos' ? 'pro' : 'none'),
+        label: edition === 'hems' ? 'Home' : (edition === 'eos' ? 'Pro' : 'Keine Lizenz'),
         industrial: edition === 'eos',
         unrestricted: edition === 'eos',
         configuredRatedPowerW: ratedPowerW,
@@ -496,6 +491,9 @@ function resolveStorageLicensePowerProfile(adapter, cfg = {}, farmRows = [], sel
  */
 function applyStorageLicensePowerLimit(targetW, profile = {}) {
     const requestedW = Number.isFinite(Number(targetW)) ? Number(targetW) : 0;
+    if (!profile || !['home', 'pro'].includes(profile.id)) {
+        return { requestedW, targetW: 0, limited: requestedW !== 0, limitW: 0, profile: 'none', label: 'Keine Lizenz' };
+    }
     const hardLimitW = Math.max(0, Number(profile && profile.maxCommandW || 0));
     if (hardLimitW <= 0) {
         return {

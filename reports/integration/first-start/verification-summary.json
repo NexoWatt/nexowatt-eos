@@ -1,0 +1,595 @@
+{
+  "schemaVersion": 1,
+  "sourceVersion": "0.2.0-dev.9",
+  "requirement": "EOS-REQ-ONBOARD-20261002",
+  "recordedAt": "2026-10-03T06:32:50.255700+00:00",
+  "environment": {
+    "platform": "Windows-11-10.0.26100-SP0",
+    "architecture": "AMD64",
+    "node": "v24.21.0",
+    "python": "3.14.0"
+  },
+  "groups": [
+    {
+      "name": "onboarding",
+      "raw": "reports/integration/first-start/raw/onboarding.tap",
+      "sha256": "e7d4db2f611810c619ecad8073358835f1463f21f30945e66a43a7eec24b01a6",
+      "scope": "https-local-and-memory-store",
+      "counts": {
+        "tests": 98,
+        "pass": 98,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "product-build-contract",
+      "raw": "reports/integration/first-start/raw/installation-product-build-r6-complete.tap",
+      "sha256": "bc055c8ede511480be2ced1f49f78b0cfaf2a5e98bb0e24939fda39fa03c6710",
+      "scope": "source-and-build-contract",
+      "counts": {
+        "tests": 19,
+        "pass": 19,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "accounts-and-control",
+      "raw": "reports/onboarding/admin-accounts-and-control.tap",
+      "sha256": "b2d989dc9ab392bc67042669752bf0855d1b9aea2adcb68e6692eac9e3738cf6",
+      "scope": "admin-modules-and-local-tls",
+      "counts": {
+        "tests": 51,
+        "pass": 50,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "service-contract",
+      "raw": "reports/onboarding/cross-service-contracts.tap",
+      "sha256": "b915eeafad0ac0875f790a57875c4ada10a5c376b734ad940ffb4fa247808cf7",
+      "scope": "unit-contract-and-simulated-host-effects",
+      "counts": {
+        "tests": 18,
+        "pass": 18,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "invitation-parser",
+      "raw": "reports/onboarding/admin-invitation-parser.tap",
+      "sha256": "b7583ca58f2abbaa258f726ef7b1575aafd65d3bf4027352c40bfccaa4a16fd8",
+      "scope": "actual-express-parser-route-harness",
+      "counts": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "first-start-license",
+      "raw": "reports/onboarding/first-start-license.tap",
+      "sha256": "3bc36b43f9310eb3e59bcd5107240ae509dce76b173d5702c923a04f6508bfbf",
+      "scope": "actual-license-core-and-encrypted-store; simulated-descriptor-ownership",
+      "counts": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "first-start-cleanup",
+      "raw": "reports/onboarding/first-start-cleanup.tap",
+      "sha256": "3dc93c9a2b532697d0fa4e0bd7e419d546251fcd00eeb9d9297abc82c51ce3fb",
+      "scope": "real-temporary-files; simulated-root-marker-ownership",
+      "counts": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "security-regression",
+      "raw": "reports/integration/first-start/raw/security-regression.tap",
+      "sha256": "6b8357ac31bc097a3f670148d04b8e252e9c1307667fb24870405688b440fa4e",
+      "scope": "baseline-tls-and-sftp-regression",
+      "counts": {
+        "tests": 41,
+        "pass": 41,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": true,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "security-initial-path-missing",
+      "raw": "reports/integration/first-start/raw/security-regression-path-missing.tap",
+      "sha256": "3e4d29b3a6d49d42421c55e67293e6eb67b82439b6f654aab1278180dd40eca0",
+      "scope": "platform-limited-failed-attempt",
+      "counts": {
+        "tests": 41,
+        "pass": 27,
+        "fail": 14,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": false,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "legacy-release-windows",
+      "raw": "reports/integration/first-start/raw/installation-release-windows.tap",
+      "sha256": "9440bd532630e35a7d51029bb2df592a0ee94ef844b2054b27dfcd9886059545",
+      "scope": "platform-limited-failed-attempt",
+      "counts": {
+        "tests": 9,
+        "pass": 5,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passedWithoutFailure": false,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "legacy-web-systemd-windows",
+      "raw": "reports/integration/first-start/raw/installation-web-systemd-windows.tap",
+      "sha256": "501bb2715b6948faae393ca0671bf8afb8528e9d72da49dd8b353b4ce6fe969a",
+      "scope": "platform-limited-failed-attempt",
+      "counts": {
+        "tests": 16,
+        "pass": 0,
+        "fail": 15,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0
+      },
+      "passedWithoutFailure": false,
+      "hardwareExecuted": false
+    }
+  ],
+  "focusedTestsPassed": 246,
+  "focusedTestsSkipped": 1,
+  "focusedSuitesHaveNoFailures": true,
+  "allAttemptedSuitesPassed": false,
+  "retainedLegacyFailures": 33,
+  "sourceBinding": "reports/integration/first-start/delivery-sources.json",
+  "sourceBindingSha256": "83797bf3e09a68e62a5c276e08991aef0165291f8060693c9bb834d829d44fa4",
+  "sourceBindingKind": "delivery-source-snapshot",
+  "sourceBindingVerifiedAtTestTime": false,
+  "pythonSecurityRegression": {
+    "schemaVersion": 1,
+    "runs": [
+      {
+        "test": "tests/security/host-policy.test.py",
+        "exitCode": 1,
+        "raw": "reports/integration/first-start/raw/security-host-policy.test.txt",
+        "sha256": "1eb656077499eab8903ca0bfe719406a512b94604ec9ce61ba45b7578296f62d",
+        "host": "Windows Git bash; not native Linux",
+        "hardwareExecuted": false
+      },
+      {
+        "test": "tests/security/node-update-log.test.py",
+        "exitCode": 1,
+        "raw": "reports/integration/first-start/raw/security-node-update-log.test.txt",
+        "sha256": "144d94884ddef1ccd2a649505dd7fec4f67dd3000e5ba313153f0ee6985d5d6b",
+        "host": "Windows Git bash; not native Linux",
+        "hardwareExecuted": false
+      },
+      {
+        "test": "tests/security/profile.test.py",
+        "exitCode": 1,
+        "raw": "reports/integration/first-start/raw/security-profile.test.txt",
+        "sha256": "d23542fd9f6b422a886c1699fccbeb371f838e636218c5269fb6c4ec2fb2ee8d",
+        "host": "Windows Git bash; not native Linux",
+        "hardwareExecuted": false
+      },
+      {
+        "test": "tests/security/wrapper.test.py",
+        "exitCode": 1,
+        "raw": "reports/integration/first-start/raw/security-wrapper.test.txt",
+        "sha256": "00876198c5ffad5dd829883bb13f8cbebb7af6249b0691fb22013a15257b93fe",
+        "host": "Windows Git bash; not native Linux",
+        "hardwareExecuted": false
+      }
+    ],
+    "allPassed": false
+  },
+  "build": {
+    "schemaVersion": 1,
+    "kind": "eos-first-start-complete-build-attempt",
+    "recordedAt": "2026-10-03T06:24:15.500Z",
+    "sourceVersion": "0.2.0-dev.9",
+    "candidateRuntimeVersion": "0.2.0-test.3",
+    "host": {
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "npm": "11.19.0"
+    },
+    "target": {
+      "platform": "linux-arm64",
+      "node": "24.21.0"
+    },
+    "assembly": {
+      "passed": true,
+      "exitCode": 0,
+      "workingDirectory": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d",
+      "scope": "isolated-build-host-app-tree-only",
+      "installedComponents": [
+        {
+          "id": "js-controller",
+          "package": "iobroker.js-controller",
+          "version": "7.2.2",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": true,
+          "acceptance": "management-test-only"
+        },
+        {
+          "id": "eos-admin",
+          "package": "iobroker.eos-admin",
+          "version": "7.10.11",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": true,
+          "acceptance": "management-test-only"
+        },
+        {
+          "id": "nexowatt-ui",
+          "package": "iobroker.nexowatt-ui",
+          "version": "1.0.21",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": true,
+          "acceptance": "management-test-only"
+        },
+        {
+          "id": "nexowatt-devices",
+          "package": "iobroker.nexowatt-devices",
+          "version": "0.5.169",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        },
+        {
+          "id": "eebus",
+          "package": "iobroker.eebus",
+          "version": "0.3.0",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        },
+        {
+          "id": "ocpp21",
+          "package": "iobroker.ocpp21",
+          "version": "0.4.0",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        },
+        {
+          "id": "nexowatt-backup",
+          "package": "iobroker.nexowatt-backup",
+          "version": "1.0.10",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        }
+      ],
+      "packageLockSha256": "ca41c25acfbb4e342ced019877bf9b6675be683d09a4ec7b058b77b0aad1bb89",
+      "appInventoryEntries": 22093,
+      "appBytes": 310388941,
+      "npmLifecycleScriptsExecuted": false,
+      "npmNetworkMode": "offline-only",
+      "privateAdaptersPublished": false
+    },
+    "sbom": {
+      "schemaValid": true,
+      "bindingPassed": true,
+      "passed": true,
+      "installedPackages": 686,
+      "uniqueNpmComponents": 639,
+      "embeddedPackages": 3,
+      "scope": "npm-and-explicit-vendored-packages",
+      "fullOperatingSystemInventory": false
+    },
+    "architecture": {
+      "passed": false,
+      "exitCode": 1,
+      "installedPackageCountIncludingRoot": 687,
+      "nativeFiles": 61,
+      "issueCount": 25,
+      "issueCodeCounts": {
+        "ARCH_UNREVIEWED_NATIVE_BUILD": 2,
+        "ARCH_NODE_ADDON_ABI_UNREVIEWED": 21,
+        "ARCH_MACH_HEADER": 2
+      },
+      "executedTargetCode": false,
+      "hardwareQualified": false
+    },
+    "signedRuntimeBuilt": false,
+    "packageSigningInvoked": false,
+    "generatedSigningKeys": false,
+    "currentRuntimeArtifact": null,
+    "candidateInstallable": false,
+    "hostInstallationPerformed": false,
+    "configured": false,
+    "physicalControlEnabled": false,
+    "productionReleaseApproved": false,
+    "hardwareTests": "OPEN_NOT_EXECUTED",
+    "commands": [
+      {
+        "stage": "assembly",
+        "program": "node",
+        "args": [
+          "tools/integration/assemble-postgresql-test.cjs",
+          "--output",
+          "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d",
+          "--platform",
+          "linux-arm64"
+        ],
+        "environment": {
+          "npm_config_cache": "<repository>/.work/npm-cache"
+        },
+        "exitCode": 0
+      },
+      {
+        "stage": "npm-sbom",
+        "program": "node",
+        "args": [
+          "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+          "sbom",
+          "--sbom-format",
+          "cyclonedx",
+          "--omit=dev",
+          "--offline"
+        ],
+        "cwd": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+        "exitCode": 0
+      },
+      {
+        "stage": "sbom-bind",
+        "program": "python",
+        "args": [
+          "tools/integration/bind-sbom.py",
+          "--app",
+          "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+          "--npm-sbom",
+          "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime.raw.cdx.json",
+          "--transform-evidence",
+          "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\controller-transform.json",
+          "--out",
+          "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime.cdx.json",
+          "--coverage",
+          "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime-sbom-coverage.json"
+        ],
+        "exitCode": 0
+      },
+      {
+        "stage": "sbom-schema",
+        "program": "python",
+        "args": [
+          "tools/integration/validate-sbom.py",
+          "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime.cdx.json",
+          "--output",
+          "reports\\integration\\first-start\\runtime-sbom-schema-d.json"
+        ],
+        "environment": {
+          "PYTHONPATH": "<repository>/.work/python-libs"
+        },
+        "offline": true,
+        "exitCode": 0
+      },
+      {
+        "stage": "architecture",
+        "program": "node",
+        "mode": "stdin script invoking unchanged exported checker",
+        "module": "tools/integration/check-runtime-architecture.cjs",
+        "function": "checkRuntimeArchitecture",
+        "arguments": {
+          "app": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+          "platform": "linux-arm64",
+          "nodeVersion": "24.21.0"
+        },
+        "exitCode": 1
+      },
+      {
+        "stage": "inventory-and-binding",
+        "program": "node",
+        "mode": "stdin script",
+        "inventoryFunction": "runtime/release/bundle.cjs:inventory",
+        "inventoryApp": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+        "excludedPaths": "npm node_modules/.bin launchers only, same payload exclusion as preparePayload",
+        "bindingFunction": "runtime/release/sbom-binding.cjs:verifySbomBinding",
+        "profile": "runtime-assembly-d.json:controllerProfile",
+        "exitCode": 0
+      }
+    ],
+    "earlierAttempts": [
+      {
+        "id": "a",
+        "outcome": "offline dependency cache incomplete; selected public dependencies were then fetched into isolated cache; no app lifecycle scripts or online private-app install"
+      },
+      {
+        "id": "b",
+        "outcome": "BUILD_OFFLINE_CACHE_MISS for five exact public tarballs; those tarballs were subsequently cached"
+      },
+      {
+        "id": "c",
+        "outcome": "BUILD_NPM_FAILED during npm pack UI before install; stdout/stderr empty and exact original subprocess cause unavailable",
+        "diagnosticRetry": "full-runtime-build-c-pack-ui-retry.json",
+        "diagnosticRetryExitCode": 0,
+        "diagnosticRetryElapsedMs": 9661
+      },
+      {
+        "id": "d",
+        "outcome": "full offline assembly and SBOM pass; unchanged architecture gate rejects native addons"
+      }
+    ],
+    "limitations": [
+      "This is a Windows build-host observation, not a Pi or Linux installation or execution test.",
+      "Native ABI/security review and actual linux-arm64 hardware acceptance remain open; installed files do not grant physical control.",
+      "The signing command is Linux-only because Windows chmod cannot prove POSIX private-key permissions; no signing key was generated here.",
+      "No new signed runtime or successful host installation is claimed; historical test.2 artifacts were not modified.",
+      "R6 onboarding/context/runtime helper source work is outside the npm app snapshot; a future signed release must be built from the final complete source checkout."
+    ],
+    "artifacts": [
+      {
+        "path": "runtime-package-d.json",
+        "bytes": 630,
+        "sha256": "57170620cc1a8b18b1036aecf175fe752fe45e98334acce3cff45a726ce81060"
+      },
+      {
+        "path": "runtime-package-lock-d.json",
+        "bytes": 315312,
+        "sha256": "ca41c25acfbb4e342ced019877bf9b6675be683d09a4ec7b058b77b0aad1bb89"
+      },
+      {
+        "path": "runtime-full-d.cdx.json",
+        "bytes": 781380,
+        "sha256": "6488ae33eed42b6578a8e43e2256dba747f135c6bbf2cb695e1b6d6f51043233"
+      },
+      {
+        "path": "runtime-sbom-schema-d.json",
+        "bytes": 357,
+        "sha256": "bbdfcf4a8ab5b5f0f1f564f1847525ccba1e09c88190c41c278a7ff8625e2d7e"
+      },
+      {
+        "path": "runtime-sbom-coverage-d.json",
+        "bytes": 408204,
+        "sha256": "d1aba2882d81859c56e1fb58311f54d5c103b1da1c9ac470ae3b7aa809e26a75"
+      },
+      {
+        "path": "runtime-sbom-binding-d.json",
+        "bytes": 194,
+        "sha256": "06b29610ece3196126e138898fd806625aab049ab8e9b780e455951ba67c0d6c"
+      },
+      {
+        "path": "runtime-app-inventory-d.json",
+        "bytes": 4431230,
+        "sha256": "fd347fe6e4961c8eb4870fd663cd91036bc22fb2b700accdba2a686147559e40"
+      },
+      {
+        "path": "runtime-architecture-full-d.json",
+        "bytes": 35550,
+        "sha256": "f10b920eedd7b6ec8a83a3413f3931c5bb923cae09939c7dbff94473136b8dfa"
+      },
+      {
+        "path": "runtime-assembly-d.json",
+        "bytes": 8825,
+        "sha256": "c029a296e5c3c55bf9410c97c1daf25d07921bdf715ae74cb6cacafb7b6bd8bf"
+      },
+      {
+        "path": "runtime-build-evidence-d.json",
+        "bytes": 5697,
+        "sha256": "da1d384eba04f848ba2997dfdf62b103b40541ff0032dfca2336d4287f4229c4"
+      },
+      {
+        "path": "runtime-controller-transform-d.json",
+        "bytes": 2995,
+        "sha256": "5ee7d04ed3e115fb38473492c9b18556f6e21c749699e959f3f6c4cffc15b72a"
+      },
+      {
+        "path": "runtime-install-d-result.json",
+        "bytes": 97,
+        "sha256": "cd4500c2609293fc718c55a9fb0e6876abdca1cd4df499cb795f9473bfac4d9f"
+      },
+      {
+        "path": "raw/runtime-install-d.txt",
+        "bytes": 890,
+        "sha256": "7b6e47a2aa93398a95423f8ab04f4cb3188bbd1bbb8c8516314923837d876dfd"
+      },
+      {
+        "path": "raw/full-runtime-build-d.txt",
+        "bytes": 3724,
+        "sha256": "b7bfd546fe0f58ab61b577ff95acd777392d741a1eaae560aca9e8010e40c461"
+      },
+      {
+        "path": "raw/runtime-architecture-full-d.txt",
+        "bytes": 7672,
+        "sha256": "53bc2ed78c5b8ee06a03f17f30ba247967d6ce8c504d4bf41cfa28bafa085789"
+      },
+      {
+        "path": "raw/runtime-inventory-binding-d.txt",
+        "bytes": 314,
+        "sha256": "0a0876e1a40639c91425b824c8245c9be1aebf13feacc4f9f6aaf93ce940515e"
+      }
+    ]
+  },
+  "targetHardwareTested": false,
+  "nativePostgresqlTested": false,
+  "nativeSystemdTested": false,
+  "graphicalBrowserTested": false,
+  "fullAdminTypecheckExecuted": false,
+  "physicalControlReleased": false,
+  "productionReleaseApproved": false,
+  "legacyTest2Verification": "user-reported signed-bundle check only; not a host installation; not rerun as hardware evidence",
+  "limitations": [
+    "Real local HTTPS/TLS is distinct from simulated database and systemd effects.",
+    "Delivery hashes are recorded after test execution; retained logs do not establish a cryptographic test-time source binding.",
+    "Initial Node security attempt lacked OpenSSL in PATH; its failed log is retained beside the successful rerun.",
+    "Python host security suites failed on Windows/Git Bash: missing POSIX geteuid, tools and /tmp permissions; these are not passes.",
+    "Legacy POSIX permission, /root and Linux-manifest checks failed on Windows; retained in raw logs.",
+    "The browser runtime reported no available browser; DOM tests are not visual browser acceptance.",
+    "License and device-plan forms are implemented; actual device communication, live measurements and engineering acceptance of plant values remain open.",
+    "Interrupted multi-object commits stay blocked and require controlled host recovery; no distributed transaction claimed."
+  ]
+}

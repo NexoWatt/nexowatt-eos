@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-crossplatform-test-archive-mechanism",
+  "startedAt": "2026-10-03T07:48:46.041Z",
+  "finishedAt": "2026-10-03T07:49:11.633Z",
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "24.21.0"
+  },
+  "command": "node --test --test-concurrency=1 --test-reporter=tap tests/integration/test-archive.test.cjs tests/integration/payload-architecture-report.test.cjs tests/integration/build-runtime.test.cjs tests/postgresql/full-product.test.cjs",
+  "exitCode": 0,
+  "passed": true,
+  "counts": {
+    "tests": 39,
+    "passed": 39,
+    "failed": 0,
+    "skipped": 0
+  },
+  "sourcesUnchangedDuringRun": true,
+  "tapSha256": "689f90e8a758a017391f56a48bf85632eb0473715ad6aa35ce42975d6d5e996a",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "files": [
+    {
+      "path": "tools/integration/create-test-archive.cjs",
+      "sha256": "6f683bdf9799d4af522306fc70c6bfe7f65b472fc4bfaa4da2110e20037c6685",
+      "bytes": 7991
+    },
+    {
+      "path": "tools/integration/test-archive.py",
+      "sha256": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b",
+      "bytes": 11773
+    },
+    {
+      "path": "tools/integration/package-postgresql-test.cjs",
+      "sha256": "96707b826538c7468ea7d605ce356e3f3fc616e7b90a6541d3a0d20ed9d25f85",
+      "bytes": 4813
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "a2db7123d4849ccfb5235136e8e48d97079ee0d1b27095e13e1534780fe8d5b3",
+      "bytes": 14347
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "596f37a333412090eca17249270343549344b036efcbf6fe2695a1c040582817",
+      "bytes": 20596
+    },
+    {
+      "path": "runtime/release/bundle.cjs",
+      "sha256": "9c3c8f38672d84d7adbb6b05eb4b13e3c35483ced63a427697370aeb7c5c2e3b",
+      "bytes": 12364
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "41e73625a9f366998bd74aafb2c46875d81acb457cadcc4ef935cad877dc11b9",
+      "bytes": 11250
+    },
+    {
+      "path": "runtime/native/serialport-contract.cjs",
+      "sha256": "4909a37aab9e1a7b53f60dbdf9352b430a70ec27608604fc988a1ee2d8873525",
+      "bytes": 8674
+    },
+    {
+      "path": "runtime/native/serialport-policy.json",
+      "sha256": "206c91ef814ec548b2489e54163493c814e239c355fd92423e5fb3f42b719cc2",
+      "bytes": 22811
+    },
+    {
+      "path": "runtime/policy/admission.cjs",
+      "sha256": "d12e78cd825be29ea43ca067d39ca957e89a39d67c152fbdaa58b64b7bd1055c",
+      "bytes": 16772
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "79ea05d3b31b550d68be8b7232b088269cccf2590289121b7867e1bc882830a1",
+      "bytes": 16622
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "644e3b14b2bd806371aafe9d7f6bac426401cf336e4fc3ba0b1f75c94fa082b9",
+      "bytes": 4009
+    },
+    {
+      "path": "tests/system/fixtures/sbom-transform.cjs",
+      "sha256": "b5fcd424aef6c1765f57efa8c9ef2f80aea76cf2058e38d9dc558a35c2a99159",
+      "bytes": 970
+    },
+    {
+      "path": "tests/integration/test-archive.test.cjs",
+      "sha256": "3ccc214b723ae3dab813a3e1d8fe246459e457fb677e3a2ecb0900ece57c4005",
+      "bytes": 13631
+    },
+    {
+      "path": "tests/integration/payload-architecture-report.test.cjs",
+      "sha256": "7a90a759220c2b84fe11ab627433da12399cb43b7a2f1450a212bbc2987029c5",
+      "bytes": 7972
+    },
+    {
+      "path": "tests/integration/build-runtime.test.cjs",
+      "sha256": "d7bf020a275e22b99d7059b1e9a59b5bcdbbef76c6b365d15c7aa3bbcb4c0863",
+      "bytes": 6213
+    },
+    {
+      "path": "tests/postgresql/full-product.test.cjs",
+      "sha256": "756b33f75e1f41bc6f826ba7ec583e7fd5ae5d1877d7f5e9f957d15bce785094",
+      "bytes": 8864
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/cjs-main.original.txt",
+      "sha256": "c8e7c0b42e4f7efa85988f2c9bf357cc9190608b34177ba696b3d14cb0c50573",
+      "bytes": 179852
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/cjs-setup.original.txt",
+      "sha256": "fa9f14db6f73db3121610acd29baff5ab01fc6451f4ce0ffd47531022c2e4e69",
+      "bytes": 99992
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/cjs-setupInstall.original.txt",
+      "sha256": "709662c216dc10d849ab9cc867fc9dfef8d582e4657b504ee44bc2ac9e2a453b",
+      "bytes": 61967
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/esm-main.original.txt",
+      "sha256": "3e58dde34ed58667fa65104839e1ef87e2075cba96fc1810dc9a5173ebb2fe27",
+      "bytes": 235557
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/esm-setup.original.txt",
+      "sha256": "3e49f39ff1a98a1a4d14bca7db6a5f90435eeeceaff6385bb6069539e35885ab",
+      "bytes": 122188
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/esm-setupInstall.original.txt",
+      "sha256": "d63b5308af6b1c625b00e61ca48e4fcf928a5ce9346c4d3458a2ed0cdca2efa0",
+      "bytes": 75024
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/source-main.original.txt",
+      "sha256": "bbf7470b383bb48ab244ac2bb71dac22414885034a09a91e594a936476daa1e7",
+      "bytes": 253584
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/source-setup.original.txt",
+      "sha256": "c3f3c70a66ceb19ba29335c19094f6280affe5278864b14d62c5fb51768e43ec",
+      "bytes": 128947
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/source-setupInstall.original.txt",
+      "sha256": "c381e998308dd131459967205c0558c03c447b172be2ab23c3a6c491b3536bec",
+      "bytes": 81126
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/ws-server-4.5.1.original.txt",
+      "sha256": "ad8e5d744cdc85ed2670312c528a4222ce3bc4872a8cfb7abe09b113b35096ae",
+      "bytes": 20034
+    }
+  ],
+  "scope": "Actual Ed25519 memory-only signing and Python stdlib archive writing/readback. Tiny native fixtures replace product/SBOM validation only; five added core-only payload fixtures exercise actual catalog/controller/SBOM/architecture gates, including exact per-platform scan count and a complete public archive API path. Additional build normalization and full-product contract tests run locally. No complete six-adapter payload build in this scoped run.",
+  "notPerformed": [
+    "Complete production payload packaging in this scoped mechanism run",
+    "Linux filesystem extraction and unchanged verifyBundle on target",
+    "Native addon execution",
+    "systemd or PostgreSQL installation",
+    "Browser or Pi/hardware acceptance"
+  ],
+  "productionReleaseApproved": false
+}

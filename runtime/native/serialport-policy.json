@@ -1,0 +1,658 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-pinned-serialport-native-policy",
+  "profile": "eos-serialport-linux-arm64-glibc-node24-v1",
+  "target": {
+    "platform": "linux-arm64",
+    "nodeVersion": "24.21.0",
+    "minimumGlibc": "2.28",
+    "libuvMajor": 1,
+    "minimumNapi": 8
+  },
+  "upstreamArm64Status": "built-not-in-upstream-supported-platform-list",
+  "hardwareAcceptance": false,
+  "packages": [
+    {
+      "packagePath": "node_modules/@serialport/bindings-cpp",
+      "package": "@serialport/bindings-cpp",
+      "version": "12.0.1",
+      "archive": "https://registry.npmjs.org/@serialport/bindings-cpp/-/bindings-cpp-12.0.1.tgz",
+      "integrity": "sha512-r2XOwY2dDvbW7dKqSPIk2gzsr6M6Qpe9+/Ngs94fNaNlcTRCV02PfaoDmRgcubpNVVcLATlxSxPTIDw12dbKOg==",
+      "archiveSha256": "8cf4e55fcbc175ee56b9c5ba79e6665b9528adabfde8e3b4ae1abd6e948f40e2",
+      "napi": 6,
+      "loader": "dist/load-bindings.js",
+      "native": "prebuilds/linux-arm64/node.napi.armv8.node",
+      "nativeSha256": "2341a58d2c3d99f827a411c65cb1c9c9f00a80b62e9bbbde58b2f29625fd56d9",
+      "nativeBytes": 146744,
+      "elfNeeded": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libpthread.so.0",
+        "libc.so.6"
+      ],
+      "elfVersions": [
+        {
+          "library": "libgcc_s.so.1",
+          "version": "GCC_3.0"
+        },
+        {
+          "library": "libpthread.so.0",
+          "version": "GLIBC_2.17"
+        },
+        {
+          "library": "libc.so.6",
+          "version": "GLIBC_2.17"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.8"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.9"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4.21"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4"
+        }
+      ],
+      "uvImports": [
+        "uv_close",
+        "uv_default_loop",
+        "uv_poll_init",
+        "uv_poll_start",
+        "uv_poll_stop",
+        "uv_strerror",
+        "uv_unref"
+      ],
+      "originalFiles": [
+        {
+          "path": "LICENSE",
+          "bytes": 1105,
+          "sha256": "12b8f57dbef742496d1356e7773fdf32924724bf1cdb2cd833c448611d04a525"
+        },
+        {
+          "path": "README.md",
+          "bytes": 6308,
+          "sha256": "f38ee5c0a886f53f27d80054bf1bad35233eccc75b688f64453a41e6536ab2d6"
+        },
+        {
+          "path": "binding.gyp",
+          "bytes": 1891,
+          "sha256": "06c0c7b04545f5a5ed689d113d19b0b9feb2018eb15e3d407694e827f90bc4fd"
+        },
+        {
+          "path": "dist/darwin.d.ts",
+          "bytes": 1498,
+          "sha256": "f1a7bedd7bc96fb9c7378a815eee009f4bd4bfbdbe65f814b15d1e539d1107f6"
+        },
+        {
+          "path": "dist/darwin.js",
+          "bytes": 5235,
+          "sha256": "792495728d54f5c3132ed82be56369cf4cefce90a0411c34fc21d9f2904e423b"
+        },
+        {
+          "path": "dist/errors.d.ts",
+          "bytes": 281,
+          "sha256": "3a28904968592c8802f67b729993393161789ae7c5d033a5b9a2917e01db2614"
+        },
+        {
+          "path": "dist/errors.js",
+          "bytes": 304,
+          "sha256": "4835dc695fdb088bd04b74ccf7b12d99b8e7d0ebbaa7774a9ae05ed1e5b0a273"
+        },
+        {
+          "path": "dist/index.d.ts",
+          "bytes": 530,
+          "sha256": "d31f2710a55b0e1a54ddedbea84c2b4966285e0d63d2b65a2ed02effb530fab2"
+        },
+        {
+          "path": "dist/index.js",
+          "bytes": 1933,
+          "sha256": "0616992e5c3fd1d27409fefdd423a81938f2a5bf1d26f37a389903487e9d1daf"
+        },
+        {
+          "path": "dist/linux-list.d.ts",
+          "bytes": 210,
+          "sha256": "6f7ad267f66f62632c416096cd0e952ea0a8a803e5d4e35ae45ad1a6d08eeaeb"
+        },
+        {
+          "path": "dist/linux-list.js",
+          "bytes": 3594,
+          "sha256": "1f5f656cfaa7364133aae86c90bba199ba40c3eef8884a9c5a201770ff158ae3"
+        },
+        {
+          "path": "dist/linux.d.ts",
+          "bytes": 1685,
+          "sha256": "29ba926515ca7879fb1a77db62edcc8da6afa9882ab88491fbf33623a17f4270"
+        },
+        {
+          "path": "dist/linux.js",
+          "bytes": 5277,
+          "sha256": "e431a287acb3e4a7d1c5165430de7c08dae0a7cef0d4107ae2a147aac97b5c36"
+        },
+        {
+          "path": "dist/load-bindings.d.ts",
+          "bytes": 473,
+          "sha256": "729c1d0de59280e9e2b7620ad35b5f56cb83020eca12daaa5024d1ec7ba82b32"
+        },
+        {
+          "path": "dist/load-bindings.js",
+          "bytes": 2406,
+          "sha256": "f70c71d7d2e810ff570afc60be81ed6c82ed40f16d7f632860e30873635fc722"
+        },
+        {
+          "path": "dist/poller.d.ts",
+          "bytes": 1279,
+          "sha256": "7fbc065eefc4c8d2443f865bec121eb6e7277d1152ed42a06df1f10a8a0008b4"
+        },
+        {
+          "path": "dist/poller.js",
+          "bytes": 3467,
+          "sha256": "f3eae01b7733ff7cd2a260aa607056e5f0c473377fb7dbd44b18c75ae89bd58f"
+        },
+        {
+          "path": "dist/unix-read.d.ts",
+          "bytes": 591,
+          "sha256": "66b96c64b44e5437ae8f6408b5afb6af303f56561313e82d11aef373c1879cce"
+        },
+        {
+          "path": "dist/unix-read.js",
+          "bytes": 2301,
+          "sha256": "d4032da84a9d161af75a1681740c5aabbe00fb790dc88ce9c2445227ea429955"
+        },
+        {
+          "path": "dist/unix-write.d.ts",
+          "bytes": 518,
+          "sha256": "19752d146535a15697eab18aed6fc161df0ad37cd11f633a6693b07d70f1a369"
+        },
+        {
+          "path": "dist/unix-write.js",
+          "bytes": 2430,
+          "sha256": "2e1cc906a935d7242dfd2c5f317e76fc2d812b2605ad01ae2df1f7abec6c1e0f"
+        },
+        {
+          "path": "dist/win32-sn-parser.d.ts",
+          "bytes": 73,
+          "sha256": "6ec8dd3efaab2bada5a5aa3c1925f948d5c24cc7371d3ee432ea9c27dc62ba4a"
+        },
+        {
+          "path": "dist/win32-sn-parser.js",
+          "bytes": 463,
+          "sha256": "a3e3c191aef6cbe7cec17c193b1034613bb4c86fbe9d903366d7e87dc07250ac"
+        },
+        {
+          "path": "dist/win32.d.ts",
+          "bytes": 1350,
+          "sha256": "ca8cf6fdee561f3754143428652bfdd5c063dc5280da23a8feaa37498c4351e8"
+        },
+        {
+          "path": "dist/win32.js",
+          "bytes": 5745,
+          "sha256": "39032d8e2f54001c8af8ecf08c33692972526560b45c168c9ac06a4e90b98a40"
+        },
+        {
+          "path": "package.json",
+          "bytes": 2847,
+          "sha256": "9bbae26a6fd2127ac6da1bdff9597dbf00b14d60d4a2a6f8e63bee4b820d8b37"
+        },
+        {
+          "path": "prebuilds/android-arm/node.napi.armv7.node",
+          "bytes": 93432,
+          "sha256": "7947c3e850b753da5b602c776028aae372b4f7847dfbaf7c696f1ee743a7e1eb"
+        },
+        {
+          "path": "prebuilds/android-arm64/node.napi.armv8.node",
+          "bytes": 132552,
+          "sha256": "bdfe8f469663f1adca8f910e669950dacdf4710182ba147d94beba47174b594f"
+        },
+        {
+          "path": "prebuilds/darwin-x64+arm64/node.napi.node",
+          "bytes": 289056,
+          "sha256": "e8f5177df50677df2a91dfe14ace2bdf16fade5c4d7dfa3d5b14427715d581b5"
+        },
+        {
+          "path": "prebuilds/linux-arm/node.napi.armv6.node",
+          "bytes": 117012,
+          "sha256": "b10a83aca31ebf21b901affc61961a16924aa558ddf4b27ed2aa694ecb00f1e5"
+        },
+        {
+          "path": "prebuilds/linux-arm/node.napi.armv7.node",
+          "bytes": 117024,
+          "sha256": "0f3fc12ed86fb8ea6460c7d2b612db997bd0bb6c8a6eb7492f93dcad376c7cea"
+        },
+        {
+          "path": "prebuilds/linux-arm64/node.napi.armv8.node",
+          "bytes": 146744,
+          "sha256": "2341a58d2c3d99f827a411c65cb1c9c9f00a80b62e9bbbde58b2f29625fd56d9"
+        },
+        {
+          "path": "prebuilds/linux-x64/node.napi.glibc.node",
+          "bytes": 154928,
+          "sha256": "c32a2a98bb31220544a2e866a9d2bee618b2fa8bdc735ffdabec19421c589960"
+        },
+        {
+          "path": "prebuilds/linux-x64/node.napi.musl.node",
+          "bytes": 153776,
+          "sha256": "a9bad9a88cb0b67ad1807debce24510d581752c7aef3d9f2bcce30b119ac3009"
+        },
+        {
+          "path": "prebuilds/win32-ia32/node.napi.node",
+          "bytes": 179200,
+          "sha256": "df91e6a6764481b58c95f07a7f81193ae4f99877d1e3da26a05f99664b2f2b23"
+        },
+        {
+          "path": "prebuilds/win32-x64/node.napi.node",
+          "bytes": 229376,
+          "sha256": "2d5d112e2e57054034fa9454e9c33dc306377455d989644f7d4c1b43027eb006"
+        },
+        {
+          "path": "src/darwin_list.cpp",
+          "bytes": 10449,
+          "sha256": "db67a6d2fae06ba62f56abcab976e3ac57cbd6a72ad7056d7139b0502841208a"
+        },
+        {
+          "path": "src/darwin_list.h",
+          "bytes": 2171,
+          "sha256": "b3ef60a9668d9d3df8d8ef35bd73a7eb4f25cb04891ec8ffeffecbf4d32e63bf"
+        },
+        {
+          "path": "src/poller.cpp",
+          "bytes": 5047,
+          "sha256": "8dd9b123931edb6d52fdda695c03c0150d56b850caab0d645796b7f01694e2bc"
+        },
+        {
+          "path": "src/poller.h",
+          "bytes": 1018,
+          "sha256": "39963ac4467d71d6c6faa339e6c52b17677fc20eec07dcf9654bd81fa9805cf4"
+        },
+        {
+          "path": "src/serialport.cpp",
+          "bytes": 10510,
+          "sha256": "3218da47fee85ab3a6f672c84bda47aa50f7419889cc50c84d00975d23849cdc"
+        },
+        {
+          "path": "src/serialport.h",
+          "bytes": 5793,
+          "sha256": "b1a8bda12bdc4f18fd534e30bf192c1f7d8c5399b46bdd9a3900c8217cd4a6bd"
+        },
+        {
+          "path": "src/serialport_linux.cpp",
+          "bytes": 1408,
+          "sha256": "f9898d81ed2b5285c948f3ea237d2ddbdfdf79e2553bc1fac996d40de7359833"
+        },
+        {
+          "path": "src/serialport_linux.h",
+          "bytes": 419,
+          "sha256": "5e09caeb95b46cbd27e819fe588c216c937eb23e293af851c7916122dcbc64e9"
+        },
+        {
+          "path": "src/serialport_unix.cpp",
+          "bytes": 13964,
+          "sha256": "49fbcd9742de85b6288141d3d1bd819b465fb8f73b721449c4157e17eac0f1b5"
+        },
+        {
+          "path": "src/serialport_unix.h",
+          "bytes": 237,
+          "sha256": "b6829f65ce343486b1b99d7bb4a1e3be50a068ddee97929b4d451d6a4518b8d7"
+        },
+        {
+          "path": "src/serialport_win.cpp",
+          "bytes": 31530,
+          "sha256": "3187aeab269afbf2a271024babff8ba69313202a68e7ed0d4b3981c4947603f0"
+        },
+        {
+          "path": "src/serialport_win.h",
+          "bytes": 2815,
+          "sha256": "57dfd87ff45b61dca6af2eeffbfb7167fbc8226d731d62d1d884ed1706223124"
+        }
+      ],
+      "patchedLoaderSha256": "621ce066e385d3e12eb29b323ae02a6ecb05f56361b7084212d64df19ac4ba55",
+      "patchedLoaderBytes": 2349,
+      "fixedLoaderSha256": "fc13a6476639331242fea8144505730f02cacb71aca470e411cc5049322a5470",
+      "fixedLoaderBytes": 1971
+    },
+    {
+      "packagePath": "node_modules/modbus-serial/node_modules/@serialport/bindings-cpp",
+      "package": "@serialport/bindings-cpp",
+      "version": "13.0.0",
+      "archive": "https://registry.npmjs.org/@serialport/bindings-cpp/-/bindings-cpp-13.0.0.tgz",
+      "integrity": "sha512-r25o4Bk/vaO1LyUfY/ulR6hCg/aWiN6Wo2ljVlb4Pj5bqWGcSRC4Vse4a9AcapuAu/FeBzHCbKMvRQeCuKjzIQ==",
+      "archiveSha256": "68bc2ce6a4b3be82d76d708d1467c6adf2be878fefe09c499017b6273c3f024d",
+      "napi": 8,
+      "loader": "dist/serialport-bindings.js",
+      "native": "prebuilds/linux-arm64/@serialport+bindings-cpp.armv8.glibc.node",
+      "nativeSha256": "a92389bed45b1ea7f9613e6c01de18e60cf58d484cddf065d8603c9143876f8f",
+      "nativeBytes": 134312,
+      "elfNeeded": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6"
+      ],
+      "elfVersions": [
+        {
+          "library": "libgcc_s.so.1",
+          "version": "GCC_3.0"
+        },
+        {
+          "library": "libc.so.6",
+          "version": "GLIBC_2.28"
+        },
+        {
+          "library": "libc.so.6",
+          "version": "GLIBC_2.17"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.8"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3.9"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "CXXABI_1.3"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4.21"
+        },
+        {
+          "library": "libstdc++.so.6",
+          "version": "GLIBCXX_3.4"
+        }
+      ],
+      "uvImports": [
+        "uv_close",
+        "uv_default_loop",
+        "uv_poll_init",
+        "uv_poll_start",
+        "uv_poll_stop",
+        "uv_strerror",
+        "uv_unref"
+      ],
+      "originalFiles": [
+        {
+          "path": "LICENSE",
+          "bytes": 1105,
+          "sha256": "12b8f57dbef742496d1356e7773fdf32924724bf1cdb2cd833c448611d04a525"
+        },
+        {
+          "path": "README.md",
+          "bytes": 6308,
+          "sha256": "f38ee5c0a886f53f27d80054bf1bad35233eccc75b688f64453a41e6536ab2d6"
+        },
+        {
+          "path": "binding.gyp",
+          "bytes": 1891,
+          "sha256": "06c0c7b04545f5a5ed689d113d19b0b9feb2018eb15e3d407694e827f90bc4fd"
+        },
+        {
+          "path": "dist/darwin.d.ts",
+          "bytes": 1467,
+          "sha256": "f6cc7cfd05001a9138a0dbe7c1e405fbb10700f939c9b75d84b9f2c2d54adf61"
+        },
+        {
+          "path": "dist/darwin.js",
+          "bytes": 5235,
+          "sha256": "792495728d54f5c3132ed82be56369cf4cefce90a0411c34fc21d9f2904e423b"
+        },
+        {
+          "path": "dist/errors.d.ts",
+          "bytes": 281,
+          "sha256": "3a28904968592c8802f67b729993393161789ae7c5d033a5b9a2917e01db2614"
+        },
+        {
+          "path": "dist/errors.js",
+          "bytes": 304,
+          "sha256": "4835dc695fdb088bd04b74ccf7b12d99b8e7d0ebbaa7774a9ae05ed1e5b0a273"
+        },
+        {
+          "path": "dist/index.d.ts",
+          "bytes": 530,
+          "sha256": "d31f2710a55b0e1a54ddedbea84c2b4966285e0d63d2b65a2ed02effb530fab2"
+        },
+        {
+          "path": "dist/index.js",
+          "bytes": 1904,
+          "sha256": "66b2befbe977d24e3c6648afe854eb9666eecf30726ba0cb65edfa2789dd3b90"
+        },
+        {
+          "path": "dist/linux-list.d.ts",
+          "bytes": 179,
+          "sha256": "faacbcc6833d58d401f58976d422cd84e2c2357d20e730930dfea269830d588a"
+        },
+        {
+          "path": "dist/linux-list.js",
+          "bytes": 3566,
+          "sha256": "dff0a656d9a2e9cbbd206e9eee90d0134d3ae36fa2153d31af555648b1325803"
+        },
+        {
+          "path": "dist/linux.d.ts",
+          "bytes": 1654,
+          "sha256": "f3f896548650e7a5c2021fb3e62f9e82d556a5aa00a2ff8942c64a93f7a6d5d8"
+        },
+        {
+          "path": "dist/linux.js",
+          "bytes": 5277,
+          "sha256": "e431a287acb3e4a7d1c5165430de7c08dae0a7cef0d4107ae2a147aac97b5c36"
+        },
+        {
+          "path": "dist/load-bindings.d.ts",
+          "bytes": 473,
+          "sha256": "729c1d0de59280e9e2b7620ad35b5f56cb83020eca12daaa5024d1ec7ba82b32"
+        },
+        {
+          "path": "dist/load-bindings.js",
+          "bytes": 2568,
+          "sha256": "576761af31601a9831d9eecb44395a522f296b857aa59b8fae208336d0d827f0"
+        },
+        {
+          "path": "dist/poller.d.ts",
+          "bytes": 1248,
+          "sha256": "f27cb9fa7b78b19df4b0ae39e2b97dbebb54e91433096b49ef39f73cd25b5e0e"
+        },
+        {
+          "path": "dist/poller.js",
+          "bytes": 3394,
+          "sha256": "e145b98346d7abaf21160d58b0595ecdd8a93175e6bd6f59e3cc60133075c73d"
+        },
+        {
+          "path": "dist/serialport-bindings.d.ts",
+          "bytes": 35,
+          "sha256": "80235567f9d4ffeccf3123a66a1b13c4fd09a7df7932edc87cf797df25c06229"
+        },
+        {
+          "path": "dist/serialport-bindings.js",
+          "bytes": 491,
+          "sha256": "b733341fc16f8c1b0391050010060a7a0e0e2a1908803ef34afcbce432936b5f"
+        },
+        {
+          "path": "dist/unix-read.d.ts",
+          "bytes": 529,
+          "sha256": "a20f615810fb3a7d3ea444995ced74bce3316b91b6ab83bc7d2182a65542ba89"
+        },
+        {
+          "path": "dist/unix-read.js",
+          "bytes": 2301,
+          "sha256": "d4032da84a9d161af75a1681740c5aabbe00fb790dc88ce9c2445227ea429955"
+        },
+        {
+          "path": "dist/unix-write.d.ts",
+          "bytes": 456,
+          "sha256": "e12271aa3cb9b321e72dc02af2b1110a5043ec54be3edcaca9c6a2ec98a395c5"
+        },
+        {
+          "path": "dist/unix-write.js",
+          "bytes": 2430,
+          "sha256": "2e1cc906a935d7242dfd2c5f317e76fc2d812b2605ad01ae2df1f7abec6c1e0f"
+        },
+        {
+          "path": "dist/win32-sn-parser.d.ts",
+          "bytes": 73,
+          "sha256": "6ec8dd3efaab2bada5a5aa3c1925f948d5c24cc7371d3ee432ea9c27dc62ba4a"
+        },
+        {
+          "path": "dist/win32-sn-parser.js",
+          "bytes": 463,
+          "sha256": "a3e3c191aef6cbe7cec17c193b1034613bb4c86fbe9d903366d7e87dc07250ac"
+        },
+        {
+          "path": "dist/win32.d.ts",
+          "bytes": 1319,
+          "sha256": "49357ee4ba1e42dd79910c1060dda2ecb1166c3c8c45111fedf3e73afafa3ce0"
+        },
+        {
+          "path": "dist/win32.js",
+          "bytes": 5745,
+          "sha256": "39032d8e2f54001c8af8ecf08c33692972526560b45c168c9ac06a4e90b98a40"
+        },
+        {
+          "path": "package.json",
+          "bytes": 2849,
+          "sha256": "7b1af3e0ecc4602efe9aa7ee01d31a6f31ba367bf8ba2b2614da1ba48f57f886"
+        },
+        {
+          "path": "prebuilds/android-arm/@serialport+bindings-cpp.armv7.node",
+          "bytes": 92748,
+          "sha256": "47830141653647f790c55a98dd97e7d03c51eaf41548c9e2e59817ac9a88ff38"
+        },
+        {
+          "path": "prebuilds/android-arm64/@serialport+bindings-cpp.armv8.node",
+          "bytes": 131800,
+          "sha256": "bdefd0b2acc5f90ac0cd218fadaf51cbd091e54739cfe321dd588f29c7d70afc"
+        },
+        {
+          "path": "prebuilds/darwin-x64+arm64/@serialport+bindings-cpp.node",
+          "bytes": 254416,
+          "sha256": "23daa6940614b42ac940c96e0f420d7576738a515f29c25bc1e1790f9abd5704"
+        },
+        {
+          "path": "prebuilds/linux-arm/@serialport+bindings-cpp.armv6.glibc.node",
+          "bytes": 116964,
+          "sha256": "04f0086b6cab4d5665234845c1adf8b8d89e2bed3ff08424a1724a824a0629bf"
+        },
+        {
+          "path": "prebuilds/linux-arm/@serialport+bindings-cpp.armv7.glibc.node",
+          "bytes": 116972,
+          "sha256": "5c052871c2e9a90c1adc3d7d7a88831a4971999a575b2b0c471113ec9302cedd"
+        },
+        {
+          "path": "prebuilds/linux-arm/@serialport+bindings-cpp.armv7.musl.node",
+          "bytes": 116888,
+          "sha256": "b2720fbae4a852ce70670c156d37764f32f2b316706cfcba9e11341ee04e0211"
+        },
+        {
+          "path": "prebuilds/linux-arm64/@serialport+bindings-cpp.armv8.glibc.node",
+          "bytes": 134312,
+          "sha256": "a92389bed45b1ea7f9613e6c01de18e60cf58d484cddf065d8603c9143876f8f"
+        },
+        {
+          "path": "prebuilds/linux-arm64/@serialport+bindings-cpp.armv8.musl.node",
+          "bytes": 134224,
+          "sha256": "c42316381abdbcdd3d56ce2b2bcec04cb62a6f092b57cf2bb8f963a155b55d57"
+        },
+        {
+          "path": "prebuilds/linux-x64/@serialport+bindings-cpp.glibc.node",
+          "bytes": 150744,
+          "sha256": "572054004570f2a93630ca716c32947257283d1abbfd536f7a91cf6d98dc50db"
+        },
+        {
+          "path": "prebuilds/linux-x64/@serialport+bindings-cpp.musl.node",
+          "bytes": 170080,
+          "sha256": "794a33f480832d57268a225a8560963cf4b8153334186cff13cf3cec40f7d99b"
+        },
+        {
+          "path": "prebuilds/win32-arm64/@serialport+bindings-cpp.armv8.node",
+          "bytes": 237568,
+          "sha256": "bc246fbe6cc0295c44bf836e814a75643c59718524c8f732982a8a0fa89b9cb6"
+        },
+        {
+          "path": "prebuilds/win32-ia32/@serialport+bindings-cpp.node",
+          "bytes": 184832,
+          "sha256": "411c9635a15b34281a5f6cb0de9d61cc2e3b8cc4c9cae6fb541fadc34e28cd90"
+        },
+        {
+          "path": "prebuilds/win32-x64/@serialport+bindings-cpp.node",
+          "bytes": 233472,
+          "sha256": "eead9115994f9ad9471cd607ead9aa5c3dbf460c878bafdde41b68b57679fefc"
+        },
+        {
+          "path": "src/darwin_list.cpp",
+          "bytes": 10449,
+          "sha256": "db67a6d2fae06ba62f56abcab976e3ac57cbd6a72ad7056d7139b0502841208a"
+        },
+        {
+          "path": "src/darwin_list.h",
+          "bytes": 2171,
+          "sha256": "b3ef60a9668d9d3df8d8ef35bd73a7eb4f25cb04891ec8ffeffecbf4d32e63bf"
+        },
+        {
+          "path": "src/poller.cpp",
+          "bytes": 5047,
+          "sha256": "8dd9b123931edb6d52fdda695c03c0150d56b850caab0d645796b7f01694e2bc"
+        },
+        {
+          "path": "src/poller.h",
+          "bytes": 1018,
+          "sha256": "39963ac4467d71d6c6faa339e6c52b17677fc20eec07dcf9654bd81fa9805cf4"
+        },
+        {
+          "path": "src/serialport.cpp",
+          "bytes": 10510,
+          "sha256": "3218da47fee85ab3a6f672c84bda47aa50f7419889cc50c84d00975d23849cdc"
+        },
+        {
+          "path": "src/serialport.h",
+          "bytes": 5793,
+          "sha256": "b1a8bda12bdc4f18fd534e30bf192c1f7d8c5399b46bdd9a3900c8217cd4a6bd"
+        },
+        {
+          "path": "src/serialport_linux.cpp",
+          "bytes": 1408,
+          "sha256": "f9898d81ed2b5285c948f3ea237d2ddbdfdf79e2553bc1fac996d40de7359833"
+        },
+        {
+          "path": "src/serialport_linux.h",
+          "bytes": 419,
+          "sha256": "5e09caeb95b46cbd27e819fe588c216c937eb23e293af851c7916122dcbc64e9"
+        },
+        {
+          "path": "src/serialport_unix.cpp",
+          "bytes": 13982,
+          "sha256": "30107aadae805b4353d8270e9a4cfa5b1ca52b3bfcd1e3e06f4832c01f2e8bcf"
+        },
+        {
+          "path": "src/serialport_unix.h",
+          "bytes": 237,
+          "sha256": "b6829f65ce343486b1b99d7bb4a1e3be50a068ddee97929b4d451d6a4518b8d7"
+        },
+        {
+          "path": "src/serialport_win.cpp",
+          "bytes": 31713,
+          "sha256": "bd2538833cf0cc99ffebb29806ba1db0687fa220888757433005d1ed0ad5e82b"
+        },
+        {
+          "path": "src/serialport_win.h",
+          "bytes": 2815,
+          "sha256": "57dfd87ff45b61dca6af2eeffbfb7167fbc8226d731d62d1d884ed1706223124"
+        }
+      ],
+      "patchedLoaderSha256": "370c565e46d0d6fd1f3c67de5d44bc671f0062aa08bac69c40792cadbb5641a0",
+      "patchedLoaderBytes": 206,
+      "fixedLoaderSha256": "d36d7b6333d990baecb4099ac0349546a4a46aa4fab3cdbec7e506412552da72",
+      "fixedLoaderBytes": 1992
+    }
+  ]
+}

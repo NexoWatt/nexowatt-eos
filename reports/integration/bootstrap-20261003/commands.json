@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "host": "win32-x64",
+  "node": "24.21.0",
+  "stages": [
+    {
+      "name": "node-bootstrap",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/bootstrap/build-download.test.cjs",
+        "tests/bootstrap/first-start.test.cjs"
+      ],
+      "started": "2026-10-03T13:34:14.434Z",
+      "finished": "2026-10-03T13:34:15.676Z",
+      "exitCode": 0,
+      "expectedExit": 0,
+      "error": null
+    },
+    {
+      "name": "python-bootstrap",
+      "program": "python",
+      "args": [
+        "-I",
+        "-B",
+        "tests/bootstrap/prepare-host.test.py"
+      ],
+      "started": "2026-10-03T13:34:15.676Z",
+      "finished": "2026-10-03T13:34:16.655Z",
+      "exitCode": 0,
+      "expectedExit": 0,
+      "error": null
+    },
+    {
+      "name": "unit-namespace",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "--test-name-pattern=unit namespace",
+        "tests/postgresql/host-install.test.cjs"
+      ],
+      "started": "2026-10-03T13:34:16.655Z",
+      "finished": "2026-10-03T13:34:17.356Z",
+      "exitCode": 0,
+      "expectedExit": 0,
+      "error": null
+    },
+    {
+      "name": "postgresql-host-fixtures",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/postgresql/host-install.test.cjs"
+      ],
+      "started": "2026-10-03T13:34:17.356Z",
+      "finished": "2026-10-03T13:34:18.889Z",
+      "exitCode": 1,
+      "expectedExit": 1,
+      "error": null
+    }
+  ],
+  "files": [
+    {
+      "path": "tools/bootstrap/build-download.cjs",
+      "sha256": "7749167b0180813ded1e64f3182bf255c6326257c6641354c2625ad4e8d1636f"
+    },
+    {
+      "path": "tools/bootstrap/build-kit.py",
+      "sha256": "355ea3fbaa09d723d60ffa4b9e77aadcb57880143b4790e8285613cad87beffa"
+    },
+    {
+      "path": "tools/bootstrap/prepare-host.py",
+      "sha256": "48581d8c4c68c85772d9a1ce1e99ca0ce5d8a0fb9ba0fbcb8d3d00d65db6b4d4"
+    },
+    {
+      "path": "tools/bootstrap/first-start.cjs",
+      "sha256": "a584ee08d6a69b09297282a43087496a4808758f976b9c1c64e24f11b0875557"
+    },
+    {
+      "path": "tools/system/postgresql-host-preflight.cjs",
+      "sha256": "b7ea0b1b4e237f4f3be110428bf8c0137bd9550481aa759621872edcbb0da091"
+    },
+    {
+      "path": "tools/system/install-from-checkout.cjs",
+      "sha256": "b3a71b9d6a38dc4197612ce15faf83eaafaa060c25f243bca8a886b10a0bb7e9"
+    },
+    {
+      "path": "tests/bootstrap/build-download.test.cjs",
+      "sha256": "846ba6e9ebe3b1741f04bb766f3f127aad158edd5b35273b1d7fd02618d281c7"
+    },
+    {
+      "path": "tests/bootstrap/first-start.test.cjs",
+      "sha256": "b025305e57ea8c6245c1ffbc8c93a86a8af0f2b9dfd24363072373f7ee0137fe"
+    },
+    {
+      "path": "tests/bootstrap/prepare-host.test.py",
+      "sha256": "25479e88838f8720ab8b9256583ec3077378a1f7e7b64cfbf4773ad5124dade0"
+    },
+    {
+      "path": "tests/postgresql/host-install.test.cjs",
+      "sha256": "2b985734e849cc6f9fd847cbf78bb055430e764d8f0994e9632313bad08f2e6f"
+    }
+  ],
+  "nativeSystemdExecuted": false,
+  "aptExecuted": false,
+  "piInstallationExecuted": false,
+  "hardwareAcceptance": "OPEN",
+  "productionReleaseApproved": false
+}

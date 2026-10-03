@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: matching root completion removes only the handoff and retains durable closed-state evidence
+ok 1 - matching root completion removes only the handoff and retains durable closed-state evidence
+  ---
+  duration_ms: 157.8879
+  type: 'test'
+  ...
+# Subtest: ordinary shutdown without a completion marker preserves the protected handoff
+ok 2 - ordinary shutdown without a completion marker preserves the protected handoff
+  ---
+  duration_ms: 34.737
+  type: 'test'
+  ...
+# Subtest: untrusted root decision and mismatched or malformed completion markers never authorize deletion
+ok 3 - untrusted root decision and mismatched or malformed completion markers never authorize deletion
+  ---
+  duration_ms: 114.0259
+  type: 'test'
+  ...
+# Subtest: unfinished state, state-handoff mismatch and invalid handoff preserve the original evidence
+ok 4 - unfinished state, state-handoff mismatch and invalid handoff preserve the original evidence
+  ---
+  duration_ms: 137.0036
+  type: 'test'
+  ...
+# Subtest: hard-linked handoff or completion files fail before deleting any link
+ok 5 - hard-linked handoff or completion files fail before deleting any link
+  ---
+  duration_ms: 38.114
+  type: 'test'
+  ...
+# Subtest: directory symlinks or Windows junctions cannot redirect completion or handoff cleanup
+ok 6 - directory symlinks or Windows junctions cannot redirect completion or handoff cleanup
+  ---
+  duration_ms: 35.7954
+  type: 'test'
+  ...
+# Subtest: non-canonical paths, a handoff directory and missing state fail with a fixed public error
+ok 7 - non-canonical paths, a handoff directory and missing state fail with a fixed public error
+  ---
+  duration_ms: 46.9522
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 856.5412

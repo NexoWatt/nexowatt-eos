@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+ok 1 - frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+  ---
+  duration_ms: 22.3296
+  type: 'test'
+  ...
+# Subtest: authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+ok 2 - authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+  ---
+  duration_ms: 16.8883
+  type: 'test'
+  ...
+# Subtest: copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+ok 3 - copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+  ---
+  duration_ms: 9.5824
+  type: 'test'
+  ...
+# Subtest: Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+ok 4 - Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+  ---
+  duration_ms: 20.1923
+  type: 'test'
+  ...
+# Subtest: missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+ok 5 - missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+  ---
+  duration_ms: 59.494
+  type: 'test'
+  ...
+# Subtest: actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema
+ok 6 - actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema
+  ---
+  duration_ms: 64.8271
+  type: 'test'
+  ...
+# Subtest: configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields
+ok 7 - configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields
+  ---
+  duration_ms: 64.1181
+  type: 'test'
+  ...
+# Subtest: 202 handoff and lost setup connection never claim completed installation
+ok 8 - 202 handoff and lost setup connection never claim completed installation
+  ---
+  duration_ms: 15.0175
+  type: 'test'
+  ...
+# Subtest: only explicit root completion shows access success; plant acceptance remains open
+ok 9 - only explicit root completion shows access success; plant acceptance remains open
+  ---
+  duration_ms: 11.3314
+  type: 'test'
+  ...
+# Subtest: local reissue CLI refuses password arguments and never prints the argument
+ok 10 - local reissue CLI refuses password arguments and never prints the argument
+  ---
+  duration_ms: 108.6522
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 512.3211

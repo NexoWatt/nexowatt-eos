@@ -1,0 +1,38 @@
+
+> iobroker.nexowatt-ui@1.0.21 test:eos-account-roles
+> node --test test/eos-account-roles.test.cjs test/eos-sse-authorization.test.cjs test/eos-service-worker-auth.test.cjs
+
+✔ EOS-ROLES: product reads require login and canonical group identity; aliases never elevate (408.3965ms)
+✔ EOS-ACCOUNT: initial own-password setup gates data, preserves identity, revokes all sessions (21093.5266ms)
+✔ EOS-ACCOUNT: reset metadata, disabled accounts and group changes revoke active sessions (86.4433ms)
+✔ EOS-ACCOUNT: password input bounds and fail-closed initialization metadata (1.3901ms)
+✔ EOS-ACCOUNT: shared verification/derivation budget admits two and rejects excess without queue (1.7783ms)
+✔ EOS-SSE: forged logout leaves streams alive; valid logout closes only its own stream (82.4128ms)
+✔ worker installs without prefetching login-protected content (113.9015ms)
+✔ activation deletes legacy EOS caches before controlling clients (61.7679ms)
+✔ offline protected route cannot use a previous session cache: / (13.0191ms)
+✔ offline protected route cannot use a previous session cache: /index.html (6.0476ms)
+✔ offline protected route cannot use a previous session cache: /static/index.html (3.3555ms)
+✔ offline protected route cannot use a previous session cache: /api/state (3.7329ms)
+✔ offline protected route cannot use a previous session cache: /api/export.json (3.9405ms)
+✔ offline protected route cannot use a previous session cache: /config (32.1568ms)
+✔ offline protected route cannot use a previous session cache: /state/live (3.9271ms)
+✔ offline protected route cannot use a previous session cache: /static/auth.js?token=fixture (5.8871ms)
+✔ authentication denial is returned directly without cache fallback (8.3583ms)
+✔ only successful public same-origin assets are cached (3.3281ms)
+✔ public asset denied response never enters cache (2.7872ms)
+✔ public asset redirect response never enters cache (2.8618ms)
+✔ public asset offline fallback is confined to current cache (20.1958ms)
+✔ worker does not intercept native transport: GET https://other.test/asset.js (2.5925ms)
+✔ worker does not intercept native transport: GET /events (2.4293ms)
+✔ worker does not intercept native transport: POST /api/account/password (2.1964ms)
+✔ EOS-SSE each frame rechecks authorization and revocation prevents queued payload (15.578ms)
+✔ EOS-SSE global pending cap survives closed clients until actual authorization settles (6.3244ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23625.4955

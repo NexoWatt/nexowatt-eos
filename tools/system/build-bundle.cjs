@@ -8,6 +8,7 @@ const { parseCatalog, componentTreeDigest, planAdmission } = require('../../runt
 const { verifyBuildProfile } = require('../../runtime/controller-profile/transform.cjs');
 const { verifySbomBinding } = require('../../runtime/release/sbom-binding.cjs');
 const { checkRuntimeArchitecture } = require('../integration/check-runtime-architecture.cjs');
+const product = require('../../runtime/product/scope.cjs');
 const REPO = path.resolve(__dirname, '../..');
 function reject(code) { const error = new Error(code); error.code = code; throw error; }
 function parseJson(file) { return JSON.parse(readFileLimited(file, 16 * 1024 * 1024).bytes); }
@@ -38,6 +39,32 @@ function copyDirectory(source, destination, skipBin = false) {
     }
     walk('');
 }
+function runtimeLicenseNotices(source, appPrefix = '') {
+    if (!['', 'app/'].includes(appPrefix)) reject('BUILD_LICENSE_PATH');
+    let notices = source;
+    for (const spec of product.SPECS.filter(spec => spec.source)) {
+        notices = notices.replaceAll(`components/${spec.source}/`, `${appPrefix}node_modules/${spec.package}/`);
+    }
+    const backends = ['@nexowatt/eos-postgresql-store', '@iobroker/db-objects-postgresql', '@iobroker/db-states-postgresql'];
+    notices = notices.replaceAll('`runtime/postgresql/packages/*/LICENSE`',
+        backends.map(name => `\`${appPrefix}node_modules/${name}/LICENSE\``).join(', '));
+    return notices.replaceAll('docs/history/UPSTREAM_README.md', 'licenses/upstream/README.ioBroker-Installer.md')
+        .replaceAll('components/*/LICENSES/', `${appPrefix}node_modules/*/LICENSES/`)
+        .replaceAll('SBOMs unter `reports/integration/`', `Runtime-SBOM in \`${appPrefix ? '' : '../'}sbom.cdx.json\``);
+}
+function copyRuntimeLicenses(destination, appPrefix = '') {
+    // Preserve the original texts. Only the central notice's locations change
+    // from the source checkout layout to the delivered runtime layout.
+    trustedDirectory(destination);
+    fs.writeFileSync(path.join(destination, 'LICENSE'), readFileLimited(path.join(REPO, 'LICENSE')).bytes,
+        { flag: 'wx', mode: 0o644 });
+    const notices = readFileLimited(path.join(REPO, 'THIRD_PARTY_NOTICES.md')).bytes.toString('utf8');
+    fs.writeFileSync(path.join(destination, 'THIRD_PARTY_NOTICES.md'), runtimeLicenseNotices(notices, appPrefix),
+        { flag: 'wx', mode: 0o644 });
+    copyDirectory(path.join(REPO, 'licenses'), path.join(destination, 'licenses'));
+    fs.writeFileSync(path.join(destination, 'licenses/upstream/README.ioBroker-Installer.md'),
+        readFileLimited(path.join(REPO, 'docs/history/UPSTREAM_README.md')).bytes, { flag: 'wx', mode: 0o644 });
+}
 function componentRows(files, packageName) {
     const prefix = `app/node_modules/${packageName}/`;
     return files.filter(row => row.path.startsWith(prefix)).map(row => ({ path: row.path.slice(prefix.length), size: row.size, sha256: row.sha256 }));
@@ -49,11 +76,14 @@ function validatePayload(payload, manifest) {
     const communication = new Set(catalog.entries.map(entry => entry.communication));
     if (communication.size !== 1 || !['eos-redis-tls13-v1', 'eos-postgresql-mtls13-v1'].includes([...communication][0])) reject('BUILD_DATABASE_PROFILE');
     const databaseBackend = communication.has('eos-postgresql-mtls13-v1') ? 'postgresql' : 'redis';
+    const fullProduct = manifest.releaseVersion === '0.2.0-test.3';
+    const productInventory = fullProduct ? product.inspectApp(path.join(payload, 'app')) : null;
+    if (fullProduct) product.assertCatalog(catalog);
     if (databaseBackend === 'postgresql') {
         const controller = parseJson(path.join(payload, 'app/node_modules/iobroker.js-controller/package.json'));
         for (const name of ['@iobroker/db-objects-postgresql', '@iobroker/db-states-postgresql', '@nexowatt/eos-postgresql-store']) {
             const item = parseJson(path.join(payload, 'app/node_modules', name, 'package.json'));
-            if (item.name !== name || item.version !== '0.1.0-dev.1' || controller.dependencies?.[name] !== item.version ||
+            if (item.name !== name || item.version !== (fullProduct ? '0.1.0-dev.2' : '0.1.0-dev.1') || controller.dependencies?.[name] !== item.version ||
                 lock.packages['node_modules/iobroker.js-controller']?.dependencies?.[name] !== item.version ||
                 lock.packages[`node_modules/${name}`]?.version !== item.version) reject('BUILD_POSTGRESQL_PACKAGES');
         }
@@ -73,31 +103,44 @@ function validatePayload(payload, manifest) {
     }
     // A checked catalog is not an execution sandbox. The complete dependency
     // tree is separately covered by the signed release manifest.
+    const executable = fullProduct ? catalog.entries.filter(entry => entry.review.status === 'approved-test') : catalog.entries;
     const plan = planAdmission(catalog, { profile: manifest.profile,
-        requested: catalog.entries.map(({ id, version }) => ({ id, version })), installed, active: [] });
+        requested: executable.map(({ id, version }) => ({ id, version })),
+        installed: installed.filter(row => executable.some(entry => entry.id === row.id)), active: [] });
     if (plan.quarantine.length || !catalog.entries.some(e => e.id === 'js-controller' && e.kind === 'core' && e.required)) reject('BUILD_CORE_REQUIRED');
-    const profile = verifyBuildProfile(path.join(payload, 'app'), catalog.entries.filter(e => e.kind === 'adapter').map(({ package: name, version }) => ({ package: name, version })));
+    const profile = verifyBuildProfile(path.join(payload, 'app'), executable.filter(e => e.kind === 'adapter').map(({ package: name, version }) => ({ package: name, version })));
+    if (fullProduct) {
+        // Backend dependencies change the upstream controller manifest too.
+        // Bind that derivative in the same SBOM pedigree/table as code patches;
+        // do not retain an upstream archive hash as its local-content identity.
+        const relativePath = 'node_modules/iobroker.js-controller/package.json';
+        profile.files.push({ relativePath, sha256: sha256(readFileLimited(path.join(payload, 'app', relativePath)).bytes) });
+    }
     const sbom = verifySbomBinding(payload, manifest.files, profile);
     // Every advertised platform must match the installed native payload. A
     // cross-built ARM tree remains untested on hardware until the Pi accepts it.
     if (!Array.isArray(manifest.platforms) || !manifest.platforms.length) reject('BUILD_ARCHITECTURE');
+    const architectureReports = [];
     for (const platform of manifest.platforms) {
-        if (!checkRuntimeArchitecture({ app: path.join(payload, 'app'), platform, nodeVersion: manifest.nodeVersion }).passed) reject('BUILD_ARCHITECTURE');
+        const report = checkRuntimeArchitecture({ app: path.join(payload, 'app'), platform, nodeVersion: manifest.nodeVersion });
+        if (!report.passed) reject('BUILD_ARCHITECTURE');
+        architectureReports.push(report);
     }
-    return { catalog, plan, sbom, databaseBackend };
+    return { catalog, plan, sbom, databaseBackend, productInventory, architectureReports };
 }
 function preparePayload({ appDirectory, destination, catalogFile, sbomFile }) {
     const source = trustedDirectory(appDirectory);
     const target = path.resolve(destination);
     if (target === source || target.startsWith(source + path.sep)) reject('BUILD_OUTPUT_INSIDE_INPUT');
-    if (fs.readdirSync(source).some(p => !['package.json', 'package-lock.json', 'node_modules'].includes(p))) reject('BUILD_APP_EXTRA_FILE');
+    if (fs.readdirSync(source).some(p => !['package.json', 'package-lock.json', 'node_modules', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'licenses'].includes(p))) reject('BUILD_APP_EXTRA_FILE');
     trustedDirectory(path.dirname(path.resolve(destination)));
     fs.mkdirSync(destination, { mode: 0o700 });
     try {
         copyDirectory(source, path.join(destination, 'app'), true);
+        copyRuntimeLicenses(destination, 'app/');
         copyDirectory(path.join(REPO, 'runtime'), path.join(destination, 'runtime'));
         fs.mkdirSync(path.join(destination, 'tools')); fs.mkdirSync(path.join(destination, 'tools/system'));
-        for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs']) {
+        for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'prepare-onboarding.cjs', 'prepare-first-start-context.cjs', 'finalize-onboarding.cjs', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs']) {
             fs.copyFileSync(path.join(REPO, 'tools/system', file), path.join(destination, 'tools/system', file), fs.constants.COPYFILE_EXCL);
         }
         fs.mkdirSync(path.join(destination, 'tools/integration'));
@@ -142,7 +185,7 @@ function main(argv) {
         return createBundle({ sourceDirectory: payload, bundleDirectory: output, metadata, privateKey: key.bytes });
     } finally { fs.rmSync(scratch, { recursive: true, force: true }); }
 }
-module.exports = { copyDirectory, componentRows, validatePayload, preparePayload, main };
+module.exports = { copyDirectory, runtimeLicenseNotices, copyRuntimeLicenses, componentRows, validatePayload, preparePayload, main };
 if (require.main === module) {
     try { process.stdout.write(`${JSON.stringify({ ok: true, ...main(process.argv.slice(2)) })}\n`); }
     catch (error) { process.stderr.write(`${JSON.stringify({ ok: false, code: /^[A-Z_]+$/.test(error.code || '') ? error.code : 'BUILD_FAILED' })}\n`); process.exitCode = 1; }

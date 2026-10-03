@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Bind actual npm tree and explicitly inventoried embedded package directories."""
 import argparse
+import base64
 import hashlib
 import importlib.util
 import json
@@ -16,7 +17,80 @@ EMBEDDED = {
     'node_modules/iobroker.nexowatt-ui/packages/eos-license-client': '@nexowatt/eos-license-client',
 }
 
-def bind(app, npm_sbom, transform=None):
+def native_binding(app, bom, evidence_path):
+    """Attribute exactly reviewed derivative native packages, never upstream bytes."""
+    policy, _ = base.read_json(ROOT / 'runtime/native/serialport-policy.json')
+    present = any((app / pin['packagePath'] / 'eos-native-loader.cjs').exists() for pin in policy['packages'])
+    if evidence_path is None:
+        if present: raise base.EvidenceError('NATIVE_EVIDENCE_REQUIRED')
+        return []
+    evidence, evidence_hash = base.read_json(evidence_path)
+    if not present or evidence.get('schemaVersion') != 1 or evidence.get('kind') != 'eos-serialport-native-normalization' or \
+       evidence.get('profile') != policy['profile'] or evidence.get('platform') != policy['target']['platform'] or \
+       evidence.get('nodeVersion') != policy['target']['nodeVersion'] or evidence.get('hardwareAccepted') is not False or \
+       evidence.get('targetLoadProbeRequired') is not True or len(evidence.get('packages', [])) != len(policy['packages']):
+        raise base.EvidenceError('NATIVE_EVIDENCE_IDENTITY')
+    lock, _ = base.read_json(app / 'package-lock.json')
+    compact_hash = lambda rows: hashlib.sha256(json.dumps(rows, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
+    result = []
+    for pin, record in zip(policy['packages'], evidence['packages']):
+        original = pin['originalFiles']
+        removed = [row for row in original if row['path'].endswith('.node') and row['path'] != pin['native']]
+        added = {'path': 'eos-native-loader.cjs', 'bytes': pin['fixedLoaderBytes'], 'sha256': pin['fixedLoaderSha256']}
+        expected = [({'path': row['path'], 'bytes': pin['patchedLoaderBytes'], 'sha256': pin['patchedLoaderSha256']}
+                     if row['path'] == pin['loader'] else row) for row in original if row not in removed] + [added]
+        expected.sort(key=lambda row: row['path'])
+        original_hash, normalized_hash = compact_hash(original), compact_hash(expected)
+        identity = {'profile': policy['profile'], 'packagePath': pin['packagePath'], 'package': pin['package'], 'version': pin['version'],
+            'upstreamArchive': pin['archive'], 'upstreamIntegrity': pin['integrity'], 'upstreamArchiveSha256': pin['archiveSha256'],
+            'originalTreeSha256': original_hash, 'normalizedTreeSha256': normalized_hash,
+            'selectedNative': pin['packagePath'] + '/' + pin['native'], 'nativeSha256': pin['nativeSha256'],
+            'napi': pin['napi'], 'targetProbeRequired': True, 'hardwareAccepted': False,
+            'removedFiles': removed, 'addedFiles': [added], 'modifiedFiles': [{'path': pin['loader'],
+                'originalSha256': next(row['sha256'] for row in original if row['path'] == pin['loader']), 'sha256': pin['patchedLoaderSha256']}],
+            'lifecycleScriptsExecuted': False, 'targetCodeExecuted': False}
+        if record != identity: raise base.EvidenceError('NATIVE_EVIDENCE_CONTENT')
+        entry = lock['packages'].get(pin['packagePath'], {})
+        if entry.get('version') != pin['version'] or entry.get('resolved') != pin['archive'] or entry.get('integrity') != pin['integrity'] or entry.get('link'):
+            raise base.EvidenceError('NATIVE_LOCK_IDENTITY')
+        directory = app / pin['packagePath']
+        cursor = app
+        for part in Path(pin['packagePath']).parts:
+            cursor /= part
+            if cursor.is_symlink(): raise base.EvidenceError('NATIVE_PATH_LINK')
+        files = []
+        # Every file is accounted for. Nested npm dependencies are inventoried
+        # by the main lock-tree binder and are not part of this npm archive.
+        def walk(directory, relative=''):
+            for item in sorted(directory.iterdir()):
+                if item.is_symlink(): raise base.EvidenceError('NATIVE_PATH_LINK')
+                if item.name == 'node_modules' and item.is_dir(): continue
+                name = (relative + '/' if relative else '') + item.name
+                if item.is_dir(): walk(item, name); continue
+                stat = item.stat()
+                if not item.is_file() or stat.st_nlink != 1 or stat.st_size > 8 * 1024 * 1024 or len(files) >= 256:
+                    raise base.EvidenceError('NATIVE_FILE_LIMIT')
+                files.append({'path': name, 'bytes': stat.st_size, 'sha256': hashlib.sha256(item.read_bytes()).hexdigest()})
+        walk(directory)
+        files.sort(key=lambda row: row['path'])
+        if files != expected: raise base.EvidenceError('NATIVE_PACKAGE_CONTENT')
+        matches = [c for c in bom['components'] if c['name'] == pin['package'] and c['version'] == pin['version']]
+        if len(matches) != 1: raise base.EvidenceError('NATIVE_COMPONENT')
+        component = matches[0]
+        upstream_hash = [{'alg': 'SHA-512', 'content': base64.b64decode(pin['integrity'][7:], validate=True).hex()}]
+        if component.get('modified') or component.get('pedigree') or component.get('hashes') != upstream_hash:
+            raise base.EvidenceError('NATIVE_UPSTREAM_HASH')
+        ancestor = {k: component[k] for k in ['type', 'name', 'version', 'purl', 'hashes'] if k in component}
+        component.pop('hashes')
+        component['modified'] = True
+        component['pedigree'] = {'ancestors': [ancestor], 'notes': 'EOS TEST derivative: only pinned ARM64/glibc prebuild retained; fixed verified loader; target dlopen required; hardware not accepted.'}
+        claims = {'profile': policy['profile'], 'installed-path': pin['packagePath'], 'original-tree-sha256': original_hash,
+                  'normalized-tree-sha256': normalized_hash, 'evidence-sha256': evidence_hash, 'target-load-probe-required': 'true'}
+        component.setdefault('properties', []).extend({'name': 'eos:native:' + name, 'value': value} for name, value in claims.items())
+        result.append({'packagePath': pin['packagePath'], 'version': pin['version'], **claims})
+    return result
+
+def bind(app, npm_sbom, transform=None, native_evidence=None):
     bom, coverage = base.bind_inventory(app, npm_sbom, transform)
     local = {(row['name'], row['version']) for row in coverage['installedPackages'] if row['archiveSource'] == 'local-build-artifact'}
     for component in bom['components']:
@@ -36,6 +110,7 @@ def bind(app, npm_sbom, transform=None):
                     prop['value'] = reference
     embedded = []
     app = Path(app).resolve(strict=True)
+    coverage['nativeTransformation'] = native_binding(app, bom, native_evidence)
     for relative, expected_name in EMBEDDED.items():
         directory = app / relative
         if not directory.exists():
@@ -90,11 +165,13 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__)
     for k in ['app', 'npm-sbom', 'out', 'coverage']: p.add_argument('--' + k, required=True, type=Path)
     p.add_argument('--transform-evidence', type=Path)
+    p.add_argument('--native-evidence', type=Path)
     a = p.parse_args()
     inputs = {(a.app/'package.json').resolve(), (a.app/'package-lock.json').resolve(), a.npm_sbom.resolve()}
     if a.transform_evidence: inputs.add(a.transform_evidence.resolve())
+    if a.native_evidence: inputs.add(a.native_evidence.resolve())
     if a.out.resolve() == a.coverage.resolve() or a.out.resolve() in inputs or a.coverage.resolve() in inputs: raise base.EvidenceError('OUTPUT_COLLISION')
-    bom, coverage = bind(a.app, a.npm_sbom, a.transform_evidence)
+    bom, coverage = bind(a.app, a.npm_sbom, a.transform_evidence, a.native_evidence)
     for target, value in [(a.out, bom), (a.coverage, coverage)]:
         if target.is_symlink(): raise base.EvidenceError('OUTPUT_LINK')
         target.write_text(json.dumps(value, indent=2) + '\n')

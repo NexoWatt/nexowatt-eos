@@ -1,0 +1,144 @@
+[
+  {
+    "name": "assembly",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "tools/integration/assemble-postgresql-test.cjs",
+      "--output",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e",
+      "--platform",
+      "linux-arm64"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T07:31:02.230Z",
+    "finished": "2026-10-03T07:34:48.263Z",
+    "exitCode": 0,
+    "errorCode": null
+  },
+  {
+    "name": "npm-sbom",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js",
+      "sbom",
+      "--sbom-format",
+      "cyclonedx",
+      "--omit=dev",
+      "--offline"
+    ],
+    "cwd": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\app",
+    "started": "2026-10-03T07:34:48.265Z",
+    "finished": "2026-10-03T07:34:56.251Z",
+    "exitCode": 0,
+    "errorCode": null
+  },
+  {
+    "name": "sbom-binding",
+    "program": "python",
+    "args": [
+      "-B",
+      "tools/integration/bind-sbom.py",
+      "--app",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\app",
+      "--npm-sbom",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\runtime.raw.cdx.json",
+      "--transform-evidence",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\controller-transform.json",
+      "--native-evidence",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\native-transform.json",
+      "--out",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\runtime.cdx.json",
+      "--coverage",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\runtime-sbom-coverage.json"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T07:34:56.259Z",
+    "finished": "2026-10-03T07:35:00.394Z",
+    "exitCode": 0,
+    "errorCode": null
+  },
+  {
+    "name": "sbom-schema",
+    "program": "python",
+    "args": [
+      "-B",
+      "tools/integration/validate-sbom.py",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\runtime.cdx.json",
+      "--output",
+      "C:\\Users\\User\\Desktop\\Nexowatt-EOS\\reports\\integration\\installable-test3-20261003\\build\\runtime-sbom-schema.json"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T07:35:00.395Z",
+    "finished": "2026-10-03T07:35:00.650Z",
+    "exitCode": 1,
+    "errorCode": null
+  },
+  {
+    "name": "sbom-schema-retry",
+    "program": "python",
+    "args": [
+      "-B",
+      "tools/integration/validate-sbom.py",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\runtime.cdx.json",
+      "--output",
+      "C:\\Users\\User\\Desktop\\Nexowatt-EOS\\reports\\integration\\installable-test3-20261003\\build\\runtime-sbom-schema.json"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T07:36:11.043Z",
+    "finished": "2026-10-03T07:36:12.554Z",
+    "exitCode": 0,
+    "errorCode": null
+  },
+  {
+    "name": "package",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "tools/integration/package-postgresql-test.cjs",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T07:42:15.098Z",
+    "finished": "2026-10-03T07:44:29.236Z",
+    "exitCode": 4294967295,
+    "errorCode": null
+  },
+  {
+    "name": "package-retry",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "tools/integration/package-postgresql-test.cjs",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T07:49:54.126Z",
+    "finished": "2026-10-03T07:53:07.228Z",
+    "exitCode": 1,
+    "errorCode": null
+  },
+  {
+    "name": "package-final",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "tools/integration/package-postgresql-test.cjs",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T07:59:04.219Z",
+    "finished": "2026-10-03T08:16:44.353Z",
+    "exitCode": 1,
+    "errorCode": null
+  },
+  {
+    "name": "package-delivery",
+    "program": "C:\\Program Files\\nodejs\\node.exe",
+    "args": [
+      "tools/integration/package-postgresql-test.cjs",
+      "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e"
+    ],
+    "cwd": "C:\\Users\\User\\Desktop\\Nexowatt-EOS",
+    "started": "2026-10-03T08:19:28.757Z",
+    "finished": "2026-10-03T08:29:34.252Z",
+    "exitCode": 0,
+    "errorCode": null
+  }
+]

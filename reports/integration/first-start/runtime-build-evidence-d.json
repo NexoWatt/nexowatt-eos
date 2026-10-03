@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "scope": "isolated-build-host-installed-assessment-tree",
+  "productReleaseApproved": false,
+  "targetDeviceObserved": false,
+  "targetPlatform": "linux-arm64",
+  "hostPlatform": "win32-x64",
+  "node": "v24.21.0",
+  "npmLifecycleScriptsExecuted": false,
+  "npmNetworkMode": "offline-only",
+  "runtimeDependencyPolicy": {
+    "schemaVersion": 1,
+    "policyId": "EOS-RUNTIME-DEPENDENCIES-001",
+    "advisory": "GHSA-67mh-4wv8-2f99",
+    "controller": "7.2.2",
+    "loader": "2.5.1-1",
+    "esbuild": "0.28.2",
+    "resolution": {
+      "controller": "node_modules\\iobroker.js-controller\\package.json",
+      "loader": "node_modules\\@alcalzone\\esbuild-register\\package.json",
+      "esbuild": "node_modules\\esbuild\\package.json"
+    },
+    "inspectedEsbuildInstances": [
+      {
+        "path": "node_modules/esbuild",
+        "version": "0.28.2"
+      }
+    ],
+    "packageLockSha256": "ca41c25acfbb4e342ced019877bf9b6675be683d09a4ec7b058b77b0aad1bb89",
+    "verifiedHost": {
+      "platform": "win32",
+      "arch": "x64"
+    },
+    "lifecycleScriptsRequired": false
+  },
+  "postgresqlBackendBinding": {
+    "originalControllerManifestSha256": "4a96107db23638188ce1efcecb356bae6f0bc591659bbd3212fb9d8379cfa507",
+    "controllerManifestSha256": "2481a60d667c5547696728d3bae46b6363d428ab7227e8258de201e9e3442f25",
+    "packages": [
+      {
+        "name": "@nexowatt/eos-postgresql-store",
+        "version": "0.1.0-dev.2",
+        "sha256": "915d92944246811ae1e558bee57875673af092d4c1f48712746e8893920645fb"
+      },
+      {
+        "name": "@iobroker/db-objects-postgresql",
+        "version": "0.1.0-dev.2",
+        "sha256": "8a8f4bc2b6b8856395b33dd84ae5167df6299d48d6074f36ed7f544ce8d950ac"
+      },
+      {
+        "name": "@iobroker/db-states-postgresql",
+        "version": "0.1.0-dev.2",
+        "sha256": "d07de1ee0351b1d05af8d0abd0c3b7e3792565d917bac7c05661f88e53319979"
+      }
+    ],
+    "change": "exact private backend dependencies moved to controller; stale npm hidden lock removed"
+  },
+  "components": [
+    {
+      "id": "admin",
+      "package": "iobroker.eos-admin",
+      "version": "7.10.11",
+      "archive": "iobroker.eos-admin-7.10.11.tgz",
+      "sha256": "d2a48b890627711412c186e0f6f2f9917cf2686e159a194ad8272dff9c0ea753",
+      "main": "build/main.js",
+      "snapshot": {
+        "files": 2202,
+        "bytes": 129205694
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "ui",
+      "package": "iobroker.nexowatt-ui",
+      "version": "1.0.21",
+      "archive": "iobroker.nexowatt-ui-1.0.21.tgz",
+      "sha256": "fc50671fcf88fb5d2e6eba733eb5dccd992d7d7bd5f632a14e6e3ed8078c403d",
+      "main": "main.js",
+      "snapshot": {
+        "files": 2802,
+        "bytes": 54699785
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "devices",
+      "package": "iobroker.nexowatt-devices",
+      "version": "0.5.169",
+      "archive": "iobroker.nexowatt-devices-0.5.169.tgz",
+      "sha256": "cd2e31b20f99adae210fa8dab82a01517f269af4065251bfc968dafb47ae7551",
+      "main": "bootstrap.js",
+      "snapshot": {
+        "files": 138,
+        "bytes": 10691863
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "eebus",
+      "package": "iobroker.eebus",
+      "version": "0.3.0",
+      "archive": "iobroker.eebus-0.3.0.tgz",
+      "sha256": "2cff3fc33a797680c8a8e94636ac96ee1fc78ee13aefae9c5b94b15ae589fc77",
+      "main": "build/main.js",
+      "snapshot": {
+        "files": 138,
+        "bytes": 1189709
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "ocpp21",
+      "package": "iobroker.ocpp21",
+      "version": "0.4.0",
+      "archive": "iobroker.ocpp21-0.4.0.tgz",
+      "sha256": "0f56797d47fa2123872f543fec241691cf21db35259cae69ffe052c86cbe75d6",
+      "main": "main.js",
+      "snapshot": {
+        "files": 35,
+        "bytes": 2239524
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "backitup",
+      "package": "iobroker.nexowatt-backup",
+      "version": "1.0.10",
+      "archive": "iobroker.nexowatt-backup-1.0.10.tgz",
+      "sha256": "f2785a47579222bc62c6d0c5bfc64710b83a71fcb3d1757b611491cea4ac726a",
+      "main": "build/main.js",
+      "snapshot": {
+        "files": 358,
+        "bytes": 7063581
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "store",
+      "package": "@nexowatt/eos-postgresql-store",
+      "version": "0.1.0-dev.2",
+      "archive": "nexowatt-eos-postgresql-store-0.1.0-dev.2.tgz",
+      "sha256": "915d92944246811ae1e558bee57875673af092d4c1f48712746e8893920645fb",
+      "main": "index.cjs",
+      "snapshot": {
+        "files": 2,
+        "bytes": 20750
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "db-objects-postgresql",
+      "package": "@iobroker/db-objects-postgresql",
+      "version": "0.1.0-dev.2",
+      "archive": "iobroker-db-objects-postgresql-0.1.0-dev.2.tgz",
+      "sha256": "8a8f4bc2b6b8856395b33dd84ae5167df6299d48d6074f36ed7f544ce8d950ac",
+      "main": "index.cjs",
+      "snapshot": {
+        "files": 6,
+        "bytes": 40437
+      },
+      "lifecycleScriptsExecuted": false
+    },
+    {
+      "id": "db-states-postgresql",
+      "package": "@iobroker/db-states-postgresql",
+      "version": "0.1.0-dev.2",
+      "archive": "iobroker-db-states-postgresql-0.1.0-dev.2.tgz",
+      "sha256": "d07de1ee0351b1d05af8d0abd0c3b7e3792565d917bac7c05661f88e53319979",
+      "main": "index.cjs",
+      "snapshot": {
+        "files": 3,
+        "bytes": 27444
+      },
+      "lifecycleScriptsExecuted": false
+    }
+  ],
+  "packageLockSha256": "ca41c25acfbb4e342ced019877bf9b6675be683d09a4ec7b058b77b0aad1bb89"
+}

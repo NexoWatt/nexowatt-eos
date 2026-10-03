@@ -1,9 +1,96 @@
-# Aktueller Entwicklungsstand: EOS dev8
+<!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
+# EOS per SSH auf einem neuen Pi installieren
 
-Vollständiger Quellstand mit gehärtetem PostgreSQL-Ereigniskanal und separatem
-mTLS-Erweiterungskanal. Einstieg und Prüfgrenzen: [Entwicklungsbericht](docs/security/ADAPTER_CHANNEL_DEV8_DE.md).
-**Die enthaltenen signierten Installer test.1/test.2 sind historische Artefakte.
-Der test.2-Installer enthält die dev8-Neuerungen nicht. Es wurde kein neuer Installer erzeugt.**
+**Der Testinstaller enthält jetzt den öffentlichen Prüfschlüssel eurer vorhandenen
+EOS-Lizenzverwaltung.** Auf dem Pi genügt die einmalige verdeckte Eingabe des
+GitHub-Tokens. Git und eine manuelle Übertragung der Schlüsseldatei sind nicht nötig.
+
+1. Per SSH am frischen Debian-13-/Raspberry-Pi-OS-13-Pi mit **ARM64** anmelden.
+   Falls die Sitzung noch nicht als `root` läuft, zuerst `sudo -i` ausführen.
+2. Den **gesamten folgenden Block** zusammen kopieren und in die SSH-Sitzung einfügen.
+   Den GitHub-Token erst bei der verdeckten Abfrage eingeben und Enter drücken.
+   Er benötigt Leserecht auf `NexoWatt/nexowatt-eos`.
+3. Die automatische Installation abwarten und anschließend die im Terminal
+   angezeigte HTTPS-Adresse für den Erststart verwenden.
+
+Das Basisabbild benötigt `bash`, `curl`, `python3`, laufendes systemd, eine
+korrekte Uhr und mindestens 6 GiB freien Platz. Node und PostgreSQL werden
+bei Bedarf automatisch vorbereitet. Vorhandene EOS-Daten oder PostgreSQL-
+Cluster werden nicht überschrieben.
+
+**Bei `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING`:** Du verwendest noch
+den alten, fest gebundenen Befehl. Er bleibt gesperrt. Ersetze ihn vollständig
+durch diesen aktuellen Block; ändere keine Hashes oder Manifestdateien von Hand.
+
+```bash
+/bin/bash <<'EOS_INSTALL'
+# EOS_GITHUB_BOOTSTRAP_VERSION=2026-10-03
+set +x
+set -euo pipefail
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
+umask 077
+[[ $EUID -eq 0 ]] || { echo 'EOS: Bitte zuerst sudo -i ausfuehren.' >&2; exit 1; }
+[[ -x /usr/bin/curl && -x /usr/bin/python3 ]] || { echo 'EOS: curl und python3 werden im Basisabbild benoetigt.' >&2; exit 1; }
+[[ -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1
+(( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1
+set +a
+unset eos_token
+read -r -s -p 'GitHub-Token: ' eos_token </dev/tty
+printf '\n' >/dev/tty
+[[ $eos_token =~ ^[A-Za-z0-9_]{20,512}$ ]] || { echo 'EOS: Tokenformat ungueltig.' >&2; exit 1; }
+eos_stage=$(/usr/bin/mktemp -d /root/eos-download-XXXXXXXX)
+printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14301 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/00de8f6fdc938fa6e85742d176e20a520c231069' -o "$eos_stage/github-download.py"
+printf '%s  %s\n' '6faf6bf09aaaf3faf92a1e64d49f8ba822dbb3ea6dd10fdee4c8f8617a5c41bc' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
+exec 3< <(printf '%s\n' "$eos_token")
+unset eos_token
+exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 5e7d8cf35f503fbd6e03b49bfe2cebcad682a04d --manifest-sha256 ae63c4a4dce5d96a28364a37e871ed88c0c051607651ce7d78a36a9aeb541e00
+EOS_INSTALL
+```
+
+Nach erfolgreichem Start zeigt das Terminal die konkrete Browseradresse,
+den öffentlichen CA-Pfad mit Fingerabdruck und den kurzlebigen Einrichtungscode.
+Die Geräte-CA über den vertrauenswürdigen Zugang übernehmen und im Browser
+vertrauen. Dann den Assistenten öffnen und den Einrichtungscode eingeben.
+Die **UUID ist vor Lizenzaktivierung und Passwortvergabe sichtbar und kopierbar**.
+Die dafür erzeugte Lizenz im Assistenten eintragen; Benutzerpasswörter werden
+ausschließlich im Frontend vergeben. Lizenzbereiche und Kontingente bleiben
+serverseitig geprüft.
+
+[Anleitung und Voraussetzungen](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
+[Sicherheitsgrenzen](docs/security/PRIVATE_GITHUB_BOOTSTRAP_DE.md) ·
+[Prüfschlüsselzuordnung und Paketnachweise](reports/integration/github-bootstrap-ready-20261003/README.md).
+
+**Vollständige Pi-Installation und Hardwaretests: OFFEN, nicht ausgeführt.**
+Dieser Einstieg ist für die Testumgebung; Anlagensteuerung bleibt gesperrt.
+Er ist kein Flotten-Updater.
+
+<!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
+
+---
+
+# Aktueller Entwicklungsstand: EOS dev9 – geschützter Erststart
+
+Der neue Installationspfad verlangt Controller und sämtliche sechs Produktadapter
+als tatsächliche Laufzeitpakete. Die HTTPS-Ersteinrichtung verwendet einen
+kurzlebigen lokalen Besitzcode; Benutzer vergeben ihre Passwörter im Frontend.
+Der Assistent führt durch Standort, signierte Lizenz, Anlagenwerte und Geräteplan.
+Nicht verfügbare Anlagenangaben bleiben ausdrücklich als offen markiert.
+Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
+
+[**Aus Git installieren und testen**](docs/operations/GIT_TEST3_INSTALLATION_DE.md) ·
+[Ein-Befehl-Download vorbereiten](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
+[Ersteinrichtung und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
+[Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
+[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r2-20261003/).
+
+**Der signierte vollständige ARM64-Installationskandidat `0.2.0-test.3`, Revision 2, ist enthalten.**
+[Lieferung und Fingerabdrücke](delivery/test-pi-0.2.0-test.3-r2/README.md). UUID-Anzeige,
+Frontend-Passwortvergabe und Home-/Pro-Lizenzgrenzen sind umgesetzt.
+
+**Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**
+Die historischen signierten Pakete test.1/test.2 enthalten die neuen Quellen
+nicht. Der aktuelle Paketbau-/Lieferstatus steht im Prüfbericht; Geräte- und
+Hardwareabnahme sind offen, Anlagenbefehle bleiben gesperrt.
 
 ---
 
@@ -11,7 +98,9 @@ Der test.2-Installer enthält die dev8-Neuerungen nicht. Es wurde kein neuer Ins
 
 # NexoWatt EOS
 
-**Hauptrepository des integrierten EOS-Systems · `0.2.0-dev.7` · 2. Oktober 2026.**
+**Hauptrepository des integrierten EOS-Systems · `0.2.0-dev.9` · 3. Oktober 2026.**
+
+Die folgenden test.2-/dev7-Angaben beschreiben den historischen Lieferstand.
 
 Neu: signierter **PostgreSQL-Installationskandidat `0.2.0-test.2`** für einen
 frischen, isolierten Debian-13-Lite-Test-Pi (ARM64). Er enthält Controller,
@@ -47,7 +136,7 @@ technische Paketnamen, Schnittstellen und Urheberrechtshinweise bleiben erhalten
 
 Das aktive Entwicklungsprofil verbindet den gehärteten js-controller 7.2.2 mit
 EOS Admin 7.10.11 und NexoWatt UI 1.0.21. Devices, EEBUS, OCPP21 und Backup sind
-vollständig als Quellen enthalten, aber noch nicht für den Anlagenbetrieb
+vollständig als Laufzeitpakete enthalten, aber noch nicht für den Anlagenbetrieb
 aktiviert. UI-Design und Funktionsquellen bleiben erhalten; physische Befehle
 sind im Laborprofil weiterhin gesperrt.
 
@@ -59,14 +148,13 @@ sind im Laborprofil weiterhin gesperrt.
 | Installateur | Persönlicher Zugang, freigegebene Einrichtung und eigene Passwortvergabe; keine Adminrolle. |
 | Benutzer | Persönlicher Zugang zu den vorgesehenen Bedienansichten und eigenes Passwort; keine technische Administration. |
 
-Die lokale, rootgeschützte Ersteinrichtung legt mindestens ein Installateur- und
-ein Benutzerkonto an. Die Startpasswörter müssen untereinander und vom
-Servicepasswort verschieden sein; ein eingebautes Standardpasswort gibt es nicht. Installateur und Benutzer müssen nach der ersten
-Anmeldung mit ihrem individuellen Startpasswort ein eigenes Passwort vergeben.
-Die Rolle wird bei der vertrauten Einrichtung festgelegt und lässt sich in der
-Anmeldung nicht auswählen. Der Adminzugang ist für NexoWatt Service reserviert.
-Die genauen Rechte, Sperren und verbleibenden Grenzen beschreibt die
-[Anmelde- und Rollenarchitektur](docs/security/BRANDING_ROLES_DE.md).
+Im neuen Erststartprofil richtet der Besitzer über HTTPS das erste feste
+Servicekonto `admin` mit eigenem Passwort ein. Nach der Anmeldung erstellt die
+Service-Administration berechtigte Einladungen für Installateure und Benutzer.
+Jeder Empfänger setzt sein Passwort selbst; es gibt keine gemeinsamen
+Standardpasswörter und keinen Terminaldialog für Benutzerpasswörter.
+Der Einladungsweg und seine Grenzen stehen im
+[Konten- und Steuergrenzenbericht](docs/security/ONBOARDING_ACCOUNTS_REVIEW_DE.md).
 
 ## Architektur und Nachweise
 
@@ -107,6 +195,19 @@ des konkreten Prüfberichts; frühere Ergebnisse gelten nicht automatisch für
 veränderte Dateien.
 
 ## Herkunft und Lizenzen
+
+**NexoWatt EOS ist hinsichtlich der eigenen, nicht anderweitig lizenzierten
+NexoWatt-Bestandteile proprietär. Nutzung, Installation, Änderung und Weitergabe
+setzen die vorherige schriftliche Erlaubnis von NexoWatt voraus.** Maßgeblich ist
+die [Lizenz](LICENSE); die [Drittanbieterhinweise](THIRD_PARTY_NOTICES.md) grenzen
+die übernommenen Bestandteile und bestehende Lizenzrechte ab.
+
+Eine technische Einrichtung ohne aktivierten EOS-Lizenzschlüssel erteilt keine
+vertragliche Nutzungsberechtigung. Bereits wirksam eingeräumte Rechte an früheren
+Fassungen, insbesondere MIT-Rechte, bleiben unberührt. Der
+[Änderungsnachweis vom 03.10.2026](docs/development/LICENSING_CHANGE_2026-10-03_DE.md)
+beschreibt den damaligen Lizenzstand; die neue Runtime-Lieferung wird im
+[aktuellen Nachweis](reports/integration/installable-test3-20261003/) separat belegt.
 
 Die ioBroker-Basis und die Herkunft aller übernommenen Komponenten bleiben
 nachvollziehbar. Der [historische Upstream-README](docs/history/UPSTREAM_README.md)

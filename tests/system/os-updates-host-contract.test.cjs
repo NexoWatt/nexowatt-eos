@@ -7,7 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const crypto = require('node:crypto');
-const { copyDirectory, preparePayload } = require('../../tools/system/build-bundle.cjs');
+const { copyDirectory, copyRuntimeLicenses, preparePayload } = require('../../tools/system/build-bundle.cjs');
 const { inspectHost } = require('../../tools/system/host-preflight.cjs');
 const { installHost } = require('../../tools/system/install-host.cjs');
 const REPO = path.resolve(__dirname, '../..');
@@ -19,13 +19,14 @@ function fixture(t) {
 test('prepared release inventory binds updater implementation, policy, initial status and units', t => {
     const root = fixture(t), app = path.join(root, 'app'), destination = path.join(root, 'payload');
     fs.mkdirSync(app);
-    fs.writeFileSync(path.join(app, 'package.json'), '{"name":"fixture","version":"1.0.0"}\n');
+    fs.writeFileSync(path.join(app, 'package.json'), '{"name":"fixture","version":"1.0.0","license":"SEE LICENSE IN LICENSE"}\n');
     fs.writeFileSync(path.join(app, 'package-lock.json'), '{"lockfileVersion":3}\n');
+    copyRuntimeLicenses(app);
     const catalogFile = path.join(root, 'catalog.json'), sbomFile = path.join(root, 'sbom.json');
     fs.writeFileSync(catalogFile, '{}\n');
     fs.writeFileSync(sbomFile, '{"bomFormat":"CycloneDX","components":[]}\n');
     const rows = preparePayload({ appDirectory: app, destination, catalogFile, sbomFile });
-    for (const name of ['runtime/os-updates/runner.py', 'system/test-base/os-updates/policy.json', 'system/test-base/os-updates/initial-status.json',
+    for (const name of ['LICENSE', 'licenses/upstream/LICENSE.ioBroker-Installer.txt', 'runtime/os-updates/runner.py', 'system/test-base/os-updates/policy.json', 'system/test-base/os-updates/initial-status.json',
         'system/test-base/systemd/nexowatt-eos-os-updates.service', 'system/test-base/systemd/nexowatt-eos-os-updates.timer']) {
         const bytes = fs.readFileSync(path.join(REPO, name));
         const row = rows.find(row => row.path === name);
@@ -34,6 +35,14 @@ test('prepared release inventory binds updater implementation, policy, initial s
         assert.equal(row.size, bytes.length);
         assert.deepEqual(fs.readFileSync(path.join(destination, name)), bytes);
     }
+    for (const name of ['LICENSE', 'THIRD_PARTY_NOTICES.md', 'licenses/upstream/LICENSE.ioBroker-Installer.txt']) {
+        assert.deepEqual(fs.readFileSync(path.join(destination, 'app', name)), fs.readFileSync(path.join(app, name)));
+        assert.ok(rows.some(row => row.path === `app/${name}`));
+    }
+    const notices = fs.readFileSync(path.join(destination, 'THIRD_PARTY_NOTICES.md'), 'utf8');
+    assert.match(notices, /\]\(app\/node_modules\/iobroker\.eos-admin\/THIRD_PARTY_NOTICES\.md\)/);
+    assert.doesNotMatch(notices, /components\/|runtime\/postgresql\/packages\/|\.\.\/sbom/);
+    assert.ok(rows.some(row => row.path === 'THIRD_PARTY_NOTICES.md'));
     // This is preparation, not signature or target acceptance. Historical signed
     // bundles are not rebuilt and no new releasable runtime is emitted here.
     assert.equal(fs.existsSync(path.join(destination, 'manifest.sig')), false);

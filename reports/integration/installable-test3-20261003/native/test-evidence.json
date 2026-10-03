@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-native-policy-test-evidence",
+  "createdAt": "2026-10-03T07:31:34.427Z",
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "24.21.0"
+  },
+  "sourceFiles": [
+    {
+      "path": "runtime/native/serialport-policy.json",
+      "bytes": 22811,
+      "sha256": "206c91ef814ec548b2489e54163493c814e239c355fd92423e5fb3f42b719cc2"
+    },
+    {
+      "path": "runtime/native/serialport-contract.cjs",
+      "bytes": 8674,
+      "sha256": "4909a37aab9e1a7b53f60dbdf9352b430a70ec27608604fc988a1ee2d8873525"
+    },
+    {
+      "path": "runtime/native/serialport-acceptance.cjs",
+      "bytes": 2197,
+      "sha256": "ab02923fa09c335b4bc5b24312e3ed64dc50e1bc4882ea29f9baf61b5ec77654"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "bytes": 11250,
+      "sha256": "41e73625a9f366998bd74aafb2c46875d81acb457cadcc4ef935cad877dc11b9"
+    },
+    {
+      "path": "tools/integration/normalize-serialport-native.cjs",
+      "bytes": 1898,
+      "sha256": "3b159d1153d132975d00cb5988a980680ecbabf717951e87d7971a49d5aee4f3"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "bytes": 20596,
+      "sha256": "596f37a333412090eca17249270343549344b036efcbf6fe2695a1c040582817"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "bytes": 13628,
+      "sha256": "37c2ac5d84ac447c47f5d5d2dd0d78a25c7b32b379baab6d33161af46d3801a3"
+    },
+    {
+      "path": "tools/integration/bind-sbom.py",
+      "bytes": 12844,
+      "sha256": "b4d17160e1240ccffb98c2c0d4d00c1a21db80715c8684548c581bb78fb7b2f6"
+    },
+    {
+      "path": "tests/integration/serialport-native.test.cjs",
+      "bytes": 14847,
+      "sha256": "37f9b02da8b83b8e8af2cacd8d3a6f25c9f421008774f647fda6eda4810f3530"
+    }
+  ],
+  "checks": [
+    {
+      "command": "EOS_NATIVE_TEST_APP=<original-d-app> node --test --test-reporter=tap tests/integration/serialport-native.test.cjs tests/integration/runtime-architecture.test.cjs tests/integration/build-runtime.test.cjs tests/system/sbom-binding.test.cjs",
+      "exitCode": 0,
+      "passed": 54,
+      "failed": 0,
+      "skipped": 0,
+      "log": {
+        "path": "reports\\integration\\installable-test3-20261003\\native\\tests-02.tap",
+        "bytes": 24518,
+        "sha256": "46ed5ceb0cbf21a6482aff42dbffecfb13e5e243f3bee93683f779278d3b5ffa"
+      }
+    },
+    {
+      "command": "python -B tests/integration/embedded-sbom.test.py",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "log": {
+        "path": "reports\\integration\\installable-test3-20261003\\native\\embedded-sbom-tests.txt",
+        "bytes": 850,
+        "sha256": "500609a5af42b8df823be598c007e8645cd62a1b79fa7a26d9af2d3e1d42edc3"
+      }
+    }
+  ],
+  "independentElfReview": {
+    "path": "reports\\integration\\installable-test3-20261003\\native\\review-elf.json",
+    "bytes": 3637,
+    "sha256": "112a96a761072b0e33dd0c4342a5aad4f11c9de818a74edb357b1b22349b9209"
+  },
+  "upstreamArchiveObservation": {
+    "path": "reports\\integration\\installable-test3-20261003\\native\\archive-provenance.json",
+    "bytes": 606,
+    "sha256": "fb361245e743c621c31d08cc3f57b35cea7a7b71089bf89577deddf432556c84"
+  },
+  "abiObservation": {
+    "path": "reports\\integration\\installable-test3-20261003\\native\\elf-observation.json",
+    "bytes": 51023,
+    "sha256": "8ce453b95ebe91b40000e94724efa841b45aa3fe54f67afb3e82deda2b26b61f"
+  },
+  "hardwareAccepted": false,
+  "targetLoadExecuted": false,
+  "deviceIoPerformed": false,
+  "limitations": [
+    "Unit tests use real integrity-checked upstream package files but never execute native target code.",
+    "The generated fixed loader is exercised with mocked filesystem/dlopen boundaries in addition to actual package-tree checks.",
+    "The actual installer must perform RTLD_NOW target loading before host mutation.",
+    "tests-01.tap is the earlier Node spec-reporter output, superseded by tests-02.tap after RTLD_NOW hardening."
+  ]
+}

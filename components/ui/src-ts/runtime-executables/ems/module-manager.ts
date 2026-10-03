@@ -244,29 +244,16 @@ class ModuleManager {
      * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
      */
     _licenseEdition() {
-        const info = this.adapter && this.adapter._nwLicenseInfo && typeof this.adapter._nwLicenseInfo === 'object' ? this.adapter._nwLicenseInfo : {};
-        if (info && info.ok === true) {
-            try { return featureFlags.normalizeEdition(info.edition || 'eos'); } catch (_e) {}
-            const e = String(info.edition || 'eos').toLowerCase();
-            return (e === 'hems' || e === 'home') ? 'hems' : 'eos';
-        }
+        // Der Adapter prüft die lebende zentrale Lease. Alte Beobachtungs-States
+        // und lokale Editionslabels sind keine Berechtigung für einen Modultick.
+        try { return featureFlags.normalizeEdition(this.adapter?._nwCurrentLicenseEdition?.()); } catch (_e) {}
         return 'none';
     }
 
     _licenseAllowsApp(appId: unknown): boolean {
-        const edition = this._licenseEdition();
-        try {
-            if (featureFlags && typeof featureFlags.allowsApp === 'function') {
-                return !!featureFlags.allowsApp(edition, String(appId || ''));
-            }
-        } catch (_e) {}
-        if (edition === 'eos') return true;
-        if (edition !== 'hems') return false;
-        // Notfall-Fallback: Muss der zentralen HOME_APP_IDS-Matrix entsprechen. So bleiben
-        // Home-Apps auch dann korrekt freigegeben, wenn der Feature-Service beim Start
-        // ausnahmsweise nicht geladen werden kann.
-        const hemsApps = new Set(['charging', 'storage', 'storagefarm', 'thermal', 'heatingrod', 'threshold', 'relay', 'grid', 'aiAdvisor', 'tariff', 'para14a', 'energyWallet', 'energyLedger', 'nlP1']);
-        return hemsApps.has(String(appId || ''));
+        // Dieselbe serverseitige Entscheidung wie App-Center/API einschließlich
+        // signierter Kontingente. Fehlender Prüfer oder Ausnahme sperrt das Modul.
+        try { return this.adapter?._nwLicenseAllowsAppId?.(String(appId || '')) === true; } catch (_e) { return false; }
     }
 
     _getDiagCfg() {

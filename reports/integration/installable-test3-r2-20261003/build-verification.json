@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "output": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-r2",
+  "host": "win32-x64",
+  "node": "24.21.0",
+  "deliveryRevision": 2,
+  "releaseSequence": 5,
+  "commands": [
+    {
+      "name": "revision-regression",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "--test",
+        "tests/system/install-from-checkout.test.cjs",
+        "tests/integration/postgresql-catalog-payload.test.cjs",
+        "tests/integration/test-archive.test.cjs"
+      ],
+      "started": "2026-10-03T13:25:14.084Z",
+      "finished": "2026-10-03T13:25:35.008Z",
+      "exitCode": 0,
+      "errorCode": null
+    },
+    {
+      "name": "package",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "tools/integration/package-postgresql-test.cjs",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-r2"
+      ],
+      "started": "2026-10-03T13:28:16.000Z",
+      "finished": "2026-10-03T13:35:25.239Z",
+      "exitCode": 0,
+      "errorCode": null
+    },
+    {
+      "name": "deliver",
+      "program": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "tools/integration/deliver-postgresql-test.cjs",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-r2"
+      ],
+      "started": "2026-10-03T13:35:58.018Z",
+      "finished": "2026-10-03T13:36:06.302Z",
+      "exitCode": 0,
+      "errorCode": null
+    }
+  ],
+  "completedBuildPassed": true,
+  "originalAndCopiedAppUnchanged": true,
+  "historicalDeliveriesUnchanged": true,
+  "nativeTargetExecutionPerformed": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "ee095843d9bc56094cff081d5a76f466133fd66ca303b17279886b8580dc2295"
+    },
+    {
+      "path": "app-reuse.json",
+      "sha256": "1446736d32a7165e7a8422bbb837e2f0b343415387b2624910f59d4352bf0c81"
+    },
+    {
+      "path": "archive-delivery-verification.json",
+      "sha256": "85aaf633157064610bf93ba7f4a9c0a2579e3fafee02f983ddac17daf1e497bb"
+    },
+    {
+      "path": "assembly.json",
+      "sha256": "1cef477bc263b5012348d18c8e6a55182e668a7640cf9561d7c993b49b607be3"
+    },
+    {
+      "path": "build-evidence.json",
+      "sha256": "d4ca28d4f9e99a2a63179f7043bae3c690a5fa413ec46fab4ab9ed4ea145a8bb"
+    },
+    {
+      "path": "build-revision.cjs",
+      "sha256": "3af23e832f1762a29b9ece35c597e52f2d0b0e8a61c4e9e57da6cb3edf14f284"
+    },
+    {
+      "path": "controller-transform.json",
+      "sha256": "5ee7d04ed3e115fb38473492c9b18556f6e21c749699e959f3f6c4cffc15b72a"
+    },
+    {
+      "path": "deliver.command.json",
+      "sha256": "457cde0b4824d0f43271a74c8cbaae25e5e4b05b6445ec988291b0fed69dcd66"
+    },
+    {
+      "path": "deliver.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "deliver.stdout.log",
+      "sha256": "8dd9b4a4c7c6481506888b5928013cb92b034b0dafb53400c7911bb6bb996531"
+    },
+    {
+      "path": "delivery.json",
+      "sha256": "b6ae0340fb45a0a17c80e74c86de8a3a8aee7e72404d33e89e9d56ddbea1126d"
+    },
+    {
+      "path": "historical-delivery-preservation.json",
+      "sha256": "12c47d4b5efae887bd519d2033eec6335bf125f4d025cbefc4bacff25c8fb78a"
+    },
+    {
+      "path": "native-transform.json",
+      "sha256": "8e99eae587c917a7642a93d6d5ae58ab5f3bc1336a28b1b50603e424933d80d0"
+    },
+    {
+      "path": "package.command.json",
+      "sha256": "35368938ae152a9cec37fc6ebb05b6ddd8fbc077d11c9babddcbc6502bf43335"
+    },
+    {
+      "path": "package.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "package.stdout.log",
+      "sha256": "433bc173d6e2835a57f7eee416f72256171a02d4dcfcd82619dfee34a7cb1ba8"
+    },
+    {
+      "path": "release-metadata.json",
+      "sha256": "c54ad662879c2bfd5731a68c60fbe615adceb678d61258248c7509112b2b8216"
+    },
+    {
+      "path": "revision-regression.command.json",
+      "sha256": "2770a9471b98e55b709e9232dbc2e25d7b7df385be706274d495ea99d0abf9f2"
+    },
+    {
+      "path": "revision-regression.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "revision-regression.stdout.log",
+      "sha256": "4a2b695b21979aee2850433815847ece1e89a0a004000abc9feaaed17b4fd67f"
+    },
+    {
+      "path": "runtime-package-lock.json",
+      "sha256": "2752bb37cac608b2f7e26cd9e049e0cfc8e12964c61bf3959dfa46330e538bd7"
+    },
+    {
+      "path": "runtime-package.json",
+      "sha256": "073328882105ba54937062e943ba7d33658cbde00078bd7a4e0242a8f765845d"
+    },
+    {
+      "path": "runtime-sbom-coverage.json",
+      "sha256": "c01f8100bec79a75fc3103967285b60d403a9fc0f8cef042b629e0fb487a99c1"
+    },
+    {
+      "path": "runtime.cdx.json",
+      "sha256": "1b4b155abdc097582b2664fc47f5862f5140ed06f1cf1f1fa83da824a2463348"
+    },
+    {
+      "path": "runtime.raw.cdx.json",
+      "sha256": "d5bbcebab23938b2d0700ad3dc6d0ae0945a5e15880df3e399f7b2de1933890f"
+    },
+    {
+      "path": "signed-source-binding.json",
+      "sha256": "97c480f5062573a8286e8b425c3740ad4408a704bce35a20b7d1de972790f25c"
+    }
+  ]
+}

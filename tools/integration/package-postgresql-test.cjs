@@ -2,49 +2,69 @@
 // Reproducible package assembly from an observed tree, not a release approval.
 const fs = require('node:fs');
 const path = require('node:path');
-const crypto = require('node:crypto');
-const cp = require('node:child_process');
-const { inventory, sha256, verifyBundle } = require('../../runtime/release/bundle.cjs');
 const { componentTreeDigest } = require('../../runtime/policy/admission.cjs');
-const { main: build } = require('../system/build-bundle.cjs');
-const REPO = path.resolve(__dirname, '../..');
+const { preparePayload, componentRows } = require('../system/build-bundle.cjs');
+const { createTestArchive } = require('./create-test-archive.cjs');
+const product = require('../../runtime/product/scope.cjs');
+const DELIVERY_REVISION = 2;
+const RELEASE_SEQUENCE = 5;
+function releaseMetadata(platform) {
+    if (!['linux-arm64', 'linux-x64'].includes(platform)) throw new Error('PG_PRODUCT_ASSEMBLY_REQUIRED');
+    return { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: RELEASE_SEQUENCE,
+        profile: 'test', nodeVersion: '24.21.0', platforms: [platform] };
+}
+function prepareCatalogPayload({ app, payload, catalogFile, sbomFile, catalog }) {
+    // An incomplete catalog is only unsigned build input. In particular npm's
+    // nested .bin helpers belong to the source tree, not the delivered payload.
+    fs.writeFileSync(catalogFile, JSON.stringify(catalog, null, 2) + '\n', { flag: 'wx' });
+    const files = preparePayload({ appDirectory: app, destination: payload, catalogFile, sbomFile });
+    const bound = { ...catalog, entries: catalog.entries.map(entry => ({ ...entry,
+        sha256: componentTreeDigest(componentRows(files, entry.package)) })) };
+    const bytes = JSON.stringify(bound, null, 2) + '\n';
+    // Only the two files just created by this build are replaced. The source
+    // app stays intact. Signing re-inventories and validates the final payload.
+    fs.writeFileSync(catalogFile, bytes);
+    fs.writeFileSync(path.join(payload, 'catalog.json'), bytes);
+    return bound;
+}
 function packageTest(directory) {
     const base = path.resolve(directory), app = path.join(base, 'app');
-    const catalog = JSON.parse(fs.readFileSync(path.join(REPO, 'reports/integration/stabilization/arm64/catalog.json')));
-    const files = inventory(app);
-    catalog.catalogRevision = 2;
-    for (const entry of catalog.entries) {
-        const prefix = `node_modules/${entry.package}/`;
-        entry.sha256 = componentTreeDigest(files.filter(row => row.path.startsWith(prefix)).map(row => ({ path: row.path.slice(prefix.length), size: row.size, sha256: row.sha256 })));
-        entry.communication = 'eos-postgresql-mtls13-v1';
-        entry.permissions.protocols = entry.permissions.protocols.map(name => name === 'eos-redis-tls13-v1' ? entry.communication : name);
-        entry.review.evidenceId = 'eos-postgresql-test-install-20261002';
-    }
+    const installedComponents = product.inspectApp(app);
+    const assembly = JSON.parse(fs.readFileSync(path.join(base, 'assembly.json'), 'utf8'));
+    if (!['linux-arm64', 'linux-x64'].includes(assembly.platform) || assembly.productProfile !== product.PROFILE) throw new Error('PG_PRODUCT_ASSEMBLY_REQUIRED');
+    const catalog = { schemaVersion: 1, kind: 'eos-adapter-admission', catalogRevision: 3,
+        entries: product.SPECS.map(spec => ({ id: spec.id, package: spec.package, version: spec.version,
+            sha256: '', digestKind: 'tree-sha256-v1', kind: spec.kind, required: spec.execute,
+            review: { status: spec.execute ? 'approved-test' : 'pending', evidenceId: spec.execute ? 'eos-first-start-20261002' : null },
+            permissions: { capabilities: spec.kind === 'core' ? ['state.read', 'state.write', 'process.fixed'] : ['state.read', 'state.write', ...(spec.execute ? ['https.listen', 'https.client'] : [])],
+                protocols: ['eos-postgresql-mtls13-v1', ...(spec.execute && spec.kind === 'adapter' ? ['https'] : [])],
+                network: 'declared-endpoints-and-discovery', shellExec: false, additionalNpmModules: [], arbitraryCode: false },
+            communication: 'eos-postgresql-mtls13-v1' })) };
     const save = (file, value) => fs.writeFileSync(path.join(base, file), JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
-    save('catalog.json', catalog);
-    const metadata = { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.2', sequence: 3,
-        profile: 'test', nodeVersion: '24.21.0', platforms: ['linux-arm64'] };
+    const metadata = releaseMetadata(assembly.platform);
     save('release-metadata.json', metadata);
-    const keyDirectory = path.join(base, 'test-signing-private'); fs.mkdirSync(keyDirectory, { mode: 0o700 });
-    const keys = crypto.generateKeyPairSync('ed25519');
-    const secret = keys.privateKey.export({ type: 'pkcs8', format: 'pem' });
-    const publicKey = keys.publicKey.export({ type: 'spki', format: 'pem' });
-    const privateFile = path.join(keyDirectory, 'release-private.pem'); fs.writeFileSync(privateFile, secret, { flag: 'wx', mode: 0o600 });
-    fs.writeFileSync(path.join(base, 'release-public.pem'), publicKey, { flag: 'wx', mode: 0o644 });
-    const bundle = path.join(base, 'bundle');
-    build(['--app', app, '--catalog', path.join(base,'catalog.json'), '--sbom', path.join(base,'runtime.cdx.json'),
-        '--metadata', path.join(base,'release-metadata.json'), '--private-key', privateFile, '--output', bundle]);
-    const result = verifyBundle({ bundleDirectory: bundle, publicKey, minimumSequence: 0, nodeVersion: '24.21.0', platform: 'linux-arm64' });
-    const archive = path.join(base, 'eos-0.2.0-test.2-linux-arm64.tar.gz');
-    const tar = cp.spawnSync('/usr/bin/tar', ['--sort=name', '--mtime=2026-10-02 00:00:00Z', '--owner=0', '--group=0', '--numeric-owner', '-czf', archive, '-C', base, 'bundle'], { encoding: 'utf8', timeout: 120000 });
-    if (tar.status !== 0 || tar.error) throw new Error('PG_ARCHIVE_FAILED');
-    const delivery = { schemaVersion: 1, sourceVersion: '0.2.0-dev.7', runtimeVersion: metadata.releaseVersion, releaseId: result.releaseId,
-        signingPublicKeySha256: sha256(publicKey), archive: path.basename(archive), sha256: sha256(fs.readFileSync(archive)), bytes: fs.statSync(archive).size,
-        signedFiles: result.manifest.files.length, platform: 'linux-arm64', database: 'postgresql',
-        scope: 'isolated fresh Debian13 Pi5 test; Admin/UI; no physical control', targetTestRequired: true, productionReleaseApproved: false };
+    const archive = path.join(base, `eos-0.2.0-test.3-${assembly.platform}.tar.gz`);
+    // This payload is build input, not a POSIX bundle installed from Windows.
+    // The archive carries the signed modes and is reread before delivery.
+    const payload = path.join(base, 'test-archive-payload');
+    prepareCatalogPayload({ app, payload, catalog,
+        catalogFile: path.join(base, 'catalog.json'), sbomFile: path.join(base, 'runtime.cdx.json') });
+    const result = createTestArchive({ payloadDirectory: payload, archivePath: archive,
+        publicKeyPath: path.join(base, 'release-public.pem'), metadata });
+    const delivery = { schemaVersion: 1, sourceVersion: '0.2.0-dev.9', runtimeVersion: metadata.releaseVersion,
+        deliveryRevision: DELIVERY_REVISION, releaseSequence: metadata.sequence, releaseId: result.releaseId,
+        signingPublicKeySha256: result.signingPublicKeySha256, archive: path.basename(archive),
+        sha256: result.archiveSha256, bytes: result.archiveBytes,
+        signedFiles: result.manifest.files.length, platform: assembly.platform, database: 'postgresql',
+        productProfile: product.PROFILE, installedComponents,
+        scope: 'full required package installation; HTTPS first-start; management activation only; physical adapters pending acceptance',
+        archiveReadbackVerified: result.archiveReadbackVerified, archiveModePolicy: result.modePolicy,
+        signing: result.signing, privateKeyPersisted: false,
+        reproducibility: 'Payload modes, order and timestamps are canonical. A fresh test signer changes the signature, public-key hash and archive hash; identical manifest bytes retain the same releaseId.',
+        configured: false, physicalControlEnabled: false, targetTestRequired: true, productionReleaseApproved: false };
     save('delivery.json', delivery); return delivery;
 }
-module.exports = { packageTest };
+module.exports = { DELIVERY_REVISION, RELEASE_SEQUENCE, releaseMetadata, packageTest, prepareCatalogPayload };
 if (require.main === module) {
     try { if(process.argv.length!==3) throw new Error('PG_PACKAGE_USAGE'); process.stdout.write(JSON.stringify(packageTest(process.argv[2])) + '\n'); }
     catch(error) { process.stderr.write((error.code || error.message) + '\n'); process.exitCode = 1; }

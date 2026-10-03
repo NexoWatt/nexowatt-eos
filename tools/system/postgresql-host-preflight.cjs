@@ -4,10 +4,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const osInfo = require('node:os');
 const { command, toolTrust, parseOsRelease, OS_UPDATE_PACKAGES } = require('./host-preflight.cjs');
-const ACCOUNTS = Object.freeze(['eos-runtime', 'eos-postgres']);
+const ACCOUNTS = Object.freeze(['eos-runtime', 'eos-postgres', 'eos-setup']);
 const UNITS = Object.freeze(['nexowatt-eos.target', 'nexowatt-eos-controller.service', 'nexowatt-eos-initialize.service',
     'nexowatt-eos-postgresql.service', 'nexowatt-eos-upload.service', 'nexowatt-eos-pg-certificates.service',
-    'nexowatt-eos-pg-certificates.timer', 'nexowatt-eos-os-updates.service', 'nexowatt-eos-os-updates.timer']);
+    'nexowatt-eos-pg-certificates.timer', 'nexowatt-eos-os-updates.service', 'nexowatt-eos-os-updates.timer',
+    'nexowatt-eos-setup.target', 'nexowatt-eos-setup.service', 'nexowatt-eos-setup-finalize.path', 'nexowatt-eos-setup-finalize.service', 'nexowatt-eos-setup-license.service']);
 const REQUIRED = Object.freeze(['/usr/bin/node', '/usr/bin/systemctl', '/usr/sbin/useradd', '/usr/sbin/groupadd',
     '/usr/sbin/getcap', '/usr/bin/openssl', '/usr/bin/getent', '/usr/bin/chown', '/usr/bin/ss', '/usr/bin/id', '/usr/sbin/nologin',
     '/usr/sbin/runuser', '/usr/lib/postgresql/17/bin/postgres', '/usr/lib/postgresql/17/bin/initdb', '/usr/lib/postgresql/17/bin/psql', '/usr/lib/postgresql/17/bin/pg_isready',
@@ -17,6 +18,26 @@ const FRESH_PATHS = Object.freeze(['/etc/nexowatt-eos', '/var/lib/nexowatt-eos',
     '/opt/nexowatt/eos/current', '/opt/nexowatt-eos', '/opt/iobroker', '/etc/nexowatt-eos-os-updates',
     '/var/lib/nexowatt-eos-os-updates', '/etc/systemd/system/nexowatt-eos.service', '/run/nexowatt-eos-postgresql',
     ...UNITS.map(name => `/etc/systemd/system/${name}`)]);
+// systemd257 returns exit 1 for a successful filtered list with no matches.
+// Query the complete table instead: absence must follow a successful command,
+// never reinterpret a generic command failure as an empty EOS namespace.
+// These columns are the C-locale systemd257 unit-file table, with --full to
+// prevent ellipsized names. Unrecognized or incomplete output fails closed.
+const UNIT_FILE_ROW = /^((?:[A-Za-z0-9:_.@-]|\\x[0-9A-Fa-f]{2})+\.(?:service|socket|device|mount|automount|swap|target|path|timer|slice|scope))[ \t]+(enabled|enabled-runtime|linked|linked-runtime|alias|masked|masked-runtime|static|disabled|indirect|generated|transient|bad)[ \t]+(enabled|disabled|ignored|unknown|n\/a|-)[ \t]*$/;
+function inspectUnitNamespace(result) {
+    const names = [], lines = result.stdout.split(/\r?\n/).filter(line => line.trim());
+    let valid = lines.length > 0;
+    for (const line of lines) {
+        const match = UNIT_FILE_ROW.exec(line);
+        if (!match || match[1].length > 255) { valid = false; continue; }
+        names.push(match[1]);
+    }
+    const conflicts = names.filter(name => /^(?:nexowatt-eos|iobroker)/.test(name));
+    return { ok: result.status === 0 && !result.error && !result.stderr?.trim() && valid && conflicts.length === 0,
+        detail: { requirement: 'No existing EOS/ioBroker unit may be replaced.', queryStatus: result.status,
+            queryError: result.error || null, outputValid: valid, stderrPresent: Boolean(result.stderr?.trim()),
+            conflictingUnits: conflicts } };
+}
 function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, root = '/', exec = command,
     uid = process.getuid?.(), hostname = osInfo.hostname().split('.')[0] } = {}) {
     const at = name => path.join(root, name), checks = [];
@@ -67,7 +88,7 @@ function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, r
     const listeners = run('/usr/bin/ss', ['-H', '-ltn']);
     const rows = listeners.stdout.split('\n').filter(line => line.trim()).map(line => line.trim().split(/\s+/));
     add('ports-free', listeners.status === 0 && !listeners.error && rows.every(row => row.length >= 5 && row[0] === 'LISTEN' && /:\d+$/.test(row[3])) &&
-        !rows.some(row => /:(?:15432|8081|8188)$/.test(row[3] || '')), 'PostgreSQL15432, Admin8081, UI8188 must be unused.');
+        !rows.some(row => /:(?:15432|8081|8188|8443)$/.test(row[3] || '')), 'PostgreSQL15432, Admin8081, UI8188, Setup8443 must be unused.');
     for (const account of ACCOUNTS) for (const table of ['passwd', 'group']) {
         const result = run('/usr/bin/getent', [table, account]);
         add(`fresh-${table}:${account}`, result.status === 2 && !result.error && !result.stdout, 'No account takeover or migration.');
@@ -76,8 +97,8 @@ function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, r
         let exists = true; try { fs.lstatSync(at(file)); } catch (e) { if (e.code === 'ENOENT') exists = false; }
         add(`fresh-path:${file}`, !exists, 'Existing installation must be preserved; use a fresh test image.');
     }
-    const units = run('/usr/bin/systemctl', ['list-unit-files', '--no-legend', '--no-pager', 'nexowatt-eos*', 'iobroker*']);
-    add('fresh-unit-namespace', units.status === 0 && !units.error && units.stdout.trim() === '', 'No existing EOS/ioBroker unit may be replaced.');
+    const units = inspectUnitNamespace(run('/usr/bin/systemctl', ['list-unit-files', '--no-legend', '--no-pager', '--full']));
+    add('fresh-unit-namespace', units.ok, units.detail);
     let space = 0; try { const stat = fs.statfsSync(at('/')); space = Number(stat.bavail) * Number(stat.bsize); } catch { /* fail */ }
     add('free-space', space >= 6 * 1024 ** 3, { bytes: space, minimumBytes: 6 * 1024 ** 3 });
     const ready = checks.every(row => row.status === 'pass');
@@ -86,4 +107,4 @@ function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, r
         targetHardwareAccepted: false, productionReleaseApproved: false,
         scope: 'Read-only fresh Debian13 test-host admission. Live TLS/schema/controller/HTTPS gates must still pass on the target.' };
 }
-module.exports = { ACCOUNTS, UNITS, REQUIRED, FRESH_PATHS, inspectPostgresqlHost };
+module.exports = { ACCOUNTS, UNITS, REQUIRED, FRESH_PATHS, inspectUnitNamespace, inspectPostgresqlHost };

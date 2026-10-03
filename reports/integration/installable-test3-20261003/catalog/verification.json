@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-postgresql-catalog-payload-regression",
+  "completedAt": "2026-10-03T07:57:45.701Z",
+  "host": {
+    "platform": "win32",
+    "node": "24.21.0"
+  },
+  "realBuildFinding": {
+    "reportedBy": "root-agent exact source/payload comparison",
+    "failure": "BUILD_COMPONENT_DIGEST",
+    "component": "iobroker.nexowatt-ui",
+    "sourceFiles": 607,
+    "payloadFiles": 604,
+    "removedSourceOnlyFiles": [
+      "node_modules/.bin/mime",
+      "node_modules/.bin/mime.cmd",
+      "node_modules/.bin/mime.ps1"
+    ],
+    "otherSixComponents": "same file counts and bytes",
+    "cause": "Catalog was bound to the app source before preparePayload removed nested .bin helper directories."
+  },
+  "change": {
+    "catalogInput": "Actual inventory returned by preparePayload; app/node_modules component-relative rows",
+    "sourceAppMutated": false,
+    "baseCatalogEqualsPayloadCatalog": true,
+    "signatureAndRuntimeGatesChanged": false,
+    "reproducibility": "A fresh signing key changes signature, public-key hash and archive hash. Identical manifest bytes retain releaseId."
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/integration/postgresql-catalog-payload.test.cjs",
+    "tests/postgresql/full-product.test.cjs",
+    "tests/integration/test-archive.test.cjs"
+  ],
+  "exitCode": 0,
+  "tests": 24,
+  "passed": 24,
+  "failed": 0,
+  "skipped": 0,
+  "meaningfulRegression": [
+    "Actual preparePayload removes the three nested npm helper files from a seven-file component fixture and retains its four runtime files.",
+    "Source app file inventory is unchanged.",
+    "Both final catalog files match the actual payload digest, which differs from the old source digest.",
+    "A later runtime-byte mutation changes the observed component digest.",
+    "Existing output is refused; all existing product and signed-archive rejection tests remain active."
+  ],
+  "files": [
+    {
+      "path": "tools/integration/package-postgresql-test.cjs",
+      "bytes": 5238,
+      "sha256": "ffba0326f4806cc8e4bc49c3b3d30e8c45607013b8aff12a398b1efc70817a08"
+    },
+    {
+      "path": "tests/integration/postgresql-catalog-payload.test.cjs",
+      "bytes": 3583,
+      "sha256": "c11eba5f2fa5b9dd2ad00ae218be9dbf652ccb13f41f2179cbeca3b8b43707d4"
+    },
+    {
+      "path": "reports/integration/installable-test3-20261003/catalog/regression.tap",
+      "bytes": 11572,
+      "sha256": "45bf81d6dcfd4c71ffefd92aaa3f82ed89c388cacd55f1d4dec000f155b3b54a"
+    }
+  ],
+  "fullRuntimeArtifactBuiltByThisCheck": false,
+  "targetExecutionPerformed": false,
+  "hardwareTested": false
+}

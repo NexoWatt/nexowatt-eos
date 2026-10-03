@@ -1,0 +1,72 @@
+# Private GitHub-Testinstallation: Grenzen und Prüfungen
+
+Der authentisch aus dem privaten Herstellerrepository bezogene README-Befehl
+bindet den vollständigen Python-Loader an eine feste Git-Blob-ID und einen
+separaten SHA-256. Ein ersetzter README-Befehl wäre selbst ein neuer
+Vertrauensanker; ein Hash allein authentifiziert keine beliebige Downloadquelle.
+GitHub-/Repository-Zugriffsrechte und Herstellerfreigabe bleiben deshalb relevant.
+
+Die aktuelle Testlieferung liegt unter `delivery/bootstrap-test3-r2` und bindet
+den öffentlichen NWL2-Trustexport des vorhandenen lokalen Lizenzgenerators ein.
+Der normale Aufruf `node cli.js trust <Ausgabedatei>` erzeugte einen neuen
+öffentlichen Export mit `kid: nexowattEOS`, bytegleich mit der zuvor vorliegenden
+Datei aus dem Downloadordner: 140 Bytes, SHA-256
+`470dce1dec8f4a5da87339e9166aed025789ea86ab85613f2c508f5e9d434b6f`.
+Damit wurde die Zuordnung über den Generator festgestellt; die Prüfung beruht
+nicht nur auf einem passenden Dateiformat. Dafür wurden kein privater Schlüssel
+exportiert, keine Passphrase abgefragt und keine Lizenz ausgestellt.
+
+Das neue Manifest enthält `ready: true`. Der frühere Einstieg mit fehlendem
+Trust bleibt als unverändertes historisches Paket gesperrt. Seine Meldung
+`BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING` tritt vor der Paketinstallation
+auf. Betroffene Nutzer ersetzen den gesamten kopierten Block durch den aus der
+[aktuellen README des Testzweigs](https://github.com/NexoWatt/nexowatt-eos/blob/feature/eos-first-start-20261002/README.md).
+Der öffentliche Prüfschlüssel wird im Installerkit mitgeliefert; eine manuelle
+Schlüsselübernahme oder Abschaltung der Prüfung auf dem Pi ist nicht nötig.
+
+Der Loader akzeptiert nur ein exakt strukturiertes, erneut doppelt gehashtes
+Manifest für `NexoWatt/nexowatt-eos` und die feste test.3-Revision 2. Er lädt
+nur die drei bekannten Datenarchive und den gebundenen Vorbereitungscode.
+Keine veränderlichen Branch-Downloads, Weiterleitungen oder Download-URL-Felder
+werden ausgeführt. Dateilänge, Git-Blob-SHA-1 und SHA-256 müssen gemeinsam passen.
+Der vorhandene Installer prüft darüber hinaus die Release-Signatur und sämtliche
+Manifestdateien. Die historische test.3-Revision wird nicht überschrieben.
+
+Der PAT kommt verdeckt aus `/dev/tty`. Vor dem Lesen werden Shell-Tracing,
+automatischer Variablenexport und ein eventuell geerbtes Exportattribut entfernt.
+curl erhält den Authorization-Header ausschließlich über Standardeingabe; Python
+erhält ihn einmal über FD 3 und schließt diesen vor Netzwerk-/Unterprozessen.
+Der PAT wird nicht in URL, argv, Umgebungsvariablen, Datei oder Protokoll abgelegt.
+Er wird vor dem Installationsaufruf verworfen. Dies verspricht keine nachweisbare
+vollständige Löschung aller internen Python-/TLS-Speicherkopien. Root und ein
+kompromittierter Kernel bleiben außerhalb dieser Geheimnisschutzgrenze.
+
+Alle Zielverbindungen verwenden geprüfte Zertifikate. Python bindet ausdrücklich
+den geschützten Debian-CA-Pfad; Proxy-/TLS-Umgebungsvariablen steuern den Download
+nicht. Der herstellerseitige Windows-Readback verwendet dessen OS-Zertifikate,
+lehnt `SSL_CERT_FILE`/`SSL_CERT_DIR` vor dem Credentialabruf ab und ist **kein**
+Nachweis für den CA-Pfad oder die UID-/Systemd-Grenzen auf Debian.
+
+Alle Zielablagen werden privat und exklusiv angelegt. Der Hosthelfer wiederholt
+die Frischsystemprüfung und prüft die drei bereits geladenen Dateien erneut
+vor Entpacken oder APT. Kein Skip-/Force-/Offline-CLI-Schalter wurde ergänzt.
+Vorhandene EOS-Daten und PostgreSQL-Cluster bleiben geschützt; ein abgebrochener
+Teillauf ist zu prüfen und wird nicht automatisch überschrieben.
+
+Der GitHub-PAT ersetzt weder den öffentlichen NWL2-Lizenzprüfschlüssel noch eine
+Gerätelizenz. Die Schlüsselzuordnung erfolgt vor dem Paketbau; auf dem Pi wird
+sie nicht erneut erfragt. Die belegte Herkunft aus dem lokalen Generator ist
+noch kein Nachweis einer echten signierten Lizenzannahme auf dem Zielgerät.
+UUID-Anzeige, Frontendpasswort, Lizenzrechte und technische Steuerungssperren
+bleiben bestehen.
+
+Die Tests verwenden isolierte Daten und prüfen auch falsche Hashes, Größen,
+Weiterleitungen, Authfehler, manipulierte Helfer, fehlenden Herstellertrust,
+Tokenweitergabe und geschützte Dateitypen. Eine vollständige Pi-Neuinstallation,
+reale systemd-/PostgreSQL-/TLS-Abnahme, Abbruch-/Reboottest,
+Browser-Gesamtlauf einschließlich CA-Vertrauen, reale Lizenzannahme und sämtliche
+Geräte-/Hardwaretests bleiben **OFFEN**. Neuinstallation ist kein Flottenupdate;
+eine dauerhafte Signatur-/Update-/Rollbackkette wird damit nicht bereitgestellt.
+
+Die Nachweise zur aktuellen Lieferung stehen im
+[Prüfbericht zum freigeschalteten GitHub-Einstieg](../../reports/integration/github-bootstrap-ready-20261003/README.md).

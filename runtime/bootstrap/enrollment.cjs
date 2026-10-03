@@ -11,6 +11,7 @@ const { validateProfile } = require('../controller-profile/guard.cjs');
 const accountsPolicy = require('./accounts.cjs');
 const MARKER = 'system.meta.eosEnrollment';
 const PROFILE = 'eos-integrated-ui-lab-v1';
+const FIRST_START_MARKER = 'system.meta.eosFirstStart';
 const SPECS = Object.freeze([
     Object.freeze({ name: 'eos-admin', version: '7.10.11', main: 'build/main.js', port: 8081 }),
     Object.freeze({ name: 'nexowatt-ui', version: '1.0.21', main: 'main.js', port: 8188 }),
@@ -94,6 +95,10 @@ async function verify({ objects, config, app, allowPending = false }) {
     if (marker?.native?.profile !== PROFILE || marker.native.version !== 2 ||
         marker.native.runtimeConfigSha256 !== digest(config) || marker.native.physicalControlEnabled !== false ||
         !(marker.native.state === 'complete' || allowPending && marker.native.state === 'pending')) fail('ENROLLMENT_MARKER');
+    if (marker.native.firstRunPolicyVersion !== undefined) {
+        if (marker.native.firstRunPolicyVersion !== 1) fail('ENROLLMENT_FIRST_START');
+        await verifyFirstRun({ objects, allowPending });
+    }
     const core = await objects.getObjectAsync('system.meta.eosTestBase');
     if (core?.native?.state !== 'complete' || core.native.profile !== 'eos-core-only-bootstrap-v1' ||
         core.native.coreControllerVersion !== '7.2.2' || core.native.bootstrapPolicyVersion !== 1 ||
@@ -123,6 +128,72 @@ async function verify({ objects, config, app, allowPending = false }) {
     }
     return { status: 'INTEGRATED_UI_LAB_VERIFIED', profile: PROFILE, adaptersEnabled: result.rows.filter(r => (r.value || r.doc).common.enabled).length,
         physicalControlEnabled: false, productionReleaseApproved: false };
+}
+async function verifyFirstRun({ objects, allowPending = false }) {
+    const marker = await objects.getObjectAsync(FIRST_START_MARKER);
+    const { validateSettings } = require('../onboarding/policy.cjs');
+    if (marker?.native?.schemaVersion !== 1 || marker.native.configurationValidated !== true ||
+        marker.native.physicalControlEnabled !== false ||
+        !(marker.native.state === 'complete' || allowPending && marker.native.state === 'pending')) fail('ENROLLMENT_FIRST_START');
+    validateSettings(marker.native.settings);
+    if (marker.native.settingsSha256 !== digest(marker.native.settings)) fail('ENROLLMENT_FIRST_START');
+    const expected = require('../onboarding/configuration.cjs').summarize(marker.native.settings,
+        { mode: marker.native.settings.licenseMode === 'verified' ? 'activate' : 'unlicensed' });
+    if (!isDeepStrictEqual(marker.native.commissioning, expected)) fail('ENROLLMENT_FIRST_START');
+    const common = (await objects.getObjectAsync('system.config'))?.common;
+    // This marker records the accepted initial configuration, not an immutable
+    // forever-snapshot: authorized setting changes must survive later reboots.
+    validateSettings({ ...marker.native.settings, siteName: common?.siteName, language: common?.language, timeZone: common?.timeZone });
+    return { state: marker.native.state, configurationValidated: true, physicalControlEnabled: false };
+}
+async function enrollFirstRun({ objects, states, config, app, passwordHash: hashed, settings, verifyFresh }) {
+    if (typeof verifyFresh !== 'function') fail('ENROLLMENT_FRESH_GATE_REQUIRED');
+    strongHash(hashed);
+    settings = require('../onboarding/policy.cjs').validateSettings(settings);
+    const packages = pinnedAdapters(app);
+    const binding = digest({ passwordHash: hashed, settings, config });
+    const previous = await objects.getObjectAsync(MARKER);
+    // Only an already finished identical handoff is idempotent. An interrupted
+    // multi-object write stays blocked; replaying it could erase foreign edits.
+    if (previous) {
+        if (previous.native?.firstRunPolicyVersion === 1 && previous.native.state === 'complete' && previous.native.firstRunBinding === binding) {
+            return verify({ objects, config, app });
+        }
+        fail('ENROLLMENT_ALREADY_ATTEMPTED');
+    }
+    if (await objects.getObjectAsync(FIRST_START_MARKER)) fail('ENROLLMENT_ALREADY_ATTEMPTED');
+    await verifyFresh();
+    if ((await states.getState(`system.host.${config.system.hostname}.alive`))?.val === true) fail('ENROLLMENT_CONTROLLER_RUNNING');
+    const admin = structuredClone(await objects.getObjectAsync('system.user.admin'));
+    const system = structuredClone(await objects.getObjectAsync('system.config'));
+    if (!admin || admin.common?.enabled !== false || admin.common.password !== '' || !system) fail('ENROLLMENT_FRESH_ADMIN_REQUIRED');
+    const marker = { _id: MARKER, type: 'meta', common: { name: 'EOS browser first-start enrollment', type: 'meta.user' },
+        native: { profile: PROFILE, version: 2, state: 'pending', runtimeConfigSha256: digest(config), physicalControlEnabled: false,
+            accountPolicyVersion: accountsPolicy.ACCOUNT_POLICY_VERSION, accounts: [], firstRunPolicyVersion: 1, firstRunBinding: binding },
+        from: 'system.host.eos-enrollment', ts: Date.now() };
+    const configuration = require('../onboarding/configuration.cjs');
+    const firstStart = { _id: FIRST_START_MARKER, type: 'meta', common: { name: 'EOS first-start configuration', type: 'meta.user' },
+        native: { schemaVersion: 1, state: 'pending', configurationValidated: true, physicalControlEnabled: false,
+            settings, settingsSha256: digest(settings),
+            commissioning: configuration.summarize(settings, { mode: settings.licenseMode === 'verified' ? 'activate' : 'unlicensed' }) }, acl: { ...accountsPolicy.PRIVATE_ACL },
+        from: 'system.host.eos-enrollment', ts: Date.now() };
+    await objects.setObjectAsync(MARKER, marker);
+    await objects.setObjectAsync(FIRST_START_MARKER, firstStart);
+    for (const item of packages) {
+        const doc = instanceDocument(item, config.system.hostname);
+        if (item.spec.name === 'nexowatt-ui') configuration.applyPlant(doc.native, settings.plant);
+        await objects.setObjectAsync(doc._id, doc);
+    }
+    Object.assign(system.common, { siteName: settings.siteName, language: settings.language, timeZone: settings.timeZone });
+    await objects.setObjectAsync(system._id, system);
+    admin.common = { ...admin.common, enabled: true, password: hashed, name: 'NexoWatt Service' };
+    admin.acl = { ...accountsPolicy.PRIVATE_ACL };
+    await objects.setObjectAsync(admin._id, admin);
+    for (const role of Object.keys(accountsPolicy.ROLES)) await objects.setObjectAsync(accountsPolicy.ROLES[role], accountsPolicy.groupDocument(role, []));
+    await verify({ objects, config, app, allowPending: true });
+    firstStart.native.state = 'complete'; await objects.setObjectAsync(FIRST_START_MARKER, firstStart);
+    marker.native.state = 'complete'; await objects.setObjectAsync(MARKER, marker);
+    return verify({ objects, config, app });
 }
 async function enroll({ objects, states, config, app, password, accounts, verifyFresh }) {
     if (typeof verifyFresh !== 'function') fail('ENROLLMENT_FRESH_GATE_REQUIRED');
@@ -164,4 +235,4 @@ async function enroll({ objects, states, config, app, password, accounts, verify
     await objects.setObjectAsync(MARKER, marker);
     return verify({ objects, config, app });
 }
-module.exports = { MARKER, PROFILE, SPECS, validatePassword, passwordHash, strongHash, pinnedAdapters, instanceDocument, assertInstance, verify, enroll };
+module.exports = { MARKER, PROFILE, FIRST_START_MARKER, SPECS, validatePassword, passwordHash, strongHash, pinnedAdapters, instanceDocument, assertInstance, verify, verifyFirstRun, enroll, enrollFirstRun };

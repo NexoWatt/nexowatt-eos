@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: key generator refuses overwrite and protects private material
+not ok 1 - key generator refuses overwrite and protects private material
+  ---
+  duration_ms: 1144.4745
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\system\\release-cli.test.cjs:63:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    438 !== 384
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 384
+  actual: 438
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\system\release-cli.test.cjs:65:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: verify checks signed package identity, digest, policy and exact runtime
+not ok 2 - verify checks signed package identity, digest, policy and exact runtime
+  ---
+  duration_ms: 935.9058
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\system\\release-cli.test.cjs:68:1'
+  failureType: 'testCodeFailure'
+  error: 'BUNDLE_MANIFEST'
+  code: 'BUNDLE_MANIFEST'
+  name: 'BundleError'
+  stack: |-
+    fail (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:15:29)
+    validateManifest (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:105:107)
+    createBundle (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:139:22)
+    Object.sign (C:\Users\User\Desktop\Nexowatt-EOS\tests\system\release-cli.test.cjs:59:24)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\system\release-cli.test.cjs:69:29)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+  ...
+# Subtest: signed stale upstream SBOM cannot describe locally transformed runtime
+not ok 3 - signed stale upstream SBOM cannot describe locally transformed runtime
+  ---
+  duration_ms: 1189.8853
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\system\\release-cli.test.cjs:74:1'
+  failureType: 'testCodeFailure'
+  error: 'BUNDLE_MANIFEST'
+  code: 'BUNDLE_MANIFEST'
+  name: 'BundleError'
+  stack: |-
+    fail (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:15:29)
+    validateManifest (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:105:107)
+    createBundle (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:139:22)
+    Object.sign (C:\Users\User\Desktop\Nexowatt-EOS\tests\system\release-cli.test.cjs:59:24)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\system\release-cli.test.cjs:78:52)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+  ...
+# Subtest: inventory generation never turns installed code into an approved adapter
+ok 4 - inventory generation never turns installed code into an approved adapter
+  ---
+  duration_ms: 1200.9338
+  type: 'test'
+  ...
+# Subtest: changed package tree and pending catalog do not become approved by signing
+ok 5 - changed package tree and pending catalog do not become approved by signing
+  ---
+  duration_ms: 1438.5087
+  type: 'test'
+  ...
+# Subtest: URL/range root dependencies and lifecycle scripts are rejected
+ok 6 - URL/range root dependencies and lifecycle scripts are rejected
+  ---
+  duration_ms: 1105.274
+  type: 'test'
+  ...
+# Subtest: installed check validates retained signature and detects changed release bytes
+not ok 7 - installed check validates retained signature and detects changed release bytes
+  ---
+  duration_ms: 1141.6184
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\system\\release-cli.test.cjs:110:1'
+  failureType: 'testCodeFailure'
+  error: 'BUNDLE_MANIFEST'
+  code: 'BUNDLE_MANIFEST'
+  name: 'BundleError'
+  stack: |-
+    fail (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:15:29)
+    validateManifest (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:105:107)
+    createBundle (C:\Users\User\Desktop\Nexowatt-EOS\runtime\release\bundle.cjs:139:22)
+    Object.sign (C:\Users\User\Desktop\Nexowatt-EOS\tests\system\release-cli.test.cjs:59:24)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\system\release-cli.test.cjs:111:29)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+  ...
+# Subtest: bundle preparation removes npm executable links and rejects other symlinks
+ok 8 - bundle preparation removes npm executable links and rejects other symlinks
+  ---
+  duration_ms: 1305.32
+  type: 'test'
+  ...
+# Subtest: CLI rejects duplicate, missing and extra options before work
+ok 9 - CLI rejects duplicate, missing and extra options before work
+  ---
+  duration_ms: 1.5707
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 5
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9916.388

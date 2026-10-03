@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: a crashed or timed-out first-start trial revokes its permit and stops its controller
+ok 1 - a crashed or timed-out first-start trial revokes its permit and stops its controller
+  ---
+  duration_ms: 22.631
+  type: 'test'
+  ...
+# Subtest: successful lock removal leaves the completed controller running
+ok 2 - successful lock removal leaves the completed controller running
+  ---
+  duration_ms: 0.6858
+  type: 'test'
+  ...
+# Subtest: known independent maintenance does not lose its trial permit
+ok 3 - known independent maintenance does not lose its trial permit
+  ---
+  duration_ms: 0.6665
+  type: 'test'
+  ...
+# Subtest: another first-start invocation or legacy coordinator keeps its already-owned lock
+ok 4 - another first-start invocation or legacy coordinator keeps its already-owned lock
+  ---
+  duration_ms: 8.4625
+  type: 'test'
+  ...
+# Subtest: missing or invalid systemd invocation cannot run either privileged coordinator context
+ok 5 - missing or invalid systemd invocation cannot run either privileged coordinator context
+  ---
+  duration_ms: 2.4039
+  type: 'test'
+  ...
+# Subtest: permit removal error still attempts a stop and reports only a generic code
+ok 6 - permit removal error still attempts a stop and reports only a generic code
+  ---
+  duration_ms: 0.7215
+  type: 'test'
+  ...
+# Subtest: unreadable or unknown maintenance state attempts fail-closed quiescence
+ok 7 - unreadable or unknown maintenance state attempts fail-closed quiescence
+  ---
+  duration_ms: 0.7582
+  type: 'test'
+  ...
+# Subtest: a stop failure remains a failing service result
+ok 8 - a stop failure remains a failing service result
+  ---
+  duration_ms: 0.5904
+  type: 'test'
+  ...
+# Subtest: only the fixed stop-post selector is accepted; caller paths and commands are rejected
+ok 9 - only the fixed stop-post selector is accepted; caller paths and commands are rejected
+  ---
+  duration_ms: 0.9412
+  type: 'test'
+  ...
+# Subtest: real systemd unit installs independent stop-post and budgets beyond coordinator deadline
+ok 10 - real systemd unit installs independent stop-post and budgets beyond coordinator deadline
+  ---
+  duration_ms: 2.0587
+  type: 'test'
+  ...
+# Subtest: finalizer verifies before starting; persists only after authenticated TLS probes
+ok 11 - finalizer verifies before starting; persists only after authenticated TLS probes
+  ---
+  duration_ms: 15.6345
+  type: 'test'
+  ...
+# Subtest: parallel attempt failing exclusive lock never stops the owning finalizer
+ok 12 - parallel attempt failing exclusive lock never stops the owning finalizer
+  ---
+  duration_ms: 1.7285
+  type: 'test'
+  ...
+# Subtest: interruption at stop always blocks restart and stops controller
+ok 13 - interruption at stop always blocks restart and stops controller
+  ---
+  duration_ms: 1.1963
+  type: 'test'
+  ...
+# Subtest: interruption at enroll always blocks restart and stops controller
+ok 14 - interruption at enroll always blocks restart and stops controller
+  ---
+  duration_ms: 2.484
+  type: 'test'
+  ...
+# Subtest: interruption at verify always blocks restart and stops controller
+ok 15 - interruption at verify always blocks restart and stops controller
+  ---
+  duration_ms: 0.6584
+  type: 'test'
+  ...
+# Subtest: interruption at configureLicense always blocks restart and stops controller
+ok 16 - interruption at configureLicense always blocks restart and stops controller
+  ---
+  duration_ms: 0.9714
+  type: 'test'
+  ...
+# Subtest: interruption at upload always blocks restart and stops controller
+ok 17 - interruption at upload always blocks restart and stops controller
+  ---
+  duration_ms: 23.3942
+  type: 'test'
+  ...
+# Subtest: interruption at enableWebInstances always blocks restart and stops controller
+ok 18 - interruption at enableWebInstances always blocks restart and stops controller
+  ---
+  duration_ms: 0.8111
+  type: 'test'
+  ...
+# Subtest: interruption at authorize always blocks restart and stops controller
+ok 19 - interruption at authorize always blocks restart and stops controller
+  ---
+  duration_ms: 0.9039
+  type: 'test'
+  ...
+# Subtest: interruption at start always blocks restart and stops controller
+ok 20 - interruption at start always blocks restart and stops controller
+  ---
+  duration_ms: 9.4437
+  type: 'test'
+  ...
+# Subtest: interruption at probe always blocks restart and stops controller
+ok 21 - interruption at probe always blocks restart and stops controller
+  ---
+  duration_ms: 0.7596
+  type: 'test'
+  ...
+# Subtest: interruption at persist always blocks restart and stops controller
+ok 22 - interruption at persist always blocks restart and stops controller
+  ---
+  duration_ms: 0.4722
+  type: 'test'
+  ...
+# Subtest: interruption at enableBoot always blocks restart and stops controller
+ok 23 - interruption at enableBoot always blocks restart and stops controller
+  ---
+  duration_ms: 0.3715
+  type: 'test'
+  ...
+# Subtest: interruption at disableSetup always blocks restart and stops controller
+ok 24 - interruption at disableSetup always blocks restart and stops controller
+  ---
+  duration_ms: 0.3764
+  type: 'test'
+  ...
+# Subtest: interruption at release always blocks restart and stops controller
+ok 25 - interruption at release always blocks restart and stops controller
+  ---
+  duration_ms: 0.3687
+  type: 'test'
+  ...
+# Subtest: shipped setup unit arguments execute the real setup main parser
+ok 26 - shipped setup unit arguments execute the real setup main parser
+  ---
+  duration_ms: 43.4096
+  type: 'test'
+  ...
+# Subtest: setup has its own unprivileged identity and no writable runtime or database access
+ok 27 - setup has its own unprivileged identity and no writable runtime or database access
+  ---
+  duration_ms: 1.7751
+  type: 'test'
+  ...
+# Subtest: boot transition uses installable target and finalizer is an argument-free fixed root entry
+ok 28 - boot transition uses installable target and finalizer is an argument-free fixed root entry
+  ---
+  duration_ms: 3.0937
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 846.4001

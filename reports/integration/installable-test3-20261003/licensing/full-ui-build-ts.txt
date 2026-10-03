@@ -1,0 +1,24 @@
+
+> iobroker.nexowatt-ui@1.0.21 build:ts
+> npm run clean:ts && npm run sync:ts-runtime-executables && npm run sync:ts-main-helpers && npm run sync:ts-scripts && npm run sync:ts-frontend-mirrors && npm run sync:ts-adapter-mirrors && npm run sync:ts-backend-mirrors && npm run sync:ts-adapter-helpers && npm run sync:ts-energy-flow-mirrors && npm run sync:ts-ems-mirrors && npm run sync:ts-shadow-bridges && npm run sync:ts-runtime-mirrors && npm run build:types
+
+
+> iobroker.nexowatt-ui@1.0.21 clean:ts
+> node scripts/clean-ts-build.js
+
+[clean-ts-build] removed build-ts
+[clean-ts-build] removed build-types
+[clean-ts-build] removed build\types
+
+> iobroker.nexowatt-ui@1.0.21 sync:ts-runtime-executables
+> node scripts/build-ts-runtime-executables.js
+
+[ts-runtime-executables] OK: 135 produktive Runtime-Dateien bereits aktuell; TS ist die kanonische Runtime-Quelle.
+
+> iobroker.nexowatt-ui@1.0.21 sync:ts-main-helpers
+> node scripts/build-ts-main-helpers.js
+
+error TS2688: Cannot find type definition file for 'node'.
+  The file is in the program because:
+    Entry point of type library 'node' specified in compilerOptions
+[build-ts-main-helpers] ERROR: TypeScript-Build für Main-Helfer fehlgeschlagen. Falls tsc fehlt: npm install oder npm ci ausführen.

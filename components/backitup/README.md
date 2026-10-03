@@ -59,4 +59,4 @@ EOS system profile archives are gzip-compressed TAR archives, not encrypted cont
 
 ## Attribution
 
-See `NOTICE.md` and `LICENSE`.
+The current NexoWatt-specific distribution is proprietary and requires prior written permission from NexoWatt. Upstream MIT terms, third-party licenses and rights validly granted under earlier MIT distributions remain unaffected. See [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) and the byte-preserved [previous MIT notice](LICENSES/PREVIOUS-MIT.txt).

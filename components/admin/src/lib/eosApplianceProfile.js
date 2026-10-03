@@ -182,6 +182,9 @@ function objectChangeAllowed(command, id, value, previous) {
             } else if (key === 'common') {
                 if (!commonChangeAllowed(previous.common, entry, instance ? COMMON_EDITABLE : SYSTEM_COMMON_EDITABLE, partial)) return false;
                 if (instance && Object.hasOwn(entry, 'enabled') && typeof entry.enabled !== 'boolean') return false;
+                // Installed field/backup packages are not commissioned devices.
+                // Browser writes cannot turn their instances on in this profile.
+                if (instance && entry.enabled === true && !['system.adapter.eos-admin.0', 'system.adapter.nexowatt-ui.0'].includes(id)) return false;
                 if (instance && Object.hasOwn(entry, 'loglevel') && !['silly', 'debug', 'info', 'warn', 'error'].includes(entry.loglevel)) return false;
             } else if (!isDeepStrictEqual(previous[key], entry)) return false;
         }
@@ -198,10 +201,14 @@ function objectChangeAllowed(command, id, value, previous) {
 
 function socketCommandAllowed(command, args, objects = {}) {
     if (typeof command !== 'string' || !Array.isArray(args) || DENIED.has(command)) return false;
+    // The commissioning profile has no plant activation approval. Apply this
+    // before role/upstream ACLs so a valid Service session cannot bypass the UI.
+    if (['setState', 'setBinaryState', 'createState', 'delState'].includes(command)) return false;
     if (command === 'sendToHost') return typeof args[1] === 'string' && HOST_READS.has(args[1]);
     if (command === 'sendTo' && /^eos-admin\.\d+$/.test(String(args[0]))) {
         return args[1] === 'eos.license.check' || args[1] === 'admin:getNotificationSchema';
     }
+    if (command === 'sendTo') return false;
     const id = args[0];
     if (MUTATE_OBJECT.has(command)) {
         if (typeof id !== 'string' || id.length > 1024) return false;

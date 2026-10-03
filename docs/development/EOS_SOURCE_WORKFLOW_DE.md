@@ -9,7 +9,8 @@ als bereits eingerichtet dargestellt.
 ## Verbindlicher Quellstand
 
 Das zusammengeführte EOS-Repository ist die Hauptquelle des Produkts. Sein
-konfiguriertes `origin` ist `https://github.com/NexoWatt/EOS.git`; ein lokaler
+konfiguriertes `origin` ist `https://github.com/NexoWatt/Nexowatt-EOS.git`
+(erneut geprüft am 03.10.2026); ein lokaler
 Commit bedeutet noch keinen Push auf GitHub. Produktversion und Produktscope
 stehen in `system/product.json`. Das Root-`package.json` bezeichnet weiterhin
 den übernommenen Installer und ist keine EOS-Produktversionsdatei.

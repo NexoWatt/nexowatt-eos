@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: EOS-ROLES: product reads require login and canonical group identity; aliases never elevate
+ok 1 - EOS-ROLES: product reads require login and canonical group identity; aliases never elevate
+  ---
+  duration_ms: 898.5221
+  type: 'test'
+  ...
+# Subtest: EOS-ACCOUNT: initial own-password setup gates data, preserves identity, revokes all sessions
+ok 2 - EOS-ACCOUNT: initial own-password setup gates data, preserves identity, revokes all sessions
+  ---
+  duration_ms: 24000.4318
+  type: 'test'
+  ...
+# Subtest: EOS-ACCOUNT: reset metadata, disabled accounts and group changes revoke active sessions
+ok 3 - EOS-ACCOUNT: reset metadata, disabled accounts and group changes revoke active sessions
+  ---
+  duration_ms: 110.2681
+  type: 'test'
+  ...
+# Subtest: EOS-ACCOUNT: password input bounds and fail-closed initialization metadata
+ok 4 - EOS-ACCOUNT: password input bounds and fail-closed initialization metadata
+  ---
+  duration_ms: 1.3821
+  type: 'test'
+  ...
+# Subtest: EOS-ACCOUNT: shared verification/derivation budget admits two and rejects excess without queue
+ok 5 - EOS-ACCOUNT: shared verification/derivation budget admits two and rejects excess without queue
+  ---
+  duration_ms: 2.3672
+  type: 'test'
+  ...
+# Subtest: EOS-SSE: forged logout leaves streams alive; valid logout closes only its own stream
+ok 6 - EOS-SSE: forged logout leaves streams alive; valid logout closes only its own stream
+  ---
+  duration_ms: 100.198
+  type: 'test'
+  ...
+# Subtest: worker installs without prefetching login-protected content
+ok 7 - worker installs without prefetching login-protected content
+  ---
+  duration_ms: 100.77
+  type: 'test'
+  ...
+# Subtest: activation deletes legacy EOS caches before controlling clients
+ok 8 - activation deletes legacy EOS caches before controlling clients
+  ---
+  duration_ms: 3.8892
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /
+ok 9 - offline protected route cannot use a previous session cache: /
+  ---
+  duration_ms: 11.6231
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /index.html
+ok 10 - offline protected route cannot use a previous session cache: /index.html
+  ---
+  duration_ms: 3.8953
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /static/index.html
+ok 11 - offline protected route cannot use a previous session cache: /static/index.html
+  ---
+  duration_ms: 3.0152
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /api/state
+ok 12 - offline protected route cannot use a previous session cache: /api/state
+  ---
+  duration_ms: 3.5917
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /api/export.json
+ok 13 - offline protected route cannot use a previous session cache: /api/export.json
+  ---
+  duration_ms: 3.5794
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /config
+ok 14 - offline protected route cannot use a previous session cache: /config
+  ---
+  duration_ms: 3.5933
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /state/live
+ok 15 - offline protected route cannot use a previous session cache: /state/live
+  ---
+  duration_ms: 3.8043
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /static/auth.js?token=fixture
+ok 16 - offline protected route cannot use a previous session cache: /static/auth.js?token=fixture
+  ---
+  duration_ms: 6.1343
+  type: 'test'
+  ...
+# Subtest: authentication denial is returned directly without cache fallback
+ok 17 - authentication denial is returned directly without cache fallback
+  ---
+  duration_ms: 2.7087
+  type: 'test'
+  ...
+# Subtest: only successful public same-origin assets are cached
+ok 18 - only successful public same-origin assets are cached
+  ---
+  duration_ms: 3.5407
+  type: 'test'
+  ...
+# Subtest: public asset denied response never enters cache
+ok 19 - public asset denied response never enters cache
+  ---
+  duration_ms: 9.8134
+  type: 'test'
+  ...
+# Subtest: public asset redirect response never enters cache
+ok 20 - public asset redirect response never enters cache
+  ---
+  duration_ms: 2.5615
+  type: 'test'
+  ...
+# Subtest: public asset offline fallback is confined to current cache
+ok 21 - public asset offline fallback is confined to current cache
+  ---
+  duration_ms: 27.5678
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: GET https://other.test/asset.js
+ok 22 - worker does not intercept native transport: GET https://other.test/asset.js
+  ---
+  duration_ms: 4.8747
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: GET /events
+ok 23 - worker does not intercept native transport: GET /events
+  ---
+  duration_ms: 3.3722
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: POST /api/account/password
+ok 24 - worker does not intercept native transport: POST /api/account/password
+  ---
+  duration_ms: 3.887
+  type: 'test'
+  ...
+# Subtest: EOS-SSE each frame rechecks authorization and revocation prevents queued payload
+ok 25 - EOS-SSE each frame rechecks authorization and revocation prevents queued payload
+  ---
+  duration_ms: 21.6085
+  type: 'test'
+  ...
+# Subtest: EOS-SSE global pending cap survives closed clients until actual authorization settles
+ok 26 - EOS-SSE global pending cap survives closed clients until actual authorization settles
+  ---
+  duration_ms: 13.2161
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 34856.9262

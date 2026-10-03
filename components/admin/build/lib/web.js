@@ -25,6 +25,7 @@ const eosWebResources_1 = require("./eosWebResources");
 const eosApplianceProfile_1 = require("./eosApplianceProfile");
 const eosSessionSecurity_1 = require("./eosSessionSecurity");
 const eosUploadGuard_1 = require("./eosUploadGuard");
+const eosAccountInvitations_1 = require("./eosAccountInvitations");
 let AdapterStore;
 /** Content of a socket-io file */
 let socketIoFile;
@@ -164,6 +165,7 @@ class Web {
     systemLanguage;
     checkTimeout;
     oauth2Model;
+    eosInvitations;
     /** Short-lived passwordless first-activation claims. Keys are SHA-256 hashes of HttpOnly cookie tokens. */
     eosPasswordClaims = new Map();
     /** Small in-memory rate limiter for unauthenticated first-activation requests. */
@@ -1147,6 +1149,7 @@ class Web {
         }
         res.status(200).json({
             role: access.role,
+            canInvite: access.role === 'admin',
             canResetInstaller: access.role === 'admin',
             canResetEndUser: true,
             accounts: await this.getEosManagedAccounts(access.role),
@@ -1654,6 +1657,39 @@ class Web {
                 AdapterStore = adapter_core_1.commonTools.session(session, this.settings.ttl);
                 this.store = new AdapterStore({ adapter: this.adapter });
                 this.server.app.use(cookieParser());
+                this.eosInvitations = (0, eosAccountInvitations_1.createAccountInvitations)(this.adapter);
+                // Einladungsannahme ist ausschließlich Besitznachweis, keine
+                // allgemeine Sitzung. HTTPS-Origin und 4-KiB-Grenze vor dem Parser.
+                const invitationGuard = (req, res, next) => {
+                    res.setHeader('Cache-Control', 'no-store');
+                    if (typeof req.headers.origin !== 'string' || !this.isEosSameOriginWrite(req)
+                        || req.headers['x-nexowatt-eos-invitation'] !== '1'
+                        || !req.is('application/json')) {
+                        res.status(403).json({ error: 'invalidRequestOrigin' });
+                        return;
+                    }
+                    next();
+                };
+                this.server.app.post('/nexowatt/account/accept', invitationGuard, bodyParser.json({ limit: '4kb', strict: true }), (req, res) => {
+                    void this.eosInvitations.accept(req.body).then(result => res.json(result)).catch((error) => {
+                        res.status(['accountBusy', 'invitationRateLimit'].includes(error.message) ? 429 : 400)
+                            .json({ error: 'invitationUnavailable' });
+                    });
+                }, (_error, _req, res, _next) => {
+                    // body-parser-Fehler können Passworttext in message/body
+                    // tragen. Hier beenden, bevor Express Fehler protokolliert.
+                    res.setHeader('Cache-Control', 'no-store');
+                    res.status(400).json({ error: 'invitationUnavailable' });
+                });
+                this.server.app.get('/nexowatt/account/accept', (_req, res) => {
+                    res.setHeader('Cache-Control', 'no-store');
+                    res.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+                    res.sendFile((0, node_path_1.join)(__dirname, '../../public/nexowatt-invitation.html'));
+                });
+                this.server.app.get('/nexowatt/account/invitation.js', (_req, res) => {
+                    res.setHeader('Cache-Control', 'no-store');
+                    res.type('application/javascript').sendFile((0, node_path_1.join)(__dirname, '../../public/nexowatt-invitation.js'));
+                });
                 // License imports must pass authentication, Origin and rate limits
                 // before their small dedicated JSON parser consumes any body.
                 const genericUrlencoded = bodyParser.urlencoded({ extended: true });
@@ -1934,6 +1970,21 @@ class Web {
                 void this.resetEosAccountPassword(req, res).catch(() => {
                     this.adapter.log.warn('Cannot reset EOS account');
                     res.status(500).json({ error: 'accountResetFailed' });
+                });
+            });
+            this.server.app.post('/nexowatt/account/invite', this.eosTechnicalRouteGuard(true, true), (req, res) => {
+                res.setHeader('Cache-Control', 'no-store');
+                if (typeof req.headers.origin !== 'string' || !this.isEosSameOriginWrite(req)
+                    || req.headers['x-nexowatt-eos-invitation'] !== '1') {
+                    res.status(403).json({ error: 'invalidRequestOrigin' });
+                    return;
+                }
+                const authorize = async () => {
+                    const access = await this.getEosRequestAccess(req);
+                    return !!access.userId && access.role === 'admin';
+                };
+                void this.eosInvitations.issue(req.body, authorize).then(result => res.json(result)).catch((error) => {
+                    res.status(error.message === 'accountBusy' ? 429 : 400).json({ error: 'invitationUnavailable' });
                 });
             });
             this.server.app.get('/iobroker_check.html', (_req, res) => {

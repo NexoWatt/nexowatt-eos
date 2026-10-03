@@ -1,0 +1,60 @@
+{
+  "recordedAt": "2026-10-03T07:25:03.449701+00:00",
+  "runs": [
+    {
+      "name": "checkout-node",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/install-from-checkout.test.cjs"
+      ],
+      "exitCode": 0,
+      "log": "reports/integration/installable-test3-20261003/checkout/checkout-node.log",
+      "sha256": "6c576d6a1d9d7e0de13023f55a9a7fb585210d2103187393f4a60350e50018b9"
+    },
+    {
+      "name": "checkout-extract",
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "tests/system/extract-test-bundle.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "log": "reports/integration/installable-test3-20261003/checkout/checkout-extract.log",
+      "sha256": "b1b91ef2a88d505d9de840cb093663cafc787428e85d7bcd73b7f607afd64a96"
+    }
+  ],
+  "sources": [
+    {
+      "path": "tools/system/install-from-checkout.cjs",
+      "sha256": "e60d0fe32612003685b5b7db2be83c25864b6b80865afd9ca4d3dc20968bd4ef"
+    },
+    {
+      "path": "tools/system/extract-test-bundle.py",
+      "sha256": "84958e5adb16cabf556b5b48b7f4791a3540921e98bfc75967a0717492a3610f"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "ba5af752e10ec6cd98c024f0903c9843be7fb51c550d87c431196bf83fb8f150"
+    },
+    {
+      "path": "tools/integration/test-archive.py",
+      "sha256": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b"
+    },
+    {
+      "path": "tests/system/install-from-checkout.test.cjs",
+      "sha256": "8628b235484e66744b1c6cff9125a53f9b8b11160b523669e5c908f79807512e"
+    },
+    {
+      "path": "tests/system/extract-test-bundle.test.py",
+      "sha256": "cbe8f04807176074e784f60cc453430d455a948fbcedc6ea44f16b52faeda5a7"
+    }
+  ],
+  "sourceStableDuringTests": true,
+  "linuxRootInstallationExecuted": false,
+  "hardwareTested": false,
+  "scope": "unit effects and actual bounded data-only tar extraction on Windows; umask API fixture only"
+}

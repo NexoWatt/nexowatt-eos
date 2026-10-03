@@ -1,0 +1,329 @@
+TAP version 13
+# Subtest: unique local CA and distinct per-listener keys verify SANs
+not ok 1 - unique local CA and distinct per-listener keys verify SANs
+  ---
+  duration_ms: 2.4639
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:12:1'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input []
+not ok 2 - rejects invalid SAN input []
+  ---
+  duration_ms: 0.2603
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input ["a\\nDNS:evil"]
+not ok 3 - rejects invalid SAN input ["a\\nDNS:evil"]
+  ---
+  duration_ms: 2.2222
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input ["*.example.com"]
+not ok 4 - rejects invalid SAN input ["*.example.com"]
+  ---
+  duration_ms: 0.2938
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input ["bad/name"]
+not ok 5 - rejects invalid SAN input ["bad/name"]
+  ---
+  duration_ms: 0.277
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input ["-evil"]
+not ok 6 - rejects invalid SAN input ["-evil"]
+  ---
+  duration_ms: 0.2194
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input ["xxxxxxxxxxxxxxxxxxxxxx
+not ok 7 - rejects invalid SAN input ["xxxxxxxxxxxxxxxxxxxxxx
+  ---
+  duration_ms: 0.2055
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input ["eos.test","eos.test","
+not ok 8 - rejects invalid SAN input ["eos.test","eos.test","
+  ---
+  duration_ms: 0.2482
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input ["  host"]
+not ok 9 - rejects invalid SAN input ["  host"]
+  ---
+  duration_ms: 0.3196
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: rejects invalid SAN input [null]
+not ok 10 - rejects invalid SAN input [null]
+  ---
+  duration_ms: 0.2855
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:21:5'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: never overwrites an existing certificate installation
+not ok 11 - never overwrites an existing certificate installation
+  ---
+  duration_ms: 0.1529
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:23:1'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: warning before expiry and rejection after expiry
+not ok 12 - warning before expiry and rejection after expiry
+  ---
+  duration_ms: 0.2425
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:24:1'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: TLS1.3 with trusted SAN succeeds; TLS1.2 rejected over real socket
+not ok 13 - TLS1.3 with trusted SAN succeeds; TLS1.2 rejected over real socket
+  ---
+  duration_ms: 0.1624
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:29:1'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+# Subtest: world-readable private leaf key rejected
+not ok 14 - world-readable private leaf key rejected
+  ---
+  duration_ms: 0.129
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:43:1'
+  failureType: 'hookFailed'
+  error: "ENOENT: no such file or directory, mkdtemp '/root/eos-web-fixture-XXXXXX'"
+  code: 'ENOENT'
+  stack: |-
+    Object.mkdtempSync (node:fs:3134:18)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:26)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.createHook (node:internal/test_runner/test:1117:33)
+    node:internal/test_runner/harness:426:12
+    Object.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:10:1)
+    Module._compile (node:internal/modules/cjs/loader:1929:14)
+  ...
+not ok 15 - C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs
+  ---
+  duration_ms: 0.7771
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\tests\\integration\\web-certificates.test.cjs:11:1'
+  failureType: 'hookFailed'
+  error: 'The "path" argument must be of type string or an instance of Buffer or URL. Received undefined'
+  code: 'ERR_INVALID_ARG_TYPE'
+  name: 'TypeError'
+  stack: |-
+    Object.rmSync (node:fs:1282:25)
+    TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\tests\integration\web-certificates.test.cjs:11:16)
+    TestHook.runInAsyncScope (node:async_hooks:227:14)
+    TestHook.run (node:internal/test_runner/test:1402:25)
+    TestHook.run (node:internal/test_runner/test:1757:18)
+    TestHook.run (node:internal/util:581:20)
+    Test.runHook (node:internal/test_runner/test:1289:20)
+    after (node:internal/test_runner/test:1342:20)
+    Test.run (node:internal/test_runner/test:1428:13)
+  ...
+# Subtest: actual systemd-analyze accepts new PostgreSQL unit grammar in inert fixture; no services executed
+ok 16 - actual systemd-analyze accepts new PostgreSQL unit grammar in inert fixture; no services executed # SKIP systemd-analyze unavailable
+  ---
+  duration_ms: 3.2557
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 0
+# fail 15
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 435.6485

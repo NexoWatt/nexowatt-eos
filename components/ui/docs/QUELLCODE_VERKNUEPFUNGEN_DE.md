@@ -2,7 +2,7 @@
 
 Automatisch aus den Originalquellen erzeugter Wegweiser. Einstieg und fachliche Abläufe: [Quellcode verstehen](QUELLCODE_WEGWEISER_DE.md). Pflege: [Dokumentationsstandard](DOKUMENTATIONSSTANDARD_DE.md).
 
-Erfasst: 237 selbst gepflegte TS-/TSX-Dateien, 5824 benannte Funktionen/Methoden. Generierte Spiegel, Testdateien, externe Pakete und Build-Artefakte sind ausgeschlossen.
+Erfasst: 237 selbst gepflegte TS-/TSX-Dateien, 5821 benannte Funktionen/Methoden. Generierte Spiegel, Testdateien, externe Pakete und Build-Artefakte sind ausgeschlossen.
 
 Die Funktionslinks zeigen auf die Originalquelle. Statische Imports und dynamische Kommunikation sind verschieden; Backend-API, ioBroker-States und HTML-/Browser-Globals werden im fachlichen Wegweiser erklärt.
 

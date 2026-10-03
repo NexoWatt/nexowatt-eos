@@ -1,0 +1,92 @@
+
+test_both_known_legacy_capability_sets_are_removed (__main__.HostPolicyTests.test_both_known_legacy_capability_sets_are_removed) ... 
+  test_both_known_legacy_capability_sets_are_removed (__main__.HostPolicyTests.test_both_known_legacy_capability_sets_are_removed) (caps='cap_net_bind_service,cap_net_admin,cap_net_raw=eip') ... FAIL
+  test_both_known_legacy_capability_sets_are_removed (__main__.HostPolicyTests.test_both_known_legacy_capability_sets_are_removed) (caps='cap_net_raw,cap_net_bind_service=eip') ... FAIL
+test_custom_policy_aborts_without_replacing_or_stripping_caps (__main__.HostPolicyTests.test_custom_policy_aborts_without_replacing_or_stripping_caps) ... ok
+test_existing_managed_policy_is_idempotent (__main__.HostPolicyTests.test_existing_managed_policy_is_idempotent) ... FAIL
+test_legacy_policy_replaced_and_unsafe_memberships_removed (__main__.HostPolicyTests.test_legacy_policy_replaced_and_unsafe_memberships_removed) ... FAIL
+test_new_policy_grants_no_privileges_or_device_groups (__main__.HostPolicyTests.test_new_policy_grants_no_privileges_or_device_groups) ... FAIL
+test_npm_wrappers_preserve_literal_arguments_and_directory_boundary (__main__.HostPolicyTests.test_npm_wrappers_preserve_literal_arguments_and_directory_boundary) ... 
+  test_npm_wrappers_preserve_literal_arguments_and_directory_boundary (__main__.HostPolicyTests.test_npm_wrappers_preserve_literal_arguments_and_directory_boundary) (wrapper='change_npm_command_user') ... FAIL
+  test_npm_wrappers_preserve_literal_arguments_and_directory_boundary (__main__.HostPolicyTests.test_npm_wrappers_preserve_literal_arguments_and_directory_boundary) (wrapper='change_npm_command_root') ... FAIL
+test_old_policy_with_unexpected_command_is_not_recognized (__main__.HostPolicyTests.test_old_policy_with_unexpected_command_is_not_recognized) ... ok
+test_permissions_propagate_owner_and_acl_failures (__main__.HostPolicyTests.test_permissions_propagate_owner_and_acl_failures) ... ok
+test_policy_symlink_is_rejected_without_target_change (__main__.HostPolicyTests.test_policy_symlink_is_rejected_without_target_change) ... ok
+test_redis_helpers_refuse_without_host_operations (__main__.HostPolicyTests.test_redis_helpers_refuse_without_host_operations) ... ok
+test_runtime_account_with_uid_zero_is_rejected_before_policy_write (__main__.HostPolicyTests.test_runtime_account_with_uid_zero_is_rejected_before_policy_write) ... ok
+test_standalone_custom_service_rule_is_not_treated_as_generated (__main__.HostPolicyTests.test_standalone_custom_service_rule_is_not_treated_as_generated) ... ok
+test_unexpected_capabilities_abort_before_policy_change (__main__.HostPolicyTests.test_unexpected_capabilities_abort_before_policy_change) ... ok
+test_validation_failure_preserves_old_policy (__main__.HostPolicyTests.test_validation_failure_preserves_old_policy) ... ok
+test_version_policy_uses_supplied_json_without_network (__main__.HostPolicyTests.test_version_policy_uses_supplied_json_without_network) ... ok
+
+======================================================================
+FAIL: test_both_known_legacy_capability_sets_are_removed (__main__.HostPolicyTests.test_both_known_legacy_capability_sets_are_removed) (caps='cap_net_bind_service,cap_net_admin,cap_net_raw=eip')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\host-policy.test.py", line 143, in test_both_known_legacy_capability_sets_are_removed
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : main: line 131: readlink: command not found
+
+
+======================================================================
+FAIL: test_both_known_legacy_capability_sets_are_removed (__main__.HostPolicyTests.test_both_known_legacy_capability_sets_are_removed) (caps='cap_net_raw,cap_net_bind_service=eip')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\host-policy.test.py", line 143, in test_both_known_legacy_capability_sets_are_removed
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : main: line 131: readlink: command not found
+
+
+======================================================================
+FAIL: test_existing_managed_policy_is_idempotent (__main__.HostPolicyTests.test_existing_managed_policy_is_idempotent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\host-policy.test.py", line 109, in test_existing_managed_policy_is_idempotent
+    self.assertEqual(self.run_shell('create_user_linux iobroker').returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_legacy_policy_replaced_and_unsafe_memberships_removed (__main__.HostPolicyTests.test_legacy_policy_replaced_and_unsafe_memberships_removed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\host-policy.test.py", line 102, in test_legacy_policy_replaced_and_unsafe_memberships_removed
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : main: line 34: cat: command not found
+
+
+======================================================================
+FAIL: test_new_policy_grants_no_privileges_or_device_groups (__main__.HostPolicyTests.test_new_policy_grants_no_privileges_or_device_groups)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\host-policy.test.py", line 92, in test_new_policy_grants_no_privileges_or_device_groups
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : main: line 131: readlink: command not found
+
+
+======================================================================
+FAIL: test_npm_wrappers_preserve_literal_arguments_and_directory_boundary (__main__.HostPolicyTests.test_npm_wrappers_preserve_literal_arguments_and_directory_boundary) (wrapper='change_npm_command_user')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\host-policy.test.py", line 225, in test_npm_wrappers_preserve_literal_arguments_and_directory_boundary
+    self.assertEqual(result.stdout.count('SUDO_BRANCH'), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_npm_wrappers_preserve_literal_arguments_and_directory_boundary (__main__.HostPolicyTests.test_npm_wrappers_preserve_literal_arguments_and_directory_boundary) (wrapper='change_npm_command_root')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\host-policy.test.py", line 225, in test_npm_wrappers_preserve_literal_arguments_and_directory_boundary
+    self.assertEqual(result.stdout.count('SUDO_BRANCH'), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 15 tests in 3.306s
+
+FAILED (failures=7)
