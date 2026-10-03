@@ -53,8 +53,9 @@ function groupDocument(role, rows) {
 function inventory(rows) { return rows.map(({ username, role }) => ({ userId: `system.user.${username}`, role })).sort((a, b) => a.userId.localeCompare(b.userId)); }
 async function verifyAccounts(objects, marker, strongHash) {
     const enrolled = marker?.native?.accounts;
+    const firstRun = marker?.native?.firstRunPolicyVersion === 1;
     if (marker?.native?.accountPolicyVersion !== ACCOUNT_POLICY_VERSION || !Array.isArray(enrolled) ||
-        enrolled.length < 2 || enrolled.length > MAX_ACCOUNTS) fail('ENROLLMENT_ACCOUNT_MARKER');
+        enrolled.length < (firstRun ? 0 : 2) || enrolled.length > MAX_ACCOUNTS) fail('ENROLLMENT_ACCOUNT_MARKER');
     const known = new Map();
     for (const row of enrolled) {
         if (!exact(row, ['userId', 'role']) || typeof row.userId !== 'string' || !validUserName(row.userId.replace(/^system\.user\./, '')) ||
@@ -74,9 +75,16 @@ async function verifyAccounts(objects, marker, strongHash) {
             account.passwordInitialized === true && account.passwordSetupVersion === 1 &&
             user.native.eosPasswordChangeRequired !== true;
         if (!pending && !initialized) fail('ENROLLMENT_ACCOUNT_STATE');
-        strongHash(user.common.password);
+        const invitation = account.invitation;
+        const invited = firstRun && pending && user.common.enabled === false && user.common.password === '' &&
+            exact(invitation, ['digest', 'expiresAt', 'consumed']) && /^[a-f0-9]{64}$/.test(invitation.digest) &&
+            Number.isSafeInteger(invitation.expiresAt) && invitation.expiresAt > 0 && invitation.consumed === false;
+        if (!invited) strongHash(user.common.password);
+        const consumed = (initialized || pending) && invitation?.consumed === true && (exact(invitation, ['consumed']) ||
+            exact(invitation, ['consumed', 'acceptedAt']) && Number.isSafeInteger(invitation.acceptedAt) && invitation.acceptedAt > 0);
+        if (invitation !== undefined && !invited && !consumed) fail('ENROLLMENT_INVITATION_STATE');
     }
-    if (new Set(known.values()).size !== 2) fail('ENROLLMENT_ACCOUNT_MARKER');
+    if (!firstRun && new Set(known.values()).size !== 2) fail('ENROLLMENT_ACCOUNT_MARKER');
     const result = await objects.getObjectViewAsync('system', 'group', { startkey: 'system.group.', endkey: 'system.group.\u9999' });
     if (!Array.isArray(result?.rows) || result.rows.length > 32) fail('ENROLLMENT_GROUP_DRIFT');
     const groups = new Map();

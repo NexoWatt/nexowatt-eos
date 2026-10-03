@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { snapshot, normalizeRoot, build } = require('../../tools/integration/build-runtime.cjs');
+const { copyRuntimeLicenses } = require('../../tools/system/build-bundle.cjs');
 test('target package selection is explicit and rejects unsupported platforms', () => {
  const { targetArguments } = require('../../tools/integration/build-runtime.cjs');
  assert.deepEqual(targetArguments('linux-arm64'), ['--os=linux', '--cpu=arm64', '--libc=glibc']);
@@ -41,4 +42,23 @@ test('conflicting or prototype-mutating component overrides fail before installa
  assert.throws(() => mergeOverrides([{ child: '2.0.1' }, { child: '2.0.2' }]), /BUILD_OVERRIDE_CONFLICT/);
  assert.throws(() => mergeOverrides([JSON.parse('{"__proto__":{"polluted":"1"}}')]), /BUILD_OVERRIDE_SHAPE/);
  assert.throws(() => mergeOverrides([{ child: null }]), /BUILD_OVERRIDE_SHAPE/);
+});
+test('runtime app includes intact proprietary and upstream license texts with runtime notice locations', t => {
+ const app = dir(t), repo = path.resolve(__dirname, '../..');
+ copyRuntimeLicenses(app);
+ for (const file of ['LICENSE', 'licenses/upstream/LICENSE.ioBroker-Installer.txt']) {
+  assert.deepEqual(fs.readFileSync(path.join(app, file)), fs.readFileSync(path.join(repo, file)));
+ }
+ assert.deepEqual(fs.readFileSync(path.join(app, 'licenses/upstream/README.ioBroker-Installer.md')),
+  fs.readFileSync(path.join(repo, 'docs/history/UPSTREAM_README.md')));
+ const notices = fs.readFileSync(path.join(app, 'THIRD_PARTY_NOTICES.md'), 'utf8');
+ assert.match(notices, /\]\(node_modules\/iobroker\.eos-admin\/THIRD_PARTY_NOTICES\.md\)/);
+ assert.match(notices, /\]\(node_modules\/iobroker\.ocpp21\/LICENSES\/PREVIOUS-MIT\.txt\)/);
+ for (const name of ['@nexowatt/eos-postgresql-store', '@iobroker/db-objects-postgresql', '@iobroker/db-states-postgresql']) {
+  assert.ok(notices.includes(`node_modules/${name}/LICENSE`));
+ }
+ assert.ok(notices.includes('../sbom.cdx.json'));
+ assert.doesNotMatch(notices, /components\/|runtime\/postgresql\/packages\/|reports\/integration\/|docs\/history\//);
+ assert.match(notices, /früher wirksam eingeräumte MIT-Rechte/);
+ assert.throws(() => copyRuntimeLicenses(app), { code: 'EEXIST' });
 });

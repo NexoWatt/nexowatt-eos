@@ -1,0 +1,83 @@
+
+test_cleanup_keeps_private_raw_log_and_does_not_process_runtime_logs (__main__.PrivateUpdateLogs.test_cleanup_keeps_private_raw_log_and_does_not_process_runtime_logs) ... FAIL
+test_compatibility_output_uses_private_directory (__main__.PrivateUpdateLogs.test_compatibility_output_uses_private_directory) ... FAIL
+test_compatibility_without_logging_is_rejected (__main__.PrivateUpdateLogs.test_compatibility_without_logging_is_rejected) ... ok
+test_mktemp_failure_aborts_without_a_log_or_privileged_fallback (__main__.PrivateUpdateLogs.test_mktemp_failure_aborts_without_a_log_or_privileged_fallback) ... ok
+test_prepared_runtime_symlink_tmpdir_and_old_logs_remain_untouched (__main__.PrivateUpdateLogs.test_prepared_runtime_symlink_tmpdir_and_old_logs_remain_untouched) ... FAIL
+test_private_directory_file_permissions_and_mirrored_output (__main__.PrivateUpdateLogs.test_private_directory_file_permissions_and_mirrored_output) ... FAIL
+test_separate_runs_do_not_reuse_directory (__main__.PrivateUpdateLogs.test_separate_runs_do_not_reuse_directory) ... FAIL
+
+======================================================================
+FAIL: test_cleanup_keeps_private_raw_log_and_does_not_process_runtime_logs (__main__.PrivateUpdateLogs.test_cleanup_keeps_private_raw_log_and_does_not_process_runtime_logs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 118, in test_cleanup_keeps_private_raw_log_and_does_not_process_runtime_logs
+    directory, _ = self.successful_init("cleanup\n")
+                   ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 89, in successful_init
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : mktemp: failed to create directory via template '/tmp/iob-nodejs-update.XXXXXXXXXX': Permission denied
+[31m[ERROR] Could not create a private update log directory.[0m
+
+
+======================================================================
+FAIL: test_compatibility_output_uses_private_directory (__main__.PrivateUpdateLogs.test_compatibility_output_uses_private_directory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 126, in test_compatibility_output_uses_private_directory
+    directory, result = self.successful_init("compatibility_check\n")
+                        ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 89, in successful_init
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : mktemp: failed to create directory via template '/tmp/iob-nodejs-update.XXXXXXXXXX': Permission denied
+[31m[ERROR] Could not create a private update log directory.[0m
+
+
+======================================================================
+FAIL: test_prepared_runtime_symlink_tmpdir_and_old_logs_remain_untouched (__main__.PrivateUpdateLogs.test_prepared_runtime_symlink_tmpdir_and_old_logs_remain_untouched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 109, in test_prepared_runtime_symlink_tmpdir_and_old_logs_remain_untouched
+    self.successful_init()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 89, in successful_init
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : mktemp: failed to create directory via template '/tmp/iob-nodejs-update.XXXXXXXXXX': Permission denied
+[31m[ERROR] Could not create a private update log directory.[0m
+
+
+======================================================================
+FAIL: test_private_directory_file_permissions_and_mirrored_output (__main__.PrivateUpdateLogs.test_private_directory_file_permissions_and_mirrored_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 105, in test_private_directory_file_permissions_and_mirrored_output
+    self.successful_init()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 89, in successful_init
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : mktemp: failed to create directory via template '/tmp/iob-nodejs-update.XXXXXXXXXX': Permission denied
+[31m[ERROR] Could not create a private update log directory.[0m
+
+
+======================================================================
+FAIL: test_separate_runs_do_not_reuse_directory (__main__.PrivateUpdateLogs.test_separate_runs_do_not_reuse_directory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 148, in test_separate_runs_do_not_reuse_directory
+    first, _ = self.successful_init()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\node-update-log.test.py", line 89, in successful_init
+    self.assertEqual(result.returncode, 0, result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : mktemp: failed to create directory via template '/tmp/iob-nodejs-update.XXXXXXXXXX': Permission denied
+[31m[ERROR] Could not create a private update log directory.[0m
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.596s
+
+FAILED (failures=5)

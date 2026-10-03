@@ -153,4 +153,11 @@ async function probeWeb({ directory, ports = { admin: 8081, ui: 8188 } }) {
     })));
     return { status: 'WEB_TLS_IDENTITIES_VERIFIED', peerVerified: true, tls: 'TLSv1.3' };
 }
-module.exports = { SCOPES, normalizeHosts, provisionWeb, inspectWeb, prepareWebRenewal, probeWeb };
+function provisionSetupWeb({ directory }) {
+    if (process.getuid?.() !== 0) fail('WEB_CERTIFICATE_ROOT_REQUIRED');
+    const inspected = inspectWeb({ directory });
+    if (fs.existsSync(path.join(directory, 'setup.key')) || fs.existsSync(path.join(directory, 'setup.crt'))) fail('WEB_CERTIFICATE_SETUP_EXISTS');
+    certificate(directory, 'setup', inspected.hosts);
+    return { certificatePath: path.join(directory, 'setup.crt'), privateKeyPath: path.join(directory, 'setup.key'), caPath: path.join(directory, 'ca.crt') };
+}
+module.exports = { SCOPES, normalizeHosts, provisionWeb, provisionSetupWeb, inspectWeb, prepareWebRenewal, probeWeb };

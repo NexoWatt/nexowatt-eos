@@ -1,5 +1,16 @@
 # NexoWatt EOS review profile — parameters
 
+## Browser first-start profile (dev9 / candidate test.3)
+
+The PostgreSQL full-product candidate requires `--setup-input` with `eos-base.cjs install`.
+Prepare **public host/trust data only** using `tools/system/prepare-onboarding.cjs`
+with `--hosts-file`, `--origin` (HTTPS, port 8443), `--license-trust`,
+`--license-trust-sha256` (independently authenticated) and `--output`.
+No user password is accepted by this preparation flow. The new frontend sets it.
+Local root can renew an uncommitted possession code using
+`runtime/onboarding/issue-code.cjs` without arguments. A pending commit cannot
+be reopened through this command. See the [complete workflow and open tests](docs/operations/FIRST_START_INSTALLATION_DE.md).
+
 This branch prepares host hardening; it is **not a completed product release**. See [acceptance gates](docs/security/ACCEPTANCE.md). The previous upstream installation commands fetch upstream ioBroker and do not apply these changes.
 
 ## Build and source execution

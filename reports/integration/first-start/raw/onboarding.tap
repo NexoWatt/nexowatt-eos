@@ -1,0 +1,598 @@
+TAP version 13
+# Subtest: strict input accepts two individual roles and emits nonsecret inventory
+ok 1 - strict input accepts two individual roles and emits nonsecret inventory
+  ---
+  duration_ms: 82.3221
+  type: 'test'
+  ...
+# Subtest: reject unknown root key
+ok 2 - reject unknown root key
+  ---
+  duration_ms: 1.8714
+  type: 'test'
+  ...
+# Subtest: reject unknown account key
+ok 3 - reject unknown account key
+  ---
+  duration_ms: 0.9708
+  type: 'test'
+  ...
+# Subtest: reject admin role
+ok 4 - reject admin role
+  ---
+  duration_ms: 0.8436
+  type: 'test'
+  ...
+# Subtest: reject reserved admin username
+ok 5 - reject reserved admin username
+  ---
+  duration_ms: 0.8146
+  type: 'test'
+  ...
+# Subtest: reject foreign identifier
+ok 6 - reject foreign identifier
+  ---
+  duration_ms: 0.7151
+  type: 'test'
+  ...
+# Subtest: reject mixed case identifier
+ok 7 - reject mixed case identifier
+  ---
+  duration_ms: 5.6308
+  type: 'test'
+  ...
+# Subtest: reject duplicate identity
+ok 8 - reject duplicate identity
+  ---
+  duration_ms: 1.0852
+  type: 'test'
+  ...
+# Subtest: reject only installer
+ok 9 - reject only installer
+  ---
+  duration_ms: 1.1926
+  type: 'test'
+  ...
+# Subtest: reject only one account
+ok 10 - reject only one account
+  ---
+  duration_ms: 1.6081
+  type: 'test'
+  ...
+# Subtest: reject too many accounts
+ok 11 - reject too many accounts
+  ---
+  duration_ms: 8.8747
+  type: 'test'
+  ...
+# Subtest: reject service credential reused
+ok 12 - reject service credential reused
+  ---
+  duration_ms: 0.7297
+  type: 'test'
+  ...
+# Subtest: reject temporary credential reused
+ok 13 - reject temporary credential reused
+  ---
+  duration_ms: 0.6136
+  type: 'test'
+  ...
+# Subtest: reject weak password
+ok 14 - reject weak password
+  ---
+  duration_ms: 0.5167
+  type: 'test'
+  ...
+# Subtest: reject control character
+ok 15 - reject control character
+  ---
+  duration_ms: 0.5063
+  type: 'test'
+  ...
+# Subtest: canonical group IDs work despite untrusted view display name
+ok 16 - canonical group IDs work despite untrusted view display name
+  ---
+  duration_ms: 5.3304
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects service membership escalation
+ok 17 - read-only enrollment check detects service membership escalation
+  ---
+  duration_ms: 9.0682
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects legacy inheritance
+ok 18 - read-only enrollment check detects legacy inheritance
+  ---
+  duration_ms: 1.0304
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects new admin alias
+ok 19 - read-only enrollment check detects new admin alias
+  ---
+  duration_ms: 1.247
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects raw state write permission
+ok 20 - read-only enrollment check detects raw state write permission
+  ---
+  duration_ms: 18.8067
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects disabled role
+ok 21 - read-only enrollment check detects disabled role
+  ---
+  duration_ms: 2.2499
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects world readable password
+ok 22 - read-only enrollment check detects world readable password
+  ---
+  duration_ms: 1.1618
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects unmanaged identity
+ok 23 - read-only enrollment check detects unmanaged identity
+  ---
+  duration_ms: 2.6553
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects passwordless account
+ok 24 - read-only enrollment check detects passwordless account
+  ---
+  duration_ms: 1.0248
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects unrecorded account
+ok 25 - read-only enrollment check detects unrecorded account
+  ---
+  duration_ms: 2.3191
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects missing role group
+ok 26 - read-only enrollment check detects missing role group
+  ---
+  duration_ms: 2.1726
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects missing group policy
+ok 27 - read-only enrollment check detects missing group policy
+  ---
+  duration_ms: 1.3098
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects inconsistent first-login state
+ok 28 - read-only enrollment check detects inconsistent first-login state
+  ---
+  duration_ms: 1.6794
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects inconsistent account marker
+ok 29 - read-only enrollment check detects inconsistent account marker
+  ---
+  duration_ms: 1.15
+  type: 'test'
+  ...
+# Subtest: read-only enrollment check detects malformed marker ID
+ok 30 - read-only enrollment check detects malformed marker ID
+  ---
+  duration_ms: 0.7863
+  type: 'test'
+  ...
+# Subtest: legitimate password initialization or account disable does not mutate role enrollment
+ok 31 - legitimate password initialization or account disable does not mutate role enrollment
+  ---
+  duration_ms: 2.8296
+  type: 'test'
+  ...
+# Subtest: initial enrollment stores only hash and disabled fixed instances; verifies without writes
+ok 32 - initial enrollment stores only hash and disabled fixed instances; verifies without writes
+  ---
+  duration_ms: 33063.7984
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:0
+ok 33 - password rejects bounded invalid input string:0
+  ---
+  duration_ms: 0.8283
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:5
+ok 34 - password rejects bounded invalid input string:5
+  ---
+  duration_ms: 0.4031
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:129
+ok 35 - password rejects bounded invalid input string:129
+  ---
+  duration_ms: 0.3466
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:14
+ok 36 - password rejects bounded invalid input string:14
+  ---
+  duration_ms: 0.5278
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:21
+ok 37 - password rejects bounded invalid input string:21
+  ---
+  duration_ms: 0.4176
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 38 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.336
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 39 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.5101
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:200
+ok 40 - password rejects bounded invalid input string:200
+  ---
+  duration_ms: 0.9795
+  type: 'test'
+  ...
+# Subtest: password allows long unicode passphrase without composition tricks
+ok 41 - password allows long unicode passphrase without composition tricks
+  ---
+  duration_ms: 0.7676
+  type: 'test'
+  ...
+# Subtest: rejects marker pending without repair
+ok 42 - rejects marker pending without repair
+  ---
+  duration_ms: 13.906
+  type: 'test'
+  ...
+# Subtest: rejects config changed without repair
+ok 43 - rejects config changed without repair
+  ---
+  duration_ms: 11.7307
+  type: 'test'
+  ...
+# Subtest: rejects physical enabled without repair
+ok 44 - rejects physical enabled without repair
+  ---
+  duration_ms: 10.9063
+  type: 'test'
+  ...
+# Subtest: rejects core binding without repair
+ok 45 - rejects core binding without repair
+  ---
+  duration_ms: 10.3713
+  type: 'test'
+  ...
+# Subtest: rejects remote repo without repair
+ok 46 - rejects remote repo without repair
+  ---
+  duration_ms: 11.4072
+  type: 'test'
+  ...
+# Subtest: rejects automatic updates without repair
+ok 47 - rejects automatic updates without repair
+  ---
+  duration_ms: 11.0783
+  type: 'test'
+  ...
+# Subtest: rejects disabled admin without repair
+ok 48 - rejects disabled admin without repair
+  ---
+  duration_ms: 10.1421
+  type: 'test'
+  ...
+# Subtest: rejects world-readable service hash without repair
+ok 49 - rejects world-readable service hash without repair
+  ---
+  duration_ms: 8.5209
+  type: 'test'
+  ...
+# Subtest: rejects weak password without repair
+ok 50 - rejects weak password without repair
+  ---
+  duration_ms: 8.0845
+  type: 'test'
+  ...
+# Subtest: rejects extra executable without repair
+ok 51 - rejects extra executable without repair
+  ---
+  duration_ms: 10.8126
+  type: 'test'
+  ...
+# Subtest: rejects node arguments without repair
+ok 52 - rejects node arguments without repair
+  ---
+  duration_ms: 9.2466
+  type: 'test'
+  ...
+# Subtest: rejects remote host without repair
+ok 53 - rejects remote host without repair
+  ---
+  duration_ms: 7.7049
+  type: 'test'
+  ...
+# Subtest: rejects admin plaintext without repair
+ok 54 - rejects admin plaintext without repair
+  ---
+  duration_ms: 11.8367
+  type: 'test'
+  ...
+# Subtest: rejects UI no auth without repair
+ok 55 - rejects UI no auth without repair
+  ---
+  duration_ms: 10.1942
+  type: 'test'
+  ...
+# Subtest: rejects UI trusted header without repair
+ok 56 - rejects UI trusted header without repair
+  ---
+  duration_ms: 11.0049
+  type: 'test'
+  ...
+# Subtest: rejects UI path without repair
+ok 57 - rejects UI path without repair
+  ---
+  duration_ms: 11.3125
+  type: 'test'
+  ...
+# Subtest: controller alive blocks first mutation
+ok 58 - controller alive blocks first mutation
+  ---
+  duration_ms: 4.6807
+  type: 'test'
+  ...
+# Subtest: failed enrollment retains pending gate and never enables partially written instances
+ok 59 - failed enrollment retains pending gate and never enables partially written instances
+  ---
+  duration_ms: 16688.4939
+  type: 'test'
+  ...
+# Subtest: shipped template choices are exact, hash-bound projections of the existing Devices source
+ok 60 - shipped template choices are exact, hash-bound projections of the existing Devices source
+  ---
+  duration_ms: 212.6669
+  type: 'test'
+  ...
+# Subtest: configured plant persists sourced limits and input-only mappings without enabling control
+ok 61 - configured plant persists sourced limits and input-only mappings without enabling control
+  ---
+  duration_ms: 141.3349
+  type: 'test'
+  ...
+# Subtest: explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+ok 62 - explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+  ---
+  duration_ms: 6.4288
+  type: 'test'
+  ...
+# Subtest: real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+ok 63 - real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+  ---
+  duration_ms: 22.2955
+  type: 'test'
+  ...
+# Subtest: EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+ok 64 - EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+  ---
+  duration_ms: 2.1345
+  type: 'test'
+  ...
+# Subtest: planned device counts and canonical product adapter names must fit the authenticated license
+ok 65 - planned device counts and canonical product adapter names must fit the authenticated license
+  ---
+  duration_ms: 27.5843
+  type: 'test'
+  ...
+# Subtest: first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+ok 66 - first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+  ---
+  duration_ms: 538.5525
+  type: 'test'
+  ...
+# Subtest: configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+ok 67 - configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+  ---
+  duration_ms: 121.4775
+  type: 'test'
+  ...
+# Subtest: every partial object-store write keeps the start gate closed and refuses unsafe replay
+ok 68 - every partial object-store write keeps the start gate closed and refuses unsafe replay
+  ---
+  duration_ms: 537.6518
+  type: 'test'
+  ...
+# Subtest: configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+ok 69 - configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+  ---
+  duration_ms: 31.4527
+  type: 'test'
+  ...
+# Subtest: first-run marker and safety policy drift block subsequent enrollment verification
+ok 70 - first-run marker and safety policy drift block subsequent enrollment verification
+  ---
+  duration_ms: 126.2724
+  type: 'test'
+  ...
+# Subtest: frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+ok 71 - frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+  ---
+  duration_ms: 76.4453
+  type: 'test'
+  ...
+# Subtest: actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema
+ok 72 - actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema
+  ---
+  duration_ms: 234.0474
+  type: 'test'
+  ...
+# Subtest: configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields
+ok 73 - configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields
+  ---
+  duration_ms: 328.7998
+  type: 'test'
+  ...
+# Subtest: 202 handoff and lost setup connection never claim completed installation
+ok 74 - 202 handoff and lost setup connection never claim completed installation
+  ---
+  duration_ms: 39.121
+  type: 'test'
+  ...
+# Subtest: only explicit root completion shows access success; plant acceptance remains open
+ok 75 - only explicit root completion shows access success; plant acceptance remains open
+  ---
+  duration_ms: 44.5369
+  type: 'test'
+  ...
+# Subtest: local reissue CLI refuses password arguments and never prints the argument
+ok 76 - local reissue CLI refuses password arguments and never prints the argument
+  ---
+  duration_ms: 332.3764
+  type: 'test'
+  ...
+# Subtest: local reissue engine produces new state; owner restoration uses only its validated open descriptor
+ok 77 - local reissue engine produces new state; owner restoration uses only its validated open descriptor
+  ---
+  duration_ms: 63.1904
+  type: 'test'
+  ...
+# Subtest: previous state must be regular, singly linked, private and owned by the expected setup identity
+ok 78 - previous state must be regular, singly linked, private and owned by the expected setup identity
+  ---
+  duration_ms: 7.2023
+  type: 'test'
+  ...
+# Subtest: replacement between lstat and open is rejected before any ownership change
+ok 79 - replacement between lstat and open is rejected before any ownership change
+  ---
+  duration_ms: 62.263
+  type: 'test'
+  ...
+# Subtest: symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive
+ok 80 - symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive
+  ---
+  duration_ms: 32.9332
+  type: 'test'
+  ...
+# Subtest: replacement after descriptor validation cannot redirect fchown to the new path
+ok 81 - replacement after descriptor validation cannot redirect fchown to the new path
+  ---
+  duration_ms: 11.3278
+  type: 'test'
+  ...
+# Subtest: verified TLS only; endpoint validates CA, hostname, expiry and trust
+ok 82 - verified TLS only; endpoint validates CA, hostname, expiry and trust
+  ---
+  duration_ms: 205.185
+  type: 'test'
+  ...
+# Subtest: HTTPS configuration and signed license are checked against installed identity/trust before one private handoff
+ok 83 - HTTPS configuration and signed license are checked against installed identity/trust before one private handoff
+  ---
+  duration_ms: 305.6962
+  type: 'test'
+  ...
+# Subtest: license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF
+ok 84 - license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF
+  ---
+  duration_ms: 187.1003
+  type: 'test'
+  ...
+# Subtest: possession is required; wrong, expired, reused and missing codes fail
+ok 85 - possession is required; wrong, expired, reused and missing codes fail
+  ---
+  duration_ms: 129.311
+  type: 'test'
+  ...
+# Subtest: persistent attempt limit survives reboot
+ok 86 - persistent attempt limit survives reboot
+  ---
+  duration_ms: 160.3679
+  type: 'test'
+  ...
+# Subtest: real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation
+ok 87 - real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation
+  ---
+  duration_ms: 14575.4144
+  type: 'test'
+  ...
+# Subtest: host, origin, CSRF, proxy, URL and role manipulation are rejected
+ok 88 - host, origin, CSRF, proxy, URL and role manipulation are rejected
+  ---
+  duration_ms: 292.7078
+  type: 'test'
+  ...
+# Subtest: session cookie, cache and content policy are restrictive; password hash handoff contains no secrets
+ok 89 - session cookie, cache and content policy are restrictive; password hash handoff contains no secrets
+  ---
+  duration_ms: 127.4132
+  type: 'test'
+  ...
+# Subtest: parallel finalization derives once and only one handoff wins
+ok 90 - parallel finalization derives once and only one handoff wins
+  ---
+  duration_ms: 166.857
+  type: 'test'
+  ...
+# Subtest: abort during commit and restart retain closed state with no handoff or administrative access
+ok 91 - abort during commit and restart retain closed state with no handoff or administrative access
+  ---
+  duration_ms: 101.0929
+  type: 'test'
+  ...
+# Subtest: expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code
+ok 92 - expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code
+  ---
+  duration_ms: 150.8247
+  type: 'test'
+  ...
+# Subtest: local reissue immediately revokes a still-valid live session and rollback does not extend it
+ok 93 - local reissue immediately revokes a still-valid live session and rollback does not extend it
+  ---
+  duration_ms: 117.4112
+  type: 'test'
+  ...
+# Subtest: body, request rate and settings bounds fail closed
+ok 94 - body, request rate and settings bounds fail closed
+  ---
+  duration_ms: 1259.1938
+  type: 'test'
+  ...
+# Subtest: storage rejects replacement preparation, hardlinks, tampering and pending mutation locks
+ok 95 - storage rejects replacement preparation, hardlinks, tampering and pending mutation locks
+  ---
+  duration_ms: 69.2456
+  type: 'test'
+  ...
+# Subtest: ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion
+ok 96 - ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion
+  ---
+  duration_ms: 3.2633
+  type: 'test'
+  ...
+# Subtest: cleanup failure logs fixed code only and makes shutdown non-successful
+ok 97 - cleanup failure logs fixed code only and makes shutdown non-successful
+  ---
+  duration_ms: 0.9371
+  type: 'test'
+  ...
+# Subtest: asynchronous main rejects arbitrary config and password CLI arguments
+ok 98 - asynchronous main rejects arbitrary config and password CLI arguments
+  ---
+  duration_ms: 3.5066
+  type: 'test'
+  ...
+1..98
+# tests 98
+# suites 0
+# pass 98
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 50337.0155

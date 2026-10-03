@@ -1,9 +1,20 @@
-# Aktueller Entwicklungsstand: EOS dev8
+# Aktueller Entwicklungsstand: EOS dev9 – geschützter Erststart
 
-Vollständiger Quellstand mit gehärtetem PostgreSQL-Ereigniskanal und separatem
-mTLS-Erweiterungskanal. Einstieg und Prüfgrenzen: [Entwicklungsbericht](docs/security/ADAPTER_CHANNEL_DEV8_DE.md).
-**Die enthaltenen signierten Installer test.1/test.2 sind historische Artefakte.
-Der test.2-Installer enthält die dev8-Neuerungen nicht. Es wurde kein neuer Installer erzeugt.**
+Der neue Installationspfad verlangt Controller und sämtliche sechs Produktadapter
+als tatsächliche Laufzeitpakete. Die HTTPS-Ersteinrichtung verwendet einen
+kurzlebigen lokalen Besitzcode; Benutzer vergeben ihre Passwörter im Frontend.
+Der Assistent führt durch Standort, signierte Lizenz, Anlagenwerte und Geräteplan.
+Nicht verfügbare Anlagenangaben bleiben ausdrücklich als offen markiert.
+Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
+
+[Installationsablauf und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
+[Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
+[Aktuelle Test- und Buildnachweise](reports/integration/first-start/verification-summary.json).
+
+**Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**
+Die historischen signierten Pakete test.1/test.2 enthalten die neuen Quellen
+nicht. Der aktuelle Paketbau-/Lieferstatus steht im Prüfbericht; Geräte- und
+Hardwareabnahme sind offen, Anlagenbefehle bleiben gesperrt.
 
 ---
 
@@ -11,7 +22,9 @@ Der test.2-Installer enthält die dev8-Neuerungen nicht. Es wurde kein neuer Ins
 
 # NexoWatt EOS
 
-**Hauptrepository des integrierten EOS-Systems · `0.2.0-dev.7` · 2. Oktober 2026.**
+**Hauptrepository des integrierten EOS-Systems · `0.2.0-dev.9` · 3. Oktober 2026.**
+
+Die folgenden test.2-/dev7-Angaben beschreiben den historischen Lieferstand.
 
 Neu: signierter **PostgreSQL-Installationskandidat `0.2.0-test.2`** für einen
 frischen, isolierten Debian-13-Lite-Test-Pi (ARM64). Er enthält Controller,
@@ -59,14 +72,13 @@ sind im Laborprofil weiterhin gesperrt.
 | Installateur | Persönlicher Zugang, freigegebene Einrichtung und eigene Passwortvergabe; keine Adminrolle. |
 | Benutzer | Persönlicher Zugang zu den vorgesehenen Bedienansichten und eigenes Passwort; keine technische Administration. |
 
-Die lokale, rootgeschützte Ersteinrichtung legt mindestens ein Installateur- und
-ein Benutzerkonto an. Die Startpasswörter müssen untereinander und vom
-Servicepasswort verschieden sein; ein eingebautes Standardpasswort gibt es nicht. Installateur und Benutzer müssen nach der ersten
-Anmeldung mit ihrem individuellen Startpasswort ein eigenes Passwort vergeben.
-Die Rolle wird bei der vertrauten Einrichtung festgelegt und lässt sich in der
-Anmeldung nicht auswählen. Der Adminzugang ist für NexoWatt Service reserviert.
-Die genauen Rechte, Sperren und verbleibenden Grenzen beschreibt die
-[Anmelde- und Rollenarchitektur](docs/security/BRANDING_ROLES_DE.md).
+Im neuen Erststartprofil richtet der Besitzer über HTTPS das erste feste
+Servicekonto `admin` mit eigenem Passwort ein. Nach der Anmeldung erstellt die
+Service-Administration berechtigte Einladungen für Installateure und Benutzer.
+Jeder Empfänger setzt sein Passwort selbst; es gibt keine gemeinsamen
+Standardpasswörter und keinen Terminaldialog für Benutzerpasswörter.
+Der Einladungsweg und seine Grenzen stehen im
+[Konten- und Steuergrenzenbericht](docs/security/ONBOARDING_ACCOUNTS_REVIEW_DE.md).
 
 ## Architektur und Nachweise
 
@@ -107,6 +119,18 @@ des konkreten Prüfberichts; frühere Ergebnisse gelten nicht automatisch für
 veränderte Dateien.
 
 ## Herkunft und Lizenzen
+
+**NexoWatt EOS ist hinsichtlich der eigenen, nicht anderweitig lizenzierten
+NexoWatt-Bestandteile proprietär. Nutzung, Installation, Änderung und Weitergabe
+setzen die vorherige schriftliche Erlaubnis von NexoWatt voraus.** Maßgeblich ist
+die [Lizenz](LICENSE); die [Drittanbieterhinweise](THIRD_PARTY_NOTICES.md) grenzen
+die übernommenen Bestandteile und bestehende Lizenzrechte ab.
+
+Eine technische Einrichtung ohne aktivierten EOS-Lizenzschlüssel erteilt keine
+vertragliche Nutzungsberechtigung. Bereits wirksam eingeräumte Rechte an früheren
+Fassungen, insbesondere MIT-Rechte, bleiben unberührt. Der
+[Änderungsnachweis vom 03.10.2026](docs/development/LICENSING_CHANGE_2026-10-03_DE.md)
+beschreibt die neue Kennzeichnung und die noch ausstehende Runtime-Neuerstellung.
 
 Die ioBroker-Basis und die Herkunft aller übernommenen Komponenten bleiben
 nachvollziehbar. Der [historische Upstream-README](docs/history/UPSTREAM_README.md)

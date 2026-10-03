@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-first-start-requirements-coverage",
+  "requirement": "EOS-REQ-ONBOARD-20261002",
+  "reviewedAtUtc": "2026-10-03T06:32:21.192474+00:00",
+  "sourceVersion": "0.2.0-dev.9",
+  "reviewMethod": "Preserved requirement compared with final source, documentation and scoped local tests, including actual TLS APIs and signed-license core, actual HTML parsed into a DOM logic fixture, memory database enrollment and explicit negative cases. No target runtime, native hardware, PostgreSQL or systemd installation was executed.",
+  "statusDefinitions": {
+    "implemented": "Source implementation present; listed tests have limited scope and do not establish the complete requirement on target hardware.",
+    "tested": "Source behavior has the explicitly referenced scoped local evidence; remaining target/acceptance limitations remain open.",
+    "open": "Material functional or delivery work required by the request is still unfinished, even where partial implementation and tests exist."
+  },
+  "overall": {
+    "requirementsFullySatisfied": false,
+    "completeHostInstallationDemonstrated": false,
+    "newSignedFullRuntimeDemonstrated": false,
+    "hardwareTestsExecutedByThisReview": false,
+    "physicalControlReleased": false,
+    "mainUnfinishedRequirements": [
+      "R1",
+      "R8",
+      "D1"
+    ],
+    "fullRuntimeAppTreeAssembled": true,
+    "candidateRuntimeSbomValidated": true
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "requirement": "Vollstaendige Produktinstallation mit Runtime, Datenbank, Diensten, allen verpflichtenden Basisadaptern, EOS-Oberflaeche und Assistent; Paketumfang vor Build pruefen.",
+      "status": "open",
+      "implemented": [
+        "Fester Vollproduktvertrag umfasst js-controller und sechs Adapter; Quellen-/Paket-/Lock-/Katalogpruefungen und PostgreSQL-/Setup-Installationspfad vorhanden.",
+        "Installiert, konfiguriert und ausfuehrungsberechtigt werden getrennt behandelt.",
+        "Vollstaendiger isolierter Linux-ARM64-Appbaum mit allen sieben Pflichtpaketen und gebundenem Lock lokal assembliert; keine Lifecycle-Skripte oder Zielausfuehrung."
+      ],
+      "tested": [
+        "product",
+        "native",
+        "assembly",
+        "runtimeNative",
+        "runtimeSbom"
+      ],
+      "open": [
+        "Kein neues signiertes installierbares Vollruntimepaket: unveraendertes Native-Gate meldet25 Befunde (2 unreviewedNativeBuild,21 NodeAddonABI,2 MachHeader).",
+        "Kein nativer Hostinstallations-/Dienststartlauf des neuen Gesamtstands. Appbaum/SBOM und historische test.2-Paketpruefung sind dafuer kein Beleg."
+      ]
+    },
+    {
+      "id": "R2",
+      "requirement": "Technische Geheimnisse geschuetzt erzeugen und verwalten; keine gemeinsamen Benutzerstandardpasswoerter.",
+      "status": "implemented",
+      "implemented": [
+        "Geraetespezifische PostgreSQL-/Webschluessel mit getrennten OS-Rollen und privaten Dateirechten; Setupkonto ohne Datenbankcredentials.",
+        "Kein Benutzerpasswort in neuer Installer-Eingabe; erster Browserzugang uebergibt nur einen PBKDF2-Hash."
+      ],
+      "tested": [
+        "setup",
+        "product",
+        "services"
+      ],
+      "open": [
+        "Tatsaechliche Linux-Dateirechte, Systemd-Isolation, PostgreSQL-mTLS/Rollen sowie Schluesselbereitstellung/-lebenszyklus des neuen Gesamtstands bleiben offen.",
+        "Die auf Windows simulierte UID/fchown-Pruefung ist keine native Rechteabnahme."
+      ]
+    },
+    {
+      "id": "R3",
+      "requirement": "Erststart nur mit benoetigten Einrichtungs-/Grunddiensten; HTTPS-Assistent; getrennte Betriebszustaende.",
+      "status": "tested",
+      "implemented": [
+        "Separates HTTPS-Setup unter eos-setup; Controller/Admin/UI bleiben bis zum geschuetzten Abschluss gesperrt.",
+        "Abschluss startet ausschliesslich Managementinstanzen; physicalControlEnabled bleibt false."
+      ],
+      "tested": [
+        "setup",
+        "services",
+        "product"
+      ],
+      "open": [
+        "Erster dokumentierter Zugriff erfolgt ausdruecklich ueber Port8443; kein automatischer Redirect von den noch gestoppten regulaeren Admin-/UI-Ports.",
+        "Grafische Browserabnahme, echte Bootreihenfolge und nativer Dienststart auf dem Pi sind nicht ausgefuehrt."
+      ]
+    },
+    {
+      "id": "R4",
+      "requirement": "Installationsspezifischer kurzlebiger Besitzcode aus vertrautem Lokalzugang, nach Abschluss ungueltig; kein Vertrauen allein in lokale IP.",
+      "status": "tested",
+      "implemented": [
+        "Zufaelliger192-Bit-Code, zehn Minuten, persistentes Fehlversuchslimit und einmaliger Verbrauch; keine IP-Ausnahme.",
+        "Nur lokaler Root kann vor Commit einen neuen Code ausstellen; neuer setupId widerruft alte Sitzung. Private Code-Datei unter /etc/nexowatt-eos/setup-code.txt."
+      ],
+      "tested": [
+        "setup"
+      ],
+      "open": [
+        "Vertrauliche Codeuebergabe und positive Root-CLI-Ausfuehrung samt realen Dateirechten sind auf dem Zielhost zu pruefen."
+      ]
+    },
+    {
+      "id": "R5",
+      "requirement": "Erstes berechtigtes Konto und Passwort im Frontend; weitere Konten berechtigt anlegen, eigene Benutzerpasswoerter, serverseitige Rollenpruefung.",
+      "status": "tested",
+      "implemented": [
+        "Erstes Konto serverfest admin mit Servicerolle; Passwort und Wiederholung ausschliesslich im HTTPS-Formular.",
+        "Service kann persoenliche Installateur-/Benutzerkonten einladen; deaktivierte Einladung ohne Passwort, eigener Passwortabschluss durch Empfaenger und dauerhafter Codeverbrauch.",
+        "Rollenwahl auf feste erlaubte persoenliche Rollen begrenzt; keine Selbstbefoerderung."
+      ],
+      "tested": [
+        "setup",
+        "accounts",
+        "parser"
+      ],
+      "open": [
+        "Vollstaendiger Admin-/Controller-Prozesslauf mit Login, Einladung und Annahme im echten Browser fehlt; kompletter Admin-Typcheck wurde nicht ausgefuehrt.",
+        "Mehrteilige Einladungsschreibvorgaenge besitzen keine allgemeine objektuebergreifende Datenbanktransaktion."
+      ]
+    },
+    {
+      "id": "R6",
+      "requirement": "Assistent fuehrt durch erforderliche System-, Lizenz- und Geraeteeinstellungen mit produktbezogenen Pflichtfeldern und sicheren Wertebereichen; authentischer Herstellertrust, kein privater Signierschluessel am Geraet.",
+      "status": "tested",
+      "implemented": [
+        "Gefuehrte Standort-, Lizenz-, Anschluss-/Messpunkt-/Paragraph14a-, Geraete- und Passwortschritte mit striktem Schema und erneutem Servercheck bei verbindlichem Abschluss.",
+        "Signierter NWL2-Token wird im Assistenten gegen vorgegebene UUID und authentischen rootgeschuetzten Herstellertrust geprueft; Root wiederholt Pruefung gegen echte DBUUID. RuntimeUID schreibt bestehenden verschluesselten Adminstore. Kein Browsertrust und kein privater Signierschluessel.",
+        "Anschlussleistung, Stromgrenze/Sicherung, Netzphasen, Nennspannung, Reserve, Messwert-/Envelopealter, signed/split-Leistungsmessung, eindeutige Phasenmesspunkte und Paragraph14a Aktivsignal/EMS-Sollwert werden explizit erfasst. Softwaregrenzen stammen aus Produktquellen; keine angenommenen elektrischen Anlagenwerte.",
+        "Vorhandene195 Templates sind gehasht referenziert. Gefuehrte ModbusTCP/RTU/ASCII-, EEBUS- und OCPP-Planung mit gebundenen Template-Rollen, Herstellergrenzen und eindeutigen Verbindungsfeldern; kanonische benoetigte Adapter und unabhaengige Speicher-/Ladepunktpositionen werden gegen authentische Lizenzkontingente geprueft.",
+        "Erfasste Plantwerte werden in vorhandene native UI-Konfigurationsfelder uebernommen; private FirstStart-Dokumente behalten den Geraeteplan und ausdruecklichen Erfassungsstatus. Fehlende Daten/Lizenz/Geraeteangaben bleiben explizit offen; physische Adapter werden nicht gestartet."
+      ],
+      "tested": [
+        "setup",
+        "license",
+        "cleanup",
+        "services",
+        "configurationProvenance"
+      ],
+      "open": [
+        "Reale Anschlussleistung, Sicherungs-/Schutzkonzept, Hersteller-/Modell-/Firmwareangaben, Adressen und Messpunktzuordnung muessen aus verbindlichen Zielanlagenunterlagen kommen. Source-Clamps bis1e12W beziehungsweise20000A sind technische Zahlenbereiche, keine betrieblichen Freigaben.",
+        "Die gefuehrte Anschlussplanung umfasst ModbusTCP/RTU/ASCII, EEBUS und OCPP. Andere vorhandene Devices-Protokolle und serielle Raten ausser9600/38400 nutzen einen ausdruecklichen deferred-Pfad und sind hier nicht fertig konfiguriert.",
+        "Keine Live-Erreichbarkeit, Messwertaktualitaet, Vorzeichen/Skalierung, Schutz-/Signalpruefung oder Hardware-/Regelungsabnahme ausgefuehrt. Authentischer realer Hersteller-Vertrauensweg bleibt betrieblich nachzuweisen.",
+        "Grafische Browser- und Zertifikatimportabnahme bleibt offen; DOM/FormData-Logiktests belegen keine visuelle oder echte Browserabnahme."
+      ],
+      "derivedFieldsEvidence": "reports/integration/first-start/configuration-provenance.json",
+      "missingDataVsImplementation": "Konkrete gefuehrte Hauptpfade und Persistenz sind implementiert. Unbekannte verbindliche Zielanlagenwerte koennen nicht geraten werden. Nicht gefuehrte Protokolle bleiben eine ausdruecklich begrenzte Implementierungsabdeckung, die ueber deferred nicht als erledigt ausgegeben wird."
+    },
+    {
+      "id": "R7",
+      "requirement": "Parallele Benutzeranlage/Abschluss verhindern; verbindlich speichern; Setup danach deaktivieren; Abbruch/Neustart ohne offenen Admin- oder Anlagenzugang.",
+      "status": "tested",
+      "implemented": [
+        "Persistente Mutations-/Commitlocks, atomare Dateiumbenennung mit fsync, Root-Wartungssperre und pending/complete-Marker.",
+        "Root-Finalizer prueft Release erneut; Abschluss erst nach Management-HTTPS-Probes; Setupdienst und Trigger werden gestoppt und Setupautostart deaktiviert.",
+        "Fehlversuche bleiben gesperrt; teilweise Enrollment-Writes duerfen nicht automatisch ueberrollt werden.",
+        "Geordneter Setup-Signalstopp bereinigt die eigene private Lizenz-/Hashuebergabe nur bei rootgeschuetztem, passenden Completionmarker; gewoehnlicher Stopp ohne Abschluss behaelt sie. Unlink ist keine zugesicherte sichere Medienloeschung."
+      ],
+      "tested": [
+        "setup",
+        "services",
+        "accounts",
+        "cleanup"
+      ],
+      "open": [
+        "Keine behauptete gemeinsame Transaktion ueber Objektstore, Dateien und Systemd; unterbrochener Commit benoetigt kontrollierte Wiederherstellung.",
+        "Realer Stromausfall, Mehrprozessgrenzen, Wiederherstellung/Restore und Boot nach Abschluss sind auf Linux/Pi offen."
+      ]
+    },
+    {
+      "id": "R8",
+      "requirement": "Anlagensteuerung erst nach gueltiger Pflichtkonfiguration, Lizenz und erforderlichen Berechtigungen freigeben.",
+      "status": "open",
+      "implemented": [
+        "Sicherer Verweigerungspfad: physische Adapter bleiben nicht ausfuehrungszugelassen; UI- und Admin-Schreib-/Befehlsgrenzen bleiben wirksam.",
+        "Gueltige Lizenz oder Servicerolle heben die physische Sperre nicht auf."
+      ],
+      "tested": [
+        "accounts",
+        "product",
+        "services"
+      ],
+      "open": [
+        "Positiver Freigabepfad nach vollstaendiger technischer Geraetekonfiguration und Anlagenabnahme ist nicht implementiert beziehungsweise nicht abgenommen.",
+        "Kein Hardware-/Regelungs-/Grenzwerttest; physicalControlEnabled bleibt ausdruecklich false."
+      ]
+    },
+    {
+      "id": "S1",
+      "requirement": "HTTPS/Gegenstellenpruefung, Host/Origin, CSRF, kurze sichere Sitzung, begrenzte Fehlversuche/Last und keine Geheimnisse in URLs/normalen Logs/Berichten; gezielte negative Tests.",
+      "status": "tested",
+      "implemented": [
+        "TLS1.3 ohne HTTP-Fallback; Kette/SAN/Geltung und exakte Host/Origin-Puefung; Secure/HttpOnly/SameSite-Cookie, CSRF, Zeit-/Body-/Header-/Verbindungs-/Anfragelimits.",
+        "Keine Passwoerter/Codes/Tokens in URLs oder Fehlermeldungen; Hash und signierter Lizenzvorschlag nur in privater begrenzter Uebergabe, danach bestehender verschluesselter Lizenzstore und kontrollierte Uebergabebereinigung."
+      ],
+      "tested": [
+        "setup",
+        "accounts",
+        "parser",
+        "services"
+      ],
+      "open": [
+        "Kein unabhaengiger Penetrationstest, kein kompletter End-to-End-Logmitschnitt des laufenden Produkts, keine Pi-Passwort-/Langzeitlast und keine grafische Zertifikats-/Browserabnahme.",
+        "Testdoubles fuer Objektstore/Systemd und Windows-simulierte POSIX-Eigenschaften bleiben von nativen Tests getrennt."
+      ]
+    },
+    {
+      "id": "D1",
+      "requirement": "Vollstaendige Quellen, Dokumentation, SBOM, nachvollziehbare Tests und passendes neu gebautes/signiertes Testpaket; historisches test.2 nicht nachtraeglich aendern oder als Vollinstallation zaehlen.",
+      "status": "open",
+      "implemented": [
+        "Anforderung, Installations-/Sicherheitsdokumentation, Quell-/Lockinventare und Rohbelege vorhanden; historische test.2-Verifikation ausdruecklich als Nutzerbericht zur Bundlepruefung bezeichnet.",
+        "Signatur-, Lizenz- und Nativegates bleiben aktiv."
+      ],
+      "tested": [
+        "setup",
+        "product",
+        "accounts",
+        "parser",
+        "services",
+        "native",
+        "buildAttempt",
+        "assembly",
+        "runtimeNative",
+        "runtimeSbom"
+      ],
+      "open": [
+        "Voll-Appbaum und passender Runtime-SBOM sind assembliert und Schema/Binding geprueft, aber Native-/ABI-Gate verhindert neues signiertes installierbares Testpaket. Keine Signatur- oder Lizenzpruefung umgangen.",
+        "Vollstaendiger Repository-Export und finale Lieferhashes werden vom Abschlussrecorder erzeugt; dieser Bericht allein behauptet deren Fertigstellung nicht."
+      ]
+    }
+  ],
+  "evidence": {
+    "setup": {
+      "path": "reports/integration/first-start/raw/onboarding.tap",
+      "sha256": "e7d4db2f611810c619ecad8073358835f1463f21f30945e66a43a7eec24b01a6",
+      "command": "node --test --test-reporter=tap tests/onboarding/*.test.cjs tests/integration/accounts.test.cjs tests/integration/enrollment.test.cjs",
+      "result": {
+        "tests": 98,
+        "pass": 98,
+        "fail": 0,
+        "skipped": 0,
+        "durationMs": 50337.0155,
+        "platform": "Windows x64",
+        "hardwareTestsExecuted": false
+      }
+    },
+    "product": {
+      "path": "reports/integration/first-start/raw/installation-product-build-final.tap",
+      "sha256": "06fd31a5870de46c7b4df5fb26848f3c39f0d9c8a6334a24416127b75114680e"
+    },
+    "accounts": {
+      "path": "reports/onboarding/admin-accounts-and-control.tap",
+      "sha256": "b2d989dc9ab392bc67042669752bf0855d1b9aea2adcb68e6692eac9e3738cf6"
+    },
+    "parser": {
+      "path": "reports/onboarding/admin-invitation-parser.tap",
+      "sha256": "b7583ca58f2abbaa258f726ef7b1575aafd65d3bf4027352c40bfccaa4a16fd8"
+    },
+    "services": {
+      "path": "reports/onboarding/cross-service-contracts.tap",
+      "sha256": "b915eeafad0ac0875f790a57875c4ada10a5c376b734ad940ffb4fa247808cf7"
+    },
+    "native": {
+      "path": "reports/integration/first-start/native-package-observation.json",
+      "sha256": "5027edd25ec82716f23f72b781628aca46624969aac758def07208f24f9f87cf"
+    },
+    "buildAttempt": {
+      "path": "reports/integration/first-start/build-status.json",
+      "sha256": "cb804dd36f9ed73fa47962f687b7e08edc66ac515838ec9858d4d1996abc00b4"
+    },
+    "license": {
+      "path": "reports/onboarding/first-start-license.tap",
+      "sha256": "3bc36b43f9310eb3e59bcd5107240ae509dce76b173d5702c923a04f6508bfbf"
+    },
+    "cleanup": {
+      "path": "reports/onboarding/first-start-cleanup.tap",
+      "sha256": "3dc93c9a2b532697d0fa4e0bd7e419d546251fcd00eeb9d9297abc82c51ce3fb"
+    },
+    "configurationProvenance": {
+      "path": "reports/integration/first-start/configuration-provenance.json",
+      "sha256": "604a471176706fa60ab701fc2ed56afab433df09456ef08b4527cd3f8720fa00"
+    },
+    "assembly": {
+      "path": "reports/integration/first-start/runtime-assembly-d.json",
+      "sha256": "c029a296e5c3c55bf9410c97c1daf25d07921bdf715ae74cb6cacafb7b6bd8bf"
+    },
+    "runtimeNative": {
+      "path": "reports/integration/first-start/runtime-architecture-full-d.json",
+      "sha256": "f10b920eedd7b6ec8a83a3413f3931c5bb923cae09939c7dbff94473136b8dfa"
+    },
+    "runtimeSbom": {
+      "path": "reports/integration/first-start/runtime-sbom-schema-d.json",
+      "sha256": "bbdfcf4a8ab5b5f0f1f564f1847525ccba1e09c88190c41c278a7ff8625e2d7e"
+    }
+  },
+  "reviewedSourceBindings": [
+    {
+      "path": "docs/requirements/EOS-REQ-ONBOARD-20261002.txt",
+      "sha256": "37fafe6b7d6b3a51b3a552d26cecaef793c3c0f747d3fe2e05e59de57ded4637"
+    },
+    {
+      "path": "docs/operations/FIRST_START_INSTALLATION_DE.md",
+      "sha256": "e24921ed5caa4008d4f53f0ebf1ee3fd3c3da506d81c1711ba94d4185e159741"
+    },
+    {
+      "path": "docs/security/FIRST_START_DE.md",
+      "sha256": "889339cbbab6d0e8fc6b746e12f221f52b8dd30832936a083955b4dfa0964266"
+    },
+    {
+      "path": "docs/security/ONBOARDING_ACCOUNTS_REVIEW_DE.md",
+      "sha256": "79643f50337fe46294b25a3893340d67fec91cdecbf50747be8335a27512a8ea"
+    },
+    {
+      "path": "runtime/onboarding/policy.cjs",
+      "sha256": "7c1ce7527ce9df41e3773ac9a3ca4122cc1af263b6ad5bf749ec1815abc595b1"
+    },
+    {
+      "path": "runtime/onboarding/server.cjs",
+      "sha256": "2c59c6876734be1c806112b84d96b0892d1013aee507667dd5a8485f034f590a"
+    },
+    {
+      "path": "runtime/onboarding/issue-code.cjs",
+      "sha256": "0d7c36b580e786516cc9666ab6f93517d350a86efb153d4002ec2b7b7b958164"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "c637f97177c4260023876590157d3d18481431f79aeadd35c83b5a48b4005220"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "644e3b14b2bd806371aafe9d7f6bac426401cf336e4fc3ba0b1f75c94fa082b9"
+    },
+    {
+      "path": "components/admin/src/lib/eosAccountInvitations.js",
+      "sha256": "e3702658d11774d5fd553b96eb236ab722904c4ccdfcffadcf95b7de514be09a"
+    },
+    {
+      "path": "tools/system/prepare-onboarding.cjs",
+      "sha256": "d56104b714fb3b2e861aa9866a5f83edf571dbd3fe66ff70cd50881cb48413ca"
+    },
+    {
+      "path": "tools/system/finalize-onboarding.cjs",
+      "sha256": "72acd8751739a040e6f32e2f6f4c00f73455b8fd294ffeebac4f5fb120370054"
+    },
+    {
+      "path": "runtime/onboarding/configuration.cjs",
+      "sha256": "f30234624c86a09a2935db7947e381994bf6599d51b666300f5afaf8c3075c40"
+    },
+    {
+      "path": "runtime/onboarding/device-catalog.json",
+      "sha256": "d181f40df7a603084c8daabf600e09998359455adb31304a356abc807f7aa6a0"
+    },
+    {
+      "path": "runtime/onboarding/main.cjs",
+      "sha256": "fa09a7fc4db8a4e892180bed798a640a263622daacbbf269577021182520d7dd"
+    },
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "sha256": "d06badfece8204b0858586c391b738877f9a9a8fdc3e4c58265bae56be333fcb"
+    },
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "sha256": "f503d9f6fe385dbab5d1fb383f79ddf60b7511a33511b2bc0ff2f830213cee21"
+    },
+    {
+      "path": "runtime/onboarding/cleanup.cjs",
+      "sha256": "1fd9ecbc191f047f0b00c4a0f6b1a7cc6a350682eff28f87a8a57eccd03fcde0"
+    },
+    {
+      "path": "runtime/bootstrap/first-start-configuration.cjs",
+      "sha256": "cb32ac84ce73bf4dd2802c7f3466fe461db302293eff1c905587d1922a2ad7c8"
+    }
+  ],
+  "historicalContext": "The preserved requirement text describes a previous unimplemented state and ZIP retrieval failure. Its historical status is not current proof. The reported test.2 Pi verification proves bundle contents only and is not counted as a complete installation or hardware test.",
+  "priorCoverageSnapshot": "reports/integration/first-start/requirements-coverage.before-r6.json"
+}

@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-first-start-configuration-provenance",
+  "reviewedAtUtc": "2026-10-03T06:29:07.743659+00:00",
+  "interpretation": "These are existing software input bounds and newly tightened first-start validation constraints, not certified operational electrical ranges. Actual installation documentation, manufacturer conditions, licensing and hardware tests remain required.",
+  "resourceLimits": {
+    "maxPlannedDevices": 16,
+    "httpBodyBytes": 65536,
+    "privateHandoffBytes": 65536,
+    "licenseTokenBytes": 16384,
+    "classification": "first-start resource bounds, not product hardware capacity"
+  },
+  "fields": [
+    {
+      "field": "plant.gridConnectionPowerW",
+      "wizardConstraint": "integer 1..1000000000000 W; site-specific value required",
+      "source": "components/ui/src-ts/runtime-executables/ems/modules/core-limits.ts",
+      "sourceSha256": "cb7e619c4a14f3fb69ee44c6dc52842b4ce52b65a28030f2ba83023851c5d71f",
+      "interpretation": "gridConnectionPower clamp; positive requirement from safety-envelope.ts"
+    },
+    {
+      "field": "plant.maxPhaseCurrentA / safetyMarginW",
+      "wizardConstraint": "positive <=20000 A; integer margin>=0 and <connectionW",
+      "source": "components/ui/src-ts/runtime-executables/ems/modules/core-limits.ts",
+      "sourceSha256": "cb7e619c4a14f3fb69ee44c6dc52842b4ce52b65a28030f2ba83023851c5d71f",
+      "interpretation": "maxPhaseA and safetyMarginW technical clamps; cross-field relation preserves positive residual envelope"
+    },
+    {
+      "field": "plant.gridPhaseCount / nominalVoltageV / safetyMeterTimeoutSec / safetyEnvelopeMaxAgeSec",
+      "wizardConstraint": "1..3 phases; 200..260 V; 5..120 s; 1..30 s",
+      "source": "components/ui/src-ts/runtime-executables/ems/services/safety-envelope.ts",
+      "sourceSha256": "1b614b39217ffde0e4facc48f12d96c43742d8c09f092d4a2a5b6567265626de",
+      "interpretation": "resolveSafetyConfig; no source defaults are substituted for user plant values"
+    },
+    {
+      "field": "plant.measurements",
+      "wizardConstraint": "signed net point or coherent split import/export, unique phase input IDs",
+      "source": "components/ui/src-ts/runtime-executables/ems/services/measurement-freshness.ts",
+      "sourceSha256": "b0ace7f829f5f852d33e09e3d484c425a549ecd5630e9c8f5fe8cc556d7f2e68",
+      "interpretation": "Freshness, sign, connected state and physical correctness are NOT verified by schema validation"
+    },
+    {
+      "field": "plant.para14a",
+      "wizardConstraint": "disabled, direct active signal, or EMS active signal plus setpoint state",
+      "source": "components/ui/src-ts/runtime-executables/ems/modules/para14a.ts",
+      "sourceSha256": "fef7d00c5ff21b5d7f879b9def06694db998c1d1256ff1c56c1601ba0766d24f",
+      "interpretation": "para14aMode, para14aActiveId and para14aEmsSetpointWId; actual signal safety and operator agreement stay open"
+    },
+    {
+      "field": "devicePlan.devices.modbus",
+      "wizardConstraint": "TCP/RTU/ASCII with existing template; poll250..600000ms timeout100..60000ms offset-100000..100000",
+      "source": "components/devices/admin/jsonConfig.json",
+      "sourceSha256": "178332afdb790640fcc9d71e76b61812ac5114545bb48edf37d71f883a02ed19",
+      "interpretation": "TCP ports1..65535; serial path /dev; parity none/even/odd,dataBits5..8,stopBits1/2"
+    },
+    {
+      "field": "devicePlan.devices.serial.baudRate",
+      "wizardConstraint": "9600 or38400 only in this wizard",
+      "source": "components/devices/lib/templates.json",
+      "sourceSha256": "aafb7013fd6a58c14de81313af44dddbba5fe4ea7e4579dd30ea34514ea709e8",
+      "interpretation": "Only concrete baud values present in source template hints; driver accepts numeric input without authoritative support list. Other rates intentionally require deferred device configuration."
+    },
+    {
+      "field": "devicePlan.devices.varta",
+      "wizardConstraint": "poll >=1000ms, Link>=5000ms; unit1..255; registerOffset0",
+      "source": "components/devices/lib/drivers/vartaModbus.js",
+      "sourceSha256": "4e3a867a1e2dfde739a9c2ec355be9ecb4f3f893ce8726baf2cdf0b156d9d2bc",
+      "interpretation": "Model match/manufacturer communication and remote-control approval remain unverified; template selection does not grant writes."
+    },
+    {
+      "field": "devicePlan.devices.deye",
+      "wizardConstraint": "unit1..247; registerOffset0; serial source templates",
+      "source": "components/devices/lib/drivers/deyeModbus.js",
+      "sourceSha256": "fa67cfe4535867b596a762d2863221f41f6426f5a7224960c660051284b592af",
+      "interpretation": "Preliminary model/firmware and scaling acceptance remain open."
+    },
+    {
+      "field": "devicePlan.devices.ocpp21",
+      "wizardConstraint": "connector0..64, minimum current1..32A; explicit station identity",
+      "source": "components/ocpp21/admin/jsonConfig.json",
+      "sourceSha256": "7e57e333050f3ed9d4800f4e6e69e7a6db4aca07ba5bc1d4f0f2d91d1f06f789",
+      "interpretation": "Existing Admin numeric bounds; no socket opened and no smart charging command emitted."
+    },
+    {
+      "field": "devicePlan.devices.eebus",
+      "wizardConstraint": "40hex SKI, explicit peer host/port",
+      "source": "components/eebus/io-package.json",
+      "sourceSha256": "731e06a1f93b954000d45c2a471724ec8904d9fd13448b5cfb5a278d52c3e2c2",
+      "interpretation": "Identity planned; SHIP pairing, trust and device use-case acceptance not executed."
+    },
+    {
+      "field": "license",
+      "wizardConstraint": "NWL2 Ed25519 deviceUUID/time/adapters/edition/limits verification",
+      "source": "components/admin/src/lib/eosLicenseCore.js",
+      "sourceSha256": "8f7913edeba380744aed8fb2131f0b8cf9d5bf9152d25e4441d5f0ff4063246f",
+      "interpretation": "Authentic installed root-owned trust only. Private issuer keys absent. Setup and root independently verify; runtime UID encrypted store."
+    },
+    {
+      "field": "license.requiredAdapters",
+      "wizardConstraint": "nexowatt-devices/eebus/ocpp21 according to selected protocol",
+      "source": "runtime/product/scope.cjs",
+      "sourceSha256": "644e3b14b2bd806371aafe9d7f6bac426401cf336e4fc3ba0b1f75c94fa082b9",
+      "interpretation": "Canonical shipped adapter IDs, no guessed eos-* rename. Each independent storage/charger plan position conservatively counts toward license limit."
+    }
+  ],
+  "open": [
+    "Physical connection ratings, fuses, device model/firmware/address/credentials and measurement assignment cannot be inferred from repository defaults.",
+    "This wizard captures Modbus TCP/RTU/ASCII, EEBUS and OCPP plans. Other Devices protocols and other serial rates use explicit deferred status; no claim of configuration for those protocols.",
+    "Protocol reachability, live values, sign/scaling/freshness, protection design and native/ABI/boot/systemd/PostgreSQL acceptance remain unexecuted.",
+    "Application UI/browser rendering and real certificate onboarding were not visually tested; local HTML DOM logic and HTTPS API tests have narrower scope."
+  ],
+  "physicalControlEnabled": false,
+  "implementationBindings": [
+    {
+      "path": "runtime/onboarding/cleanup.cjs",
+      "sha256": "1fd9ecbc191f047f0b00c4a0f6b1a7cc6a350682eff28f87a8a57eccd03fcde0"
+    },
+    {
+      "path": "runtime/onboarding/configuration.cjs",
+      "sha256": "f30234624c86a09a2935db7947e381994bf6599d51b666300f5afaf8c3075c40"
+    },
+    {
+      "path": "runtime/onboarding/device-catalog.json",
+      "sha256": "d181f40df7a603084c8daabf600e09998359455adb31304a356abc807f7aa6a0"
+    },
+    {
+      "path": "runtime/onboarding/issue-code.cjs",
+      "sha256": "0d7c36b580e786516cc9666ab6f93517d350a86efb153d4002ec2b7b7b958164"
+    },
+    {
+      "path": "runtime/onboarding/main.cjs",
+      "sha256": "fa09a7fc4db8a4e892180bed798a640a263622daacbbf269577021182520d7dd"
+    },
+    {
+      "path": "runtime/onboarding/policy.cjs",
+      "sha256": "7c1ce7527ce9df41e3773ac9a3ca4122cc1af263b6ad5bf749ec1815abc595b1"
+    },
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "sha256": "d06badfece8204b0858586c391b738877f9a9a8fdc3e4c58265bae56be333fcb"
+    },
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "sha256": "f503d9f6fe385dbab5d1fb383f79ddf60b7511a33511b2bc0ff2f830213cee21"
+    },
+    {
+      "path": "runtime/onboarding/public/style.css",
+      "sha256": "7b3a1ed2d4594fb2f8169cd82a14f29205f14e738d79caa07d7339cfb78e2edb"
+    },
+    {
+      "path": "runtime/onboarding/server.cjs",
+      "sha256": "2c59c6876734be1c806112b84d96b0892d1013aee507667dd5a8485f034f590a"
+    },
+    {
+      "path": "runtime/onboarding/state.cjs",
+      "sha256": "aefc0b7608922c750e244d7232af16df04ab812942bb3dd6cc30496c9b6b3229"
+    }
+  ]
+}

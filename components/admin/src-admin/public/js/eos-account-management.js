@@ -215,6 +215,31 @@
         overlay.querySelector('h2').textContent = state.role === 'admin' ? text.titleAdmin : text.titleInstaller;
         overlay.querySelector('header p').textContent = state.role === 'admin' ? text.introAdmin : text.introInstaller;
         overlay.querySelector('.eos-account-management-security').textContent = text.security;
+        if (state.role === 'admin') {
+            const invite = document.createElement('form');
+            invite.className = 'eos-account-invitation';
+            invite.innerHTML = '<h3>Persönliches Konto einladen</h3><p>Der Empfänger vergibt sein Passwort selbst. Der einmalige Einladungscode gilt 30 Minuten.</p><label>Benutzername <input name="username" required pattern="[a-z][a-z0-9_-]{2,31}" maxlength="32" autocomplete="off"></label> <label>Rolle <select name="role"><option value="enduser">Benutzer</option><option value="installer">Installateur</option></select></label> <button type="submit">Einladung erstellen</button>';
+            invite.addEventListener('submit', async event => {
+                event.preventDefault();
+                const button = invite.querySelector('button');
+                button.disabled = true;
+                try {
+                    const response = await fetch(new URL('nexowatt/account/invite', base).href, {
+                        method: 'POST', credentials: 'include', cache: 'no-store',
+                        headers: { 'Content-Type': 'application/json', 'X-NexoWatt-EOS-Invitation': '1' },
+                        body: JSON.stringify(Object.fromEntries(new FormData(invite))),
+                    });
+                    const payload = await response.json();
+                    if (!response.ok || !payload.code) throw new Error('Einladung konnte nicht erstellt werden. Benutzername, abgeschlossene Einrichtung und Berechtigung prüfen.');
+                    await loadAccounts();
+                    // Nur Textausgabe; weder Passwort noch Code in URL oder Browserstorage.
+                    setStatus(`Einladung für ${payload.username}: ${payload.code}. Sicher an den Empfänger übergeben. Persönliches Passwort unter ${new URL(payload.acceptancePath, base).href} setzen. Gültig bis ${formatDate(payload.expiresAt)}.`, 'success');
+                    invite.reset();
+                } catch (error) { setStatus(error.message || 'Einladung fehlgeschlagen.', 'error'); }
+                finally { button.disabled = false; }
+            });
+            overlay.querySelector('.eos-account-management-security').after(invite);
+        }
         overlay.querySelector('.eos-account-refresh').textContent = text.refresh;
         overlay.querySelector('.eos-account-close-secondary').textContent = text.close;
         overlay.querySelector('.eos-account-management-close').onclick = close;

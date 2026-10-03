@@ -4,10 +4,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const osInfo = require('node:os');
 const { command, toolTrust, parseOsRelease, OS_UPDATE_PACKAGES } = require('./host-preflight.cjs');
-const ACCOUNTS = Object.freeze(['eos-runtime', 'eos-postgres']);
+const ACCOUNTS = Object.freeze(['eos-runtime', 'eos-postgres', 'eos-setup']);
 const UNITS = Object.freeze(['nexowatt-eos.target', 'nexowatt-eos-controller.service', 'nexowatt-eos-initialize.service',
     'nexowatt-eos-postgresql.service', 'nexowatt-eos-upload.service', 'nexowatt-eos-pg-certificates.service',
-    'nexowatt-eos-pg-certificates.timer', 'nexowatt-eos-os-updates.service', 'nexowatt-eos-os-updates.timer']);
+    'nexowatt-eos-pg-certificates.timer', 'nexowatt-eos-os-updates.service', 'nexowatt-eos-os-updates.timer',
+    'nexowatt-eos-setup.target', 'nexowatt-eos-setup.service', 'nexowatt-eos-setup-finalize.path', 'nexowatt-eos-setup-finalize.service', 'nexowatt-eos-setup-license.service']);
 const REQUIRED = Object.freeze(['/usr/bin/node', '/usr/bin/systemctl', '/usr/sbin/useradd', '/usr/sbin/groupadd',
     '/usr/sbin/getcap', '/usr/bin/openssl', '/usr/bin/getent', '/usr/bin/chown', '/usr/bin/ss', '/usr/bin/id', '/usr/sbin/nologin',
     '/usr/sbin/runuser', '/usr/lib/postgresql/17/bin/postgres', '/usr/lib/postgresql/17/bin/initdb', '/usr/lib/postgresql/17/bin/psql', '/usr/lib/postgresql/17/bin/pg_isready',
@@ -67,7 +68,7 @@ function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, r
     const listeners = run('/usr/bin/ss', ['-H', '-ltn']);
     const rows = listeners.stdout.split('\n').filter(line => line.trim()).map(line => line.trim().split(/\s+/));
     add('ports-free', listeners.status === 0 && !listeners.error && rows.every(row => row.length >= 5 && row[0] === 'LISTEN' && /:\d+$/.test(row[3])) &&
-        !rows.some(row => /:(?:15432|8081|8188)$/.test(row[3] || '')), 'PostgreSQL15432, Admin8081, UI8188 must be unused.');
+        !rows.some(row => /:(?:15432|8081|8188|8443)$/.test(row[3] || '')), 'PostgreSQL15432, Admin8081, UI8188, Setup8443 must be unused.');
     for (const account of ACCOUNTS) for (const table of ['passwd', 'group']) {
         const result = run('/usr/bin/getent', [table, account]);
         add(`fresh-${table}:${account}`, result.status === 2 && !result.error && !result.stdout, 'No account takeover or migration.');

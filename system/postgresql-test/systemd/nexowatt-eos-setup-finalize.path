@@ -1,0 +1,10 @@
+[Unit]
+Description=Observe the fixed EOS first-start handoff
+PartOf=nexowatt-eos-setup.target
+ConditionPathExists=!/etc/nexowatt-eos/first-start-complete.json
+
+[Path]
+PathExists=/var/lib/nexowatt-eos/onboarding/handoff.json
+Unit=nexowatt-eos-setup-finalize.service
+TriggerLimitIntervalSec=300
+TriggerLimitBurst=1

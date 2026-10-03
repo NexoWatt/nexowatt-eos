@@ -1,0 +1,95 @@
+NexoWatt EOS – Vollinstallation und Erststart-Assistent
+Änderungskennung: EOS-REQ-ONBOARD-20261002
+Stand: 02.10.2026, Nutzerpräzisierung 20:24 Uhr Europe/Berlin
+Status: Anforderung und Sollablauf dokumentiert; noch nicht implementiert.
+
+Verbindliche Nutzeranforderung
+Das vollständige EOS-System soll installiert werden. Beim ersten Öffnen der
+Oberfläche muss ein Installationsassistent die Einrichtung durchführen.
+Benutzerpasswörter werden im Frontend vergeben, nicht im Terminal.
+Der bisherige prepare-inputs.py-Ablauf mit vorab eingegebenen Benutzerpasswörtern
+ist deshalb für diesen gewünschten Ablauf nicht weiterzuverwenden.
+
+Sollablauf
+1. Der Installer installiert die vollständige festgelegte Produktzusammenstellung:
+   Laufzeit, Datenbank, benötigte Dienste, EOS-Oberfläche, verpflichtende
+   Basisadapter und den Erststart-Assistenten. Nur im Repository enthaltene
+   Adapterquellen erfüllen diese Anforderung nicht. Der konkrete Lieferumfang
+   ist vor dem Build am Produktkatalog und den Adapterpaketen zu prüfen.
+2. Technische Dienst- und Datenbankgeheimnisse werden geschützt erzeugt und
+   verwaltet. Es gibt keine gemeinsamen Standardpasswörter für Benutzer.
+3. Beim ersten Start werden nur die für Einrichtung und Grundbetrieb nötigen
+   Dienste freigegeben. Der Browser zeigt den HTTPS-Installationsassistenten.
+   Installiert, eingerichtet und für Anlagenbefehle aktiv sind getrennte Zustände.
+4. Ein installationsspezifischer, kurzlebiger Einrichtungscode dient dem
+   Besitznachweis. Er ist kein Benutzerpasswort. Der Code wird über einen
+   vertrauenswürdigen lokalen Zugang bereitgestellt und nach Abschluss ungültig.
+   Kein offener Adminzugang aufgrund einer bloßen lokalen IP-Adresse.
+5. Im Frontend werden das erste berechtigte Konto und sein Passwort festgelegt.
+   Weitere Rollen/Konten werden danach berechtigt angelegt und Passwörter von
+   den jeweiligen Benutzern gesetzt. Die Rechtevergabe wird serverseitig geprüft.
+6. Der Assistent führt durch die benötigten System-, Lizenz- und
+   Geräteeinstellungen. Verbindliche Pflichtfelder und betrieblich sichere
+   Wertebereiche sind aus dem bestehenden Produktumfang abzuleiten.
+   Der öffentliche Hersteller-Vertrauensanker muss authentisch bereitgestellt
+   werden; eine beliebige Browserdatei darf ihn nicht ersetzen. Der private
+   Hersteller-/Lizenzsignierschlüssel bleibt außerhalb des Zielgeräts.
+7. Benutzeranlage und Einrichtungsabschluss werden gegen Parallelversuche
+   geschützt und verbindlich gespeichert. Nach Abschluss ist die Setup-
+   Schnittstelle deaktiviert. Neustart und Abbruch dürfen keinen offenen
+   Verwaltungszugang und keine unbeabsichtigte Anlagensteuerung erzeugen.
+8. Steuerfunktionen werden erst nach gültiger Pflichtkonfiguration und den
+   jeweils notwendigen Lizenz-/Berechtigungsprüfungen freigegeben.
+
+Sicherheits- und Prüfbedarf
+HTTPS einschließlich Gegenstellenprüfung, Host-/Origin-Prüfung, CSRF-Schutz,
+kurzlebige sichere Sitzung, begrenzte Fehlversuche/Anfragen/Ressourcen.
+Keine Passwörter oder Einrichtungscodes in URLs, normalen Logs oder Berichten.
+Gezielte Prüfungen: fehlender/falscher/abgelaufener/wiederverwendeter Code,
+parallele Einrichtung, Rollenmanipulation, fremder Origin/Host,
+Neustart oder Abbruch während des Abschlusses, gesperrtes Setup nach Abschluss,
+Geheimnisse in Logs, Start-/Neustartverhalten und gesperrte Anlagenbefehle
+bei unvollständiger Konfiguration. Noch nicht für diese Änderung ausgeführt.
+
+Erreichter Pi-Prüfstand – vom Nutzer gemeldete Terminalausgaben
+Umgebung: Debian 13 trixie, DEBIAN_VERSION_FULL 13.7, aarch64/arm64.
+Anfangs 52 GB freier Speicher auf /dev/mmcblk0p2; Uhr synchronisiert.
+PostgreSQL 17.11 (Debian 17.11-0+deb13u1) installiert, pg_lsclusters leer.
+Nach Neustart: systemctl --failed meldet 0 loaded units listed.
+Node-Archiv-Prüfung OK, Node v24.21.0, process.arch arm64.
+Vollständige Repository-ZIP und geschützte root-Kopie jeweils hashgeprüft:
+NexoWatt_EOS_dev8_Adapterkommunikation_FULL_2026-10-02.zip
+SHA256: 0c1fe3d717ab058b87f70f54cdd8c4a731acfbbbc6086bfb3dfbb6d1802420ba
+
+Das enthaltene test.2-Paket wurde entpackt und auf dem Pi verifiziert:
+ok: true
+releaseId: 4eb22e942f31a1730bcecb6d91a374546fbef6dee021db0440bcf6859ee74d27
+sequence: 3; profile: test; productionReleaseApproved: false
+Bundle-Komponenten: eos-admin 7.10.11, js-controller 7.2.2,
+nexowatt-ui 1.0.21; jeweils active:false im Verifikationsergebnis.
+installed:true in dieser Ausgabe beschreibt den Bundle-Inhalt und ist kein
+Beleg einer abgeschlossenen Hostinstallation oder Aktivierung.
+Dies sind Nutzerbelege, keine direkt vom Assistenten auf dem Pi ausgeführten
+Messungen. Vollständiger EOS-Start, PostgreSQL-mTLS-/Rollenabnahme, Lizenzierung,
+Frontend-Assistent, Anlagensteuerung und neues Installationspaket sind offen.
+Ob der Nutzer den bisherigen Passwortdialog schon begonnen hat, ist unbestätigt.
+
+Änderung und Lieferstatus
+Das derzeit verifizierte test.2 erfüllt den neuen Erststart-Ablauf nicht.
+Es enthält außerdem nicht die zusätzlichen dev8-Adapterkanal-Neuerungen.
+Für den neuen Ablauf sind Quelländerungen, Tests, Dokumentation/SBOM und ein
+passend gebautes und signiertes neues Testpaket erforderlich.
+Das bestehende signierte Paket wird nicht nachträglich verändert; Signatur-
+oder Lizenzprüfungen werden für die neue Einrichtung nicht abgeschaltet.
+Kein neuer Code, kein neuer Installer und keine Produktivfreigabe in diesem Stand.
+
+Aktueller Arbeitsblocker und Fortsetzung
+Der erneute Abruf der gespeicherten vollständigen dev8-Quell-ZIP scheiterte
+wiederholt mit HTTP 502, auch mit neu vorbereiteter Übertragung.
+Die vollständige bereits beim Nutzer vorhandene ZIP muss erneut als Anhang
+bereitgestellt werden. Danach: Quellen/Projektanweisungen prüfen, Erststart-
+Ablauf integrieren, gezielte Tests ausführen, vollständiges Repository samt
+passendem signiertem Testpaket und aktualisierten Nachweisen bereitstellen.
+Die abgeschlossene Linux-/PostgreSQL-/Node-Vorbereitung des Pi kann bestehen
+bleiben; eine Neuinstallation des Betriebssystems ist dafür nicht begründet.
+

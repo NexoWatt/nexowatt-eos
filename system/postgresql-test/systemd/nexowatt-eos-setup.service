@@ -1,0 +1,52 @@
+[Unit]
+Description=NexoWatt EOS HTTPS first-start frontend
+PartOf=nexowatt-eos-setup.target
+After=network.target nexowatt-eos-postgresql.service
+ConditionPathExists=/var/lib/nexowatt-eos/.initialized
+ConditionPathExists=/etc/nexowatt-eos/onboarding.json
+ConditionPathExists=/etc/nexowatt-eos/license-device.json
+ConditionPathExists=!/etc/nexowatt-eos/first-start-complete.json
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=exec
+User=eos-setup
+Group=eos-setup
+WorkingDirectory=/opt/nexowatt/eos/current
+UnsetEnvironment=NODE_OPTIONS NODE_PATH NODE_EXTRA_CA_CERTS NODE_TLS_REJECT_UNAUTHORIZED SSLKEYLOGFILE OPENSSL_CONF OPENSSL_MODULES LD_PRELOAD LD_LIBRARY_PATH
+Environment=NODE_ENV=production
+ExecStartPre=/usr/bin/node /opt/nexowatt/eos/current/runtime/release/installed-check.cjs
+ExecStart=/usr/bin/node /opt/nexowatt/eos/current/runtime/onboarding/main.cjs --config /etc/nexowatt-eos/onboarding.json
+Restart=on-failure
+RestartSec=15
+TimeoutStartSec=30
+TimeoutStopSec=10
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/nexowatt-eos/onboarding
+InaccessiblePaths=-/etc/nexowatt-eos/postgresql -/etc/nexowatt-eos/iobroker.json -/etc/nexowatt-eos/web/authority -/etc/nexowatt-eos/web/admin.key -/etc/nexowatt-eos/web/ui.key -/etc/nexowatt-eos/setup-code.txt -/etc/nexowatt-eos/first-start-license.json -/var/lib/nexowatt-eos/iobroker-data -/var/lib/nexowatt-eos/postgresql
+MemoryHigh=192M
+MemoryMax=256M
+TasksMax=32
+LimitNOFILE=256
+LimitCORE=0
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nexowatt-eos-setup

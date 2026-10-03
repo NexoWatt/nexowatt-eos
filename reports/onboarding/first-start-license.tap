@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: signed license uses real Admin core and exposes only non-secret status fields
+ok 1 - signed license uses real Admin core and exposes only non-secret status fields
+  ---
+  duration_ms: 10.2257
+  type: 'test'
+  ...
+# Subtest: explicit unlicensed choice is valid setup input and grants no license rights or files
+ok 2 - explicit unlicensed choice is valid setup input and grants no license rights or files
+  ---
+  duration_ms: 18.6595
+  type: 'test'
+  ...
+# Subtest: selection rejects unknown modes, browser trust fields, embedded paths and oversize tokens
+ok 3 - selection rejects unknown modes, browser trust fields, embedded paths and oversize tokens
+  ---
+  duration_ms: 2.0024
+  type: 'test'
+  ...
+# Subtest: signature, UUID, expiry and not-before are rechecked before any persistence
+ok 4 - signature, UUID, expiry and not-before are rechecked before any persistence
+  ---
+  duration_ms: 9.9147
+  type: 'test'
+  ...
+# Subtest: actual encrypted store survives reload with UUID binding and never stores plaintext token
+ok 5 - actual encrypted store survives reload with UUID binding and never stores plaintext token
+  ---
+  duration_ms: 111.4932
+  type: 'test'
+  ...
+# Subtest: repeated import preserves store anti-rollback and corrupted encrypted readback fails closed
+ok 6 - repeated import preserves store anti-rollback and corrupted encrypted readback fails closed
+  ---
+  duration_ms: 132.6738
+  type: 'test'
+  ...
+# Subtest: write boundary rejects wrong owner, group, mode, links and oversized transfer before truncate
+ok 7 - write boundary rejects wrong owner, group, mode, links and oversized transfer before truncate
+  ---
+  duration_ms: 1.2597
+  type: 'test'
+  ...
+# Subtest: privileged and runtime entry points accept no caller-selected path, user or command
+ok 8 - privileged and runtime entry points accept no caller-selected path, user or command
+  ---
+  duration_ms: 0.7021
+  type: 'test'
+  ...
+# Subtest: actual root writer checks the opened inode before truncating and syncs the same descriptor
+ok 9 - actual root writer checks the opened inode before truncating and syncs the same descriptor
+  ---
+  duration_ms: 12.9171
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 553.1736

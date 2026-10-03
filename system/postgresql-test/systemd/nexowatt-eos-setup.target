@@ -1,0 +1,8 @@
+[Unit]
+Description=NexoWatt EOS protected HTTPS first start
+Requires=nexowatt-eos-postgresql.service nexowatt-eos-setup.service
+Wants=nexowatt-eos-setup-finalize.path
+After=nexowatt-eos-postgresql.service nexowatt-eos-setup.service
+
+[Install]
+WantedBy=multi-user.target

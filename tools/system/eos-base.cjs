@@ -12,6 +12,7 @@ const { inspectPostgresqlHost } = require('./postgresql-host-preflight.cjs');
 const { installPostgresqlHost } = require('./install-postgresql-host.cjs');
 const { activateRelease } = require('./activate-release.cjs');
 const { checkInstalled, rootOwned } = require('../../runtime/release/installed-check.cjs');
+const { readSetupInput } = require('./prepare-onboarding.cjs');
 function reject(code) { const error = new Error(code); error.code = code; throw error; }
 function parseArgs(argv, required) {
     if (argv.length !== required.length * 2) reject('EOS_USAGE');
@@ -58,7 +59,7 @@ function keygen(directory) {
     privateWrite(path.join(target, 'release-public.pem'), publicKey, 0o644);
     return { ok: true, kind: 'test-signing-key', publicKeySha256: sha256(publicKey), productionKey: false };
 }
-function install({ bundleDirectory, keyFile, start }) {
+function install({ bundleDirectory, keyFile, start, setupInput }) {
     if (process.getuid?.() !== 0) reject('ROOT_OPERATOR_REQUIRED');
     if (typeof start !== 'boolean') reject('EXPLICIT_START_FLAG_REQUIRED');
     const bundle = path.resolve(bundleDirectory), keyPath = path.resolve(keyFile);
@@ -67,6 +68,9 @@ function install({ bundleDirectory, keyFile, start }) {
     const verified = verifyBundle({ bundleDirectory: bundle, publicKey, minimumSequence: 0,
         nodeVersion: process.versions.node, platform: `${process.platform}-${process.arch}` });
     const { catalog, databaseBackend } = validateVerified(verified);
+    const fullProduct = verified.manifest.releaseVersion === '0.2.0-test.3';
+    if (fullProduct && !setupInput || !fullProduct && setupInput) reject('EOS_SETUP_INPUT_REQUIRED');
+    const setup = fullProduct ? readSetupInput(path.resolve(setupInput), path.join(verified.payloadPath, 'app')) : undefined;
     const webPorts = webPortsForCatalog(catalog);
     const preflight = (databaseBackend === 'postgresql' ? inspectPostgresqlHost : inspectHost)({ expectedNodeVersion: verified.manifest.nodeVersion, platform: process.arch, webPorts });
     if (!preflight.ready) reject('HOST_PREFLIGHT_REJECTED');
@@ -83,6 +87,7 @@ function install({ bundleDirectory, keyFile, start }) {
     privateWrite(path.join(evidence, 'release-public.pem'), publicKey, 0o644);
     const status = (databaseBackend === 'postgresql' ? installPostgresqlHost : installHost)({ profile: 'test', releaseId: staged.releaseId, releasePath: staged.releasePath,
         start, expectedNodeVersion: staged.manifest.nodeVersion, platform: process.arch, webPorts,
+        releaseVersion: staged.manifest.releaseVersion, setup,
         sequence: staged.manifest.sequence, publicKeySha256: sha256(publicKey) });
     return { ok: true, ...status };
 }
@@ -121,9 +126,10 @@ function main(argv) {
         const a = parseArgs(rest, ['--bundle', '--public-key']);
         const v = verifyBundle({ bundleDirectory: a['--bundle'], publicKey: publicKeyFrom(a['--public-key']),
             minimumSequence: 0, platform: `${process.platform}-${process.arch}`, nodeVersion: process.versions.node });
-        const { plan } = validateVerified(v);
+        const { plan, productInventory } = validateVerified(v);
         return { ok: true, releaseId: v.releaseId, sequence: v.manifest.sequence,
-            profile: v.manifest.profile, selected: plan.selected, productionReleaseApproved: false };
+            profile: v.manifest.profile, selected: plan.selected, productInventory,
+            inventoryScope: 'signed-bundle-content-not-host-installation', productionReleaseApproved: false };
     }
     if (command === 'preflight') {
         const a = parseArgs(rest, ['--node-version']);
@@ -134,9 +140,9 @@ function main(argv) {
         return inspectPostgresqlHost({ expectedNodeVersion: a['--node-version'], platform: process.arch });
     }
     if (command === 'install') {
-        const a = parseArgs(rest, ['--bundle', '--public-key', '--start']);
+        const a = parseArgs(rest, ['--bundle', '--public-key', '--start', ...(rest.includes('--setup-input') ? ['--setup-input'] : [])]);
         if (!['yes', 'no'].includes(a['--start'])) reject('EXPLICIT_START_FLAG_REQUIRED');
-        return install({ bundleDirectory: a['--bundle'], keyFile: a['--public-key'], start: a['--start'] === 'yes' });
+        return install({ bundleDirectory: a['--bundle'], keyFile: a['--public-key'], start: a['--start'] === 'yes', setupInput: a['--setup-input'] });
     }
     if (command === 'extend') {
         const a = parseArgs(rest, ['--bundle', '--public-key']);

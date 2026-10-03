@@ -5,9 +5,23 @@ npm-debug.log
 dist
 # This is too much noise for git
 package-lock.json
+# Reviewed source locks belong to complete source deliveries; caches stay ignored.
+!/components/admin/package-lock.json
+!/components/admin/src-admin/package-lock.json
+!/components/ui/package-lock.json
+!/components/ui/src-admin-tab/package-lock.json
+!/components/devices/package-lock.json
+!/components/eebus/package-lock.json
+!/components/backitup/package-lock.json
+!/components/backitup/src-admin/package-lock.json
+!/components/backitup/src-tab/package-lock.json
+!/system/test-base/app/package-lock.json
 # Isolated security test scratch data (never ship environment fixtures)
 /tests/security/cli-fixture-*/
 # Local architecture tooling caches are not source deliverables.
 __pycache__/
 *.pyc
 .venv/
+# Isolated build tools, local caches and generated full-repository exports.
+/.work/
+/artifacts/

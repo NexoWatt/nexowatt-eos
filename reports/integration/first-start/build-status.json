@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-first-start-complete-build-attempt",
+  "recordedAt": "2026-10-03T06:24:15.500Z",
+  "sourceVersion": "0.2.0-dev.9",
+  "candidateRuntimeVersion": "0.2.0-test.3",
+  "host": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.21.0",
+    "npm": "11.19.0"
+  },
+  "target": {
+    "platform": "linux-arm64",
+    "node": "24.21.0"
+  },
+  "assembly": {
+    "passed": true,
+    "exitCode": 0,
+    "workingDirectory": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d",
+    "scope": "isolated-build-host-app-tree-only",
+    "installedComponents": [
+      {
+        "id": "js-controller",
+        "package": "iobroker.js-controller",
+        "version": "7.2.2",
+        "installed": true,
+        "configured": false,
+        "active": false,
+        "physicalControlEnabled": false,
+        "executionAdmitted": true,
+        "acceptance": "management-test-only"
+      },
+      {
+        "id": "eos-admin",
+        "package": "iobroker.eos-admin",
+        "version": "7.10.11",
+        "installed": true,
+        "configured": false,
+        "active": false,
+        "physicalControlEnabled": false,
+        "executionAdmitted": true,
+        "acceptance": "management-test-only"
+      },
+      {
+        "id": "nexowatt-ui",
+        "package": "iobroker.nexowatt-ui",
+        "version": "1.0.21",
+        "installed": true,
+        "configured": false,
+        "active": false,
+        "physicalControlEnabled": false,
+        "executionAdmitted": true,
+        "acceptance": "management-test-only"
+      },
+      {
+        "id": "nexowatt-devices",
+        "package": "iobroker.nexowatt-devices",
+        "version": "0.5.169",
+        "installed": true,
+        "configured": false,
+        "active": false,
+        "physicalControlEnabled": false,
+        "executionAdmitted": false,
+        "acceptance": "hardware-and-security-acceptance-open"
+      },
+      {
+        "id": "eebus",
+        "package": "iobroker.eebus",
+        "version": "0.3.0",
+        "installed": true,
+        "configured": false,
+        "active": false,
+        "physicalControlEnabled": false,
+        "executionAdmitted": false,
+        "acceptance": "hardware-and-security-acceptance-open"
+      },
+      {
+        "id": "ocpp21",
+        "package": "iobroker.ocpp21",
+        "version": "0.4.0",
+        "installed": true,
+        "configured": false,
+        "active": false,
+        "physicalControlEnabled": false,
+        "executionAdmitted": false,
+        "acceptance": "hardware-and-security-acceptance-open"
+      },
+      {
+        "id": "nexowatt-backup",
+        "package": "iobroker.nexowatt-backup",
+        "version": "1.0.10",
+        "installed": true,
+        "configured": false,
+        "active": false,
+        "physicalControlEnabled": false,
+        "executionAdmitted": false,
+        "acceptance": "hardware-and-security-acceptance-open"
+      }
+    ],
+    "packageLockSha256": "ca41c25acfbb4e342ced019877bf9b6675be683d09a4ec7b058b77b0aad1bb89",
+    "appInventoryEntries": 22093,
+    "appBytes": 310388941,
+    "npmLifecycleScriptsExecuted": false,
+    "npmNetworkMode": "offline-only",
+    "privateAdaptersPublished": false
+  },
+  "sbom": {
+    "schemaValid": true,
+    "bindingPassed": true,
+    "passed": true,
+    "installedPackages": 686,
+    "uniqueNpmComponents": 639,
+    "embeddedPackages": 3,
+    "scope": "npm-and-explicit-vendored-packages",
+    "fullOperatingSystemInventory": false
+  },
+  "architecture": {
+    "passed": false,
+    "exitCode": 1,
+    "installedPackageCountIncludingRoot": 687,
+    "nativeFiles": 61,
+    "issueCount": 25,
+    "issueCodeCounts": {
+      "ARCH_UNREVIEWED_NATIVE_BUILD": 2,
+      "ARCH_NODE_ADDON_ABI_UNREVIEWED": 21,
+      "ARCH_MACH_HEADER": 2
+    },
+    "executedTargetCode": false,
+    "hardwareQualified": false
+  },
+  "signedRuntimeBuilt": false,
+  "packageSigningInvoked": false,
+  "generatedSigningKeys": false,
+  "currentRuntimeArtifact": null,
+  "candidateInstallable": false,
+  "hostInstallationPerformed": false,
+  "configured": false,
+  "physicalControlEnabled": false,
+  "productionReleaseApproved": false,
+  "hardwareTests": "OPEN_NOT_EXECUTED",
+  "commands": [
+    {
+      "stage": "assembly",
+      "program": "node",
+      "args": [
+        "tools/integration/assemble-postgresql-test.cjs",
+        "--output",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d",
+        "--platform",
+        "linux-arm64"
+      ],
+      "environment": {
+        "npm_config_cache": "<repository>/.work/npm-cache"
+      },
+      "exitCode": 0
+    },
+    {
+      "stage": "npm-sbom",
+      "program": "node",
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "sbom",
+        "--sbom-format",
+        "cyclonedx",
+        "--omit=dev",
+        "--offline"
+      ],
+      "cwd": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+      "exitCode": 0
+    },
+    {
+      "stage": "sbom-bind",
+      "program": "python",
+      "args": [
+        "tools/integration/bind-sbom.py",
+        "--app",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+        "--npm-sbom",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime.raw.cdx.json",
+        "--transform-evidence",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\controller-transform.json",
+        "--out",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime.cdx.json",
+        "--coverage",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime-sbom-coverage.json"
+      ],
+      "exitCode": 0
+    },
+    {
+      "stage": "sbom-schema",
+      "program": "python",
+      "args": [
+        "tools/integration/validate-sbom.py",
+        "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\runtime.cdx.json",
+        "--output",
+        "reports\\integration\\first-start\\runtime-sbom-schema-d.json"
+      ],
+      "environment": {
+        "PYTHONPATH": "<repository>/.work/python-libs"
+      },
+      "offline": true,
+      "exitCode": 0
+    },
+    {
+      "stage": "architecture",
+      "program": "node",
+      "mode": "stdin script invoking unchanged exported checker",
+      "module": "tools/integration/check-runtime-architecture.cjs",
+      "function": "checkRuntimeArchitecture",
+      "arguments": {
+        "app": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+        "platform": "linux-arm64",
+        "nodeVersion": "24.21.0"
+      },
+      "exitCode": 1
+    },
+    {
+      "stage": "inventory-and-binding",
+      "program": "node",
+      "mode": "stdin script",
+      "inventoryFunction": "runtime/release/bundle.cjs:inventory",
+      "inventoryApp": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261002-d\\app",
+      "excludedPaths": "npm node_modules/.bin launchers only, same payload exclusion as preparePayload",
+      "bindingFunction": "runtime/release/sbom-binding.cjs:verifySbomBinding",
+      "profile": "runtime-assembly-d.json:controllerProfile",
+      "exitCode": 0
+    }
+  ],
+  "earlierAttempts": [
+    {
+      "id": "a",
+      "outcome": "offline dependency cache incomplete; selected public dependencies were then fetched into isolated cache; no app lifecycle scripts or online private-app install"
+    },
+    {
+      "id": "b",
+      "outcome": "BUILD_OFFLINE_CACHE_MISS for five exact public tarballs; those tarballs were subsequently cached"
+    },
+    {
+      "id": "c",
+      "outcome": "BUILD_NPM_FAILED during npm pack UI before install; stdout/stderr empty and exact original subprocess cause unavailable",
+      "diagnosticRetry": "full-runtime-build-c-pack-ui-retry.json",
+      "diagnosticRetryExitCode": 0,
+      "diagnosticRetryElapsedMs": 9661
+    },
+    {
+      "id": "d",
+      "outcome": "full offline assembly and SBOM pass; unchanged architecture gate rejects native addons"
+    }
+  ],
+  "limitations": [
+    "This is a Windows build-host observation, not a Pi or Linux installation or execution test.",
+    "Native ABI/security review and actual linux-arm64 hardware acceptance remain open; installed files do not grant physical control.",
+    "The signing command is Linux-only because Windows chmod cannot prove POSIX private-key permissions; no signing key was generated here.",
+    "No new signed runtime or successful host installation is claimed; historical test.2 artifacts were not modified.",
+    "R6 onboarding/context/runtime helper source work is outside the npm app snapshot; a future signed release must be built from the final complete source checkout."
+  ],
+  "artifacts": [
+    {
+      "path": "runtime-package-d.json",
+      "bytes": 630,
+      "sha256": "57170620cc1a8b18b1036aecf175fe752fe45e98334acce3cff45a726ce81060"
+    },
+    {
+      "path": "runtime-package-lock-d.json",
+      "bytes": 315312,
+      "sha256": "ca41c25acfbb4e342ced019877bf9b6675be683d09a4ec7b058b77b0aad1bb89"
+    },
+    {
+      "path": "runtime-full-d.cdx.json",
+      "bytes": 781380,
+      "sha256": "6488ae33eed42b6578a8e43e2256dba747f135c6bbf2cb695e1b6d6f51043233"
+    },
+    {
+      "path": "runtime-sbom-schema-d.json",
+      "bytes": 357,
+      "sha256": "bbdfcf4a8ab5b5f0f1f564f1847525ccba1e09c88190c41c278a7ff8625e2d7e"
+    },
+    {
+      "path": "runtime-sbom-coverage-d.json",
+      "bytes": 408204,
+      "sha256": "d1aba2882d81859c56e1fb58311f54d5c103b1da1c9ac470ae3b7aa809e26a75"
+    },
+    {
+      "path": "runtime-sbom-binding-d.json",
+      "bytes": 194,
+      "sha256": "06b29610ece3196126e138898fd806625aab049ab8e9b780e455951ba67c0d6c"
+    },
+    {
+      "path": "runtime-app-inventory-d.json",
+      "bytes": 4431230,
+      "sha256": "fd347fe6e4961c8eb4870fd663cd91036bc22fb2b700accdba2a686147559e40"
+    },
+    {
+      "path": "runtime-architecture-full-d.json",
+      "bytes": 35550,
+      "sha256": "f10b920eedd7b6ec8a83a3413f3931c5bb923cae09939c7dbff94473136b8dfa"
+    },
+    {
+      "path": "runtime-assembly-d.json",
+      "bytes": 8825,
+      "sha256": "c029a296e5c3c55bf9410c97c1daf25d07921bdf715ae74cb6cacafb7b6bd8bf"
+    },
+    {
+      "path": "runtime-build-evidence-d.json",
+      "bytes": 5697,
+      "sha256": "da1d384eba04f848ba2997dfdf62b103b40541ff0032dfca2336d4287f4229c4"
+    },
+    {
+      "path": "runtime-controller-transform-d.json",
+      "bytes": 2995,
+      "sha256": "5ee7d04ed3e115fb38473492c9b18556f6e21c749699e959f3f6c4cffc15b72a"
+    },
+    {
+      "path": "runtime-install-d-result.json",
+      "bytes": 97,
+      "sha256": "cd4500c2609293fc718c55a9fb0e6876abdca1cd4df499cb795f9473bfac4d9f"
+    },
+    {
+      "path": "raw/runtime-install-d.txt",
+      "bytes": 890,
+      "sha256": "7b6e47a2aa93398a95423f8ab04f4cb3188bbd1bbb8c8516314923837d876dfd"
+    },
+    {
+      "path": "raw/full-runtime-build-d.txt",
+      "bytes": 3724,
+      "sha256": "b7bfd546fe0f58ab61b577ff95acd777392d741a1eaae560aca9e8010e40c461"
+    },
+    {
+      "path": "raw/runtime-architecture-full-d.txt",
+      "bytes": 7672,
+      "sha256": "53bc2ed78c5b8ee06a03f17f30ba247967d6ce8c504d4bf41cfa28bafa085789"
+    },
+    {
+      "path": "raw/runtime-inventory-binding-d.txt",
+      "bytes": 314,
+      "sha256": "0a0876e1a40639c91425b824c8245c9be1aebf13feacc4f9f6aaf93ce940515e"
+    }
+  ]
+}

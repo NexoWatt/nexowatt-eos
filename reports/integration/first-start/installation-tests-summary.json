@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "runs": [
+    {
+      "name": "installation-product-build",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/integration/build-runtime.test.cjs",
+        "tests/postgresql/full-product.test.cjs"
+      ],
+      "exitCode": 0,
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "skipped": 0,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "installation-release-windows",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/release-cli.test.cjs"
+      ],
+      "exitCode": 1,
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "tests": 9,
+      "pass": 5,
+      "fail": 4,
+      "skipped": 0,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "installation-web-systemd-windows",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/integration/web-certificates.test.cjs",
+        "tests/postgresql/unit-grammar.test.cjs"
+      ],
+      "exitCode": 1,
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "tests": 16,
+      "pass": 0,
+      "fail": 15,
+      "skipped": 1,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "installation-product-build-final",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/integration/build-runtime.test.cjs",
+        "tests/postgresql/full-product.test.cjs"
+      ],
+      "exitCode": 0,
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "skipped": 0,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "installation-product-build-final2",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/integration/build-runtime.test.cjs",
+        "tests/postgresql/full-product.test.cjs"
+      ],
+      "exitCode": 0,
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "skipped": 0,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "installation-product-build-r6-final",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/integration/build-runtime.test.cjs",
+        "tests/postgresql/full-product.test.cjs"
+      ],
+      "exitCode": 0,
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "tests": 18,
+      "pass": 18,
+      "fail": 0,
+      "skipped": 0,
+      "hardwareExecuted": false
+    },
+    {
+      "name": "installation-product-build-r6-complete",
+      "args": [
+        "--test",
+        "--test-reporter=tap",
+        "tests/integration/build-runtime.test.cjs",
+        "tests/postgresql/full-product.test.cjs"
+      ],
+      "exitCode": 0,
+      "platform": "win32",
+      "arch": "x64",
+      "node": "v24.21.0",
+      "tests": 19,
+      "pass": 19,
+      "fail": 0,
+      "skipped": 0,
+      "hardwareExecuted": false
+    }
+  ],
+  "limitations": [
+    "Windows cannot prove POSIX ownership, systemd, PG17 native or ARM64 host install",
+    "Existing POSIX-only suites retain failed attempts, not pass claims"
+  ]
+}

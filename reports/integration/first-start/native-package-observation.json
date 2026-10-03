@@ -1,0 +1,753 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-native-package-cache-static-observation",
+  "requirement": "EOS-REQ-ONBOARD-20261002",
+  "observedAtUtc": "2026-10-02T20:56:31.265639+00:00",
+  "environment": {
+    "os": "Windows",
+    "architecture": "AMD64",
+    "python": "3.14.0",
+    "node": "v24.21.0"
+  },
+  "operation": "Read existing component lock and npm content-addressed cache; verify SHA-512 archive integrity; inspect tar members in memory; apply existing read-only binary-header parser to copied prefixes. No archive files written to disk, package installation, install script or native code execution.",
+  "sourceBindings": [
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "3802812b56ab190ebf850a28dc719028820a1f91f8f30efa17f884416688c85b"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "18c2976a406f0f581e1d9acb1f98507b9f8624b354f98ac6315ba785fa312b40"
+    },
+    {
+      "path": "components/devices/package.json",
+      "sha256": "25bf5b75bd3ee22c215773e834e6a3bcd229220c17192bc845edf2c45d1be174"
+    },
+    {
+      "path": "components/devices/package-lock.json",
+      "sha256": "d126c4f9f6775a63e7e9f4dbe418d0749ae6f06bb763868247b2a459cbd54a44"
+    },
+    {
+      "path": "system/integration/components.json",
+      "sha256": "4e17fd8f35695f95905f194d3ca9d678cbb1a04783ef9398086a84e60dbd53f9"
+    }
+  ],
+  "scope": {
+    "productProfile": "eos-full-install-first-start-v1",
+    "requiredPackage": "iobroker.nexowatt-devices@0.5.169",
+    "devicesExecutionAdmitted": false,
+    "packageRequirementIsIndependentOfExecutionAdmission": true,
+    "observedLock": "components/devices/package-lock.json",
+    "observedLockIsFinalRuntimeLock": false,
+    "finalRuntimeBuildVerified": false
+  },
+  "dependencyPaths": [
+    {
+      "edges": [
+        "iobroker.nexowatt-devices@0.5.169",
+        "serialport@12.0.0",
+        "@serialport/bindings-cpp@12.0.1"
+      ],
+      "required": true
+    },
+    {
+      "edges": [
+        "iobroker.nexowatt-devices@0.5.169",
+        "modbus-serial@8.0.25",
+        "serialport@13.0.0",
+        "@serialport/bindings-cpp@13.0.0"
+      ],
+      "optionalFrom": "modbus-serial@8.0.25 ? serialport@13.0.0"
+    }
+  ],
+  "packages": [
+    {
+      "componentLockPath": "node_modules/serialport",
+      "name": "serialport",
+      "version": "12.0.0",
+      "optionalInComponentLock": false,
+      "registryArchiveUrl": "https://registry.npmjs.org/serialport/-/serialport-12.0.0.tgz",
+      "componentLockIntegrity": "sha512-AmH3D9hHPFmnF/oq/rvigfiAouAKyK/TjnrkwZRYSFZxNggJxwvbAbfYrLeuvq7ktUdhuHdVdSjj852Z55R+uA==",
+      "cacheContentPath": ".work/npm-cache/_cacache/content-v2/sha512/02/61/f70fd8473c59a717fa2afebbe281f880a2e00ac8afd38e7ae4c19458485671360809c70bdb01b7d8acb7aebeaee4b54761b877557528e3f39d99e7947eb8",
+      "archiveBytes": 4481,
+      "archiveSha256": "021f2b0b985fae48bfb501631fbf8538723eacfea6478f3cae2d1cfe4653c45a",
+      "sha512IntegrityMatchesComponentLock": true,
+      "packageManifestSha256": "2b4653e23957dbecbbdbe378f78de0c86ca2df1bd1f97fa6f7433b5c4be4a143",
+      "gypfile": false,
+      "installScript": null,
+      "engines": {
+        "node": ">=16.0.0"
+      },
+      "dependencies": {
+        "@serialport/binding-mock": "10.2.2",
+        "@serialport/bindings-cpp": "12.0.1",
+        "@serialport/parser-byte-length": "12.0.0",
+        "@serialport/parser-cctalk": "12.0.0",
+        "@serialport/parser-delimiter": "12.0.0",
+        "@serialport/parser-inter-byte-timeout": "12.0.0",
+        "@serialport/parser-packet-length": "12.0.0",
+        "@serialport/parser-readline": "12.0.0",
+        "@serialport/parser-ready": "12.0.0",
+        "@serialport/parser-regex": "12.0.0",
+        "@serialport/parser-slip-encoder": "12.0.0",
+        "@serialport/parser-spacepacket": "12.0.0",
+        "@serialport/stream": "12.0.0",
+        "debug": "4.3.4"
+      },
+      "optionalDependencies": {},
+      "nativeFiles": []
+    },
+    {
+      "componentLockPath": "node_modules/@serialport/bindings-cpp",
+      "name": "@serialport/bindings-cpp",
+      "version": "12.0.1",
+      "optionalInComponentLock": false,
+      "registryArchiveUrl": "https://registry.npmjs.org/@serialport/bindings-cpp/-/bindings-cpp-12.0.1.tgz",
+      "componentLockIntegrity": "sha512-r2XOwY2dDvbW7dKqSPIk2gzsr6M6Qpe9+/Ngs94fNaNlcTRCV02PfaoDmRgcubpNVVcLATlxSxPTIDw12dbKOg==",
+      "cacheContentPath": ".work/npm-cache/_cacache/content-v2/sha512/af/65/cec18d9d0ef6d6edd2aa48f224da0cecafa33a4297bdfbf360b3de1f35a365713442574d8f7daa0399181cb9ba4d55570b0139714b13d3203c35d9d6ca3a",
+      "archiveBytes": 656684,
+      "archiveSha256": "8cf4e55fcbc175ee56b9c5ba79e6665b9528adabfde8e3b4ae1abd6e948f40e2",
+      "sha512IntegrityMatchesComponentLock": true,
+      "packageManifestSha256": "9bbae26a6fd2127ac6da1bdff9597dbf00b14d60d4a2a6f8e63bee4b820d8b37",
+      "gypfile": true,
+      "installScript": "node-gyp-build",
+      "engines": {
+        "node": ">=16.0.0"
+      },
+      "dependencies": {
+        "@serialport/bindings-interface": "1.2.2",
+        "@serialport/parser-readline": "11.0.0",
+        "debug": "4.3.4",
+        "node-addon-api": "7.0.0",
+        "node-gyp-build": "4.6.0"
+      },
+      "optionalDependencies": {},
+      "nativeFiles": [
+        {
+          "archivePath": "package/prebuilds/linux-arm/node.napi.armv6.node",
+          "bytes": 117012,
+          "sha256": "b10a83aca31ebf21b901affc61961a16924aa558ddf4b27ed2aa694ecb00f1e5",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 32,
+            "machine": 40,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/android-arm/node.napi.armv7.node",
+          "bytes": 93432,
+          "sha256": "7947c3e850b753da5b602c776028aae372b4f7847dfbaf7c696f1ee743a7e1eb",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 32,
+            "machine": 40,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "android-arm",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-arm/node.napi.armv7.node",
+          "bytes": 117024,
+          "sha256": "0f3fc12ed86fb8ea6460c7d2b612db997bd0bb6c8a6eb7492f93dcad376c7cea",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 32,
+            "machine": 40,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/android-arm64/node.napi.armv8.node",
+          "bytes": 132552,
+          "sha256": "bdfe8f469663f1adca8f910e669950dacdf4710182ba147d94beba47174b594f",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 183,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": true,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "android-arm64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-arm64/node.napi.armv8.node",
+          "bytes": 146744,
+          "sha256": "2341a58d2c3d99f827a411c65cb1c9c9f00a80b62e9bbbde58b2f29625fd56d9",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 183,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": true,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm64",
+          "targetPathAndHeader": {
+            "arm64": true,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-x64/node.napi.glibc.node",
+          "bytes": 154928,
+          "sha256": "c32a2a98bb31220544a2e866a9d2bee618b2fa8bdc735ffdabec19421c589960",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 62,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": true,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-x64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": true
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-x64/node.napi.musl.node",
+          "bytes": 153776,
+          "sha256": "a9bad9a88cb0b67ad1807debce24510d581752c7aef3d9f2bcce30b119ac3009",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 62,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": true,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-x64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": true
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/darwin-x64+arm64/node.napi.node",
+          "bytes": 289056,
+          "sha256": "e8f5177df50677df2a91dfe14ace2bdf16fade5c4d7dfa3d5b14427715d581b5",
+          "executed": false,
+          "headerError": "ARCH_MACH_HEADER",
+          "unchangedGateDisposition": "rejected: ARCH_MACH_HEADER",
+          "declaredVariantPath": "darwin-x64+arm64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/win32-ia32/node.napi.node",
+          "bytes": 179200,
+          "sha256": "df91e6a6764481b58c95f07a7f81193ae4f99877d1e3da26a05f99664b2f2b23",
+          "executed": false,
+          "header": {
+            "format": "PE",
+            "bits": 32,
+            "machine": 332,
+            "endianness": "little"
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "win32-ia32",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/win32-x64/node.napi.node",
+          "bytes": 229376,
+          "sha256": "2d5d112e2e57054034fa9454e9c33dc306377455d989644f7d4c1b43027eb006",
+          "executed": false,
+          "header": {
+            "format": "PE",
+            "bits": 64,
+            "machine": 34404,
+            "endianness": "little"
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "win32-x64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        }
+      ]
+    },
+    {
+      "componentLockPath": "node_modules/modbus-serial",
+      "name": "modbus-serial",
+      "version": "8.0.25",
+      "optionalInComponentLock": false,
+      "registryArchiveUrl": "https://registry.npmjs.org/modbus-serial/-/modbus-serial-8.0.25.tgz",
+      "componentLockIntegrity": "sha512-T6OHW80k7DtYZF96onavw84IXNu44EW+fybgVftWAGOraL8vTmMZod8w6thOrWj2I2qHC9Gsn2nitVTUDih+6A==",
+      "cacheContentPath": ".work/npm-cache/_cacache/content-v2/sha512/4f/a3/875bcd24ec3b58645f7aa276afc3ce085cdbb8e045be7f26e055fb560063ab68bf2f4e6319a1df30ead84ead68f6236a870bd1ac9f69e2b554d40e287ee8",
+      "archiveBytes": 44818,
+      "archiveSha256": "fbedf5d9fe2eb4d7b803d637a2c3c1db1917f0041830cd9958f393cf17f64dfb",
+      "sha512IntegrityMatchesComponentLock": true,
+      "packageManifestSha256": "c0b273365915ccf5737b84c682863397b4ba736cf82492b503bb169e62fb6a88",
+      "gypfile": false,
+      "installScript": null,
+      "engines": {},
+      "dependencies": {
+        "debug": "^4.4.3"
+      },
+      "optionalDependencies": {
+        "serialport": "^13.0.0"
+      },
+      "nativeFiles": []
+    },
+    {
+      "componentLockPath": "node_modules/modbus-serial/node_modules/serialport",
+      "name": "serialport",
+      "version": "13.0.0",
+      "optionalInComponentLock": true,
+      "registryArchiveUrl": "https://registry.npmjs.org/serialport/-/serialport-13.0.0.tgz",
+      "componentLockIntegrity": "sha512-PHpnTd8isMGPfFTZNCzOZp9m4mAJSNWle9Jxu6BPTcWq7YXl5qN7tp8Sgn0h+WIGcD6JFz5QDgixC2s4VW7vzg==",
+      "cacheContentPath": ".work/npm-cache/_cacache/content-v2/sha512/3c/7a/674ddf22b0c18f7c54d9342cce669f66e2600948d5a57bd271bba04f4dc5aaed85e5e6a37bb69f12827d21f96206703e89173e500e08b10b6b38556eefce",
+      "archiveBytes": 4491,
+      "archiveSha256": "950f9e6a8c4981ba1fc7dcd94d8d811a29375425d882eeb47d4091d61dcd2b3a",
+      "sha512IntegrityMatchesComponentLock": true,
+      "packageManifestSha256": "67a936745bc739b617cc33034279806b580aa1ca021e76783de37f4a25618192",
+      "gypfile": false,
+      "installScript": null,
+      "engines": {
+        "node": ">=20.0.0"
+      },
+      "dependencies": {
+        "@serialport/binding-mock": "10.2.2",
+        "@serialport/bindings-cpp": "13.0.0",
+        "@serialport/parser-byte-length": "13.0.0",
+        "@serialport/parser-cctalk": "13.0.0",
+        "@serialport/parser-delimiter": "13.0.0",
+        "@serialport/parser-inter-byte-timeout": "13.0.0",
+        "@serialport/parser-packet-length": "13.0.0",
+        "@serialport/parser-readline": "13.0.0",
+        "@serialport/parser-ready": "13.0.0",
+        "@serialport/parser-regex": "13.0.0",
+        "@serialport/parser-slip-encoder": "13.0.0",
+        "@serialport/parser-spacepacket": "13.0.0",
+        "@serialport/stream": "13.0.0",
+        "debug": "4.4.0"
+      },
+      "optionalDependencies": {},
+      "nativeFiles": []
+    },
+    {
+      "componentLockPath": "node_modules/modbus-serial/node_modules/@serialport/bindings-cpp",
+      "name": "@serialport/bindings-cpp",
+      "version": "13.0.0",
+      "optionalInComponentLock": true,
+      "registryArchiveUrl": "https://registry.npmjs.org/@serialport/bindings-cpp/-/bindings-cpp-13.0.0.tgz",
+      "componentLockIntegrity": "sha512-r25o4Bk/vaO1LyUfY/ulR6hCg/aWiN6Wo2ljVlb4Pj5bqWGcSRC4Vse4a9AcapuAu/FeBzHCbKMvRQeCuKjzIQ==",
+      "cacheContentPath": ".work/npm-cache/_cacache/content-v2/sha512/af/6e/68e0193fbda3b52f251f63fba547a84283f69688de96a369635656f83e3e5ba9619c4910b856c7b86bd01c6a9b80bbf15e0731c26ca32f450782b8a8f321",
+      "archiveBytes": 868906,
+      "archiveSha256": "68bc2ce6a4b3be82d76d708d1467c6adf2be878fefe09c499017b6273c3f024d",
+      "sha512IntegrityMatchesComponentLock": true,
+      "packageManifestSha256": "7b1af3e0ecc4602efe9aa7ee01d31a6f31ba367bf8ba2b2614da1ba48f57f886",
+      "gypfile": true,
+      "installScript": "node-gyp-build",
+      "engines": {
+        "node": ">=18.0.0"
+      },
+      "dependencies": {
+        "@serialport/bindings-interface": "1.2.2",
+        "@serialport/parser-readline": "12.0.0",
+        "debug": "4.4.0",
+        "node-addon-api": "8.3.0",
+        "node-gyp-build": "4.8.4"
+      },
+      "optionalDependencies": {},
+      "nativeFiles": [
+        {
+          "archivePath": "package/prebuilds/linux-arm/@serialport+bindings-cpp.armv6.glibc.node",
+          "bytes": 116964,
+          "sha256": "04f0086b6cab4d5665234845c1adf8b8d89e2bed3ff08424a1724a824a0629bf",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 32,
+            "machine": 40,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-arm/@serialport+bindings-cpp.armv7.glibc.node",
+          "bytes": 116972,
+          "sha256": "5c052871c2e9a90c1adc3d7d7a88831a4971999a575b2b0c471113ec9302cedd",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 32,
+            "machine": 40,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-arm/@serialport+bindings-cpp.armv7.musl.node",
+          "bytes": 116888,
+          "sha256": "b2720fbae4a852ce70670c156d37764f32f2b316706cfcba9e11341ee04e0211",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 32,
+            "machine": 40,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/android-arm/@serialport+bindings-cpp.armv7.node",
+          "bytes": 92748,
+          "sha256": "47830141653647f790c55a98dd97e7d03c51eaf41548c9e2e59817ac9a88ff38",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 32,
+            "machine": 40,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "android-arm",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-arm64/@serialport+bindings-cpp.armv8.glibc.node",
+          "bytes": 134312,
+          "sha256": "a92389bed45b1ea7f9613e6c01de18e60cf58d484cddf065d8603c9143876f8f",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 183,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": true,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm64",
+          "targetPathAndHeader": {
+            "arm64": true,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-arm64/@serialport+bindings-cpp.armv8.musl.node",
+          "bytes": 134224,
+          "sha256": "c42316381abdbcdd3d56ce2b2bcec04cb62a6f092b57cf2bb8f963a155b55d57",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 183,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": true,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-arm64",
+          "targetPathAndHeader": {
+            "arm64": true,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/android-arm64/@serialport+bindings-cpp.armv8.node",
+          "bytes": 131800,
+          "sha256": "bdefd0b2acc5f90ac0cd218fadaf51cbd091e54739cfe321dd588f29c7d70afc",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 183,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": true,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "android-arm64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/win32-arm64/@serialport+bindings-cpp.armv8.node",
+          "bytes": 237568,
+          "sha256": "bc246fbe6cc0295c44bf836e814a75643c59718524c8f732982a8a0fa89b9cb6",
+          "executed": false,
+          "header": {
+            "format": "PE",
+            "bits": 64,
+            "machine": 43620,
+            "endianness": "little"
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "win32-arm64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-x64/@serialport+bindings-cpp.glibc.node",
+          "bytes": 150744,
+          "sha256": "572054004570f2a93630ca716c32947257283d1abbfd536f7a91cf6d98dc50db",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 62,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": true,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-x64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": true
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/linux-x64/@serialport+bindings-cpp.musl.node",
+          "bytes": 170080,
+          "sha256": "794a33f480832d57268a225a8560963cf4b8153334186cff13cf3cec40f7d99b",
+          "executed": false,
+          "header": {
+            "format": "ELF",
+            "bits": 64,
+            "machine": 62,
+            "endianness": "little",
+            "osAbi": 0,
+            "type": 3,
+            "dynamic": true,
+            "interpreter": null
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": true,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "linux-x64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": true
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/darwin-x64+arm64/@serialport+bindings-cpp.node",
+          "bytes": 254416,
+          "sha256": "23daa6940614b42ac940c96e0f420d7576738a515f29c25bc1e1790f9abd5704",
+          "executed": false,
+          "headerError": "ARCH_MACH_HEADER",
+          "unchangedGateDisposition": "rejected: ARCH_MACH_HEADER",
+          "declaredVariantPath": "darwin-x64+arm64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/win32-ia32/@serialport+bindings-cpp.node",
+          "bytes": 184832,
+          "sha256": "411c9635a15b34281a5f6cb0de9d61cc2e3b8cc4c9cae6fb541fadc34e28cd90",
+          "executed": false,
+          "header": {
+            "format": "PE",
+            "bits": 32,
+            "machine": 332,
+            "endianness": "little"
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "win32-ia32",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        },
+        {
+          "archivePath": "package/prebuilds/win32-x64/@serialport+bindings-cpp.node",
+          "bytes": 233472,
+          "sha256": "eead9115994f9ad9471cd607ead9aa5c3dbf460c878bafdde41b68b57679fefc",
+          "executed": false,
+          "header": {
+            "format": "PE",
+            "bits": 64,
+            "machine": 34404,
+            "endianness": "little"
+          },
+          "linuxArm64HeaderMatches": false,
+          "linuxX64HeaderMatches": false,
+          "unchangedGateDisposition": "rejected: ARCH_NODE_ADDON_ABI_UNREVIEWED",
+          "declaredVariantPath": "win32-x64",
+          "targetPathAndHeader": {
+            "arm64": false,
+            "x64": false
+          }
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "EOS-FULL-NATIVE-ABI-20261002",
+      "status": "open",
+      "summary": "The exact Devices component-lock archives include 23 native Node addon prebuilds across two bindings-cpp versions. Existing gate rejects every .node addon pending an explicit ABI contract and also rejects each gypfile package except the separately reviewed diskusage exception. Disabling the Devices instance does not remove these installed package bytes from the architecture scan.",
+      "observedNativePrebuildCount": 23,
+      "gypfileGate": "ARCH_UNREVIEWED_NATIVE_BUILD",
+      "nodeAddonGate": "ARCH_NODE_ADDON_ABI_UNREVIEWED",
+      "gateChanged": false,
+      "isObservedFinalRuntimeGateExecution": false,
+      "linuxArm64PathAndHeaderCount": 3,
+      "linuxX64PathAndHeaderCount": 4
+    }
+  ],
+  "limitations": [
+    "Component-lock/cache observation only: final full-runtime dependency resolution may select different versions and needs its own exact lock, package/SBOM binding and static gate result.",
+    "Matching ELF ARM64/x64 headers and N-API labels do not prove Node 24.21.0 addon compatibility, libc compatibility, successful module loading, serial I/O or device behavior.",
+    "No lifecycle/install scripts, package code, native prebuild, controller, adapter, PostgreSQL service or hardware was executed by this observation.",
+    "Cache SHA-512 equality binds to the checked-in component lock; it is not an independent publisher signature or vulnerability assessment.",
+    "Full-system build/signature, native ABI qualification, Linux/systemd installation and Raspberry Pi/hardware acceptance remain open.",
+    "The existing headerMatches helper checks ELF machine/class for Linux and Android alike; declaredVariantPath and targetPathAndHeader additionally distinguish Linux-labelled archives. Neither is a libc or ABI execution test."
+  ],
+  "nextRequiredEvidence": [
+    "Resolve and bind the final full-product runtime lock without bypassing the architecture gate.",
+    "Review an explicit per-addon ABI/libc/Node contract and applicable loading paths for each native file; retain exact hashes and SBOM provenance.",
+    "Run the resulting signed target candidate on isolated Linux ARM64 hardware, including verified addon load, serial-port permission checks, positive/negative I/O and failure/reboot behavior before any execution or physical-control approval."
+  ]
+}

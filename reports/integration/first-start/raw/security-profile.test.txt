@@ -1,0 +1,10 @@
+
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\profile.test.py", line 37, in <module>
+    class ProfileTest(unittest.TestCase):
+    ...<121 lines>...
+                    self.assertNotIn('UNREACHABLE', result.stdout)
+  File "C:\Users\User\Desktop\Nexowatt-EOS\tests\security\profile.test.py", line 87, in ProfileTest
+    @unittest.skipUnless(os.geteuid() == 0, 'root branch only; no real credential switch')
+                         ^^^^^^^^^^
+AttributeError: module 'os' has no attribute 'geteuid'. Did you mean: 'getpid'?
