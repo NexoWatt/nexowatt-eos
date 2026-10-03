@@ -6,8 +6,7 @@ const { componentTreeDigest } = require('../../runtime/policy/admission.cjs');
 const { preparePayload, componentRows } = require('../system/build-bundle.cjs');
 const { createTestArchive } = require('./create-test-archive.cjs');
 const product = require('../../runtime/product/scope.cjs');
-const DELIVERY_REVISION = 2;
-const RELEASE_SEQUENCE = 5;
+const { DELIVERY_REVISION, RELEASE_SEQUENCE } = require('../system/install-from-checkout.cjs');
 function releaseMetadata(platform) {
     if (!['linux-arm64', 'linux-x64'].includes(platform)) throw new Error('PG_PRODUCT_ASSEMBLY_REQUIRED');
     return { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: RELEASE_SEQUENCE,

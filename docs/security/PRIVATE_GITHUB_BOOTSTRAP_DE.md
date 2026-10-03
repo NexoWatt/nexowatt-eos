@@ -6,7 +6,7 @@ separaten SHA-256. Ein ersetzter README-Befehl wäre selbst ein neuer
 Vertrauensanker; ein Hash allein authentifiziert keine beliebige Downloadquelle.
 GitHub-/Repository-Zugriffsrechte und Herstellerfreigabe bleiben deshalb relevant.
 
-Die aktuelle Testlieferung liegt unter `delivery/bootstrap-test3-r2-apt` und bindet
+Die aktuelle Testlieferung liegt unter `delivery/bootstrap-test3-r3` und bindet
 den öffentlichen NWL2-Trustexport des vorhandenen lokalen Lizenzgenerators ein.
 Der normale Aufruf `node cli.js trust <Ausgabedatei>` erzeugte einen neuen
 öffentlichen Export mit `kid: nexowattEOS`, bytegleich mit der zuvor vorliegenden
@@ -25,12 +25,13 @@ Der öffentliche Prüfschlüssel wird im Installerkit mitgeliefert; eine manuell
 Schlüsselübernahme oder Abschaltung der Prüfung auf dem Pi ist nicht nötig.
 
 Der Loader akzeptiert nur ein exakt strukturiertes, erneut doppelt gehashtes
-Manifest für `NexoWatt/nexowatt-eos` und die feste test.3-Revision 2. Er lädt
+Manifest für `NexoWatt/nexowatt-eos` und die feste test.3-Revision 3 mit
+signierter Sequenz 6. Er lädt
 nur die drei bekannten Datenarchive und den gebundenen Vorbereitungscode.
 Keine veränderlichen Branch-Downloads, Weiterleitungen oder Download-URL-Felder
 werden ausgeführt. Dateilänge, Git-Blob-SHA-1 und SHA-256 müssen gemeinsam passen.
 Der vorhandene Installer prüft darüber hinaus die Release-Signatur und sämtliche
-Manifestdateien. Die historische test.3-Revision wird nicht überschrieben.
+Manifestdateien. Historische Lieferungen werden nicht überschrieben.
 
 Der PAT kommt verdeckt aus `/dev/tty`. Vor dem Lesen werden Shell-Tracing,
 automatischer Variablenexport und ein eventuell geerbtes Exportattribut entfernt.
@@ -53,6 +54,22 @@ vor Entpacken oder APT. Kein Skip-/Force-/Offline-CLI-Schalter wurde ergänzt.
 Vorhandene EOS-Daten und PostgreSQL-Cluster bleiben geschützt; ein abgebrochener
 Teillauf ist zu prüfen und wird nicht automatisch überschrieben.
 
+Die signierten Hostinstaller teilen sich jetzt dieselbe strikte Auswertung
+der Root-Abfrage `sudo -n -l -U <Dienstkonto>`. Ein erfolgreicher Rückgabecode
+allein sagt nicht aus, ob das Konto Rechte besitzt. Zugelassen wird nur
+Exitcode 0 mit leerem Fehlerkanal und der vollständigen C-Locale-Zeile
+`User <Dienstkonto> is not allowed to run sudo on <Hostname>.` für genau das
+abgefragte Konto. Kommandolisten, Warnungen, zusätzliche Zeilen, abweichende
+Konten, Signale, Spawnfehler und erfolglose Abfragen führen zum Abbruch.
+Die Änderung vergibt keine Sudo-Rechte und ändert keine Sudoers-Dateien.
+
+Der gemeldete `PG_SUDO_POLICY_REJECTED` tritt in der Kontophase auf. Zu diesem
+Zeitpunkt können `eos-runtime` und Release-/Prüfdateien unter
+`/opt/nexowatt/eos` bereits existieren. Der tatsächliche Zustand des betroffenen
+Pi muss vor einer Wiederherstellung diagnostiziert werden. Der neue README-
+Block ist kein automatischer Reparatur- oder Fortsetzungsweg; es gibt keine
+Kontolöschung, pauschale Sudoers-Änderung oder Abschaltung der Frischsystemprüfung.
+
 Die APT-Korrektur ergänzt ausschließlich `.pgp` neben `.gpg` und `.asc` für
 einzelne Keyring-Dateinamen unter `/usr/share/keyrings/`. Das deckt die
 [offizielle Raspberry-Pi-OS-ARM64-Vorlage](https://raw.githubusercontent.com/RPi-Distro/pi-gen/4d8ee447dd3d37e8b0ef8752e460d9082d9d435d/stage0/00-configure-apt/files/raspi.sources)
@@ -66,14 +83,15 @@ Ungültige Deb822-Optionen liefern die festen Fehlercodes
 `BOOTSTRAP_APT_SOURCE_OPTIONS_ARCHITECTURES`,
 `BOOTSTRAP_APT_SOURCE_OPTIONS_SIGNED_BY` oder
 `BOOTSTRAP_APT_SOURCE_OPTIONS_COMPONENTS`. Die Diagnose enthält keine frei
-übernommenen Inhalte der Paketquellen. Die tatsächliche Konfiguration des
-gemeldeten Pi ist noch unbekannt; die allgemeine Kompatibilitätskorrektur
-belegt deshalb nicht die konkrete Fehlerursache dieses Geräts.
+übernommenen Inhalte der Paketquellen. Das neue Pi-Protokoll zeigt erfolgreiche
+Quellenprüfung und APT-Aufrufe, gefolgt vom Abbruch in der Sudo-Prüfung; die
+ursprüngliche vollständige Quellenkonfiguration liegt weiterhin nicht vor.
 
 Die bisherigen Lieferordner bleiben unverändert. Der neue README-Block bindet
 den geänderten Bootstrap und sein neues Manifest; alte, bereits kopierte
-Blöcke laden weiterhin die jeweils alte Version. Die signierte Runtime
-test.3 Revision 2 mit Sequenz 5 bleibt unverändert.
+Blöcke laden weiterhin die jeweils alte Version. Für die Hostkorrektur wurde
+eine neue signierte Runtime test.3 Revision 3 mit Sequenz 6 bereitgestellt.
+Revision 2 mit Sequenz 5 bleibt als historische Lieferung unverändert.
 
 Der GitHub-PAT ersetzt weder den öffentlichen NWL2-Lizenzprüfschlüssel noch eine
 Gerätelizenz. Die Schlüsselzuordnung erfolgt vor dem Paketbau; auf dem Pi wird
@@ -91,7 +109,10 @@ Geräte-/Hardwaretests bleiben **OFFEN**. Neuinstallation ist kein Flottenupdate
 eine dauerhafte Signatur-/Update-/Rollbackkette wird damit nicht bereitgestellt.
 
 Die Nachweise zur aktuellen Lieferung stehen im
-[Prüfbericht zur APT-Kompatibilitätskorrektur](../../reports/integration/github-bootstrap-apt-20261003/).
+[Prüfbericht zur Sudo-Korrektur und GitHub-Lieferung](../../reports/integration/github-bootstrap-sudo-20261003/README.md)
+und im [signierten R3-Bau](../../reports/integration/installable-test3-r3-20261003/README.md).
+Die [APT-Kompatibilitätskorrektur](../../reports/integration/github-bootstrap-apt-20261003/)
+bleibt separat belegt.
 Die einmalige Herstellertrust-Zuordnung ist im
 [vorherigen GitHub-Prüfbericht](../../reports/integration/github-bootstrap-ready-20261003/README.md)
 dokumentiert.

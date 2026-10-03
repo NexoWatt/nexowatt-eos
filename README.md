@@ -32,6 +32,14 @@ kopieren und erneut starten. Der alte Befehl lädt weiterhin den alten Installer
 Falls erneut ein APT-Fehler erscheint, den vollständigen Fehlercode zur Prüfung
 weitergeben. Paketquellen und Signaturprüfungen müssen dafür nicht verändert werden.
 
+
+**Nach `PG_SUDO_POLICY_REJECTED`:** Revision 3 korrigiert die Sudo-Abfrage
+für neue Dienstkonten. Auf dem bereits betroffenen Pi können `eos-runtime`
+und Dateien unter `/opt/nexowatt/eos` zurückgeblieben sein. Dort zuerst den
+Restzustand prüfen und den Wiederanlauf vorbereiten; der folgende Block ist
+für einen frischen Host und übernimmt keine Teilinstallation.
+[Befund und Wiederanlaufstatus](reports/integration/github-bootstrap-sudo-20261003/README.md).
+
 ```bash
 /bin/bash <<'EOS_INSTALL'
 # EOS_GITHUB_BOOTSTRAP_VERSION=2026-10-03
@@ -49,11 +57,11 @@ read -r -s -p 'GitHub-Token: ' eos_token </dev/tty
 printf '\n' >/dev/tty
 [[ $eos_token =~ ^[A-Za-z0-9_]{20,512}$ ]] || { echo 'EOS: Tokenformat ungueltig.' >&2; exit 1; }
 eos_stage=$(/usr/bin/mktemp -d /root/eos-download-XXXXXXXX)
-printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14631 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/4667218fc6c46c0e9469e8cc4e699816a9a56d2d' -o "$eos_stage/github-download.py"
-printf '%s  %s\n' '44e007193e77315025e73227be1113166eae1d9901e9655eeacea7fa91a83e28' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
+printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14631 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/ea168948332e365f59c1798a79d8439863b8e098' -o "$eos_stage/github-download.py"
+printf '%s  %s\n' '89194c388e023bad6dca7347a132d24f45927d3710a635cf7ba9e4ea491177c6' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
 exec 3< <(printf '%s\n' "$eos_token")
 unset eos_token
-exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 50d93fc576ddff78cac458b0d702d128e5634064 --manifest-sha256 1f2132c9e39b5604bd6368549d8cf1a22daa9016921ecb607a538f9937ce899e
+exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 03a04702f31571814021f3de5ebd0586859c1404 --manifest-sha256 3fe525dbcca620709e7767e6d474842650b50406d3a0ae8ae2a4aedd82b7ad2b
 EOS_INSTALL
 ```
 
@@ -68,7 +76,7 @@ serverseitig geprüft.
 
 [Anleitung und Voraussetzungen](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/PRIVATE_GITHUB_BOOTSTRAP_DE.md) ·
-[APT-Korrektur und aktuelle Paketnachweise](reports/integration/github-bootstrap-apt-20261003/README.md) ·
+[Sudo-Korrektur und aktuelle Paketnachweise](reports/integration/github-bootstrap-sudo-20261003/README.md) ·
 [Prüfschlüsselzuordnung](reports/integration/github-bootstrap-ready-20261003/README.md).
 
 **Vollständige Pi-Installation und Hardwaretests: OFFEN, nicht ausgeführt.**
@@ -92,10 +100,10 @@ Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 [Ein-Befehl-Download vorbereiten](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
 [Ersteinrichtung und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
-[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r2-20261003/).
+[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r3-20261003/).
 
-**Der signierte vollständige ARM64-Installationskandidat `0.2.0-test.3`, Revision 2, ist enthalten.**
-[Lieferung und Fingerabdrücke](delivery/test-pi-0.2.0-test.3-r2/README.md). UUID-Anzeige,
+**Der signierte vollständige ARM64-Installationskandidat `0.2.0-test.3`, Revision 3, ist enthalten.**
+[Lieferung und Fingerabdrücke](delivery/test-pi-0.2.0-test.3-r3/README.md). UUID-Anzeige,
 Frontend-Passwortvergabe und Home-/Pro-Lizenzgrenzen sind umgesetzt.
 
 **Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**

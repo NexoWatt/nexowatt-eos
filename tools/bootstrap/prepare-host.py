@@ -28,7 +28,7 @@ NODE_MEMBER = "node-v24.21.0-linux-arm64/bin/node"
 NODE_DEST = Path("/opt/nexowatt-node") / NODE_MEMBER
 EOS_ASSET = "eos-0.2.0-test.3-linux-arm64.tar.gz"
 ASSETS = ("installer-kit.zip", NODE_ASSET, EOS_ASSET)
-DELIVERY = "delivery/test-pi-0.2.0-test.3-r2"
+DELIVERY = "delivery/test-pi-0.2.0-test.3-r3"
 LIMITS = {ASSETS[0]: 64 * 1024**2, NODE_ASSET: 128 * 1024**2, EOS_ASSET: 1024**3}
 ENV = {"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LANG": "C", "LC_ALL": "C",
        "DEBIAN_FRONTEND": "noninteractive", "NEEDRESTART_MODE": "l"}

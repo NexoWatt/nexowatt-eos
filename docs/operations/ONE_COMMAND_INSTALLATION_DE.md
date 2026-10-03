@@ -9,12 +9,28 @@ Eigenes Webhosting, npm-Zugang und manuell erstellte Setup-Dateien entfallen.
 **Aktueller Status:** Der öffentliche NWL2-Prüfschlüssel mit der Schlüsselkennung
 `nexowattEOS` wurde über den normalen öffentlichen Trustexport des vorhandenen
 lokalen Lizenzgenerators zugeordnet und in
-[`delivery/bootstrap-test3-r2-apt`](../../delivery/bootstrap-test3-r2-apt/)
+[`delivery/bootstrap-test3-r3`](../../delivery/bootstrap-test3-r3/)
 eingebunden. Das neue Manifest ist für den Installationsversuch freigeschaltet
 (`ready: true`). Auf dem Pi ist keine manuelle Schlüsseldatei mehr erforderlich.
 Die vollständige Pi-Installation, systemd-/PostgreSQL-/TLS-Abnahme, der
 Browser-Gesamtlauf, eine reale Lizenzaktivierung, Reboot und sämtliche
 Hardwaretests sind weiterhin **OFFEN, nicht ausgeführt**.
+
+Die aktuelle Lieferung verwendet **test.3 Revision 3, signierte Sequenz 6**.
+Sie korrigiert die Sudo-Prüfung neu angelegter Dienstkonten. Eine erfolgreiche
+Root-Abfrage mit der vollständigen Meldung, dass genau das Dienstkonto kein
+Sudo ausführen darf, wird jetzt richtig ausgewertet. Tatsächlich erlaubte
+Sudo-Kommandos, fehlgeschlagene Abfragen und zusätzliche Ausgaben werden
+weiterhin abgelehnt.
+
+**Nach `PG_SUDO_POLICY_REJECTED` auf dem bereits verwendeten Pi zuerst den
+Teillauf prüfen.** `eos-runtime` und Dateien unter `/opt/nexowatt/eos` können
+schon vorhanden sein. Den neuen Block auf diesem Gerät nicht einfach erneut
+ausführen: Er bleibt ein Neuinstallationsverfahren und überschreibt diesen
+Zustand nicht. Fehlernachweise erhalten; Dienstkonten, Verzeichnisse und
+Dienststatus zunächst nur lesen. Danach eine Wiederherstellung passend zum
+tatsächlichen Zustand festlegen. Konten oder Bestandsdaten nicht pauschal
+löschen und keine zusätzlichen Sudoers-Regeln vergeben.
 
 Bei `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING` wurde der frühere, fest
 gebundene Installationsblock ausgeführt. Dieser bleibt unverändert gesperrt und
@@ -26,8 +42,9 @@ dem Pi müssen dafür nicht geändert werden.
 Die aktuelle Bootstrap-Lieferung berücksichtigt außerdem die `.pgp`-Keyring-
 Dateien der offiziellen Raspberry-Pi-OS-ARM64-Paketquellen. Die frühere
 Vorprüfung akzeptierte hier nur `.gpg` und `.asc`. Diese Kompatibilitätslücke
-ist korrigiert; die tatsächliche APT-Konfiguration des gemeldeten Test-Pi liegt
-noch nicht vor und ist damit nicht als Fehlerursache bestätigt. Auch für diese
+ist korrigiert. Im inzwischen vorliegenden Pi-Protokoll passieren die
+Quellenprüfung und APT-Aufrufe; der spätere Abbruch betrifft die Sudo-Prüfung.
+Das Protokoll belegt keine vollständige Installation. Auch für diese
 Korrektur den **gesamten aktuellen README-Block** kopieren: Ein bereits
 gespeicherter Befehl lädt wegen seiner festen Hashbindung weiterhin die alte
 Bootstrap-Version.
@@ -75,8 +92,10 @@ Branchinhalt als Installationsprogramm ausgeführt. Die HTTPS-Verbindungen gehen
 ausschließlich an die festgelegte GitHub-API; Weiterleitungen werden abgelehnt.
 
 GitHub liefert die Dateien über seine Raw-Blob-API, die Blobs bis **100 MB**
-unterstützt. Das vorhandene EOS-Archiv mit 88.546.534 Bytes und das Node-Archiv
-mit 30.843.004 Bytes liegen darunter. [GitHub-Primärdokumentation](https://docs.github.com/en/rest/git/blobs#get-a-blob).
+unterstützt. Der Builder und die Paketprüfung prüfen die Größen aller drei
+Archive gegen diese Transportgrenze. Die konkreten Größen und Hashes stehen
+im gebundenen `github-manifest.json` der aktuellen Lieferung.
+[GitHub-Primärdokumentation](https://docs.github.com/en/rest/git/blobs#get-a-blob).
 
 Nach erfolgreicher Downloadprüfung folgen die bestehenden Installationsschritte:
 
@@ -117,8 +136,9 @@ Bereich, ohne den Inhalt der Quelldatei auszugeben:
 
 Bei einem erneuten Abbruch den genauen Fehler und die betroffene öffentliche
 Paketquellen-Konfiguration prüfen; keine Signatur- oder Quellenprüfung abschalten.
-Die Runtime bleibt test.3 Revision 2, signierte Sequenz 5. Die Korrektur betrifft
-ausschließlich den Bootstrap.
+Die APT-Kompatibilitätskorrektur bleibt im Bootstrap enthalten. Die aktuelle
+Runtime test.3 Revision 3, signierte Sequenz 6 enthält zusätzlich die
+korrigierte Sudo-Prüfung der Dienstkonten.
 
 ## Browser: UUID, Lizenz und Passwort
 
@@ -158,7 +178,7 @@ Der Vorgang exportiert ausschließlich öffentliche Prüfdaten; es wurden weder
 ein privater Schlüssel exportiert noch eine neue Lizenz ausgestellt. Die
 Zuordnung zum lokalen Generator ersetzt keine reale Lizenzprüfung auf dem Pi.
 Bei einer späteren Lieferung den Lizenztrust-Hash und den Releaseschlüssel-Pin der
-[Revision-2-Lieferung](../../delivery/test-pi-0.2.0-test.3-r2/README.md) über den
+[Revision-3-Lieferung](../../delivery/test-pi-0.2.0-test.3-r3/README.md) über den
 Hersteller-Übergabeweg bestätigen.
 
 Herstellerbeispiel mit zu ersetzenden Platzhaltern:
@@ -173,7 +193,7 @@ node tools/bootstrap/build-github-download.cjs \
 
 Die Ausgabe muss ein **neuer direkter Unterordner von `delivery/`** im
 Arbeitsrepository sein; alle angegebenen Dateipfade sind absolut. Der Builder
-prüft das bestehende signierte r2-Archiv erneut, bindet die übernommenen
+prüft das bestehende signierte r3-Archiv erneut, bindet die übernommenen
 Runtime-/Systemhelfer an die Quellen und prüft das erzeugte Installerkit durch
 erneutes Lesen. Das Runtime-Archiv bleibt unverändert. Es wird kein Token in
 die Ausgabe aufgenommen und nichts automatisch hochgeladen.
@@ -181,7 +201,7 @@ die Ausgabe aufgenommen und nichts automatisch hochgeladen.
 Der Ausgabeordner enthält `github-download.py`, `prepare-host.py`,
 `github-manifest.json`, `installer-kit.zip`, die öffentliche Datei
 `license-public-trust.json`, `preparation.json` und `INSTALL_COMMAND.txt`.
-Das vorhandene r2-Archiv und das offizielle Node-Archiv bleiben an ihren
+Das vorhandene r3-Archiv und das offizielle Node-Archiv bleiben an ihren
 bereits versionierten Lieferpfaden. Die erzeugten Dateien müssen vollständig
 im privaten Repository verfügbar sein, bevor der zugehörige Inhalt von
 `INSTALL_COMMAND.txt` in die README übernommen und für den Teststart verwendet
@@ -195,7 +215,8 @@ Laufzeitverzeichnis ist kein Updateverfahren. Vollständige Pi-Installation,
 systemd, Browser-Gesamtlauf, Reboot, Recovery und Hardwareabnahme bleiben bis
 zur tatsächlichen Ausführung **OFFEN**.
 
-Prüfbelege: [Aktuelle APT-Kompatibilitätskorrektur](../../reports/integration/github-bootstrap-apt-20261003/),
+Prüfbelege: [Aktuelle Sudo-Prüfung und GitHub-Lieferung](../../reports/integration/github-bootstrap-sudo-20261003/README.md),
+[vorherige APT-Kompatibilitätskorrektur](../../reports/integration/github-bootstrap-apt-20261003/),
 [Herstellertrust und vorheriger GitHub-Einstieg](../../reports/integration/github-bootstrap-ready-20261003/README.md),
 [Bootstrap-Prüfbericht](../../reports/integration/bootstrap-20261003/README.md)
-und [signierte Revision 2](../../reports/integration/installable-test3-r2-20261003/README.md).
+und [signierte Revision 3](../../reports/integration/installable-test3-r3-20261003/README.md).

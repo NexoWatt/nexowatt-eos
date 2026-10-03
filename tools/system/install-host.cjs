@@ -14,6 +14,16 @@ const UNITS = ['nexowatt-eos.target', 'nexowatt-eos-controller.service', 'nexowa
 const SERVICES = ['nexowatt-eos-controller.service', 'nexowatt-eos-initialize.service', 'nexowatt-eos-redis@objects.service', 'nexowatt-eos-redis@states.service',
     'nexowatt-eos-upload.service', 'nexowatt-eos-certificates.service', 'nexowatt-eos-certificates.timer', 'nexowatt-eos-os-updates.timer'];
 function reject(code) { const e = new Error(code); e.code = code; throw e; }
+function sudoListingDeniesAll(result, account) {
+    // A root `sudo -n -l -U USER` query succeeds (exit 0) even when USER has
+    // no privileges. Exit 1 is a failed query, not proof of absent rights.
+    // command() fixes the C locale. Accept only its complete denial line for
+    // this account; warnings, extra output and every command listing fail closed.
+    if (!result || result.status !== 0 || result.error || result.stderr !== '' ||
+        typeof result.stdout !== 'string' || typeof account !== 'string') return false;
+    const match = /^User (eos-[a-z-]+) is not allowed to run sudo on ([A-Za-z0-9][A-Za-z0-9_.-]{0,252})\.\n$/.exec(result.stdout);
+    return Boolean(match && match[0] === result.stdout && match[1] === account);
+}
 function privateWrite(file, content, mode = 0o640) {
     const fd = fs.openSync(file, fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW, mode);
     try { fs.writeFileSync(fd, content); fs.fchmodSync(fd, mode); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
@@ -97,7 +107,7 @@ function installHost(options, dependencies = {}) {
             if (run('/usr/bin/id', ['-Gn', name]).trim() !== name) reject('RUNTIME_GROUP_POLICY_REJECTED');
             if (fs.existsSync(at('/usr/bin/sudo'))) {
                 const sudo = exec('/usr/bin/sudo', ['-n', '-l', '-U', name]);
-                if (sudo.status !== 1 || !/not allowed to run sudo/.test(sudo.stdout + sudo.stderr)) reject('RUNTIME_SUDO_POLICY_REJECTED');
+                if (!sudoListingDeniesAll(sudo, name)) reject('RUNTIME_SUDO_POLICY_REJECTED');
             }
         }
         phase = 'directories';
@@ -189,7 +199,7 @@ function installHost(options, dependencies = {}) {
         throw error;
     }
 }
-module.exports = { installHost, mergeControllerConfig, privateWrite, assertNoSymlinkAncestors, UNITS, SERVICES };
+module.exports = { installHost, mergeControllerConfig, privateWrite, assertNoSymlinkAncestors, sudoListingDeniesAll, UNITS, SERVICES };
 if (require.main === module) {
     process.stderr.write('Use the signed EOS release orchestrator. Direct host installation is not supported.\n');
     process.exitCode = 2;

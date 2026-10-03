@@ -12,7 +12,7 @@ const ROOT = path.resolve(__dirname, '../..');
 const python = process.platform === 'win32' ? 'python' : '/usr/bin/python3';
 
 test('download endpoint excludes shell, auth, query, redirect and path injection syntax', () => {
-    for (const value of ['https://install.example.com', 'https://install.example.com/test/0.2.0-test.3-r2'])
+    for (const value of ['https://install.example.com', 'https://install.example.com/test/0.2.0-test.3-r3'])
         assert.equal(builder.baseUrl(value), value);
     for (const value of ['', 'http://install.example.com', 'https://user:pass@install.example.com',
         'https://install.example.com?a=b', 'https://install.example.com/#x', 'https://install.example.com:8443',

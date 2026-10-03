@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { command } = require('./host-preflight.cjs');
 const { ACCOUNTS, UNITS, inspectPostgresqlHost } = require('./postgresql-host-preflight.cjs');
-const { privateWrite, assertNoSymlinkAncestors, mergeControllerConfig } = require('./install-host.cjs');
+const { privateWrite, assertNoSymlinkAncestors, mergeControllerConfig, sudoListingDeniesAll } = require('./install-host.cjs');
 const pg = require('../../runtime/postgresql/host.cjs');
 const web = require('../../runtime/transport/web-certificates.cjs');
 const product = require('../../runtime/product/scope.cjs');
@@ -68,7 +68,7 @@ function installPostgresqlHost(options, dependencies = {}) {
             if (run('/usr/bin/id', ['-Gn', account]).trim() !== account) fail('PG_GROUP_POLICY_REJECTED');
             if (fs.existsSync(at('/usr/bin/sudo'))) {
                 const result = exec('/usr/bin/sudo', ['-n', '-l', '-U', account]);
-                if (result.status !== 1 || result.error || !/not allowed to run sudo/.test(result.stdout + result.stderr)) fail('PG_SUDO_POLICY_REJECTED');
+                if (!sudoListingDeniesAll(result, account)) fail('PG_SUDO_POLICY_REJECTED');
             }
         }
         phase = 'directories';

@@ -15,7 +15,8 @@ import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
-DELIVERY = "delivery/test-pi-0.2.0-test.3-r2"
+DELIVERY = "delivery/test-pi-0.2.0-test.3-r3"
+RELEASE_SEQUENCE = 6
 TRUST_SHA = "470dce1dec8f4a5da87339e9166aed025789ea86ab85613f2c508f5e9d434b6f"
 DER_SHA = "144e9b8328f4ad52a66617347efaae14c28ffc40011f56a7cc9a7377ec00a411"
 
@@ -86,7 +87,7 @@ def verify(packet):
     require(hashlib.sha256(der).hexdigest() == DER_SHA, "issuer DER mismatch")
     metadata = read_json(ROOT / DELIVERY / "delivery.json")
     require(preparation["licenseTrustSha256"] == TRUST_SHA, "preparation trust mismatch")
-    require(preparation["releaseId"] == metadata["releaseId"] and preparation["releaseSequence"] == 5,
+    require(preparation["releaseId"] == metadata["releaseId"] and preparation["releaseSequence"] == RELEASE_SEQUENCE,
             "release metadata mismatch")
     require(preparation["releasePublicKeySha256"] == metadata["signingPublicKeySha256"], "release trust mismatch")
     for flag in ("tokenStored", "published", "targetInstallationExecuted", "productionReleaseApproved", "fleetUpdaterImplemented"):
@@ -121,7 +122,7 @@ def verify(packet):
                 require(entry.isfile() and 0 < entry.size <= 16 * 1024**2, "release manifest entry")
                 signed_manifest = json.loads(archive.extractfile(entry).read(16 * 1024**2 + 1))
                 break
-    require(signed_manifest is not None and signed_manifest["sequence"] == 5, "release manifest missing")
+    require(signed_manifest is not None and signed_manifest["sequence"] == RELEASE_SEQUENCE, "release manifest missing")
     signed = [row for row in signed_manifest["files"] if row["path"].startswith(("runtime/", "tools/system/"))
               or row["path"] in ("tools/integration/check-runtime-architecture.cjs", "security/verify-runtime-tls.cjs")]
     values, total = {}, 0
@@ -182,7 +183,7 @@ def verify(packet):
             "pins": pins, "assets": assets, "publicTrust": {"kid": "nexowattEOS", "sha256": TRUST_SHA,
             "spkiDerSha256": DER_SHA, "ed25519Validated": True, "privateKeyPresent": False},
             "kit": {"files": len(values), "bytes": total, "allMembersReadAndCompared": True,
-                    "sourceFilesBound": len(signed), "releaseSequence": 5, "bootstrapPinsVerified": True},
+                    "sourceFilesBound": len(signed), "releaseSequence": RELEASE_SEQUENCE, "bootstrapPinsVerified": True},
             "releaseSignatureCheck": "NOT_REPEATED: manufacturer builder verifies signature; this check reads manifest data and compares source bytes",
             "command": {"exactRendererMatch": True, "pinsPresent": True, "singleHiddenTokenPrompt": True,
                         "unsafeOptionsAbsent": True, "bashSyntax": syntax},

@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "kind": "private-github-bootstrap-sudo-regression-verification",
+  "checkedAt": "2026-10-03T16:57:24.579Z",
+  "platform": "win32",
+  "node": "v24.21.0",
+  "ok": false,
+  "results": [
+    {
+      "name": "node-bootstrap",
+      "command": [
+        "node.exe",
+        "--test",
+        "--test-reporter=tap",
+        "tests/bootstrap/build-download.test.cjs",
+        "tests/bootstrap/build-github-download.test.cjs",
+        "tests/bootstrap/first-start.test.cjs",
+        "tests/bootstrap/github-publication.test.cjs"
+      ],
+      "exitCode": 0,
+      "launchError": null,
+      "stdout": {
+        "file": "raw/node-bootstrap.stdout",
+        "bytes": 7291,
+        "sha256": "86a1a7220476541362555944d135e54ebab7d437ca1e18eceb9500eec4927ae6"
+      },
+      "stderr": {
+        "file": "raw/node-bootstrap.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "node-security",
+      "command": [
+        "node.exe",
+        "--test",
+        "--test-reporter=tap",
+        "tests/security/runtime-tls.test.cjs",
+        "tests/security/sftp.test.cjs"
+      ],
+      "exitCode": 1,
+      "launchError": null,
+      "stdout": {
+        "file": "raw/node-security.stdout",
+        "bytes": 17991,
+        "sha256": "eb258c8898fa09b09afcd65c8422d1dc4fca5fb633d87bec183f16d885945bbc"
+      },
+      "stderr": {
+        "file": "raw/node-security.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "python-download",
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "tests/bootstrap/github-download.test.py"
+      ],
+      "exitCode": 0,
+      "launchError": null,
+      "stdout": {
+        "file": "raw/python-download.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "raw/python-download.stderr",
+        "bytes": 3692,
+        "sha256": "dbcb31d1b1490058a12cc45292d00b7b4c571ae66b7574a660f708d74b7512c7"
+      }
+    },
+    {
+      "name": "python-host-preparation",
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "tests/bootstrap/prepare-host.test.py"
+      ],
+      "exitCode": 0,
+      "launchError": null,
+      "stdout": {
+        "file": "raw/python-host-preparation.stdout",
+        "bytes": 229,
+        "sha256": "b93de80ac91d13130495c6084288574c3ff85a1eea0b7c552e3dade3870197f9"
+      },
+      "stderr": {
+        "file": "raw/python-host-preparation.stderr",
+        "bytes": 4729,
+        "sha256": "850e11fe0a7ebbb715d931eb1386968271bd5ae3cf3bdcbe6f30b1c2b62027fb"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "path": "tools/bootstrap/build-github-download.cjs",
+      "bytes": 8464,
+      "sha256": "423cd75468c321f40096e8bc2898e3c15dd5021089e94089c63b179f8844828c"
+    },
+    {
+      "path": "tools/bootstrap/github-download.py",
+      "bytes": 14631,
+      "sha256": "89194c388e023bad6dca7347a132d24f45927d3710a635cf7ba9e4ea491177c6"
+    },
+    {
+      "path": "tools/bootstrap/prepare-host.py",
+      "bytes": 29629,
+      "sha256": "77ba3b5b5883e71f2dd8403414874b8f452f15489ec22d2036551a20e35905cd"
+    },
+    {
+      "path": "tools/bootstrap/build-download.cjs",
+      "bytes": 11165,
+      "sha256": "12790e3935bdaf781fb33069c5badd5273dd646dcb5da523b20e3796033efe98"
+    },
+    {
+      "path": "tools/bootstrap/first-start.cjs",
+      "bytes": 12113,
+      "sha256": "a584ee08d6a69b09297282a43087496a4808758f976b9c1c64e24f11b0875557"
+    },
+    {
+      "path": "tools/system/install-host.cjs",
+      "bytes": 15146,
+      "sha256": "b31a0e5f8e75b9e9b51069a1660c16b4b322a69be626ccb42f054849bd8c6403"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "bytes": 15606,
+      "sha256": "9820c9ad49c51c2d559b7809a23144c626df88bb4750628b3937c5f4de965062"
+    },
+    {
+      "path": "tools/system/install-from-checkout.cjs",
+      "bytes": 7449,
+      "sha256": "34ee3e258f1f074556d641b2b8afd292a7136935bb1450dc42935a4c0eee2bc1"
+    },
+    {
+      "path": "tools/integration/verify-github-ready.py",
+      "bytes": 13501,
+      "sha256": "609155b1cb72855dc34be164e23b1db146ae3ebd82c376161e4b97511bee000d"
+    },
+    {
+      "path": "tools/integration/verify-private-github-blobs.py",
+      "bytes": 4879,
+      "sha256": "4b4eb1534794210e23f9d253602e8c190945bad0e511a7262b7a887eb3951877"
+    },
+    {
+      "path": "tools/integration/record-github-sudo-fix.cjs",
+      "bytes": 5309,
+      "sha256": "3ef6b13b46b3f9be7b1ff0f9e6626e8e1008f5e3a5825efd8b8e3f358b10cab9"
+    },
+    {
+      "path": "tests/bootstrap/build-download.test.cjs",
+      "bytes": 6163,
+      "sha256": "403a423f02254c8403f8b2a6720ddc24b1c96e0af3eccb33df0513a0b562d01f"
+    },
+    {
+      "path": "tests/bootstrap/build-github-download.test.cjs",
+      "bytes": 5577,
+      "sha256": "4b5829dbbb89bd5deb08430959589be17cd7e295ff02ea32a687a253af3b8019"
+    },
+    {
+      "path": "tests/bootstrap/first-start.test.cjs",
+      "bytes": 15150,
+      "sha256": "b6f07d4141c7b59b535bca9a192398372af051a0d41b16e1bc351dc5435cdbb6"
+    },
+    {
+      "path": "tests/bootstrap/github-download.test.py",
+      "bytes": 21149,
+      "sha256": "64b9c5f5eeba3998dd3f25a7bd5564ddcee7bcc0642433f9513a008fc2363a7c"
+    },
+    {
+      "path": "tests/bootstrap/prepare-host.test.py",
+      "bytes": 26674,
+      "sha256": "f4f076c5d0c54e2b0f5eeabfbd06ac732a89796f579045e35450ffe1ac236db2"
+    },
+    {
+      "path": "tests/bootstrap/github-publication.test.cjs",
+      "bytes": 12362,
+      "sha256": "37ef0a0df52a78d46169dbcb8c8863627cc9c09c8c3c22fe0c83c530d3a89205"
+    },
+    {
+      "path": "tests/system/sudo-policy.test.cjs",
+      "bytes": 9789,
+      "sha256": "edc8118f298913b42591aaf9a4b2e851ff76a306dc19c9f3be51d0751d64730d"
+    },
+    {
+      "path": "tests/security/runtime-tls.test.cjs",
+      "bytes": 8992,
+      "sha256": "efcc8fc89cdc01c7e87af6974fd0149d1cf2cad13b357a42eea5a1eb2dcb7481"
+    },
+    {
+      "path": "tests/security/sftp.test.cjs",
+      "bytes": 7552,
+      "sha256": "1312d6fef84a828997e1bc21cde58357f711a7d92e3e418d4fc5343666a3b75e"
+    }
+  ],
+  "sudoAndRevisionRegression": "../installable-test3-r3-20261003/revision-regression.command.json",
+  "manufacturerBuild": "../installable-test3-r3-20261003/build-verification.json",
+  "actualManufacturerPacket": "delivery/bootstrap-test3-r3/preparation.json",
+  "actualPacketVerification": "artifact-verification.json",
+  "manufacturerLicenseTrustProvenance": "../github-bootstrap-ready-20261003/license-trust-provenance.json",
+  "priorUserPiFailure": "user-pi-observation.json",
+  "runtimeRevision": 3,
+  "releaseSequence": 6,
+  "windowsPosixBaselineObservation": {
+    "command": [
+      "node",
+      "--test",
+      "tests/postgresql/host-install.test.cjs"
+    ],
+    "phase": "before sudo source change",
+    "pass": 13,
+    "fail": 4,
+    "skipped": 1,
+    "rawLogAvailable": false,
+    "source": "observed tool output; not reconstructed as a raw log",
+    "failureScope": "existing POSIX toolTrust/mode/ownership fixtures on Windows; new sudo command-fixture models metadata explicitly"
+  },
+  "unavailableLinuxChecks": {
+    "wslInstalled": false,
+    "nativeSudoExecuted": false,
+    "shellPolicySuites": [
+      "tests/security/host-policy.test.py",
+      "tests/security/wrapper.test.py",
+      "tests/security/node-update-log.test.py",
+      "tests/security/profile.test.py"
+    ],
+    "status": "NOT_EXECUTED: require native /bin/bash, Linux paths and POSIX semantics unavailable on this Windows host"
+  },
+  "targetInstallationExecutedByAgent": false,
+  "completedPiInstallation": false,
+  "actualRecoveryExecuted": false,
+  "nativeDebianCaPathTested": false,
+  "browserTested": false,
+  "hardwareAcceptance": "OPEN",
+  "productionReleaseApproved": false,
+  "fleetUpdaterImplemented": false
+}

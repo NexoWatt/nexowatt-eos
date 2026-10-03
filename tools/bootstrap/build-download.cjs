@@ -6,7 +6,7 @@ const path = require('node:path');
 const cp = require('node:child_process');
 const { inventory, readFileLimited, sha256, trustedDirectory } = require('../../runtime/release/bundle.cjs');
 const { verifyTestArchive } = require('../integration/create-test-archive.cjs');
-const { digestArchive, deliveryIdentity, DELIVERY_DIRECTORY } = require('../system/install-from-checkout.cjs');
+const { digestArchive, deliveryIdentity, DELIVERY_DIRECTORY, DELIVERY_REVISION, RELEASE_SEQUENCE } = require('../system/install-from-checkout.cjs');
 const { validatePublicKeys } = require('../../components/admin/build/lib/eosLicenseCore.js');
 const ROOT = path.resolve(__dirname, '../..');
 const NODE_ARCHIVE = 'node-v24.21.0-linux-arm64.tar.xz';
@@ -95,7 +95,7 @@ function build(args) {
         keyBytes, args['--release-public-key-sha256'], 'linux-arm64');
     const archiveFile = path.join(deliveryDir, delivery.archive);
     const checked = verifyTestArchive({ archivePath: archiveFile, publicKey: keyBytes, expectedReleaseId: delivery.releaseId, platform: 'linux-arm64' });
-    if (checked.manifest.sequence !== 5 || checked.archiveSha256 !== delivery.sha256 || checked.archiveBytes !== delivery.bytes)
+    if (checked.manifest.sequence !== RELEASE_SEQUENCE || checked.archiveSha256 !== delivery.sha256 || checked.archiveBytes !== delivery.bytes)
         fail('DOWNLOAD_RELEASE_BINDING');
     const nodeFile = path.join(ROOT, 'delivery/test-pi-0.2.0-test.1', NODE_ARCHIVE);
     if (digestArchive(nodeFile) !== NODE_SHA256) fail('DOWNLOAD_NODE_HASH');
@@ -142,7 +142,7 @@ function build(args) {
     const command = installCommand(url, script);
     fs.writeFileSync(path.join(output, 'INSTALL_COMMAND.txt'), command + '\n', { flag: 'wx' });
     const report = { schemaVersion: 1, kind: 'eos-test-download-preparation', baseUrl: url,
-        releaseId: checked.releaseId, releaseSequence: 5, deliveryRevision: 2, assets,
+        releaseId: checked.releaseId, releaseSequence: RELEASE_SEQUENCE, deliveryRevision: DELIVERY_REVISION, assets,
         bootstrapSha256: sha256(script), sourceFilesBound, kit,
         licenseTrustSha256: sha256(trust), releasePublicKeySha256: delivery.signingPublicKeySha256,
         published: false, targetInstallationExecuted: false, hardwareAcceptance: 'OPEN',

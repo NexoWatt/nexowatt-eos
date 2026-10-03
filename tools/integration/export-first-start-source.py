@@ -16,7 +16,7 @@ import zipfile
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = "NexoWatt_EOS_dev9_FULL_PRIVATE_GITHUB_APT_FIX_2026-10-03"
+NAME = "NexoWatt_EOS_dev9_FULL_PRIVATE_GITHUB_SUDO_FIX_R3_2026-10-03"
 PRIVATE_PEM = re.compile(rb'-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY-----[\r\n]+[A-Za-z0-9+/=\r\n]{32,}')
 
 

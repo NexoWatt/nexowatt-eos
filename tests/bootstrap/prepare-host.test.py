@@ -21,7 +21,7 @@ SPEC.loader.exec_module(subject)
 
 
 def config():
-    return {"schemaVersion": 1, "baseUrl": "https://downloads.example.com/eos/test3-r2",
+    return {"schemaVersion": 1, "baseUrl": "https://downloads.example.com/eos/test3-r3",
             "deliveryDirectory": subject.DELIVERY,
             "assets": [{"name": name, "bytes": 1, "sha256": subject.NODE_SHA256 if name == subject.NODE_ASSET else "a" * 64}
                        for name in subject.ASSETS]}

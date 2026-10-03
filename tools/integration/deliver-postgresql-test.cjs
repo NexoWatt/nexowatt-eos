@@ -10,7 +10,7 @@ const { digestArchive, DELIVERY_DIRECTORY, DELIVERY_REVISION, RELEASE_SEQUENCE }
 const product = require('../../runtime/product/scope.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const ARCHIVE = 'eos-0.2.0-test.3-linux-arm64.tar.gz';
-const REPORT = path.join(ROOT, 'reports/integration/installable-test3-r2-20261003');
+const REPORT = path.join(ROOT, 'reports/integration/installable-test3-r3-20261003');
 function deliver(directory) {
     trustedDirectory(ROOT);
     const base = trustedDirectory(path.resolve(directory));

@@ -98,9 +98,9 @@ print(json.dumps({'files':len(rows),'bytes':total,'readbackVerified':True,'sourc
                   'licenseTrustSha256':expected_config['licenseTrustSha256'],'sequence':manifest['sequence']}))
 `;
 
-test('real private GitHub publication builder binds r2, all assets and complete source kit with ephemeral public fixture trust',
+test('real private GitHub publication builder binds r3, all assets and complete source kit with ephemeral public fixture trust',
     { timeout: 300000 }, t => {
-        assert.equal(DELIVERY_DIRECTORY, 'delivery/test-pi-0.2.0-test.3-r2');
+        assert.equal(DELIVERY_DIRECTORY, 'delivery/test-pi-0.2.0-test.3-r3');
         assert.ok(fs.existsSync(BASH), 'real Bash is required; syntax checks must not be claimed from string matching');
         const suffix = `${Date.now()}-${crypto.randomBytes(8).toString('hex')}`;
         const name = `github-fixture-${suffix}`;
@@ -153,7 +153,7 @@ test('real private GitHub publication builder binds r2, all assets and complete 
         assert.deepEqual(report.prepareHost, manifest.prepareHost);
         assert.deepEqual(report.assets, manifest.assets);
         assert.equal(report.releaseId, delivery.releaseId);
-        assert.equal(report.releaseSequence, 5);
+        assert.equal(report.releaseSequence, 6);
         assert.equal(report.licenseTrustSha256, sha256(trust));
         assert.deepEqual(fs.readFileSync(path.join(output, 'license-public-trust.json')), trust);
         for (const flag of ['tokenStored', 'published', 'targetInstallationExecuted', 'productionReleaseApproved', 'fleetUpdaterImplemented'])
@@ -169,7 +169,7 @@ test('real private GitHub publication builder binds r2, all assets and complete 
         assert.equal(report.sourceFilesBound, verified.sourceFilesBound);
         assert.ok(verified.sourceFilesBound > 0);
         assert.equal(verified.licenseTrustSha256, sha256(trust));
-        assert.equal(verified.sequence, 5);
+        assert.equal(verified.sequence, 6);
 
         const command = fs.readFileSync(path.join(output, 'INSTALL_COMMAND.txt'), 'utf8').trimEnd();
         assert.equal(command, builder.installCommand(report.driver, report.manifest));
