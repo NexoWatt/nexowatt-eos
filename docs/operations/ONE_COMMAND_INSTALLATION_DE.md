@@ -6,13 +6,22 @@ Ein Installationsblock in einer Root-Terminalsitzung genügt; der GitHub-Token
 wird einmal verdeckt abgefragt. Git muss auf dem Pi nicht installiert sein.
 Eigenes Webhosting, npm-Zugang und manuell erstellte Setup-Dateien entfallen.
 
-**Aktueller Status:** Ein öffentlicher NWL2-Trustexport mit der Schlüsselkennung
-`nexowattEOS` liegt vor und entspricht dem Format des vorhandenen Generators.
-Seine Zuordnung zum gewünschten Herstellerschlüssel ist noch vom Nutzer zu
-bestätigen. Eine gültige Schlüsselstruktur allein belegt diese Zuordnung nicht.
-Der Einstieg wird deshalb noch nicht als abschließend startbereit ausgewiesen.
-Die vollständige Pi-Installation, systemd-/PostgreSQL-Abnahme und sämtliche
-Hardwaretests sind **OFFEN, nicht ausgeführt**.
+**Aktueller Status:** Der öffentliche NWL2-Prüfschlüssel mit der Schlüsselkennung
+`nexowattEOS` wurde über den normalen öffentlichen Trustexport des vorhandenen
+lokalen Lizenzgenerators zugeordnet und in
+[`delivery/bootstrap-test3-r2`](../../delivery/bootstrap-test3-r2/)
+eingebunden. Das neue Manifest ist für den Installationsversuch freigeschaltet
+(`ready: true`). Auf dem Pi ist keine manuelle Schlüsseldatei mehr erforderlich.
+Die vollständige Pi-Installation, systemd-/PostgreSQL-/TLS-Abnahme, der
+Browser-Gesamtlauf, eine reale Lizenzaktivierung, Reboot und sämtliche
+Hardwaretests sind weiterhin **OFFEN, nicht ausgeführt**.
+
+Bei `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING` wurde der frühere, fest
+gebundene Installationsblock ausgeführt. Dieser bleibt unverändert gesperrt und
+beendet sich vor der Paketinstallation. Den **gesamten Block** erneut aus der
+[aktuellen README des Testzweigs](https://github.com/NexoWatt/nexowatt-eos/blob/feature/eos-first-start-20261002/README.md)
+kopieren und in der SSH-Root-Sitzung ausführen. Einzelne Hashes oder Dateien auf
+dem Pi müssen dafür nicht geändert werden.
 
 ## So läuft der Teststart ab
 
@@ -24,7 +33,7 @@ Hardwaretests sind **OFFEN, nicht ausgeführt**.
    bereithalten. Bei einem fein abgestuften Token: Ressourceninhaber `NexoWatt`,
    nur dieses Repository und **Contents: Read-only** auswählen. Je nach
    Organisationsrichtlinie muss der Token zuerst freigegeben sein.
-3. Den vollständigen aktuellen Installationsblock aus der **[README](../../README.md)**
+3. Den vollständigen aktuellen Installationsblock aus der **[README des Testzweigs](https://github.com/NexoWatt/nexowatt-eos/blob/feature/eos-first-start-20261002/README.md)**
    kopieren und einmal in die Root-Sitzung einfügen. Den Token erst bei der
    verdeckten Abfrage eingeben; keine Tokenwerte in den Befehl einsetzen.
 4. Die automatische Vorbereitung und Installation abwarten. Nach erfolgreichem
@@ -107,8 +116,15 @@ Der öffentliche Trustexport wird zusammen mit dem kleinen Installerkit im
 privaten Repository bereitgestellt. Er enthält ausschließlich die Zuordnung
 `kid` zu öffentlichen Ed25519-SPKI-Schlüsseln; der private Herstellerschlüssel
 und der Generator-Tresor werden weder veröffentlicht noch auf den Pi übertragen.
-Der bestätigte Export muss zum `kid` der später ausgestellten NWL2-Lizenzen
-passen. Den Lizenztrust-Hash und den Releaseschlüssel-Pin der
+Der zugeordnete Export muss zum `kid` der später ausgestellten NWL2-Lizenzen
+passen. Für diese Lieferung wurde mit `node cli.js trust <Ausgabedatei>` ein
+neuer öffentlicher Export des vorhandenen lokalen Generators erstellt. Er ist
+bytegleich mit dem zuvor vorliegenden Export aus dem Downloadordner: 140 Bytes,
+SHA-256 `470dce1dec8f4a5da87339e9166aed025789ea86ab85613f2c508f5e9d434b6f`.
+Der Vorgang exportiert ausschließlich öffentliche Prüfdaten; es wurden weder
+ein privater Schlüssel exportiert noch eine neue Lizenz ausgestellt. Die
+Zuordnung zum lokalen Generator ersetzt keine reale Lizenzprüfung auf dem Pi.
+Bei einer späteren Lieferung den Lizenztrust-Hash und den Releaseschlüssel-Pin der
 [Revision-2-Lieferung](../../delivery/test-pi-0.2.0-test.3-r2/README.md) über den
 Hersteller-Übergabeweg bestätigen.
 
@@ -146,5 +162,6 @@ Laufzeitverzeichnis ist kein Updateverfahren. Vollständige Pi-Installation,
 systemd, Browser-Gesamtlauf, Reboot, Recovery und Hardwareabnahme bleiben bis
 zur tatsächlichen Ausführung **OFFEN**.
 
-Prüfbelege: [Bootstrap-Prüfbericht](../../reports/integration/bootstrap-20261003/README.md)
+Prüfbelege: [Freigeschalteter privater GitHub-Einstieg](../../reports/integration/github-bootstrap-ready-20261003/README.md),
+[Bootstrap-Prüfbericht](../../reports/integration/bootstrap-20261003/README.md)
 und [signierte Revision 2](../../reports/integration/installable-test3-r2-20261003/README.md).

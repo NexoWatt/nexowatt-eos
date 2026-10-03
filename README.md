@@ -1,21 +1,26 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# EOS-Testinstallation auf einem neuen Pi
+# EOS per SSH auf einem neuen Pi installieren
 
-Der vorbereitete Installationsblock steht hier zum Kopieren. Er verwendet euer
-privates Repository und fragt den GitHub-Token einmal verdeckt ab. Git muss auf
-dem Pi nicht installiert sein.
+**Der Testinstaller enthält jetzt den öffentlichen Prüfschlüssel eurer vorhandenen
+EOS-Lizenzverwaltung.** Auf dem Pi genügt die einmalige verdeckte Eingabe des
+GitHub-Tokens. Git und eine manuelle Übertragung der Schlüsseldatei sind nicht nötig.
 
-**Noch gesperrt: Die Zuordnung von `Downloads/license-trust.json` zu eurer
-aktuellen Lizenzverwaltung ist noch zu best?tigen. Der unten gebundene Stand
-bricht deshalb vor Paketinstallation ab. Er ist noch kein startbereiter
-Installationsbefehl.** Nach der einmaligen Herstellerzuordnung wird hier der
-fertige Block mit eingebundenem ?ffentlichen Pr?fschl?ssel bereitgestellt;
-auf neuen Ger?ten ist dann keine Schl?sseleingabe n?tig.
+1. Per SSH am frischen Debian-13-/Raspberry-Pi-OS-13-Pi mit **ARM64** anmelden.
+   Falls die Sitzung noch nicht als `root` läuft, zuerst `sudo -i` ausführen.
+2. Den **gesamten folgenden Block** zusammen kopieren und in die SSH-Sitzung einfügen.
+   Den GitHub-Token erst bei der verdeckten Abfrage eingeben und Enter drücken.
+   Er benötigt Leserecht auf `NexoWatt/nexowatt-eos`.
+3. Die automatische Installation abwarten und anschließend die im Terminal
+   angezeigte HTTPS-Adresse für den Erststart verwenden.
 
-F?r den sp?teren Test: frisches Debian 13/Raspberry Pi OS 13 **ARM64**, eine
-Root-PuTTY-Sitzung (gegebenenfalls zuerst `sudo -i`), `curl`, `python3` und
-ein GitHub-Token mit Leserecht auf `NexoWatt/nexowatt-eos`. Den gesamten Block
-zusammen kopieren; den Token erst bei der verdeckten Abfrage eingeben.
+Das Basisabbild benötigt `bash`, `curl`, `python3`, laufendes systemd, eine
+korrekte Uhr und mindestens 6 GiB freien Platz. Node und PostgreSQL werden
+bei Bedarf automatisch vorbereitet. Vorhandene EOS-Daten oder PostgreSQL-
+Cluster werden nicht überschrieben.
+
+**Bei `BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING`:** Du verwendest noch
+den alten, fest gebundenen Befehl. Er bleibt gesperrt. Ersetze ihn vollständig
+durch diesen aktuellen Block; ändere keine Hashes oder Manifestdateien von Hand.
 
 ```bash
 /bin/bash <<'EOS_INSTALL'
@@ -38,21 +43,26 @@ printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PA
 printf '%s  %s\n' '6faf6bf09aaaf3faf92a1e64d49f8ba822dbb3ea6dd10fdee4c8f8617a5c41bc' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
 exec 3< <(printf '%s\n' "$eos_token")
 unset eos_token
-exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 6598247a5d6c58cc5ea76ef3eb39fb3eebb7bc35 --manifest-sha256 82723dd9c8fa625dfef3d11461855c6242a3cc0af3d050dd5eb5b2e51ac78fc2
+exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 5e7d8cf35f503fbd6e03b49bfe2cebcad682a04d --manifest-sha256 ae63c4a4dce5d96a28364a37e871ed88c0c051607651ce7d78a36a9aeb541e00
 EOS_INSTALL
 ```
 
-Nach einer erfolgreichen Installation zeigt das Terminal die HTTPS-Adresse
-und den lokalen Einrichtungscode. Die Ger?te-CA im Browser vertrauensw?rdig
-importieren, dann den Assistenten ?ffnen. Die **UUID ist vor Lizenzaktivierung
-und Passwortvergabe sichtbar und kopierbar**. Benutzerpassw?rter werden im
-Frontend vergeben; Lizenzbereiche und Kontingente bleiben serverseitig gepr?ft.
+Nach erfolgreichem Start zeigt das Terminal die konkrete Browseradresse,
+den öffentlichen CA-Pfad mit Fingerabdruck und den kurzlebigen Einrichtungscode.
+Die Geräte-CA über den vertrauenswürdigen Zugang übernehmen und im Browser
+vertrauen. Dann den Assistenten öffnen und den Einrichtungscode eingeben.
+Die **UUID ist vor Lizenzaktivierung und Passwortvergabe sichtbar und kopierbar**.
+Die dafür erzeugte Lizenz im Assistenten eintragen; Benutzerpasswörter werden
+ausschließlich im Frontend vergeben. Lizenzbereiche und Kontingente bleiben
+serverseitig geprüft.
 
-[Anleitung und Voraussetzungen](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ?
-[Sicherheitsgrenzen](docs/security/PRIVATE_GITHUB_BOOTSTRAP_DE.md) ?
-[Pr?fbelege](reports/integration/github-bootstrap-20261003/README.md).
-**Vollst?ndige Pi-Installation und Hardwaretests: OFFEN, nicht ausgef?hrt.**
-Dieser Einstieg installiert neu; er ist kein Flotten-Updater.
+[Anleitung und Voraussetzungen](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
+[Sicherheitsgrenzen](docs/security/PRIVATE_GITHUB_BOOTSTRAP_DE.md) ·
+[Prüfschlüsselzuordnung und Paketnachweise](reports/integration/github-bootstrap-ready-20261003/README.md).
+
+**Vollständige Pi-Installation und Hardwaretests: OFFEN, nicht ausgeführt.**
+Dieser Einstieg ist für die Testumgebung; Anlagensteuerung bleibt gesperrt.
+Er ist kein Flotten-Updater.
 
 <!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
 

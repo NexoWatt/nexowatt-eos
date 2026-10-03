@@ -6,6 +6,24 @@ separaten SHA-256. Ein ersetzter README-Befehl wäre selbst ein neuer
 Vertrauensanker; ein Hash allein authentifiziert keine beliebige Downloadquelle.
 GitHub-/Repository-Zugriffsrechte und Herstellerfreigabe bleiben deshalb relevant.
 
+Die aktuelle Testlieferung liegt unter `delivery/bootstrap-test3-r2` und bindet
+den öffentlichen NWL2-Trustexport des vorhandenen lokalen Lizenzgenerators ein.
+Der normale Aufruf `node cli.js trust <Ausgabedatei>` erzeugte einen neuen
+öffentlichen Export mit `kid: nexowattEOS`, bytegleich mit der zuvor vorliegenden
+Datei aus dem Downloadordner: 140 Bytes, SHA-256
+`470dce1dec8f4a5da87339e9166aed025789ea86ab85613f2c508f5e9d434b6f`.
+Damit wurde die Zuordnung über den Generator festgestellt; die Prüfung beruht
+nicht nur auf einem passenden Dateiformat. Dafür wurden kein privater Schlüssel
+exportiert, keine Passphrase abgefragt und keine Lizenz ausgestellt.
+
+Das neue Manifest enthält `ready: true`. Der frühere Einstieg mit fehlendem
+Trust bleibt als unverändertes historisches Paket gesperrt. Seine Meldung
+`BOOTSTRAP_MANUFACTURER_LICENSE_TRUST_MISSING` tritt vor der Paketinstallation
+auf. Betroffene Nutzer ersetzen den gesamten kopierten Block durch den aus der
+[aktuellen README des Testzweigs](https://github.com/NexoWatt/nexowatt-eos/blob/feature/eos-first-start-20261002/README.md).
+Der öffentliche Prüfschlüssel wird im Installerkit mitgeliefert; eine manuelle
+Schlüsselübernahme oder Abschaltung der Prüfung auf dem Pi ist nicht nötig.
+
 Der Loader akzeptiert nur ein exakt strukturiertes, erneut doppelt gehashtes
 Manifest für `NexoWatt/nexowatt-eos` und die feste test.3-Revision 2. Er lädt
 nur die drei bekannten Datenarchive und den gebundenen Vorbereitungscode.
@@ -36,13 +54,19 @@ Vorhandene EOS-Daten und PostgreSQL-Cluster bleiben geschützt; ein abgebrochene
 Teillauf ist zu prüfen und wird nicht automatisch überschrieben.
 
 Der GitHub-PAT ersetzt weder den öffentlichen NWL2-Lizenzprüfschlüssel noch eine
-Gerätelizenz. Die Schlüsselzuordnung ist eine Herstellerentscheidung vor dem
-Paketbau; auf dem Pi wird sie nicht erneut erfragt. UUID-Anzeige, Frontendpasswort,
-Lizenzrechte und technische Steuerungssperren bleiben bestehen.
+Gerätelizenz. Die Schlüsselzuordnung erfolgt vor dem Paketbau; auf dem Pi wird
+sie nicht erneut erfragt. Die belegte Herkunft aus dem lokalen Generator ist
+noch kein Nachweis einer echten signierten Lizenzannahme auf dem Zielgerät.
+UUID-Anzeige, Frontendpasswort, Lizenzrechte und technische Steuerungssperren
+bleiben bestehen.
 
 Die Tests verwenden isolierte Daten und prüfen auch falsche Hashes, Größen,
 Weiterleitungen, Authfehler, manipulierte Helfer, fehlenden Herstellertrust,
-Tokenweitergabe und geschützte Dateitypen. Eine vollständige Neuinstallation,
-Abbruch-/Reboottest, Browser-CA-Vertrauen, reale Lizenzannahme und sämtliche
+Tokenweitergabe und geschützte Dateitypen. Eine vollständige Pi-Neuinstallation,
+reale systemd-/PostgreSQL-/TLS-Abnahme, Abbruch-/Reboottest,
+Browser-Gesamtlauf einschließlich CA-Vertrauen, reale Lizenzannahme und sämtliche
 Geräte-/Hardwaretests bleiben **OFFEN**. Neuinstallation ist kein Flottenupdate;
 eine dauerhafte Signatur-/Update-/Rollbackkette wird damit nicht bereitgestellt.
+
+Die Nachweise zur aktuellen Lieferung stehen im
+[Prüfbericht zum freigeschalteten GitHub-Einstieg](../../reports/integration/github-bootstrap-ready-20261003/README.md).
