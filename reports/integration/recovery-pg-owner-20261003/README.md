@@ -2,7 +2,8 @@
 
 Stand: 03.10.2026. Befundkennung: **NW-EOS-261003-RECOVERY-PG-OWNER**.
 Status: Ursache bestätigt; Quellkorrektur und lokale Nachprüfung bestanden.
-Veröffentlichung und Zielabnahme werden gesondert nachgewiesen.
+Der neue Einstieg ist veröffentlicht und vollständig zurückgelesen; die
+Zielabnahme steht aus. [Aktuelle Pins und CI](publication.json).
 Betroffen: `tools/bootstrap/recover-sudo-abort.py` und der öffentliche
 Installationsstart mit dem darin eingebetteten Recovery-Helfer.
 
@@ -106,8 +107,11 @@ Reale lokale Verzeichnis-/Deskriptoroperationen und die Archivsignaturprüfung
 sind von simulierten Eigentümern, Konten und Hostbefehlen zu unterscheiden.
 Es wurden keine Konten auf dem Pi geändert.
 
-Der neue Einstieg wird exklusiv unter
-`delivery/public-entry-test3-r4-recovery2` erzeugt. Das unveränderte R4-Archiv
+Der neue Einstieg wurde exklusiv unter
+`delivery/public-entry-test3-r4-recovery2` erzeugt und auf Commit
+`23e1598223b13eb83fac0860079db4d0964f99ce` veröffentlicht. Die vier öffentlichen
+Downloads stimmen vollständig mit Größe, SHA-256 und Git-Blob-Pins überein
+([Rücklesen](public-network-readback.json)). Das unveränderte R4-Archiv
 wurde dabei erneut vollständig einschließlich Signatur geprüft. Die exakten
 eingebetteten Vorbereiter-/Recoverybytes, die Konfiguration und Bash-Syntax
 wurden zusätzlich geprüft. [Maschinenlesbarer Prüfbeleg](verification.json).
@@ -120,6 +124,14 @@ Nachladen bestand die vollständige Suite; der erste Lauf ist als
 der Ausführungs-Sandbox hängen gebliebener Node-/Bash-Testlauf wurde abgebrochen;
 der erfolgreiche Lauf mit erlaubten Kindprozessen steht in `raw/public-entry.tap`.
 Dies sind lokale Testumgebungsereignisse, keine weiteren Pi-Fehler.
+
+Die drei Jobs der [EOS-CI 37147531267](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37147531267)
+bestanden auf genau diesem Quellcommit. Der Produktjob unter Node 24.21.0 /
+Linux x64 meldet 178 Node-, 66 Root-Fixture- und 94 Python-Prüfungen; keine
+fehlgeschlagen oder übersprungen. Darin enthalten sind die 14 neuen Fälle.
+[Rohbeleg](raw/github-product-success.log). Die alte Upstream-Plattform-CI und
+CodeQL sind separate Prüfungen; daraus wird kein vollständiges grünes
+Repository- oder Produktionsurteil abgeleitet.
 
 **Native Recovery auf dem Nutzer-Pi, anschließende Vollinstallation,
 Browser-Ersteinrichtung, Reboot und Hardware-/Anlagenbetrieb sind weiterhin

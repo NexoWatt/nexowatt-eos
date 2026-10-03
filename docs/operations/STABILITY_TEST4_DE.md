@@ -2,7 +2,9 @@
 
 Stand: 03.10.2026. Ziel: isolierter Debian-13-/Raspberry-Pi-OS-13-Host, ARM64,
 systemd und ausreichend freier Speicher. Keine laufende Kundenanlage migrieren.
-Die tatsächliche Pi-Abnahme ist noch offen.
+Die tatsächliche Pi-Abnahme ist noch offen. Der Nutzerlauf mit dem ursprünglichen
+öffentlichen Einstieg scheiterte an `RECOVERY_PATH_OWNER`. Einstiegsrevision 2
+behebt dessen bestätigte PostgreSQL-Eigentümerprüfung; der native Nachtest steht aus.
 
 ## Installation
 
@@ -28,6 +30,27 @@ Bereitstellung und schaltet den eng begrenzten Wiederherstellungshelfer vor.
 Er prüft Version, Dateien, Konten, Dienste und fehlende Nutzdaten. Nur der exakt
 bekannte Zustand wird in Quarantäne erhalten; andere Zustände werden abgewiesen.
 Weder Konto-/Datenlöschung noch eine allgemeine Reset-/Force-Funktion existieren.
+
+## Korrektur des gemeldeten Recovery-Abbruchs
+
+Der aktuelle README-Befehl lädt `public-entry-test3-r4-recovery2` aus einem neuen
+festen Commit. Nur dieser Einstieg enthält die Korrektur. Der alte Befehl mit
+Installer-SHA-256 `f6ad2f72…` bleibt ein historischer Beleg und lädt weiterhin die
+alte Prüfung. Das signierte Laufzeitpaket bleibt Revision 4 / Sequenz 7.
+
+Auf dem diagnostizierten Test-Pi den neuen vollständigen README-Befehl einmal
+verwenden. Eigentümer der PostgreSQL-Verzeichnisse nicht manuell umstellen und
+keine R2-Dateien oder Konten entfernen. Der Helfer verifiziert das tatsächliche
+lokale `postgres`-Konto; dessen zusätzliche Gruppe `ssl-cert` ist zulässig.
+Die beiden Containerverzeichnisse müssen weiterhin echte, leere Verzeichnisse
+mit sicheren Rechten und root-geschützten Vorfahren sein. Eine leere Ausgabe
+von `pg_lsclusters` allein genügt dafür nicht.
+
+Erwarteter Verlauf: vollständige R2-Prüfung, Ausgabe des geschützten
+Sicherungsverzeichnisses, Erhalt der ursprünglichen numerischen Kontoidentität,
+anschließend normale R4-Vorbereitung. Bei erneutem Abbruch Fehlercode und
+Ausgabe melden. Eine bereits teilweise durchgeführte Sicherung wird nicht
+blind fortgesetzt. [Befund, Tests und Pins](../../reports/integration/recovery-pg-owner-20261003/README.md).
 
 ## Ersteinrichtung
 

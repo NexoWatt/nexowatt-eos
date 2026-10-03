@@ -7,6 +7,12 @@ und SBOM. Autorisierte Änderungen erfolgen gemäß `AGENTS.md` auf `main`.
 
 ## Ergebnis und Grenzen
 
+**Zielrückmeldung / Einstiegskorrektur:** Der ursprüngliche öffentliche Einstieg
+scheiterte auf dem Nutzer-Pi an `RECOVERY_PATH_OWNER`. Der [neue, separat
+gebundene Einstieg 2](../recovery-pg-owner-20261003/README.md) korrigiert die
+Prüfung leerer PostgreSQL-Verzeichnisse. R4-Runtime und App-SBOM bleiben
+unverändert. [Aktueller Veröffentlichungsnachweis](../recovery-pg-owner-20261003/publication.json).
+
 **Aktualisierung:** R4 ist gebaut, veröffentlicht und zusammen mit dem
 tokenfreien öffentlichen Download vollständig zurückgelesen. Der konkrete
 [Veröffentlichungsnachweis](publication.json) nennt den Produktquellstand,
@@ -33,6 +39,7 @@ abgenommene Anlagenbefehle, zusätzliche Adapter und JavaScript bleiben wirksam.
 | EOS-STAB-20261003-03 | Sicher ausgegebene Installerfehler verloren die bereits ermittelte Installationsphase. | Elf feste Phasen im Fehlerbericht; unbekannte Werte bleiben unterdrückt. | 16 isolierte Tests bestanden. |
 | EOS-STAB-20261003-04 | Grüne Security-CI deckte zentrale Bootstrap-/Onboarding-/PG-/Adapterkanalpfade nicht ab; runtime/components fehlten im Trigger. | Explizite zusätzliche EOS-Vertragstests, korrigierte Trigger und Ziel-Node-Version. Bestehende Gates bleiben erhalten. | Lokale Ergebnisse und neuer CI-Lauf getrennt im CI-Bericht. |
 | EOS-STAB-20261003-05 | Frischinstallation und bereits diagnostizierter R2-Abbruch verlangten unterschiedliche Einstiege. | Ein generierter Kopierblock; nur bei vorhandener Bereitstellung wird der separat gepinnte, eng begrenzte R2-Recoveryhelfer vorgeschaltet. | Shell-/Pin-/Recovery-Vertragstests; tatsächliche Ziel-Recovery offen. |
+| EOS-STAB-20261003-06 / NW-EOS-261003-RECOVERY-PG-OWNER | Recovery verwendet Root-Eigentümerprüfung für leere postgres-eigene PostgreSQL-Containerverzeichnisse und stoppt den Nutzerlauf. | Eng begrenzte Eigentümerprüfung mit lokal/NSS-verifizierter PostgreSQL-Identität; 47 Recovery- und 12 Bootstrap-Tests, Vorher-/Nachher-Beleg. | Lokal und EOS-CI nachgeprüft; erneute Pi-Recovery und Installation offen. |
 
 Teilberichte: [Erststart](onboarding.md), [Installerdiagnose](installer-diagnostics.md),
 [CI](ci.md), [PostgreSQL-Rechte](postgresql-permissions.md).

@@ -4,6 +4,9 @@
 **Signierter ARM64-Teststand: test.3 Revision 4, Sequenz 7.** Das Paket und
 der öffentliche Ein-Befehl-Download sind veröffentlicht und zurückgelesen.
 Ein GitHub-Token wird für diesen Einstieg nicht benötigt.
+**Einstiegsrevision 2** korrigiert den bestätigten `RECOVERY_PATH_OWNER`-Abbruch
+bei leeren PostgreSQL-Verzeichnissen im Eigentum von `postgres`.
+[Fehlerkorrektur und Nachprüfung](reports/integration/recovery-pg-owner-20261003/README.md).
 
 1. Mit PuTTY/SSH als Benutzer mit sudo-Recht am Pi anmelden.
 2. Den folgenden vollständigen Befehl einmal einfügen. Bei Bedarf wird das
@@ -14,7 +17,7 @@ Ein GitHub-Token wird für diesen Einstieg nicht benötigt.
    UUID, Lizenz und persönliche Benutzerpasswörter werden im Frontend behandelt.
 
 ```bash
-/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-installer-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 71463 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/16a947182badf052e9866f7cd167056e994ba914/delivery/public-entry-test3-r4/install.sh -o "$d/install.sh"; [[ $(/usr/bin/stat -c %s "$d/install.sh") == 71463 ]] || exit 1; printf '\''%s  %s\n'\'' '\''f6ad2f72f5c50d99dc91097867a83b83790512290fd4a64e1c3c80744e968c84'\'' "$d/install.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/install.sh"'
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-installer-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 75499 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/23e1598223b13eb83fac0860079db4d0964f99ce/delivery/public-entry-test3-r4-recovery2/install.sh -o "$d/install.sh"; [[ $(/usr/bin/stat -c %s "$d/install.sh") == 75499 ]] || exit 1; printf '\''%s  %s\n'\'' '\''4f08637c9c2b4de5a233f7e310e67c69c79f2293f1dc4461ce4ea79ce3a478d4'\'' "$d/install.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/install.sh"'
 ```
 
 Der Befehl lädt das vollständige Installationsskript mit curl in ein neues,
@@ -34,10 +37,10 @@ werden erhalten. Andere bestehende Installationen werden abgewiesen; dieser
 Befehl ist kein Updater und keine allgemeine Reparaturfunktion. Alte R2-/R3-
 Befehle und signierte Dateien bleiben als historische Belege erhalten.
 
-[Befehl als Textdatei](delivery/public-entry-test3-r4/INSTALL_COMMAND.txt) ·
+[Befehl als Textdatei](delivery/public-entry-test3-r4-recovery2/INSTALL_COMMAND.txt) ·
 [Installation und Pi-Abnahme](docs/operations/STABILITY_TEST4_DE.md) ·
 [Änderungen und offene Punkte](reports/integration/stability-20261003/README.md) ·
-[Veröffentlichungsnachweis](reports/integration/stability-20261003/publication.json) ·
+[Veröffentlichungsnachweis](reports/integration/recovery-pg-owner-20261003/publication.json) ·
 [Gebundene App-SBOM](reports/integration/installable-test3-r4-20261003/runtime.cdx.json).
 
 **Die tatsächliche Pi-Vollinstallation, Browser-, Reboot-, Backup-/Restore- und

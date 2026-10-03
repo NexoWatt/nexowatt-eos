@@ -1,0 +1,654 @@
+﻿2026-10-03T19:20:30.7061853Z Current runner version: '2.337.0'
+2026-10-03T19:20:30.7086036Z ##[group]Runner Image Provisioner
+2026-10-03T19:20:30.7086976Z Hosted Compute Agent
+2026-10-03T19:20:30.7087637Z Version: 20260901.588
+2026-10-03T19:20:30.7088300Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-03T19:20:30.7089046Z Build Date: 2026-09-01T19:56:44Z
+2026-10-03T19:20:30.7089851Z Worker ID: {091a6462-3ceb-4118-bb66-558d63df6cc9}
+2026-10-03T19:20:30.7090943Z Azure Region: westcentralus
+2026-10-03T19:20:30.7091673Z ##[endgroup]
+2026-10-03T19:20:30.7093346Z ##[group]Operating System
+2026-10-03T19:20:30.7094007Z Ubuntu
+2026-10-03T19:20:30.7094662Z 24.04.5
+2026-10-03T19:20:30.7095190Z LTS
+2026-10-03T19:20:30.7095688Z ##[endgroup]
+2026-10-03T19:20:30.7096306Z ##[group]Runner Image
+2026-10-03T19:20:30.7096912Z Image: ubuntu-24.04
+2026-10-03T19:20:30.7097594Z Version: 20260927.320.1
+2026-10-03T19:20:30.7098866Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-03T19:20:30.7101083Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-03T19:20:30.7102125Z ##[endgroup]
+2026-10-03T19:20:30.7103297Z ##[group]GITHUB_TOKEN Permissions
+2026-10-03T19:20:30.7105436Z Contents: read
+2026-10-03T19:20:30.7106158Z Metadata: read
+2026-10-03T19:20:30.7106797Z ##[endgroup]
+2026-10-03T19:20:30.7108829Z Secret source: Actions
+2026-10-03T19:20:30.7109952Z Cache mode: write
+2026-10-03T19:20:30.7111088Z Prepare workflow directory
+2026-10-03T19:20:30.7537506Z Prepare all required actions
+2026-10-03T19:20:30.7585750Z Getting action download info
+2026-10-03T19:20:31.0443383Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-03T19:20:31.1307332Z Download action repository 'actions/setup-node@820762786026740c76f36085b0efc47a31fe5020' (SHA:820762786026740c76f36085b0efc47a31fe5020)
+2026-10-03T19:20:31.3118591Z Complete job name: Node 24 bootstrap, onboarding and transport contracts
+2026-10-03T19:20:31.3884260Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-03T19:20:31.3885327Z with:
+2026-10-03T19:20:31.3885780Z   persist-credentials: false
+2026-10-03T19:20:31.3886313Z   repository: NexoWatt/nexowatt-eos
+2026-10-03T19:20:31.3890332Z   token: ***
+2026-10-03T19:20:31.3890785Z   ssh-strict: true
+2026-10-03T19:20:31.3891225Z   ssh-user: git
+2026-10-03T19:20:31.3891636Z   clean: true
+2026-10-03T19:20:31.3892073Z   sparse-checkout-cone-mode: true
+2026-10-03T19:20:31.3892588Z   fetch-depth: 1
+2026-10-03T19:20:31.3893018Z   fetch-tags: false
+2026-10-03T19:20:31.3893460Z   show-progress: true
+2026-10-03T19:20:31.3893927Z   lfs: false
+2026-10-03T19:20:31.3894341Z   submodules: false
+2026-10-03T19:20:31.3894791Z   set-safe-directory: true
+2026-10-03T19:20:31.3895296Z   allow-unsafe-pr-checkout: false
+2026-10-03T19:20:31.3896077Z env:
+2026-10-03T19:20:31.3896512Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T19:20:31.3897007Z ##[endgroup]
+2026-10-03T19:20:31.4871928Z Syncing repository: NexoWatt/nexowatt-eos
+2026-10-03T19:20:31.4874505Z ##[group]Getting Git version info
+2026-10-03T19:20:31.4875811Z Working directory is '/home/runner/work/nexowatt-eos/nexowatt-eos'
+2026-10-03T19:20:31.4877491Z [command]/usr/bin/git version
+2026-10-03T19:20:31.4939315Z git version 2.55.0
+2026-10-03T19:20:31.4964368Z ##[endgroup]
+2026-10-03T19:20:31.4974731Z Temporarily overriding HOME='/home/runner/work/_temp/3267e5b0-7521-4f13-a9b5-402248ca00b0' before making global git config changes
+2026-10-03T19:20:31.4977174Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-03T19:20:31.4980616Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T19:20:31.5040732Z Deleting the contents of '/home/runner/work/nexowatt-eos/nexowatt-eos'
+2026-10-03T19:20:31.5044783Z ##[group]Determining repository object format
+2026-10-03T19:20:31.5046564Z ##[endgroup]
+2026-10-03T19:20:31.5048343Z ##[group]Initializing the repository
+2026-10-03T19:20:31.5049690Z [command]/usr/bin/git init /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T19:20:31.5152896Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-03T19:20:31.5154481Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-03T19:20:31.5156019Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-03T19:20:31.5157292Z hint: call:
+2026-10-03T19:20:31.5157967Z hint:
+2026-10-03T19:20:31.5158873Z hint: 	git config --global init.defaultBranch <name>
+2026-10-03T19:20:31.5159880Z hint:
+2026-10-03T19:20:31.5161047Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-03T19:20:31.5162550Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-03T19:20:31.5163795Z hint:
+2026-10-03T19:20:31.5164514Z hint: 	git branch -m <name>
+2026-10-03T19:20:31.5165326Z hint:
+2026-10-03T19:20:31.5166417Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-03T19:20:31.5173197Z Initialized empty Git repository in /home/runner/work/nexowatt-eos/nexowatt-eos/.git/
+2026-10-03T19:20:31.5181601Z [command]/usr/bin/git remote add origin https://github.com/NexoWatt/nexowatt-eos
+2026-10-03T19:20:31.5231004Z ##[endgroup]
+2026-10-03T19:20:31.5231899Z ##[group]Disabling automatic garbage collection
+2026-10-03T19:20:31.5236392Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-03T19:20:31.5270875Z ##[endgroup]
+2026-10-03T19:20:31.5272395Z ##[group]Setting up auth
+2026-10-03T19:20:31.5273258Z Removing SSH command configuration
+2026-10-03T19:20:31.5278241Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T19:20:31.5315002Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T19:20:31.5688092Z Removing HTTP extra header
+2026-10-03T19:20:31.5696241Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T19:20:31.5736794Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T19:20:31.5961969Z Removing includeIf entries pointing to credentials config files
+2026-10-03T19:20:31.5968615Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T19:20:31.6003799Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T19:20:31.6237654Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-03T19:20:31.6279835Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path /home/runner/work/_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:20:31.6316268Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:20:31.6355897Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:20:31.6393141Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:20:31.6425960Z ##[endgroup]
+2026-10-03T19:20:31.6427328Z ##[group]Fetching the repository
+2026-10-03T19:20:31.6433747Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +23e1598223b13eb83fac0860079db4d0964f99ce:refs/remotes/origin/main
+2026-10-03T19:21:01.1194328Z From https://github.com/NexoWatt/nexowatt-eos
+2026-10-03T19:21:01.1195436Z  * [new ref]         23e1598223b13eb83fac0860079db4d0964f99ce -> origin/main
+2026-10-03T19:21:01.1205873Z [command]/usr/bin/git branch --list --remote origin/main
+2026-10-03T19:21:01.1236683Z   origin/main
+2026-10-03T19:21:01.1245369Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-10-03T19:21:01.1271522Z 23e1598223b13eb83fac0860079db4d0964f99ce
+2026-10-03T19:21:01.1275910Z ##[endgroup]
+2026-10-03T19:21:01.1276710Z ##[group]Determining the checkout info
+2026-10-03T19:21:01.1277567Z ##[endgroup]
+2026-10-03T19:21:01.1280901Z [command]/usr/bin/git sparse-checkout disable
+2026-10-03T19:21:01.1333552Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-03T19:21:01.1367725Z ##[group]Checking out the ref
+2026-10-03T19:21:01.1371944Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-10-03T19:21:02.1856798Z Updating files:  74% (4909/6546)
+2026-10-03T19:21:02.9476806Z Updating files:  75% (4910/6546)
+2026-10-03T19:21:02.9524433Z Updating files:  76% (4975/6546)
+2026-10-03T19:21:03.0359076Z Updating files:  77% (5041/6546)
+2026-10-03T19:21:03.0551139Z Updating files:  78% (5106/6546)
+2026-10-03T19:21:03.0657772Z Updating files:  79% (5172/6546)
+2026-10-03T19:21:03.0766489Z Updating files:  80% (5237/6546)
+2026-10-03T19:21:03.0916535Z Updating files:  81% (5303/6546)
+2026-10-03T19:21:03.0959166Z Updating files:  82% (5368/6546)
+2026-10-03T19:21:03.1000425Z Updating files:  83% (5434/6546)
+2026-10-03T19:21:03.1046977Z Updating files:  84% (5499/6546)
+2026-10-03T19:21:03.1112841Z Updating files:  85% (5565/6546)
+2026-10-03T19:21:03.1198676Z Updating files:  86% (5630/6546)
+2026-10-03T19:21:03.1296026Z Updating files:  87% (5696/6546)
+2026-10-03T19:21:03.1348449Z Updating files:  88% (5761/6546)
+2026-10-03T19:21:03.1421879Z Updating files:  89% (5826/6546)
+2026-10-03T19:21:03.1463568Z Updating files:  90% (5892/6546)
+2026-10-03T19:21:03.1513124Z Updating files:  90% (5930/6546)
+2026-10-03T19:21:03.1597411Z Updating files:  91% (5957/6546)
+2026-10-03T19:21:03.1645010Z Updating files:  92% (6023/6546)
+2026-10-03T19:21:03.1722911Z Updating files:  93% (6088/6546)
+2026-10-03T19:21:03.1755169Z Updating files:  94% (6154/6546)
+2026-10-03T19:21:03.1801145Z Updating files:  95% (6219/6546)
+2026-10-03T19:21:03.1861571Z Updating files:  96% (6285/6546)
+2026-10-03T19:21:03.1905827Z Updating files:  97% (6350/6546)
+2026-10-03T19:21:03.1973873Z Updating files:  98% (6416/6546)
+2026-10-03T19:21:03.2032179Z Updating files:  99% (6481/6546)
+2026-10-03T19:21:03.2033000Z Updating files: 100% (6546/6546)
+2026-10-03T19:21:03.2033613Z Updating files: 100% (6546/6546), done.
+2026-10-03T19:21:03.2109502Z Switched to a new branch 'main'
+2026-10-03T19:21:03.2116026Z branch 'main' set up to track 'origin/main'.
+2026-10-03T19:21:03.2234204Z ##[endgroup]
+2026-10-03T19:21:03.2293392Z [command]/usr/bin/git log -1 --format=%H
+2026-10-03T19:21:03.2327518Z 23e1598223b13eb83fac0860079db4d0964f99ce
+2026-10-03T19:21:03.2338405Z ##[group]Removing auth
+2026-10-03T19:21:03.2338743Z Removing SSH command configuration
+2026-10-03T19:21:03.2343483Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T19:21:03.2379814Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T19:21:03.2614660Z Removing HTTP extra header
+2026-10-03T19:21:03.2618412Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T19:21:03.2653656Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T19:21:03.2883083Z Removing includeIf entries pointing to credentials config files
+2026-10-03T19:21:03.2886245Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T19:21:03.2917072Z includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path
+2026-10-03T19:21:03.2917940Z includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path
+2026-10-03T19:21:03.2918446Z includeif.gitdir:/github/workspace/.git.path
+2026-10-03T19:21:03.2918855Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-03T19:21:03.2925720Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path
+2026-10-03T19:21:03.2952245Z /home/runner/work/_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:21:03.2963477Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-43e04eb0\-7da9\-4cc2\-b33c\-9703d5662c5f\.config
+2026-10-03T19:21:03.3001294Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path
+2026-10-03T19:21:03.3029660Z /home/runner/work/_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:21:03.3043816Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/nexowatt-eos/nexowatt-eos/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-43e04eb0\-7da9\-4cc2\-b33c\-9703d5662c5f\.config
+2026-10-03T19:21:03.3084792Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-03T19:21:03.3113396Z /github/runner_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:21:03.3121837Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-43e04eb0\-7da9\-4cc2\-b33c\-9703d5662c5f\.config
+2026-10-03T19:21:03.3157782Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-03T19:21:03.3183505Z /github/runner_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config
+2026-10-03T19:21:03.3192267Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-43e04eb0\-7da9\-4cc2\-b33c\-9703d5662c5f\.config
+2026-10-03T19:21:03.3228577Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T19:21:03.3453570Z Removing credentials config '/home/runner/work/_temp/git-credentials-43e04eb0-7da9-4cc2-b33c-9703d5662c5f.config'
+2026-10-03T19:21:03.3463042Z ##[endgroup]
+2026-10-03T19:21:03.3775098Z ##[group]Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+2026-10-03T19:21:03.3775539Z with:
+2026-10-03T19:21:03.3775752Z   node-version: 24.21.0
+2026-10-03T19:21:03.3776004Z   package-manager-cache: false
+2026-10-03T19:21:03.3776278Z   check-latest: false
+2026-10-03T19:21:03.3778710Z   token: ***
+2026-10-03T19:21:03.3778914Z env:
+2026-10-03T19:21:03.3779131Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T19:21:03.3779392Z ##[endgroup]
+2026-10-03T19:21:03.5020498Z Found in cache @ /opt/hostedtoolcache/node/24.21.0/x64
+2026-10-03T19:21:03.5024193Z ##[group]Environment details
+2026-10-03T19:21:03.9094892Z node: v24.21.0
+2026-10-03T19:21:03.9095358Z npm: 11.19.0
+2026-10-03T19:21:03.9095703Z yarn: 1.22.22
+2026-10-03T19:21:03.9097173Z ##[endgroup]
+2026-10-03T19:21:03.9224107Z ##[group]Run git rev-parse HEAD
+2026-10-03T19:21:03.9224474Z [36;1mgit rev-parse HEAD[0m
+2026-10-03T19:21:03.9225107Z [36;1mnode -e 'if (process.version !== "v24.21.0" || process.platform !== "linux") process.exit(1); console.log(process.version, process.arch)'[0m
+2026-10-03T19:21:03.9225754Z [36;1mpython3 --version[0m
+2026-10-03T19:21:03.9226007Z [36;1m/usr/bin/openssl version[0m
+2026-10-03T19:21:03.9226271Z [36;1m/bin/bash --version[0m
+2026-10-03T19:21:03.9479341Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T19:21:03.9479706Z env:
+2026-10-03T19:21:03.9479933Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T19:21:03.9480455Z ##[endgroup]
+2026-10-03T19:21:03.9606339Z 23e1598223b13eb83fac0860079db4d0964f99ce
+2026-10-03T19:21:03.9862234Z v24.21.0 x64
+2026-10-03T19:21:03.9913309Z Python 3.12.3
+2026-10-03T19:21:03.9937536Z OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+2026-10-03T19:21:03.9950518Z GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)
+2026-10-03T19:21:03.9951259Z Copyright (C) 2022 Free Software Foundation, Inc.
+2026-10-03T19:21:03.9951857Z License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+2026-10-03T19:21:03.9952413Z 
+2026-10-03T19:21:03.9952934Z This is free software; you are free to change and redistribute it.
+2026-10-03T19:21:03.9953807Z There is NO WARRANTY, to the extent permitted by law.
+2026-10-03T19:21:03.9995972Z ##[group]Run node --test \
+2026-10-03T19:21:03.9996409Z [36;1mnode --test \[0m
+2026-10-03T19:21:03.9996778Z [36;1m  tests/bootstrap/build-download.test.cjs \[0m
+2026-10-03T19:21:03.9997218Z [36;1m  tests/bootstrap/build-github-download.test.cjs \[0m
+2026-10-03T19:21:03.9997632Z [36;1m  tests/bootstrap/first-start.test.cjs \[0m
+2026-10-03T19:21:03.9998033Z [36;1m  tests/bootstrap/stability-entry.test.cjs \[0m
+2026-10-03T19:21:03.9998431Z [36;1m  tests/bootstrap/public-entry.test.cjs \[0m
+2026-10-03T19:21:03.9998821Z [36;1m  tests/onboarding/configuration.test.cjs \[0m
+2026-10-03T19:21:03.9999207Z [36;1m  tests/onboarding/enrollment.test.cjs \[0m
+2026-10-03T19:21:03.9999577Z [36;1m  tests/onboarding/frontend.test.cjs \[0m
+2026-10-03T19:21:03.9999945Z [36;1m  tests/onboarding/issue-code.test.cjs \[0m
+2026-10-03T19:21:04.0000589Z [36;1m  tests/onboarding/server.test.cjs \[0m
+2026-10-03T19:21:04.0000965Z [36;1m  tests/onboarding/shutdown.test.cjs \[0m
+2026-10-03T19:21:04.0001365Z [36;1m  tests/postgresql/store.test.cjs \[0m
+2026-10-03T19:21:04.0001777Z [36;1m  tests/postgresql/store-channel-hardening.test.cjs \[0m
+2026-10-03T19:21:04.0002188Z [36;1m  tests/postgresql/states.test.cjs \[0m
+2026-10-03T19:21:04.0002573Z [36;1m  tests/postgresql/provision-permissions.test.cjs \[0m
+2026-10-03T19:21:04.0002979Z [36;1m  tests/adapter-channel/channel.test.cjs[0m
+2026-10-03T19:21:04.0065916Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T19:21:04.0066313Z env:
+2026-10-03T19:21:04.0066572Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T19:21:04.0066923Z ##[endgroup]
+2026-10-03T19:21:04.4601357Z ✔ real TLS1.3 mutual channel reads only public state fields (79.265464ms)
+2026-10-03T19:21:04.4962519Z ✔ separate certificates send/receive authenticated messages, with no sender spoofing (40.384329ms)
+2026-10-03T19:21:04.5126031Z ✔ telemetry writes force ack=true and server-derived sender identity (15.526834ms)
+2026-10-03T19:21:04.5392921Z ✔ logic writes only a bounded request namespace, ack=false (27.486873ms)
+2026-10-03T19:21:04.5532764Z ✔ invalid control value -1 is denied before backend (12.386113ms)
+2026-10-03T19:21:04.5681714Z ✔ invalid control value 4201 is denied before backend (14.520219ms)
+2026-10-03T19:21:04.5800544Z ✔ invalid control value "100" is denied before backend (13.409389ms)
+2026-10-03T19:21:04.5923475Z ✔ invalid control value null is denied before backend (11.959308ms)
+2026-10-03T19:21:04.6054524Z ✔ invalid control value {"val":100} is denied before backend (11.042382ms)
+2026-10-03T19:21:04.6227408Z ✔ private data, unknown message commands and host messages are denied (19.697723ms)
+2026-10-03T19:21:04.6351702Z ✔ additional identity fields cannot replace authenticated sender (10.093141ms)
+2026-10-03T19:21:04.6431335Z ✔ valid CA certificate without policy pin is denied (8.044716ms)
+2026-10-03T19:21:04.6502182Z ✔ expired certificate cannot authenticate (7.361793ms)
+2026-10-03T19:21:04.6595452Z ✔ no client certificate cannot authenticate (6.566172ms)
+2026-10-03T19:21:04.6651322Z ✔ wrong server name fails certificate verification (9.328678ms)
+2026-10-03T19:21:04.6753736Z ✔ wrong trust anchor fails certificate verification (7.315287ms)
+2026-10-03T19:21:04.6792011Z ✔ TLS1.2 is rejected instead of downgraded (4.052279ms)
+2026-10-03T19:21:04.6832845Z ✔ plaintext HTTP is refused (3.804928ms)
+2026-10-03T19:21:04.7029734Z ✔ replayed RPC identifier cannot perform a second write (21.079417ms)
+2026-10-03T19:21:04.7221999Z ✔ expired or future-dated requests never reach backend (19.987432ms)
+2026-10-03T19:21:04.9025414Z ✔ expired queued messages are discarded before delivery (179.095291ms)
+2026-10-03T19:21:05.1432356Z ✔ bounded mailbox rejects overflow and does not silently replace messages (241.597222ms)
+2026-10-03T19:21:05.1698016Z ✔ policy revocation also invalidates live sessions and queued commands (28.171608ms)
+2026-10-03T19:21:05.1824087Z ✔ policy changes during asynchronous work deny its late completion (11.099606ms)
+2026-10-03T19:21:05.1944376Z ✔ unknown operations and oversized requests are rejected (12.332022ms)
+2026-10-03T19:21:05.2073332Z ✔ malformed backend values fail closed and backend error content is hidden (12.977855ms)
+2026-10-03T19:21:10.2097407Z ✔ client budgets the full session plus RPC to five seconds and does not retry (5003.382459ms)
+2026-10-03T19:21:10.2124545Z ✔ closed clients cannot create another socket (1.689637ms)
+2026-10-03T19:21:10.2126341Z ✔ policy cannot authorize arbitrary foreign writes, secrets, duplicate pins or unbounded numbers (0.646855ms)
+2026-10-03T19:21:10.2309212Z ✔ strict request parser rejects duplicate keys, non-finite numbers and excess nesting (18.495042ms)
+2026-10-03T19:21:10.2406910Z ✔ new gateway epoch rejects a request from an earlier service instance (10.024974ms)
+2026-10-03T19:21:10.2494786Z ✔ null state remains null and is not reinterpreted as a zero reading (8.683315ms)
+2026-10-03T19:21:10.5421669Z ✔ rate limiting bounds authenticated requests (292.215218ms)
+2026-10-03T19:21:10.5516079Z ✔ client concurrent calls are bounded and cancelled on close (9.6199ms)
+2026-10-03T19:21:10.5558104Z ✔ pin cannot authenticate a different certificate subject (5.028307ms)
+2026-10-03T19:21:10.5736973Z ✔ download endpoint excludes shell, auth, query, redirect and path injection syntax (2.00221ms)
+2026-10-03T19:21:10.5738570Z ✔ manufacturer must supply real-shaped Ed25519 public trust with separate exact pin (140.319297ms)
+2026-10-03T19:21:10.5739747Z ✔ kit cannot ship changed or omitted signed helpers or extra runtime code (0.636646ms)
+2026-10-03T19:21:10.5742003Z ✔ one command checks a separately delivered script pin before execution; script data survive exact embedding (1.934403ms)
+2026-10-03T19:21:10.5743814Z ✔ canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit (454.142499ms)
+2026-10-03T19:21:10.5745532Z ✔ build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords (0.710984ms)
+2026-10-03T19:21:10.5747038Z ✔ Git blob identity hashes the canonical Git header as well as exact bytes (1.4117ms)
+2026-10-03T19:21:10.5748717Z ✔ manufacturer inputs require authentic public trust and pins; arbitrary repository credentials are not CLI options (0.860122ms)
+2026-10-03T19:21:10.5750578Z ✔ target command keeps token out of argv, history, URLs, disk and child environment (0.506303ms)
+2026-10-03T19:21:10.5752193Z ✔ only pinned fixed-repository code executes, after complete bounded HTTPS download and SHA256 check (0.416005ms)
+2026-10-03T19:21:10.5753803Z ✔ copyable here-document parses in real Bash including protected token descriptor handoff (7.367525ms)
+2026-10-03T19:21:10.5755445Z ✔ inherited export and allexport cannot copy the new token into child environments; FD3 survives exec (5.747526ms)
+2026-10-03T19:21:10.5757208Z ✔ IP selection prefers a validated SSH local destination only when present on an active noninternal interface (7.701947ms)
+2026-10-03T19:21:10.5758978Z ✔ one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible (0.293297ms)
+2026-10-03T19:21:10.5762006Z ✔ bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets (1.684678ms)
+2026-10-03T19:21:10.5764319Z ✔ license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash (4.864411ms)
+2026-10-03T19:21:10.5766011Z ✔ TTY must be an actual character terminal before it can receive any possession code (0.663686ms)
+2026-10-03T19:21:10.5767584Z ✔ successful runner uses all existing installer flags and emits possession only through opened TTY (8.88471ms)
+2026-10-03T19:21:10.5769176Z ✔ missing TTY, ambiguous IP and changed pins fail before host installation or input creation (8.033435ms)
+2026-10-03T19:21:10.5771024Z ✔ installer failures never read or output code and sanitized error excludes downstream secret messages (7.45619ms)
+2026-10-03T19:21:10.5772648Z ✔ unsafe code permissions and existing input directory fail closed without TTY disclosure (7.565884ms)
+2026-10-03T19:21:10.5774448Z ✔ CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties (1.470239ms)
+2026-10-03T19:21:10.5776015Z ✔ TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file (0.33252ms)
+2026-10-03T19:21:10.5777507Z ✔ ambiguous address errors give a bounded corrective message without addresses or secrets (0.388604ms)
+2026-10-03T19:21:10.5779376Z ✔ terminal success is readable and includes public browser trust instructions without arbitrary result properties (3.542189ms)
+2026-10-03T19:21:10.5781720Z ✔ preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets (3.454866ms)
+2026-10-03T19:21:10.5783736Z ✔ host failure preserves fixed installation phase through the real runner without disclosure or retries (32.75419ms)
+2026-10-03T19:21:10.5785598Z ✔ unknown or malformed installation phases are omitted while existing code and preflight checks remain (0.732474ms)
+2026-10-03T19:21:10.5787387Z ✔ public transport retains all three pinned assets and a fixed repository commit (2.31347ms)
+2026-10-03T19:21:10.5789041Z ✔ public transport rejects mutable refs, foreign repositories and malformed asset sets (0.866705ms)
+2026-10-03T19:21:10.5791092Z ✔ generated entry contains exact preparer bytes and bounded R2 recovery before normal preparation (6.841024ms)
+2026-10-03T19:21:10.5792841Z ✔ one-line curl entry verifies full size and hash in a protected directory before execution (4.076584ms)
+2026-10-03T19:21:10.5794591Z ✔ one pasteable command validates downloaded code before execution and keeps recovery conditional (10.750286ms)
+2026-10-03T19:21:10.5796165Z ✔ invalid or injected recovery pins are refused before generating a command (1.231975ms)
+2026-10-03T19:21:10.5797712Z ✔ shipped template choices are exact, hash-bound projections of the existing Devices source (50.538164ms)
+2026-10-03T19:21:10.5799424Z ✔ configured plant persists sourced limits and input-only mappings without enabling control (48.375157ms)
+2026-10-03T19:21:10.5801701Z ✔ explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated (2.739673ms)
+2026-10-03T19:21:10.5803554Z ✔ real model restrictions, serial fields, template/role mismatch and unknown fields fail closed (6.364847ms)
+2026-10-03T19:21:10.5805333Z ✔ EEBUS/OCPP identities and source-backed limits are captured with no connections or commands (0.64446ms)
+2026-10-03T19:21:10.5807116Z ✔ planned device counts and canonical product adapter names must fit the authenticated license (1.732227ms)
+2026-10-03T19:21:10.5809156Z ✔ first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices (26.41296ms)
+2026-10-03T19:21:10.5811531Z ✔ configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan (5.777492ms)
+2026-10-03T19:21:10.5813566Z ✔ every partial object-store write keeps the start gate closed and refuses unsafe replay (21.462912ms)
+2026-10-03T19:21:10.5815685Z ✔ configuration, running controller, unknown password hash and different replay handoff are rejected before mutation (3.637429ms)
+2026-10-03T19:21:10.5818036Z ✔ first-run marker and safety policy drift block subsequent enrollment verification (17.208747ms)
+2026-10-03T19:21:10.5820349Z ✔ frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage (39.85364ms)
+2026-10-03T19:21:10.5822552Z ✔ authenticated catalog UUID is visible, read-only and selectable before any license or password entry (26.619197ms)
+2026-10-03T19:21:10.5824953Z ✔ copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves (10.198358ms)
+2026-10-03T19:21:10.5827225Z ✔ Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success (27.970975ms)
+2026-10-03T19:21:10.5829535Z ✔ missing or invalid catalog UUID never enables copying, displays response text, or creates an identity (66.886785ms)
+2026-10-03T19:21:10.5831016Z ✔ actual HTML disabled fieldsets omit inactive required values and deferred form submits valid exact schema (51.537315ms)
+2026-10-03T19:21:10.5832215Z ✔ configured HTML form builds real template connection and plant inputs; switching phases/signals disables unused required fields (67.920226ms)
+2026-10-03T19:21:10.5833174Z ✔ 202 handoff and lost setup connection never claim completed installation (10.051815ms)
+2026-10-03T19:21:10.5833972Z ✔ only explicit root completion shows access success; plant acceptance remains open (12.541102ms)
+2026-10-03T19:21:10.5834888Z ✔ claim header timeout aborts at five seconds, releases the button and never retries or exposes the code (4.970188ms)
+2026-10-03T19:21:10.5835863Z ✔ one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup (4.978684ms)
+2026-10-03T19:21:10.5836788Z ✔ initial session JSON timeout is bounded and successful requests clear their deadline timers (7.911467ms)
+2026-10-03T19:21:10.5837741Z ✔ ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff (13.997444ms)
+2026-10-03T19:21:10.5838709Z ✔ a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials (17.614884ms)
+2026-10-03T19:21:10.5839667Z ✔ lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts (12.005905ms)
+2026-10-03T19:21:10.5840946Z ✔ reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker (10.669756ms)
+2026-10-03T19:21:10.5841834Z ✔ local reissue CLI refuses password arguments and never prints the argument (52.789347ms)
+2026-10-03T19:21:10.5842739Z ✔ local reissue engine produces new state; owner restoration uses only its validated open descriptor (14.054037ms)
+2026-10-03T19:21:10.5843731Z ✔ previous state must be regular, singly linked, private and owned by the expected setup identity (1.86802ms)
+2026-10-03T19:21:10.5844563Z ✔ replacement between lstat and open is rejected before any ownership change (1.509582ms)
+2026-10-03T19:21:10.5845494Z ✔ symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive (1.204965ms)
+2026-10-03T19:21:10.5846387Z ✔ replacement after descriptor validation cannot redirect fchown to the new path (2.031654ms)
+2026-10-03T19:21:10.5847122Z ✔ verified TLS only; endpoint validates CA, hostname, expiry and trust (60.240936ms)
+2026-10-03T19:21:10.5848010Z ✔ catalog UUID licenses this device before password setup and stays private to the live claimed session (45.015055ms)
+2026-10-03T19:21:10.5849047Z ✔ HTTPS configuration and signed license are checked against installed identity/trust before one private handoff (83.304311ms)
+2026-10-03T19:21:10.5850313Z ✔ license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF (41.819672ms)
+2026-10-03T19:21:10.5851190Z ✔ possession is required; wrong, expired, reused and missing codes fail (31.664673ms)
+2026-10-03T19:21:10.5851777Z ✔ persistent attempt limit survives reboot (53.083628ms)
+2026-10-03T19:21:10.5852812Z ✔ real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation (1513.919665ms)
+2026-10-03T19:21:10.5853783Z ✔ host, origin, CSRF, proxy, URL and role manipulation are rejected (48.793503ms)
+2026-10-03T19:21:10.5854652Z ✔ session cookie, cache and content policy are restrictive; password hash handoff contains no secrets (25.378235ms)
+2026-10-03T19:21:10.5855442Z ✔ parallel finalization derives once and only one handoff wins (94.461755ms)
+2026-10-03T19:21:10.5857134Z ✔ abort during commit and restart retain closed state with no handoff or administrative access (18.362415ms)
+2026-10-03T19:21:10.5858660Z ✔ expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code (30.115525ms)
+2026-10-03T19:21:10.5859636Z ✔ local reissue immediately revokes a still-valid live session and rollback does not extend it (24.341874ms)
+2026-10-03T19:21:10.5860855Z ✔ body, request rate and settings bounds fail closed (279.557965ms)
+2026-10-03T19:21:10.5861670Z ✔ storage rejects replacement preparation, hardlinks, tampering and pending mutation locks (9.489527ms)
+2026-10-03T19:21:10.5862633Z ✔ ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion (2.289344ms)
+2026-10-03T19:21:10.5863469Z ✔ cleanup failure logs fixed code only and makes shutdown non-successful (0.318824ms)
+2026-10-03T19:21:10.5864200Z ✔ asynchronous main rejects arbitrary config and password CLI arguments (0.684184ms)
+2026-10-03T19:21:10.5865003Z ✔ PostgreSQL provisioning preserves service traversal and private keys under umask 22 (151.468826ms)
+2026-10-03T19:21:10.5865896Z ✔ PostgreSQL provisioning preserves service traversal and private keys under umask 77 (111.963097ms)
+2026-10-03T19:21:10.5866671Z ✔ plugin exports native backend identity and complete inspected 7.2.2 API (4.399996ms)
+2026-10-03T19:21:10.5867576Z ✔ setState matches metadata, seconds conversion, comment and deep equality semantics without mutating input (1.988214ms)
+2026-10-03T19:21:10.5868411Z ✔ primitive values, explicit lc/q and Async aliases preserve contract (1.204454ms)
+2026-10-03T19:21:10.5869253Z ✔ ordered batch reads preserve duplicates and null missing values; qualified keys are namespace bound (1.616851ms)
+2026-10-03T19:21:10.5869960Z ✔ raw restore keeps exact JSON and emits no event (6.915933ms)
+2026-10-03T19:21:10.5870835Z ✔ system/user subscription isolation, wildcards and unsubscribe (2.651599ms)
+2026-10-03T19:21:10.5871617Z ✔ escaped glob literals and negated classes do not become regular-expression expressions (1.381774ms)
+2026-10-03T19:21:10.5872404Z ✔ state deletion and TTL expiration emit null; reads exclude expired values (2.483747ms)
+2026-10-03T19:21:10.5873190Z ✔ sessions expire, can be destroyed, and retain upstream one-argument success callback (1.370303ms)
+2026-10-03T19:21:10.5874076Z ✔ messages/logs preserve prefixed channels and event buffers, without storing/replaying commands (1.446324ms)
+2026-10-03T19:21:10.5874923Z ✔ Buffer state read matches upstream JSON shape while change event revives Buffer (0.917649ms)
+2026-10-03T19:21:10.5875673Z ✔ callbacks are asynchronous and return id/error in their existing slots (0.812503ms)
+2026-10-03T19:21:10.5876411Z ✔ destroyDB is limited to state namespace and leaves sessions/protocol intact (0.589929ms)
+2026-10-03T19:21:10.5877220Z ✔ disconnect fails writes closed and reconnect resumes live subscriptions without replay (1.30429ms)
+2026-10-03T19:21:10.5877946Z ✔ unexpected protocol version disconnects and prevents writes (0.608975ms)
+2026-10-03T19:21:10.5878745Z ✔ autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error (1.28828ms)
+2026-10-03T19:21:10.5879649Z ✔ invalid input, invalid JSON, nonfinite numbers and unsupported TTL are rejected before writing (1.0251ms)
+2026-10-03T19:21:10.5880675Z ✔ bounded events reject oversized writes and preserve previous value (7.480475ms)
+2026-10-03T19:21:10.5881464Z ✔ malformed stored JSON and malformed buffer event fail closed without raw diagnostics (1.802828ms)
+2026-10-03T19:21:10.5882468Z ✔ simultaneous updates preserve latest value when later metadata-only write follows (0.613362ms)
+2026-10-03T19:21:10.5883153Z ✔ closed client cannot reopen, read, publish or write (0.27379ms)
+2026-10-03T19:21:10.5883885Z ✔ overlapping subscriptions preserve normal duplicate delivery but expiry delivers once (1.005493ms)
+2026-10-03T19:21:10.5884727Z ✔ queued events are discarded across disconnect rather than executing stale commands (0.520119ms)
+2026-10-03T19:21:10.5885532Z ✔ event fanout and subscription count are bounded and overload disconnects visibly (92.744797ms)
+2026-10-03T19:21:10.5886310Z ✔ malformed UTF-8 stored data is rejected rather than normalized silently (0.436583ms)
+2026-10-03T19:21:10.5887055Z ✔ namespace globs and overlapping domains are rejected before opening a store (0.269001ms)
+2026-10-03T19:21:10.5887881Z ✔ quote-shaped state ids remain literal data at the Store boundary (0.280402ms)
+2026-10-03T19:21:10.5888610Z ✔ non-ASCII ids and Redis byte-wise question-mark globs remain compatible (2.113848ms)
+2026-10-03T19:21:10.5889287Z ✔ aggregate complex-glob work is bounded per incoming event (1.301896ms)
+2026-10-03T19:21:10.5890232Z ✔ working connection verifier requires encryption, authorization and actual TLS1.3 (1.294592ms)
+2026-10-03T19:21:10.5891289Z ✔ pre-reconnect watermark rejects retained event IDs and alternate numeric encodings (4.909866ms)
+2026-10-03T19:21:10.5891999Z ✔ replay remains rejected after duplicate cache eviction (52.324ms)
+2026-10-03T19:21:10.5892706Z ✔ queued lower sequence cannot be delivered after newer committed notification (0.353378ms)
+2026-10-03T19:21:10.5893425Z ✔ connection requires verified TLS1.3 mTLS with fixed time budgets (5.19631ms)
+2026-10-03T19:21:10.5893960Z ✔ configuration rejects cleartext (1.26176ms)
+2026-10-03T19:21:10.5894424Z ✔ configuration rejects invalid cert input (0.210512ms)
+2026-10-03T19:21:10.5894925Z ✔ configuration rejects disabled peer check (0.228255ms)
+2026-10-03T19:21:10.5895385Z ✔ configuration rejects downgrade (0.233145ms)
+2026-10-03T19:21:10.5895861Z ✔ configuration rejects custom identity verifier (0.165178ms)
+2026-10-03T19:21:10.5896331Z ✔ configuration rejects SNI override (0.159777ms)
+2026-10-03T19:21:10.5896784Z ✔ configuration rejects connection string (0.168284ms)
+2026-10-03T19:21:10.5897213Z ✔ configuration rejects password (0.159477ms)
+2026-10-03T19:21:10.5897631Z ✔ configuration rejects unix socket (0.293938ms)
+2026-10-03T19:21:10.5898062Z ✔ configuration rejects invalid port (0.293447ms)
+2026-10-03T19:21:10.5898470Z ✔ configuration rejects superuser (0.186137ms)
+2026-10-03T19:21:10.5898906Z ✔ configuration rejects cross domain role (0.155099ms)
+2026-10-03T19:21:10.5899386Z ✔ configuration rejects query config override (0.129341ms)
+2026-10-03T19:21:10.5899839Z ✔ configuration rejects bad database (0.164957ms)
+2026-10-03T19:21:10.5900517Z ✔ TLS environment bypass rejected (0.274932ms)
+2026-10-03T19:21:10.5901372Z ✔ glob contract includes wildcards, literal escapes and ranges without regex execution (0.874629ms)
+2026-10-03T19:21:10.5902197Z ✔ input resembling SQL remains bound data; never concatenated into statement (1.00937ms)
+2026-10-03T19:21:10.5902943Z ✔ batch preserves order and missing slots; SQL enforces aggregate value limit (0.586182ms)
+2026-10-03T19:21:10.5903657Z ✔ key-list and complex glob work are bounded; broad star is supported (11.156723ms)
+2026-10-03T19:21:10.5904290Z ✔ read batch and key control bytes reject before querying (0.844433ms)
+2026-10-03T19:21:10.5904911Z ✔ transaction error rolls back and releases once; no commit/event (0.790953ms)
+2026-10-03T19:21:10.5905623Z ✔ long session TTL accepted while nonsensical TTL and large events fail closed (1.214542ms)
+2026-10-03T19:21:10.5906082Z ℹ tests 178
+2026-10-03T19:21:10.5906293Z ℹ suites 0
+2026-10-03T19:21:10.5906502Z ℹ pass 178
+2026-10-03T19:21:10.5906717Z ℹ fail 0
+2026-10-03T19:21:10.5906935Z ℹ cancelled 0
+2026-10-03T19:21:10.5907156Z ℹ skipped 0
+2026-10-03T19:21:10.5907359Z ℹ todo 0
+2026-10-03T19:21:10.5907774Z ℹ duration_ms 6529.742401
+2026-10-03T19:21:10.5938592Z ##[group]Run sudo -- "$(command -v node)" --test \
+2026-10-03T19:21:10.5939012Z [36;1msudo -- "$(command -v node)" --test \[0m
+2026-10-03T19:21:10.5939347Z [36;1m  tests/system/sudo-policy.test.cjs \[0m
+2026-10-03T19:21:10.5939708Z [36;1m  tests/system/preflight-installation.test.cjs[0m
+2026-10-03T19:21:10.6005675Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T19:21:10.6006036Z env:
+2026-10-03T19:21:10.6006250Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T19:21:10.6006502Z ##[endgroup]
+2026-10-03T19:21:11.6075693Z ✔ valid signed bundle and commissioning inputs never bypass Redis security hold or mutate the host (110.722086ms)
+2026-10-03T19:21:11.6077839Z ✔ tampered signed payload and wrong signer fail before target commands or credential validation (48.160161ms)
+2026-10-03T19:21:11.6081666Z ✔ wrong signing public key is rejected even when all host prerequisites are ready (44.79379ms)
+2026-10-03T19:21:11.6083442Z ✔ a valid signature never promotes a pending catalog entry (47.339933ms)
+2026-10-03T19:21:11.6085343Z ✔ current release must declare the observed target architecture and exact Node version (35.863997ms)
+2026-10-03T19:21:11.6095388Z ✔ duplicate service and installer credentials or browser-selected admin role fail before target commands (74.335553ms)
+2026-10-03T19:21:11.6096980Z ✔ secret modes, symlinks and invalid certificate hosts are rejected before target commands (77.755778ms)
+2026-10-03T19:21:11.6098565Z ✔ occupied integrated UI port yields a non-mutating rejected report (53.006619ms)
+2026-10-03T19:21:11.6099766Z ✔ CLI bounds exact path-only arguments, requires root, and never dumps raw parser errors (132.957939ms)
+2026-10-03T19:21:11.6105350Z ✔ direct signed installer cannot skip integrated web port gate by omitting standalone preflight (61.966782ms)
+2026-10-03T19:21:11.6111327Z ✔ actual Redis admission hold prevents direct signed installation before staging, accounts or services (103.1742ms)
+2026-10-03T19:21:11.6116938Z ✔ verified installer forwards the same catalog port profile to the privileged host recheck (47.786705ms)
+2026-10-03T19:21:11.6119130Z ✔ orchestrator fixture keeps the actual ancestor guard and rejects a writable target before staging (47.116479ms)
+2026-10-03T19:21:11.6316217Z ✔ successful root sudo listing with no privileges is accepted for each EOS account (2.313459ms)
+2026-10-03T19:21:11.6317577Z ✔ sudo listing rejects failed list (0.146283ms)
+2026-10-03T19:21:11.6318472Z ✔ sudo listing rejects timeout (0.099806ms)
+2026-10-03T19:21:11.6319419Z ✔ sudo listing rejects truncated response (0.169866ms)
+2026-10-03T19:21:11.6320665Z ✔ sudo listing rejects password required (1.188233ms)
+2026-10-03T19:21:11.6321824Z ✔ sudo listing rejects policy warning despite denial (0.126155ms)
+2026-10-03T19:21:11.6322901Z ✔ sudo listing rejects host lookup warning (0.084237ms)
+2026-10-03T19:21:11.6323846Z ✔ sudo listing rejects granted root command (0.188961ms)
+2026-10-03T19:21:11.6324861Z ✔ sudo listing rejects granted unprivileged command (0.237763ms)
+2026-10-03T19:21:11.6325914Z ✔ sudo listing rejects different account (0.309878ms)
+2026-10-03T19:21:11.6326786Z ✔ sudo listing rejects appended commands (0.13967ms)
+2026-10-03T19:21:11.6327745Z ✔ sudo listing rejects prefixed custom text (0.158746ms)
+2026-10-03T19:21:11.6328641Z ✔ sudo listing rejects duplicated denial (0.072515ms)
+2026-10-03T19:21:11.6329515Z ✔ sudo listing rejects extra blank line (0.052468ms)
+2026-10-03T19:21:11.6330675Z ✔ sudo listing rejects denial on stderr (0.047518ms)
+2026-10-03T19:21:11.6331604Z ✔ sudo listing rejects localized response (0.052739ms)
+2026-10-03T19:21:11.6332524Z ✔ sudo listing rejects empty success (0.042088ms)
+2026-10-03T19:21:11.6333793Z ✔ missing or malformed subprocess fields never establish absent privileges (0.131084ms)
+2026-10-03T19:21:11.6335408Z ✔ postgresql installer reaches directories only after every real account sudo branch passes (26.992531ms)
+2026-10-03T19:21:11.6336186Z ✔ postgresql installer stops at accounts for failed list (7.194813ms)
+2026-10-03T19:21:11.6337473Z ✔ postgresql installer stops at accounts for timeout (6.181755ms)
+2026-10-03T19:21:11.6338128Z ✔ postgresql installer stops at accounts for truncated response (5.378939ms)
+2026-10-03T19:21:11.6338792Z ✔ postgresql installer stops at accounts for password required (5.691301ms)
+2026-10-03T19:21:11.6339501Z ✔ postgresql installer stops at accounts for policy warning despite denial (5.312326ms)
+2026-10-03T19:21:11.6340645Z ✔ postgresql installer stops at accounts for host lookup warning (4.398384ms)
+2026-10-03T19:21:11.6341840Z ✔ postgresql installer stops at accounts for granted root command (4.41834ms)
+2026-10-03T19:21:11.6343091Z ✔ postgresql installer stops at accounts for granted unprivileged command (4.792557ms)
+2026-10-03T19:21:11.6344391Z ✔ postgresql installer stops at accounts for different account (4.732576ms)
+2026-10-03T19:21:11.6345659Z ✔ postgresql installer stops at accounts for appended commands (4.19808ms)
+2026-10-03T19:21:11.6346558Z ✔ postgresql installer stops at accounts for prefixed custom text (4.939501ms)
+2026-10-03T19:21:11.6347236Z ✔ postgresql installer stops at accounts for duplicated denial (4.624895ms)
+2026-10-03T19:21:11.6347874Z ✔ postgresql installer stops at accounts for extra blank line (4.376572ms)
+2026-10-03T19:21:11.6348495Z ✔ postgresql installer stops at accounts for denial on stderr (4.752914ms)
+2026-10-03T19:21:11.6349129Z ✔ postgresql installer stops at accounts for localized response (5.018488ms)
+2026-10-03T19:21:11.6349757Z ✔ postgresql installer stops at accounts for empty success (4.634302ms)
+2026-10-03T19:21:11.6350874Z ✔ redis installer reaches directories only after every real account sudo branch passes (4.338321ms)
+2026-10-03T19:21:11.6351588Z ✔ redis installer stops at accounts for failed list (3.358215ms)
+2026-10-03T19:21:11.6352149Z ✔ redis installer stops at accounts for timeout (3.461268ms)
+2026-10-03T19:21:11.6352733Z ✔ redis installer stops at accounts for truncated response (3.131473ms)
+2026-10-03T19:21:11.6353359Z ✔ redis installer stops at accounts for password required (3.02771ms)
+2026-10-03T19:21:11.6354019Z ✔ redis installer stops at accounts for policy warning despite denial (3.116796ms)
+2026-10-03T19:21:11.6354674Z ✔ redis installer stops at accounts for host lookup warning (3.18873ms)
+2026-10-03T19:21:11.6355287Z ✔ redis installer stops at accounts for granted root command (3.233844ms)
+2026-10-03T19:21:11.6355951Z ✔ redis installer stops at accounts for granted unprivileged command (3.434428ms)
+2026-10-03T19:21:11.6356580Z ✔ redis installer stops at accounts for different account (3.503817ms)
+2026-10-03T19:21:11.6357163Z ✔ redis installer stops at accounts for appended commands (4.081443ms)
+2026-10-03T19:21:11.6357758Z ✔ redis installer stops at accounts for prefixed custom text (3.588305ms)
+2026-10-03T19:21:11.6358351Z ✔ redis installer stops at accounts for duplicated denial (3.035705ms)
+2026-10-03T19:21:11.6358933Z ✔ redis installer stops at accounts for extra blank line (3.02234ms)
+2026-10-03T19:21:11.6359513Z ✔ redis installer stops at accounts for denial on stderr (3.117487ms)
+2026-10-03T19:21:11.6360307Z ✔ redis installer stops at accounts for localized response (3.51082ms)
+2026-10-03T19:21:11.6360949Z ✔ redis installer stops at accounts for empty success (3.110143ms)
+2026-10-03T19:21:11.6361685Z ✔ full-product PostgreSQL installer also checks the final eos-setup account (4.390058ms)
+2026-10-03T19:21:11.6362206Z ℹ tests 66
+2026-10-03T19:21:11.6362423Z ℹ suites 0
+2026-10-03T19:21:11.6362669Z ℹ pass 66
+2026-10-03T19:21:11.6362899Z ℹ fail 0
+2026-10-03T19:21:11.6363132Z ℹ cancelled 0
+2026-10-03T19:21:11.6363375Z ℹ skipped 0
+2026-10-03T19:21:11.6363623Z ℹ todo 0
+2026-10-03T19:21:11.6363895Z ℹ duration_ms 989.129337
+2026-10-03T19:21:11.6462209Z ##[group]Run python3 tests/bootstrap/github-download.test.py
+2026-10-03T19:21:11.6462700Z [36;1mpython3 tests/bootstrap/github-download.test.py[0m
+2026-10-03T19:21:11.6463089Z [36;1mpython3 tests/bootstrap/prepare-host.test.py[0m
+2026-10-03T19:21:11.6463719Z [36;1m# ArchivedPinTests is a separate signed-R2 delivery verification.[0m
+2026-10-03T19:21:11.6464241Z [36;1m# This source-fixture job does not execute or claim that archive check.[0m
+2026-10-03T19:21:11.6465017Z [36;1mpython3 tests/bootstrap/recover-sudo-abort.test.py PayloadTests GuardTests PostgresIdentityTests PostgresDirectoryTests MutationTests[0m
+2026-10-03T19:21:11.6529604Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T19:21:11.6529956Z env:
+2026-10-03T19:21:11.6530432Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T19:21:11.6530702Z ##[endgroup]
+2026-10-03T19:21:11.7659589Z test_blocked_manifest_fails_before_staging_helper_or_host_install (__main__.GithubDownloader.test_blocked_manifest_fails_before_staging_helper_or_host_install) ... ok
+2026-10-03T19:21:11.7668230Z test_changed_helper_between_download_and_import_is_rejected (__main__.GithubDownloader.test_changed_helper_between_download_and_import_is_rejected) ... ok
+2026-10-03T19:21:11.7671911Z test_cli_accepts_only_public_pins_and_never_echoes_unknown_secret_argument (__main__.GithubDownloader.test_cli_accepts_only_public_pins_and_never_echoes_unknown_secret_argument) ... ok
+2026-10-03T19:21:11.7679016Z test_download_deadline_closes_connection_without_reading_or_leaking_exception (__main__.GithubDownloader.test_download_deadline_closes_connection_without_reading_or_leaking_exception) ... ok
+2026-10-03T19:21:11.7684550Z test_download_exclusive_fixed_filenames_prevent_overwrite_or_path_injection (__main__.GithubDownloader.test_download_exclusive_fixed_filenames_prevent_overwrite_or_path_injection) ... ok
+2026-10-03T19:21:11.7696293Z test_early_host_refuses_nonlinux_nonroot_and_non_tty_without_install (__main__.GithubDownloader.test_early_host_refuses_nonlinux_nonroot_and_non_tty_without_install) ... ok
+2026-10-03T19:21:11.7748096Z test_fd3_is_noninheritable_bounded_ascii_and_always_closed (__main__.GithubDownloader.test_fd3_is_noninheritable_bounded_ascii_and_always_closed) ... ok
+2026-10-03T19:21:11.7756884Z test_fd3_timeout_closes_descriptor_without_read (__main__.GithubDownloader.test_fd3_timeout_closes_descriptor_without_read) ... ok
+2026-10-03T19:21:11.7803466Z test_forged_asset_never_reaches_install_and_clears_token (__main__.GithubDownloader.test_forged_asset_never_reaches_install_and_clears_token) ... ok
+2026-10-03T19:21:11.7824941Z test_forged_helper_never_imports_or_runs_and_clears_token (__main__.GithubDownloader.test_forged_helper_never_imports_or_runs_and_clears_token) ... ok
+2026-10-03T19:21:11.7882419Z test_full_download_authenticates_helper_and_all_assets_before_import_and_install (__main__.GithubDownloader.test_full_download_authenticates_helper_and_all_assets_before_import_and_install) ... ok
+2026-10-03T19:21:11.7889561Z test_manifest_rejects_wrong_repository_custom_paths_extras_types_and_large_assets (__main__.GithubDownloader.test_manifest_rejects_wrong_repository_custom_paths_extras_types_and_large_assets) ... ok
+2026-10-03T19:21:11.7898969Z test_private_file_requires_root_regular_single_link_and_exact_mode (__main__.GithubDownloader.test_private_file_requires_root_regular_single_link_and_exact_mode) ... ok
+2026-10-03T19:21:11.7902660Z test_public_errors_never_expose_response_exception_or_token (__main__.GithubDownloader.test_public_errors_never_expose_response_exception_or_token) ... ok
+2026-10-03T19:21:11.7921235Z test_redirect_and_access_errors_never_read_error_body_or_follow_location (__main__.GithubDownloader.test_redirect_and_access_errors_never_read_error_body_or_follow_location) ... ok
+2026-10-03T19:21:11.7933466Z test_response_limits_truncation_and_encoding_fail_before_any_execution (__main__.GithubDownloader.test_response_limits_truncation_and_encoding_fail_before_any_execution) ... ok
+2026-10-03T19:21:11.7959189Z test_streaming_does_not_buffer_large_assets_and_enforces_expected_length (__main__.GithubDownloader.test_streaming_does_not_buffer_large_assets_and_enforces_expected_length) ... ok
+2026-10-03T19:21:11.7968903Z test_system_ca_cannot_be_symlink_or_writable_by_nonroot (__main__.GithubDownloader.test_system_ca_cannot_be_symlink_or_writable_by_nonroot) ... ok
+2026-10-03T19:21:11.8156555Z test_tls_connection_is_fixed_verified_and_ignores_proxy_environment (__main__.GithubDownloader.test_tls_connection_is_fixed_verified_and_ignores_proxy_environment) ... ok
+2026-10-03T19:21:11.8161241Z test_valid_blob_checks_git_object_sha_and_sha256_and_fixed_request (__main__.GithubDownloader.test_valid_blob_checks_git_object_sha_and_sha256_and_fixed_request) ... ok
+2026-10-03T19:21:11.8173606Z test_wrong_sha256_or_git_sha_is_rejected_even_when_other_digest_matches (__main__.GithubDownloader.test_wrong_sha256_or_git_sha_is_rejected_even_when_other_digest_matches) ... ok
+2026-10-03T19:21:11.8174718Z 
+2026-10-03T19:21:11.8175164Z ----------------------------------------------------------------------
+2026-10-03T19:21:11.8175831Z Ran 21 tests in 0.053s
+2026-10-03T19:21:11.8176099Z 
+2026-10-03T19:21:11.8176269Z OK
+2026-10-03T19:21:11.9167294Z test_all_downloads_are_fixed_bounded_and_hash_verified (__main__.HostPreparation.test_all_downloads_are_fixed_bounded_and_hash_verified) ... ok
+2026-10-03T19:21:11.9179780Z test_apt_transactions_are_explicit_and_server_follows_cluster_suppression (__main__.HostPreparation.test_apt_transactions_are_explicit_and_server_follows_cluster_suppression) ... ok
+2026-10-03T19:21:11.9188098Z test_config_requires_exact_three_assets_pinned_node_and_fixed_delivery (__main__.HostPreparation.test_config_requires_exact_three_assets_pinned_node_and_fixed_delivery) ... ok
+2026-10-03T19:21:11.9195003Z test_deb822_option_diagnostics_use_only_fixed_reason_codes (__main__.HostPreparation.test_deb822_option_diagnostics_use_only_fixed_reason_codes) ... ok
+2026-10-03T19:21:11.9200399Z test_download_origin_rejects_redirect_auth_traversal_and_url_parameters (__main__.HostPreparation.test_download_origin_rejects_redirect_auth_traversal_and_url_parameters) ... ok
+2026-10-03T19:21:11.9208213Z test_existing_cluster_data_is_never_deleted_or_adopted (__main__.HostPreparation.test_existing_cluster_data_is_never_deleted_or_adopted) ... ok
+2026-10-03T19:21:11.9214141Z test_existing_eos_data_aborts_before_commands_and_preserves_bytes (__main__.HostPreparation.test_existing_eos_data_aborts_before_commands_and_preserves_bytes) ... ok
+2026-10-03T19:21:11.9221475Z EOS: Voraussetzungen geprüft; lade die drei festgelegten Installationsdateien.
+2026-10-03T19:21:11.9227243Z test_failed_download_hash_precedes_all_extraction_and_host_mutations (__main__.HostPreparation.test_failed_download_hash_precedes_all_extraction_and_host_mutations) ... ok
+2026-10-03T19:21:11.9234158Z test_legacy_pgp_signed_by_with_arm64_remains_bounded (__main__.HostPreparation.test_legacy_pgp_signed_by_with_arm64_remains_bounded) ... ok
+2026-10-03T19:21:11.9270905Z test_local_handoff_cannot_skip_schema_or_fresh_host_admission (__main__.HostPreparation.test_local_handoff_cannot_skip_schema_or_fresh_host_admission) ... ok
+2026-10-03T19:21:11.9305637Z test_local_handoff_rehashes_last_asset_before_any_extraction_or_apt (__main__.HostPreparation.test_local_handoff_rehashes_last_asset_before_any_extraction_or_apt) ... ok
+2026-10-03T19:21:11.9352485Z EOS: Alle Download-Hashes stimmen. Bereite Node und PostgreSQL vor.
+2026-10-03T19:21:11.9361285Z test_local_handoff_reuses_all_verified_assets_with_same_fixed_runner_and_no_download (__main__.HostPreparation.test_local_handoff_reuses_all_verified_assets_with_same_fixed_runner_and_no_download) ... ok
+2026-10-03T19:21:11.9408725Z test_node_extracts_only_fixed_regular_arm64_elf_member (__main__.HostPreparation.test_node_extracts_only_fixed_regular_arm64_elf_member) ... ok
+2026-10-03T19:21:11.9412403Z test_official_debian_deb822_pgp_sources_accept_both_release_stanzas (__main__.HostPreparation.test_official_debian_deb822_pgp_sources_accept_both_release_stanzas) ... ok
+2026-10-03T19:21:11.9414452Z test_official_raspberry_pi_deb822_pgp_source_is_accepted (__main__.HostPreparation.test_official_raspberry_pi_deb822_pgp_source_is_accepted) ... ok
+2026-10-03T19:21:11.9418448Z test_official_sources_only_no_trust_bypass_or_custom_repositories (__main__.HostPreparation.test_official_sources_only_no_trust_bypass_or_custom_repositories) ... ok
+2026-10-03T19:21:11.9421853Z test_older_gpg_and_asc_source_forms_are_preserved (__main__.HostPreparation.test_older_gpg_and_asc_source_forms_are_preserved) ... ok
+2026-10-03T19:21:11.9427847Z test_pgp_keyring_cannot_escape_the_existing_protected_directory (__main__.HostPreparation.test_pgp_keyring_cannot_escape_the_existing_protected_directory) ... ok
+2026-10-03T19:21:11.9433196Z test_pgp_sources_still_require_fixed_official_origins_suites_and_architecture (__main__.HostPreparation.test_pgp_sources_still_require_fixed_official_origins_suites_and_architecture) ... ok
+2026-10-03T19:21:11.9437750Z test_pgp_support_preserves_signature_and_validity_bypass_rejections (__main__.HostPreparation.test_pgp_support_preserves_signature_and_validity_bypass_rejections) ... ok
+2026-10-03T19:21:11.9443670Z EOS: Voraussetzungen geprüft; lade die drei festgelegten Installationsdateien.
+2026-10-03T19:21:11.9445586Z test_public_download_path_delegates_to_same_local_revalidation (__main__.HostPreparation.test_public_download_path_delegates_to_same_local_revalidation) ... ok
+2026-10-03T19:21:11.9447754Z test_ssh_environment_preserves_only_valid_connection_and_no_caller_overrides (__main__.HostPreparation.test_ssh_environment_preserves_only_valid_connection_and_no_caller_overrides) ... ok
+2026-10-03T19:21:11.9454421Z test_stock_createcluster_preserved_and_only_effective_setting_disabled (__main__.HostPreparation.test_stock_createcluster_preserved_and_only_effective_setting_disabled) ... ok
+2026-10-03T19:21:11.9457222Z test_unit_table_requires_successful_recognized_full_output (__main__.HostPreparation.test_unit_table_requires_successful_recognized_full_output) ... ok
+2026-10-03T19:21:11.9480885Z test_zip_data_only_roundtrip_and_nothing_else_executed (__main__.HostPreparation.test_zip_data_only_roundtrip_and_nothing_else_executed) ... ok
+2026-10-03T19:21:11.9491682Z test_zip_rejects_nul_names_before_python_truncation_can_hide_suffix (__main__.HostPreparation.test_zip_rejects_nul_names_before_python_truncation_can_hide_suffix) ... ok
+2026-10-03T19:21:11.9642772Z test_zip_rejects_traversal_duplicates_links_types_collisions_before_writing (__main__.HostPreparation.test_zip_rejects_traversal_duplicates_links_types_collisions_before_writing) ... /usr/lib/python3.12/zipfile/__init__.py:1620: UserWarning: Duplicate name: 'bootstrap.json'
+2026-10-03T19:21:11.9645992Z   return self._open_to_write(zinfo, force_zip64=force_zip64)
+2026-10-03T19:21:11.9670475Z ok
+2026-10-03T19:21:11.9670688Z 
+2026-10-03T19:21:11.9671284Z ----------------------------------------------------------------------
+2026-10-03T19:21:11.9671917Z Ran 27 tests in 0.052s
+2026-10-03T19:21:11.9672185Z 
+2026-10-03T19:21:11.9672343Z OK
+2026-10-03T19:21:12.0679090Z test_changed_file_rejected (__main__.PayloadTests.test_changed_file_rejected) ... ok
+2026-10-03T19:21:12.0688061Z test_directory_metadata_rejected (__main__.PayloadTests.test_directory_metadata_rejected) ... ok
+2026-10-03T19:21:12.0697991Z test_exact_real_tree_contents_pass (__main__.PayloadTests.test_exact_real_tree_contents_pass) ... ok
+2026-10-03T19:21:12.0704965Z test_exact_stage_layout_rejects_current_pointer (__main__.PayloadTests.test_exact_stage_layout_rejects_current_pointer) ... ok
+2026-10-03T19:21:12.0714164Z test_extra_empty_directory_rejected (__main__.PayloadTests.test_extra_empty_directory_rejected) ... ok
+2026-10-03T19:21:12.0725540Z test_extra_file_rejected (__main__.PayloadTests.test_extra_file_rejected) ... ok
+2026-10-03T19:21:12.0735211Z test_manifest_paths_and_duplicate_entries_rejected (__main__.PayloadTests.test_manifest_paths_and_duplicate_entries_rejected) ... ok
+2026-10-03T19:21:12.0744402Z test_manifest_profile_and_entry_types_rejected (__main__.PayloadTests.test_manifest_profile_and_entry_types_rejected) ... ok
+2026-10-03T19:21:12.0753545Z test_missing_file_rejected (__main__.PayloadTests.test_missing_file_rejected) ... ok
+2026-10-03T19:21:12.0776707Z test_mode_owner_group_link_and_filesystem_changes_rejected (__main__.PayloadTests.test_mode_owner_group_link_and_filesystem_changes_rejected) ... ok
+2026-10-03T19:21:12.0792805Z test_unpinned_manifest_rejected_before_openssl_or_payload (__main__.PayloadTests.test_unpinned_manifest_rejected_before_openssl_or_payload) ... ok
+2026-10-03T19:21:12.0794836Z test_changed_login_shell_home_and_ids_rejected (__main__.GuardTests.test_changed_login_shell_home_and_ids_rejected) ... ok
+2026-10-03T19:21:12.0800821Z test_check_is_default_and_never_mutates (__main__.GuardTests.test_check_is_default_and_never_mutates) ... ok
+2026-10-03T19:21:12.0802424Z test_duplicate_json_keys_rejected (__main__.GuardTests.test_duplicate_json_keys_rejected) ... ok
+2026-10-03T19:21:12.0804143Z test_exact_accounts_pass_in_all_rename_phases (__main__.GuardTests.test_exact_accounts_pass_in_all_rename_phases) ... ok
+2026-10-03T19:21:12.0806245Z test_extra_account_group_or_supplementary_membership_rejected (__main__.GuardTests.test_extra_account_group_or_supplementary_membership_rejected) ... ok
+2026-10-03T19:21:12.0815482Z test_failed_commands_and_stderr_are_not_accepted (__main__.GuardTests.test_failed_commands_and_stderr_are_not_accepted) ... ok
+2026-10-03T19:21:12.0819377Z test_mounts_below_stage_and_stage_itself_rejected (__main__.GuardTests.test_mounts_below_stage_and_stage_itself_rejected) ... ok
+2026-10-03T19:21:12.0822413Z test_native_evidence_is_preserved_as_non_hardware_test (__main__.GuardTests.test_native_evidence_is_preserved_as_non_hardware_test) ... ok
+2026-10-03T19:21:12.0824969Z test_process_real_effective_saved_and_supplementary_ids_rejected (__main__.GuardTests.test_process_real_effective_saved_and_supplementary_ids_rejected) ... ok
+2026-10-03T19:21:12.0833633Z test_recover_requires_exact_flag_and_passed_checks (__main__.GuardTests.test_recover_requires_exact_flag_and_passed_checks) ... ok
+2026-10-03T19:21:12.0837576Z test_supported_debian_and_raspberry_pi_os_13_only (__main__.GuardTests.test_supported_debian_and_raspberry_pi_os_13_only) ... ok
+2026-10-03T19:21:12.0839727Z test_unit_table_requires_complete_successful_rows_and_no_eos (__main__.GuardTests.test_unit_table_requires_complete_successful_rows_and_no_eos) ... ok
+2026-10-03T19:21:12.0842319Z test_unlocked_shadow_and_uid_alias_rejected_without_secret_output (__main__.GuardTests.test_unlocked_shadow_and_uid_alias_rejected_without_secret_output) ... ok
+2026-10-03T19:21:12.0844502Z test_unreadable_or_incomplete_process_table_rejected (__main__.GuardTests.test_unreadable_or_incomplete_process_table_rejected) ... ok
+2026-10-03T19:21:12.0851926Z test_exception_is_applied_only_to_existing_fixed_pg_paths (__main__.PostgresIdentityTests.test_exception_is_applied_only_to_existing_fixed_pg_paths) ... ok
+2026-10-03T19:21:12.0865046Z test_local_and_nss_identity_must_match (__main__.PostgresIdentityTests.test_local_and_nss_identity_must_match) ... ok
+2026-10-03T19:21:12.0868187Z test_missing_alias_malformed_or_mismatched_identity_is_rejected (__main__.PostgresIdentityTests.test_missing_alias_malformed_or_mismatched_identity_is_rejected) ... ok
+2026-10-03T19:21:12.0870901Z test_observed_and_different_package_ids_are_accepted (__main__.PostgresIdentityTests.test_observed_and_different_package_ids_are_accepted) ... ok
+2026-10-03T19:21:12.0873126Z test_root_and_eos_identity_collisions_are_rejected (__main__.PostgresIdentityTests.test_root_and_eos_identity_collisions_are_rejected) ... ok
+2026-10-03T19:21:12.0884196Z test_nonempty_directory_and_hidden_file_fail_without_removal (__main__.PostgresDirectoryTests.test_nonempty_directory_and_hidden_file_fail_without_removal) ... ok
+2026-10-03T19:21:12.0891775Z test_observed_empty_postgres_owned_directory_passes (__main__.PostgresDirectoryTests.test_observed_empty_postgres_owned_directory_passes) ... ok
+2026-10-03T19:21:12.0901278Z test_opened_directory_change_is_rejected_and_fd_closed (__main__.PostgresDirectoryTests.test_opened_directory_change_is_rejected_and_fd_closed) ... ok
+2026-10-03T19:21:12.0908710Z test_path_substitution_after_scan_is_rejected (__main__.PostgresDirectoryTests.test_path_substitution_after_scan_is_rejected) ... ok
+2026-10-03T19:21:12.0933510Z test_preflight_observed_pg_ownership_reaches_cluster_check (__main__.PostgresDirectoryTests.test_preflight_observed_pg_ownership_reaches_cluster_check) ... ok
+2026-10-03T19:21:12.0942773Z test_root_owned_and_alternate_postgres_identity_pass (__main__.PostgresDirectoryTests.test_root_owned_and_alternate_postgres_identity_pass) ... ok
+2026-10-03T19:21:12.0951413Z test_symlink_and_regular_file_are_rejected (__main__.PostgresDirectoryTests.test_symlink_and_regular_file_are_rejected) ... ok
+2026-10-03T19:21:12.0969751Z test_unrelated_or_mixed_owners_and_special_or_writable_modes_fail (__main__.PostgresDirectoryTests.test_unrelated_or_mixed_owners_and_special_or_writable_modes_fail) ... ok
+2026-10-03T19:21:12.0978921Z test_unsafe_parent_and_generic_postgres_tool_path_still_fail (__main__.PostgresDirectoryTests.test_unsafe_parent_and_generic_postgres_tool_path_still_fail) ... ok
+2026-10-03T19:21:12.1013949Z test_group_failure_leaves_original_account_and_staging_evidence (__main__.MutationTests.test_group_failure_leaves_original_account_and_staging_evidence) ... ok
+2026-10-03T19:21:12.1041513Z test_journal_failure_prevents_following_account_mutations (__main__.MutationTests.test_journal_failure_prevents_following_account_mutations) ... ok
+2026-10-03T19:21:12.1064467Z test_new_mount_stops_before_rename (__main__.MutationTests.test_new_mount_stops_before_rename) ... ok
+2026-10-03T19:21:12.1087286Z test_process_detected_before_rename_preserves_original_tree (__main__.MutationTests.test_process_detected_before_rename_preserves_original_tree) ... ok
+2026-10-03T19:21:12.1111477Z test_stage_identity_change_stops_before_rename (__main__.MutationTests.test_stage_identity_change_stops_before_rename) ... ok
+2026-10-03T19:21:12.1158137Z test_success_preserves_files_uid_gid_and_renames_user_last (__main__.MutationTests.test_success_preserves_files_uid_gid_and_renames_user_last) ... ok
+2026-10-03T19:21:12.1196293Z test_user_failure_keeps_original_account_and_exact_pending_step (__main__.MutationTests.test_user_failure_keeps_original_account_and_exact_pending_step) ... ok
+2026-10-03T19:21:12.1197386Z 
+2026-10-03T19:21:12.1197794Z ----------------------------------------------------------------------
+2026-10-03T19:21:12.1198400Z Ran 46 tests in 0.053s
+2026-10-03T19:21:12.1198632Z 
+2026-10-03T19:21:12.1198768Z OK
+2026-10-03T19:21:12.1357033Z ##[group]Run cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+2026-10-03T19:21:12.1357450Z [36;1mcat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'[0m
+2026-10-03T19:21:12.1358107Z [36;1mThis job selects source-only bootstrap, onboarding, sudo/preflight and PostgreSQL contract fixtures, plus real loopback TLS tests.[0m
+2026-10-03T19:21:12.1359100Z [36;1mPostgreSQL contract tests use doubles; no native database, ARM64 runtime, APT transaction, systemd installation or plant is exercised.[0m
+2026-10-03T19:21:12.1360394Z [36;1mRecovery archive-signature verification, full artifact publication and native Debian 13 / Pi first-start acceptance remain separate OPEN gates.[0m
+2026-10-03T19:21:12.1361416Z [36;1mA green result is not a production approval. The historical upstream Linux/macOS/FreeBSD/Windows workflows remain separate.[0m
+2026-10-03T19:21:12.1361995Z [36;1mSUMMARY[0m
+2026-10-03T19:21:12.1424306Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-03T19:21:12.1424698Z env:
+2026-10-03T19:21:12.1424918Z   PYTHONDONTWRITEBYTECODE: 1
+2026-10-03T19:21:12.1425171Z ##[endgroup]
+2026-10-03T19:21:12.1629197Z Post job cleanup.
+2026-10-03T19:21:12.2875329Z Post job cleanup.
+2026-10-03T19:21:12.3724486Z [command]/usr/bin/git version
+2026-10-03T19:21:12.3770044Z git version 2.55.0
+2026-10-03T19:21:12.3820393Z Temporarily overriding HOME='/home/runner/work/_temp/247c097e-760a-4084-9e90-ca9c96efb42a' before making global git config changes
+2026-10-03T19:21:12.3821523Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-03T19:21:12.3826138Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/nexowatt-eos/nexowatt-eos
+2026-10-03T19:21:12.3859155Z Removing SSH command configuration
+2026-10-03T19:21:12.3866176Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-03T19:21:12.3900620Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-03T19:21:12.4160346Z Removing HTTP extra header
+2026-10-03T19:21:12.4166121Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-03T19:21:12.4204636Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-03T19:21:12.4464551Z Removing includeIf entries pointing to credentials config files
+2026-10-03T19:21:12.4473768Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-03T19:21:12.4516909Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-03T19:21:12.4924767Z Cleaning up orphan processes
