@@ -1,3 +1,63 @@
+<!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
+# EOS-Testinstallation auf einem neuen Pi
+
+Der vorbereitete Installationsblock steht hier zum Kopieren. Er verwendet euer
+privates Repository und fragt den GitHub-Token einmal verdeckt ab. Git muss auf
+dem Pi nicht installiert sein.
+
+**Noch gesperrt: Die Zuordnung von `Downloads/license-trust.json` zu eurer
+aktuellen Lizenzverwaltung ist noch zu best?tigen. Der unten gebundene Stand
+bricht deshalb vor Paketinstallation ab. Er ist noch kein startbereiter
+Installationsbefehl.** Nach der einmaligen Herstellerzuordnung wird hier der
+fertige Block mit eingebundenem ?ffentlichen Pr?fschl?ssel bereitgestellt;
+auf neuen Ger?ten ist dann keine Schl?sseleingabe n?tig.
+
+F?r den sp?teren Test: frisches Debian 13/Raspberry Pi OS 13 **ARM64**, eine
+Root-PuTTY-Sitzung (gegebenenfalls zuerst `sudo -i`), `curl`, `python3` und
+ein GitHub-Token mit Leserecht auf `NexoWatt/nexowatt-eos`. Den gesamten Block
+zusammen kopieren; den Token erst bei der verdeckten Abfrage eingeben.
+
+```bash
+/bin/bash <<'EOS_INSTALL'
+# EOS_GITHUB_BOOTSTRAP_VERSION=2026-10-03
+set +x
+set -euo pipefail
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
+umask 077
+[[ $EUID -eq 0 ]] || { echo 'EOS: Bitte zuerst sudo -i ausfuehren.' >&2; exit 1; }
+[[ -x /usr/bin/curl && -x /usr/bin/python3 ]] || { echo 'EOS: curl und python3 werden im Basisabbild benoetigt.' >&2; exit 1; }
+[[ -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1
+(( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1
+set +a
+unset eos_token
+read -r -s -p 'GitHub-Token: ' eos_token </dev/tty
+printf '\n' >/dev/tty
+[[ $eos_token =~ ^[A-Za-z0-9_]{20,512}$ ]] || { echo 'EOS: Tokenformat ungueltig.' >&2; exit 1; }
+eos_stage=$(/usr/bin/mktemp -d /root/eos-download-XXXXXXXX)
+printf 'header = "Authorization: Bearer %s"\n' "$eos_token" | /usr/bin/env -i PATH="$PATH" LC_ALL=C /usr/bin/curl -q --config - --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 14301 --header 'Accept: application/vnd.github.raw+json' --header 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/NexoWatt/nexowatt-eos/git/blobs/00de8f6fdc938fa6e85742d176e20a520c231069' -o "$eos_stage/github-download.py"
+printf '%s  %s\n' '6faf6bf09aaaf3faf92a1e64d49f8ba822dbb3ea6dd10fdee4c8f8617a5c41bc' "$eos_stage/github-download.py" | /usr/bin/sha256sum --check --status
+exec 3< <(printf '%s\n' "$eos_token")
+unset eos_token
+exec /usr/bin/env -i PATH="$PATH" LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /usr/bin/python3 -I -B "$eos_stage/github-download.py" --manifest-blob 6598247a5d6c58cc5ea76ef3eb39fb3eebb7bc35 --manifest-sha256 82723dd9c8fa625dfef3d11461855c6242a3cc0af3d050dd5eb5b2e51ac78fc2
+EOS_INSTALL
+```
+
+Nach einer erfolgreichen Installation zeigt das Terminal die HTTPS-Adresse
+und den lokalen Einrichtungscode. Die Ger?te-CA im Browser vertrauensw?rdig
+importieren, dann den Assistenten ?ffnen. Die **UUID ist vor Lizenzaktivierung
+und Passwortvergabe sichtbar und kopierbar**. Benutzerpassw?rter werden im
+Frontend vergeben; Lizenzbereiche und Kontingente bleiben serverseitig gepr?ft.
+
+[Anleitung und Voraussetzungen](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ?
+[Sicherheitsgrenzen](docs/security/PRIVATE_GITHUB_BOOTSTRAP_DE.md) ?
+[Pr?fbelege](reports/integration/github-bootstrap-20261003/README.md).
+**Vollst?ndige Pi-Installation und Hardwaretests: OFFEN, nicht ausgef?hrt.**
+Dieser Einstieg installiert neu; er ist kein Flotten-Updater.
+
+<!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
+
+---
+
 # Aktueller Entwicklungsstand: EOS dev9 – geschützter Erststart
 
 Der neue Installationspfad verlangt Controller und sämtliche sechs Produktadapter

@@ -589,11 +589,21 @@ def ssh_environment(value):
     return env
 
 
-def prepare(config, staging):
+def install_downloaded(config, staging):
+    """Internal handoff from an authenticated downloader, never a CLI bypass.
+
+    Recheck the fresh host and every complete asset. A downloader's earlier
+    checks are not evidence that the bytes still present are the pinned ones.
+    """
     config = validate_config(config)
     node_present = preflight(staging)
-    print("EOS: Voraussetzungen geprüft; lade die drei festgelegten Installationsdateien.", flush=True)
-    assets = download_assets(config, staging)
+    assets = {}
+    for asset in config["assets"]:
+        path = staging / asset["name"]
+        trusted_path(path)
+        digest_file(path, asset)
+        os.chmod(path, 0o400)
+        assets[asset["name"]] = path
     kit = extract_kit(assets["installer-kit.zip"], staging / "kit")
     node = extract_node(assets[NODE_ASSET], staging / "node.bin")
     destination = kit / DELIVERY / EOS_ASSET
@@ -609,6 +619,14 @@ def prepare(config, staging):
                  timeout=3600, cwd=kit, env=ssh_environment(os.environ.get("SSH_CONNECTION", "")))
     if result.returncode != 0:
         fail("BOOTSTRAP_FIRST_START_FAILED")
+
+
+def prepare(config, staging):
+    config = validate_config(config)
+    preflight(staging)
+    print("EOS: Voraussetzungen geprüft; lade die drei festgelegten Installationsdateien.", flush=True)
+    download_assets(config, staging)
+    install_downloaded(config, staging)
 
 
 def main():

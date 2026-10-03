@@ -68,6 +68,20 @@ class HostPreparation(unittest.TestCase):
         with self.assertRaisesRegex(subject.Rejected, code):
             callback()
 
+    def downloaded_fixture(self):
+        write_zip(self.directory / "installer-kit.zip")
+        write_node_tar(self.directory / subject.NODE_ASSET)
+        (self.directory / subject.EOS_ASSET).write_bytes(b"opaque signed-runtime archive fixture")
+        value = config()
+        for asset in value["assets"]:
+            data = (self.directory / asset["name"]).read_bytes()
+            asset.update(bytes=len(data), sha256=hashlib.sha256(data).hexdigest())
+        # The internal fixture pin binds the synthetic ELF tar, not a real Node
+        # release. Production keeps the fixed upstream digest and no CLI hook.
+        node_hash = next(asset["sha256"] for asset in value["assets"] if asset["name"] == subject.NODE_ASSET)
+        self.enterContext(mock.patch.object(subject, "NODE_SHA256", node_hash))
+        return value
+
     def test_config_requires_exact_three_assets_pinned_node_and_fixed_delivery(self):
         self.assertEqual(subject.validate_config(config()), config())
         malformed = []
@@ -143,6 +157,75 @@ class HostPreparation(unittest.TestCase):
         self.assertEqual(len(calls), 3)
         for asset in value["assets"]:
             subject.digest_file(files[asset["name"]], asset)
+
+    def test_local_handoff_rehashes_last_asset_before_any_extraction_or_apt(self):
+        value = self.downloaded_fixture()
+        archive = self.directory / subject.EOS_ASSET
+        original = archive.read_bytes()
+        archive.write_bytes(bytes([original[0] ^ 1]) + original[1:])
+        with mock.patch.object(subject, "preflight", return_value=False) as admission, \
+                mock.patch.object(subject, "trusted_path"), mock.patch.object(subject, "digest_file", wraps=subject.digest_file) as digest, \
+                mock.patch.object(subject, "extract_kit") as extract, mock.patch.object(subject, "prepare_packages") as apt, \
+                mock.patch.object(subject, "install_node") as node, mock.patch.object(subject, "run") as command:
+            self.rejected(lambda: subject.install_downloaded(value, self.directory), "ASSET_HASH")
+            admission.assert_called_once_with(self.directory)
+            self.assertEqual([call.args[0].name for call in digest.call_args_list], list(subject.ASSETS))
+            extract.assert_not_called()
+            apt.assert_not_called()
+            node.assert_not_called()
+            command.assert_not_called()
+        self.assertFalse((self.directory / "kit").exists())
+
+    def test_local_handoff_reuses_all_verified_assets_with_same_fixed_runner_and_no_download(self):
+        value = self.downloaded_fixture()
+        events = []
+        original_digest = subject.digest_file
+
+        def digest(path, asset):
+            original_digest(path, asset)
+            events.append(("hash", path.name))
+
+        def apt(stage):
+            self.assertEqual(stage, self.directory)
+            self.assertEqual(events, [("hash", name) for name in subject.ASSETS])
+            self.assertEqual((stage / "kit" / subject.DELIVERY / subject.EOS_ASSET).read_bytes(),
+                             (stage / subject.EOS_ASSET).read_bytes())
+            events.append(("apt",))
+
+        with mock.patch.object(subject, "preflight", return_value=False), mock.patch.object(subject, "trusted_path"), \
+                mock.patch.object(subject, "digest_file", side_effect=digest), \
+                mock.patch.object(subject, "prepare_packages", side_effect=apt), mock.patch.object(subject, "install_node") as node, \
+                mock.patch.object(subject, "download_assets") as download, \
+                mock.patch.object(subject, "run", return_value=subprocess.CompletedProcess([], 0)) as command:
+            subject.install_downloaded(value, self.directory)
+            download.assert_not_called()
+            node.assert_called_once_with(self.directory / "node.bin", False)
+            self.assertEqual(command.call_count, 1)
+            self.assertEqual(command.call_args.args[0], ["/usr/bin/node", str(self.directory / "kit/tools/bootstrap/first-start.cjs")])
+            self.assertEqual(command.call_args.kwargs["cwd"], self.directory / "kit")
+
+    def test_local_handoff_cannot_skip_schema_or_fresh_host_admission(self):
+        value = self.downloaded_fixture()
+        with mock.patch.object(subject, "preflight", side_effect=subject.Rejected("BOOTSTRAP_EXISTING_EOS")) as admission, \
+                mock.patch.object(subject, "digest_file") as digest, mock.patch.object(subject, "prepare_packages") as apt:
+            self.rejected(lambda: subject.install_downloaded(value, self.directory), "EXISTING_EOS")
+            admission.assert_called_once_with(self.directory)
+            digest.assert_not_called()
+            apt.assert_not_called()
+        value["bypass"] = True
+        with mock.patch.object(subject, "preflight") as admission:
+            self.rejected(lambda: subject.install_downloaded(value, self.directory), "BOOTSTRAP_CONFIG")
+            admission.assert_not_called()
+
+    def test_public_download_path_delegates_to_same_local_revalidation(self):
+        value = config()
+        events = []
+        with mock.patch.object(subject, "preflight", side_effect=lambda stage: events.append("preflight")), \
+                mock.patch.object(subject, "download_assets", side_effect=lambda cfg, stage: events.append("download")), \
+                mock.patch.object(subject, "install_downloaded", side_effect=lambda cfg, stage: events.append("install_downloaded")) as handoff:
+            subject.prepare(value, self.directory)
+        self.assertEqual(events, ["preflight", "download", "install_downloaded"])
+        handoff.assert_called_once_with(value, self.directory)
 
     def test_zip_data_only_roundtrip_and_nothing_else_executed(self):
         archive, target = self.directory / "kit.zip", self.directory / "kit"

@@ -1,6 +1,7 @@
 # Changelog for Linux-Installer-Script
 
 ## 2026-10-03
+* Add private NexoWatt/nexowatt-eos GitHub installation with one hidden token prompt, fixed blob/SHA256 verification and an exact README command (`EOS_GITHUB_BOOTSTRAP_VERSION=2026-10-03`). Tokens are never persisted or passed to package/runtime children. Public license trust must be authenticated before enabling the installation; Pi and hardware acceptance remain open.
 * Prepare a fixed, hash-pinned one-command TEST download with automatic Debian/Node/PostgreSQL prerequisites and protected browser-first setup; generated `BOOTSTRAP_VERSION=2026-10-03`. Hosting, authentic manufacturer license trust, browser certificate distribution and real Pi acceptance remain open.
 * Correct systemd257 fresh-unit admission using a successful complete unit table; ship a newly signed test.3 revision2 instead of modifying the original signed archive.
 

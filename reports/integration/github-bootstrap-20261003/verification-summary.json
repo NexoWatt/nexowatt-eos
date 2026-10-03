@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "kind": "private-github-bootstrap-verification",
+  "checkedAt": "2026-10-03T14:03:32.680Z",
+  "platform": "win32",
+  "node": "v24.21.0",
+  "results": [
+    {
+      "name": "node-bootstrap",
+      "command": [
+        "node.exe",
+        "--test",
+        "--test-reporter=tap",
+        "tests/bootstrap/build-download.test.cjs",
+        "tests/bootstrap/build-github-download.test.cjs",
+        "tests/bootstrap/first-start.test.cjs",
+        "tests/bootstrap/github-publication.test.cjs"
+      ],
+      "exitCode": 0,
+      "launchError": null,
+      "stdout": {
+        "file": "raw/node-bootstrap.stdout",
+        "bytes": 7293,
+        "sha256": "882ad64e2886e3691183c83d70565ef7b7a1d5a88fe6527f6e589fa22692cf67"
+      },
+      "stderr": {
+        "file": "raw/node-bootstrap.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "python-download",
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "tests/bootstrap/github-download.test.py"
+      ],
+      "exitCode": 0,
+      "launchError": null,
+      "stdout": {
+        "file": "raw/python-download.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "file": "raw/python-download.stderr",
+        "bytes": 3692,
+        "sha256": "9fccaea4cefdba7f9861e3020b889eed978d124d4fd0c8111cde43694a8ddf47"
+      }
+    },
+    {
+      "name": "python-host-preparation",
+      "command": [
+        "python",
+        "-I",
+        "-B",
+        "tests/bootstrap/prepare-host.test.py"
+      ],
+      "exitCode": 0,
+      "launchError": null,
+      "stdout": {
+        "file": "raw/python-host-preparation.stdout",
+        "bytes": 229,
+        "sha256": "b93de80ac91d13130495c6084288574c3ff85a1eea0b7c552e3dade3870197f9"
+      },
+      "stderr": {
+        "file": "raw/python-host-preparation.stderr",
+        "bytes": 3455,
+        "sha256": "96325f0af4981695a3e145843679d2f69b2f82d33afdc0f277d16125b3b9a1ad"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "path": "tools/bootstrap/build-github-download.cjs",
+      "bytes": 8342,
+      "sha256": "f1507e0eb314d907c3f0bfa31112c6ece29dbb40df7199df263caf952807d22b"
+    },
+    {
+      "path": "tools/bootstrap/github-download.py",
+      "bytes": 14301,
+      "sha256": "6faf6bf09aaaf3faf92a1e64d49f8ba822dbb3ea6dd10fdee4c8f8617a5c41bc"
+    },
+    {
+      "path": "tools/bootstrap/prepare-host.py",
+      "bytes": 28584,
+      "sha256": "bc3422502f0f3c28d8c4a5176e487b5d9f6b4d340014cb1709b8f0993c85386f"
+    },
+    {
+      "path": "tools/bootstrap/build-download.cjs",
+      "bytes": 10923,
+      "sha256": "7749167b0180813ded1e64f3182bf255c6326257c6641354c2625ad4e8d1636f"
+    },
+    {
+      "path": "tools/bootstrap/first-start.cjs",
+      "bytes": 12113,
+      "sha256": "a584ee08d6a69b09297282a43087496a4808758f976b9c1c64e24f11b0875557"
+    },
+    {
+      "path": "tools/integration/verify-private-github-blobs.py",
+      "bytes": 4767,
+      "sha256": "8bfc836c7dabc2011560dec26c10e2f5c791b9d0efa846fa91fe42c5c34bf1de"
+    },
+    {
+      "path": "tools/integration/record-github-bootstrap.cjs",
+      "bytes": 3644,
+      "sha256": "b6a8a0cc1f30c6ea05b34cad33417c8687bc5eef464d7dd9ed22dfc87e9f2742"
+    },
+    {
+      "path": "tests/bootstrap/build-github-download.test.cjs",
+      "bytes": 5497,
+      "sha256": "f14d4385a371de0332825c7490fe160a2a145bb9c09f096829986aa3e5dbd7bd"
+    },
+    {
+      "path": "tests/bootstrap/github-download.test.py",
+      "bytes": 20790,
+      "sha256": "fd7b4b45fd0fdf1282f3d7a2055a076adfce7edb74d3950b76f638bbcf2cb514"
+    },
+    {
+      "path": "tests/bootstrap/prepare-host.test.py",
+      "bytes": 20079,
+      "sha256": "04c35c18ac95d8e983abfdd7b1235014625c6854ad24083211825773183e5585"
+    },
+    {
+      "path": "tests/bootstrap/github-publication.test.cjs",
+      "bytes": 12175,
+      "sha256": "1e712620564e6a389a65673a8540cf54cae8a5e4afc5b47b6b6cda043cc11640"
+    }
+  ],
+  "completeManufacturerBuildFixture": "tests/bootstrap/github-publication.test.cjs uses only an isolated public fixture key",
+  "readyForTargetInstallation": false,
+  "manufacturerLicenseTrustIdentityConfirmed": false,
+  "previousSignedRuntimeReused": "delivery/test-pi-0.2.0-test.3-r2",
+  "signedRuntimeChanged": false,
+  "targetInstallationExecuted": false,
+  "nativeDebianCaPathTested": false,
+  "browserTested": false,
+  "hardwareAcceptance": "OPEN",
+  "productionReleaseApproved": false,
+  "fleetUpdaterImplemented": false
+}
