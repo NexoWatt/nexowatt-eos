@@ -54,3 +54,35 @@ Quell-/Lock-SBOM und gegebenenfalls tatsächlich gebauter Runtime-SBOM müssen
 unterschieden werden. Ein fehlgeschlagener Build erhält keine Erfolgssignatur.
 Historische test.2-Hashes bleiben historische Belege. Dieser Stand enthält keine
 Konformitätserklärung und keine Produktivfreigabe.
+
+## Ergänzung: installierbarer test.3-Kandidat vom 03.10.2026
+
+Der neue [Git-Einstieg](../operations/GIT_TEST3_INSTALLATION_DE.md) verlangt
+einen bereits authentisierten, rootkontrollierten Checkout und unabhängig
+bestätigte öffentliche Vertrauensanker. Hashgebundene Datenextraktion begrenzt
+Pfade, Dateitypen, Rechte, Größen und PAX-Header vor dem Schreiben. Danach
+gelten unverändert die Signatur-, Produkt-, SBOM- und Dateirechteprüfungen.
+Der feste native Zielprobe lädt nur die geprüften ARM64-Bibliotheken mit
+`RTLD_NOW`; er enumeriert und öffnet keine Geräte. Eine bestandene Prüfung
+ist keine Hardwarefreigabe.
+
+Der Buildsignierer hält einen kurzlebigen Ed25519-Testschlüssel ausschließlich
+im Arbeitsspeicher. Nur Manifest, Signatur und öffentlicher Schlüssel werden
+geschrieben. Kanonische POSIX-Metadaten im signierten Archiv ersetzen keine
+behauptete Windows-Rechteprüfung. Auf Linux gelten die tatsächlichen Rechte
+weiterhin als Installationsvoraussetzung.
+
+Ein fester systemd-Stopwächter bindet einen unvollständigen Abschluss an dessen
+`INVOCATION_ID`, entfernt die vorläufige Startfreigabe und versucht den
+Controllerstop auch nach Abbruch des Hauptprozesses. Er löscht den
+Wartungslock nicht und übernimmt keinen fremden Lauf. Die direkte systemd-
+Fehler-/Kill-/Recovery-Abnahme bleibt offen.
+
+Die [Lizenzmatrix](../../components/ui/docs/security/EOS_LICENSE_ENTITLEMENTS_2026-10-03_DE.md)
+verwendet bestätigte, kurze Admin-Leases und berücksichtigt engere signierte
+Kontingente. Historische Labels, Konfigurationswerte und bloßer HTTP-Erfolg
+erteilen keine Rechte. Anlagen- und Gerätefreigaben bleiben davon unabhängig.
+
+Aktuelle, vor und nach den jeweiligen Tests gebundene Quellen und Rohlogs:
+[`installable-test3-20261003`](../../reports/integration/installable-test3-20261003/).
+Die obigen früheren Liefernachweise werden dadurch nicht umgedeutet.

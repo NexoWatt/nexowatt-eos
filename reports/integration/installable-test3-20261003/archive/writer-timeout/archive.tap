@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: canonical archive signs in-memory keys, validates payload and verifies all readback members
+ok 1 - canonical archive signs in-memory keys, validates payload and verifies all readback members
+  ---
+  duration_ms: 973.4408
+  type: 'test'
+  ...
+# Subtest: actual product validation cannot be skipped by the public archive API
+ok 2 - actual product validation cannot be skipped by the public archive API
+  ---
+  duration_ms: 104.6645
+  type: 'test'
+  ...
+# Subtest: test-only profile, exact Node contract and single platform are mandatory
+ok 3 - test-only profile, exact Node contract and single platform are mandatory
+  ---
+  duration_ms: 161.6844
+  type: 'test'
+  ...
+# Subtest: wrong architecture cannot become executable through a manifest mode
+ok 4 - wrong architecture cannot become executable through a manifest mode
+  ---
+  duration_ms: 91.8876
+  type: 'test'
+  ...
+# Subtest: unknown native addon prevents signing
+ok 5 - unknown native addon prevents signing
+  ---
+  duration_ms: 88.9521
+  type: 'test'
+  ...
+# Subtest: outputs cannot overwrite files or reside inside the authenticated payload
+ok 6 - outputs cannot overwrite files or reside inside the authenticated payload
+  ---
+  duration_ms: 660.264
+  type: 'test'
+  ...
+# Subtest: readback rejects changed payload, modes, owners, links, extras, duplicates and traversal
+ok 7 - readback rejects changed payload, modes, owners, links, extras, duplicates and traversal
+  ---
+  duration_ms: 6668.8348
+  type: 'test'
+  ...
+# Subtest: signature and out-of-band signer fingerprint remain independent trust checks
+ok 8 - signature and out-of-band signer fingerprint remain independent trust checks
+  ---
+  duration_ms: 1096.8838
+  type: 'test'
+  ...
+# Subtest: truncated gzip and unconsumed trailing archive content are rejected
+ok 9 - truncated gzip and unconsumed trailing archive content are rejected
+  ---
+  duration_ms: 1533.0294
+  type: 'test'
+  ...
+# Subtest: oversized hidden PAX extension is rejected before tarfile parses its body
+ok 10 - oversized hidden PAX extension is rejected before tarfile parses its body
+  ---
+  duration_ms: 833.0802
+  type: 'test'
+  ...
+# Subtest: canonical archive bytes repeat for identical payload, manifest and signature
+ok 11 - canonical archive bytes repeat for identical payload, manifest and signature
+  ---
+  duration_ms: 898.9855
+  type: 'test'
+  ...
+# Subtest: source hardlink and directory junction cannot feed bytes outside the payload
+ok 12 - source hardlink and directory junction cannot feed bytes outside the payload
+  ---
+  duration_ms: 64.0154
+  type: 'test'
+  ...
+# Subtest: signing requires the validator report for the exact platform and original native bytes
+ok 13 - signing requires the validator report for the exact platform and original native bytes
+  ---
+  duration_ms: 324.8272
+  type: 'test'
+  ...
+# Subtest: second byte inventory rejects ordinary and native mutations after validation
+ok 14 - second byte inventory rejects ordinary and native mutations after validation
+  ---
+  duration_ms: 121.7427
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13872.0268

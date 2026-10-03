@@ -9,6 +9,7 @@ const cp = require('node:child_process');
 const dependencyPolicy = require('./runtime-dependency-policy.cjs');
 const product = require('../../runtime/product/scope.cjs');
 const { copyRuntimeLicenses } = require('../system/build-bundle.cjs');
+const { normalize: normalizeSerialport } = require('./normalize-serialport-native.cjs');
 const REPO = path.resolve(__dirname, '../..');
 const COMPONENTS = ['admin', 'ui', 'devices', 'eebus', 'ocpp21', 'backitup'];
 const sha = b => crypto.createHash('sha256').update(b).digest('hex');
@@ -155,8 +156,10 @@ function build({ output, components = COMPONENTS, eebusSource, platform, postgre
             change: 'exact private backend dependencies moved to controller; stale npm hidden lock removed' };
         product.inspectApp(app);
     }
+    const nativeNormalization = postgresql && platform === 'linux-arm64' ? normalizeSerialport({ app, platform, nodeVersion: process.versions.node }) : undefined;
+    if (nativeNormalization) fs.writeFileSync(path.join(base, 'native-transform.json'), JSON.stringify(nativeNormalization, null, 2) + '\n', { flag: 'wx', mode: 0o644 });
     const runtimeDependencyPolicy = dependencyPolicy.verifyInstalledTree(app);
-    const evidence = { schemaVersion: 1, scope: 'isolated-build-host-installed-assessment-tree', productReleaseApproved: false, targetDeviceObserved: false, targetPlatform: platform, hostPlatform: `${process.platform}-${process.arch}`, node: process.version, npmLifecycleScriptsExecuted: false, npmNetworkMode: 'offline-only', runtimeDependencyPolicy, postgresqlBackendBinding, components: packed, packageLockSha256: sha(fs.readFileSync(path.join(app, 'package-lock.json'))) };
+    const evidence = { schemaVersion: 1, scope: 'isolated-build-host-installed-assessment-tree', productReleaseApproved: false, targetDeviceObserved: false, targetPlatform: platform, hostPlatform: `${process.platform}-${process.arch}`, node: process.version, npmLifecycleScriptsExecuted: false, npmNetworkMode: 'offline-only', runtimeDependencyPolicy, postgresqlBackendBinding, nativeNormalization, components: packed, packageLockSha256: sha(fs.readFileSync(path.join(app, 'package-lock.json'))) };
     fs.writeFileSync(path.join(base, 'build-evidence.json'), JSON.stringify(evidence, null, 2) + '\n');
     return evidence;
 }

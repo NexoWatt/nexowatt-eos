@@ -48,7 +48,10 @@ test('EOS-ACCOUNT: initial own-password setup gates data, preserves identity, re
     assert.equal((await h.request('/api/account/password',{token,method:'POST',headers:headers(h),body:{...change,user:'admin'}})).status,400);
     assert.equal((await h.request('/api/account/password',{token,method:'POST',headers:headers(h),body:{...change,currentPassword:secret()}})).status,401);
     const serviceBefore = structuredClone(h.objects.get('system.user.admin'));
-    const result = await h.request('/api/account/password',{token,method:'POST',headers:headers(h),body:change});
+    // Echte PBKDF2-Ableitung (600000 Runden, 256 Byte) darf auf langsamen
+    // Testhosts länger als der generische 5s-Client brauchen. Der Server bleibt
+    // unverändert auf 30s begrenzt; weder KDF noch Lastbudget werden vereinfacht.
+    const result = await h.request('/api/account/password',{token,method:'POST',headers:headers(h),body:change,signal:AbortSignal.timeout(20000)});
     assert.equal(result.status,200,result.text); assert.equal(result.data.logoutRequired,true);
     assert.equal((await h.request('/api/auth/status',{token:token2})).data.authed,false);
     assert.deepEqual(h.objects.get('system.user.admin'),serviceBefore);
@@ -56,9 +59,9 @@ test('EOS-ACCOUNT: initial own-password setup gates data, preserves identity, re
     assert.equal(after.native.nexowattEosAccount.role,'enduser');assert.equal(after.native.nexowattEosAccount.managedBy,'eos');
     assert.equal(after.common.enabled,true); assert.equal(eos.passwordChangeRequired(after,'kunde'),false);
     assert.match(after.common.password,/^pbkdf2\$600000\$[a-f0-9]{512}\$[a-f0-9]{32}$/);
-    const login = await h.request('/api/auth/login',{method:'POST',body:{user:'kunde',password:change.password}});
+    const login = await h.request('/api/auth/login',{method:'POST',body:{user:'kunde',password:change.password},signal:AbortSignal.timeout(20000)});
     assert.equal(login.status,200); assert.equal(login.data.passwordChangeRequired,false);
-    assert.equal((await h.request('/api/auth/login',{method:'POST',body:{user:'kunde',password:h.testPassword}})).status,401);
+    assert.equal((await h.request('/api/auth/login',{method:'POST',body:{user:'kunde',password:h.testPassword},signal:AbortSignal.timeout(20000)})).status,401);
   } finally { await h.close(); }
 });
 

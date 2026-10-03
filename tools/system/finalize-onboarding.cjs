@@ -18,6 +18,10 @@ const { waitAdapters, probeWeb, quiesceAfterFailure } = require('./onboard-ui.cj
 const DIRECTORY = '/etc/nexowatt-eos';
 const LOCK = DIRECTORY + '/.activation.lock';
 const COMPLETE = DIRECTORY + '/first-start-complete.json';
+// The individual service budgets include license import (60s), upload (240s),
+// controller start/stop (60s each), readiness (30s) and bounded DB/file checks.
+// Leave systemd a margin after the coordinator deadline for its stop-post guard.
+const DEADLINE_MS = 840000;
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const silent = Object.fromEntries(['silly', 'debug', 'info', 'warn', 'error'].map(key => [key, () => {}]));
 
@@ -88,8 +92,51 @@ async function completeSequence(effects) {
     }
 }
 
+function invocationIdentity(value = process.env.INVOCATION_ID) {
+    if (typeof value !== 'string' || !/^[a-f0-9]{32}$/.test(value)) fail('FIRST_START_SYSTEMD_INVOCATION');
+    return value;
+}
+function quiesceIncomplete(effects, invocationId) {
+    invocationIdentity(invocationId);
+    let lock, unreadable = false;
+    try { lock = effects.readLock(); } catch { unreadable = true; }
+    if (!unreadable && lock === null) return { status: 'FIRST_START_NO_INCOMPLETE_TRIAL' };
+    // A failed attempt cannot claim another invocation's already-owned lock.
+    // Legacy/manual coordinators have no matching systemd invocation either.
+    if (!unreadable && lock && lock.invocationId !== invocationId) return { status: 'FIRST_START_OTHER_MAINTENANCE' };
+    // A separately invoked, known maintenance coordinator owns its own trial.
+    // The first-start unit must not revoke that coordinator's permit.
+    if (!unreadable && ['additive-release', 'certificate-rotation', 'web-certificate-rotation'].includes(lock?.operation)) {
+        return { status: 'FIRST_START_OTHER_MAINTENANCE' };
+    }
+    let blocked = true;
+    try { effects.block(); } catch { blocked = false; }
+    // In particular, a damaged permit must never prevent the stop attempt.
+    try { effects.stop(); } catch { fail('FIRST_START_QUIESCE_STOP_FAILED'); }
+    if (unreadable || !blocked || lock?.operation !== 'ui-onboarding') fail('FIRST_START_QUIESCE_STATE_FAILED');
+    return { status: 'FIRST_START_INCOMPLETE_TRIAL_STOPPED' };
+}
+
+function quiesceHost() {
+    if (process.getuid?.() !== 0) fail('FIRST_START_ROOT_REQUIRED');
+    const invocationId = invocationIdentity();
+    return quiesceIncomplete({
+        readLock: () => {
+            rootOwned(DIRECTORY);
+            try { fs.lstatSync(LOCK); } catch (error) { if (error.code === 'ENOENT') return null; throw error; }
+            rootOwned(LOCK);
+            const record = JSON.parse(readFileLimited(LOCK, 8192).bytes);
+            if (!record || Array.isArray(record) || typeof record !== 'object') fail('FIRST_START_QUIESCE_STATE_FAILED');
+            return record;
+        },
+        block: () => blockStart(DIRECTORY),
+        stop: () => command(['stop', 'nexowatt-eos-controller.service'], 90000),
+    }, invocationId);
+}
+
 async function finalize() {
     if (process.getuid?.() !== 0) fail('FIRST_START_ROOT_REQUIRED');
+    const invocationId = invocationIdentity();
     const releasePath = fs.realpathSync('/opt/nexowatt/eos/current');
     const evidencePath = path.join('/opt/nexowatt/eos/verified', path.basename(releasePath));
     const installed = checkInstalled({ releasePath, evidencePath });
@@ -107,7 +154,8 @@ async function finalize() {
         const result = await completeSequence({
             acquire: () => {
                 lock = fs.openSync(LOCK, fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW, 0o600);
-                fs.writeFileSync(lock, JSON.stringify({ operation: 'ui-onboarding', pid: process.pid, releaseId: installed.releaseId }) + '\n');
+                fs.writeFileSync(lock, JSON.stringify({ operation: 'ui-onboarding', pid: process.pid,
+                    invocationId, releaseId: installed.releaseId }) + '\n');
                 fs.fsyncSync(lock); syncDirectory(DIRECTORY);
             },
             stop: () => {
@@ -197,10 +245,17 @@ async function finalize() {
         // Recovery requires an OS administrator; no web request can clear it.
     }
 }
-module.exports = { completeSequence, persistComplete, finalize };
+function dispatch(argv) {
+    if (argv.length === 0) return finalize();
+    if (argv.length === 1 && argv[0] === '--quiesce-incomplete') return quiesceHost();
+    fail('FIRST_START_USAGE');
+}
+module.exports = { DEADLINE_MS, completeSequence, invocationIdentity, quiesceIncomplete, quiesceHost, persistComplete, finalize, dispatch };
 if (require.main === module) {
-    const deadline = setTimeout(() => { process.stderr.write('{"ok":false,"code":"FIRST_START_TIMEOUT"}\n'); process.exit(1); }, 360000);
-    Promise.resolve().then(() => { if (process.argv.length !== 2) fail('FIRST_START_USAGE'); return finalize(); }).then(
+    // systemd ExecStopPost always runs the independent guard, including after
+    // this deadline, SIGTERM, SIGKILL or an unhandled coordinator exception.
+    const deadline = setTimeout(() => { process.stderr.write('{"ok":false,"code":"FIRST_START_TIMEOUT"}\n'); process.exit(1); }, DEADLINE_MS);
+    Promise.resolve().then(() => dispatch(process.argv.slice(2))).then(
         result => process.stdout.write(JSON.stringify(result) + '\n'),
         error => { process.stderr.write(JSON.stringify({ ok: false, code: /^[A-Z_]+$/.test(error.code || '') ? error.code : 'FIRST_START_FAILED' }) + '\n'); process.exitCode = 1; },
     ).finally(() => clearTimeout(deadline));

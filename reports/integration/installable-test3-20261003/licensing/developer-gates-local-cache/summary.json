@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-03T08:31:55.672013+00:00",
+  "status": "partial; full mandatory test:all has not passed",
+  "scope": "Offline local toolchain recovery and original UI developer-gate execution in isolated copy. After isolated validation and explicit parent approval, only the positive/negative license test fixture and its standard artifact manifest were updated in components/ui. Runtime license and safety gates unchanged.",
+  "network": "No package downloads or installation. Tests use local loopback HTTP/HTTPS/SMTP and fresh-profile headless Chrome fixtures.",
+  "originalEvidencePreserved": [
+    {
+      "path": "reports/integration/installable-test3-20261003/licensing/verification.json",
+      "sha256": "fa9a7cc4324d30cf58c5c348b70aefe944585450220180a6a76982eea9eac471"
+    },
+    {
+      "path": "reports/integration/installable-test3-20261003/licensing/findings.json",
+      "sha256": "5f3eeebfb671cd8ab45c279eb29f0b0c2c86a46547c1492e47c1bbaf5154a328"
+    },
+    {
+      "path": "reports/integration/installable-test3-20261003/licensing/full-ui-build-ts.json",
+      "sha256": "56da8377852ca66d1617a64f222bd03078bc30e4c6d554451dc3092433e229f4"
+    },
+    {
+      "path": "reports/integration/installable-test3-20261003/licensing/full-ui-build-ts.txt",
+      "sha256": "c54b90f877b074ae3d165681e98a8bf514d29b97313d582de7d23ac83de87678"
+    },
+    {
+      "path": "reports/integration/installable-test3-20261003/licensing/full-ui-test-all.json",
+      "sha256": "021efe907c333a60cb33ff8e340acac324e3a49e0b952d3de5d6693262e56c2e"
+    },
+    {
+      "path": "reports/integration/installable-test3-20261003/licensing/full-ui-test-all.txt",
+      "sha256": "398cb5e48262b87e16973b2fc218a5c9e4f47bae11d3a2ea0c1b3c92a399f75f"
+    }
+  ],
+  "toolchain": {
+    "description": "Exact package-lock-pinned TypeScript5.8.3, @types/node22.19.21, undici-types6.21.0 recovered using cacache integrity checks from existing cache; Windows local .cmd shims only in isolated node_modules/.bin. No npm ci or lifecycle execution.",
+    "bindings": [
+      {
+        "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/toolchain-cache.json",
+        "sha256": "874bde0a28946c9f1fd4ea641526f49c1780e2e89c50f92002861a933860ad39"
+      },
+      {
+        "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/toolchain-lock-binding.json",
+        "sha256": "b4a9507805ac19cf8206a4991e7cb1c971f7c40269236c9980efd37c9ce78804"
+      },
+      {
+        "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/locked-cache-inventory.json",
+        "sha256": "208b23ec0a399ab61d6ba15f5b0cdb13adc911db3beb74f53bc306755822681d"
+      }
+    ]
+  },
+  "buildTs": {
+    "status": "passed",
+    "evidence": {
+      "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/build-ts.json",
+      "sha256": "d109e567b4a6fc420cc092028e9921c50031eb951ba74322e4bdbef6f52da032"
+    },
+    "output": {
+      "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/build-ts.txt",
+      "sha256": "25d735c66740f02635f5dbd6622ab4c2fbdcc18ae3f7f65a2eaa432359f55dbf"
+    },
+    "comparison": {
+      "comparedFiles": 405,
+      "different": [],
+      "resealed": false
+    },
+    "comparisonStage": "Before isolated fixture correction; all 405 packaged files byte-identical to frozen product manifest. No product reseal."
+  },
+  "fullTestAll": {
+    "status": "failed",
+    "evidence": {
+      "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/test-all.json",
+      "sha256": "ae4c2cd34f69885ac546db12d79ae3d7faca61535dd5c58e45a18b0bc050b2b9"
+    },
+    "output": {
+      "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/test-all.txt",
+      "sha256": "5419bdfc5b5a9640b079e96500bd146e87353ce01bfda95d62d20a4b07621996"
+    },
+    "passedBeforeFailure": "Complete test:types and all subsequent scripts up to stable-1.0.2; optional browser checks explicitly skipped when CHROMIUM_BIN absent remain skips.",
+    "firstFailure": "Home AppCenter runner only probes Linux paths unless CHROMIUM_BIN provided; resolved by installed Windows Chrome in separate continuation.",
+    "initialDependencyBoundary": "Earlier initial full invocation used existing isolated Express5.2.1 tree. Continuations and separate role suite use exact UI Express4.22.3 from existing runtime d."
+  },
+  "continuationUnmodified": {
+    "basis": "Unmodified npm test:all scripts starting at first failed stage; original full invocation remains separately failed. No gate skipped.",
+    "chrome": {
+      "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      "sha256": "67f3364b9ca6075935f85d2c961a91e02aabf2323cc1a57579ad56f4d56d0c57",
+      "mode": "Existing test runner headless with fresh temporary profile; no personal browser/profile accessed"
+    },
+    "dependencies": "Existing exact UI runtime dependencies, Express4.22.3; local locked compiler packages",
+    "packageDownloads": false,
+    "results": [
+      {
+        "script": "test:stable-1.0.3-home-appcenter",
+        "exitCode": 0,
+        "durationMs": 28700,
+        "evidence": "continuation/01-test-stable-1.0.3-home-appcenter.txt",
+        "sha256": "df287d1df580aed51e10fd4c92f9d5d2a4d9dd404d8afbc39da7ee7202829028"
+      },
+      {
+        "script": "test:stable-1.0.4-auto-pv",
+        "exitCode": 0,
+        "durationMs": 2627,
+        "evidence": "continuation/02-test-stable-1.0.4-auto-pv.txt",
+        "sha256": "10613d1eb174fefdc70f3c43db5479400682a0335f7d758fc49c773d0a70cce2"
+      },
+      {
+        "script": "test:stable-1.0.5-storage-protection",
+        "exitCode": 1,
+        "durationMs": 2319,
+        "evidence": "continuation/03-test-stable-1.0.5-storage-protection.txt",
+        "sha256": "63d2dce389b6425f85e0f1abf8c5ab61590411cdb4efca53da74e471f843cb46"
+      }
+    ],
+    "remaining": [
+      "test:stable-1.0.6-dc",
+      "test:stable-1.0.7-notifications",
+      "test:stable-1.0.8-storage-licenses",
+      "test:stable-1.0.9-access",
+      "test:eos-auth-security",
+      "test:eos-os-update-status",
+      "test:eos-account-roles",
+      "test:stable-1.0.10-security",
+      "test:stable-1.0.11-documentation",
+      "test:stable-1.0.12-publish",
+      "test:stable-release",
+      "test:mesh-coordinator",
+      "test:zero-export-pv",
+      "test:stable-1.0.18-charging",
+      "test:stable-1.0.19-grid-share",
+      "test:stable-1.0.20-storage",
+      "test:zero-export-inverter-mapping"
+    ]
+  },
+  "exactRuntimeRoleSuite": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "test/eos-account-roles.test.cjs",
+      "test/eos-sse-authorization.test.cjs",
+      "test/eos-service-worker-auth.test.cjs"
+    ],
+    "cwd": ".work/ui-developer-gates-cache-20261003",
+    "exitCode": 0,
+    "durationMs": 35114,
+    "sha256": "a9c1f53efbdffe9997bcd5484e7e1da34ac8c8c5981837d296c7c7c3d0037759",
+    "expressVersion": "4.22.3",
+    "dependencySource": "Existing complete runtime d, read-only; exact UI nested Express package and root dependency tree",
+    "packageJsonSha256": "0a1770344ae7215b2a8e4f31be9f08d726253d4ded2c8b820ec1db8c7c00d000"
+  },
+  "fullStageAccounting": {
+    "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/stage-matrix.json",
+    "sha256": "93d0767fbb90ec2dceb0c09ef66cb3387c099962dff829d40b4140846b385213"
+  },
+  "isolatedFixtureTrial": {
+    "why": "Positive storage-policy fixture omitted trusted central feature/edition methods after fail-closed licensing removed implicit Pro fallback. Production correctly returns zero. Positive boundary is now explicit only in the isolated fixture, with missing-boundary negative expected zero.",
+    "productChanged": true,
+    "packageInclusion": {
+      "actualBuiltFile": "C:\\Users\\User\\AppData\\Local\\Temp\\eos-first-start-build-20261003-e\\app\\node_modules\\iobroker.nexowatt-ui\\scripts\\verify-stable-1.0.5-storage-protection-telemetry.cjs",
+      "exists": true,
+      "sha256": "22f0137880e887fec79cb680417650f379162af0ccd20a5692fdcf72e0401568",
+      "originalProductSha256": "22f0137880e887fec79cb680417650f379162af0ccd20a5692fdcf72e0401568",
+      "finalProductSha256": "1d05662d933d3e73429b6a9acb843b1326e3bb9551c42008ac220906a414fd50",
+      "isolatedSha256": "1d05662d933d3e73429b6a9acb843b1326e3bb9551c42008ac220906a414fd50",
+      "declaredPackageFile": true
+    },
+    "proposedDiff": {
+      "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/proposed-license-fixture.patch",
+      "sha256": "89293ee93be721376e9b9a50ad9a4a3f65cec1df76785a747b7fc911e02768f1"
+    },
+    "approvedSourceChangesApplied": [
+      "components/ui/scripts/release-artifact-manifest.json",
+      "components/ui/scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs"
+    ],
+    "generator": "node scripts/generate-release-artifact-manifest.js, first isolated copy then explicitly approved product source;405declared artifacts verified. No TypeScript mirror exists for this.cjs fixture.",
+    "finalSourceValidation": [
+      {
+        "command": [
+          "node",
+          "scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs"
+        ],
+        "cwd": "components/ui",
+        "exitCode": 0,
+        "durationMs": 766,
+        "output": {
+          "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/final-source-verify-stable-1.0.5-storage-protection-telemetry.cjs.txt",
+          "sha256": "a4337f5b4544a966f72d81d3ee37a0de6a4e18a2f96c7af2c38123098fde2958"
+        }
+      },
+      {
+        "command": [
+          "node",
+          "scripts/verify-release-artifact.js"
+        ],
+        "cwd": "components/ui",
+        "exitCode": 0,
+        "durationMs": 2683,
+        "output": {
+          "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/final-source-verify-release-artifact.js.txt",
+          "sha256": "ff85d6dc3f5f63c3f3f1f22778dd2f2ddf69eb422b13a33733372e2396cdfe5b"
+        }
+      }
+    ],
+    "finalTrialPackageComparison": {
+      "compared": 405,
+      "differences": [],
+      "trialManifestMatchesFinalProduct": true
+    },
+    "firstTrial": {
+      "scope": "Isolated copy with explicit positive central license fixture and missing-license negative case; frozen product sources unchanged",
+      "packageDownloads": false,
+      "scriptsModified": false,
+      "results": [
+        {
+          "script": "test:stable-1.0.5-storage-protection",
+          "exitCode": 0,
+          "durationMs": 2211,
+          "evidence": "fixture-trial-01/01-test-stable-1.0.5-storage-protection.txt",
+          "sha256": "e8e4d03ce67eb65af82b0c9697f8043279721e4dec2475877846894ec0e37bc9"
+        },
+        {
+          "script": "test:stable-1.0.6-dc",
+          "exitCode": 0,
+          "durationMs": 3028,
+          "evidence": "fixture-trial-01/02-test-stable-1.0.6-dc.txt",
+          "sha256": "9fcb68c83db7098e67414724cbacf607e623d3e6653fbf38fa7ec2437b6848bb"
+        },
+        {
+          "script": "test:stable-1.0.7-notifications",
+          "exitCode": 1,
+          "durationMs": 1584,
+          "evidence": "fixture-trial-01/03-test-stable-1.0.7-notifications.txt",
+          "sha256": "bd85ae6cb3a197ea9e9f06d368c6714eab1b18cdf5af9fed2bf8a206724a1497"
+        }
+      ],
+      "remaining": [
+        "test:stable-1.0.8-storage-licenses",
+        "test:stable-1.0.9-access",
+        "test:eos-auth-security",
+        "test:eos-os-update-status",
+        "test:eos-account-roles",
+        "test:stable-1.0.10-security",
+        "test:stable-1.0.11-documentation",
+        "test:stable-1.0.12-publish",
+        "test:stable-release",
+        "test:mesh-coordinator",
+        "test:zero-export-pv",
+        "test:stable-1.0.18-charging",
+        "test:stable-1.0.19-grid-share",
+        "test:stable-1.0.20-storage",
+        "test:zero-export-inverter-mapping"
+      ],
+      "fixture": {
+        "path": "scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs",
+        "productSha256": "22f0137880e887fec79cb680417650f379162af0ccd20a5692fdcf72e0401568",
+        "trialSha256": "1d05662d933d3e73429b6a9acb843b1326e3bb9551c42008ac220906a414fd50"
+      }
+    },
+    "remainingScripts": {
+      "scope": "Isolated copy with explicit positive central license fixture and missing-license negative case; frozen product sources unchanged",
+      "packageDownloads": false,
+      "scriptsModified": false,
+      "results": [
+        {
+          "script": "test:stable-1.0.8-storage-licenses",
+          "exitCode": 0,
+          "durationMs": 4382,
+          "evidence": "fixture-trial-02/01-test-stable-1.0.8-storage-licenses.txt",
+          "sha256": "c5814202e4c8c159e9d68aa5671038832efd170c359424fe7ab7874a0d57da0f"
+        },
+        {
+          "script": "test:stable-1.0.9-access",
+          "exitCode": 0,
+          "durationMs": 6301,
+          "evidence": "fixture-trial-02/02-test-stable-1.0.9-access.txt",
+          "sha256": "5680cec7c5e8a6e2bb853749ba8ea341399df734e7eaa5854ac75a9922b9e545"
+        },
+        {
+          "script": "test:eos-auth-security",
+          "exitCode": 0,
+          "durationMs": 4274,
+          "evidence": "fixture-trial-02/03-test-eos-auth-security.txt",
+          "sha256": "99f8278c752b385b2f20846ae42b4eef051891b123d3f16428f8bf0611158b23"
+        },
+        {
+          "script": "test:eos-os-update-status",
+          "exitCode": 1,
+          "durationMs": 3108,
+          "evidence": "fixture-trial-02/04-test-eos-os-update-status.txt",
+          "sha256": "3f05924c3dbc717d9fe3db5a5ca74f0c3bf382f5217d60d741e89d7be736e342"
+        },
+        {
+          "script": "test:eos-account-roles",
+          "exitCode": 0,
+          "durationMs": 26003,
+          "evidence": "fixture-trial-02/05-test-eos-account-roles.txt",
+          "sha256": "28451ea2ffc0b1f6e0f6910e799cbe9857b03fc95cc46e16fffaf1824f16e454"
+        },
+        {
+          "script": "test:stable-1.0.10-security",
+          "exitCode": 0,
+          "durationMs": 10674,
+          "evidence": "fixture-trial-02/06-test-stable-1.0.10-security.txt",
+          "sha256": "42aecd4ca43763cb3c26c1e7377029c18109637db5188a433a6f522c38b2a184"
+        },
+        {
+          "script": "test:stable-1.0.11-documentation",
+          "exitCode": 0,
+          "durationMs": 3808,
+          "evidence": "fixture-trial-02/07-test-stable-1.0.11-documentation.txt",
+          "sha256": "3e235d9703174c1298e0061e127b680afac546b646c751084dd76a0e37de40db"
+        },
+        {
+          "script": "test:stable-1.0.12-publish",
+          "exitCode": 0,
+          "durationMs": 96593,
+          "evidence": "fixture-trial-02/08-test-stable-1.0.12-publish.txt",
+          "sha256": "27f4279449c6e50a37b324a1621b3b8574ce4b803afac35a65692eb17ddc80a6"
+        },
+        {
+          "script": "test:stable-release",
+          "exitCode": 0,
+          "durationMs": 2264,
+          "evidence": "fixture-trial-02/09-test-stable-release.txt",
+          "sha256": "18183df1b990188945763318fbec5cd1126c3a7660dbb1d2878ac588b1041d7c"
+        },
+        {
+          "script": "test:mesh-coordinator",
+          "exitCode": 1,
+          "durationMs": 13194,
+          "evidence": "fixture-trial-02/10-test-mesh-coordinator.txt",
+          "sha256": "6e6928de1f7a5270bf082836fca031e5562aa25b4af3dce0a6cb8e5532c6c45b"
+        },
+        {
+          "script": "test:zero-export-pv",
+          "exitCode": 0,
+          "durationMs": 10868,
+          "evidence": "fixture-trial-02/11-test-zero-export-pv.txt",
+          "sha256": "dcd46c1840734ebd8c0a66936c7c7b61929d6b4967a8c2676acaa56985a013ba"
+        },
+        {
+          "script": "test:stable-1.0.18-charging",
+          "exitCode": 0,
+          "durationMs": 13023,
+          "evidence": "fixture-trial-02/12-test-stable-1.0.18-charging.txt",
+          "sha256": "8dfa66d7bd8ff4eb29cb612965454f87cfb55899a9b2e25ed298f4a412732fea"
+        },
+        {
+          "script": "test:stable-1.0.19-grid-share",
+          "exitCode": 0,
+          "durationMs": 11137,
+          "evidence": "fixture-trial-02/13-test-stable-1.0.19-grid-share.txt",
+          "sha256": "80fd3b7ca6774e336215118a4b1343ec9d677db8c6126466225f1a2dce832b89"
+        },
+        {
+          "script": "test:stable-1.0.20-storage",
+          "exitCode": 0,
+          "durationMs": 18115,
+          "evidence": "fixture-trial-02/14-test-stable-1.0.20-storage.txt",
+          "sha256": "1b7ace02729d1a5bbe7eb545fe6865571b87248c4f7670388d076e32eadde55a"
+        },
+        {
+          "script": "test:zero-export-inverter-mapping",
+          "exitCode": 0,
+          "durationMs": 1560,
+          "evidence": "fixture-trial-02/15-test-zero-export-inverter-mapping.txt",
+          "sha256": "1a4a9e6a376c6c8d54557998ab21f8bbad03d8f0b8d4ba20890987260aa7150e"
+        }
+      ],
+      "remaining": [],
+      "fixture": {
+        "path": "scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs",
+        "productSha256": "22f0137880e887fec79cb680417650f379162af0ccd20a5692fdcf72e0401568",
+        "trialSha256": "1d05662d933d3e73429b6a9acb843b1326e3bb9551c42008ac220906a414fd50"
+      }
+    }
+  },
+  "sourceFreeze": {
+    "filesChecked": 2327,
+    "approvedChanges": [
+      "components/ui/scripts/release-artifact-manifest.json",
+      "components/ui/scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs"
+    ],
+    "unexpectedChanges": [],
+    "finalFiles": [
+      {
+        "path": "components/ui/scripts/release-artifact-manifest.json",
+        "sha256": "73c519ed67d04aa161972742b8669333fcd09217f174578ae394ffef925a2b64"
+      },
+      {
+        "path": "components/ui/scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs",
+        "sha256": "1d05662d933d3e73429b6a9acb843b1326e3bb9551c42008ac220906a414fd50"
+      }
+    ],
+    "baseline": {
+      "path": "reports/integration/installable-test3-20261003/licensing/developer-gates-local-cache/frozen-source-before.json",
+      "sha256": "48450285e36787eeb98becf81ce6e9202e87cec6e32f41c3efd9160a1c30fad7"
+    }
+  },
+  "open": [
+    "Original full test:all invocation failed; separately executed continuations are not represented as a successful full invocation.",
+    "Notification stable-1.0.7 exact POSIX0600 assertion fails on Windows0666; unchanged. Run on real target Linux.",
+    "OS-update file-reader O_NOFOLLOW assertions fail because Windows Node lacks POSIX O_NOFOLLOW; unchanged. Run on real target Linux.",
+    "Mesh coordinator unchanged200ms loopback timing gate failed at216ms during this Windows run; no mesh timing acceptance or hardware inference. Repeat unchanged gate on supported isolated target Linux.",
+    "Complete offline npm ci was not run: existing cache lacks five nonoptional dev transitives plus25 optional foreign-platform esbuild packages.",
+    "No target Linux/systemd installation, physical device run, plant engineering acceptance, or general visual UI acceptance established by these developer tests."
+  ]
+}

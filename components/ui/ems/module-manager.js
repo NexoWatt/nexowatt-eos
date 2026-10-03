@@ -2,7 +2,7 @@
  * AUTO-GENERATED RUNTIME FILE - NICHT MANUELL BEARBEITEN.
  *
  * Quelle: src-ts/runtime-executables/ems/module-manager.ts
- * Quell-Hash: sha256:4843200d11751c7ad09e828e64f37fbe10a1eb5f30b12b0e9cf3bfdfa74de751
+ * Quell-Hash: sha256:c8f30dc6def2b7c68f31f95b883f248d5461b8f242fb5516e121c94cb85ab2a4
  * Erzeugung: npm run sync:ts-runtime-executables
  *
  * Zweck:
@@ -201,34 +201,23 @@ class ModuleManager {
      * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
      */
     _licenseEdition() {
-        const info = this.adapter && this.adapter._nwLicenseInfo && typeof this.adapter._nwLicenseInfo === 'object' ? this.adapter._nwLicenseInfo : {};
-        if (info && info.ok === true) {
-            try {
-                return featureFlags.normalizeEdition(info.edition || 'eos');
-            }
-            catch (_e) { }
-            const e = String(info.edition || 'eos').toLowerCase();
-            return (e === 'hems' || e === 'home') ? 'hems' : 'eos';
+        // Der Adapter prüft die lebende zentrale Lease. Alte Beobachtungs-States
+        // und lokale Editionslabels sind keine Berechtigung für einen Modultick.
+        try {
+            return featureFlags.normalizeEdition(this.adapter?._nwCurrentLicenseEdition?.());
         }
+        catch (_e) { }
         return 'none';
     }
     _licenseAllowsApp(appId) {
-        const edition = this._licenseEdition();
+        // Dieselbe serverseitige Entscheidung wie App-Center/API einschließlich
+        // signierter Kontingente. Fehlender Prüfer oder Ausnahme sperrt das Modul.
         try {
-            if (featureFlags && typeof featureFlags.allowsApp === 'function') {
-                return !!featureFlags.allowsApp(edition, String(appId || ''));
-            }
+            return this.adapter?._nwLicenseAllowsAppId?.(String(appId || '')) === true;
         }
-        catch (_e) { }
-        if (edition === 'eos')
-            return true;
-        if (edition !== 'hems')
+        catch (_e) {
             return false;
-        // Notfall-Fallback: Muss der zentralen HOME_APP_IDS-Matrix entsprechen. So bleiben
-        // Home-Apps auch dann korrekt freigegeben, wenn der Feature-Service beim Start
-        // ausnahmsweise nicht geladen werden kann.
-        const hemsApps = new Set(['charging', 'storage', 'storagefarm', 'thermal', 'heatingrod', 'threshold', 'relay', 'grid', 'aiAdvisor', 'tariff', 'para14a', 'energyWallet', 'energyLedger', 'nlP1']);
-        return hemsApps.has(String(appId || ''));
+        }
     }
     _getDiagCfg() {
         const cfg = (this.adapter && this.adapter.config && this.adapter.config.diagnostics) ? this.adapter.config.diagnostics : null;

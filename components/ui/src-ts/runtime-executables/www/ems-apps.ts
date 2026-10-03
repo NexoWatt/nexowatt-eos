@@ -1038,21 +1038,17 @@
     aiAutopilot: 'aiAutopilot'
   });
 
+  /** Nur eine positive, noch laufende zentrale Lease gibt Anzeige-/Formrechte.
+   * Beschriftungen, alte NW1-Schlüssel und erfolgreiche HTTP-Aufrufe sind keine Lizenz. */
   function _licenseEdition() {
-    const info = currentLicenseInfo && typeof currentLicenseInfo === 'object' ? currentLicenseInfo : {};
-    const e = String(info.edition || '').trim().toLowerCase();
-    if (e === 'eos' || e === 'pro') return 'eos';
-    if (e === 'hems' || e === 'home') return 'hems';
-    const label = String(info.editionLabel || info.message || info.msg || '').trim().toLowerCase();
-    if (info.eosFullAccess === true || info.proFullAccess === true || /\b(eos|pro)\b/.test(label)) return 'eos';
-    if (/\b(hems|home)\b/.test(label)) return 'hems';
-    if ((info.valid === true || info.ok === true) && e !== 'none') return 'eos';
-    return 'none';
+    const info = currentLicenseInfo;
+    if (!info || info.valid !== true || !Number.isSafeInteger(info.validUntil) || info.validUntil <= Date.now() || info.validUntil > Date.now() + 15000) return 'none';
+    return info.edition === 'eos' ? 'eos' : info.edition === 'hems' ? 'hems' : 'none';
   }
 
   function _maxStorageCount() {
-    const edition = _licenseEdition();
-    return edition === 'hems' ? 2 : (edition === 'eos' ? 10 : 0);
+    const edition = _licenseEdition(), count = currentLicenseInfo && currentLicenseInfo.maxStorages;
+    return edition !== 'none' && Number.isSafeInteger(count) && count >= 0 ? Math.min(count, edition === 'hems' ? 2 : 10) : 0;
   }
 
   function _appLicenseFeature(appId) {
@@ -1060,25 +1056,18 @@
   }
 
   function _isFeatureLicensed(feature) {
-    const ed = _licenseEdition();
-    if (ed === 'eos') return true;
-    if (ed !== 'hems') return false;
-    const features = currentLicenseInfo && currentLicenseInfo.features && typeof currentLicenseInfo.features === 'object' ? currentLicenseInfo.features : {};
-    const f = String(feature || '');
-    if (Object.prototype.hasOwnProperty.call(features, f)) return !!features[f];
-    return HOME_LICENSE_FEATURES.has(f);
+    if (_licenseEdition() === 'none') return false;
+    const features = currentLicenseInfo && currentLicenseInfo.features;
+    return !!features && Object.prototype.hasOwnProperty.call(features, String(feature || '')) && features[String(feature || '')] === true;
   }
 
   function _isAppLicensed(appId) {
-    const ed = _licenseEdition();
-    if (ed === 'eos') return true;
-    if (ed === 'hems') return HEMS_APP_IDS.has(String(appId || '')) || _isFeatureLicensed(_appLicenseFeature(appId));
-    return false;
+    return _isFeatureLicensed(_appLicenseFeature(appId));
   }
 
   function _maxEvcsCount() {
-    const max = Number(currentLicenseInfo && currentLicenseInfo.maxWallboxes);
-    return Number.isFinite(max) && max > 0 ? Math.max(0, Math.min(50, Math.round(max))) : 50;
+    const edition = _licenseEdition(), count = currentLicenseInfo && currentLicenseInfo.maxWallboxes;
+    return edition !== 'none' && Number.isSafeInteger(count) && count >= 0 ? Math.min(count, edition === 'hems' ? 3 : 50) : 0;
   }
 
   function _licenseLabel() {
@@ -1090,22 +1079,8 @@
 
   function _storagePowerProfileInfo() {
     const ed = _licenseEdition();
-    const raw = currentLicenseInfo && currentLicenseInfo.storagePowerProfile && typeof currentLicenseInfo.storagePowerProfile === 'object'
-      ? currentLicenseInfo.storagePowerProfile
-      : {};
-    const maxStoragePowerWRaw = Number(currentLicenseInfo && currentLicenseInfo.maxStoragePowerW);
-    const maxCommandWRaw = Number(raw.maxCommandW);
-    const maxCommandW = Number.isFinite(maxCommandWRaw) && maxCommandWRaw >= 0
-      ? maxCommandWRaw
-      : (Number.isFinite(maxStoragePowerWRaw) && maxStoragePowerWRaw >= 0 ? maxStoragePowerWRaw : (ed === 'hems' ? 50000 : 0));
-    return {
-      edition: ed,
-      id: String(raw.id || (ed === 'eos' ? 'pro' : (ed === 'hems' ? 'home' : 'none'))),
-      label: String(raw.label || (ed === 'eos' ? 'Pro' : (ed === 'hems' ? 'Home' : 'Keine Lizenz'))),
-      unrestricted: raw.unrestricted === true || ed === 'eos',
-      industrial: raw.industrial === true || ed === 'eos',
-      maxCommandW: Math.max(0, Number(maxCommandW) || 0),
-    };
+    return { edition: ed, id: ed === 'eos' ? 'pro' : ed === 'hems' ? 'home' : 'none', label: _licenseLabel(),
+      unrestricted: ed === 'eos', industrial: ed === 'eos', maxCommandW: ed === 'hems' ? 50000 : 0 };
   }
 
   function updateStorageLicensePowerUi() {
@@ -1136,88 +1111,33 @@
     }
   }
 
+  /** Normalisiert ausschließlich aktuelle Metadaten des geschützten Features-Endpunkts.
+   * Die höchstens 15 Sekunden gültige Lease begrenzt auch eine Anzeige ohne Netzwerk.
+   * Engere signierte Kontingente und explizite Feature-false-Werte bleiben erhalten. */
   function normalizeLicenseInfo(raw) {
-    const src = raw && typeof raw === 'object' ? raw : {};
-    const unwrap = (value) => {
-      if (value && typeof value === 'object') {
-        if (Object.prototype.hasOwnProperty.call(value, 'value')) return value.value;
-        if (Object.prototype.hasOwnProperty.call(value, 'val')) return value.val;
-      }
-      return value;
-    };
-    const asBool = (value) => {
-      const v = unwrap(value);
-      if (v === true) return true;
-      if (v === false || v === null || v === undefined) return false;
-      const t = String(v).trim().toLowerCase();
-      return t === 'true' || t === '1' || t === 'yes' || t === 'ja' || t === 'valid' || t === 'gültig';
-    };
-    const rawEdition = String(unwrap(src.edition) || '').trim().toLowerCase();
-    const labelHint = String(unwrap(src.editionLabel) || unwrap(src.message) || unwrap(src.msg) || '').trim().toLowerCase();
-    const keyHint = String(unwrap(src.licenseKey) || unwrap(src.licenseKeyMasked) || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-    let edition = (rawEdition === 'eos' || rawEdition === 'pro') ? 'eos' : ((rawEdition === 'hems' || rawEdition === 'home') ? 'hems' : 'none');
-    if (edition === 'none' && (src.eosFullAccess === true || asBool(src.eosFullAccess) || src.proFullAccess === true || asBool(src.proFullAccess) || /\b(eos|pro)\b/.test(labelHint))) edition = 'eos';
-    if (edition === 'none' && /\b(hems|home)\b/.test(labelHint)) edition = 'hems';
-    if (edition === 'none' && /^NW1TH/.test(keyHint)) edition = 'hems';
-    if (edition === 'none' && /^(NW1E|NW1TE|NW1T|NW1)/.test(keyHint)) edition = 'eos';
-    // /api/license/info uses ok=true for transport success; the license itself is valid=true.
-    const valid = asBool(src.valid) || edition === 'eos' || edition === 'hems';
+    const src = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+    let edition = ['eos', 'pro'].includes(src.edition) ? 'eos' : ['hems', 'home'].includes(src.edition) ? 'hems' : 'none';
+    const now = Date.now();
+    const valid = src.valid === true && edition !== 'none' && Number.isSafeInteger(src.validUntil) &&
+      src.validUntil > now && src.validUntil <= now + 15000;
     if (!valid) edition = 'none';
-    const label = edition === 'eos' ? 'Pro' : (edition === 'hems' ? 'Home' : 'Keine Lizenz');
-    let features = src.features && typeof src.features === 'object' ? src.features : {};
-    const featuresJsonRaw = unwrap(src.featuresJson);
-    if ((!features || !Object.keys(features).length) && typeof featuresJsonRaw === 'string' && featuresJsonRaw.trim()) {
-      try {
-        const parsed = JSON.parse(featuresJsonRaw);
-        if (parsed && typeof parsed === 'object') features = parsed.features && typeof parsed.features === 'object' ? parsed.features : parsed;
-      } catch (_e) {}
+    const label = edition === 'eos' ? 'Pro' : edition === 'hems' ? 'Home' : 'Keine Lizenz';
+    const count = (value, max) => valid && Number.isSafeInteger(value) && value >= 0 ? Math.min(value, max) : 0;
+    const features = {};
+    if (valid && src.features && typeof src.features === 'object' && !Array.isArray(src.features)) {
+      for (const key of Object.keys(src.features)) if (/^[A-Za-z][A-Za-z0-9]{0,63}$/.test(key) && key !== 'constructor' && key !== 'prototype') features[key] = src.features[key] === true;
     }
-    const maxWallboxesRaw = Number(unwrap(src.maxWallboxes));
-    const rawStorageProfile = src.storagePowerProfile && typeof src.storagePowerProfile === 'object'
-      ? src.storagePowerProfile
-      : {};
-    const maxStoragePowerWRaw = Number(unwrap(src.maxStoragePowerW));
-    const profileMaxCommandWRaw = Number(unwrap(rawStorageProfile.maxCommandW));
-    const storagePowerProfile = {
-      edition,
-      id: String(unwrap(rawStorageProfile.id) || (edition === 'eos' ? 'pro' : (edition === 'hems' ? 'home' : 'none'))),
-      label: String(unwrap(rawStorageProfile.label) || label),
-      industrial: asBool(rawStorageProfile.industrial) || edition === 'eos',
-      unrestricted: asBool(rawStorageProfile.unrestricted) || edition === 'eos',
-      maxCommandW: Number.isFinite(profileMaxCommandWRaw)
-        ? Math.max(0, Math.round(profileMaxCommandWRaw))
-        : (Number.isFinite(maxStoragePowerWRaw) ? Math.max(0, Math.round(maxStoragePowerWRaw)) : (edition === 'hems' ? 50000 : 0)),
-    };
-    return {
-      valid,
-      edition,
-      editionLabel: String(unwrap(src.editionLabel) || label),
-      type: String(unwrap(src.type) || (valid ? 'full' : 'none')),
-      message: String(unwrap(src.message) || unwrap(src.msg) || ''),
-      expiresAt: Number(unwrap(src.expiresAt) || 0),
-      daysRemaining: Number(unwrap(src.daysRemaining) || 0),
-      maxWallboxes: Number.isFinite(maxWallboxesRaw) ? Math.max(0, Math.round(maxWallboxesRaw)) : 0,
-      maxStoragePowerW: storagePowerProfile.maxCommandW,
-      storagePowerProfile,
-      features: features || {},
-      eosFullAccess: edition === 'eos' || src.eosFullAccess === true || asBool(src.eosFullAccess),
-      proFullAccess: edition === 'eos' || src.proFullAccess === true || asBool(src.proFullAccess)
-    };
+    const storagePowerProfile = { edition, id: edition === 'eos' ? 'pro' : edition === 'hems' ? 'home' : 'none', label,
+      industrial: edition === 'eos', unrestricted: edition === 'eos', maxCommandW: edition === 'hems' ? 50000 : 0 };
+    return { valid, edition, editionLabel: label, type: valid ? 'central' : 'none', message: typeof src.message === 'string' ? src.message : '',
+      validUntil: valid ? src.validUntil : 0, expiresAt: 0, daysRemaining: 0,
+      maxWallboxes: count(src.maxWallboxes, edition === 'hems' ? 3 : 50), maxStorages: count(src.maxStorages, edition === 'hems' ? 2 : 10),
+      maxStoragePowerW: storagePowerProfile.maxCommandW, storagePowerProfile, features,
+      eosFullAccess: edition === 'eos', proFullAccess: edition === 'eos' };
   }
 
   function _licenseIsUsable(info) {
     return !!(info && typeof info === 'object' && info.valid && (info.edition === 'eos' || info.edition === 'hems'));
-  }
-
-  function _inferLicenseFromSuccessfulInstallerGate(data, cfg) {
-    // /api/installer/config is registered behind the backend license gate. If this request
-    // succeeds but an older/stale config payload still lacks license metadata, keep the
-    // App-Center usable by treating the already-open gate as EOS. Backend module gates remain
-    // authoritative and still block if the license is actually invalid.
-    if (data && data.ok === true && cfg && typeof cfg === 'object') {
-      return normalizeLicenseInfo({ valid: true, edition: 'eos', editionLabel: 'Pro', message: 'Lizenz über Backend-Gate erkannt' });
-    }
-    return normalizeLicenseInfo(null);
   }
 
   async function fetchLicenseInfoFallback() {
@@ -1225,36 +1145,7 @@
       const data = await fetchJson('/api/license/features?t=' + Date.now(), { cache: 'no-store' });
       return normalizeLicenseInfo(data);
     } catch (_e) {
-      return null;
-    }
-  }
-
-  async function fetchLicenseInfoFromStateFallback() {
-    try {
-      const data = await fetchJson('/api/state?t=' + Date.now(), { cache: 'no-store' });
-      const readVal = (key) => {
-        const rec = data && data[key];
-        return rec && Object.prototype.hasOwnProperty.call(rec, 'value') ? rec.value : undefined;
-      };
-      return normalizeLicenseInfo({
-        valid: readVal('license.valid'),
-        type: readVal('license.type') || 'none',
-        edition: readVal('license.edition') || 'none',
-        editionLabel: readVal('license.edition') || readVal('license.message') || '',
-        featuresJson: readVal('license.featuresJson') || '{}',
-        maxWallboxes: readVal('license.maxWallboxes'),
-        storagePowerProfile: {
-          id: readVal('license.storagePowerProfile') || '',
-          label: String(readVal('license.storagePowerProfile') || '').toLowerCase() === 'pro' ? 'Pro' : (String(readVal('license.storagePowerProfile') || '').toLowerCase() === 'home' ? 'Home' : ''),
-          maxCommandW: readVal('license.maxStoragePowerW'),
-        },
-        maxStoragePowerW: readVal('license.maxStoragePowerW'),
-        message: readVal('license.message') || '',
-        expiresAt: readVal('license.expiresAt') || 0,
-        daysRemaining: readVal('license.daysRemaining') || 0,
-      });
-    } catch (_e) {
-      return null;
+      return normalizeLicenseInfo(null);
     }
   }
 
@@ -1488,15 +1379,15 @@
     if (_licenseLiveRefreshInFlight) return;
     _licenseLiveRefreshInFlight = true;
     try {
-      const before = JSON.stringify(currentLicenseInfo || {});
-      const liveLicense = await fetchLicenseInfoFallback();
-      const stateLicense = _licenseIsUsable(liveLicense) ? null : await fetchLicenseInfoFromStateFallback();
-      const nextLicense = _licenseIsUsable(liveLicense) ? liveLicense : (_licenseIsUsable(stateLicense) ? stateLicense : liveLicense || stateLicense);
-      if (!nextLicense) return;
+      // Eine verlängerte Lease erneuert die Berechtigung, aber baut keine
+      // Eingabefelder neu auf. Nur geänderte Rechte/Grenzen lösen das aus.
+      const rights = (info) => JSON.stringify({ ...(info || {}), validUntil: 0 });
+      const before = rights(currentLicenseInfo);
+      const nextLicense = await fetchLicenseInfoFallback();
       currentConfig = currentConfig && typeof currentConfig === 'object' ? currentConfig : {};
       currentConfig.license = nextLicense;
       currentLicenseInfo = normalizeLicenseInfo(nextLicense);
-      const after = JSON.stringify(currentLicenseInfo || {});
+      const after = rights(currentLicenseInfo);
       if (before !== after) {
         try { buildAppsUI(); } catch (_eBuildApps) {}
         try { buildEvcsUI(); } catch (_eBuildEvcs) {}
@@ -2683,8 +2574,8 @@ http://mesh-peer.local:8188" ${isEos ? '' : 'disabled'}>${_meshHtmlEscape(Array.
 
     const licenseCard = document.createElement('div');
     licenseCard.className = 'nw-config-card nw-license-edition-card';
-    const licenseLimit = _maxEvcsCount() < 50 ? ` · Lademanagement bis ${_maxEvcsCount()} Wallboxen` : ' · Vollzugriff';
-    licenseCard.innerHTML = `<div class="nw-config-card__header"><div><div class="nw-config-card__title">Lizenz: ${_licenseLabel()}</div><div class="nw-config-card__subtitle">${_licenseEdition() === 'eos' ? 'Pro ist die Vollversion mit allen Apps, Industrie-Skalierung und künftigen Erweiterungen.' : 'Home zeigt die freigegebenen Basis-Apps mit bis zu 50 kW Speicherleistung.'}${licenseLimit}</div></div></div>`;
+    const licenseLimit = ` · Bis ${_maxEvcsCount()} Ladepunkte · ${_maxStorageCount()} Speichersysteme`;
+    licenseCard.innerHTML = `<div class="nw-config-card__header"><div><div class="nw-config-card__title">Lizenz: ${_licenseLabel()}</div><div class="nw-config-card__subtitle">${_licenseEdition() === 'eos' ? 'Pro ist die Vollversion mit allen Apps, Industrie-Skalierung und künftigen Erweiterungen.' : (_licenseEdition() === 'hems' ? 'Home zeigt die freigegebenen Basis-Apps mit bis zu 50 kW Speicherleistung.' : 'Keine gültige zentrale Lizenzfreigabe.')}${licenseLimit}</div></div></div>`;
     els.appsList.appendChild(licenseCard);
     // 0.8.37: Reine Zuordnungs-/Stationskarten und große Modul-Konfigurationen
     // werden fachlich passend in eigene Reiter gerendert. Der Apps-Reiter bleibt
@@ -13140,21 +13031,9 @@ http://mesh-peer.local:8188" ${isEos ? '' : 'disabled'}>${_meshHtmlEscape(Array.
     const data = await fetchJson('/api/installer/config?t=' + Date.now(), { cache: 'no-store' });
     const cfg = (data && data.config && typeof data.config === 'object') ? data.config : {};
 
-    // Runtime-Fallback: Die Lizenzseite nutzt /api/license/info und kann eine Lizenz sofort
-    // aktivieren. Das App-Center zieht denselben Endpoint zusätzlich, damit EOS/HEMS sofort
-    // sichtbar wird und nicht auf einer alten "Keine Lizenz"-Konfiguration hängen bleibt.
-    const configLicense = normalizeLicenseInfo(cfg.license || (data && data.license));
-    const liveLicense = await fetchLicenseInfoFallback();
-    const stateLicense = _licenseIsUsable(liveLicense) ? null : await fetchLicenseInfoFromStateFallback();
-    if (_licenseIsUsable(liveLicense)) {
-      cfg.license = liveLicense;
-    } else if (_licenseIsUsable(stateLicense)) {
-      cfg.license = stateLicense;
-    } else if (_licenseIsUsable(configLicense)) {
-      cfg.license = configLicense;
-    } else {
-      cfg.license = _inferLicenseFromSuccessfulInstallerGate(data, cfg);
-    }
+    // Ein erfolgreicher Konfigurationsabruf und alte States beweisen keine Edition.
+    // Auch bei Ablauf, Widerruf oder fehlender Antwort wird die Anzeige gesperrt.
+    cfg.license = await fetchLicenseInfoFallback();
 
     await hydrateStorageFarmConfigFromRuntimeState(cfg);
     applyConfigToUI(cfg);
@@ -17048,9 +16927,9 @@ if (els.ocppAutoDetect) {
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) refreshLicenseForAppCenter('visible').catch(() => {});
     });
-    window.setInterval(() => {
-      if (_licenseEdition() === 'none') refreshLicenseForAppCenter('poll').catch(() => {});
-    }, 5000);
+    // Auch eine aktive Lizenz wird erneuert: Downgrade und Widerruf dürfen
+    // nicht erst beim nächsten Fokuswechsel sichtbar werden.
+    window.setInterval(() => { refreshLicenseForAppCenter('poll').catch(() => {}); }, 5000);
   }).catch(() => {
     try { setStatus('App-Center gesperrt: Anmeldung als Admin oder Installer erforderlich.', 'error'); } catch (_e) {}
   });

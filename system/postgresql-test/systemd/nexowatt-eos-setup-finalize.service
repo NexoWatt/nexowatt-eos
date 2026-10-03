@@ -15,8 +15,9 @@ WorkingDirectory=/opt/nexowatt/eos/current
 UnsetEnvironment=NODE_OPTIONS NODE_PATH NODE_EXTRA_CA_CERTS NODE_TLS_REJECT_UNAUTHORIZED SSLKEYLOGFILE OPENSSL_CONF OPENSSL_MODULES LD_PRELOAD LD_LIBRARY_PATH
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/node /opt/nexowatt/eos/current/tools/system/finalize-onboarding.cjs
-TimeoutStartSec=360
-TimeoutStopSec=60
+ExecStopPost=/usr/bin/node /opt/nexowatt/eos/current/tools/system/finalize-onboarding.cjs --quiesce-incomplete
+TimeoutStartSec=900
+TimeoutStopSec=120
 UMask=0077
 NoNewPrivileges=yes
 CapabilityBoundingSet=CAP_DAC_READ_SEARCH

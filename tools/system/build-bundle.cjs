@@ -120,10 +120,13 @@ function validatePayload(payload, manifest) {
     // Every advertised platform must match the installed native payload. A
     // cross-built ARM tree remains untested on hardware until the Pi accepts it.
     if (!Array.isArray(manifest.platforms) || !manifest.platforms.length) reject('BUILD_ARCHITECTURE');
+    const architectureReports = [];
     for (const platform of manifest.platforms) {
-        if (!checkRuntimeArchitecture({ app: path.join(payload, 'app'), platform, nodeVersion: manifest.nodeVersion }).passed) reject('BUILD_ARCHITECTURE');
+        const report = checkRuntimeArchitecture({ app: path.join(payload, 'app'), platform, nodeVersion: manifest.nodeVersion });
+        if (!report.passed) reject('BUILD_ARCHITECTURE');
+        architectureReports.push(report);
     }
-    return { catalog, plan, sbom, databaseBackend, productInventory };
+    return { catalog, plan, sbom, databaseBackend, productInventory, architectureReports };
 }
 function preparePayload({ appDirectory, destination, catalogFile, sbomFile }) {
     const source = trustedDirectory(appDirectory);

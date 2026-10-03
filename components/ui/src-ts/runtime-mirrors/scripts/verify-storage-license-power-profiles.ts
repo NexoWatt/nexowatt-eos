@@ -19,7 +19,7 @@
  * - Der nächste Schritt ist pro Modul echte Typisierung statt pauschalem No-Check.
  * - Fachliche Kommentare markieren die Abschnitte, die später einzeln migriert werden.
  *
- * Original-Hash: 476f1a51ec8b257603b6d36d04e773f92b5af2b2fa60ac50d9517ae1c7b3c9a4
+ * Original-Hash: d4196aaeeb1c94812b500f477bfbc20a139b3e42450f4dff8145805e8c494fa4
  */
 
 /**
@@ -61,6 +61,10 @@ const root = path.resolve(__dirname, '..');
 const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8');
 const flags = require('../ems/services/feature-flags');
 const storage = require('../ems/modules/storage-control');
+// Nur die Vertrauensgrenze wird simuliert; Profil und finale Begrenzung sind
+// produktiver Code. Lokale Legacy-Felder dürfen keinen Speicher freischalten.
+const licensed = edition => ({ _nwCurrentLicenseEdition: () => edition,
+  _nwIsFeatureLicensed: feature => ['storageControl', 'storageFarm'].includes(feature) });
 
 assert.strictEqual(flags.normalizeEdition('home'), 'hems');
 assert.strictEqual(flags.normalizeEdition('hems'), 'hems');
@@ -115,7 +119,7 @@ assert.strictEqual(storage.deriveStorageRatedPowerW({}, [
 ], 'farm'), 550000);
 
 const resolvedHome = storage.resolveStorageLicensePowerProfile(
-  { _nwLicenseInfo: { ok: true, edition: 'hems' }, _nwLicenseOk: true },
+  licensed('hems'),
   { ratedPowerW: 120000 },
   [],
   'single',
@@ -125,7 +129,7 @@ assert.strictEqual(resolvedHome.maxCommandW, 50000);
 assert.strictEqual(resolvedHome.effectiveRatedPowerW, 50000);
 
 const resolvedPro = storage.resolveStorageLicensePowerProfile(
-  { _nwLicenseInfo: { ok: true, edition: 'eos' }, _nwLicenseOk: true },
+  licensed('eos'),
   { ratedPowerW: 900000 },
   [],
   'single',
@@ -133,6 +137,10 @@ const resolvedPro = storage.resolveStorageLicensePowerProfile(
 assert.strictEqual(resolvedPro.id, 'pro');
 assert.strictEqual(resolvedPro.maxCommandW, 0);
 assert.strictEqual(resolvedPro.defaultMaxDeltaWPerTick, 45000);
+const denied = storage.resolveStorageLicensePowerProfile({ _nwLicenseInfo: { ok: true, edition: 'eos' }, _nwLicenseOk: true });
+assert.strictEqual(denied.id, 'none');
+assert.strictEqual(storage.applyStorageLicensePowerLimit(750000, denied).targetW, 0);
+assert.strictEqual(storage.applyStorageLicensePowerLimit(-750000, {}).targetW, 0);
 
 const storageSource = read('ems/modules/storage-control.js');
 const zeroFirewallIdx = storageSource.indexOf("zeroWriteFirewallMeasurementGapAgeMs");
@@ -145,8 +153,8 @@ assert(storageSource.includes("speicher.regelung.licensePowerLimited"));
 assert(storageSource.includes("speicher.regelung.licensePowerJson"));
 
 const main = read('main.js');
-assert(main.includes('license.storagePowerProfile'));
-assert(main.includes('license.maxStoragePowerW'));
+assert(main.includes('storagePowerProfile: featureInfo.storagePowerProfile.id'));
+assert(main.includes('maxStoragePowerW: featureInfo.maxStoragePowerW'));
 assert(main.includes('_nwApplyLicenseLimitsToInstallerPatch'));
 assert(main.includes('p.storage.ratedPowerW = normalizePositiveW(p.storage.ratedPowerW)'));
 assert(main.includes('storagePerformanceProfile(this._nwCurrentLicenseEdition(), storageRatedPowerW)'));
@@ -258,6 +266,7 @@ class LicenseRuntimeDp {
 async function runLicenseProfileTick({ edition, ratedPowerW, gridW, targetGridImportW = 50, importThresholdW = 50, stepW }) {
   const states = new Map();
   const adapter = {
+    ...licensed(edition),
     _nwLicenseOk: true,
     _nwLicenseInfo: { ok: true, type: 'full', edition },
     config: {

@@ -20,7 +20,7 @@
  * 0.7.99: /api/state und /api/set TS-Shadow
  * - main.js führt jetzt nur diagnostische TS-Helfer für API-State/API-Set aus.
  * - Die produktive API-Antwort und Schreiblogik bleiben weiterhin JavaScript.
- * Original-Hash: 47a51c3f8338271a5fbb586ae654d80921a89abdf1751c879bc23fb979a8ea9f
+ * Original-Hash: 981fb920522a4fa1543dcaca70f1e48c86eb022a8149dd12b3151c5df9442cf3
  * RC75-Prüfhinweis: Open-Meteo übernimmt den zentralen EOS-Admin-/Systemstandort,
  * veröffentlicht nur nutzbare Prognosekurven als aktiv und stellt PV-Flächen unabhängig
  * von verzögerter Settings-Hydrierung über eine einfache Endkundentabelle bereit.
@@ -2458,6 +2458,7 @@ class NexoWattVis extends utils.Adapter {
       maxStoragePowerW: { type: 'number', role: 'value.power', def: 0 },
       message: { type: 'string', role: 'text', def: '' },
       expiresAt: { type: 'number', role: 'value.time', def: 0 },
+      validUntil: { type: 'number', role: 'value.time', def: 0 },
       daysRemaining: { type: 'number', role: 'value', def: 0 },
 
     };
@@ -2537,7 +2538,7 @@ class NexoWattVis extends utils.Adapter {
 
   _nwCurrentLicenseEdition() {
     const status = this._nwCentralLicense?.getStatus();
-    return status?.valid === true ? (status.edition === 'home' ? 'hems' : 'eos') : 'none';
+    return status?.valid === true ? this._nwNormalizeLicenseEdition(status.edition) : 'none';
   }
 
   _nwLicenseFeaturesForEdition(edition) {
@@ -2597,12 +2598,15 @@ class NexoWattVis extends utils.Adapter {
     const status = this._nwCentralLicense?.getStatus();
     if (status?.valid !== true) return false;
     const name = String(feature || '');
+    // Auch ein einzelner Speicher benötigt einen signierten Speicherplatz.
+    if (['storageControl', 'storageFarm'].includes(name) && this._nwLicenseMaxStorages() < 1) return false;
+    if (name === 'chargingManagement' && this._nwLicenseMaxWallboxes() < 1) return false;
     const required = /^(mesh|microgrid)/i.test(name) ? 'microgridMaster'
       : name === 'smartHome' ? 'smartHome'
       : /^(energyWallet|energyLedger|energyOrigin)/.test(name) ? 'wallet'
       : /^(billing|solarChargeBilling)/.test(name) ? 'billing'
       : name === 'multiSiteWallet' ? 'multisite' : 'energy';
-    return status.features.includes(required) && !!this._nwLicenseFeaturesForEdition(this._nwCurrentLicenseEdition())[name];
+    return Array.isArray(status.features) && status.features.includes(required) && !!this._nwLicenseFeaturesForEdition(this._nwCurrentLicenseEdition())[name];
   }
 
   _nwLicenseAllowsAppId(appId) {
@@ -2611,12 +2615,18 @@ class NexoWattVis extends utils.Adapter {
 
   _nwLicenseMaxWallboxes() {
     const status = this._nwCentralLicense?.getStatus();
-    return status?.valid === true ? status.limits.chargePoints : 0;
+    // Signierte Kontingente begrenzen die bestehende UI-Kapazität (maximal 50
+    // Ladepunkte), niemals umgekehrt. Null bedeutet keine Freigabe.
+    const edition = status?.valid === true ? this._nwNormalizeLicenseEdition(status.edition) : 'none';
+    const count = status?.limits?.chargePoints;
+    return edition !== 'none' && Number.isSafeInteger(count) && count >= 0 ? Math.min(count, edition === 'hems' ? 3 : 50) : 0;
   }
 
   _nwLicenseMaxStorages() {
     const status = this._nwCentralLicense?.getStatus();
-    return status?.valid === true ? status.limits.batteries : 0;
+    const edition = status?.valid === true ? this._nwNormalizeLicenseEdition(status.edition) : 'none';
+    const count = status?.limits?.batteries;
+    return edition !== 'none' && Number.isSafeInteger(count) && count >= 0 ? Math.min(count, edition === 'hems' ? 2 : 10) : 0;
   }
 
   _nwValidateStorageFarmLicense(config) {
@@ -2636,6 +2646,7 @@ class NexoWattVis extends utils.Adapter {
   _nwBuildLicenseFeatureInfo() {
     const info = (this._nwLicenseInfo && typeof this._nwLicenseInfo === 'object') ? this._nwLicenseInfo : {};
     const valid = this._nwCentralLicense?.isAllowed() === true;
+    const lease = this._nwCentralLicense?.getStatus();
     let edition = this._nwCurrentLicenseEdition();
 
     const features = this._nwLicenseFeaturesForEdition(edition);
@@ -2653,11 +2664,15 @@ class NexoWattVis extends utils.Adapter {
         };
     return {
       valid,
+      // Ablauf der zentralen Freigabe, nicht das Vertragsende der Lizenz.
+      // Die echte Lizenzlaufzeit wird ausschließlich im EOS Admin angezeigt.
+      validUntil: valid && lease?.valid === true ? Number(lease.validUntil || 0) : 0,
       type: String(info.type || (valid ? 'full' : 'none')),
       edition,
       editionLabel,
       message: String(info.msg || (valid ? `${editionLabel} Lizenz gültig` : '')),
-      expiresAt: Number(info.expiresAt || 0),
+      expiresAt: 0,
+      expiryManagedBy: 'eos-admin.0',
       daysRemaining: Number(info.daysRemaining || 0),
       maxWallboxes: this._nwLicenseMaxWallboxes(),
       maxStorages: this._nwLicenseMaxStorages(),
@@ -2704,7 +2719,7 @@ class NexoWattVis extends utils.Adapter {
     } catch (_e) {}
     try {
       const maxWb = this._nwLicenseMaxWallboxes();
-      if (maxWb > 0 && p.settingsConfig && typeof p.settingsConfig === 'object') {
+      if (p.settingsConfig && typeof p.settingsConfig === 'object') {
         const rawCount = Number(p.settingsConfig.evcsCount);
         const count = Number.isFinite(rawCount) ? Math.max(0, Math.min(maxWb, Math.round(rawCount))) : 0;
         p.settingsConfig.evcsCount = count;
@@ -2812,12 +2827,14 @@ class NexoWattVis extends utils.Adapter {
     this._nwLicenseOk = status.valid === true;
     const info = { ok: this._nwLicenseOk, type: 'central', edition: this._nwCurrentLicenseEdition(),
       msg: this._nwLicenseOk ? 'Zentrale EOS-Lizenz gültig.' : 'Zentrale Lizenzfreigabe nicht verfügbar.',
-      code: status.code, expiresAt: status.validUntil || 0 };
+      code: status.code, validUntil: status.validUntil || 0, expiresAt: 0 };
     this._nwLicenseInfo = info;
     const featureInfo = this._nwBuildLicenseFeatureInfo();
     for (const [key, value] of Object.entries({ valid: this._nwLicenseOk, type: 'central',
       edition: info.edition, featuresJson: JSON.stringify(featureInfo), maxWallboxes: featureInfo.maxWallboxes,
-      maxStorages: featureInfo.maxStorages, message: info.msg, expiresAt: info.expiresAt })) {
+      maxStorages: featureInfo.maxStorages, storagePowerProfile: featureInfo.storagePowerProfile.id,
+      maxStoragePowerW: featureInfo.maxStoragePowerW, message: info.msg,
+      validUntil: featureInfo.validUntil, expiresAt: 0, daysRemaining: 0 })) {
       try { await this.setStateAsync('license.' + key, { val: value, ack: true }); } catch (_) {}
     }
     if (logResult) this.log.info('EOS central license: ' + status.code);
@@ -8847,7 +8864,7 @@ class NexoWattVis extends utils.Adapter {
       ? Number(cfg.evcsCount)
       : rawList.length;
     const licenseMaxWallboxes = (typeof this._nwLicenseMaxWallboxes === 'function') ? Number(this._nwLicenseMaxWallboxes()) : 0;
-    const evcsLimit = licenseMaxWallboxes > 0 ? Math.min(50, Math.max(0, Math.round(licenseMaxWallboxes))) : 50;
+    const evcsLimit = Number.isSafeInteger(licenseMaxWallboxes) && licenseMaxWallboxes >= 0 ? Math.min(50, licenseMaxWallboxes) : 0;
     const evcsCount = Math.max(0, Math.min(evcsLimit, Math.round(Number.isFinite(rawCount) ? rawCount : 0)));
     this.evcsCount = evcsCount;
     this.log.info(`[NexoWatt EOS] Ladepunkte konfiguriert: ${evcsCount}`);

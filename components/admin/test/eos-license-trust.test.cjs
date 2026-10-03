@@ -44,7 +44,10 @@ function fixture(options = {}) {
     const realRequire = require('node:module').createRequire(sourcePath);
     const context = { module, exports: module.exports, Buffer, JSON, setTimeout, clearTimeout, setInterval, clearInterval,
         process: { platform: options.platform || 'linux' },
-        require: name => name === 'node:fs/promises' ? filesystem : realRequire(name) };
+        // Der virtuelle POSIX-Dateibaum braucht auch auf Windows POSIX-Pfade.
+        // Die Windows-Ablehnung verwendet separat einen kanonischen Win32-Pfad.
+        require: name => name === 'node:fs/promises' ? filesystem
+            : name === 'node:path' ? (options.platform === 'win32' ? path.win32 : path.posix) : realRequire(name) };
     vm.runInNewContext(fs.readFileSync(sourcePath, 'utf8'), context, { filename: sourcePath });
     return { read: module.exports.readTrustFile, visited, closed: () => closed, opened: () => opened };
 }
@@ -94,7 +97,7 @@ test('read remains bounded after growth and rejects malformed contents with clos
 });
 
 test('Windows and noncanonical paths require explicit supported provisioning', async () => {
-    await assert.rejects(fixture({ platform: 'win32' }).read(filename), { code: 'TRUST_PLATFORM_UNSUPPORTED' });
+    await assert.rejects(fixture({ platform: 'win32' }).read('C:\\etc\\nexowatt\\license-trust.json'), { code: 'TRUST_PLATFORM_UNSUPPORTED' });
     for (const name of [null, '', 'relative.json', '/etc/../etc/nexowatt/license-trust.json', '/etc/\0trust.json']) {
         await assert.rejects(fixture().read(name), { code: 'TRUST_PATH' });
     }

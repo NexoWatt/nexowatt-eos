@@ -1,0 +1,182 @@
+
+> iobroker.nexowatt-ui@1.0.21 test:eos-auth-security
+> node --test --test-reporter=tap scripts/verify-eos-auth-security.cjs
+
+TAP version 13
+# Subtest: UI-AUTH: undefined / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 1 - UI-AUTH: undefined / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 331.7637
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: undefined / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 2 - UI-AUTH: undefined / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 64.9369
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: all / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 3 - UI-AUTH: all / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 49.14
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: all / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 4 - UI-AUTH: all / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 49.9828
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: lan / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 5 - UI-AUTH: lan / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 50.415
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: lan / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 6 - UI-AUTH: lan / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 50.534
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: session / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 7 - UI-AUTH: session / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 47.1273
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: session / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 8 - UI-AUTH: session / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 47.5739
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: invalid / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+ok 9 - UI-AUTH: invalid / alte Auth-Flags=true: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 47.9047
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: invalid / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+ok 10 - UI-AUTH: invalid / alte Auth-Flags=false: anonym gesperrt, Kunde bedient
+  ---
+  duration_ms: 51.7537
+  type: 'test'
+  ...
+# Subtest: UI-AUTH: Kunden-Schreibfamilien verweigern vor jeder Handler-Wirkung
+ok 11 - UI-AUTH: Kunden-Schreibfamilien verweigern vor jeder Handler-Wirkung
+  ---
+  duration_ms: 41.8448
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: group-removal widerruft eine echte angemeldete Admin-Sitzung
+ok 12 - UI-SESSION: group-removal widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 42.8225
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: group-disabled widerruft eine echte angemeldete Admin-Sitzung
+ok 13 - UI-SESSION: group-disabled widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 42.5353
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: account-disabled widerruft eine echte angemeldete Admin-Sitzung
+ok 14 - UI-SESSION: account-disabled widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 26.8247
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: account-deleted widerruft eine echte angemeldete Admin-Sitzung
+ok 15 - UI-SESSION: account-deleted widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 32.5039
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: password-changed widerruft eine echte angemeldete Admin-Sitzung
+ok 16 - UI-SESSION: password-changed widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 27.6457
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: group-read-error widerruft eine echte angemeldete Admin-Sitzung
+ok 17 - UI-SESSION: group-read-error widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 32.6307
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: account-read-error widerruft eine echte angemeldete Admin-Sitzung
+ok 18 - UI-SESSION: account-read-error widerruft eine echte angemeldete Admin-Sitzung
+  ---
+  duration_ms: 30.2181
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: neue Gruppenrechte verlangen ebenfalls eine neue Anmeldung
+ok 19 - UI-SESSION: neue Gruppenrechte verlangen ebenfalls eine neue Anmeldung
+  ---
+  duration_ms: 28.0201
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: logout während laufender Kontoprüfung wird nicht rückgängig gemacht
+ok 20 - UI-SESSION: logout während laufender Kontoprüfung wird nicht rückgängig gemacht
+  ---
+  duration_ms: 38.909
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: expiry während laufender Kontoprüfung wird nicht rückgängig gemacht
+ok 21 - UI-SESSION: expiry während laufender Kontoprüfung wird nicht rückgängig gemacht
+  ---
+  duration_ms: 40.8411
+  type: 'test'
+  ...
+# Subtest: UI-LOGIN: Typ-/Längenprüfung, falsche Passwörter, Rate-Limit und alte Bypass-Flags
+ok 22 - UI-LOGIN: Typ-/Längenprüfung, falsche Passwörter, Rate-Limit und alte Bypass-Flags
+  ---
+  duration_ms: 66.0154
+  type: 'test'
+  ...
+# Subtest: UI-LOGIN: Passwortänderung während Passwortprüfung erzeugt keine Sitzung
+ok 23 - UI-LOGIN: Passwortänderung während Passwortprüfung erzeugt keine Sitzung
+  ---
+  duration_ms: 16.8342
+  type: 'test'
+  ...
+# Subtest: UI-SESSION: Passwortänderung während Gruppenprüfung sperrt den laufenden Zugriff
+ok 24 - UI-SESSION: Passwortänderung während Gruppenprüfung sperrt den laufenden Zugriff
+  ---
+  duration_ms: 24.2017
+  type: 'test'
+  ...
+# Subtest: UI-COOKIE: fehlerhafte/mehrdeutige Cookies verweigern; Server und gültige Sitzung bleiben nutzbar
+ok 25 - UI-COOKIE: fehlerhafte/mehrdeutige Cookies verweigern; Server und gültige Sitzung bleiben nutzbar
+  ---
+  duration_ms: 127.176
+  type: 'test'
+  ...
+# Subtest: UI-COOKIE: Parser hat keinen Objekt-Prototyp und wirft bei beliebigen Header-Typen nicht
+ok 26 - UI-COOKIE: Parser hat keinen Objekt-Prototyp und wirft bei beliebigen Header-Typen nicht
+  ---
+  duration_ms: 41.1043
+  type: 'test'
+  ...
+# Subtest: UI-NETZ: Anmeldung besitzt keine LAN-/Tailscale-IP-Beschränkung
+ok 27 - UI-NETZ: Anmeldung besitzt keine LAN-/Tailscale-IP-Beschränkung
+  ---
+  duration_ms: 12.334
+  type: 'test'
+  ...
+# Subtest: UI-DEPENDENCY: Express-Parser verarbeiten den gemeldeten Sonderfall und weisen ungültige Limits ab
+ok 28 - UI-DEPENDENCY: Express-Parser verarbeiten den gemeldeten Sonderfall und weisen ungültige Limits ab
+  ---
+  duration_ms: 7.4111
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2791.6883

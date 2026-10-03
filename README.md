@@ -7,9 +7,14 @@ Der Assistent führt durch Standort, signierte Lizenz, Anlagenwerte und Gerätep
 Nicht verfügbare Anlagenangaben bleiben ausdrücklich als offen markiert.
 Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 
-[Installationsablauf und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
+[**Aus Git installieren und testen**](docs/operations/GIT_TEST3_INSTALLATION_DE.md) ·
+[Ersteinrichtung und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
-[Aktuelle Test- und Buildnachweise](reports/integration/first-start/verification-summary.json).
+[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-20261003/).
+
+**Der signierte vollständige ARM64-Installationskandidat `0.2.0-test.3` ist enthalten.**
+[Lieferung und Fingerabdrücke](delivery/test-pi-0.2.0-test.3/README.md). UUID-Anzeige,
+Frontend-Passwortvergabe und Home-/Pro-Lizenzgrenzen sind umgesetzt.
 
 **Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**
 Die historischen signierten Pakete test.1/test.2 enthalten die neuen Quellen
@@ -60,7 +65,7 @@ technische Paketnamen, Schnittstellen und Urheberrechtshinweise bleiben erhalten
 
 Das aktive Entwicklungsprofil verbindet den gehärteten js-controller 7.2.2 mit
 EOS Admin 7.10.11 und NexoWatt UI 1.0.21. Devices, EEBUS, OCPP21 und Backup sind
-vollständig als Quellen enthalten, aber noch nicht für den Anlagenbetrieb
+vollständig als Laufzeitpakete enthalten, aber noch nicht für den Anlagenbetrieb
 aktiviert. UI-Design und Funktionsquellen bleiben erhalten; physische Befehle
 sind im Laborprofil weiterhin gesperrt.
 
@@ -130,7 +135,8 @@ Eine technische Einrichtung ohne aktivierten EOS-Lizenzschlüssel erteilt keine
 vertragliche Nutzungsberechtigung. Bereits wirksam eingeräumte Rechte an früheren
 Fassungen, insbesondere MIT-Rechte, bleiben unberührt. Der
 [Änderungsnachweis vom 03.10.2026](docs/development/LICENSING_CHANGE_2026-10-03_DE.md)
-beschreibt die neue Kennzeichnung und die noch ausstehende Runtime-Neuerstellung.
+beschreibt den damaligen Lizenzstand; die neue Runtime-Lieferung wird im
+[aktuellen Nachweis](reports/integration/installable-test3-20261003/) separat belegt.
 
 Die ioBroker-Basis und die Herkunft aller übernommenen Komponenten bleiben
 nachvollziehbar. Der [historische Upstream-README](docs/history/UPSTREAM_README.md)

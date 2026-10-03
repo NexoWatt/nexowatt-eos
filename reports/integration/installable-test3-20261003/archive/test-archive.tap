@@ -1,0 +1,244 @@
+TAP version 13
+# Subtest: target package selection is explicit and rejects unsupported platforms
+ok 1 - target package selection is explicit and rejects unsupported platforms
+  ---
+  duration_ms: 6.6452
+  type: 'test'
+  ...
+# Subtest: exact root normalization preserves archive integrity and local provenance
+ok 2 - exact root normalization preserves archive integrity and local provenance
+  ---
+  duration_ms: 46.1004
+  type: 'test'
+  ...
+# Subtest: normalization rejects mismatched actual installed identity
+ok 3 - normalization rejects mismatched actual installed identity
+  ---
+  duration_ms: 14.7034
+  type: 'test'
+  ...
+# Subtest: normalization rejects missing artifact integrity
+ok 4 - normalization rejects missing artifact integrity
+  ---
+  duration_ms: 13.2332
+  type: 'test'
+  ...
+# Subtest: normalization rejects traversal archive references
+ok 5 - normalization rejects traversal archive references
+  ---
+  duration_ms: 14.0486
+  type: 'test'
+  ...
+# Subtest: source snapshot skips execution dependencies and rejects links
+ok 6 - source snapshot skips execution dependencies and rejects links
+  ---
+  duration_ms: 12.6824
+  type: 'test'
+  ...
+# Subtest: existing output directories and duplicate components rejected before npm
+ok 7 - existing output directories and duplicate components rejected before npm
+  ---
+  duration_ms: 3.355
+  type: 'test'
+  ...
+# Subtest: build itself rejects omitted target before creating output or invoking npm
+ok 8 - build itself rejects omitted target before creating output or invoking npm
+  ---
+  duration_ms: 2.754
+  type: 'test'
+  ...
+# Subtest: aggregate root preserves compatible component overrides
+ok 9 - aggregate root preserves compatible component overrides
+  ---
+  duration_ms: 0.612
+  type: 'test'
+  ...
+# Subtest: conflicting or prototype-mutating component overrides fail before installation
+ok 10 - conflicting or prototype-mutating component overrides fail before installation
+  ---
+  duration_ms: 1.2843
+  type: 'test'
+  ...
+# Subtest: runtime app includes intact proprietary and upstream license texts with runtime notice locations
+ok 11 - runtime app includes intact proprietary and upstream license texts with runtime notice locations
+  ---
+  duration_ms: 25.6925
+  type: 'test'
+  ...
+# Subtest: validator performs one real architecture scan and returns that same successful report
+ok 12 - validator performs one real architecture scan and returns that same successful report
+  ---
+  duration_ms: 519.8284
+  type: 'test'
+  ...
+# Subtest: each advertised platform receives its own real mandatory scan
+ok 13 - each advertised platform receives its own real mandatory scan
+  ---
+  duration_ms: 504.6138
+  type: 'test'
+  ...
+# Subtest: unknown native input is rejected by the validator despite supplied extra skip/report arguments
+ok 14 - unknown native input is rejected by the validator despite supplied extra skip/report arguments
+  ---
+  duration_ms: 500.25
+  type: 'test'
+  ...
+# Subtest: catalog and SBOM failures still reject before the architecture gate
+ok 15 - catalog and SBOM failures still reject before the architecture gate
+  ---
+  duration_ms: 877.8224
+  type: 'test'
+  ...
+# Subtest: public archive API signs a core fixture through all actual payload gates without validator injection
+ok 16 - public archive API signs a core fixture through all actual payload gates without validator injection
+  ---
+  duration_ms: 1366.0002
+  type: 'test'
+  ...
+# Subtest: canonical archive signs in-memory keys, validates payload and verifies all readback members
+ok 17 - canonical archive signs in-memory keys, validates payload and verifies all readback members
+  ---
+  duration_ms: 1276.7941
+  type: 'test'
+  ...
+# Subtest: actual product validation cannot be skipped by the public archive API
+ok 18 - actual product validation cannot be skipped by the public archive API
+  ---
+  duration_ms: 135.2502
+  type: 'test'
+  ...
+# Subtest: test-only profile, exact Node contract and single platform are mandatory
+ok 19 - test-only profile, exact Node contract and single platform are mandatory
+  ---
+  duration_ms: 233.9711
+  type: 'test'
+  ...
+# Subtest: wrong architecture cannot become executable through a manifest mode
+ok 20 - wrong architecture cannot become executable through a manifest mode
+  ---
+  duration_ms: 151.9393
+  type: 'test'
+  ...
+# Subtest: unknown native addon prevents signing
+ok 21 - unknown native addon prevents signing
+  ---
+  duration_ms: 176.9104
+  type: 'test'
+  ...
+# Subtest: outputs cannot overwrite files or reside inside the authenticated payload
+ok 22 - outputs cannot overwrite files or reside inside the authenticated payload
+  ---
+  duration_ms: 928.6183
+  type: 'test'
+  ...
+# Subtest: readback rejects changed payload, modes, owners, links, extras, duplicates and traversal
+ok 23 - readback rejects changed payload, modes, owners, links, extras, duplicates and traversal
+  ---
+  duration_ms: 9471.2529
+  type: 'test'
+  ...
+# Subtest: signature and out-of-band signer fingerprint remain independent trust checks
+ok 24 - signature and out-of-band signer fingerprint remain independent trust checks
+  ---
+  duration_ms: 1648.1896
+  type: 'test'
+  ...
+# Subtest: truncated gzip and unconsumed trailing archive content are rejected
+ok 25 - truncated gzip and unconsumed trailing archive content are rejected
+  ---
+  duration_ms: 2391.6045
+  type: 'test'
+  ...
+# Subtest: oversized hidden PAX extension is rejected before tarfile parses its body
+ok 26 - oversized hidden PAX extension is rejected before tarfile parses its body
+  ---
+  duration_ms: 1255.5684
+  type: 'test'
+  ...
+# Subtest: canonical archive bytes repeat for identical payload, manifest and signature
+ok 27 - canonical archive bytes repeat for identical payload, manifest and signature
+  ---
+  duration_ms: 1098.2074
+  type: 'test'
+  ...
+# Subtest: source hardlink and directory junction cannot feed bytes outside the payload
+ok 28 - source hardlink and directory junction cannot feed bytes outside the payload
+  ---
+  duration_ms: 161.7441
+  type: 'test'
+  ...
+# Subtest: signing requires the validator report for the exact platform and original native bytes
+ok 29 - signing requires the validator report for the exact platform and original native bytes
+  ---
+  duration_ms: 780.081
+  type: 'test'
+  ...
+# Subtest: second byte inventory rejects ordinary and native mutations after validation
+ok 30 - second byte inventory rejects ordinary and native mutations after validation
+  ---
+  duration_ms: 346.0328
+  type: 'test'
+  ...
+# Subtest: all six actual source manifests and executable entrypoints exist; source presence is not installation
+ok 31 - all six actual source manifests and executable entrypoints exist; source presence is not installation
+  ---
+  duration_ms: 22.9719
+  type: 'test'
+  ...
+# Subtest: complete installed fixture has seven mandatory packages but only two executable adapters
+ok 32 - complete installed fixture has seven mandatory packages but only two executable adapters
+  ---
+  duration_ms: 87.5723
+  type: 'test'
+  ...
+# Subtest: test.2-sized product, missing entrypoint and changed root lock are rejected
+ok 33 - test.2-sized product, missing entrypoint and changed root lock are rejected
+  ---
+  duration_ms: 59.4594
+  type: 'test'
+  ...
+# Subtest: product catalog cannot admit field adapters or silently omit required Management packages
+ok 34 - product catalog cannot admit field adapters or silently omit required Management packages
+  ---
+  duration_ms: 1.1683
+  type: 'test'
+  ...
+# Subtest: public setup inputs require matching HTTPS origin and an independently pinned public trust export
+ok 35 - public setup inputs require matching HTTPS origin and an independently pinned public trust export
+  ---
+  duration_ms: 14.895
+  type: 'test'
+  ...
+# Subtest: full-product host install rejects missing first-start security inputs before commands
+ok 36 - full-product host install rejects missing first-start security inputs before commands
+  ---
+  duration_ms: 2.0577
+  type: 'test'
+  ...
+# Subtest: setup boot target excludes Controller; isolated frontend cannot read DB or user data
+ok 37 - setup boot target excludes Controller; isolated frontend cannot read DB or user data
+  ---
+  duration_ms: 3.4791
+  type: 'test'
+  ...
+# Subtest: public first-start context binds only the actual database UUID to fixed public trust
+ok 38 - public first-start context binds only the actual database UUID to fixed public trust
+  ---
+  duration_ms: 3.4164
+  type: 'test'
+  ...
+# Subtest: missing assembly is rejected on every build host before any signing output
+ok 39 - missing assembly is rejected on every build host before any signing output
+  ---
+  duration_ms: 3.5749
+  type: 'test'
+  ...
+1..39
+# tests 39
+# suites 0
+# pass 39
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25348.1916

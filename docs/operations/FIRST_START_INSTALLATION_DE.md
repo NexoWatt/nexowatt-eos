@@ -34,22 +34,26 @@ test.2-Paket erfüllt diesen Vertrag nicht.
 
 **Quellenimplementierung und ausgeführte Hostinstallation sind getrennte
 Nachweise.** Der aktuelle Build-/Lieferstatus und sämtliche Rohprotokolle stehen
-in [verification-summary.json](../../reports/integration/first-start/verification-summary.json).
+im neuen Verzeichnis `reports/integration/installable-test3-20261003/`; frühere
+Prüfungen stehen unverändert in [verification-summary.json](../../reports/integration/first-start/verification-summary.json).
 Die historischen signierten Verzeichnisse test.1 und test.2 bleiben unverändert.
 Die vom Nutzer gemeldete test.2-Verifikation auf Debian 13/ARM64 belegt nur
 den Bundle-Inhalt. Sie wird hier weder als eigene Messung noch als vollständiger
 EOS-Start, neue Installation oder Hardwareabnahme gezählt.
 
-Der tatsächliche Vollbuild `d` wurde offline zusammengestellt; die Runtime-SBOM
-und ihre Bindung an 686 installierte npm-Pakete wurden geprüft. Das unveränderte
-Architekturgate meldet jedoch 25 Befunde zu Serialport-Nativeprebuilds, darunter
-fehlende Node-ABI-Nachweise. **Es wird kein neuer signierter test.3-Kandidat
-mitgeliefert.** Zusätzlich verlangt das Signierwerkzeug einen Linux-Buildhost
-mit belastbaren POSIX-Schlüsselrechten. Belege und genaue Dateipfade stehen in
+Der frühere Vollbuild `d` blieb am Serialport-Nativegate hängen. Dieser
+historische Befund steht unverändert in
 [build-status.json](../../reports/integration/first-start/build-status.json).
-Vor einer neuen Installation müssen diese Build-/Nativegates bearbeitet und
-ein passender signierter Kandidat erzeugt werden. Das historische test.2 ist
-dafür kein Ersatz.
+Der neue Build bindet die beiden ARM64-Bibliotheken samt fester Loader und
+separater SBOM-Ableitung. Der TEST-Signierschlüssel verbleibt ausschließlich
+im Arbeitsspeicher; die Linux-Rechteprüfung beim Installieren bleibt bestehen.
+Der tatsächliche neue Lieferstatus und die aktuellen Rohbelege werden unter
+`reports/integration/installable-test3-20261003/` geführt.
+
+**Für den aktuellen Einstieg aus Git die [test.3-Installationsanleitung](GIT_TEST3_INSTALLATION_DE.md)
+verwenden.** Sie verbindet Archivehash, unabhängigen Releaseschlüssel-Pin,
+Signatur-/Paketprüfung, echten nativen Ziel-Ladeversuch und anschließende Installation.
+Die folgenden direkten Bundlebefehle dokumentieren den darunterliegenden Vertrag.
 
 ## Voraussetzungen und öffentlicher Vertrauensanker
 
@@ -171,6 +175,11 @@ Abschlussmarker vorhanden ist. Crash-/Mutationslocks werden nicht automatisch
 entfernt. Der Webdienst erhält weder sudo- noch Datenbankzugang.
 
 Während des Abschlusses gilt ein exklusiver persistenter Wartungslock.
+Ein fester systemd-`ExecStopPost`-Wächter ist an denselben Dienstlauf gebunden
+und versucht bei unvollständigem Abschluss auch nach Prozessabbruch, die
+Startfreigabe zu entfernen und den Controller zu stoppen. Die Gesamtfristen
+betragen 840 Sekunden im Finalizer, 900 Sekunden für den Dienststart und
+120 Sekunden für den Stop. Reale Abbruch-/SIGKILL-Tests sind weiterhin offen.
 Fehler versuchen stets, die Startfreigabe zu entfernen und den Controller zu
 stoppen. Teilweise Objektwrites bleiben gesperrt. Es gibt keine behauptete
 Transaktion über den gesamten ioBroker-Objektstore und die Systemd-Wirkungen.
@@ -186,6 +195,11 @@ ist noch auf dem Zielhost nachzuweisen.
 - Frischer Boot, Reboot, Stromausfall an jeder Commitgrenze, Recovery und Restore.
 - Browserdarstellung und kompletter Admin-/UI-Login einschließlich Einladungs-
   und Lizenzrouten mit dem echten Gerätezertifikat; vollständiger Admin-Typcheck.
+- Vollständige UI-Entwicklungsprüfungen: `build:ts` besteht mit der deklarierten
+  lokalen Toolchain. `test:all` ist wegen der POSIX-Prüfungen unter Windows und
+  eines überschrittenen Mesh-Zeitbudgets weiterhin nicht vollständig bestanden.
+  Die gezielten Lizenz-, Typ-, Syntax-, Spiegel- und Manifestprüfungen bestanden;
+  sie ersetzen diese übergeordneten Gates nicht.
 - Sämtliche Geräte-, Regelungs-, Grenzwert-, Lizenz-/Anlagen- und Hardwaretests.
 
 Diese Punkte sind **offen, nicht ausgeführt**. Lokale Modultests, echte Loopback-

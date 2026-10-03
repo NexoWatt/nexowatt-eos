@@ -16,7 +16,7 @@ import zipfile
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-NAME = "NexoWatt_EOS_dev9_Erststart_FULL_PROPRIETAER_UUID_2026-10-03"
+NAME = "NexoWatt_EOS_dev9_FULL_INSTALL_TEST3_2026-10-03"
 PRIVATE_PEM = re.compile(rb'-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY-----[\r\n]+[A-Za-z0-9+/=\r\n]{32,}')
 
 
@@ -95,10 +95,11 @@ def export(destination):
         product = json.loads(archive.read("NexoWatt_EOS/system/product.json"))
     with archive_path.open("rb") as stream:
         archive_hash = digest(stream)
+    git_status = git("status", "--porcelain", "--untracked-files=all").decode("utf-8").splitlines()
     manifest = {"schemaVersion": 1, "kind": "complete-repository-worktree-delivery", "sourceVersion": product["version"],
                 "baseCommit": git("rev-parse", "HEAD").decode().strip(),
-                "gitStatus": git("status", "--porcelain", "--untracked-files=all").decode("utf-8").splitlines(),
-                "snapshotIncludesUncommittedChanges": True, "gitObjectDatabaseIncluded": False,
+                "gitStatus": git_status,
+                "snapshotIncludesUncommittedChanges": bool(git_status), "gitObjectDatabaseIncluded": False,
                 "archive": archive_path.name, "sha256": archive_hash, "bytes": archive_path.stat().st_size,
                 "fileCount": len(records), "files": records, "everyMemberReadBackAndVerified": True,
                 "newSignedRuntimeBuilt": product.get("firstStart", {}).get("newSignedRuntimeBuilt", False),

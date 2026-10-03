@@ -1,0 +1,62 @@
+
+> iobroker.nexowatt-ui@1.0.21 test:zero-export-pv
+> node scripts/verify-zero-export-pv-coordinator.cjs && node scripts/verify-zero-export-charging.cjs && node scripts/verify-heating-rod-central-zero-export.js && node scripts/verify-zero-export-storage-probe.cjs && node scripts/verify-zero-export-appcenter.cjs && node scripts/verify-zero-export-core.cjs && node scripts/verify-heating-rod-zero-export-tariff.cjs
+
+[zero-export-pv] PASS Nulleinspeisung tagsüber: EV erhält seine echte einphasige Mindestlast
+[zero-export-pv] PASS PV-Reaktion allein reicht nicht: erst das physikalische Budget übernimmt
+[zero-export-pv] PASS Zufällige Nullbilanz ohne PV-Anstieg bestätigt keine neue Solarleistung
+[zero-export-pv] PASS PV wird gemeinsames Budget: vorherige Prüflast erhält keinen doppelten Leistungsanspruch
+[zero-export-pv] PASS Netzbezug: kein dauerhafter PV-Versuch und gemeinsamer Wiederholschutz
+[zero-export-pv] PASS Batterieentladung bei 0 W NVP: kein dauerhafter PV-Versuch und gemeinsamer Wiederholschutz
+[zero-export-pv] PASS Bereits vorhandener Netzbezug oder Batterieentladung verhindert einen Start
+[zero-export-pv] PASS Ein Versuch gleichzeitig: EV und Heizstab addieren ihre Prüflasten nicht
+[zero-export-pv] PASS Priorität: bereits physikalisch versorgte Last blockiert keinen zulässigen Heizstab
+[zero-export-pv] PASS Priorität: DC-Mindestleistung oberhalb Prüflastgrenze blockiert keinen zulässigen Heizstab
+[zero-export-pv] PASS Priorität: lokales Leistungslimit unter Mindestlast blockiert keinen zulässigen Heizstab
+[zero-export-pv] PASS DC: definierte Mindestleistung wird gewährt, niemals durch AC-6-A-Werte ersetzt
+[zero-export-pv] PASS DC: Mindestleistung, Gesamtlimit und Zusatzleistungsgrenze gelten gleichzeitig
+[zero-export-pv] PASS Geänderte technische Mindestleistung entzieht eine inzwischen unzulässige Lease
+[zero-export-pv] PASS NVP veraltet: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS PV veraltet: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Nacht: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Batteriemessung fehlt: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Schutzhülle sperrt: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS externe Autorität sperrt: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Tarifabregelung: aktive Lease wird sofort aufgehoben
+[zero-export-pv] PASS Veralteter Core-Snapshot und fehlende Verbraucherrückmeldung geben keine Leistung frei
+[zero-export-pv] PASS Wiederholte Anforderungen verlängern keine Lease
+[zero-export-pv] PASS Keine Reaktion des Fahrzeugs: begrenzter Versuch statt Dauerfreigabe
+[zero-export-pv] PASS Phasenumschaltung: STOP-/Schaltwartezeit gilt nicht als neue PV-Last
+[zero-export-pv] PASS Phasenumschaltung verliert bei veraltetem Lastwert sofort ihre Prüffreigabe
+[zero-export-pv] PASS Phasenumschaltung hängt: auch laufende Rückmeldungen verlängern 90 s Wartezeit nicht
+[zero-export-pv] PASS Auch während Phasen-STOP werden 20 Wh Fremdenergie begrenzt
+[zero-export-pv] PASS Uhr-Rücksprung hebt aktive Prüflast auf und verhindert sofortige Neufreigabe
+[zero-export-pv] PASS 80 W Importbias: bestätigte 1.380-W-Mindestlast bleibt bei 1.300 W PV stabil
+[zero-export-pv] PASS Importbias wird erst nach Übergabe an den nächsten Core-Zyklus separat gehalten
+[zero-export-pv] PASS Importbias hält nur bestätigte Leistung; größerer Sollwert benötigt eigenen Prüfschritt
+[zero-export-pv] PASS Importbias ist kein Batterieanteil und übersteht weder Laststopp noch veraltete Messung
+[zero-export-pv] PASS Importbias: eine gehaltene EV-Mindestlast blockiert keine spätere Heizstab-Prüfung
+[zero-export-pv] PASS Importbias wird beim Halten nicht über die konfigurierte Summe ausgedehnt
+[zero-export-pv] PASS Importbias: zwei bestätigte Verbraucher bekommen zusammen höchstens 80 W
+[zero-export-pv] PASS Importbias hebt geänderte technische Mindestleistung nicht auf
+[zero-export-pv] PASS Uhr-Rücksprung entzieht auch den zuvor bestätigten Import-Halteanteil
+[zero-export-pv] PASS Diagnose und ausgeschaltete Strategie bleiben auch bei guten Messungen passiv
+[zero-export-pv] PASS Abschalten zwischen Core-Ticks entzieht beim Writer die bestehende Freigabe
+[zero-export-pv] PASS Quellenprüfung: echte PV und NVP genügen bei Anlage ohne Speicher
+[zero-export-pv] PASS Quellenprüfung: Forecast oder neu veröffentlichte Bilanz macht alte PV nicht frisch
+[zero-export-pv] PASS Quellenprüfung: frische 0-W-PV bleibt 0 W; fehlender Wert wird nicht als frisch behandelt
+[zero-export-pv] PASS Quellenprüfung: NVP-Alter addiert Originalmessung und Snapshot-Verzögerung
+[zero-export-pv] PASS Quellenprüfung: aktive Batterie verlangt echten gerichteten Leistungsnachweis
+[zero-export-pv] PASS Quellenprüfung: ein einzelner Lade-Kanal schließt Batterieentladung nicht aus
+[zero-export-pv] PASS Quellenprüfung: Speicherfarm-Netto-Laden darf Entladung eines zweiten Speichers nicht verbergen
+[zero-export-pv] PASS Quellenprüfung: ausstehende oder überholte externe Netzvorgabe sperrt Prüflast
+[zero-export-pv] PASS Unbestätigte Prüflast bleibt von einem zweiten PV-Budget ausgeschlossen
+[zero-export-pv] PASS Teilweise zugewiesene laufende Last reserviert den gesamten erworbenen Prüflastanteil
+[zero-export-pv] 50 passed, 0 failed
+[zero-export-charging] OK: AC/DC minima, exclusive lease, PV accounting, limits, expiry and safe phase transitions
+[zero-export-charging] real runtime ticks and writes OK
+[heating-rod-central-zero-export] OK: zentrale Freigabe, reale Stufen, Frische, Grenzen, Rücknahme und finaler Writer-Guard.
+[zero-export-storage] OK: Schutzvoraussetzungen, echter Split-Writer, getrennte Budgetreservierung, Total-Cap und Lease-Widerruf.
+[zero-export-appcenter] OK: Alias-/Save-Vertrag, komplette Kartenbreite, WR-Zuordnung/Neuzeichnen, Messwerte, Defaults und aufklappbare Diagnose in Quelle/Typed Mirror.
+[zero-export-core] OK: Core-Reserve, echte Wärmemessung, Null/0, Prüflast, 120 Netz/PV-Rückkopplungszyklen und Batterieabzug.
+[heating-rod-zero-export-tariff] OK: 5 echte Tarif-Ticks ohne PV/Strategie; explizite Strategiegrenzen, Gesamtgrenzen, PV-only, Aus/Diagnose, Grant-Frische, NVP und Batterie bleiben geschützt.

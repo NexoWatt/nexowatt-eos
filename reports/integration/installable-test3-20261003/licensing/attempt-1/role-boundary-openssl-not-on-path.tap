@@ -1,0 +1,190 @@
+TAP version 13
+# node:child_process:981
+#     throw err;
+#     ^
+# <ref *1> Error: spawnSync openssl ENOENT
+#     at Object.spawnSync (node:internal/child_process:1160:20)
+#     at spawnSync (node:child_process:928:24)
+#     at execFileSync (node:child_process:971:15)
+#     at Object.<anonymous> (C:\\Users\\User\\Desktop\\Nexowatt-EOS\\components\\ui\\scripts\\eos-tls-fixture.cjs:11:1)
+#     at Module._compile (node:internal/modules/cjs/loader:1929:14)
+#     at Object..js (node:internal/modules/cjs/loader:2060:10)
+#     at Module.load (node:internal/modules/cjs/loader:1651:32)
+#     at Module._load (node:internal/modules/cjs/loader:1443:12)
+#     at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+#     at Module.require (node:internal/modules/cjs/loader:1674:12) {
+#   errno: -4058,
+#   code: 'ENOENT',
+#   syscall: 'spawnSync openssl',
+#   path: 'openssl',
+#   spawnargs: [
+#     'req',
+#     '-x509',
+#     '-newkey',
+#     'ec',
+#     '-pkeyopt',
+#     'ec_paramgen_curve:P-256',
+#     '-nodes',
+#     '-days',
+#     '2',
+#     '-subj',
+#     '/CN=localhost',
+#     '-addext',
+#     'subjectAltName=DNS:localhost,IP:127.0.0.1',
+#     '-addext',
+#     'basicConstraints=critical,CA:FALSE',
+#     '-keyout',
+#     'C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\eos-ui-tls-test-k3V6Xx\\\\leaf.key',
+#     '-out',
+#     'C:\\\\Users\\\\User\\\\AppData\\\\Local\\\\Temp\\\\eos-ui-tls-test-k3V6Xx\\\\leaf.crt'
+#   ],
+#   error: [Circular *1],
+#   status: null,
+#   signal: null,
+#   output: null,
+#   pid: 0,
+#   stdout: undefined,
+#   stderr: undefined
+# }
+# Node.js v24.21.0
+# Subtest: test\\eos-account-roles.test.cjs
+not ok 1 - test\\eos-account-roles.test.cjs
+  ---
+  duration_ms: 658.1098
+  type: 'test'
+  location: 'C:\\Users\\User\\Desktop\\Nexowatt-EOS\\components\\ui\\test\\eos-account-roles.test.cjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: worker installs without prefetching login-protected content
+ok 2 - worker installs without prefetching login-protected content
+  ---
+  duration_ms: 82.1877
+  type: 'test'
+  ...
+# Subtest: activation deletes legacy EOS caches before controlling clients
+ok 3 - activation deletes legacy EOS caches before controlling clients
+  ---
+  duration_ms: 2.6903
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /
+ok 4 - offline protected route cannot use a previous session cache: /
+  ---
+  duration_ms: 6.9061
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /index.html
+ok 5 - offline protected route cannot use a previous session cache: /index.html
+  ---
+  duration_ms: 2.6933
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /static/index.html
+ok 6 - offline protected route cannot use a previous session cache: /static/index.html
+  ---
+  duration_ms: 4.0071
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /api/state
+ok 7 - offline protected route cannot use a previous session cache: /api/state
+  ---
+  duration_ms: 3.6564
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /api/export.json
+ok 8 - offline protected route cannot use a previous session cache: /api/export.json
+  ---
+  duration_ms: 3.6141
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /config
+ok 9 - offline protected route cannot use a previous session cache: /config
+  ---
+  duration_ms: 3.5854
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /state/live
+ok 10 - offline protected route cannot use a previous session cache: /state/live
+  ---
+  duration_ms: 3.8685
+  type: 'test'
+  ...
+# Subtest: offline protected route cannot use a previous session cache: /static/auth.js?token=fixture
+ok 11 - offline protected route cannot use a previous session cache: /static/auth.js?token=fixture
+  ---
+  duration_ms: 5.7632
+  type: 'test'
+  ...
+# Subtest: authentication denial is returned directly without cache fallback
+ok 12 - authentication denial is returned directly without cache fallback
+  ---
+  duration_ms: 3.3325
+  type: 'test'
+  ...
+# Subtest: only successful public same-origin assets are cached
+ok 13 - only successful public same-origin assets are cached
+  ---
+  duration_ms: 3.2422
+  type: 'test'
+  ...
+# Subtest: public asset denied response never enters cache
+ok 14 - public asset denied response never enters cache
+  ---
+  duration_ms: 3.3559
+  type: 'test'
+  ...
+# Subtest: public asset redirect response never enters cache
+ok 15 - public asset redirect response never enters cache
+  ---
+  duration_ms: 2.2768
+  type: 'test'
+  ...
+# Subtest: public asset offline fallback is confined to current cache
+ok 16 - public asset offline fallback is confined to current cache
+  ---
+  duration_ms: 6.3147
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: GET https://other.test/asset.js
+ok 17 - worker does not intercept native transport: GET https://other.test/asset.js
+  ---
+  duration_ms: 2.3382
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: GET /events
+ok 18 - worker does not intercept native transport: GET /events
+  ---
+  duration_ms: 1.874
+  type: 'test'
+  ...
+# Subtest: worker does not intercept native transport: POST /api/account/password
+ok 19 - worker does not intercept native transport: POST /api/account/password
+  ---
+  duration_ms: 1.729
+  type: 'test'
+  ...
+# Subtest: EOS-SSE each frame rechecks authorization and revocation prevents queued payload
+ok 20 - EOS-SSE each frame rechecks authorization and revocation prevents queued payload
+  ---
+  duration_ms: 20.767
+  type: 'test'
+  ...
+# Subtest: EOS-SSE global pending cap survives closed clients until actual authorization settles
+ok 21 - EOS-SSE global pending cap survives closed clients until actual authorization settles
+  ---
+  duration_ms: 8.5194
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 20
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 686.8596

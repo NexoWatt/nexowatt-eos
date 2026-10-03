@@ -1,0 +1,34 @@
+--- a/components/ui/scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs
++++ b/components/ui/scripts/verify-stable-1.0.5-storage-protection-telemetry.cjs
+@@ -142,7 +142,7 @@
+   async writeBoolean(key, value) { this.writes.push({ key, value }); return true; }
+ }
+ async function storageTick({ policy, persistedPolicy, legacyPolicy, gridW = 6500, batteryW = 0,
+-  lastTargetW = 0, profile = 'generic', configuredCandidates = 0 } = {}) {
++  lastTargetW = 0, profile = 'generic', configuredCandidates = 0, licensed = true } = {}) {
+   const now = Date.now();
+   const entry = (val, id) => ({ val, objectId: id, ts: now });
+   const entries = { 'grid.powerW': entry(gridW, 'grid.filtered'), 'grid.powerRawW': entry(gridW, 'grid.raw'),
+@@ -162,6 +162,12 @@
+   if (persistedPolicy) states.set('chargingManagement.control.storagePolicyJson', entry(JSON.stringify(persistedPolicy), 'policy'));
+   if (legacyPolicy) states.set('chargingManagement.control.storageProtectedLoadW', { val: 4500, ts: now - 6000 });
+   const adapter = {
++    // Positive storage-policy cases explicitly model the verified central license
++    // boundary. Missing authorization must continue to produce a safe zero target.
++    ...(licensed ? {
++      _nwCurrentLicenseEdition: () => 'pro',
++      _nwIsFeatureLicensed: feature => feature === 'storageControl',
++    } : {}),
+     config: { enableStorageControl: true, enableStorageFarm: false, enableMultiUse: false,
+       enablePeakShaving: false, enableGridConstraints: false,
+       chargingManagement: { wallboxes: Array.from({ length: configuredCandidates }, () => ({ storageAssistCustomerAllowed: true })) },
+@@ -193,6 +199,9 @@
+   let out = await storageTick({ policy: snapshotFrom([reading()]) });
+   assert.equal(out.signed, 1950, 'fresh: only 2kW house minus 50W grid target');
+   scenarios++;
++  out = await storageTick({ policy: snapshotFrom([reading()]), licensed: false });
++  assert.equal(out.signed, 0, 'missing verified license boundary must deny storage power');
++  scenarios++;
+   const unknown = snapshotFrom([reading({ meterFresh: false })]);
+   for (const context of [
+     { policy: unknown },

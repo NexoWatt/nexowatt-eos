@@ -1,0 +1,84 @@
+
+> iobroker.nexowatt-ui@1.0.21 test:eos-os-update-status
+> node --test test/eos-os-update-status.test.cjs
+
+✔ OS-UI: healthy typed summary excludes raw packages, errors, paths and vendor text (5.2954ms)
+✔ OS-UI rejects unknown-version (0.8489ms)
+✔ OS-UI rejects negative-count (0.7996ms)
+✔ OS-UI rejects string-count (0.6482ms)
+✔ OS-UI rejects boolean-string (0.7199ms)
+✔ OS-UI rejects bad-date (0.8687ms)
+✔ OS-UI rejects unknown-error (0.8224ms)
+✔ OS-UI rejects freshness-relaxed (0.6664ms)
+✔ OS-UI rejects unexpected-reboot-policy (0.9459ms)
+✔ OS-UI never reports healthy for pending (1.1831ms)
+✔ OS-UI never reports healthy for held (0.8347ms)
+✔ OS-UI never reports healthy for blocked (0.8194ms)
+✔ OS-UI never reports healthy for pending-unknown (0.5156ms)
+✔ OS-UI never reports healthy for timer-disabled (0.6656ms)
+✔ OS-UI never reports healthy for timer-inactive (0.6283ms)
+✔ OS-UI never reports healthy for timer-unknown (0.5759ms)
+✔ OS-UI never reports healthy for policy-disabled (0.5668ms)
+✔ OS-UI never reports healthy for activation-required (4.0301ms)
+✔ OS-UI never reports healthy for activation-unknown (0.515ms)
+✔ OS-UI never reports healthy for activation-count-unknown (0.4738ms)
+✔ OS-UI never reports healthy for reboot-required (11.3388ms)
+✔ OS-UI never reports healthy for reboot-unknown (0.516ms)
+✔ OS-UI never reports healthy for coverage-gap (0.5347ms)
+✔ OS-UI never reports healthy for coverage-unknown (0.4571ms)
+✔ OS-UI never reports healthy for never-run (0.4137ms)
+✔ OS-UI never reports healthy for running (0.3053ms)
+✔ OS-UI never reports healthy for error (0.359ms)
+✔ OS-UI never reports healthy for disabled (0.342ms)
+✔ OS-UI stale, future and stale timer observations cannot remain healthy (0.4945ms)
+✔ OS-UI installer initial status and early host errors remain explicit (1.8023ms)
+✖ OS-UI file reader checks root ancestry/regular file and closes handles (23.8871ms)
+✖ OS-UI concurrent authenticated reads share bounded I/O (7.9609ms)
+✔ OS-UI actual endpoint denies anonymous, revoked, uninitialized and removed-role sessions before file access (334.91ms)
+✔ OS-UI actual endpoint supports service/installer/customer read-only and returns unavailable safely (113.9946ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 32
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1744.6725
+
+✖ failing tests:
+
+test at test\eos-os-update-status.test.cjs:86:1
+✖ OS-UI file reader checks root ancestry/regular file and closes handles (23.8871ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(flags & fs.constants.O_NOFOLLOW)
+  
+      at Object.open (C:\Users\User\Desktop\Nexowatt-EOS\.work\ui-developer-gates-cache-20261003\test\eos-os-update-status.test.cjs:75:14)
+      at Object.readStatusFile (evalmachine.<anonymous>:107:36)
+      at async TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\.work\ui-developer-gates-cache-20261003\test\eos-os-update-status.test.cjs:87:44)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at test\eos-os-update-status.test.cjs:95:1
+✖ OS-UI concurrent authenticated reads share bounded I/O (7.9609ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(results.every(value => value.health === 'ok'))
+  
+      at TestContext.<anonymous> (C:\Users\User\Desktop\Nexowatt-EOS\.work\ui-developer-gates-cache-20261003\test\eos-os-update-status.test.cjs:98:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

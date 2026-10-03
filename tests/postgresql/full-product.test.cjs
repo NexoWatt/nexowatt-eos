@@ -105,6 +105,9 @@ test('public first-start context binds only the actual database UUID to fixed pu
     }
     assert.throws(() => publicContext({ draft, releaseId: 'b'.repeat(64), record, normalizeUuid }));
 });
-test('non-Linux signing host is rejected before generating any private key', { skip: process.platform === 'linux' }, () => {
-    assert.throws(() => packageTest(path.join(os.tmpdir(), 'not-an-input-tree')), /PG_LINUX_SIGNING_HOST_REQUIRED/);
+test('missing assembly is rejected on every build host before any signing output', t => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-missing-assembly-'));
+    t.after(() => fs.rmSync(directory, { recursive: true, force: false }));
+    assert.throws(() => packageTest(directory), { code: 'ENOENT' });
+    assert.deepEqual(fs.readdirSync(directory), []);
 });

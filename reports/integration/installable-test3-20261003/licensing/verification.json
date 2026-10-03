@@ -1,0 +1,334 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-10-03T07:31:18.519Z",
+  "completedAt": "2026-10-03T07:32:28.220Z",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.21.0",
+    "compiler": ".work/build-tools/typescript",
+    "dependencyBoundary": "Existing isolated Express parser dependencies; no dependency installation performed."
+  },
+  "scope": "Real ephemeral NWL2 signatures, encrypted storage, Admin service, actual lease client, exact production UI/backend function bodies; controller/transport/DOM replaced where documented in tests.",
+  "open": [
+    "Two existing POSIX encrypted-store permission/link tests skipped on Windows (see central-license.tap)",
+    "Real rendered browser interaction and target Linux commissioning",
+    "Hardware and engineering acceptance",
+    "Full UI test:all/build:ts attempted and failed at development compiler/type setup; precise stages in findings.json and full-ui-*.json"
+  ],
+  "results": [
+    {
+      "name": "central-license.tap",
+      "cwd": ".",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "components/admin/test/eos-license-core.test.cjs",
+        "components/admin/test/eos-license-service.test.cjs",
+        "components/admin/test/eos-license-client.test.cjs",
+        "components/admin/test/eos-license-http.test.cjs",
+        "components/admin/test/eos-license-trust.test.cjs",
+        "components/ui/test/eos-license-entitlements.test.cjs",
+        "tests/system/first-start-license.test.cjs",
+        "tests/onboarding/configuration.test.cjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 5384,
+      "sha256": "8e7a2df3ff8e9ef64e7f8ee0b00a94f20ec540d4f18a7c66c8feca071489a26d",
+      "tests": 101,
+      "pass": 99,
+      "fail": 0
+    },
+    {
+      "name": "storage-power.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-storage-license-power-profiles.js"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 387,
+      "sha256": "0990fed4028e718ba7358cb98aa2c86a9e23fd6b4754a4d34b1a410abcfc593b",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "storage-counts.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-stable-1.0.8-storage-licenses.cjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3235,
+      "sha256": "af352d94990f67495d0237e878e6cba87c06a1dd65afcbe40d79a4e03d02b5ea",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "edition-contract.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-license-editions.js"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 334,
+      "sha256": "00b9e6e911e6011099dce98e175e4525307d0bcf5be19773945b1c3474db4fd4",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "runtime-mirror.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/build-ts-runtime-executables.js",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 8647,
+      "sha256": "732768230c1560fbc4119bd758c8f1af34739ff9136894ffd10ed394c0e0c5bc",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "parallel-mirror.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/build-ts-runtime-mirrors.js",
+        "--check"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 1879,
+      "sha256": "7c7f00b48e836d9ab8911be39aaef8f18ecad07f2ab955af077978e75367d5de",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "source-syntax.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-ts-source-syntax.js"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 12085,
+      "sha256": "8a01d388516df48df872581ceb57bf7a182f40347f297f6d1826daeabbd64b56",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "main-types.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-ts-main-runtime-typing.js"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 2329,
+      "sha256": "68d484563d450923931920119cd025a7b2dab04045748e1a2dd7912565c12d3c",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "appcenter-types.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-ts-ems-apps-runtime-typing.js"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3145,
+      "sha256": "ddde76efb3c087b56cbbb52697c68d55e7e46afd8afdcb443375884a8c67a532",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "role-boundary.tap",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "test/eos-account-roles.test.cjs",
+        "test/eos-sse-authorization.test.cjs",
+        "test/eos-service-worker-auth.test.cjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 28243,
+      "sha256": "dc1a6a9768c621f8ba563728b8a44dd38c78c9b91470e002afe77b641671a0d3",
+      "tests": 26,
+      "pass": 26,
+      "fail": 0
+    },
+    {
+      "name": "documentation.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-code-documentation.cjs"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 682,
+      "sha256": "0cd7f8dd44bf103ad075f817cd03ccc0be8f2a742095cfe9ee10f88c183963e9",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    },
+    {
+      "name": "artifact.txt",
+      "cwd": "components/ui",
+      "command": [
+        "node",
+        "scripts/verify-release-artifact.js"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3219,
+      "sha256": "ff85d6dc3f5f63c3f3f1f22778dd2f2ddf69eb422b13a33733372e2396cdfe5b",
+      "tests": 0,
+      "pass": 0,
+      "fail": 0
+    }
+  ],
+  "sources": [
+    {
+      "path": "components/ui/src-ts/runtime-executables/main.ts",
+      "sha256": "6b7f55bafa50a6728643158c6dcd92d93e89b1daacf782988c383a3db43999a1"
+    },
+    {
+      "path": "components/ui/main.js",
+      "sha256": "981fb920522a4fa1543dcaca70f1e48c86eb022a8149dd12b3151c5df9442cf3"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/www/ems-apps.ts",
+      "sha256": "1f7158e304f96ece7a8eebf6285456b8263df2621dcc8964c52b372bca892441"
+    },
+    {
+      "path": "components/ui/www/ems-apps.js",
+      "sha256": "3c48436c7cfba61f86ef09aecb0b0efc92d8663863efb8258b84b58f6c24d481"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/ems/module-manager.ts",
+      "sha256": "c8f30dc6def2b7c68f31f95b883f248d5461b8f242fb5516e121c94cb85ab2a4"
+    },
+    {
+      "path": "components/ui/ems/module-manager.js",
+      "sha256": "562283226071c089d0ee50e40306f00f35d3ecb388f9595ddf3f0778e2b66ce6"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/ems/modules/storage-control.ts",
+      "sha256": "de32f57a5527a998bf9c75f3d225281f351ed6089e873d20e29c835b0c53ae0e"
+    },
+    {
+      "path": "components/ui/ems/modules/storage-control.js",
+      "sha256": "8da10e9ee4cc8bfdc43129bd9cd683dd6bfe5a03099e20fa0e89db046e54893a"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/ems/services/feature-flags.ts",
+      "sha256": "dc53649ceae61335864c86b419839d2687c89c72ffe57476deb1754d0cc5633e"
+    },
+    {
+      "path": "components/ui/ems/services/feature-flags.js",
+      "sha256": "13794997813dfc671721bfba5736a939161863ff3ca54667cec332e1ed29d188"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-executables/lib/eos-integrated.ts",
+      "sha256": "6b72f4278773927ef54a94d7830016b8f5563a883ade5f2fd5f9da8cd26de478"
+    },
+    {
+      "path": "components/ui/packages/eos-license-client/index.js",
+      "sha256": "0f9c3e5d0f2ab31e8bac47cc315b05d994f9ab0ddf1650d807c7b03be8abc4a5"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseCore.js",
+      "sha256": "8f7913edeba380744aed8fb2131f0b8cf9d5bf9152d25e4441d5f0ff4063246f"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseService.js",
+      "sha256": "0f954e57aeb58bfc8fe9371cbc343a3cc674a8cafa98cf542bb4c89ce8cb7818"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseHttp.js",
+      "sha256": "03e1861f375087cfa53c519b554103d8d045aa662e7abdd6da3307faa9350b7e"
+    },
+    {
+      "path": "runtime/bootstrap/first-start-configuration.cjs",
+      "sha256": "cb32ac84ce73bf4dd2802c7f3466fe461db302293eff1c905587d1922a2ad7c8"
+    },
+    {
+      "path": "runtime/onboarding/configuration.cjs",
+      "sha256": "f30234624c86a09a2935db7947e381994bf6599d51b666300f5afaf8c3075c40"
+    },
+    {
+      "path": "components/ui/test/eos-license-entitlements.test.cjs",
+      "sha256": "262d34cb00858b433001e9fafc2bb3c85835050ebe0e39dd0d8c80fee25e3af6"
+    },
+    {
+      "path": "components/ui/scripts/verify-license-editions.js",
+      "sha256": "486804e2fbd27f01816bd346889d135408e3fca21fb3553979929a28c18337b9"
+    },
+    {
+      "path": "components/ui/test/eos-account-roles.test.cjs",
+      "sha256": "fc99feabe05957ef7b9eb60585e39b8e4a6e38b5d3cf3a0dc898353bfab37ed1"
+    },
+    {
+      "path": "components/ui/scripts/verify-storage-license-power-profiles.js",
+      "sha256": "d4196aaeeb1c94812b500f477bfbc20a139b3e42450f4dff8145805e8c494fa4"
+    },
+    {
+      "path": "components/ui/scripts/verify-stable-1.0.3-home-appcenter-access.cjs",
+      "sha256": "15636f078318c0fac98e18eec8f1bc1b232fb3ab0df83da0c292d5321d98656c"
+    },
+    {
+      "path": "components/ui/docs/security/EOS_LICENSE_ENTITLEMENTS_2026-10-03_DE.md",
+      "sha256": "6504d3fa31d46d976d66962b825843ce52a12da2467314c2ecc8e54593b88cac"
+    },
+    {
+      "path": "components/admin/test/eos-license-trust.test.cjs",
+      "sha256": "e859f6d102ed2cffa665451bcdff9325dffc4472b865d3d3e1b07c30b48ce7d3"
+    },
+    {
+      "path": "components/ui/scripts/release-artifact-manifest.json",
+      "sha256": "9e432e7f90d76af540b0084a41b36784bf21fb6a14aa740f0b735fa6fa11ac99"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/main.ts",
+      "sha256": "13f600c269c95e44738196aea5b5372798b12bccac6daa02a7ab6cddd53b161e"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/www/ems-apps.ts",
+      "sha256": "aed9c468bc74b46987048a495e82cde33f728a3f41439a16cb6727377302014d"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/ems/module-manager.ts",
+      "sha256": "a0683479e47a66df0dc60e689c5c047f44811eb1e0e73611f81c88d65c2bbd7a"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/ems/modules/storage-control.ts",
+      "sha256": "0f49947357add0b341b3f5886cac6ae2d0dff3733d17f3a87019a24a95c2690d"
+    }
+  ]
+}

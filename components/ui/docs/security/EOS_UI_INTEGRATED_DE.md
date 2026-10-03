@@ -31,6 +31,10 @@ Tailscale-Adresssperre. Tatsächliche VPN-/Firewall-/SAN-Tests stehen noch aus.
 
 ## Zentrale Lizenz und Migration
 
+Die aktualisierte [Home/Pro-Rechte- und Kontingentprüfung](EOS_LICENSE_ENTITLEMENTS_2026-10-03_DE.md)
+beschreibt die gemeinsame serverseitige Freigabe für Module und App-Center,
+Null-/Teilmengen sowie die getrennte Lease- und Vertragsgültigkeit.
+
 Die UI erhält ausschließlich eine höchstens 15 Sekunden gültige Freigabe mit
 Edition, Features und Mengenlimits. Der Client prüft neue Nonces, Antwortschema,
 Zeitfenster, Datentypen und editionsabhängige Grenzen; Anfrage maximal 2 Sekunden,

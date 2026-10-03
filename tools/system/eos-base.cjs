@@ -7,7 +7,7 @@ const crypto = require('node:crypto');
 const { verifyBundle, stageBundle, readFileLimited, trustedDirectory, sha256, validatePublicKey } = require('../../runtime/release/bundle.cjs');
 const { validatePayload } = require('./build-bundle.cjs');
 const { installHost, assertNoSymlinkAncestors, privateWrite } = require('./install-host.cjs');
-const { inspectHost, webPortsForCatalog } = require('./host-preflight.cjs');
+const { inspectHost, webPortsForCatalog, command } = require('./host-preflight.cjs');
 const { inspectPostgresqlHost } = require('./postgresql-host-preflight.cjs');
 const { installPostgresqlHost } = require('./install-postgresql-host.cjs');
 const { activateRelease } = require('./activate-release.cjs');
@@ -49,6 +49,19 @@ function publicKeyFrom(file) {
     const { bytes } = readFileLimited(path.resolve(file), 16384);
     return validatePublicKey(bytes);
 }
+function probeNativeForInstallation(payloadPath, platform, exec = command) {
+    // Invoked only after signature, payload and root-controlled import checks.
+    // No device enumeration/open/write: the child only loads the pinned ABI.
+    const result = exec('/usr/bin/node', [path.join(payloadPath, 'runtime/native/serialport-acceptance.cjs'),
+        '--app', path.join(payloadPath, 'app')], { timeout: 20000 });
+    let report;
+    try { report = JSON.parse(result.stdout); } catch { reject('EOS_NATIVE_TARGET_REJECTED'); }
+    if (result.status !== 0 || result.error || report.kind !== 'eos-serialport-native-target-probe' || report.passed !== true ||
+        report.platform !== platform || report.node !== '24.21.0' || report.deviceIoPerformed !== false ||
+        report.hardwareAccepted !== false || !Array.isArray(report.bindings) || report.bindings.length !== 2)
+        reject('EOS_NATIVE_TARGET_REJECTED');
+    return report;
+}
 function keygen(directory) {
     const target = path.resolve(directory); trustedDirectory(path.dirname(target));
     fs.mkdirSync(target, { mode: 0o700 });
@@ -59,7 +72,15 @@ function keygen(directory) {
     privateWrite(path.join(target, 'release-public.pem'), publicKey, 0o644);
     return { ok: true, kind: 'test-signing-key', publicKeySha256: sha256(publicKey), productionKey: false };
 }
-function install({ bundleDirectory, keyFile, start, setupInput }) {
+function withDeploymentUmask(action) {
+    // Recursive immutable release directories must be traversable by the
+    // unprivileged runtime even when the administrator uses umask 077.
+    // Secret files/directories still use explicit 0600/0640/0700/0750 modes.
+    const previous = process.umask(0o022);
+    try { return action(); } finally { process.umask(previous); }
+}
+function install(options) { return withDeploymentUmask(() => installChecked(options)); }
+function installChecked({ bundleDirectory, keyFile, start, setupInput }) {
     if (process.getuid?.() !== 0) reject('ROOT_OPERATOR_REQUIRED');
     if (typeof start !== 'boolean') reject('EXPLICIT_START_FLAG_REQUIRED');
     const bundle = path.resolve(bundleDirectory), keyPath = path.resolve(keyFile);
@@ -75,6 +96,7 @@ function install({ bundleDirectory, keyFile, start, setupInput }) {
     const preflight = (databaseBackend === 'postgresql' ? inspectPostgresqlHost : inspectHost)({ expectedNodeVersion: verified.manifest.nodeVersion, platform: process.arch, webPorts });
     if (!preflight.ready) reject('HOST_PREFLIGHT_REJECTED');
     if (databaseBackend === 'postgresql' && start !== true) reject('PG_EXPLICIT_START_REQUIRED');
+    const nativeAcceptance = fullProduct ? probeNativeForInstallation(verified.payloadPath, `${process.platform}-${process.arch}`) : null;
     assertNoSymlinkAncestors('/opt/nexowatt/eos');
     fs.mkdirSync('/opt/nexowatt/eos/releases', { recursive: true, mode: 0o755 });
     fs.mkdirSync('/opt/nexowatt/eos/verified', { mode: 0o755 });
@@ -85,13 +107,15 @@ function install({ bundleDirectory, keyFile, start, setupInput }) {
     fs.mkdirSync(evidence, { mode: 0o755 });
     for (const name of ['manifest.json', 'manifest.sig']) privateWrite(path.join(evidence, name), readFileLimited(path.join(bundle, name)).bytes, 0o644);
     privateWrite(path.join(evidence, 'release-public.pem'), publicKey, 0o644);
+    if (nativeAcceptance) privateWrite(path.join(evidence, 'native-acceptance.json'), JSON.stringify(nativeAcceptance, null, 2) + '\n', 0o644);
     const status = (databaseBackend === 'postgresql' ? installPostgresqlHost : installHost)({ profile: 'test', releaseId: staged.releaseId, releasePath: staged.releasePath,
         start, expectedNodeVersion: staged.manifest.nodeVersion, platform: process.arch, webPorts,
         releaseVersion: staged.manifest.releaseVersion, setup,
         sequence: staged.manifest.sequence, publicKeySha256: sha256(publicKey) });
     return { ok: true, ...status };
 }
-function extend({ bundleDirectory, keyFile }) {
+function extend(options) { return withDeploymentUmask(() => extendChecked(options)); }
+function extendChecked({ bundleDirectory, keyFile }) {
     if (process.getuid?.() !== 0) reject('ROOT_OPERATOR_REQUIRED');
     const bundle = path.resolve(bundleDirectory), keyPath = path.resolve(keyFile);
     trustedImport(bundle); assertNoSymlinkAncestors(keyPath);
@@ -150,7 +174,7 @@ function main(argv) {
     }
     reject('EOS_USAGE');
 }
-module.exports = { parseArgs, trustedImport, validateVerified, publicKeyFrom, keygen, install, extend, main };
+module.exports = { parseArgs, trustedImport, validateVerified, publicKeyFrom, probeNativeForInstallation, withDeploymentUmask, keygen, install, extend, main };
 if (require.main === module) {
     try { const result = main(process.argv.slice(2)); process.stdout.write(`${JSON.stringify(result)}\n`); if (result.ready === false) process.exitCode = 1; }
     catch (error) { process.stderr.write(`${JSON.stringify({ ok: false, code: /^[A-Z_]+$/.test(error.code || '') ? error.code : 'EOS_FAILED',
