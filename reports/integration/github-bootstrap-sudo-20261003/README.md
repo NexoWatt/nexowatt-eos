@@ -83,6 +83,22 @@ Die Linux-Shell-Policytests verlangen `/bin/bash` und POSIX-Verhalten; WSL ist
 auf diesem Prüfhost nicht installiert. Diese Tests sind hier nicht ausgeführt
 und werden nicht durch die neuen Command-Fixtures als bestanden ersetzt.
 
+## Veröffentlichung und tatsächlicher GitHub-Download
+
+Runtime und Bootstrap der Revision 3 wurden mit Commit
+`72cff2584c2b685e969fb0743f8a7c07a3e51d02` direkt auf `main` veröffentlicht.
+Der anschließende [authentifizierte GitHub-Rücklesetest](private-github-readback.json)
+hat alle acht benötigten Dateien tatsächlich heruntergeladen: Loader, Manifest,
+Hostvorbereitung, Installationskit, öffentlicher Lizenztrust, Kopierbefehl,
+Node-Archiv und Runtime-Archiv. Dateigröße, SHA-256 und Git-Blob-Identität
+stimmen jeweils mit den lokalen Lieferdateien überein.
+
+[Zusammengefasster Veröffentlichungsnachweis](publication.json).
+Der Token wurde weder ausgegeben noch gespeichert. Für diesen Downloadtest
+wurde der Zertifikatsspeicher des Windows-Prüfhosts verwendet; der CA-Pfad
+des Debian-Zielsystems und die Installation auf dem betroffenen Pi wurden
+dabei nicht getestet. Wiederanlauf und Hardwareabnahme bleiben offen.
+
 ## Wiederanlauf des betroffenen Pi
 
 Bei diesem Abbruch kann bereits `eos-runtime` mit gleichnamiger Gruppe angelegt
