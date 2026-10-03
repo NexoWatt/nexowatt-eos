@@ -57,6 +57,13 @@ Nachweise referenziert. Sie wurden nicht als neuer Pi-Lauf umgedeutet.
 Der [aktuelle Gesamtprüfstand](verification-summary.json) bindet diese Belege
 an die neue Lieferung und dokumentiert die tatsächliche GitHub-Rückleseprüfung.
 
+Nach dem Upload wurden **alle acht geprüften Dateien** aus dem privaten GitHub-
+Repository bytegenau zurückgelesen: Loader, neues Manifest, Hosthelfer, Installer-
+ZIP, öffentlicher Trust, Installationsblock sowie Node- und EOS-Archiv. Größen,
+Git-Blob-IDs und SHA-256 stimmen vollständig. [Tatsächlicher Readback](private-github-readback.json).
+Die Anmeldung blieb im Prozessspeicher. Dieser Herstellerlauf verwendet die
+Windows-Zertifikatsbasis und ersetzt keinen Debian-/Pi-Test.
+
 ## Noch offen
 
 **Nicht ausgeführt, OFFEN:** vollständige Pi-Installation, native Systemd-,
