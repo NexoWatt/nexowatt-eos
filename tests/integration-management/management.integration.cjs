@@ -89,12 +89,13 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         sourceSequence: 10, nativePostgresql: '17.11', node: process.version, hostArch: process.arch, signedPayloadPlatform: 'linux-arm64',
         sourceAppBytesUnchanged: false, lifecycleScriptsExecuted: false, nativeModulesRebuilt: false, mockedRuntimeDependencies: false,
         physicalAdaptersStarted: false, actualSystemdMountPolicy: false, physicalPiAcceptance: false, productionReleaseApproved: false,
-        productionReadinessPassed: false, restartPassed: false, boots: [], stages: [] };
+        productionReadinessPassed: false, restartPassed: false, boots: [], stages: [], bootstrapSteps: [] };
     let active;
     t.after(async () => {
         for (const child of children) await stop(child);
         await Promise.allSettled(clients.map(client => client.destroy()));
         evidence.runtimeIndicators = [...new Set(children.flatMap(child => [...child.seen]))].sort();
+        evidence.processIndicators = children.map(child => ({ scope: child.evidenceScope || 'unknown', indicators: [...child.seen].sort() }));
         fs.writeFileSync(path.join(root, 'management-evidence.json'), JSON.stringify(evidence, null, 2) + '\n', { mode: 0o600 });
     });
     const stage = async (name, operation) => {
@@ -104,13 +105,18 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
             catch (error) {
                 // Only known code tokens may reach TAP. Never serialize a PG,
                 // config, assertion payload, password or HTTPS response object.
-                const code = /^(?:MANAGEMENT|ONBOARD|ENROLLMENT|EOS_PG|WEB_CERTIFICATE)_[A-Z_]{1,80}$/.test(error?.code || error?.message || '') ? (error.code || error.message) : 'MANAGEMENT_STAGE_FAILED';
+                const code = require('./diagnostics.cjs').stageFailure(error);
                 failureCode = code;
                 throw new Error(code);
             }
         });
         evidence.stages.push({ name, passed, failureCode });
         if (!passed) fail('MANAGEMENT_STAGE_FAILED');
+    };
+    const bootstrapStep = async (name, operation) => {
+        const row = { name, passed: false, failureCode: null }; evidence.bootstrapSteps.push(row);
+        try { const result = await operation(); row.passed = true; return result; }
+        catch (error) { row.failureCode = require('./diagnostics.cjs').stageFailure(error); throw error; }
     };
     const before = contentRows(app), appRequire = createRequire(path.join(app, 'package.json'));
     enrollment.pinnedAdapters(app);
@@ -150,6 +156,7 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         IOBROKER_DATA_DIR: data, NODE_ENV: 'production', CI: 'true', SENTRY_DSN: '', NODE_PATH: '', NODE_OPTIONS: '' } };
     const cli = async (args, budget = 150000) => {
         const child = launch([path.join(controller, 'iobroker.js'), ...args], options); children.push(child);
+        child.evidenceScope = args[0] === 'setup' ? 'cli-setup' : args[1] === 'eos-admin' ? 'cli-upload-admin' : 'cli-upload-ui';
         const timer = setTimeout(() => signalGroup(child, 'SIGTERM'), budget);
         const hard = setTimeout(() => signalGroup(child, 'SIGKILL'), budget + 5000);
         try { if (await child.completion !== 0) fail('MANAGEMENT_CLI_FAILED'); }
@@ -162,19 +169,24 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
     const pinned = bootstrap.readPinnedApp(app);
     const verifyFresh = () => bootstrap.initialize({ objects, states, config, ...pinned, verifyOnly: true });
     await stage('production bootstrap and first-run enrollment retain strong accounts and no physical adapters', async () => {
-        assert.equal((await objects.getObjectViewAsync('system', 'instance', {})).rows.length, 0);
-        await bootstrap.initialize({ objects, states, config, ...pinned });
+        await bootstrapStep('fresh-instance-count', async () => {
+            const rows = (await objects.getObjectViewAsync('system', 'instance', {})).rows;
+            evidence.initialInstanceCount = Array.isArray(rows) && rows.length <= 10000 ? rows.length : null;
+            assert.equal(evidence.initialInstanceCount, 0);
+        });
+        await bootstrapStep('production-initialize', () => bootstrap.initialize({ objects, states, config, ...pinned }));
         const password = crypto.randomBytes(32).toString('base64url');
-        const passwordHash = await enrollment.passwordHash(password);
-        await enrollment.enrollFirstRun({ objects, states, config, app, passwordHash, verifyFresh,
+        const passwordHash = await bootstrapStep('password-hash', () => enrollment.passwordHash(password));
+        await bootstrapStep('production-enrollment', () => enrollment.enrollFirstRun({ objects, states, config, app, passwordHash, verifyFresh,
             settings: { siteName: 'Native management laboratory', language: 'de', timeZone: 'Europe/Berlin', licenseMode: 'verified',
                 deviceMode: 'disabled-pending-acceptance', safetyAcknowledged: true, plant: { mode: 'deferred', reason: 'no-plant-connected' },
-                devicePlan: { status: 'none', devices: [], confirmed: true } } });
-        const uuid = (await objects.getObjectAsync('system.meta.uuid')).native.uuid;
+                devicePlan: { status: 'none', devices: [], confirmed: true } } }));
+        const uuid = await bootstrapStep('license-uuid-read', async () => (await objects.getObjectAsync('system.meta.uuid')).native.uuid);
         const core = appRequire('iobroker.eos-admin/build/lib/eosLicenseCore.js');
-        const trust = JSON.parse(fs.readFileSync('/etc/nexowatt-eos/license-trust.json'));
-        await require('./ephemeral-license.cjs').provision({ core, uuid, trust, directory: path.join(data, 'eos-admin.0/licensing'),
-            issuer: fs.readFileSync(path.join(root, 'ephemeral-license-issuer.pem')) });
+        const trust = await bootstrapStep('license-trust-read', async () => JSON.parse(fs.readFileSync('/etc/nexowatt-eos/license-trust.json')));
+        const issuer = await bootstrapStep('license-issuer-read', async () => fs.readFileSync(path.join(root, 'ephemeral-license-issuer.pem')));
+        await bootstrapStep('license-verify-and-store', () => require('./ephemeral-license.cjs').provision({ core, uuid, trust,
+            directory: path.join(data, 'eos-admin.0/licensing'), issuer }));
     });
     await stage('production CLI uploads only the two admitted management packages', async () => {
         await cli(['upload', 'eos-admin']); await cli(['upload', 'nexowatt-ui']);
@@ -192,6 +204,7 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         const startedAt = Date.now(), row = { stage: 'controller', legacySingleProbe: null, productionProbe: null };
         evidence.boots.push(row);
         active = launch([path.join(controller, 'controller.js')], options); children.push(active);
+        active.evidenceScope = 'controller';
         await bootstrap.waitController({ objects, states, config, controllerPid: active.pid, timeoutMs: 30000, pollMs: 100 });
         row.coreReadyMs = Date.now() - startedAt;
         row.stage = 'adapters';

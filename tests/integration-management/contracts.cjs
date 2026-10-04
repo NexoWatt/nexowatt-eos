@@ -66,3 +66,15 @@ test('management fixture preserves the exact production PostgreSQL admission pro
         assert.throws(() => assertRuntimeConfig(altered), { code: 'POSTGRESQL_LOCAL_PROFILE_REQUIRED' });
     }
 });
+test('bootstrap diagnostics retain known phase failures without exposing messages, values or paths', () => {
+    const { stageFailure } = require('./diagnostics.cjs');
+    assert.equal(stageFailure(new Error('ORDINARY_SETUP_REQUIRED')), 'ORDINARY_SETUP_REQUIRED');
+    assert.equal(stageFailure(new Error('EXISTING_RUNTIME_OR_ADAPTERS_FORBIDDEN')), 'EXISTING_RUNTIME_OR_ADAPTERS_FORBIDDEN');
+    assert.equal(stageFailure({ code: 'STORAGE_UNSAFE_PATH', message: 'private license details' }), 'STORAGE_UNSAFE_PATH');
+    assert.equal(stageFailure({ code: 'EACCES', path: '/private/secret', message: 'private content' }), 'MANAGEMENT_FS_EACCES');
+    assert.equal(stageFailure({ code: 'ERR_ASSERTION', actual: 'private-content', expected: 'private-content' }), 'MANAGEMENT_ASSERTION_FAILED');
+    assert.equal(stageFailure(new TypeError('private-content')), 'MANAGEMENT_TYPE_ERROR');
+    assert.equal(stageFailure(new Error('PRIVATE_SECRET_TEXT')), 'MANAGEMENT_STAGE_FAILED');
+    assert.equal(stageFailure({ code: 'EOS_PG_UNREVIEWED_SECRET' }), 'MANAGEMENT_STAGE_FAILED');
+    assert.equal(stageFailure({ code: 'EOS_PG_PRIVATE_SECRET lower case text' }), 'MANAGEMENT_STAGE_FAILED');
+});

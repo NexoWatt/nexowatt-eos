@@ -36,7 +36,11 @@ Keine kompletten Lab-Verzeichnisse, PostgreSQL-Metadaten, Konfigurationen,
 Schlüssel, Lizenzen oder Adapterlogs veröffentlichen. Der Test gibt ausschließlich
 feste Fehlerindikatoren und relative Zeitabstände aus; rohe Prozessausgaben
 bleiben begrenzt im Speicher. Ein Fehler enthält daher eventuell nur den
-gescheiterten Prüfschritt. Die ephemere Lizenz ist korrekt signiert, gerätegebunden
+gescheiterten Prüfschritt. Bootstrap/Enrollment erfasst acht feste Teilschritte
+und eine begrenzte Instanzzahl. Eine literale Fehlercode-Liste erhält bekannte
+Bootstrap-, Lizenz- und Dateizugriffsfehler ohne Rohtexte. Prozessindikatoren
+unterscheiden erwartbare CLI-Setup-Schreibfehler von Controllerfehlern.
+Die ephemere Lizenz ist korrekt signiert, gerätegebunden
 und über den echten R7-Lizenzspeicher verschlüsselt; sie ist kein Lizenz-Bypass.
 
 ## Verbindliches Gate und Diagnose
@@ -48,8 +52,7 @@ Produkt-Endpunkt `127.0.0.1:15432`, Datenbank `eos`, gestartet. Ein belegter
 Port führt zum Fehler; vorhandene Server werden weder verwendet noch gestoppt.
 Der bisherige Core-only-Test behält seinen dynamischen Port und `eos_lab`.
 Die unveränderte Produktions-Konfigurationsprüfung bleibt verbindlich.
-Die
-Produktionserzeuger erstellen echte HTTPS-Zertifikate an den fest vorgeschriebenen
+Die Produktionserzeuger erstellen echte HTTPS-Zertifikate an den fest vorgeschriebenen
 Pfaden. Produktions-Bootstrap, Erstregistrierung, Upload-CLI, Adapter-PID-Datei,
 Enrollment-Verifikation und Neustart laufen gegen die echten Module.
 

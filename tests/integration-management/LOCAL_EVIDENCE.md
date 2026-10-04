@@ -1,7 +1,7 @@
 # Lokaler Vorprüfungsnachweis – 04.10.2026
 
-**6/6 PASS, 0 übersprungen.** Rohbeleg: `local-preflight.tap`, SHA-256
-`7715eb6ce6af7f162ca2e0781f3d7a9c83733292841a6b4ee59a1a436fc0473d`.
+**7/7 PASS, 0 übersprungen.** Rohbeleg: `local-preflight.tap`, SHA-256
+`85a64c90fcb370fb508f3f9ddbcf0e7f6dca262d1e6dfe610551cffcfc08e3aa`.
 Alle sieben Management-CJS-Dateien und die PostgreSQL-Labor-Fixture bestehen
 `node --check`; `git diff --check` ist erfolgreich.
 
@@ -19,10 +19,13 @@ Die zusätzliche Profilprüfung führt den tatsächlichen Produktionsvalidator a
 festes Managementprofil zugelassen, andere Hosts/Ports/DB-Namen abgewiesen;
 Standard-Coreprofil unverändert und unbekannte Fixtureprofile abgewiesen.
 Das ist Konfigurationsvalidierung, kein lokaler PostgreSQL-/TLS-Verbindungsnachweis.
+Der siebte Vertrag prüft zusätzlich die sichere Unterscheidung fester Bootstrap-,
+Lizenz-, Dateizugriffs- und Assertionfehler; fremde Texte und unbekannte Codes
+werden auch bei passendem Präfix nicht ausgegeben.
 
 Dateibindung der Fullmanagement-Testlogik:
 `management.integration.cjs` SHA-256
-`ad323c9444a6a8f326104dc7b89cdaa9ae93b21bcada654ab6015ea69cbb48d6`.
+`a4b70b00ddd8516508b0f7cc9f8cb022bbcf53980e54ce51655a9f5af32fdc79`.
 `tests/postgresql/fixtures/lab-cluster.cjs` SHA-256
 `78be6ae90f7660da129d7b3a802d4e5bef1aae58e31f9077f345a83c3c499e1c`.
 Die native Ausführung gegen PostgreSQL 17.11, tatsächliche Listenerbereitschaft,
@@ -44,3 +47,20 @@ explizite Management-Metadatenguards. Produktvalidator, TLS, Rollen, signierte
 R7-App und Bereitschaftskriterien wurden nicht gelockert. Dieser Lauf belegt
 keinen zusätzlichen Produktionsfehler. Erneuter nativer Management-Lauf bleibt
 bis zu dessen tatsächlichem Ergebnis **OFFEN**.
+
+## Zweiter nativer CI-Lauf: Bootstrap-/Enrollment-Phase offen
+
+Quellstand `8da2c18c9b807d5a954399761646ad91311cd51d`, Job `111475085849`,
+Artefakt `11308526368`: native PostgreSQL-Rollen/mTLS und gewöhnliches CLI-Setup
+bestanden. Die anschließende Sammelphase Bootstrap/Enrollment/Lizenz scheiterte
+vor jedem Controllerstart mit `MANAGEMENT_STAGE_FAILED`. Dieser generische Code
+erlaubt keine Zuordnung zu einem Produkt- oder Fixturefehler.
+
+Der einzige aggregierte Indikator `PERMISSION_DENIED` kann vom erwarteten
+Setup-Schreibversuch auf die schreibgeschützte Konfiguration stammen; er beweist
+keinen zusätzlichen Dateirechtefehler. Die neue reine Harness-Diagnostik trennt
+CLI- und Controllerindikatoren, protokolliert die Instanzzahl als begrenzte Zahl
+und acht feste Teilschritte einschließlich Initialisierung, Enrollment und
+Lizenzspeicher. Eine überprüfte literale Fehlercode-Liste ersetzt pauschale
+Präfixfreigaben. Produktfunktionen und Bestehenskriterien bleiben unverändert.
+Die konkrete Ursache und der nächste native Lauf bleiben **OFFEN**.

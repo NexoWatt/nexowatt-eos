@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "kind": "native-management-integration",
+  "sourceReleaseId": "d400cab68939e60e22b619b78b3ecc4a4043afbfe6e21696934db42ba586d5a3",
+  "sourceSequence": 10,
+  "nativePostgresql": "17.11",
+  "node": "v24.21.0",
+  "hostArch": "x64",
+  "signedPayloadPlatform": "linux-arm64",
+  "sourceAppBytesUnchanged": false,
+  "lifecycleScriptsExecuted": false,
+  "nativeModulesRebuilt": false,
+  "mockedRuntimeDependencies": false,
+  "physicalAdaptersStarted": false,
+  "actualSystemdMountPolicy": false,
+  "physicalPiAcceptance": false,
+  "productionReleaseApproved": false,
+  "productionReadinessPassed": false,
+  "restartPassed": false,
+  "boots": [],
+  "stages": [
+    {
+      "name": "fresh isolated native database uses separate least-privilege mTLS identities",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "ordinary setup loads actual PostgreSQL wrappers with read-only config",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production bootstrap and first-run enrollment retain strong accounts and no physical adapters",
+      "passed": false,
+      "failureCode": "MANAGEMENT_STAGE_FAILED"
+    }
+  ],
+  "runtimeIndicators": [
+    "PERMISSION_DENIED"
+  ]
+}
