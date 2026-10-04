@@ -38,9 +38,11 @@ Installer über die bestehende Installation starten.
 
 **Der echte Pi-Updateversuch, Login, Neustart, Backup/Restore und die
 Anlagenabnahme bleiben offen.** Die R6-Paket-/Updateprüfungen und die
-EOS-Sicherheits-CI sind bestanden. Die ältere plattformübergreifende
-Installermatrix hat dokumentierte offene Fehler; dieser Bestandsupdateweg führt
-`dist/install.sh` nicht aus. Physische Anlagenbefehle bleiben gesperrt.
+EOS-Sicherheits-CI sind bestanden. Die alten plattformübergreifenden CI-Jobs
+sind durch [EOS-gerechte Vertragsprüfungen](docs/operations/GITHUB_WORKFLOWS_DE.md)
+ersetzt; eine native Vollinstallation bleibt gesondert zu prüfen. Dieser
+Bestandsupdateweg führt `dist/install.sh` nicht aus. Physische Anlagenbefehle
+bleiben gesperrt.
 Dies ist ein Testkandidat, keine Produktions- oder CRA-Konformitätsfreigabe.
 
 Der [historische R5-Reparaturweg](docs/operations/TEST_R4_R5_REPAIR_ENTRY_DE.md)
