@@ -1,17 +1,50 @@
-name: "CodeQL"
+name: CodeQL
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [main]
+    paths:
+      - '**/*.js'
+      - '**/*.cjs'
+      - '**/*.mjs'
+      - '**/*.jsx'
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.html'
+      - '**/package.json'
+      - '**/package-lock.json'
+      - '.github/**'
+      - '!delivery/**'
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
+    paths:
+      - '**/*.js'
+      - '**/*.cjs'
+      - '**/*.mjs'
+      - '**/*.jsx'
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.html'
+      - '**/package.json'
+      - '**/package-lock.json'
+      - '.github/**'
+      - '!delivery/**'
   schedule:
-    - cron: "5 12 * * 6"
+    - cron: '5 12 * * 6'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     permissions:
       actions: read
       contents: read
@@ -20,22 +53,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ javascript ]
+        language: [javascript]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        # actions/checkout v7.0.1, resolved from the official tag on 2026-10-04.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4.37.9
+        # github/codeql-action v4.37.9, annotated tag dereferenced 2026-10-04.
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938
         with:
           languages: ${{ matrix.language }}
           queries: +security-and-quality
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v4.37.9
+        uses: github/codeql-action/autobuild@cdf488f595d80d6e07e03d4674febd5ab45fa938
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4.37.9
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938
         with:
-          category: "/language:${{ matrix.language }}"
+          category: /language:${{ matrix.language }}

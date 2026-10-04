@@ -13,6 +13,25 @@ Focused tests exist in `tests/security/`; run `node --test tests/security/*.test
 
 ---
 
+## Aktuelle CI-Zuständigkeit (04.10.2026)
+
+Die Workflows sind auf das EOS-Linux-/systemd-Profil ausgerichtet. Automatische
+Installer-Vertragsprüfungen prüfen Build, Schutzgrenzen und die Ablehnung
+nicht unterstützter Plattformen. Sie bestätigen keine vollständige native
+Installation und erwarten keinen automatisch gestarteten HTTP-Admin.
+EOS-Sicherheits-/Produktverträge, CodeQL und die Workflow-Syntaxprüfung bleiben
+automatisch aktiv, jeweils für ihre relevanten Dateipfade. Reine README- und
+Berichtsaktualisierungen starten diese Quelltests nicht erneut.
+
+Bereits veröffentlichte R4-/R5-/R6-Pakete und der R5-Reparatureinstieg werden nur
+noch ausdrücklich per `workflow_dispatch` geprüft/veröffentlicht; ihre
+Unveränderlichkeits- und Freigabeschranken bleiben bestehen. Windows-NPX ist eine
+manuelle historische Diagnose. Historische ioBroker-npm-/SFTP-Veröffentlichung
+ist zusätzlich auf das Upstream-Repository beschränkt.
+Siehe [Workflow-Betrieb](docs/operations/GITHUB_WORKFLOWS_DE.md) und
+[Änderungs-/Prüfbeleg](reports/integration/workflow-repair-20261004/README.md).
+Die nachfolgende ursprüngliche Upstream-CI-Beschreibung ist historisch.
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.

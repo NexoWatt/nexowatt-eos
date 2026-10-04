@@ -1,209 +1,119 @@
-name: Test
+name: EOS installer contracts
 
-# Run this job on all pushes and pull requests
+# The reviewed shell profile requires Linux/systemd and leaves the service
+# stopped and disabled. Upstream HTTP auto-start installation is not its contract.
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - "*"
-  pull_request: {}
+    branches: [main]
+    paths:
+      - '*.sh'
+      - tasks.js
+      - versions.json
+      - security/**
+      - tests/security/**
+      - tests/ci/**
+      - .github/workflows/test.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - '*.sh'
+      - tasks.js
+      - versions.json
+      - security/**
+      - tests/security/**
+      - tests/ci/**
+      - .github/workflows/test.yml
+
+permissions:
+  contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-test
+  group: eos-installer-contracts-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # Derive the test matrix from versions.json, the same source of truth the installer,
-  # the NPX package and ioBroker.admin read. A version added or dropped there is then
-  # picked up here automatically instead of drifting apart.
   node-versions:
-    if: contains(github.event.head_commit.message, '[skip ci]') == false
-    runs-on: ubuntu-latest
+    name: Validate local Node.js policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     outputs:
       matrix: ${{ steps.read.outputs.matrix }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
+      - name: Checkout reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Read and validate nodeJsAccepted from the checkout
+        id: read
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          policy = json.loads(Path('versions.json').read_text())
+          accepted = policy['nodeJsAccepted']
+          recommended = policy['nodeJsRecommended']
+          assert isinstance(accepted, list) and 0 < len(accepted) <= 8
+          assert all(type(version) is int and 22 <= version <= 99 for version in accepted)
+          assert len(set(accepted)) == len(accepted)
+          assert type(recommended) is int and recommended in accepted
+          matrix = json.dumps([str(version) + '.x' for version in accepted])
+          print('Node.js contract matrix:', matrix)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('matrix=' + matrix + '\n')
+          PY
 
-    - name: Read nodeJsAccepted from versions.json
-      id: read
-      run: |
-        MATRIX=$(jq -c '[.nodeJsAccepted[] | tostring + ".x"]' versions.json)
-        echo "Testing against Node.js: $MATRIX"
-        echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
-
-  # The jobs below point VERSIONS_URL at the branch, so nothing would notice if the
-  # real download broke. Keep covering that path here: same URL and same parsing as
-  # installer_library.sh, without a full installation.
-  versions-url:
-    if: contains(github.event.head_commit.message, '[skip ci]') == false
-    runs-on: ubuntu-latest
-    steps:
-    - name: The runtime download of versions.json still works
-      run: |
-        URL="https://raw.githubusercontent.com/ioBroker/ioBroker/master/versions.json"
-        JSON=$(curl -sL "$URL")
-        if [ -z "$JSON" ]; then
-          echo "$URL returned nothing - every installation falls back to its built-in defaults"
-          exit 1
-        fi
-        REC=$(echo "$JSON" | grep '"nodeJsRecommended"' | sed 's/.*"nodeJsRecommended"[[:space:]]*:[[:space:]]*\([0-9]*\).*/\1/')
-        ACC=$(echo "$JSON" | sed -n 's/.*"nodeJsAccepted"[[:space:]]*:[[:space:]]*\[\([0-9,[:space:]]*\)\].*/\1/p' | tr ',' ' ')
-        echo "recommended=[$REC] accepted=[$ACC]"
-        echo "$REC" | grep -qE '^[0-9]+$'
-        echo "$ACC" | grep -qE '[0-9]'
-
-  # ===================
-  # Runs unit tests on all supported node versions and OSes
-  test-install:
+  installer-contracts:
+    name: Build and guards / Node.js ${{ matrix.node-version }}
     needs: node-versions
-    if: contains(github.event.head_commit.message, '[skip ci]') == false
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     strategy:
-      # One unsupported version should not hide the result for the others
       fail-fast: false
       matrix:
         node-version: ${{ fromJson(needs.node-versions.outputs.matrix) }}
-        os: [ubuntu-latest, macos-latest]
-
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    defaults:
+      run:
+        shell: bash
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v7
-      with:
-        node-version: ${{ matrix.node-version }}
-
-    # setup-node only prepends the tool cache to PATH for the steps that follow. The
-    # generated systemd unit resolves its interpreter with "which node" at service start,
-    # using systemd's own PATH, which never contains the tool cache. Without this link the
-    # matrix would only change the Node.js that the install script sees, while ioBroker
-    # itself would keep running on the image's default version.
-    - name: Make the selected Node.js the system Node.js
-      run: |
-        sudo ln -sf "$(command -v node)" /usr/local/bin/node
-        sudo ln -sf "$(command -v npm)" /usr/local/bin/npm
-        /usr/local/bin/node -v
-
-    # installer.sh downloads installer_library.sh from master at runtime, so running it
-    # directly would test master's library instead of the one in this branch. The previous
-    # attempt to strip that block had no effect: sed without -i writes to stdout, and the
-    # sourced functions were gone by the next step anyway.
-    # "node tasks --create" inlines the local library into dist/install.sh, which is also
-    # the artifact that gets deployed to iobroker.net.
-    - name: Build the self-contained installer
-      run: node tasks --create
-
-    - name: Install ioBroker
-      # Point the installer at this branch's versions.json. It otherwise downloads
-      # master's copy at runtime, so a PR editing that file would be verified
-      # against values it does not contain - and against the matrix above, which is
-      # built from the local file.
-      env:
-        VERSIONS_URL: file://${{ github.workspace }}/versions.json
-      run: bash ./dist/install.sh --silent
-
-    - name: Test permissions
-      # TODO: test this on OSX too!
-      # runner.os is 'Linux', never 'ubuntu', so the previous startsWith() condition was
-      # always false and this step never ran on any runner.
-      if: runner.os == 'Linux'
-      run: bash .github/testFiles.sh
-
-    # The service needs a while to come up. This used to be a single attempt that only
-    # worked because an unrelated "npm install mocha chai" step ran before it and acted
-    # as an accidental delay - a race, not a test. Retry instead.
-    - name: Test if ioBroker starts by checking the admin adapter output
-      run: |
-        for i in $(seq 1 36); do
-          if curl -s --insecure http://127.0.0.1:8081 | grep -q '<title>Admin</title>'; then
-            echo "admin is reachable after $((i * 5))s"
-            exit 0
-          fi
-          sleep 5
-        done
-        echo "admin did not become reachable within 180s"
-        exit 1
-
-    # Guard so the matrix cannot quietly go back to being decorative: resolve "node" the
-    # way systemd does when it starts the unit and compare it against the matrix entry.
-    - name: Verify the service resolves Node.js ${{ matrix.node-version }}
-      if: runner.os == 'Linux'
-      run: |
-        expected="${{ matrix.node-version }}"
-        expected="${expected%.x}"
-        actual=$(sudo env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin node -v)
-        actual="${actual#v}"
-        actual="${actual%%.*}"
-        echo "ioBroker would start on Node.js $actual, the matrix asks for $expected"
-        test "$actual" = "$expected"
-
-  # ===================
-  # Exercises install_nodejs, which no CI run has ever reached: installer.sh only calls it
-  # when "node" is absent, and every runner image ships with Node.js preinstalled. The
-  # NodeSource path - GPG key import, nodesource.sources, apt pinning - was therefore
-  # completely uncovered. Remove Node.js first so the installer has to install it itself.
-  test-nodejs-install:
-    if: contains(github.event.head_commit.message, '[skip ci]') == false
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
-
-    # Must happen before Node.js is removed, "node tasks --create" needs it
-    - name: Build the self-contained installer
-      run: node tasks --create
-
-    - name: Remove the preinstalled Node.js
-      run: |
-        sudo apt-get remove -y --purge nodejs npm > /dev/null 2>&1 || true
-        sudo rm -f /usr/local/bin/node /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
-        # The tool cache copy is reachable only through the PATH entries the runner sets up
-        printf 'PATH=%s\n' "$(printf '%s' "$PATH" | tr ':' '\n' | grep -v 'hostedtoolcache/node' | paste -sd:)" >> "$GITHUB_ENV"
-
-    # GITHUB_ENV only takes effect in later steps, so assert in a separate one
-    - name: Verify Node.js is really gone
-      run: |
-        if command -v node; then
-          echo "node is still on PATH, the installer would skip install_nodejs"
-          exit 1
-        fi
-        echo "no node on PATH, install_nodejs will run"
-
-    - name: Install ioBroker
-      # Point the installer at this branch's versions.json. It otherwise downloads
-      # master's copy at runtime, so a PR editing that file would be verified
-      # against values it does not contain - and against the matrix above, which is
-      # built from the local file.
-      env:
-        VERSIONS_URL: file://${{ github.workspace }}/versions.json
-      run: bash ./dist/install.sh --silent
-
-    - name: Verify the installer installed the recommended Node.js from NodeSource
-      run: |
-        expected=$(jq -r '.nodeJsRecommended' versions.json)
-        actual=$(node -v)
-        actual="${actual#v}"
-        actual="${actual%%.*}"
-        echo "installer produced Node.js $actual, versions.json recommends $expected"
-        test "$actual" = "$expected"
-        test -f /etc/apt/sources.list.d/nodesource.sources
-        echo "NodeSource repository is configured"
-
-    - name: Test permissions
-      run: bash .github/testFiles.sh
-
-    - name: Test if ioBroker starts by checking the admin adapter output
-      run: |
-        for i in $(seq 1 36); do
-          if curl -s --insecure http://127.0.0.1:8081 | grep -q '<title>Admin</title>'; then
-            echo "admin is reachable after $((i * 5))s"
-            exit 0
-          fi
-          sleep 5
-        done
-        echo "admin did not become reachable within 180s"
-        exit 1
+      - name: Checkout reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: ${{ matrix.node-version }}
+          package-manager-cache: false
+      - name: Confirm the actual test interpreter and source
+        env:
+          EXPECTED_NODE: ${{ matrix.node-version }}
+        run: |
+          git rev-parse HEAD
+          node -e 'const expected = process.env.EXPECTED_NODE.split(".")[0]; if (process.versions.node.split(".")[0] !== expected) process.exit(1); console.log(process.version, process.execPath)'
+          python3 --version
+          bash --version
+      - name: Build the self-contained scripts without deployment
+        run: node tasks --create
+      - name: Validate generated artifacts and their actual preflight boundary
+        run: python3 tests/ci/installer-contract.test.py BuiltArtifactTest
+      - name: Run TLS and deployment identity contracts on the selected Node.js
+        run: node --test tests/security/*.test.cjs
+      - name: Run isolated host, wrapper, service and updater guards
+        run: |
+          for test_script in tests/security/*.test.py; do
+            # Only these reviewed temporary-path fixtures run as root. No installer,
+            # package manager, host policy change or service start is executed.
+            sudo env CODEX_PRIMARY_RUNTIME_NODE="$(command -v node)" python3 "$test_script"
+          done
+      - name: State verification scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          The selected Node.js actually builds the local, self-contained shell artifacts and runs TLS/SFTP contracts.
+          Generated preflight tests and isolated host/service fixtures verify refusal paths, protected tools, and the stopped/disabled service profile.
+          No system Node.js is replaced or removed; no upstream versions URL or auto-started HTTP Admin is required.
+          This is not a full installation, APT/NodeSource transaction, native systemd/UID transition, Pi test, or product release approval.
+          SUMMARY

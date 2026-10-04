@@ -1,0 +1,35 @@
+name: EOS workflow validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+      - .github/actionlint*
+      - tools/ci/check-workflows.sh
+  pull_request:
+    paths:
+      - .github/workflows/**
+      - .github/actionlint*
+      - tools/ci/check-workflows.sh
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eos-workflows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Pinned workflow syntax and expression checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout workflow sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Validate all workflow definitions
+        run: bash tools/ci/check-workflows.sh

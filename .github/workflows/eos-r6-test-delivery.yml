@@ -1,19 +1,9 @@
 name: EOS R6 signed update and public command
 
+# Published revisions are immutable. Source regressions run in security-review.yml;
+# explicit dispatch remains available for guarded publication/recovery.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - runtime/**
-      - components/admin/**
-      - components/backitup/**
-      - tools/**
-      - system/**
-      - tests/**
-      - reports/integration/installable-test3-r6-20261004/*.cjs
-      - reports/integration/installable-test3-r6-20261004/*.py
-      - .github/workflows/eos-r6-test-delivery.yml
 
 permissions:
   contents: read

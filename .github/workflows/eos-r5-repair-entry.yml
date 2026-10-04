@@ -1,15 +1,9 @@
 name: EOS R5 public repair entry
 
+# Published revisions are immutable. Source regressions run in security-review.yml;
+# explicit dispatch remains available for guarded publication/recovery.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - tools/bootstrap/build-public-repair-entry.cjs
-      - tools/bootstrap/prepare-public-repair-publication.cjs
-      - tests/bootstrap/public-repair-entry.test.cjs
-      - tests/bootstrap/public-repair-publication.test.cjs
-      - .github/workflows/eos-r5-repair-entry.yml
 
 permissions:
   contents: read

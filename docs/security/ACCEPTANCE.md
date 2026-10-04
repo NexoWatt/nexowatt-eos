@@ -1,5 +1,16 @@
 # EOS: Änderungen, Migration und Freigabesperren
 
+**CI-Nachtrag vom 04.10.2026:** Die historischen Plattform-Installationsjobs
+wurden durch ausdrücklich begrenzte EOS-Installer-Vertragsprüfungen ersetzt.
+Schutzregeln für Plattform, Pfade, Rechte und gestoppten Dienst bleiben erhalten;
+ein erwarteter Schutzabbruch wird nur mit passender Diagnose als bestandener
+Negativtest gewertet. Neue Workflow-Prüfung und gezielte Dateiauslöser vermeiden
+wiederkehrende unpassende Installationen bei Dokumentations-Pushes.
+[Änderung, konkrete Prüfungen und Grenzen](../../reports/integration/workflow-repair-20261004/README.md).
+Dies schließt die unten genannten nativen Installations-/Hardwaregates nicht.
+Die folgenden Aussagen dokumentieren weiterhin den historischen Stand vom
+30.09.2026; aktuelle R6-Lieferung und Pi-Anleitung stehen in der README auf `main`.
+
 Stand: 30.09.2026. Basis: NexoWatt/EOS Commit `18195cd94f1b0972d093128ab4572742515f7799`.
 Lokaler Prüfzweig: `security/eos-first-run-hardening-20260930`.
 

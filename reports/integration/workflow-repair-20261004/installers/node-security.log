@@ -1,0 +1,51 @@
+✔ valid profile is only a static match with open release gates (6.173047ms)
+✔ null, arrays and primitive roots are rejected without throwing (0.207722ms)
+✔ both database sections and nested objects are required (1.481779ms)
+✔ JSONL, file and missing backends cannot pass as encrypted Redis (0.579492ms)
+✔ single TCP endpoint required; sentinel, URLs and unix sockets rejected (1.051451ms)
+✔ TLS 1.3 and explicit certificate verification cannot be weakened (0.803809ms)
+✔ explicit DNS server identity and valid current CA required (2.477647ms)
+✔ short or malformed auth_pass and legacy password fallback rejected (0.892743ms)
+✔ TLS client private keys and transport overrides forbidden (1.618374ms)
+✔ client options with invalid types cannot disguise their runtime semantics (0.911771ms)
+✔ Admin 8.0.14-style options reconstruction is caught after saving (0.240082ms)
+✔ CLI reads explicit file without modifying it and emits no credential or CA (60.562638ms)
+✔ CLI rejects invalid JSON, unreadable path and unsafe profile without leaking input (217.096621ms)
+✔ reader bounds file size and rejects final symlinks where supported (2.763758ms)
+✔ matching host key permits all four simulated uploads and closes connections (5.78281ms)
+✔ missing pin fails before ssh2 load or any connection (2.318658ms)
+▶ malformed and noncanonical pins fail before network access
+  ✔ invalid fingerprint case 0 (1.181587ms)
+  ✔ invalid fingerprint case 8 (1.081657ms)
+  ✔ invalid fingerprint case 12 (1.173445ms)
+  ✔ invalid fingerprint case 51 (1.069488ms)
+  ✔ invalid fingerprint case 51 (1.013945ms)
+  ✔ invalid fingerprint case 51 (1.079584ms)
+  ✔ invalid fingerprint case 50 (1.24297ms)
+  ✔ invalid fingerprint case 50 (1.010771ms)
+✔ malformed and noncanonical pins fail before network access (10.045612ms)
+✔ different server key aborts before authentication or SFTP access (2.442935ms)
+✔ host key rotation requires an explicit verified pin update (1.842953ms)
+✔ host verifier rejects invalid callback input instead of throwing (0.978402ms)
+▶ invalid port and missing credentials fail before any connection
+  ✔ invalid port case "22extra" (1.040926ms)
+  ✔ invalid port case "0" (1.101567ms)
+  ✔ invalid port case "65536" (0.847305ms)
+  ✔ invalid port case "-22" (0.910209ms)
+  ✔ invalid port case " 22" (0.882778ms)
+  ✔ invalid port case "22\n" (1.087927ms)
+  ✔ missing SFTP_HOST (1.06348ms)
+  ✔ missing SFTP_PORT (1.078212ms)
+  ✔ missing SFTP_USER (0.909238ms)
+  ✔ missing SFTP_PASS (1.805316ms)
+✔ invalid port and missing credentials fail before any connection (11.797938ms)
+✔ connection errors are sanitized for asynchronous and synchronous failures (1.851666ms)
+✔ --create works with no deployment settings and never loads ssh2 (1.169469ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 467.887521

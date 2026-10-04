@@ -1,0 +1,102 @@
+{
+  "checkedAt": "2026-10-04T08:25:45.518374+00:00",
+  "baseCommit": "6f1b9a7d2ee0d3bd322667a7a132227e13658b4f",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "uid": 0,
+  "node": "v24.19.0",
+  "python": "3.12.14",
+  "sourceHashes": {
+    ".github/workflows/test.yml": "a0c4ba691d92b1c14d507a0ab9dc6d358495cda6c480d05c18397bb4d28ed5ce",
+    ".github/workflows/freebsd.yml": "6e642a1ee79c3d4035dbc6ab07a692e5ceac7685c8442e25849d33c09267a53e",
+    "tests/ci/installer-contract.test.py": "aba198401134fa0c04f150a8e95eb01de8e59ad8f28471d8195a6e60499dc5ce"
+  },
+  "commands": [
+    {
+      "name": "build",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "tasks",
+        "--create"
+      ],
+      "exitCode": 0,
+      "rawLog": "build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "built-contracts",
+      "command": [
+        "python3",
+        "tests/ci/installer-contract.test.py",
+        "BuiltArtifactTest"
+      ],
+      "exitCode": 0,
+      "rawLog": "built-contracts.log",
+      "sha256": "3b12adc6bb4cf06600a5631835d2f34c1931081fcbebc5f7b5efbf47bcddd1e2"
+    },
+    {
+      "name": "unsupported-platforms",
+      "command": [
+        "python3",
+        "tests/ci/installer-contract.test.py",
+        "UnsupportedPlatformTest"
+      ],
+      "exitCode": 0,
+      "rawLog": "unsupported-platforms.log",
+      "sha256": "33d75d40f69a447225fd2112e948c512c9777734ba8962179bb11cde4deb3627"
+    },
+    {
+      "name": "node-security",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--test",
+        "tests/security/runtime-tls.test.cjs",
+        "tests/security/sftp.test.cjs"
+      ],
+      "exitCode": 0,
+      "rawLog": "node-security.log",
+      "sha256": "591b8697497c6728c735893a36a07c00b6f04ca0f5b995df5442ae892f47dbac"
+    },
+    {
+      "name": "host-policy",
+      "command": [
+        "python3",
+        "tests/security/host-policy.test.py"
+      ],
+      "exitCode": 0,
+      "rawLog": "host-policy.log",
+      "sha256": "5c5560f1fb1ad893f69940339d7da314a8644b5fc39d869f6a6ea8dd9b6306e0"
+    },
+    {
+      "name": "node-update-log",
+      "command": [
+        "python3",
+        "tests/security/node-update-log.test.py"
+      ],
+      "exitCode": 0,
+      "rawLog": "node-update-log.log",
+      "sha256": "ada6a36bb1e539c8caedffa94898c541bd89d7ece157655afdcb0590924c4da4"
+    },
+    {
+      "name": "profile",
+      "command": [
+        "python3",
+        "tests/security/profile.test.py"
+      ],
+      "exitCode": 0,
+      "rawLog": "profile.log",
+      "sha256": "acf24ff8f3d5cd6d0298749d1e5ac1871d25fd2a715d8f836293e22c45d95a79"
+    },
+    {
+      "name": "wrapper",
+      "command": [
+        "python3",
+        "tests/security/wrapper.test.py"
+      ],
+      "exitCode": 0,
+      "rawLog": "wrapper.log",
+      "sha256": "6bdc3bcdcd3686f8921d161245d734868f72f6d112f691c073224a2d9761cf5c"
+    }
+  ],
+  "passed": true,
+  "scope": "Local generated artifact and isolated fixture checks only; no full installation, service mutation, native UID transition, platform VM, APT transaction or Pi run. Node22/24/26 hosted matrix pending."
+}

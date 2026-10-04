@@ -1,6 +1,12 @@
-name: iobroker npx install Windows 64bit Build
+name: Historical Windows NPX diagnostic (manual)
 
-on: [push, pull_request]
+# This upstream installer is outside the EOS Linux/systemd profile. It is kept
+# available for explicit diagnosis, without duplicating every EOS push.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-winnpx
@@ -8,37 +14,30 @@ concurrency:
 
 jobs:
   test-windows-install:
-    runs-on: windows-latest
+    runs-on: windows-2025
+    timeout-minutes: 20
     steps:
-    - uses: actions/checkout@v7
-    - uses: actions/setup-node@v7
-      with:
-        node-version: 22
-    - name: prepare-install
-      run: |
-        npm i --omit=dev
-        npm link
-        cd ..
-        mkdir iobroker-inst
-        cd iobroker-inst
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Prepare historical upstream install
+        run: |
+          npm i --omit=dev
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm link
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          New-Item -ItemType Directory -Path ../iobroker-inst
 
-    - name: install
-      run: |
-        cd ..
-        cd iobroker-inst
-        npx iobroker
+      - name: Exercise historical upstream NPX entry
+        working-directory: ../iobroker-inst
+        run: npx iobroker
 
-    #- name: prepare-fix
-    #  run: |
-    #    npm unlink
-    #    ((Get-Content -path package.json -Raw) -replace '@iobroker/install','@iobroker/fix') | Set-Content -Path package.json
-    #   npm link
-
-    #- name: fix
-    #  run: |
-    #    cd ..
-    #    cd iobroker-inst
-    #    npx iobroker
-
-    #- name: test
-    #  run: node test
+      - name: State diagnostic scope
+        if: always()
+        shell: pwsh
+        run: |
+          'Historical Windows NPX behavior only. Not an EOS installation, hardware test, or production approval.' >> $env:GITHUB_STEP_SUMMARY

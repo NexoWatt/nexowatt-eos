@@ -1,34 +1,66 @@
-name: Test FreeBSD
+name: EOS unsupported-platform guards
 
-# GitHub does not offer a FreeBSD runner, so the installer is exercised in a FreeBSD VM
-# on an ubuntu runner. This replaces .cirrus.yml, which covered the same ground but had
-# stopped producing check runs on this repository.
+# FreeBSD and macOS are explicitly outside the reviewed Linux/systemd profile.
+# Verify their rejection using inert platform probes in the actual generated
+# preflight; do not expect successful installation on an unsupported platform.
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - "*"
-  pull_request: {}
+    branches: [main]
+    paths:
+      - installer.sh
+      - installer_library.sh
+      - fix_installation.sh
+      - tasks.js
+      - versions.json
+      - security/**
+      - tests/ci/**
+      - .github/workflows/freebsd.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - installer.sh
+      - installer_library.sh
+      - fix_installation.sh
+      - tasks.js
+      - versions.json
+      - security/**
+      - tests/ci/**
+      - .github/workflows/freebsd.yml
+
+permissions:
+  contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-freebsd
+  group: eos-unsupported-platforms-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test-install-freebsd:
-    if: contains(github.event.head_commit.message, '[skip ci]') == false
-
-    runs-on: ubuntu-latest
-
+  unsupported-platform-contracts:
+    name: Reject FreeBSD, macOS and Linux without systemd
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
-
-    - name: Install and test ioBroker in a FreeBSD VM
-      uses: vmactions/freebsd-vm@v1
-      with:
-        release: '14.2'
-        usesh: true
-        prepare: |
-          pkg install -y bash node npm libnghttp2 python sudo curl
+      - name: Checkout reviewed source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Use the reviewed Node.js release
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Build the self-contained scripts without deployment
+        run: node tasks --create
+      - name: Require exact refusal before any installer body
+        run: python3 tests/ci/installer-contract.test.py UnsupportedPlatformTest
+      - name: State unsupported-platform test scope
+        if: always()
         run: |
-          bash .github/testFreeBSD.sh
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          The real generated install/fix preflight runs with inert uname/ps probes for FreeBSD, Darwin, and Linux without systemd.
+          Each case must fail with the exact profile diagnostic and must never reach the post-preflight sentinel; arbitrary nonzero exits do not pass.
+          No FreeBSD/macOS installation, native legacy Bash compatibility, VM, host mutation, or product release is claimed.
+          SUMMARY

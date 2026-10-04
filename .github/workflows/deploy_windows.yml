@@ -1,91 +1,94 @@
-name: Deploy
+name: Historical upstream npm publication (manual)
 
+# @iobroker/install and @iobroker/fix are upstream products. EOS has no automatic
+# npm publishing from a source push or tag. Dispatch on an upstream version tag
+# is retained for the historical upstream repository only.
 on:
-  push:
-    branches:
-      - '*'
-    tags:
-      # normal versions
-      - "v?[0-9]+.[0-9]+.[0-9]+"
-      # pre-releases
-      - "v?[0-9]+.[0-9]+.[0-9]+-**"
-  pull_request: { }
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: historical-upstream-npm-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   test-windows-install:
-    runs-on: windows-latest
+    if: github.repository == 'ioBroker/ioBroker' && startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-2025
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          node-version: 22
-      - name: prepare-install
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Prepare historical upstream install
         run: |
           npm i --omit=dev
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm link
-          cd ..
-          mkdir iobroker-inst
-          cd iobroker-inst
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          New-Item -ItemType Directory -Path ../iobroker-inst
 
-      - name: install
-        run: |
-          cd ..
-          cd iobroker-inst
-          npx iobroker
+      - name: Exercise historical upstream NPX entry
+        working-directory: ../iobroker-inst
+        run: npx iobroker
 
   deploy:
     needs: [test-windows-install]
-
-    # Trigger this step only when a commit on master is tagged with a version number
-    if: |
-      contains(github.event.head_commit.message, '[skip ci]') == false &&
-      github.event_name == 'push' &&
-      startsWith(github.ref, 'refs/tags/')
-
-    runs-on: ubuntu-latest
+    if: github.repository == 'ioBroker/ioBroker' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          node-version: 22
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org
 
-      - name: Extract the version and commit body from the tag
+      - name: Validate upstream version tag and prepare release notes
         id: extract_release
-        # The body may be multiline, therefore we need to escape some characters
+        shell: bash
         run: |
-          VERSION="${{ github.ref }}"
-          VERSION=${VERSION##*/}
-          VERSION=${VERSION##*v}
-          echo "::set-output name=VERSION::$VERSION"
-          BODY=$(git show -s --format=%b)
-          BODY="${BODY//'%'/'%25'}"
-          BODY="${BODY//$'\n'/'%0A'}"
-          BODY="${BODY//$'\r'/'%0D'}"
-          echo "::set-output name=BODY::$BODY"
+          set -euo pipefail
+          release_tag=${GITHUB_REF#refs/tags/}
+          [[ "$release_tag" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || exit 1
+          printf 'version=%s\n' "${release_tag#v}" >> "$GITHUB_OUTPUT"
+          git show -s --format=%b > "$RUNNER_TEMP/upstream-release-notes.txt"
 
-      - name: install
+      - name: Install upstream dependencies
         run: npm i
 
-      - name: deploy
-        run: |
-          npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
-          npm whoami
-          npm publish
+      - name: Publish upstream install package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
 
-      - name: deploy fix
+      - name: Publish upstream fix package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
           npm run make-fix
           npm publish
 
-      - name: Create Github Release
-        uses: actions/create-release@v1
+      - name: Create upstream GitHub release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release v${{ steps.extract_release.outputs.VERSION }}
-          draft: false
-          # Pre-release versions create pre-releases on GitHub
-          prerelease: ${{ contains(steps.extract_release.outputs.VERSION, '-') }}
-          body: ${{ steps.extract_release.outputs.BODY }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.extract_release.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_args=()
+          if [[ "$RELEASE_VERSION" == *-* ]]; then release_args+=(--prerelease); fi
+          gh release create "${GITHUB_REF#refs/tags/}" --verify-tag \
+            --title "Release v$RELEASE_VERSION" --notes-file "$RUNNER_TEMP/upstream-release-notes.txt" \
+            "${release_args[@]}"

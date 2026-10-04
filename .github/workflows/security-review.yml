@@ -1,55 +1,70 @@
 name: EOS security regression
 
+# Root prose documentation and generated output reports alone do not trigger CI.
+# Keep report-hosted build tools and historical metadata actually read by the
+# R6 source contracts in scope. No source test is suppressed after publication.
 on:
   workflow_dispatch:
   pull_request:
+    branches: [main]
     paths:
       - '*.sh'
-      - tasks.js
-      - versions.json
-      - package.json
+      - '*.js'
+      - '*.cjs'
+      - '*.mjs'
+      - 'versions.json'
+      - 'package.json'
       - '**/package-lock.json'
-      - AGENTS.md
-      - CLAUDE.md
-      - PARAMETERS.md
-      - README.md
-      - core/**
-      - runtime/**
-      - components/**
-      - delivery/**
-      - security/**
-      - lib-npx/**
-      - install/**
-      - tests/**
-      - docs/**
-      - system/**
-      - tools/**
-      - sbom/**
-      - .github/workflows/**
+      - 'core/**'
+      - 'runtime/**'
+      - 'components/**'
+      - 'security/**'
+      - 'lib-npx/**'
+      - 'install/**'
+      - 'img/**'
+      - 'tests/**'
+      - 'system/**'
+      - 'tools/**'
+      - 'sbom/**'
+      - 'reports/**/*.cjs'
+      - 'reports/**/*.js'
+      - 'reports/**/*.py'
+      - 'reports/**/*.sh'
+      - 'delivery/test-pi-0.2.0-test.3-r4/delivery.json'
+      - 'delivery/test-pi-0.2.0-test.3-r4/release-public.pem'
+      - 'delivery/test-pi-0.2.0-test.3-r5/delivery.json'
+      - 'delivery/test-pi-0.2.0-test.3-r5/release-public.pem'
+      - '.github/**'
   push:
+    branches: [main]
     paths:
       - '*.sh'
-      - tasks.js
-      - versions.json
-      - package.json
+      - '*.js'
+      - '*.cjs'
+      - '*.mjs'
+      - 'versions.json'
+      - 'package.json'
       - '**/package-lock.json'
-      - AGENTS.md
-      - CLAUDE.md
-      - PARAMETERS.md
-      - README.md
-      - core/**
-      - runtime/**
-      - components/**
-      - delivery/**
-      - security/**
-      - lib-npx/**
-      - install/**
-      - tests/**
-      - docs/**
-      - system/**
-      - tools/**
-      - sbom/**
-      - .github/workflows/**
+      - 'core/**'
+      - 'runtime/**'
+      - 'components/**'
+      - 'security/**'
+      - 'lib-npx/**'
+      - 'install/**'
+      - 'img/**'
+      - 'tests/**'
+      - 'system/**'
+      - 'tools/**'
+      - 'sbom/**'
+      - 'reports/**/*.cjs'
+      - 'reports/**/*.js'
+      - 'reports/**/*.py'
+      - 'reports/**/*.sh'
+      - 'delivery/test-pi-0.2.0-test.3-r4/delivery.json'
+      - 'delivery/test-pi-0.2.0-test.3-r4/release-public.pem'
+      - 'delivery/test-pi-0.2.0-test.3-r5/delivery.json'
+      - 'delivery/test-pi-0.2.0-test.3-r5/release-public.pem'
+      - '.github/**'
 
 permissions:
   contents: read
@@ -230,6 +245,12 @@ jobs:
             tests/postgresql/provision-permissions.test.cjs \
             tests/adapter-channel/channel.test.cjs
 
+      - name: Keep R6 build, derivative SBOM and publication contracts active
+        # These source fixtures do not rebuild or overwrite an immutable release.
+        run: |
+          node --test reports/integration/installable-test3-r6-20261004/build-revision.test.cjs tests/integration/r6-derivative-sbom.test.cjs
+          python3 -I -B reports/integration/installable-test3-r6-20261004/publish-candidate.test.py
+
       - name: Run isolated ownership and sudo denial contracts
         # These reviewed fixtures write temporary /root trees. Host commands and
         # service operations are stubbed; this is a disposable GitHub-hosted runner.
@@ -255,5 +276,5 @@ jobs:
           This job selects source-only bootstrap, onboarding, sudo/preflight and PostgreSQL contract fixtures, plus real loopback TLS tests.
           PostgreSQL contract tests use doubles; no native database, ARM64 runtime, APT transaction, systemd installation or plant is exercised.
           Recovery archive-signature verification, full artifact publication and native Debian 13 / Pi first-start acceptance remain separate OPEN gates.
-          A green result is not a production approval. The historical upstream Linux/macOS/FreeBSD/Windows workflows remain separate.
+          A green result is not a production approval. Historical upstream platform diagnostics and immutable delivery publication are manual workflows.
           SUMMARY

@@ -1,17 +1,9 @@
 name: EOS R4 signed test delivery
 
+# Published revisions are immutable. Source regressions run in security-review.yml;
+# explicit dispatch remains available for guarded publication/recovery.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - runtime/**
-      - tools/**
-      - system/**
-      - tests/**
-      - reports/integration/installable-test3-r4-20261003/*.cjs
-      - reports/integration/installable-test3-r4-20261003/*.py
-      - .github/workflows/eos-r4-test-delivery.yml
 
 permissions:
   contents: read

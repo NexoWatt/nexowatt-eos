@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "kind": "workflow-trigger-scope-review",
+  "date": "2026-10-04",
+  "baseCommit": "6f1b9a7d2ee0d3bd322667a7a132227e13658b4f",
+  "sourceInputs": {
+    "check-blueprint.py": [
+      "system/product-plan.json",
+      "system/security/requirements.json",
+      "system/security/threat-model.json"
+    ],
+    "validate-contracts.py": [
+      "system/contracts/**"
+    ],
+    "source_sbom.py": [
+      "package.json",
+      "Git HEAD identity",
+      "tools/sbom/vendor/cyclonedx-1.7/**",
+      "sbom/eos-installer-source.cdx.json"
+    ],
+    "component_sources.py": [
+      "system/components/source-inventory.json",
+      "tools/sbom/source_sbom.py",
+      "tools/sbom/vendor/cyclonedx-1.7/**"
+    ],
+    "R6 build source fixtures": [
+      "components/admin/**",
+      "components/backitup/**",
+      "runtime/**",
+      "tools/**",
+      "reports/integration/installable-test3-r6-20261004/*.cjs",
+      "reports/integration/installable-test3-r6-20261004/*.py",
+      "delivery/test-pi-0.2.0-test.3-r4/delivery.json",
+      "delivery/test-pi-0.2.0-test.3-r4/release-public.pem",
+      "delivery/test-pi-0.2.0-test.3-r5/delivery.json",
+      "delivery/test-pi-0.2.0-test.3-r5/release-public.pem"
+    ],
+    "branding contracts": [
+      "components/**",
+      "img/logos/ioBroker_Logo_Long_Vector.svg"
+    ]
+  },
+  "documentationAudit": {
+    "reviewDocument": "Validated as a bounded repository-relative markdown path and retained as SBOM metadata; document bytes are not opened by component_sources.py.",
+    "rootDocsAreReadBySelectedChecks": false,
+    "architectureClaims": "Checks use machine-readable system/ contracts, not prose. No document-consistency checks were removed."
+  },
+  "localTests": [
+    {
+      "command": "node --test reports/integration/installable-test3-r6-20261004/build-revision.test.cjs tests/integration/r6-derivative-sbom.test.cjs",
+      "node": "v24.19.0",
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "python3 -I -B reports/integration/installable-test3-r6-20261004/publish-candidate.test.py",
+      "tests": 9,
+      "passed": 9,
+      "failed": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "yaml.load(workflow.read_text(), Loader=yaml.BaseLoader) for every .github/workflows/*.yml",
+      "pyyaml": "6.0.3",
+      "status": "PASS",
+      "scope": "YAML parsing only; root actionlint evidence covers GitHub expressions/schema."
+    }
+  ],
+  "remoteCiStatus": "PENDING_ROOT_PUBLICATION_AND_READBACK",
+  "targetHardware": "NOT_EXECUTED",
+  "productionApproved": false,
+  "actionPins": [
+    {
+      "action": "actions/checkout",
+      "tag": "v7.0.1",
+      "sha": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "source": "https://api.github.com/repos/actions/checkout/git/ref/tags/v7.0.1"
+    },
+    {
+      "action": "actions/setup-node",
+      "tag": "v7",
+      "sha": "820762786026740c76f36085b0efc47a31fe5020",
+      "source": "https://api.github.com/repos/actions/setup-node/git/ref/tags/v7"
+    },
+    {
+      "action": "github/codeql-action",
+      "tag": "v4.37.9",
+      "tagObject": "a35ac6e6798d72df5475948b28efb89edc2e19ca",
+      "sha": "cdf488f595d80d6e07e03d4674febd5ab45fa938",
+      "sources": [
+        "https://api.github.com/repos/github/codeql-action/git/ref/tags/v4.37.9",
+        "https://api.github.com/repos/github/codeql-action/git/tags/a35ac6e6798d72df5475948b28efb89edc2e19ca"
+      ],
+      "tagSignatureVerified": false,
+      "verificationScope": "Official GitHub API ref and annotated-tag dereference; no claim of a signed upstream tag."
+    },
+    {
+      "action": "actions/upload-artifact",
+      "sha": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+      "source": "https://api.github.com/repos/actions/upload-artifact/git/commits/043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+      "change": "existing release-workflow pin retained; official commit identity reread"
+    },
+    {
+      "action": "actions/download-artifact",
+      "sha": "3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+      "source": "https://api.github.com/repos/actions/download-artifact/git/commits/3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+      "change": "existing release-workflow pin retained; official commit identity reread"
+    }
+  ],
+  "scopeBoundaries": [
+    "No signed delivery file changed.",
+    "No product runtime, adapter source, license, configuration, or secret changed.",
+    "No continue-on-error, skip-ci marker, TLS bypass, or failure suppression introduced.",
+    "Windows/macOS/FreeBSD are not supported by the current EOS Linux/systemd profile; retained upstream diagnostics are manual, not passing EOS product tests.",
+    "Manual EOS publication retains immutability and reviewed-source guards, independent artifact verification, and write permissions only for publishing jobs.",
+    "CodeQL query set and scan contents unchanged; source-trigger filters remove prose/artifact-only pushes, weekly analysis remains."
+  ],
+  "files": {
+    ".github/workflows/codeql.yml": "091aae4f52639327b5488889737b4a9dc40ca8adddbf711c01f89930cb32c2a5",
+    ".github/workflows/deploy.yml": "c5e1d241775331393c367f2da672309db67f95b1f3eb6291d4ff2f5cb160b390",
+    ".github/workflows/deploy_windows.yml": "39738daef0484107a4146efff90325783ef5fc3e29b209815b58c1b986217299",
+    ".github/workflows/eos-r4-test-delivery.yml": "691306c8f1eb241f89a7b93d254a415bd4c8bb53ab29730ae22b01150e8565c5",
+    ".github/workflows/eos-r5-repair-entry.yml": "18ff7f98aad41114299fa75e678926b01f9114ecf4500226eca22e49f671ca91",
+    ".github/workflows/eos-r5-test-delivery.yml": "2dd160a9b0568bf03a46095d3a32e1697ee9e765c9b722050fcaf282322d29cb",
+    ".github/workflows/eos-r6-test-delivery.yml": "9ae418512c4512cb43c0828edcc696428096c1ea0b4030cb0824405e8105afa8",
+    ".github/workflows/npx_install.yml": "2399a2ce9eec8344cc61bcceb8ee0700a9b478d16b8e3e6dd27bc1a054e5226d",
+    ".github/workflows/security-review.yml": "06d41ad25cf3fc61f2d30d3e983d2f25defdc5a6841b5f943d820e079d72e23b"
+  }
+}
