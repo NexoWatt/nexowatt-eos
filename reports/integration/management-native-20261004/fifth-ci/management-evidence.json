@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "kind": "native-management-integration",
+  "sourceReleaseId": "d400cab68939e60e22b619b78b3ecc4a4043afbfe6e21696934db42ba586d5a3",
+  "sourceSequence": 10,
+  "nativePostgresql": "17.11",
+  "node": "v24.21.0",
+  "hostArch": "x64",
+  "signedPayloadPlatform": "linux-arm64",
+  "sourceAppBytesUnchanged": false,
+  "lifecycleScriptsExecuted": false,
+  "nativeModulesRebuilt": false,
+  "mockedRuntimeDependencies": false,
+  "physicalAdaptersStarted": false,
+  "actualSystemdMountPolicy": false,
+  "physicalPiAcceptance": false,
+  "productionReleaseApproved": false,
+  "productionReadinessPassed": true,
+  "restartPassed": true,
+  "boots": [
+    {
+      "stage": "complete",
+      "legacySingleProbe": {
+        "elapsedMs": 26,
+        "admin": true,
+        "ui": false,
+        "adminFailure": null,
+        "uiFailure": {
+          "code": "ONBOARD_HTTPS_NOT_READY",
+          "stage": "unknown",
+          "reason": "unknown",
+          "port": 8188
+        }
+      },
+      "productionProbe": {
+        "elapsedMs": 2231,
+        "admin": true,
+        "ui": true,
+        "adminFailure": null,
+        "uiFailure": null
+      },
+      "coreReadyMs": 730,
+      "adaptersAliveMs": 6162,
+      "productionReadyMs": 8402,
+      "license": {
+        "authenticated": true,
+        "licenseValid": true,
+        "code": "LICENSE_VALID",
+        "uuidMatched": true
+      },
+      "pids": {
+        "count": 3,
+        "currentControllerAndAdmittedAdapters": true,
+        "allAlive": true
+      },
+      "runtimeLog": {
+        "bytesRead": 7982,
+        "indicators": [
+          "LICENSE_VALID"
+        ]
+      }
+    },
+    {
+      "stage": "complete",
+      "legacySingleProbe": {
+        "elapsedMs": 15,
+        "admin": true,
+        "ui": false,
+        "adminFailure": null,
+        "uiFailure": {
+          "code": "ONBOARD_HTTPS_NOT_READY",
+          "stage": "unknown",
+          "reason": "unknown",
+          "port": 8188
+        }
+      },
+      "productionProbe": {
+        "elapsedMs": 214,
+        "admin": true,
+        "ui": true,
+        "adminFailure": null,
+        "uiFailure": null
+      },
+      "coreReadyMs": 722,
+      "adaptersAliveMs": 5351,
+      "productionReadyMs": 5568,
+      "license": {
+        "authenticated": true,
+        "licenseValid": true,
+        "code": "LICENSE_VALID",
+        "uuidMatched": true
+      },
+      "pids": {
+        "count": 3,
+        "currentControllerAndAdmittedAdapters": true,
+        "allAlive": true
+      },
+      "runtimeLog": {
+        "bytesRead": 5386,
+        "indicators": [
+          "LICENSE_VALID"
+        ]
+      }
+    }
+  ],
+  "stages": [
+    {
+      "name": "fresh isolated native database uses separate least-privilege mTLS identities",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "ordinary setup loads actual PostgreSQL wrappers with read-only config",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production bootstrap and first-run enrollment retain strong accounts and no physical adapters",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production CLI uploads only the two admitted management packages",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production readiness reaches actual Admin HTTPS login redirect and strict unauthenticated UI status",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "actual adapter PID-writer lifecycle and clean controller restart retain readiness and enrollment",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "final shutdown leaves exact admitted instance scope and unchanged signed application bytes",
+      "passed": false,
+      "failureCode": "MANAGEMENT_ASSERTION_FAILED"
+    }
+  ],
+  "bootstrapSteps": [
+    {
+      "name": "fresh-instance-count",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-initialize",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "password-hash",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-enrollment",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-uuid-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-trust-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-issuer-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-verify-and-store",
+      "passed": true,
+      "failureCode": null
+    }
+  ],
+  "initialInstanceCount": 0,
+  "runtimeIndicators": [
+    "PERMISSION_DENIED"
+  ],
+  "processIndicators": [
+    {
+      "scope": "cli-setup",
+      "indicators": [
+        "PERMISSION_DENIED"
+      ]
+    },
+    {
+      "scope": "cli-upload-admin",
+      "indicators": []
+    },
+    {
+      "scope": "cli-upload-ui",
+      "indicators": []
+    },
+    {
+      "scope": "controller",
+      "indicators": []
+    },
+    {
+      "scope": "controller",
+      "indicators": []
+    }
+  ]
+}

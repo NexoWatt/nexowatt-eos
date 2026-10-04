@@ -20,6 +20,7 @@ const KNOWN_STAGE_CODES = new Set([
     'MANAGEMENT_ADMIN_LOGIN_FAILED', 'MANAGEMENT_LICENSE_STATUS_FAILED', 'MANAGEMENT_AUTH_DEADLINE',
     'MANAGEMENT_AUTH_TRANSPORT', 'MANAGEMENT_AUTH_TLS', 'MANAGEMENT_AUTH_RESPONSE_LIMIT', 'MANAGEMENT_AUTH_RESPONSE',
     'MANAGEMENT_LOG_LIMIT', 'MANAGEMENT_LOG_BOUNDARY', 'MANAGEMENT_LOG_TRUNCATED', 'MANAGEMENT_PID_DEADLINE', 'MANAGEMENT_RUNTIME_ERROR',
+    'MANAGEMENT_APP_CHANGED', 'MANAGEMENT_CONTROLLER_STOP_FAILED',
     'ENROLLMENT_ACCOUNTS_SCHEMA', 'ENROLLMENT_ACCOUNT_DRIFT', 'ENROLLMENT_ACCOUNT_MARKER', 'ENROLLMENT_ACCOUNT_ROLES_REQUIRED',
     'ENROLLMENT_ACCOUNT_STATE', 'ENROLLMENT_ADAPTER_NOT_ADMITTED', 'ENROLLMENT_ADMIN_DISABLED', 'ENROLLMENT_ADMIN_DRIFT',
     'ENROLLMENT_ADMIN_PASSWORD', 'ENROLLMENT_ALREADY_ATTEMPTED', 'ENROLLMENT_CONTROLLER_RUNNING', 'ENROLLMENT_CORE_BINDING',
@@ -77,4 +78,17 @@ function stageFailure(error) {
     if (error?.name === 'ReferenceError') return 'MANAGEMENT_REFERENCE_ERROR';
     return 'MANAGEMENT_STAGE_FAILED';
 }
-module.exports = { probeFailure, stageFailure };
+function inventoryDifference(before, after) {
+    const oldRows = new Map(before.map(row => [row.path, row])), newRows = new Map(after.map(row => [row.path, row]));
+    const result = { matches: true, added: 0, removed: 0, changed: 0, samples: [] };
+    for (const name of new Set([...oldRows.keys(), ...newRows.keys()])) {
+        const kind = !oldRows.has(name) ? 'added' : !newRows.has(name) ? 'removed' :
+            JSON.stringify(oldRows.get(name)) !== JSON.stringify(newRows.get(name)) ? 'changed' : null;
+        if (!kind) continue;
+        result.matches = false; result[kind]++;
+        if (result.samples.length < 8) result.samples.push({ kind, knownPath: ['iob', 'iobroker'].includes(name) ? name : null,
+            pathSha256: require('node:crypto').createHash('sha256').update(name).digest('hex') });
+    }
+    return result;
+}
+module.exports = { probeFailure, stageFailure, inventoryDifference };

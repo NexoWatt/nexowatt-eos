@@ -84,7 +84,7 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         sourceSequence: 10, nativePostgresql: '17.11', node: process.version, hostArch: process.arch, signedPayloadPlatform: 'linux-arm64',
         sourceAppBytesUnchanged: false, lifecycleScriptsExecuted: false, nativeModulesRebuilt: false, mockedRuntimeDependencies: false,
         physicalAdaptersStarted: false, actualSystemdMountPolicy: false, physicalPiAcceptance: false, productionReleaseApproved: false,
-        productionReadinessPassed: false, restartPassed: false, boots: [], stages: [], bootstrapSteps: [] };
+        productionReadinessPassed: false, restartPassed: false, boots: [], stages: [], bootstrapSteps: [], finalSteps: [] };
     let active, servicePassword, licenseUuid, activeLog, activeBoot;
     function checkRuntime() {
         if (!activeLog || !activeBoot) return;
@@ -119,11 +119,13 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         evidence.stages.push({ name, passed, failureCode });
         if (!passed) fail('MANAGEMENT_STAGE_FAILED');
     };
-    const bootstrapStep = async (name, operation) => {
-        const row = { name, passed: false, failureCode: null }; evidence.bootstrapSteps.push(row);
+    const recordStep = async (rows, name, operation) => {
+        const row = { name, passed: false, failureCode: null }; rows.push(row);
         try { const result = await operation(); row.passed = true; return result; }
         catch (error) { row.failureCode = require('./diagnostics.cjs').stageFailure(error); throw error; }
     };
+    const bootstrapStep = (name, operation) => recordStep(evidence.bootstrapSteps, name, operation);
+    const finalStep = (name, operation) => recordStep(evidence.finalSteps, name, operation);
     const before = contentRows(app), appRequire = createRequire(path.join(app, 'package.json'));
     enrollment.pinnedAdapters(app);
     const legacyReadiness = require(path.join(root, 'r7/bundle/payload/tools/system/onboard-ui.cjs'));
@@ -158,6 +160,11 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
     fs.writeFileSync(configFile, configBytes, { mode: 0o400, flag: 'wx' });
     assert.throws(() => fs.accessSync(configFile, fs.constants.W_OK), { code: 'EACCES' });
     fs.mkdirSync(path.join(controller, 'tmp'), { recursive: true });
+    // Match the product's immutable application before even ordinary setup.
+    // Upstream's optional root launchers must encounter its noncritical EACCES
+    // path; neither setup nor uploads may alter the original signed inventory.
+    readonlyTree(app);
+    assert.throws(() => fs.writeFileSync(path.join(controller, 'pids.txt'), '[]', { flag: 'wx' }), { code: 'EACCES' });
     // Root-managed production configuration is represented by denied writes.
     // No NODE_PATH/NODE_OPTIONS/preload or TLS disable switch reaches children.
     const options = { cwd: app, env: require('./environment.cjs').productEnvironment() };
@@ -204,8 +211,6 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         }
         await enrollment.verify({ objects, config, app });
     });
-    readonlyTree(app);
-    assert.throws(() => fs.writeFileSync(path.join(controller, 'pids.txt'), '[]', { flag: 'wx' }), { code: 'EACCES' });
     const ca = fs.readFileSync('/etc/nexowatt-eos/web/ca.crt');
     const normalStop = appRequire('@iobroker/js-controller-common').EXIT_CODES.JS_CONTROLLER_STOPPED;
     async function boot() {
@@ -272,9 +277,17 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         const next = await boot(); assert.notEqual(next, previous); evidence.restartPassed = true;
     });
     await stage('final shutdown leaves exact admitted instance scope and unchanged signed application bytes', async () => {
-        await stop(active); checkRuntime(); assert.equal(active.exitCode, normalStop);
-        await enrollment.verify({ objects, config, app });
-        assert.ok(JSON.stringify(contentRows(app)) === JSON.stringify(before));
+        await finalStep('controller-stop', async () => {
+            await stop(active); checkRuntime();
+            evidence.finalShutdown = { exitCode: Number.isInteger(active.exitCode) && active.exitCode >= 0 && active.exitCode <= 255 ? active.exitCode : null,
+                signal: ['SIGTERM', 'SIGKILL'].includes(active.signalCode) ? active.signalCode : null };
+            if (active.exitCode !== normalStop || active.signalCode !== null) fail('MANAGEMENT_CONTROLLER_STOP_FAILED');
+        });
+        await finalStep('enrollment-after-stop', () => enrollment.verify({ objects, config, app }));
+        await finalStep('signed-app-content-inventory', async () => {
+            evidence.finalInventory = require('./diagnostics.cjs').inventoryDifference(before, contentRows(app));
+            if (!evidence.finalInventory.matches) fail('MANAGEMENT_APP_CHANGED');
+        });
         evidence.sourceAppBytesUnchanged = true;
         evidence.readinessSourceSha256 = sha(fs.readFileSync(path.resolve(__dirname, '../../tools/system/onboard-ui.cjs')));
     });

@@ -1,7 +1,7 @@
 # Lokaler Vorprüfungsnachweis – 04.10.2026
 
-**10/10 PASS, 0 übersprungen.** Rohbeleg: `local-preflight.tap`, SHA-256
-`4af9389f20b00dbb474b9b0c7991b455114ee8cc564711a468e2f6b0853b4224`.
+**11/11 PASS, 0 übersprungen.** Rohbeleg: `local-preflight.tap`, SHA-256
+`25a02c16357da80eafce78b074b7a160a7fd63e9aa34d31e46291b8d8e147552`.
 Alle zehn Management-CJS-Dateien und die PostgreSQL-Labor-Fixture bestehen
 `node --check`; `git diff --check` ist erfolgreich.
 
@@ -22,7 +22,7 @@ Das ist Konfigurationsvalidierung, kein lokaler PostgreSQL-/TLS-Verbindungsnachw
 Der siebte Vertrag prüft zusätzlich die sichere Unterscheidung fester Bootstrap-,
 Lizenz-, Dateizugriffs- und Assertionfehler; fremde Texte und unbekannte Codes
 werden auch bei passendem Präfix nicht ausgegeben.
-Der achte Vertrag reproduziert mit dem authentischen R7-`createUuid` und einem
+Der UUID-Vertrag reproduziert mit dem authentischen R7-`createUuid` und einem
 reinen Objectstore-Double den ungültigen CI-Sentinel und dessen Ablehnung durch
 den echten Lizenzkern. Ein frischer Prozess mit dem echten `ci-info` bestätigt
 die Abschaltung durch `CI=false`, auch bei gesetzten Providerkennzeichen.
@@ -31,14 +31,18 @@ Arbeitsumgebung kann keine Netzwerkinterfaces auflisten (`uv_interface_addresses
 Es gibt keinen OS-Mock, keinen manuell ersetzten UUID-Wert und keine Ausnahme vom
 Lizenzvalidator. Der normale UUID-/Lizenzpfad muss im nativen Gesamtlauf bestehen.
 
-Der neunte Vertrag prüft die begrenzte Auswertung von OAuth-/Lizenzstatus-
+Der Auth-Vertrag prüft die begrenzte Auswertung von OAuth-/Lizenzstatus-
 Antwortformen: fehlende Anmeldung, ungültiger Token, abgelehnte oder fremd
 gebundene Lizenz scheitern; der Ergebnisbericht enthält keine UUID oder Tokens.
 Das ist Parservalidierung, kein lokaler HTTPS-Anmeldenachweis.
-Der zehnte Vertrag prüft echte private Dateien: pro Start nur neue Bytes,
+Der Log-Vertrag prüft echte private Dateien: pro Start nur neue Bytes,
 farbige Fehlerzeilen erkannt, keine Rohtexte ausgegeben, unprivate Dateien,
 Trunkierung, Verzeichnis, Symlink und FIFO abgewiesen. Der Leser prüft vor dem
 Öffnen den regulären Dateityp und verwendet zusätzlich `O_NOFOLLOW|O_NONBLOCK`.
+Ein zusätzlicher Inventarvertrag prüft unveränderte, hinzugefügte, entfernte und
+geänderte Dateien ohne Vergleichsausnahmen. Diagnose enthält nur Anzahlen,
+höchstens acht Pfad-Hashes und die zwei festen Namen `iob`/`iobroker`; fremde
+Dateinamen und Inhalte werden nicht ausgegeben.
 
 Zusätzlicher tatsächlicher Logger-Versuch: der authentifizierte R7-Export
 `@iobroker/js-controller-common-db/build/cjs/lib/common/logger.js:logger` wurde
@@ -51,7 +55,7 @@ oktales 0600. Der Versuch belegt Datei-Transport und Leser, keinen Adapterstart.
 
 Dateibindung der Fullmanagement-Testlogik:
 `management.integration.cjs` SHA-256
-`9eaab61db2d7ee452199c032ee6d064dc51a07de9bbde9f5b66f6f33141ffb97`.
+`0bcc2a7110f79e9653120b13537133c32316bf1e09ba63f2a2eb576d6726d527`.
 `authenticated-license.cjs` SHA-256
 `ccc784d9f2e438429209a8b90ae5be5c8c8ff026bdc0d4db2f865d5e98c8beea`.
 `runtime-log.cjs` SHA-256
@@ -60,9 +64,9 @@ Dateibindung der Fullmanagement-Testlogik:
 `e0ebd31f427ccabf712467f07918551b16e3d59a88901c2373c988aa0a6a1616`.
 `tests/postgresql/fixtures/lab-cluster.cjs` SHA-256
 `78be6ae90f7660da129d7b3a802d4e5bef1aae58e31f9077f345a83c3c499e1c`.
-Der vierte native Lauf belegt PostgreSQL 17.11 und tatsächliche Listenerbereitschaft.
-Echte HTTPS-Anmeldung, PID-Lebenszyklus und Neustart dieser neuen Harness-Fassung
-sind erst durch den kommenden CI-Lauf nachweisbar.
+Der fünfte native Lauf belegt PostgreSQL 17.11, tatsächliche Listenerbereitschaft,
+echte HTTPS-Anmeldung, aktuelle PIDs und Neustart. Der vollständige Erfolg mit
+unveränderter App-Inventur dieser neuen Harness-Fassung bleibt nachzuweisen.
 Pi-/systemd-/Browser-/Reboot-/Anlagenabnahme bleibt **OFFEN**.
 
 ## Erster nativer CI-Lauf: Fixturefehler vor Controllerstart
@@ -137,3 +141,32 @@ Start nicht bestehen lassen. Die PID-Datei muss die aktuelle Controller-PID und
 genau die beiden bestätigten Adapter-PIDs enthalten; alle müssen leben. Das
 Readiness-Gate und die Produkt-App bleiben unverändert. Nächster nativer Lauf
 und physische Pi-Abnahme bleiben **OFFEN**.
+
+## Fünfter nativer CI-Lauf: Neustart bestanden, letzte Sammelphase offen
+
+Quellstand `f0ed9bf5da8ca36e1f6ce5c805b6af8a4ef2a688`, Artefakt `11309880103`:
+beide Starts bestanden Produktionsreadiness, echte Admin-OAuth-Anmeldung,
+geschützten gültigen Lizenzstatus mit UUID-Bindung, genau drei aktuelle lebende
+PIDs und Laufzeitlogprüfung. Die Logindikatoren beider Starts enthielten nur
+`LICENSE_VALID`. Erster Start: korrigierte HTTPS-Probe 2231 ms; zweiter Start:
+214 ms. Die letzte Sammelphase scheiterte mit `MANAGEMENT_ASSERTION_FAILED`.
+Das allein unterscheidet Exitcode-, Enrollment- und Inventarprüfung nicht;
+`sourceAppBytesUnchanged: false` ist kein gesicherter nativer Dateidifferenzbefund.
+
+Konkreter unabhängig reproduzierter Fixturefehler: Die tatsächliche signierte
+R7-Setup-Methode legt bei beschreibbarem App-Root die vorher fehlenden Startwrapper
+`iob` und `iobroker` an (`setupSetup.js`, Linux-Zweig). Der Methodenversuch nutzte
+unveränderten authentifizierten Code mit Scratch-Pfadbindung und einer gedoppelten
+DB-Fortsetzung; echte Dateischreibaufrufe erzeugten genau diese zwei Dateien.
+Er belegt den Setup-Schreibpfad, keinen vollständigen nativen Setupdurchlauf.
+Leere Verzeichnisse gehören dagegen nicht zu `inventoryTree`; `controller/tmp`
+kann allein keine Inventardifferenz verursachen.
+
+Die Harness setzt jetzt den App-Schreibschutz vor Setup/Uploads. Die optionalen
+Launcher-Schreibversuche liegen bereits upstream in einem nichtkritischen
+try/catch; der Produktcode wird nicht geändert. Es werden weder Wrapper
+vorerzeugt noch Dateinamen ausgefiltert oder die Ausgangsinventur neu angesetzt.
+Die letzte Phase führt drei feste Teilschritte und begrenzte Differenzdiagnose.
+Ein echter unprivilegierter Schreibschutz-/Setup-Gesamtlauf bleibt der nächste
+native CI-Nachweis; lokal ist nur UID 0 verfügbar. Vollständiger Fullmanagement-
+PASS und Pi-/Anlagenabnahme bleiben offen.

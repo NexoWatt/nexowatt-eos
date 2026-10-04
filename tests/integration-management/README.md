@@ -58,6 +58,9 @@ Die unveränderte Produktions-Konfigurationsprüfung bleibt verbindlich.
 Die Produktionserzeuger erstellen echte HTTPS-Zertifikate an den fest vorgeschriebenen
 Pfaden. Produktions-Bootstrap, Erstregistrierung, Upload-CLI, Adapter-PID-Datei,
 Enrollment-Verifikation und Neustart laufen gegen die echten Module.
+Der App-Baum wird bereits **vor** gewöhnlichem Setup und Uploads schreibgeschützt.
+Die unveränderte Ausgangsinventur bleibt verbindlich; optionale upstream
+Startwrapper dürfen nicht nachträglich in das signierte App-Inventar gelangen.
 CLI und Controller erhalten eine feste Environment-Auswahl mit `CI=false`.
 Dadurch erzeugt upstream eine normale UUID; `CI=true` würde seinen ungültigen
 CI-Sentinel erzeugen, den der Lizenzvalidator korrekt ablehnt. Die Harness
@@ -82,6 +85,10 @@ ausbleibende erkannte Laufzeitfehler einschließlich beider Stopps, reale privat
 PID-Schreibvorgänge mit den drei aktuellen lebenden Controller-/Adapter-PIDs und ein
 zweiter erfolgreicher Start werden geprüft. App-Bytes und Konfiguration dürfen
 sich nicht ändern; nur Unix-Dateirechte bilden das schreibgeschützte Release ab.
+Die letzte Phase trennt Controller-Stopp, Enrollment und App-Inventur. Bei einer
+Abweichung werden nur Anzahlen und höchstens acht Pfad-Hashes ausgegeben;
+ausschließlich die zwei festen Setup-Namen `iob`/`iobroker` dürfen im Klartext
+erscheinen. Neue Dateiinhalte werden nie in den Prüfbericht übernommen.
 
 Das Gate verwendet die R7-App mit aktuellen Host-/Readiness-Helfern aus dem
 geprüften Quellstand. Ein R8-Builder muss die vollständige App-Bytegleichheit
@@ -103,9 +110,10 @@ echten Produktionsvalidator die Zulassung des festen Managementprofils sowie
 die Ablehnung abweichender Hosts, Ports und Datenbanknamen. Diese Prüfungen
 simulieren keine erfolgreiche TLS-Verbindung. Syntax und diese Vorprüfungen sind lokal ausführbar.
 Die aktuelle Arbeitsumgebung hat nur UID 0 in ihrer UID-Map und keinen nativen
-PostgreSQL-Server. Der vierte native Lauf erreichte beide HTTPS-Endpunkte innerhalb
-des Produktionsbudgets; der Gesamtlauf scheiterte noch an einem ungültigen
-stdout-Lizenznachweis der Harness. **Vollständiger nativer Fullmanagement-PASS mit
-echter Anmeldung, PID-Prüfung und Neustart ist bis zum nächsten tatsächlichen
+PostgreSQL-Server. Der fünfte native Lauf bestand Start und Neustart samt echter
+Anmeldung, Lizenzbindung, aktuellen PIDs und privater Laufzeitlogprüfung.
+Die letzte Sammelphase Stopp/Enrollment/App-Inventur scheiterte noch;
+die native Evidenz allein identifiziert deren Einzelassertion nicht.
+**Vollständiger nativer Fullmanagement-PASS ist bis zum nächsten tatsächlichen
 CI-Ergebnis OFFEN.** Pi/ARM64, systemd-Mount-Policies, Browser-/UI-Interaktion, Reboot,
 physische Adapter und Anlagenbetrieb bleiben eigenständige offene Abnahmen.

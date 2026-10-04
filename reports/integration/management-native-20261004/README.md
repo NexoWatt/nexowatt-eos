@@ -86,3 +86,32 @@ Der getrennte native Core-Test und CodeQL (Lauf `37217178519`) bestehen.
 Noch keine erfolgreiche vollständige Managementabnahme, R8-Signierung oder
 Pi-/Anlagenfreigabe. Nicht erreichte boolesche Nachweisfelder in den unveränderten
 Artefakten bedeuten fehlenden Nachweis, keinen beobachteten App-Baum-Unterschied.
+
+## Fünfter Lauf: Anmeldung, Lizenz, aktuelle PIDs und Neustart bestehen
+
+Quellcommit `f0ed9bf5da8ca36e1f6ce5c805b6af8a4ef2a688`,
+[Securitylauf 37218432059](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37218432059),
+Managementjob `111483642862`, Artefakt `11309880103` unter `fifth-ci/`.
+Beide tatsächlichen Starts erreichen Controller, Admin und UI. Echte HTTPS-
+Anmeldung und geschützte Lizenzstatusabfrage bestätigen jeweils `LICENSE_VALID`
+mit der registrierten Gerätebindung. Die PID-Datei enthält jeweils exakt den
+aktuellen Controller und beide zugelassenen lebenden Adapterprozesse.
+
+Die alte Einzelprüfung verfehlt bei beiden Starts die UI; die korrigierte Prüfung
+besteht nach 2231 beziehungsweise 214 ms. Die vollständige Bereitschaft wird nach
+8402 beziehungsweise 5568 ms erreicht. Die frischen privaten Laufzeitlogs beider
+Starts enthalten ausschließlich den Indikator `LICENSE_VALID`, keine erkannten
+Fehlerindikatoren. Der kontrollierte erste Stop und erneute Start bestehen;
+`productionReadinessPassed` und `restartPassed` sind im Originalbeleg `true`.
+
+Der Gesamtlauf bleibt **FAIL**: In der letzten Sammelphase nach dem zweiten Stop
+tritt `MANAGEMENT_ASSERTION_FAILED` auf. Die bisherige Diagnose unterscheidet dort
+noch nicht Controller-Exitstatus, Enrollment-Verifikation und abschließenden
+App-Dateivergleich. `sourceAppBytesUnchanged: false` bezeichnet deshalb weiterhin
+den fehlenden Abschlussnachweis und beweist allein keine tatsächlich veränderte
+Datei. Die Inventarisierung erfasst nur Dateien/Symlinks; das vom Labor angelegte
+leere Controller-`tmp`-Verzeichnis erklärt eine Dateidifferenz nicht.
+
+Die vier übrigen Security-Jobs einschließlich nativem Core-Neustart sind grün.
+R8 bleibt bis zur geklärten und bestandenen letzten Phase unsigniert; keine
+Pi-, systemd-, Browser- oder Anlagenabnahme wird aus diesem Lauf abgeleitet.

@@ -79,6 +79,21 @@ test('bootstrap diagnostics retain known phase failures without exposing message
     assert.equal(stageFailure({ code: 'EOS_PG_UNREVIEWED_SECRET' }), 'MANAGEMENT_STAGE_FAILED');
     assert.equal(stageFailure({ code: 'EOS_PG_PRIVATE_SECRET lower case text' }), 'MANAGEMENT_STAGE_FAILED');
 });
+test('final inventory remains exact and limits diagnostics to counts, two static launcher paths and path hashes', () => {
+    const { inventoryDifference, stageFailure } = require('./diagnostics.cjs');
+    const before = [{ path: 'signed-file', type: 'file', sha256: 'a' }];
+    assert.deepEqual(inventoryDifference(before, before), { matches: true, added: 0, removed: 0, changed: 0, samples: [] });
+    const after = [{ path: 'signed-file', type: 'file', sha256: 'b' }, { path: 'iob', type: 'file', sha256: 'private-content' },
+        ...Array.from({ length: 12 }, (_, i) => ({ path: 'private-name-' + i, type: 'file', sha256: 'private-content' }))];
+    const difference = inventoryDifference(before, after);
+    assert.equal(difference.matches, false); assert.equal(difference.added, 13); assert.equal(difference.changed, 1);
+    assert.equal(difference.samples.length, 8); assert.equal(difference.samples[1].knownPath, 'iob');
+    assert.ok(difference.samples.every(row => /^[a-f0-9]{64}$/.test(row.pathSha256)));
+    assert.ok(!JSON.stringify(difference).includes('private-'));
+    assert.equal(inventoryDifference(before, []).removed, 1);
+    assert.equal(stageFailure(new Error('MANAGEMENT_APP_CHANGED')), 'MANAGEMENT_APP_CHANGED');
+    assert.equal(stageFailure(new Error('MANAGEMENT_CONTROLLER_STOP_FAILED')), 'MANAGEMENT_CONTROLLER_STOP_FAILED');
+});
 test('actual R7 CI sentinel fails real licensing and the product child environment disables CI detection', () => {
     assert.ok(verified);
     const environment = require('./environment.cjs').productEnvironment();
