@@ -13,4 +13,8 @@ Archiv, Schlüssel und Liefermetadaten wurden öffentlich heruntergeladen und by
 - [Ablauf, Statusprüfung und Fehlerbehandlung](../../../docs/operations/RECOVER_R4_FIRST_START_R7_DE.md)
 - [Signatur-, Quellbindungs- und Übergangsprüfung](../installable-test3-r7-20261004/build-verification.json)
 
-Der konkrete R4→R7-Wechsel, Browser-Login, Geräteneustart und Backup/Restore auf dem Nutzer-Pi sind noch nicht ausgeführt. Physische Anlagenbefehle bleiben gesperrt; dies ist keine Produktionsfreigabe. Die unveränderten Liefermetadaten dokumentieren den Buildzeitpunkt vor Veröffentlichung des öffentlichen Einstiegs; dessen Verfügbarkeit ist im separaten Veröffentlichungsnachweis festgehalten.
+Der konkrete R4→R7-Wechsel, Browser-Login, Geräteneustart und Backup/Restore auf dem Nutzer-Pi sind noch nicht bestätigt. Physische Anlagenbefehle bleiben gesperrt; dies ist keine Produktionsfreigabe. Die unveränderten Liefermetadaten dokumentieren den Buildzeitpunkt vor Veröffentlichung des öffentlichen Einstiegs; dessen Verfügbarkeit ist im separaten Veröffentlichungsnachweis festgehalten.
+
+## Pi-Rückmeldung vom 04.10.2026, 12:46 Uhr (Europe/Berlin)
+
+Der Nutzer meldet den Controller als `failed/failed`, `Result=exit-code`, `ExecMainStatus=1`, ohne automatische Neustarts. PostgreSQL ist `active/running`. Diese Ausgabe bestätigt keinen erfolgreichen Pi-Test. Installierter Release, Ausführung und Ergebnis des R7-Befehls sind aus den Dienstzuständen allein nicht erkennbar. Benötigt werden die ursprüngliche Reparaturausgabe, ausgewählte Release-/Wiederherstellungsfelder und die letzten Dienstmeldungen. Ursache und Pi-Abnahme bleiben offen; keine erneute Aktivierung oder Löschung von Sperren wurde veranlasst. Die zuvor erfolgreichen Labor-/CI-Prüfungen gelten unverändert ausschließlich für ihre dokumentierte Umgebung.

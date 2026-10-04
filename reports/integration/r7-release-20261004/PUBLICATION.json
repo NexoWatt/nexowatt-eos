@@ -113,5 +113,29 @@
   "actualPiLoginVerified": false,
   "actualPiRebootVerified": false,
   "physicalControlEnabled": false,
-  "productionReleaseApproved": false
+  "productionReleaseApproved": false,
+  "latestUserObservation": {
+    "reportedAt": "2026-10-04T12:46:41+02:00",
+    "source": "user-provided systemctl show output",
+    "controller": {
+      "Result": "exit-code",
+      "NRestarts": 0,
+      "ExecMainStatus": 1,
+      "ActiveState": "failed",
+      "SubState": "failed"
+    },
+    "postgresql": {
+      "Result": "success",
+      "NRestarts": 0,
+      "ExecMainStatus": 0,
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    "installedReleaseConfirmed": false,
+    "recoveryCommandExecutionConfirmed": false,
+    "recoveryResultKnown": false,
+    "cause": "UNDETERMINED",
+    "nextEvidence": "Original R7 terminal result, selected release/recovery state, bounded controller and recovery service journal",
+    "piAcceptance": "OPEN"
+  }
 }
