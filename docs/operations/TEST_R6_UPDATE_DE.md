@@ -7,10 +7,12 @@ Die sechs Produktadapter und die Home-/Pro-Systemlizenz bleiben Bestandteil.
 Zwei im bisherigen Backup-Paket fehlende Hilfsmodule für SD-Karten und InfluxDB
 werden mit ihren bereits festgelegten, unveränderten Dateiprüfsummen ergänzt.
 
-Diese Anleitung beschreibt den neu vorbereiteten Updateweg. Der konkrete,
-veröffentlichte Befehl steht erst nach erfolgreichem Build und öffentlicher
-Rückleseprüfung in der aktuellen README auf `main`. Ein vorbereiteter Workflow
-allein ist kein veröffentlichtes Paket und kein ausgeführtes Pi-Update.
+R6 ist signiert und veröffentlicht. Der konkrete
+[Updatebefehl](../../delivery/public-update-test3-r6/UPDATE_COMMAND.txt) steht
+auch in der aktuellen README auf `main`. Den ganzen Inhalt einmal ins SSH-Terminal
+kopieren. [Veröffentlichung und Rückleseprüfung](../../reports/integration/r6-release-20261004/PUBLICATION.json)
+binden den Befehl an das tatsächliche Paket. Auf dem Pi wurde er durch diesen
+Veröffentlichungslauf nicht ausgeführt.
 
 ## Unterstützter Ausgangsstand
 

@@ -5,6 +5,12 @@ Datum: 04.10.2026. Quellbasis für Branding und Login:
 Öffentliche Weiterentwicklung und Veröffentlichung sind vom Nutzer ausdrücklich
 autorisiert; der private Actions-Minutenrahmen war bereits ausgeschöpft.
 
+**Veröffentlicht:** R6-Build, unabhängige Paketprüfung und öffentlicher
+Updatebefehl sind erfolgreich abgeschlossen. Die zusätzlichen öffentlichen
+Downloads und festen Commit-/Hashwerte stehen in [PUBLICATION.json](PUBLICATION.json).
+Das signierte Paket enthält 22.838 Dateien; sein Archiv hat 97.478.929 Bytes.
+Ein Pi-Update wurde durch die Veröffentlichung nicht ausgeführt.
+
 ## Zweck und Sicherheitsgrenzen
 
 R6 überführt die bereits geprüften Logo-/Browser-/Loginänderungen in ein neues
@@ -68,9 +74,11 @@ Quellüberschreibung aus dem Buildartefakt und kein automatischer Pi-Zugriff.
 Wiederaufnahme nach einer bereits erfolgten Archivpublikation ist möglich, ohne
 das Archiv neu zu bauen. Vorhandene Einstiegslieferungen werden erhalten.
 
-Zum Zeitpunkt dieser Quellvorbereitung wird noch keine erfolgreiche
-R6-Veröffentlichung behauptet. Tatsächliche Commit-/Run-/Hashwerte und öffentlicher
-Readback werden nach dem Lauf separat hier ergänzt.
+Diese Veröffentlichungskette ist erfolgreich abgeschlossen. Tatsächliche
+Commit-/Run-/Hashwerte und der zusätzliche öffentliche Readback stehen in
+[PUBLICATION.json](PUBLICATION.json). R6-Pipeline, EOS-Sicherheits-CI und CodeQL
+sind erfolgreich; die dort ebenfalls erfassten Fehler der älteren
+Installermatrix bleiben offen.
 
 ## Zielabnahme
 

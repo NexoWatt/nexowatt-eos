@@ -1,41 +1,52 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# Aktuell: R5-Testreparatur für den bereits eingerichteten Pi
+# Aktuell: R6-Testupdate für den eingerichteten Pi
 
-**test.3 Revision 5, Sequenz 8 ist signiert, veröffentlicht und vollständig
-zurückgelesen.** Sie korrigiert die zu kurze Admin-Passwortprüffrist und veraltete
-PostgreSQL-Objektmeldungen nach Verbindungsabbruch. Der neue Erststart enthält
-UUID, Home-/Pro-Lizenz und Adminpasswort; Standort und Geräte folgen später.
+**test.3 Revision 6, Sequenz 9 ist signiert, veröffentlicht und öffentlich
+zurückgelesen.** R6 enthält das NexoWatt-Branding, die Browser-/Login-Korrekturen
+und die zwei im bisherigen Backup-Paket fehlenden Hilfsmodule. Controller und
+alle sechs Produktadapter sind im Paket enthalten; Gerätefreigaben bleiben
+separat zu prüfen.
 
-Dieser Befehl ist für den **vollständig eingerichteten R4-Teststand** auf
-Debian 13/ARM64 mit Node 24.21.0. Passwort, Lizenz, UUID, Datenbank und
-Gerätezertifikate bleiben erhalten. Er startet keinen neuen Assistenten.
+Dieser Befehl aktualisiert den **vollständig eingerichteten R4- oder R5-Teststand
+in einem Aufruf direkt auf R6**. Passwort, Lizenz, UUID, Datenbank und
+Gerätezertifikate bleiben erhalten. Vor dem Test eine überprüfte Sicherung
+bereitstellen. Den vollständigen Befehl einmal im SSH-Terminal ausführen:
 
 ```bash
-/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-repair-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29746 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/b3ab994a631000e1700fbd4353efc067ad7c8cdb/delivery/public-repair-test3-r5/repair.sh -o "$d/repair.sh"; [[ -f "$d/repair.sh" && ! -L "$d/repair.sh" && $(/usr/bin/stat -c %h "$d/repair.sh") == 1 && $(/usr/bin/stat -c %u "$d/repair.sh") == 0 && $(/usr/bin/stat -c %s "$d/repair.sh") == 29746 ]] || exit 1; printf '\''%s  %s\n'\'' '\''6047c790eecd72a8c418ce7f5747123a7e0792940abd389e93a3d40707ae9604'\'' "$d/repair.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/repair.sh"'
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-update-r6-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29758 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/12dc4ebee729ba7255c903bbf5bcf3c35b59338d/delivery/public-update-test3-r6/update.sh -o "$d/update.sh"; [[ -f "$d/update.sh" && ! -L "$d/update.sh" && $(/usr/bin/stat -c %h "$d/update.sh") == 1 && $(/usr/bin/stat -c %u "$d/update.sh") == 0 && $(/usr/bin/stat -c %s "$d/update.sh") == 29758 ]] || exit 1; printf '\''%s  %s\n'\'' '\''9e70583e02c789055c3a2589477b79c94d486833d5d1d494ae4aecdbbedafd0a'\'' "$d/update.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/update.sh"'
 ```
 
-Der Befehl prüft Größe und SHA-256 vor Ausführung, lädt das signierte Archiv
-über feste Commit-URLs und lässt den Wechsel durch systemd überwachen.
-Nach Erfolg als `admin` mit dem vorhandenen Passwort auf der bisherigen
-HTTPS-Adresse anmelden und anschließend den Neustart prüfen. Ein Fehlercode
-ist ein Diagnoseergebnis; Sperrdateien nicht löschen oder den frischen Installer
-über die vorhandene Installation starten.
+Größe und SHA-256 werden vor jeder Codeausführung geprüft. Archiv, Schlüssel
+und Einstieg sind an feste Commit-URLs gebunden; ein GitHub-Token ist nicht
+nötig. Ein systemd-Dienst überwacht den Paketwechsel und dessen Fehlerbehandlung.
+Der Befehl richtet kein neues System ein und akzeptiert keine unbekannten oder
+bereits auf R6 aktualisierten Ausgangsstände.
 
-[Reparaturbefehl als Textdatei](delivery/public-repair-test3-r5/REPAIR_COMMAND.txt) ·
-[Was der Befehl macht und wie geprüft wird](docs/operations/TEST_R4_R5_REPAIR_ENTRY_DE.md) ·
-[Änderungen, Tests und offene Punkte](reports/integration/minimal-first-start-20261003/README.md) ·
-[Build und Signaturbindung](reports/integration/installable-test3-r5-20261003/build-verification.json) ·
-[Aktualisierte App-SBOM](reports/integration/installable-test3-r5-20261003/runtime.cdx.json) ·
-[Öffentliche Rückleseprüfung](delivery/public-repair-test3-r5/remote-readback.json).
+Nach Erfolg auf der bisherigen HTTPS-Adresse als `admin` mit dem bestehenden
+Passwort anmelden. Admin, UI und Backup-Ansicht auf die NexoWatt-Darstellung
+prüfen, abmelden, erneut anmelden und anschließend einen normalen Neustart
+prüfen. Lizenz und UUID müssen erhalten bleiben. Bei einem Fehler Diagnosecode
+und lokale Belege prüfen; keine Sperrdateien löschen oder einen frischen
+Installer über die bestehende Installation starten.
 
-**Die echte R4→R5-Reparatur, Admin-Anmeldung, Reboot und Anlagenabnahme auf dem
-Pi bleiben offen.** Der gemeldete Admin-Prozessabbruch ist ohne Zielprotokolle
-noch nicht eindeutig erklärt. Geräteadapter bleiben separat freizugeben.
+[Updatebefehl als Textdatei](delivery/public-update-test3-r6/UPDATE_COMMAND.txt) ·
+[Updateablauf, Rückfall und Pi-Testfolge](docs/operations/TEST_R6_UPDATE_DE.md) ·
+[Veröffentlichung und zusätzliche öffentliche Rückleseprüfung](reports/integration/r6-release-20261004/PUBLICATION.json) ·
+[Build, Signatur und beide Ausgangsstände](reports/integration/installable-test3-r6-20261004/build-verification.json) ·
+[App-SBOM](reports/integration/installable-test3-r6-20261004/runtime.cdx.json) ·
+[Erfolgreicher R6-Build und Publikationslauf](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37187130650).
+
+**Der echte Pi-Updateversuch, Login, Neustart, Backup/Restore und die
+Anlagenabnahme bleiben offen.** Die R6-Paket-/Updateprüfungen und die
+EOS-Sicherheits-CI sind bestanden. Die ältere plattformübergreifende
+Installermatrix hat dokumentierte offene Fehler; dieser Bestandsupdateweg führt
+`dist/install.sh` nicht aus. Physische Anlagenbefehle bleiben gesperrt.
 Dies ist ein Testkandidat, keine Produktions- oder CRA-Konformitätsfreigabe.
 
-Der [historische R4-Erstinstallationsweg](docs/operations/STABILITY_TEST4_DE.md)
-bleibt dokumentiert. Er enthält die neuen R5-Korrekturen nicht und ist kein
-Reparaturbefehl. Ein öffentlicher R5-Erstinstallationsbefehl wird hier nicht behauptet.
+Der [historische R5-Reparaturweg](docs/operations/TEST_R4_R5_REPAIR_ENTRY_DE.md)
+und die [historische R4-Erstinstallation](docs/operations/STABILITY_TEST4_DE.md)
+bleiben als unveränderte Lieferstände dokumentiert. Für das hier beschriebene
+Bestandsupdate gilt ausschließlich der R6-Befehl oben.
 <!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
 
 ## Quellaktualisierung vom 04.10.2026
@@ -45,10 +56,10 @@ R5-Quellstand geführt. Der reduzierte Erststart, die NWL3-Home-/Pro-Lizenz und
 sämtliche sechs Produktadapter des vorhandenen R5-Pakets bleiben erhalten.
 [Abgleich, übernommene Änderungen und Prüfungen](reports/integration/github-reconcile-20261004/README.md).
 
-Dieser Quellstand ist noch kein neu signiertes Pi-Paket. Der oben gebundene
-R5-Reparaturbefehl und alle historischen Lieferdateien behalten ihre bisherigen
-Bytes. Das separat aus einer älteren ZIP-Basis erzeugte test.3-Paket vom
-04.10.2026 ersetzt R4/R5 nicht und wird hier nicht als Bestandsupdate angeboten.
+Diese Änderungen sind jetzt im oben gebundenen R6-Testpaket enthalten.
+Die historischen R4/R5-Lieferdateien behalten ihre bisherigen Bytes.
+Das separat aus einer älteren ZIP-Basis erzeugte test.3-Paket vom 04.10.2026
+ersetzt R4/R5 nicht und wird hier nicht als Bestandsupdate angeboten.
 
 ---
 
@@ -61,17 +72,18 @@ Die neue Quellfassung beschränkt den Assistenten auf Geräte-UUID, signierte
 Home-/Pro-Lizenz und Adminpasswort. Anlagenwerte und Geräte folgen bei der
 Kundenanbindung. Sie korrigiert außerdem die zu kurze Passwortprüffrist.
 [Änderung, Tests und offener Pi-Loginbefund](reports/integration/minimal-first-start-20261003/README.md).
-R5 enthält diese Änderungen. Die historischen R4-Dateien bleiben unverändert.
+R6 enthält diese Änderungen sowie die oben genannten Branding- und Paketkorrekturen.
+Die historischen R4/R5-Dateien bleiben unverändert.
 Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 
-[**Aktuelle Pi-Testinstallation**](docs/operations/STABILITY_TEST4_DE.md) ·
+[**Aktuelles Pi-Testupdate**](docs/operations/TEST_R6_UPDATE_DE.md) ·
 [Ein-Befehl-Download vorbereiten](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
 [Ersteinrichtung und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
-[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r4-20261003/).
+[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r6-20261004/).
 
-**Der signierte ARM64-Testkandidat `0.2.0-test.3`, Revision 5, ist veröffentlicht.**
-Reparaturbefehl, SBOM und konkrete Nachweise stehen oben. Die alten Revisionen
+**Der signierte ARM64-Testkandidat `0.2.0-test.3`, Revision 6, ist veröffentlicht.**
+Updatebefehl, SBOM und konkrete Nachweise stehen oben. Die alten Revisionen
 bleiben historisch erhalten. NWL3 lizenziert Home/Pro für das System; bestehende
 NWL2-Lizenzen behalten ihre ursprünglichen Grenzen.
 
@@ -195,7 +207,7 @@ vertragliche Nutzungsberechtigung. Bereits wirksam eingeräumte Rechte an frühe
 Fassungen, insbesondere MIT-Rechte, bleiben unberührt. Der
 [Änderungsnachweis vom 03.10.2026](docs/development/LICENSING_CHANGE_2026-10-03_DE.md)
 beschreibt den damaligen Lizenzstand; die neue Runtime-Lieferung wird im
-[aktuellen Nachweis](reports/integration/installable-test3-20261003/) separat belegt.
+[aktuellen Nachweis](reports/integration/installable-test3-r6-20261004/) separat belegt.
 
 Die ioBroker-Basis und die Herkunft aller übernommenen Komponenten bleiben
 nachvollziehbar. Der [historische Upstream-README](docs/history/UPSTREAM_README.md)
