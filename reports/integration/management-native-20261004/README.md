@@ -31,3 +31,28 @@ schreibgeschützte Konfiguration entstanden sein. Er beweist keine Ursache des
 Einrichtungsfehlers. Die Stufendiagnose muss genauer werden; Produktvalidierung,
 TLS und Sicherheitsprüfungen bleiben unverändert verbindlich. Kein nativer
 Gesamterfolg und keine R8-Signierung oder Pi-Abnahme aus diesem Lauf.
+
+## Dritter Lauf: Ursache der Einrichtungslücke bestimmt
+
+Quellcommit `7c97504b4f6a8869f760de1a7bf5540a77e33c85`,
+[Securitylauf 37216490922](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37216490922),
+Managementjob `111477944477`, Artefakt `11308867039` unter `third-ci/`.
+Die feineren Unterphasen bestätigen erfolgreiches Produktions-Bootstrap,
+Passwortableitung und Erstregistrierung gegen native PostgreSQL. UUID, Trust
+und temporärer Lizenzschlüssel werden erfolgreich gelesen. Ausschließlich
+`license-verify-and-store` scheitert mit `LICENSE_UUID_INVALID`.
+
+Der tatsächliche R7-Upstream-Code erzeugt bei `CI=true` eine feste CI-Testkennung
+anstelle einer gewöhnlichen Geräte-UUID. Die unveränderte Lizenzprüfung weist
+sie korrekt ab. Der Laboraufruf hatte `CI=true` ausdrücklich in seine sonst
+streng beschränkte Kindprozessumgebung gesetzt. Korrektur: Die Produktprozesse
+verwenden dort explizit `CI=false` und führen die normale UUID-Erzeugung aus;
+keine UUID wird von Hand ersetzt und keine Lizenzprüfung abgeschwächt.
+Der Testprozess selbst bleibt im CI-Betrieb. Lokale Prüfungen des echten
+R7-CI-Sentinels und der tatsächlichen ci-info-Erkennung sind getrennt vom
+anschließenden vollständigen nativen Lauf nachzuweisen.
+
+Die Prozessindikatoren ordnen das erwartete `PERMISSION_DENIED` ausschließlich
+dem Setup-CLI zu. Noch kein Controllerstart; daher weiterhin keine vollständige
+Management- oder Pi-Abnahme. Dieser Laborbefund erklärt nicht nachträglich den
+unvollständig protokollierten früheren R7-Abbruch auf dem Pi.

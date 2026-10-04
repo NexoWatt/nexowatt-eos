@@ -55,6 +55,10 @@ Die unveränderte Produktions-Konfigurationsprüfung bleibt verbindlich.
 Die Produktionserzeuger erstellen echte HTTPS-Zertifikate an den fest vorgeschriebenen
 Pfaden. Produktions-Bootstrap, Erstregistrierung, Upload-CLI, Adapter-PID-Datei,
 Enrollment-Verifikation und Neustart laufen gegen die echten Module.
+CLI und Controller erhalten eine feste Environment-Auswahl mit `CI=false`.
+Dadurch erzeugt upstream eine normale UUID; `CI=true` würde seinen ungültigen
+CI-Sentinel erzeugen, den der Lizenzvalidator korrekt ablehnt. Die Harness
+ersetzt keine UUID und lockert weder Signaturprüfung noch Lizenzbindung.
 
 Das verbindliche Readiness-Gate ruft in dieser Reihenfolge den aktuellen
 Produktionscode auf: `waitController`, `waitAdapters`, parallel `probeWeb(8081)`

@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const crypto = require('node:crypto');
+const { spawnSync } = require('node:child_process');
 const { createRequire } = require('node:module');
 const { authenticate, PIN } = require('./prepare-bundle.cjs');
 const directory = process.env.EOS_MANAGEMENT_R7_BUNDLE, keyFile = process.env.EOS_MANAGEMENT_R7_KEY;
@@ -77,4 +78,43 @@ test('bootstrap diagnostics retain known phase failures without exposing message
     assert.equal(stageFailure(new Error('PRIVATE_SECRET_TEXT')), 'MANAGEMENT_STAGE_FAILED');
     assert.equal(stageFailure({ code: 'EOS_PG_UNREVIEWED_SECRET' }), 'MANAGEMENT_STAGE_FAILED');
     assert.equal(stageFailure({ code: 'EOS_PG_PRIVATE_SECRET lower case text' }), 'MANAGEMENT_STAGE_FAILED');
+});
+test('actual R7 CI sentinel fails real licensing and the product child environment disables CI detection', () => {
+    assert.ok(verified);
+    const environment = require('./environment.cjs').productEnvironment();
+    assert.equal(environment.CI, 'false');
+    assert.deepEqual(Object.keys(environment).sort(), ['CI', 'HOME', 'IOBROKER_DATA_DIR', 'LANG', 'NODE_ENV', 'NODE_OPTIONS', 'NODE_PATH', 'PATH', 'SENTRY_DSN'].sort());
+    // Only object persistence is represented by an in-memory store. The exact
+    // authenticated createUuid, ci-info, licensing and AES-store modules run.
+    // Separate processes prevent ci-info's cached detection from crossing cases.
+    const source = `
+const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),crypto=require('node:crypto');
+const r=require('node:module').createRequire(process.argv[1]+'/package.json');
+const temporary=fs.mkdtempSync(path.join(os.tmpdir(),'eos-real-uuid-'));
+console.log=()=>{};
+(async()=>{try{
+ const tools=r('@iobroker/js-controller-common').tools;
+ let record,writes=0;
+ const objects={getObject:async id=>id==='system.user.admin'?{type:'user'}:record,
+   setObject:async(id,value)=>{if(id!=='system.meta.uuid')throw new Error('UNEXPECTED_WRITE');record=value;writes++;}};
+ await tools.createUuid(objects);
+ const uuid=record.native.uuid,core=r('iobroker.eos-admin/build/lib/eosLicenseCore.js');
+ const issuer=crypto.generateKeyPairSync('ed25519');
+ const trust={nativeManagementLab:issuer.publicKey.export({format:'pem',type:'spki'}).toString()};
+ let license='LICENSE_VALID';
+ try{await require(process.argv[2]).provision({core,uuid,trust,issuer:issuer.privateKey,directory:path.join(temporary,'licensing')});}
+ catch(e){license=e.code==='LICENSE_UUID_INVALID'?'LICENSE_UUID_INVALID':'UNEXPECTED_FAILURE';}
+ process.stdout.write(JSON.stringify({ciDetected:r('ci-info').isCI,sentinel:uuid==='55travis-pipe-line-cior-githubaction',writes,license}));
+}finally{fs.rmSync(temporary,{recursive:true,force:true});}})().catch(()=>process.exitCode=1);`;
+    const result = spawnSync(process.execPath, ['-e', source, path.join(verified.payloadPath, 'app'), path.join(__dirname, 'ephemeral-license.cjs')],
+        { env: { ...environment, CI: 'true' }, encoding: 'utf8', timeout: 15000, maxBuffer: 4096 });
+    assert.equal(result.status, 0, 'actual-module CI-sentinel child must complete');
+    assert.deepEqual(JSON.parse(result.stdout), { ciDetected: true, sentinel: true, writes: 1, license: 'LICENSE_UUID_INVALID' });
+    // The local execution sandbox cannot enumerate network interfaces; real
+    // normal createUuid execution is mandatory in the native setup/license
+    // integration. This local case claims only actual ci-info detection.
+    const detection = spawnSync(process.execPath, ['-e', "const r=require('node:module').createRequire(process.argv[1]+'/package.json');process.stdout.write(JSON.stringify({isCI:r('ci-info').isCI}));", path.join(verified.payloadPath, 'app')],
+        { env: { ...environment, GITHUB_ACTIONS: 'true', TRAVIS: 'true' }, encoding: 'utf8', timeout: 15000, maxBuffer: 4096 });
+    assert.equal(detection.status, 0);
+    assert.deepEqual(JSON.parse(detection.stdout), { isCI: false });
 });

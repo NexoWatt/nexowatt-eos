@@ -152,8 +152,7 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
     fs.mkdirSync(path.join(controller, 'tmp'), { recursive: true });
     // Root-managed production configuration is represented by denied writes.
     // No NODE_PATH/NODE_OPTIONS/preload or TLS disable switch reaches children.
-    const options = { cwd: app, env: { PATH: process.env.PATH, LANG: 'C.UTF-8', HOME: '/var/lib/nexowatt-eos/home',
-        IOBROKER_DATA_DIR: data, NODE_ENV: 'production', CI: 'true', SENTRY_DSN: '', NODE_PATH: '', NODE_OPTIONS: '' } };
+    const options = { cwd: app, env: require('./environment.cjs').productEnvironment() };
     const cli = async (args, budget = 150000) => {
         const child = launch([path.join(controller, 'iobroker.js'), ...args], options); children.push(child);
         child.evidenceScope = args[0] === 'setup' ? 'cli-setup' : args[1] === 'eos-admin' ? 'cli-upload-admin' : 'cli-upload-ui';
