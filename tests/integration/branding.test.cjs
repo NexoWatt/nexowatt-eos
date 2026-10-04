@@ -64,3 +64,61 @@ test('legal upstream names and the product support destination stay accurate', (
     }
     assert.ok(fs.existsSync(path.join(root, 'components/admin/THIRD_PARTY_NOTICES.md')));
 });
+
+
+test('product boot logo replaces the upstream CSS Loader before the application starts', () => {
+    const source = 'components/admin/src-admin/public';
+    const built = 'components/admin/adminWww';
+    assert.equal(digest(source + '/css/eos-product-loader.css'), digest(built + '/css/eos-product-loader.css'));
+    const css = read(built + '/css/eos-product-loader.css').toString();
+    assert.match(css, /\.logo-back > \.logo-div,[\s\S]*?display: none !important/);
+    assert.match(css, /nexowatt-eos-brand-wide\.png/);
+    assert.match(css, /NexoWatt EOS wird gestartet/);
+    assert.ok(!css.includes('http:'), 'boot image must be local');
+    for (const file of ['components/admin/src-admin/index.html', built + '/index.html']) {
+        const html = read(file).toString();
+        assert.ok(html.includes("window.loadingHideLogo = 'true';"), file);
+        assert.ok(html.indexOf('eos-product-loader.css') < html.indexOf('eos-role-bootstrap.js'), file);
+        assert.ok(html.indexOf("window.loadingHideLogo = 'true';") > html.indexOf("window.loadingHideLogo = '@@loadingHideLogo@@';"), file);
+    }
+});
+
+test('long product marks use the supplied NexoWatt asset in source, build and installer', () => {
+    const logo = read('components/admin/src-admin/public/img/eos/nexowatt-eos-brand-wide.png').toString('base64');
+    for (const file of ['components/admin/src-admin/src/assets/longLogo.svg', 'components/admin/adminWww/assets/longLogo-Cq2C5cCK.svg', 'img/logos/ioBroker_Logo_Long_Vector.svg']) {
+        const svg = read(file).toString();
+        assert.match(svg, /<title>NexoWatt EOS<\/title>/, file);
+        assert.ok(svg.includes('data:image/png;base64,' + logo), file);
+    }
+});
+
+test('backup source and shipped bundle contain the same product icon', () => {
+    const backup = read('components/backitup/src-tab/src/assets/nexowatt-backup.png');
+    const backupHash = crypto.createHash('sha256').update(backup).digest('hex');
+    for (const part of ['src-admin', 'src-tab']) {
+        assert.equal(digest('components/backitup/' + part + '/src/assets/iobroker.png'), backupHash);
+        assert.equal(digest('components/backitup/' + part + '/public/favicon.ico'), iconHash);
+    }
+    assert.equal(digest('components/backitup/admin/favicon.ico'), iconHash);
+    const built = read('components/backitup/admin/assets/index-WNnhOy0_.js').toString();
+    assert.ok(built.includes('data:image/png;base64,' + backup.toString('base64')));
+    // This fingerprint is the upstream 2418-byte icon previously left in the shipped tab.
+    const embedded = [...built.matchAll(/data:image\/png;base64,([A-Za-z0-9+/=]+)/g)];
+    assert.ok(embedded.length > 0);
+    for (const match of embedded) {
+        const hash = crypto.createHash('sha256').update(Buffer.from(match[1], 'base64')).digest('hex');
+        assert.notEqual(hash, '61277a4cb094271e8784aabcc3cceb8cda43b7a5f71514424c307943915459ed');
+    }
+});
+
+
+test('backup standalone pages replace any library loading mark with the own local logo', () => {
+    const built = 'components/backitup/admin';
+    for (const part of ['src-admin', 'src-tab']) {
+        assert.equal(digest('components/backitup/' + part + '/public/eos-product-loader.css'), digest(built + '/eos-product-loader.css'));
+        assert.equal(digest('components/backitup/' + part + '/public/nexowatt-eos-logo.png'), digest(built + '/nexowatt-eos-logo.png'));
+        assert.match(read('components/backitup/' + part + '/index.html').toString(), /eos-product-loader\.css/);
+    }
+    assert.match(read(built + '/tab_m.html').toString(), /eos-product-loader\.css/);
+    assert.match(read(built + '/eos-product-loader.css').toString(), /nexowatt-eos-logo\.png/);
+});

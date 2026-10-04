@@ -38,6 +38,18 @@ bleibt dokumentiert. Er enthält die neuen R5-Korrekturen nicht und ist kein
 Reparaturbefehl. Ein öffentlicher R5-Erstinstallationsbefehl wird hier nicht behauptet.
 <!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
 
+## Quellaktualisierung vom 04.10.2026
+
+Die ergänzende NexoWatt-Logo- und Browser-Anmeldekorrektur wird auf dem vorhandenen
+R5-Quellstand geführt. Der reduzierte Erststart, die NWL3-Home-/Pro-Lizenz und
+sämtliche sechs Produktadapter des vorhandenen R5-Pakets bleiben erhalten.
+[Abgleich, übernommene Änderungen und Prüfungen](reports/integration/github-reconcile-20261004/README.md).
+
+Dieser Quellstand ist noch kein neu signiertes Pi-Paket. Der oben gebundene
+R5-Reparaturbefehl und alle historischen Lieferdateien behalten ihre bisherigen
+Bytes. Das separat aus einer älteren ZIP-Basis erzeugte test.3-Paket vom
+04.10.2026 ersetzt R4/R5 nicht und wird hier nicht als Bestandsupdate angeboten.
+
 ---
 
 # Aktueller Entwicklungsstand: EOS dev9 – geschützter Erststart

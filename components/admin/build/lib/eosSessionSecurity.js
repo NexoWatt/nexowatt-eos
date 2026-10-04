@@ -146,6 +146,10 @@ class EosSessionSecurity {
         const save = model.saveToken.bind(model);
         model.getUser = async (name, password) => {
             try {
+                // Match the existing EOS enrollment/password-change limits before
+                // object reads or native password work can consume bounded slots.
+                if (!normalizeUser(name) || typeof password !== 'string' || !password
+                    || Buffer.byteLength(password, 'utf8') > 256 || Array.from(password).length > 128) return null;
                 const result = await this.authenticate(async () => {
                     const before = await this.bounded(() => this.snapshot(name));
                     const user = await getUser(name, password);

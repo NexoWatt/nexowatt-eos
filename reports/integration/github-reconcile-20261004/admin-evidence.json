@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "id": "EOS-ADMIN-GITHUB-RECONCILE-20261004",
+  "utc": "2026-10-04T06:52:12.975521+00:00",
+  "basisCommit": "4ac429e1f4f06a249053487f719f670a8d03472b",
+  "branch": "main",
+  "adminVersion": "7.10.11",
+  "scope": "Admin backend reconciliation only; existing R5 auth protection retained",
+  "sourceSha256": {
+    "components/admin/src/lib/eosSessionSecurity.js": {
+      "sha256": "9e6fa03a00390509b1f813185e49b0569f4b6d85108492a6094695b20e934dec",
+      "mainBaseSha256": "bf05680b31210159a6fa4469c83715a8edda1ab03e48c37d563ca4d4de6043d0",
+      "unchangedFromMainBase": false
+    },
+    "components/admin/build/lib/eosSessionSecurity.js": {
+      "sha256": "9e6fa03a00390509b1f813185e49b0569f4b6d85108492a6094695b20e934dec",
+      "mainBaseSha256": "bf05680b31210159a6fa4469c83715a8edda1ab03e48c37d563ca4d4de6043d0",
+      "unchangedFromMainBase": false
+    },
+    "components/admin/test/eos-session-security.test.cjs": {
+      "sha256": "e75a84e54395596d1a6f0ec8d8c6f122cb2454ac592414e0ed375f4954a4aa3d",
+      "mainBaseSha256": "e75a84e54395596d1a6f0ec8d8c6f122cb2454ac592414e0ed375f4954a4aa3d",
+      "unchangedFromMainBase": true
+    },
+    "components/admin/test/eos-login-recovery.test.cjs": {
+      "sha256": "9ee4efef82ec05533b86e033af7b8465480b4b81fae6dd60ac7f1520758255ca",
+      "mainBaseSha256": null,
+      "unchangedFromMainBase": false
+    },
+    "components/admin/test/eos-appliance-oauth.integration.cjs": {
+      "sha256": "4272247f7a1ee1114593fb0c30ac56c8afa3a5b8a93571bcce4c0dbbc2f06415",
+      "mainBaseSha256": "4272247f7a1ee1114593fb0c30ac56c8afa3a5b8a93571bcce4c0dbbc2f06415",
+      "unchangedFromMainBase": true
+    },
+    "runtime/bootstrap/enrollment.cjs": {
+      "sha256": "85f2e50c8e3efc8fafd4c0443fe9c3197675bd462dfe9e1fc9794bd3ff5187ab",
+      "mainBaseSha256": "85f2e50c8e3efc8fafd4c0443fe9c3197675bd462dfe9e1fc9794bd3ff5187ab",
+      "unchangedFromMainBase": true
+    },
+    "runtime/postgresql/packages/db-states-postgresql/index.cjs": {
+      "sha256": "28038ebfe48b6d76446c70906a2ae60026a92856bdfd78bbf14742fa78987b83",
+      "mainBaseSha256": "28038ebfe48b6d76446c70906a2ae60026a92856bdfd78bbf14742fa78987b83",
+      "unchangedFromMainBase": true
+    },
+    "components/admin/src/lib/eosLicenseCore.js": {
+      "sha256": "615847935eb2f54b047f8c7d2db7ed90c39d2e6e2c2369d4814c44acdb65de5a",
+      "mainBaseSha256": "615847935eb2f54b047f8c7d2db7ed90c39d2e6e2c2369d4814c44acdb65de5a",
+      "unchangedFromMainBase": true
+    },
+    "components/admin/src/lib/eosLicenseService.js": {
+      "sha256": "9256af55d8708a801b1e56517ed3e3355f8e92a07c455d80d9aef7d8ee56123d",
+      "mainBaseSha256": "9256af55d8708a801b1e56517ed3e3355f8e92a07c455d80d9aef7d8ee56123d",
+      "unchangedFromMainBase": true
+    }
+  },
+  "dependencyEnvironment": {
+    "path": "/workspace/scratch/a8835322738f/build/final-test3-r2/app/node_modules",
+    "origin": "previous locally verified r2 build; dependency bytes reused for source integration test, not an R5 artifact execution",
+    "files": {
+      "express/package.json": {
+        "sha256": "2980b885bad92f757a2d44674e905cf875867d5685111d8ab8f285635b11367d",
+        "name": "express",
+        "version": "5.2.1"
+      },
+      "@iobroker/webserver/package.json": {
+        "sha256": "b92c9f6347a3ef3c3627594a7e54d3326abdf5b84e1d87282bb79fbfb280f54a",
+        "name": "@iobroker/webserver",
+        "version": "1.4.0"
+      },
+      "@iobroker/webserver/build/lib/oauth2.js": {
+        "sha256": "6a27ef475336efaac7369fd1f0ffd5ba790841e7cf33b80f1fcac56b1105c4b2"
+      },
+      "@iobroker/js-controller-common-db/package.json": {
+        "sha256": "e22cba3601e72c242119e161f2a6f64f6706826f92ba73dc8adb90b116536dd4",
+        "name": "@iobroker/js-controller-common-db",
+        "version": "7.2.3"
+      },
+      "@iobroker/js-controller-common-db/build/cjs/lib/common/password.js": {
+        "sha256": "3087cc618ece7d8ea3443e177bebbb1865d742c0ffd7f3eeab6e39ae407dfe1b"
+      },
+      "oauth2-server/package.json": {
+        "sha256": "b7a2ccad95be5e8f750a781cef30bc75ed88689223f05bbeb209d2f88fc77302",
+        "name": "@node-oauth/oauth2-server",
+        "version": "5.3.0"
+      }
+    }
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "testEvidence": {
+    "reports/integration/github-reconcile-20261004/admin-boundary-build.log": {
+      "sha256": "f0693b5cff60dadfeb2e59287da70a05d15e4484c670aaa1287740f6ce9ec0c6",
+      "format": "Node spec reporter",
+      "counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    "reports/integration/github-reconcile-20261004/admin-session-build.log": {
+      "sha256": "c1572444e36eb6c2e1e133ae7c8b2ea6810c911e4a48537e89c4425edd444fd9",
+      "format": "Node spec reporter",
+      "counts": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    "reports/integration/github-reconcile-20261004/admin-boundary-source.log": {
+      "sha256": "1d7a3f4d04a06c012c29eb55e8e5f011dbd1f9be0b79124527b441eee4778e30",
+      "format": "Node spec reporter",
+      "counts": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    "reports/integration/github-reconcile-20261004/admin-https-oauth.log": {
+      "sha256": "f5e2e12fbee4dd52f73ed23d76a82b53952c5dd0cd3e59bcc71771a66486df51",
+      "format": "Node spec reporter",
+      "counts": {
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    },
+    "reports/integration/github-reconcile-20261004/admin-session-source.log": {
+      "sha256": "67643bced5e41acf0e15293211aa4dd5d3e1d18e6a1f51e52070d1f93af0ac2c",
+      "format": "Node spec reporter",
+      "counts": {
+        "tests": 20,
+        "pass": 20,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "decisions": [
+    "Keep main/R5 authenticationTimeoutMs=15000, two held authentication slots, short DB deadline, diagnostic codes and no proof after timed-out work.",
+    "Add only early password type/nonempty/128-codepoint/256-UTF8-byte limit and existing username normalization before object reads or native proof.",
+    "Retain existing minimum/composition behavior during login; valid legacy short passwords are not newly rejected.",
+    "Do not import older ZIP enrollment, onboarding, role or license implementations; do not alter any signed delivery archive."
+  ],
+  "open": [
+    "Pi/ARM64 execution, full Admin browser/controller/PostgreSQL operation remain OPEN.",
+    "No current advisory audit or production/compliance approval is asserted.",
+    "UI method tests exist in eos-login-recovery.test.cjs and are run separately by the frontend agent after its changes."
+  ],
+  "changes": [
+    "components/admin/src/lib/eosSessionSecurity.js",
+    "components/admin/build/lib/eosSessionSecurity.js",
+    "components/admin/test/eos-login-recovery.test.cjs"
+  ],
+  "gitMutation": "No commit, push, branch creation or signed archive rewrite by this agent."
+}

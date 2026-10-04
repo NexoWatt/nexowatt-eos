@@ -22,6 +22,10 @@ const trackedRoots = [
     'test',
 ];
 const trackedFiles = [
+    // Dependency/package metadata belongs to the exact reviewed artifact too.
+    // Lifecycle checks alone would not bind a changed resolved dependency tree.
+    'package.json',
+    'package-lock.json',
     'io-package.json',
     'tasks.mts',
     'tsconfig.json',

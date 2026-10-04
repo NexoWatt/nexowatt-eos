@@ -1,0 +1,53 @@
+✔ all 30 scoped source assets match the reviewed merge record (60.324575ms)
+✔ all backup HTML entries select the product loading CSS and local image (1.498671ms)
+✔ backup favicons and compatibility icons use the current own source assets (0.886171ms)
+✖ backup compiled JavaScript differs from current main only by the known embedded logo bytes (11.651911ms)
+✔ installer compatibility logos contain current NexoWatt product assets (1.756218ms)
+✔ existing delivery remains unchanged by this source-only integration (3.982031ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 164.25861
+
+✖ failing tests:
+
+test at reports/integration/branding-main-20261004/backup-assets.test.cjs:49:1
+✖ backup compiled JavaScript differs from current main only by the known embedded logo bytes (11.651911ms)
+  Error: spawnSync git ENOBUFS
+      at Object.spawnSync (node:internal/child_process:1160:20)
+      at spawnSync (node:child_process:928:24)
+      at Object.execFileSync (node:child_process:971:15)
+      at git (/workspace/scratch/a8835322738f/git-work/nexowatt-eos/reports/integration/branding-main-20261004/backup-assets.test.cjs:11:24)
+      at TestContext.<anonymous> (/workspace/scratch/a8835322738f/git-work/nexowatt-eos/reports/integration/branding-main-20261004/backup-assets.test.cjs:51:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12) {
+    errno: -105,
+    code: 'ENOBUFS',
+    syscall: 'spawnSync git',
+    path: 'git',
+    spawnargs: [ 'show', '4ac429e1f4f06a249053487f719f670a8d03472b:components/backitup/admin/assets/index-WNnhOy0_.js' ],
+    error: Error: spawnSync git ENOBUFS
+        at Object.spawnSync (node:internal/child_process:1160:20)
+        at spawnSync (node:child_process:928:24)
+        at Object.execFileSync (node:child_process:971:15)
+        at git (/workspace/scratch/a8835322738f/git-work/nexowatt-eos/reports/integration/branding-main-20261004/backup-assets.test.cjs:11:24)
+        at TestContext.<anonymous> (/workspace/scratch/a8835322738f/git-work/nexowatt-eos/reports/integration/branding-main-20261004/backup-assets.test.cjs:51:22)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    status: null,
+    signal: 'SIGTERM',
+    output: [ null, <Buffer 76 61 72 20 65 3d 4f 62 6a 65 63 74 2e 63 72 65 61 74 65 2c 74 3d 4f 62 6a 65 63 74 2e 64 65 66 69 6e 65 50 72 6f 70 65 72 74 79 2c 6e 3d 4f 62 6a 65 ... 1081294 more bytes>, <Buffer > ],
+    pid: 46,
+    stdout: <Buffer 76 61 72 20 65 3d 4f 62 6a 65 63 74 2e 63 72 65 61 74 65 2c 74 3d 4f 62 6a 65 63 74 2e 64 65 66 69 6e 65 50 72 6f 70 65 72 74 79 2c 6e 3d 4f 62 6a 65 ... 1081294 more bytes>,
+    stderr: <Buffer >
+  }

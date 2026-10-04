@@ -1,0 +1,772 @@
+TAP version 13
+# Subtest: NWL3 derives immutable Home and Pro system rights without adapter or quota claims
+ok 1 - NWL3 derives immutable Home and Pro system rights without adapter or quota claims
+  ---
+  duration_ms: 8.640466
+  type: 'test'
+  ...
+# Subtest: NWL3 rejects even correctly signed custom grants, unknown scopes and nonperpetual variants
+ok 2 - NWL3 rejects even correctly signed custom grants, unknown scopes and nonperpetual variants
+  ---
+  duration_ms: 6.459824
+  type: 'test'
+  ...
+# Subtest: NWL3 signatures bind version, edition and device while retaining the existing trust key
+ok 3 - NWL3 signatures bind version, edition and device while retaining the existing trust key
+  ---
+  duration_ms: 3.656307
+  type: 'test'
+  ...
+# Subtest: NWL2 keeps narrower adapter and quantity restrictions after NWL3 support is added
+ok 4 - NWL2 keeps narrower adapter and quantity restrictions after NWL3 support is added
+  ---
+  duration_ms: 1.355644
+  type: 'test'
+  ...
+# Subtest: NWL3 persists encrypted across store reload without changing the device storage key
+ok 5 - NWL3 persists encrypted across store reload without changing the device storage key
+  ---
+  duration_ms: 45.561698
+  type: 'test'
+  ...
+# Subtest: UUID normalizes case/space while preserving canonical and direct vendor-prefix identity
+ok 6 - UUID normalizes case/space while preserving canonical and direct vendor-prefix identity
+  ---
+  duration_ms: 1.735805
+  type: 'test'
+  ...
+# Subtest: Home license authenticates UUID, explicit adapters, limits and immutable derived features
+ok 7 - Home license authenticates UUID, explicit adapters, limits and immutable derived features
+  ---
+  duration_ms: 1.120491
+  type: 'test'
+  ...
+# Subtest: Pro license enables Pro features only from signed edition and caps 10 batteries
+ok 8 - Pro license enables Pro features only from signed edition and caps 10 batteries
+  ---
+  duration_ms: 2.296897
+  type: 'test'
+  ...
+# Subtest: expiry and notBefore use exact millisecond boundaries without coercion or grace
+ok 9 - expiry and notBefore use exact millisecond boundaries without coercion or grace
+  ---
+  duration_ms: 1.857197
+  type: 'test'
+  ...
+# Subtest: forged or edited signature, foreign signing key, unknown kid and legacy format fail closed
+ok 10 - forged or edited signature, foreign signing key, unknown kid and legacy format fail closed
+  ---
+  duration_ms: 3.197138
+  type: 'test'
+  ...
+# Subtest: trust accepts only bounded explicit Ed25519 public SPKI keys
+ok 11 - trust accepts only bounded explicit Ed25519 public SPKI keys
+  ---
+  duration_ms: 64.16237
+  type: 'test'
+  ...
+# Subtest: schema rejects wildcard adapters, duplicate adapters, unsafe limits and unknown signed fields
+ok 12 - schema rejects wildcard adapters, duplicate adapters, unsafe limits and unknown signed fields
+  ---
+  duration_ms: 10.451374
+  type: 'test'
+  ...
+# Subtest: malformed/oversized tokens and noncanonical base64 cannot reach successful verification
+ok 13 - malformed/oversized tokens and noncanonical base64 cannot reach successful verification
+  ---
+  duration_ms: 0.51316
+  type: 'test'
+  ...
+# Subtest: encrypted storage roundtrips across restart with fresh nonce and no plaintext on disk
+ok 14 - encrypted storage roundtrips across restart with fresh nonce and no plaintext on disk
+  ---
+  duration_ms: 14.605577
+  type: 'test'
+  ...
+# Subtest: GCM binds UUID and fails after ciphertext/tag/nonce corruption
+ok 15 - GCM binds UUID and fails after ciphertext/tag/nonce corruption
+  ---
+  duration_ms: 30.399621
+  type: 'test'
+  ...
+# Subtest: missing/wrong/short storage key never silently regenerates existing encrypted license
+ok 16 - missing/wrong/short storage key never silently regenerates existing encrypted license
+  ---
+  duration_ms: 10.757297
+  type: 'test'
+  ...
+# Subtest: storage high water mark cannot decrease; serialized operations preserve monotonic value
+ok 17 - storage high water mark cannot decrease; serialized operations preserve monotonic value
+  ---
+  duration_ms: 17.402153
+  type: 'test'
+  ...
+# Subtest: clear removes only license, keeps device encryption key and permits fresh install
+ok 18 - clear removes only license, keeps device encryption key and permits fresh install
+  ---
+  duration_ms: 13.724485
+  type: 'test'
+  ...
+# Subtest: storage rejects symlink files, symlink directory/ancestor and hard linked secrets
+ok 19 - storage rejects symlink files, symlink directory/ancestor and hard linked secrets
+  ---
+  duration_ms: 8.43039
+  type: 'test'
+  ...
+# Subtest: storage rejects permissive POSIX modes and unsafe directory roots
+ok 20 - storage rejects permissive POSIX modes and unsafe directory roots
+  ---
+  duration_ms: 9.236165
+  type: 'test'
+  ...
+# Subtest: storage bounds files and rejects malformed data/envelopes without destructive overwrite
+ok 21 - storage bounds files and rejects malformed data/envelopes without destructive overwrite
+  ---
+  duration_ms: 17.071146
+  type: 'test'
+  ...
+# Subtest: NWL3 system grant uses edition policy and enabled sender checks without an adapter claim list
+ok 22 - NWL3 system grant uses edition policy and enabled sender checks without an adapter claim list
+  ---
+  duration_ms: 78.324501
+  type: 'test'
+  ...
+# Subtest: replacement by old NWL2 restores its narrower list and quotas after a system license
+ok 23 - replacement by old NWL2 restores its narrower list and quotas after a system license
+  ---
+  duration_ms: 37.613878
+  type: 'test'
+  ...
+# Subtest: NWL3 activation survives service restart and rejects forged upgrades without replacing stored rights
+ok 24 - NWL3 activation survives service restart and rejects forged upgrades without replacing stored rights
+  ---
+  duration_ms: 22.754179
+  type: 'test'
+  ...
+# Subtest: startup without provisioned trust denies and creates no license
+ok 25 - startup without provisioned trust denies and creates no license
+  ---
+  duration_ms: 2.353101
+  type: 'test'
+  ...
+# Subtest: startup with empty trust configuration denies
+ok 26 - startup with empty trust configuration denies
+  ---
+  duration_ms: 2.064408
+  type: 'test'
+  ...
+# Subtest: trusted service without stored license denies
+ok 27 - trusted service without stored license denies
+  ---
+  duration_ms: 2.748534
+  type: 'test'
+  ...
+# Subtest: Home allows licensed adapter and published Home limits with bounded lease
+ok 28 - Home allows licensed adapter and published Home limits with bounded lease
+  ---
+  duration_ms: 15.415492
+  type: 'test'
+  ...
+# Subtest: Home rejects Pro feature and over-limit resource counts
+ok 29 - Home rejects Pro feature and over-limit resource counts
+  ---
+  duration_ms: 33.197706
+  type: 'test'
+  ...
+# Subtest: Pro grants its feature set only to listed adapter and within signed limits
+ok 30 - Pro grants its feature set only to listed adapter and within signed limits
+  ---
+  duration_ms: 36.262274
+  type: 'test'
+  ...
+# Subtest: licensed second adapter receives grants only when enabled
+ok 31 - licensed second adapter receives grants only when enabled
+  ---
+  duration_ms: 11.866696
+  type: 'test'
+  ...
+# Subtest: missing, disabled, renamed or non-instance senders cannot obtain grants
+ok 32 - missing, disabled, renamed or non-instance senders cannot obtain grants
+  ---
+  duration_ms: 13.657905
+  type: 'test'
+  ...
+# Subtest: sender mismatch, unknown feature, extra keys and invalid quota types reject
+ok 33 - sender mismatch, unknown feature, extra keys and invalid quota types reject
+  ---
+  duration_ms: 12.394499
+  type: 'test'
+  ...
+# Subtest: malformed or untrusted import preserves existing encrypted license
+ok 34 - malformed or untrusted import preserves existing encrypted license
+  ---
+  duration_ms: 10.541208
+  type: 'test'
+  ...
+# Subtest: explicit license removal denies checks and remains removed after restart
+ok 35 - explicit license removal denies checks and remains removed after restart
+  ---
+  duration_ms: 13.570304
+  type: 'test'
+  ...
+# Subtest: external license deletion invalidates previously cached grant eligibility
+ok 36 - external license deletion invalidates previously cached grant eligibility
+  ---
+  duration_ms: 6.616279
+  type: 'test'
+  ...
+# Subtest: tampered authenticated ciphertext invalidates cached license
+ok 37 - tampered authenticated ciphertext invalidates cached license
+  ---
+  duration_ms: 5.313363
+  type: 'test'
+  ...
+# Subtest: encrypted license and edition persist over clean service restart
+ok 38 - encrypted license and edition persist over clean service restart
+  ---
+  duration_ms: 7.496489
+  type: 'test'
+  ...
+# Subtest: changed system UUID denies while running
+ok 39 - changed system UUID denies while running
+  ---
+  duration_ms: 4.133287
+  type: 'test'
+  ...
+# Subtest: lease is capped at expiry and license expires at exact boundary
+ok 40 - lease is capped at expiry and license expires at exact boundary
+  ---
+  duration_ms: 5.341906
+  type: 'test'
+  ...
+# Subtest: expiry is rechecked after delayed adapter object lookup
+ok 41 - expiry is rechecked after delayed adapter object lookup
+  ---
+  duration_ms: 6.163088
+  type: 'test'
+  ...
+# Subtest: wall clock rollback relative to monotonic time fails closed until restart
+ok 42 - wall clock rollback relative to monotonic time fails closed until restart
+  ---
+  duration_ms: 5.69095
+  type: 'test'
+  ...
+# Subtest: frequent sub-tolerance checks cannot keep a frozen wall clock licensed
+ok 43 - frequent sub-tolerance checks cannot keep a frozen wall clock licensed
+  ---
+  duration_ms: 5.220463
+  type: 'test'
+  ...
+# Subtest: small cumulative backward steps cannot reset the monotonic clock anchor
+ok 44 - small cumulative backward steps cannot reset the monotonic clock anchor
+  ---
+  duration_ms: 6.301275
+  type: 'test'
+  ...
+# Subtest: persisted high-water mark detects ordinary rollback across restart
+ok 45 - persisted high-water mark detects ordinary rollback across restart
+  ---
+  duration_ms: 5.987094
+  type: 'test'
+  ...
+# Subtest: sender rate cap denies excess requests and renews after window
+ok 46 - sender rate cap denies excess requests and renews after window
+  ---
+  duration_ms: 48.425496
+  type: 'test'
+  ...
+# Subtest: queue cap rejects excess work without preventing earlier jobs completing
+ok 47 - queue cap rejects excess work without preventing earlier jobs completing
+  ---
+  duration_ms: 1.556085
+  type: 'test'
+  ...
+# Subtest: new checks and mutations after stop are denied
+ok 48 - new checks and mutations after stop are denied
+  ---
+  duration_ms: 3.586783
+  type: 'test'
+  ...
+# Subtest: check queued before stop cannot grant or restore cached validity after stop
+ok 49 - check queued before stop cannot grant or restore cached validity after stop
+  ---
+  duration_ms: 3.951349
+  type: 'test'
+  ...
+# Subtest: check already in adapter lookup cannot grant after stop
+ok 50 - check already in adapter lookup cannot grant after stop
+  ---
+  duration_ms: 4.649497
+  type: 'test'
+  ...
+# Subtest: database timeout clears validity, bounds outstanding reads and ignores late results
+ok 51 - database timeout clears validity, bounds outstanding reads and ignores late results
+  ---
+  duration_ms: 26.51715
+  type: 'test'
+  ...
+# Subtest: timeout during adapter identity lookup clears a previously valid license view
+ok 52 - timeout during adapter identity lookup clears a previously valid license view
+  ---
+  duration_ms: 29.405485
+  type: 'test'
+  ...
+# Subtest: serialized deletion ahead of a check prevents an intervening grant
+ok 53 - serialized deletion ahead of a check prevents an intervening grant
+  ---
+  duration_ms: 5.541175
+  type: 'test'
+  ...
+# Subtest: status rechecks expiry after delayed UUID lookup
+ok 54 - status rechecks expiry after delayed UUID lookup
+  ---
+  duration_ms: 5.632262
+  type: 'test'
+  ...
+# Subtest: import expiring during UUID lookup preserves the previous valid license
+ok 55 - import expiring during UUID lookup preserves the previous valid license
+  ---
+  duration_ms: 6.831792
+  type: 'test'
+  ...
+# Subtest: production directory resolver works without an assumed adapter instance method
+ok 56 - production directory resolver works without an assumed adapter instance method
+  ---
+  duration_ms: 4.03205
+  type: 'test'
+  ...
+# Subtest: directory resolver failure is contained and keeps authority denied
+ok 57 - directory resolver failure is contained and keeps authority denied
+  ---
+  duration_ms: 0.789024
+  type: 'test'
+  ...
+# Subtest: trusted root-owned complete directory chain accepts bounded public keys
+ok 58 - trusted root-owned complete directory chain accepts bounded public keys
+  ---
+  duration_ms: 14.732227
+  type: 'test'
+  ...
+# Subtest: writable, foreign-owned or symbolic-link ancestor is denied before file open
+ok 59 - writable, foreign-owned or symbolic-link ancestor is denied before file open
+  ---
+  duration_ms: 16.038607
+  type: 'test'
+  ...
+# Subtest: unsafe trust file and inode swap fail closed
+ok 60 - unsafe trust file and inode swap fail closed
+  ---
+  duration_ms: 27.194828
+  type: 'test'
+  ...
+# Subtest: read remains bounded after growth and rejects malformed contents with close
+ok 61 - read remains bounded after growth and rejects malformed contents with close
+  ---
+  duration_ms: 14.011034
+  type: 'test'
+  ...
+# Subtest: Windows and noncanonical paths require explicit supported provisioning
+ok 62 - Windows and noncanonical paths require explicit supported provisioning
+  ---
+  duration_ms: 8.144862
+  type: 'test'
+  ...
+# Subtest: shipped template choices are exact, hash-bound projections of the existing Devices source
+ok 63 - shipped template choices are exact, hash-bound projections of the existing Devices source
+  ---
+  duration_ms: 112.266343
+  type: 'test'
+  ...
+# Subtest: configured plant persists sourced limits and input-only mappings without enabling control
+ok 64 - configured plant persists sourced limits and input-only mappings without enabling control
+  ---
+  duration_ms: 15.161346
+  type: 'test'
+  ...
+# Subtest: explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+ok 65 - explicit missing site data stays incomplete, while signed/split phases and §14a EMS are validated
+  ---
+  duration_ms: 2.053992
+  type: 'test'
+  ...
+# Subtest: real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+ok 66 - real model restrictions, serial fields, template/role mismatch and unknown fields fail closed
+  ---
+  duration_ms: 4.82482
+  type: 'test'
+  ...
+# Subtest: EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+ok 67 - EEBUS/OCPP identities and source-backed limits are captured with no connections or commands
+  ---
+  duration_ms: 2.056636
+  type: 'test'
+  ...
+# Subtest: planned device counts and canonical product adapter names must fit the authenticated license
+ok 68 - planned device counts and canonical product adapter names must fit the authenticated license
+  ---
+  duration_ms: 1.296044
+  type: 'test'
+  ...
+# Subtest: minimal v3 creates a deferred commissioning record without inventing site or installation values
+ok 69 - minimal v3 creates a deferred commissioning record without inventing site or installation values
+  ---
+  duration_ms: 0.631147
+  type: 'test'
+  ...
+# Subtest: minimal v3 rejects forged commissioning/UUID/settings, unsupported schemas and bypass of signed-license selection
+ok 70 - minimal v3 rejects forged commissioning/UUID/settings, unsupported schemas and bypass of signed-license selection
+  ---
+  duration_ms: 0.631437
+  type: 'test'
+  ...
+# Subtest: minimal password and handoff validation retain password policy, exact schemas and legacy record compatibility
+ok 71 - minimal password and handoff validation retain password policy, exact schemas and legacy record compatibility
+  ---
+  duration_ms: 3.789717
+  type: 'test'
+  ...
+# Subtest: first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+ok 72 - first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+  ---
+  duration_ms: 65.575571
+  type: 'test'
+  ...
+# Subtest: configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+ok 73 - configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+  ---
+  duration_ms: 13.013367
+  type: 'test'
+  ...
+# Subtest: every partial object-store write keeps the start gate closed and refuses unsafe replay
+ok 74 - every partial object-store write keeps the start gate closed and refuses unsafe replay
+  ---
+  duration_ms: 23.193764
+  type: 'test'
+  ...
+# Subtest: configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+ok 75 - configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+  ---
+  duration_ms: 3.297779
+  type: 'test'
+  ...
+# Subtest: first-run marker and safety policy drift block subsequent enrollment verification
+ok 76 - first-run marker and safety policy drift block subsequent enrollment verification
+  ---
+  duration_ms: 20.214783
+  type: 'test'
+  ...
+# Subtest: minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+ok 77 - minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+  ---
+  duration_ms: 5.546944
+  type: 'test'
+  ...
+# Subtest: frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+ok 78 - frontend consumes code in POST body and keeps cookie/CSRF credentials out of URLs and persistent browser storage
+  ---
+  duration_ms: 26.520906
+  type: 'test'
+  ...
+# Subtest: authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+ok 79 - authenticated catalog UUID is visible, read-only and selectable before any license or password entry
+  ---
+  duration_ms: 10.294748
+  type: 'test'
+  ...
+# Subtest: copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+ok 80 - copy uses complete authenticated catalog UUID including vendor prefix and reports success only after Clipboard resolves
+  ---
+  duration_ms: 3.810528
+  type: 'test'
+  ...
+# Subtest: Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+ok 81 - Clipboard absent or rejected selects the complete UUID and gives manual instructions without claiming success
+  ---
+  duration_ms: 13.945126
+  type: 'test'
+  ...
+# Subtest: missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+ok 82 - missing or invalid catalog UUID never enables copying, displays response text, or creates an identity
+  ---
+  duration_ms: 20.630829
+  type: 'test'
+  ...
+# Subtest: minimal delivered form sends only schema, signed license and admin passwords, never commissioning data or device identity
+ok 83 - minimal delivered form sends only schema, signed license and admin passwords, never commissioning data or device identity
+  ---
+  duration_ms: 5.03146
+  type: 'test'
+  ...
+# Subtest: check uses the same minimal contract and license result shows edition without adapter/count restrictions
+ok 84 - check uses the same minimal contract and license result shows edition without adapter/count restrictions
+  ---
+  duration_ms: 2.638279
+  type: 'test'
+  ...
+# Subtest: 202 handoff and lost setup connection never claim completed installation
+ok 85 - 202 handoff and lost setup connection never claim completed installation
+  ---
+  duration_ms: 1.940853
+  type: 'test'
+  ...
+# Subtest: only explicit root completion shows access success; plant acceptance remains open
+ok 86 - only explicit root completion shows access success; plant acceptance remains open
+  ---
+  duration_ms: 2.460412
+  type: 'test'
+  ...
+# Subtest: claim header timeout aborts at five seconds, releases the button and never retries or exposes the code
+ok 87 - claim header timeout aborts at five seconds, releases the button and never retries or exposes the code
+  ---
+  duration_ms: 8.923831
+  type: 'test'
+  ...
+# Subtest: one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup
+ok 88 - one five-second budget includes late headers and a stalled JSON body; a late body cannot reopen setup
+  ---
+  duration_ms: 10.751734
+  type: 'test'
+  ...
+# Subtest: initial session JSON timeout is bounded and successful requests clear their deadline timers
+ok 89 - initial session JSON timeout is bounded and successful requests clear their deadline timers
+  ---
+  duration_ms: 3.867013
+  type: 'test'
+  ...
+# Subtest: ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff
+ok 90 - ambiguous finish aborts, clears secrets, checks server state and never resubmits a committing handoff
+  ---
+  duration_ms: 15.225832
+  type: 'test'
+  ...
+# Subtest: a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials
+ok 91 - a confirmed authenticated claimed state permits only an explicit new finish with fresh credentials
+  ---
+  duration_ms: 3.53183
+  type: 'test'
+  ...
+# Subtest: lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts
+ok 92 - lost finish and unreachable state stay closed to resubmission and end bounded polling after timeouts
+  ---
+  duration_ms: 6.793654
+  type: 'test'
+  ...
+# Subtest: reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker
+ok 93 - reload while committing bounds even a permanently stalled poll and accepts only an explicit completion marker
+  ---
+  duration_ms: 5.765842
+  type: 'test'
+  ...
+# Subtest: local reissue CLI refuses password arguments and never prints the argument
+ok 94 - local reissue CLI refuses password arguments and never prints the argument
+  ---
+  duration_ms: 90.887053
+  type: 'test'
+  ...
+# Subtest: local reissue engine produces new state; owner restoration uses only its validated open descriptor
+ok 95 - local reissue engine produces new state; owner restoration uses only its validated open descriptor
+  ---
+  duration_ms: 11.665665
+  type: 'test'
+  ...
+# Subtest: previous state must be regular, singly linked, private and owned by the expected setup identity
+ok 96 - previous state must be regular, singly linked, private and owned by the expected setup identity
+  ---
+  duration_ms: 2.711529
+  type: 'test'
+  ...
+# Subtest: replacement between lstat and open is rejected before any ownership change
+ok 97 - replacement between lstat and open is rejected before any ownership change
+  ---
+  duration_ms: 3.326246
+  type: 'test'
+  ...
+# Subtest: symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive
+ok 98 - symlink-follow result from a path race is rejected by descriptor identity even if the OS open were permissive
+  ---
+  duration_ms: 0.704377
+  type: 'test'
+  ...
+# Subtest: replacement after descriptor validation cannot redirect fchown to the new path
+ok 99 - replacement after descriptor validation cannot redirect fchown to the new path
+  ---
+  duration_ms: 1.335905
+  type: 'test'
+  ...
+# Subtest: verified TLS only; endpoint validates CA, hostname, expiry and trust
+ok 100 - verified TLS only; endpoint validates CA, hostname, expiry and trust
+  ---
+  duration_ms: 44.368188
+  type: 'test'
+  ...
+# Subtest: catalog UUID licenses this device before password setup and stays private to the live claimed session
+ok 101 - catalog UUID licenses this device before password setup and stays private to the live claimed session
+  ---
+  duration_ms: 31.088611
+  type: 'test'
+  ...
+# Subtest: HTTPS configuration and signed license are checked against installed identity/trust before one private handoff
+ok 102 - HTTPS configuration and signed license are checked against installed identity/trust before one private handoff
+  ---
+  duration_ms: 57.888812
+  type: 'test'
+  ...
+# Subtest: minimal HTTPS setup accepts signed system edition without plant or adapter selections and commits exactly once
+ok 103 - minimal HTTPS setup accepts signed system edition without plant or adapter selections and commits exactly once
+  ---
+  duration_ms: 37.268694
+  type: 'test'
+  ...
+# Subtest: license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF
+ok 104 - license rechecked at finish rejects expiry, wrong device, unknown issuer, and inadequate capacity before KDF
+  ---
+  duration_ms: 30.349701
+  type: 'test'
+  ...
+# Subtest: possession is required; wrong, expired, reused and missing codes fail
+ok 105 - possession is required; wrong, expired, reused and missing codes fail
+  ---
+  duration_ms: 19.96599
+  type: 'test'
+  ...
+# Subtest: persistent attempt limit survives reboot
+ok 106 - persistent attempt limit survives reboot
+  ---
+  duration_ms: 32.973619
+  type: 'test'
+  ...
+# Subtest: real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation
+ok 107 - real HTTPS frontend password becomes a verified PBKDF2 credential with one bounded derivation
+  ---
+  duration_ms: 1317.98266
+  type: 'test'
+  ...
+# Subtest: host, origin, CSRF, proxy, URL and role manipulation are rejected
+ok 108 - host, origin, CSRF, proxy, URL and role manipulation are rejected
+  ---
+  duration_ms: 38.701194
+  type: 'test'
+  ...
+# Subtest: session cookie, cache and content policy are restrictive; password hash handoff contains no secrets
+ok 109 - session cookie, cache and content policy are restrictive; password hash handoff contains no secrets
+  ---
+  duration_ms: 17.515953
+  type: 'test'
+  ...
+# Subtest: parallel finalization derives once and only one handoff wins
+ok 110 - parallel finalization derives once and only one handoff wins
+  ---
+  duration_ms: 92.773874
+  type: 'test'
+  ...
+# Subtest: abort during commit and restart retain closed state with no handoff or administrative access
+ok 111 - abort during commit and restart retain closed state with no handoff or administrative access
+  ---
+  duration_ms: 14.01452
+  type: 'test'
+  ...
+# Subtest: expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code
+ok 112 - expired or restarted claimed session cannot finish; trusted local reissue revokes old cookie and code
+  ---
+  duration_ms: 19.63588
+  type: 'test'
+  ...
+# Subtest: local reissue immediately revokes a still-valid live session and rollback does not extend it
+ok 113 - local reissue immediately revokes a still-valid live session and rollback does not extend it
+  ---
+  duration_ms: 15.783114
+  type: 'test'
+  ...
+# Subtest: body, request rate and settings bounds fail closed
+ok 114 - body, request rate and settings bounds fail closed
+  ---
+  duration_ms: 239.206596
+  type: 'test'
+  ...
+# Subtest: storage rejects replacement preparation, hardlinks, tampering and pending mutation locks
+ok 115 - storage rejects replacement preparation, hardlinks, tampering and pending mutation locks
+  ---
+  duration_ms: 5.713223
+  type: 'test'
+  ...
+# Subtest: ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion
+ok 116 - ordered SIGTERM shutdown closes listener before cleanup; repeated signals cannot repeat secret deletion
+  ---
+  duration_ms: 1.790807
+  type: 'test'
+  ...
+# Subtest: cleanup failure logs fixed code only and makes shutdown non-successful
+ok 117 - cleanup failure logs fixed code only and makes shutdown non-successful
+  ---
+  duration_ms: 0.309795
+  type: 'test'
+  ...
+# Subtest: asynchronous main rejects arbitrary config and password CLI arguments
+ok 118 - asynchronous main rejects arbitrary config and password CLI arguments
+  ---
+  duration_ms: 0.614723
+  type: 'test'
+  ...
+# Subtest: signed license uses real Admin core and exposes only non-secret status fields
+ok 119 - signed license uses real Admin core and exposes only non-secret status fields
+  ---
+  duration_ms: 4.487543
+  type: 'test'
+  ...
+# Subtest: explicit unlicensed choice is valid setup input and grants no license rights or files
+ok 120 - explicit unlicensed choice is valid setup input and grants no license rights or files
+  ---
+  duration_ms: 6.47726
+  type: 'test'
+  ...
+# Subtest: selection rejects unknown modes, browser trust fields, embedded paths and oversize tokens
+ok 121 - selection rejects unknown modes, browser trust fields, embedded paths and oversize tokens
+  ---
+  duration_ms: 0.848403
+  type: 'test'
+  ...
+# Subtest: signature, UUID, expiry and not-before are rechecked before any persistence
+ok 122 - signature, UUID, expiry and not-before are rechecked before any persistence
+  ---
+  duration_ms: 4.965311
+  type: 'test'
+  ...
+# Subtest: actual encrypted store survives reload with UUID binding and never stores plaintext token
+ok 123 - actual encrypted store survives reload with UUID binding and never stores plaintext token
+  ---
+  duration_ms: 15.459679
+  type: 'test'
+  ...
+# Subtest: repeated import preserves store anti-rollback and corrupted encrypted readback fails closed
+ok 124 - repeated import preserves store anti-rollback and corrupted encrypted readback fails closed
+  ---
+  duration_ms: 10.170371
+  type: 'test'
+  ...
+# Subtest: write boundary rejects wrong owner, group, mode, links and oversized transfer before truncate
+ok 125 - write boundary rejects wrong owner, group, mode, links and oversized transfer before truncate
+  ---
+  duration_ms: 0.576505
+  type: 'test'
+  ...
+# Subtest: privileged and runtime entry points accept no caller-selected path, user or command
+ok 126 - privileged and runtime entry points accept no caller-selected path, user or command
+  ---
+  duration_ms: 0.351187
+  type: 'test'
+  ...
+# Subtest: actual root writer checks the opened inode before truncating and syncs the same descriptor
+ok 127 - actual root writer checks the opened inode before truncating and syncs the same descriptor
+  ---
+  duration_ms: 5.000875
+  type: 'test'
+  ...
+1..127
+# tests 127
+# suites 0
+# pass 127
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2376.252633

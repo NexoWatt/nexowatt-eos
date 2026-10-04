@@ -17,8 +17,10 @@ test('startup branding is preloaded identically in source and delivered HTML', (
     for (const file of ['adminWww/index.html', 'src-admin/index.html']) {
         const html = read(file);
         assert.match(html, /class="eos-native-shell"/);
-        assert.match(html, /<link rel="stylesheet" href="(?:\.\/)?css\/eos-startup-branding\.css\?v=20261003" \/>/);
+        assert.match(html, /<link rel="stylesheet" href="(?:\.\/)?css\/eos-startup-branding\.css\?eos=20261004" \/>/);
+        assert.match(html, /<link rel="stylesheet" href="(?:\.\/)?css\/eos-product-loader\.css\?eos=20261004" \/>/);
         assert.ok(html.indexOf('css/eos-startup-branding.css') < html.indexOf('js/eos-role-bootstrap.js'));
+        assert.ok(html.indexOf('css/eos-product-loader.css') < html.indexOf('js/eos-role-bootstrap.js'));
     }
 });
 

@@ -1,0 +1,31 @@
+/* NexoWatt EOS product loading surface. Loaded before the application module.
+ * Keep upstream Loader identifiers/API intact, replace only its visual mark.
+ * This also covers imported adapter loaders sharing the Admin document. */
+html.eos-native-shell .logo-back { background-color: #020914 !important; background-image: none !important; }
+html.eos-native-shell .logo-back > .logo-div,
+html.eos-native-shell .logo-back > .logo-animate-grow { display: none !important; }
+html.eos-native-shell .logo-back::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(82vw, 560px);
+    height: min(40vh, 160px);
+    background: url('../img/eos/nexowatt-eos-brand-wide.png') center / contain no-repeat;
+    pointer-events: none;
+    z-index: 2;
+}
+html.eos-native-shell .logo-back::before {
+    content: "NexoWatt EOS wird gestartet …";
+    position: absolute;
+    top: calc(50% + 110px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(90vw, 560px);
+    color: #d9f4ed;
+    font: 400 15px/1.5 system-ui, sans-serif;
+    text-align: center;
+    pointer-events: none;
+    z-index: 2;
+}

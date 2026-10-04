@@ -294,22 +294,31 @@ export default class Login extends Component<object, LoginState> {
     }
 
     onLogin(): void {
+        if (this.state.inProcess) {
+            return;
+        }
         this.setState({ inProcess: true, error: '' }, async () => {
-            const response = await fetch('../oauth/token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `grant_type=password&username=${encodeURIComponent(this.state.username)}&password=${encodeURIComponent(this.state.password)}&stayloggedin=${this.state.stayLoggedIn}&client_id=ioBroker`,
-            });
-            if (await Login.processTokenAnswer(this.state.stayLoggedIn, response)) {
-                // Do not allow entering again as redirection is running
-                // this.setState({ inProcess: false });
-            } else {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 20000);
+            try {
+                const response = await fetch('../oauth/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    signal: controller.signal,
+                    body: `grant_type=password&username=${encodeURIComponent(this.state.username)}&password=${encodeURIComponent(this.state.password)}&stayloggedin=${this.state.stayLoggedIn}&client_id=ioBroker`,
+                });
+                if (!(await Login.processTokenAnswer(this.state.stayLoggedIn, response))) {
+                    this.setState({ inProcess: false, error: I18n.t('wrongPassword') });
+                }
+            } catch {
                 this.setState({
                     inProcess: false,
-                    error: I18n.t('wrongPassword'),
+                    error: I18n.t('The connection is not ready yet. Please wait a moment and try again.'),
                 });
+            } finally {
+                clearTimeout(timer);
             }
         });
     }

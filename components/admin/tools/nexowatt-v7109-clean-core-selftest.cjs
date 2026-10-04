@@ -60,8 +60,8 @@ for (const css of [sourceCss, runtimeCss]) {
 }
 assert.doesNotMatch(drawer, /'tab-users',\s*'tab-enums'/, 'Structure is still part of readyToUse');
 assert.match(drawer, /tab\.name !== 'tab-enums'/, 'Drawer does not hard-filter Structure');
-assert.match(index, /nexowatt-native-shell\.css\?v=7109/, '7.10.9 CSS cache key missing');
-assert.match(index, /eos-role-ui\.js\?v=7109/, '7.10.9 role cache key missing');
+assert.match(index, /nexowatt-native-shell\.css\?eos=20261004/, 'current EOS CSS cache key missing');
+assert.match(index, /eos-role-ui\.js\?eos=20261004/, 'current EOS role cache key missing');
 assert.match(index, /nexowatt-stable-v7109\.js\?v=7109/, '7.10.9 stable runtime missing');
 
 console.log('[NexoWatt EOS v7109 clean core] OK (modern Services/Datapoints/Logs without redundant page information; Structure hidden; Installer controls native)');

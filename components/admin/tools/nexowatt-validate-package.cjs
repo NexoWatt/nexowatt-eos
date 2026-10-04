@@ -201,31 +201,41 @@ const runtime = buildInfo.runtimeEntry;
 const runtimeNumber = Number(String(runtime).replace(/^v/, ''));
 const shellCache = Number(buildInfo.shellCacheVersion ?? buildInfo.nativeShellVersion ?? runtimeNumber);
 const shellTag = String(buildInfo.shellCacheTag || shellCache);
-const autoUpdateTag = String(buildInfo.autoUpdateCacheTag || buildInfo.autoUpdateCacheVersion || shellTag);
+// Reviewed prebuilt hotfix namespace. The inherited v84/library and stable
+// overlay identities stay unchanged; all affected product resources and the
+// application import closure use the newer, explicitly required cache key.
+const assetCache = '20261004';
 if (!runtime || !Number.isFinite(runtimeNumber)) fail(`invalid runtimeEntry ${runtime}`);
 if (!Number.isFinite(shellCache)) fail(`invalid shellCacheVersion ${buildInfo.shellCacheVersion}`);
+for (const html of [index, read('src-admin/index.html')]) {
+  if (!html.includes(`name="nexowatt-eos-asset-version" content="${assetCache}"`)) fail('reviewed EOS asset namespace missing');
+}
 for (const marker of [
   `hostInit-${runtime}.js?v=${runtimeNumber}`,
-  `index-CQZugZ1z-${runtime}.js?v=${runtimeNumber}`,
-  `eos-manual-write-policy.js?v=${shellTag}`,
-  `nexowatt-native-shell.css?v=${shellTag}`,
-  `nexowatt-native-shell.js?v=${shellTag}`,
-  `eos-native-security.js?v=${shellTag}`,
+  `index-CQZugZ1z-${runtime}.js?eos=${assetCache}`,
+  `eos-manual-write-policy.js?eos=${assetCache}`,
+  `nexowatt-native-shell.css?eos=${assetCache}`,
+  `eos-product-loader.css?eos=${assetCache}`,
+  `nexowatt-native-shell.js?eos=${assetCache}`,
+  `eos-native-security.js?eos=${assetCache}`,
 ]) if (!index.includes(marker)) fail(`adminWww/index.html missing ${marker}`);
 
-if (!index.includes(`eos-role-bootstrap.js?v=${shellTag}`)) fail('role bootstrap cache key mismatch');
-if (!index.includes(`eos-branding-sanitizer.js?v=${shellTag}`)) fail('branding sanitizer cache key mismatch');
-if (!index.includes(`eos-role-ui.js?v=${shellTag}`)) fail('role UI cache key mismatch');
+if (!index.includes(`eos-role-bootstrap.js?eos=${assetCache}`)) fail('role bootstrap cache key mismatch');
+if (!index.includes(`eos-branding-sanitizer.js?eos=${assetCache}`)) fail('branding sanitizer cache key mismatch');
+if (!index.includes(`eos-policy-client.js?eos=${assetCache}`)) fail('policy client cache key mismatch');
+if (!index.includes(`eos-role-ui.js?eos=${assetCache}`)) fail('role UI cache key mismatch');
 // Security migration disables inherited shared-password accounts. The secured
 // Admin account UI is required to provision individual temporary passwords.
-if (!/eos-account-management\.js\?[^"']*security=20260930/.test(index)) fail('secured account-management runtime for credential migration must be loaded');
-if (!index.includes(`eos-auto-update.js?v=${autoUpdateTag}`)) fail('auto-update JavaScript cache key mismatch');
-if (!index.includes(`eos-auto-update.css?v=${autoUpdateTag}`)) fail('auto-update CSS cache key mismatch');
-if (!index.includes(`eos-assistant.js?v=${shellTag}`)) fail('EOS Assist cache key mismatch');
-if (!index.includes(`eos-ems-overview.js?v=${shellTag}`)) fail('EMS overview cache key mismatch');
-if (!index.includes(`eos-ems-overview.css?v=${shellTag}`)) fail('EMS overview CSS cache key mismatch');
+if (!index.includes(`eos-account-management.js?eos=${assetCache}`)) fail('secured account-management runtime for credential migration must be loaded');
+if (!read('adminWww/js/eos-account-management.js').includes('v98-account-management-real-password-write') ||
+    read('adminWww/js/eos-account-management.js') !== read('src-admin/public/js/eos-account-management.js')) fail('secured account-management source/build drift');
+if (!index.includes(`eos-auto-update.js?eos=${assetCache}`)) fail('auto-update JavaScript cache key mismatch');
+if (!index.includes(`eos-auto-update.css?eos=${assetCache}`)) fail('auto-update CSS cache key mismatch');
+if (!index.includes(`eos-assistant.js?eos=${assetCache}`)) fail('EOS Assist cache key mismatch');
+if (!index.includes(`eos-ems-overview.js?eos=${assetCache}`)) fail('EMS overview cache key mismatch');
+if (!index.includes(`eos-ems-overview.css?eos=${assetCache}`)) fail('EMS overview CSS cache key mismatch');
 if (!index.includes(`nexowatt-stable-v${shellTag}.js?v=${shellTag}`)) fail('stable shell overlay cache key mismatch');
-if (index.indexOf(`eos-manual-write-policy.js?v=${shellTag}`) > index.indexOf(`hostInit-${runtime}.js?v=${runtimeNumber}`)) fail('manual-write policy must load before the React runtime');
+if (index.indexOf(`eos-manual-write-policy.js?eos=${assetCache}`) > index.indexOf(`hostInit-${runtime}.js?v=${runtimeNumber}`)) fail('manual-write policy must load before the React runtime');
 if (!index.includes('class="eos-native-shell"')) fail('native NexoWatt shell class missing');
 for (const legacy of ['eos-branding.js', 'eos-security-ui.js', 'eos-console-quiet.js', 'eos-objects-state-tools.js']) {
   if (index.includes(legacy)) fail(`legacy browser overlay still loaded: ${legacy}`);
@@ -242,6 +252,7 @@ for (const file of [
 ]) if (!exists(file)) fail(`missing active runtime file ${file}`);
 
 const bootstrap = read(activeBootstrapFile);
+if (!read(`adminWww/assets/index-CQZugZ1z-${runtime}.js`).includes(`bootstrap-COulQZax-${runtime}.js?eos=${assetCache}`)) fail('application entry must import the reviewed bootstrap cache namespace');
 if (!bootstrap.includes('window.adapterName="eos-admin"')) fail('frontend bootstrap does not set window.adapterName="eos-admin"');
 if (bootstrap.includes('window.adapterName="admin"')) fail('frontend bootstrap still contains window.adapterName="admin"');
 for (const marker of ['NEXOWATT_TAB_ICON', 'nexowatt-native-nav-item', 'nexowatt-native-nav-icon', 'tabName:h.name', 'NexoWatt EOS', 'Zugänge & Rechte']) {

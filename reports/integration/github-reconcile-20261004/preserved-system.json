@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "reportId": "EOS-GITHUB-RECONCILE-PRESERVED-SYSTEM-20261004",
+  "recordedAt": "2026-10-04T06:53:41.108465+00:00",
+  "repository": {
+    "path": "/workspace/scratch/a8835322738f/git-work/nexowatt-eos",
+    "branch": "main",
+    "head": "4ac429e1f4f06a249053487f719f670a8d03472b"
+  },
+  "scope": "Read-only review and existing bounded tests of retained onboarding/NWL3 contracts; historical R5 manifest comparison. Only this report and TAP were written by this review.",
+  "environment": {
+    "node": "v24.19.0",
+    "os": "Linux",
+    "architecture": "x86_64"
+  },
+  "findings": [
+    {
+      "id": "MINIMAL-FIRSTSTART",
+      "status": "preserved",
+      "evidence": "runtime/onboarding/public/index.html; policy.cjs; configuration.cjs",
+      "result": "Authenticated read-only UUID with copy; license activation; admin password and repetition. Schema 3 rejects extra plant/device/UUID fields, records deferred commissioning, and does not enable physical control. HTTPS possession-code access remains a separate security gate."
+    },
+    {
+      "id": "SYSTEM-EDITION-LICENSE",
+      "status": "preserved",
+      "evidence": "components/admin/src/lib/eosLicenseCore.js; eosLicensePolicy.js; eosLicenseService.js",
+      "result": "Strict Ed25519 NWL3 UUID-bound system license; home/pro only; no custom adapter/quota/feature grants. Home 3 charge points/2 batteries; Pro 50/10 from trusted local policy. Sender instance, feature, capacity, time and bounded lease checks remain. License is encrypted at rest and persists across fixture restart."
+    },
+    {
+      "id": "NWL2-COMPATIBILITY",
+      "status": "preserved",
+      "result": "Existing NWL2 explicit adapter, quantity and lifetime restrictions remain authenticated and are not silently broadened."
+    },
+    {
+      "id": "MANUFACTURER-KEYGEN",
+      "status": "documented-separate-artifact-not-reexecuted",
+      "evidence": "reports/integration/system-edition-license-20261003/README.md",
+      "result": "Separate Keygen 1.0.2 is documented with product input {uuid, edition}. Its executable/package and own 26 historical tests were not inspected or rerun in this scoped EOS checkout review."
+    },
+    {
+      "id": "FULL-PACKAGE-R5",
+      "status": "historical-metadata-confirmed",
+      "result": "R5 metadata lists seven installed components, all unconfigured/inactive with physicalControlEnabled false. Management execution admission differs from hardware/security acceptance."
+    },
+    {
+      "id": "NO-REGRESSION-OVERLAY",
+      "status": "confirmed-for-reviewed-paths",
+      "result": "Reviewed onboarding and licensing source/build files match HEAD exactly. Older test.2/test.3 source was not copied. R5 delivery has no tracked diff."
+    }
+  ],
+  "tests": {
+    "command": "node --test --test-reporter=tap tests/onboarding/*.test.cjs tests/system/first-start-license.test.cjs components/admin/test/eos-license-core.test.cjs components/admin/test/eos-license-service.test.cjs components/admin/test/eos-license-trust.test.cjs",
+    "exitCode": 0,
+    "tests": 127,
+    "pass": 127,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "tap": "preserved-system.tap",
+    "tapSha256": "a3557f4d8369be89078a72f19d417f576469162433e2e263a2c33bad225fab7b",
+    "durationMs": 2376.252633,
+    "sources": [
+      {
+        "path": "components/admin/test/eos-license-core.test.cjs",
+        "sha256": "788c3f66291f89c331926374bdf67460fa802b185d5186d07761c9356542e790"
+      },
+      {
+        "path": "components/admin/test/eos-license-service.test.cjs",
+        "sha256": "7c4316a84ab0f48c79db8ff487b3c452e0da56e7bd48591c74630b0f3f283b10"
+      },
+      {
+        "path": "components/admin/test/eos-license-trust.test.cjs",
+        "sha256": "e859f6d102ed2cffa665451bcdff9325dffc4472b865d3d3e1b07c30b48ce7d3"
+      },
+      {
+        "path": "tests/onboarding/configuration.test.cjs",
+        "sha256": "ed514dfc9d1f9ea9aac0228ebf2975a92863ad528bbcd36c54278b9f55c9c46e"
+      },
+      {
+        "path": "tests/onboarding/enrollment.test.cjs",
+        "sha256": "3e53834974074c833a0a67d0efe3ea0e5faecab8f43828deb1971493050235a1"
+      },
+      {
+        "path": "tests/onboarding/frontend.test.cjs",
+        "sha256": "1fe0bb17610c05cc1681b6952d303b9c161a6cb0e082033c1af7caae67c76ec6"
+      },
+      {
+        "path": "tests/onboarding/issue-code.test.cjs",
+        "sha256": "975b0d81bbf17bf86bb4724790befc5eb36c31c048e509ab959240dc8171229c"
+      },
+      {
+        "path": "tests/onboarding/server.test.cjs",
+        "sha256": "91116c28e8d3c05ae5be717097a9e0341af182644c79fdf35322f4eb6e19a6ea"
+      },
+      {
+        "path": "tests/onboarding/shutdown.test.cjs",
+        "sha256": "871ec1c1de2558dedca47991bb34aabcf86ad0400f4e2234eaf4b02670a1cb75"
+      },
+      {
+        "path": "tests/system/first-start-license.test.cjs",
+        "sha256": "241e59866acbe3c9d418ffecd7ce421fb66a1ff2eb0f3da5146d2d54f63ab551"
+      }
+    ]
+  },
+  "sourceBindings": [
+    {
+      "path": "components/admin/build/lib/eosLicenseCore.js",
+      "sha256": "615847935eb2f54b047f8c7d2db7ed90c39d2e6e2c2369d4814c44acdb65de5a",
+      "bytes": 17745,
+      "matchesHead": true
+    },
+    {
+      "path": "components/admin/build/lib/eosLicenseHttp.js",
+      "sha256": "5c896dfa265539f7e56e6b6100a464b76ece0689d170817eb60c17b3e641f17a",
+      "bytes": 4082,
+      "matchesHead": true
+    },
+    {
+      "path": "components/admin/build/lib/eosLicensePolicy.js",
+      "sha256": "c973b89be1b3fe0a15185e66b5ba77a7aabc0d96e3236cd2bc8747d559acbd6e",
+      "bytes": 958,
+      "matchesHead": true
+    },
+    {
+      "path": "components/admin/build/lib/eosLicenseService.js",
+      "sha256": "9256af55d8708a801b1e56517ed3e3355f8e92a07c455d80d9aef7d8ee56123d",
+      "bytes": 16182,
+      "matchesHead": true
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseCore.js",
+      "sha256": "615847935eb2f54b047f8c7d2db7ed90c39d2e6e2c2369d4814c44acdb65de5a",
+      "bytes": 17745,
+      "matchesHead": true
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseHttp.js",
+      "sha256": "03e1861f375087cfa53c519b554103d8d045aa662e7abdd6da3307faa9350b7e",
+      "bytes": 3869,
+      "matchesHead": true
+    },
+    {
+      "path": "components/admin/src/lib/eosLicensePolicy.js",
+      "sha256": "c973b89be1b3fe0a15185e66b5ba77a7aabc0d96e3236cd2bc8747d559acbd6e",
+      "bytes": 958,
+      "matchesHead": true
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseService.js",
+      "sha256": "9256af55d8708a801b1e56517ed3e3355f8e92a07c455d80d9aef7d8ee56123d",
+      "bytes": 16182,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/cleanup.cjs",
+      "sha256": "1fd9ecbc191f047f0b00c4a0f6b1a7cc6a350682eff28f87a8a57eccd03fcde0",
+      "bytes": 3686,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/configuration.cjs",
+      "sha256": "a157555e7175355eec7cc52064415e70ac44e8808a9197e64f32dea2f6b2ac15",
+      "bytes": 9600,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/issue-code.cjs",
+      "sha256": "0d7c36b580e786516cc9666ab6f93517d350a86efb153d4002ec2b7b7b958164",
+      "bytes": 4472,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/main.cjs",
+      "sha256": "fa09a7fc4db8a4e892180bed798a640a263622daacbbf269577021182520d7dd",
+      "bytes": 3293,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/policy.cjs",
+      "sha256": "c5ee7fd6f827d9a907f9b048689072d54f9876983ac047c4509530acf9b1d3a7",
+      "bytes": 4937,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/public/app.js",
+      "sha256": "824958cf4cba92bdf2369a3f2ae4e234a8817c16ebe06c49c1b0b27901622a8c",
+      "bytes": 11713,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/public/index.html",
+      "sha256": "318ec56848e5779cc958522ce9d7a0b7d64dda64357e0befdf0b65f0facd1da5",
+      "bytes": 3711,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/public/style.css",
+      "sha256": "266b691a3e5908dd34c2644d280a2aaf2b3954d17b12677745e9691a50cc3777",
+      "bytes": 2117,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/server.cjs",
+      "sha256": "603426b99152364664bbf862a2baa82e742f646bad60c45bc46241128abfd4d3",
+      "bytes": 11387,
+      "matchesHead": true
+    },
+    {
+      "path": "runtime/onboarding/state.cjs",
+      "sha256": "aefc0b7608922c750e244d7232af16df04ab812942bb3dd6cc30496c9b6b3229",
+      "bytes": 5391,
+      "matchesHead": true
+    }
+  ],
+  "r5": {
+    "evidenceKind": "Existing git manifest only; archive not materialized or cryptographically reverified in this pass",
+    "manifestPath": "delivery/test-pi-0.2.0-test.3-r5/delivery.json",
+    "manifestBlob": "73759a2b231638004d44abcd3222033bd9ef0e09",
+    "manifestSha256": "ca7a0b5c417818bb4bbf9d08d049c105b7c9d5f42c7e1538d4f43f4edc766725",
+    "metadata": {
+      "schemaVersion": 1,
+      "sourceVersion": "0.2.0-dev.9",
+      "runtimeVersion": "0.2.0-test.3",
+      "deliveryRevision": 5,
+      "releaseSequence": 8,
+      "releaseId": "6afb22793667514f76bbcceb785ba84b00757105577a9909c182f8fc41e45061",
+      "signingPublicKeySha256": "dc73b3399c8c3790051d86461588f4cd716cd44aec1b64f70aa121f0175ab082",
+      "archive": "eos-0.2.0-test.3-linux-arm64.tar.gz",
+      "sha256": "a2956eef2da94b4fd85dc218326e1bcbeeb57c833506ada1411378e624676695",
+      "bytes": 88366802,
+      "signedFiles": 22205,
+      "platform": "linux-arm64",
+      "database": "postgresql",
+      "productProfile": "eos-full-install-first-start-v1",
+      "installedComponents": [
+        {
+          "id": "js-controller",
+          "package": "iobroker.js-controller",
+          "version": "7.2.2",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": true,
+          "acceptance": "management-test-only"
+        },
+        {
+          "id": "eos-admin",
+          "package": "iobroker.eos-admin",
+          "version": "7.10.11",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": true,
+          "acceptance": "management-test-only"
+        },
+        {
+          "id": "nexowatt-ui",
+          "package": "iobroker.nexowatt-ui",
+          "version": "1.0.21",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": true,
+          "acceptance": "management-test-only"
+        },
+        {
+          "id": "nexowatt-devices",
+          "package": "iobroker.nexowatt-devices",
+          "version": "0.5.169",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        },
+        {
+          "id": "eebus",
+          "package": "iobroker.eebus",
+          "version": "0.3.0",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        },
+        {
+          "id": "ocpp21",
+          "package": "iobroker.ocpp21",
+          "version": "0.4.0",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        },
+        {
+          "id": "nexowatt-backup",
+          "package": "iobroker.nexowatt-backup",
+          "version": "1.0.10",
+          "installed": true,
+          "configured": false,
+          "active": false,
+          "physicalControlEnabled": false,
+          "executionAdmitted": false,
+          "acceptance": "hardware-and-security-acceptance-open"
+        }
+      ],
+      "scope": "full required package installation; HTTPS first-start; management activation only; physical adapters pending acceptance",
+      "archiveReadbackVerified": true,
+      "archiveModePolicy": "eos-test-static-executables-755-others-644-v1",
+      "signing": "ephemeral-ed25519-keyobject-memory-only",
+      "privateKeyPersisted": false,
+      "reproducibility": "Payload modes, order and timestamps are canonical. A fresh test signer changes the signature, public-key hash and archive hash; identical manifest bytes retain the same releaseId.",
+      "configured": false,
+      "physicalControlEnabled": false,
+      "targetTestRequired": true,
+      "productionReleaseApproved": false,
+      "sourceCommit": "1a1a1003da76999dca473a5e6c832ddcef091935",
+      "sourceAssembly": "authenticated-r4-app-with-bound-source-overlays"
+    },
+    "trackedDiff": []
+  },
+  "limits": [
+    "No Raspberry Pi, ARM64, native PostgreSQL/systemd, installer/update, real browser or physical hardware execution.",
+    "Test runtime Node 24.19.0 on Linux x86_64; this does not substitute for release target Node 24.21.0 validation.",
+    "Onboarding and licensing tests include fixtures/simulated stores and sender/DB access. Passing them does not prove a target login or actual customer first start.",
+    "No new bundle, signing, release, dependency installation, commit, push or branch was performed. Existing signed R5 is unchanged; later source frontend/login changes do not alter its signed payload.",
+    "Fresh public installation entry remains documented as R4; separate R4-to-R5 repair requires its documented eligible installation. This review does not redefine that path."
+  ],
+  "decision": "Preserve current main onboarding and licensing implementation. No regression or additional code correction identified within this scoped review. Target acceptance remains open."
+}

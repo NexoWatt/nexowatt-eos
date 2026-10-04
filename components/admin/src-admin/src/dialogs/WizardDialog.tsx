@@ -367,7 +367,7 @@ class WizardDialog extends Component<WizardDialogProps, WizardDialogState> {
                     <div style={styles.finalText}>{I18n.t('Have fun automating your home with')}</div>
                     <img
                         src={LongLogo}
-                        alt="ioBroker"
+                        alt="NexoWatt EOS"
                         style={styles.finalLongLogo}
                     />
                 </div>
