@@ -39,6 +39,13 @@ unsicheren Verbindungsmodus.
 - Rechteänderungen und Datenbanklöschung sind im aktuellen Profil Administratoren
   vorbehalten. Objekt-Dokumente mit gefährlichen Merge-Schlüsseln, Zyklen,
   unendlichen Zahlen oder übermäßiger Tiefe werden verworfen.
+- Der Controller 7.2.2 liefert im eigenen Hostobjekt das besondere Node-Objekt
+  `process.env`. Ausschließlich beim eigenen Host, mit privilegiertem Kontext
+  und exakter Referenz auf dieses Objekt ersetzt der Client die Umgebung durch
+  ein leeres Metadatenobjekt. Alle übrigen Daten bleiben streng geprüft; das
+  Eingabeobjekt wird nicht verändert. Dies verhindert die Persistierung von
+  Umgebungsgeheimnissen und den reproduzierten Host-Schreibabbruch. Feste
+  Dokument-Diagnosecodes überstehen die Transaktionsgrenze ohne Rohfehlerdaten.
 - Nur exakt hinterlegte Maps aus den überprüften System-Views des Controllers
   werden als strukturierte Filter ausgeführt. Unbekannte Maps und Reduktionen
   scheitern mit `EOS_PG_VIEW_UNSUPPORTED`. Es gibt keinen `eval`-Fallback.
@@ -83,3 +90,10 @@ Diese Tests beweisen **keinen** gestarteten PostgreSQL-Server, TLS-Handshake,
 ARM64-Betrieb, vollständigen Controllerstart, Geräte-Failsafe oder CRA-/IEC-
 Konformität. Reale Datenmigration, Rückfall, Backup/Wiederherstellung und
 Hardware-Abnahme bleiben Freigabesperren.
+
+Nachtrag 04.10.2026: `tests/postgresql/host-object.test.cjs` nutzt zusätzlich den
+echten 7.2.2-Hostgenerator und die reale Store-Transaktionslogik. SQL-Treiber und
+Transport sind ausdrücklich Testdoubles. Der vorherige Host-Schreibfehler
+`EOS_PG_TRANSACTION_FAILED` und die Korrektur wurden damit reproduziert; native
+PostgreSQL-/Pi-Abnahme ist daraus nicht ableitbar. Siehe
+`reports/integration/controller-startup-20261004/postgresql/README.md`.

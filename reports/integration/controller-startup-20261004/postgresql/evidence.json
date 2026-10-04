@@ -1,0 +1,100 @@
+{
+  "finding": "NW-EOS-261004-PG-HOST",
+  "checkedAt": "2026-10-04T09:37:10.750708+00:00",
+  "baseCommit": "a02bba50978fa0f9bac893e1921487b457298e7f",
+  "scope": "Real js-controller 7.2.2 host generator + Objects client + Store transaction, explicit SQL/transport and network-interface test doubles",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "nativePostgresqlExecuted": false,
+    "raspberryPiExecuted": false
+  },
+  "upstreamPackages": [
+    {
+      "name": "@iobroker/db-objects-redis",
+      "version": "7.2.2",
+      "manifestSha256": "94cb30df2380fdb0ee4b8949af7ff84345d64408c53059b25af587e74a19ea3b"
+    },
+    {
+      "name": "@iobroker/js-controller-common-db",
+      "version": "7.2.2",
+      "manifestSha256": "bf3c7f61c0a4cf1a8777078b3789154b3656894c4ce7aa5fd315fada61266639"
+    },
+    {
+      "name": "iobroker.js-controller",
+      "version": "7.2.2",
+      "manifestSha256": "2481a60d667c5547696728d3bae46b6363d428ab7227e8258de201e9e3442f25"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/auth.cjs",
+      "sha256": "dcfdeb710b78fca4dae8bca3480a0b4092a606694a5cc94c13e6bc37926def63"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/index.cjs",
+      "sha256": "65e55c87b9ee0c02deeda9e356e8d1e57cfa19d1df4e92921c73024e8d8eb76b"
+    },
+    {
+      "path": "runtime/postgresql/packages/store/index.cjs",
+      "sha256": "901f4a37df2d9ef69d8bd81903dc232eec1871e99f4fb243b6d9880e04651cab"
+    },
+    {
+      "path": "tests/postgresql/host-object.test.cjs",
+      "sha256": "92a3028222d17d548607f69968e0a66549bbf1badb4285d60b004e29d9c10a6d"
+    },
+    {
+      "path": "tests/postgresql/objects.test.cjs",
+      "sha256": "ec5488dea7d3ac4222f6e6c0e365d22d9ad31a4a9ce8850026e35974786e00ee"
+    },
+    {
+      "path": "tests/postgresql/objects-lifecycle.test.cjs",
+      "sha256": "79888057df835a8c42fd9fc9c90abee8ffd83d946ebb5c8433fcfecd0212e187"
+    },
+    {
+      "path": "tests/postgresql/store.test.cjs",
+      "sha256": "554a3a553da5ad4cd8bd64f675a21be31766fcb7f2030f178479d2c62628b132"
+    },
+    {
+      "path": "tests/postgresql/store-review.test.cjs",
+      "sha256": "56b0aabb44cf942f76e31ffb1a297e21dc4ae342ab4972ef560c28472bc6ee6b"
+    },
+    {
+      "path": "tests/postgresql/store-channel-hardening.test.cjs",
+      "sha256": "9f29e6fff13326f7c396cc4bab8eadcdacb94545bc1ab8d5bf56ea3bba0074a4"
+    }
+  ],
+  "tests": {
+    "before": {
+      "pass": 2,
+      "fail": 5,
+      "total": 7,
+      "expectedFailure": "Own host write emits EOS_PG_TRANSACTION_FAILED"
+    },
+    "after": {
+      "pass": 75,
+      "fail": 0,
+      "skip": 0,
+      "total": 75
+    }
+  },
+  "evidence": [
+    {
+      "path": "before.log",
+      "bytes": 6922,
+      "sha256": "bfa1ed0d346c65bde56b878abac07548411d2eaeec2a2e1c2012c3546163ada1"
+    },
+    {
+      "path": "after.log",
+      "bytes": 6455,
+      "sha256": "f9ba4968aa5a4cb00ad41dddca9e104e283191b182d5332583b3176fa2c0d917"
+    }
+  ],
+  "open": [
+    "New signed delivery must overlay corrected Objects .cjs files into app node_modules and verify binding",
+    "Native PostgreSQL/mTLS and actual Pi startup/login/reboot not executed",
+    "The reproduction does not establish this was the only Pi failure cause"
+  ],
+  "productionReleaseApproved": false
+}

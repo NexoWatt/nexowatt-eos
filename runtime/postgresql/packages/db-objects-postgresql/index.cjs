@@ -252,7 +252,10 @@ class Client extends UpstreamClient {
             const oldObject = auth.parse(await this.store.get(this.objNamespace + id));
             if (oldObject && !auth.objectRight(oldObject, options, 'write')) throw auth.denied();
             if (!oldObject && name !== 'delObject') auth.requireRight(options, 'object', 'create');
-            if (name !== 'delObject') { auth.validateDocument(args[1]); auth.protectAcl(oldObject, args[1], options); }
+            if (name !== 'delObject') {
+                args[1] = auth.prepareHostDocument(id, args[1], options, this.hostname);
+                auth.validateDocument(args[1]); auth.protectAcl(oldObject, args[1], options);
+            }
         }
     }
 

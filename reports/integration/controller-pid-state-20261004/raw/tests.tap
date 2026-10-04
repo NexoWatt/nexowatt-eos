@@ -1,0 +1,262 @@
+TAP version 13
+# Subtest: actual cjs input and output are pinned; modified input is rejected
+ok 1 - actual cjs input and output are pinned; modified input is rejected
+  ---
+  duration_ms: 3.182767
+  type: 'test'
+  ...
+# Subtest: actual esm input and output are pinned; modified input is rejected
+ok 2 - actual esm input and output are pinned; modified input is rejected
+  ---
+  duration_ms: 1.428138
+  type: 'test'
+  ...
+# Subtest: actual source input and output are pinned; modified input is rejected
+ok 3 - actual source input and output are pinned; modified input is rejected
+  ---
+  duration_ms: 1.887669
+  type: 'test'
+  ...
+# Subtest: unknown file and second application of transform are rejected
+ok 4 - unknown file and second application of transform are rejected
+  ---
+  duration_ms: 1.61591
+  type: 'test'
+  ...
+# Subtest: both complete transformed executable modules pass the actual Node parser
+ok 5 - both complete transformed executable modules pass the actual Node parser
+  ---
+  duration_ms: 128.19392
+  type: 'test'
+  ...
+# Subtest: new build gate rejects unpatched output and verifies both exact patched files
+ok 6 - new build gate rejects unpatched output and verifies both exact patched files
+  ---
+  duration_ms: 7.662024
+  type: 'test'
+  ...
+# Subtest: all original files are checked before any output is changed
+ok 7 - all original files are checked before any output is changed
+  ---
+  duration_ms: 2.879341
+  type: 'test'
+  ...
+# Subtest: wrong package version and altered ESM export are rejected
+ok 8 - wrong package version and altered ESM export are rejected
+  ---
+  duration_ms: 2.363805
+  type: 'test'
+  ...
+# Subtest: nested common-db copy used by a host/CLI consumer is rejected
+ok 9 - nested common-db copy used by a host/CLI consumer is rejected
+  ---
+  duration_ms: 2.511807
+  type: 'test'
+  ...
+# Subtest: symlink output leaf and parent are rejected without changing external bytes
+ok 10 - symlink output leaf and parent are rejected without changing external bytes
+  ---
+  duration_ms: 7.021741
+  type: 'test'
+  ...
+# Subtest: actual upstream PID writer/read/cleanup contract (cjs)
+ok 11 - actual upstream PID writer/read/cleanup contract (cjs)
+  ---
+  duration_ms: 10.029374
+  type: 'test'
+  ...
+# Subtest: actual upstream PID writer/read/cleanup contract (esm)
+ok 12 - actual upstream PID writer/read/cleanup contract (esm)
+  ---
+  duration_ms: 5.871891
+  type: 'test'
+  ...
+# Subtest: existing systemd and provisioning contracts keep code immutable and PID state private
+ok 13 - existing systemd and provisioning contracts keep code immutable and PID state private
+  ---
+  duration_ms: 0.543207
+  type: 'test'
+  ...
+# Subtest: Node version transition never grants executable capabilities (cjs)
+ok 14 - Node version transition never grants executable capabilities (cjs)
+  ---
+  duration_ms: 8.500445
+  type: 'test'
+  ...
+# Subtest: Node version transition never grants executable capabilities (esm)
+ok 15 - Node version transition never grants executable capabilities (esm)
+  ---
+  duration_ms: 6.235358
+  type: 'test'
+  ...
+# Subtest: Node version transition never grants executable capabilities (source)
+ok 16 - Node version transition never grants executable capabilities (source)
+  ---
+  duration_ms: 6.245443
+  type: 'test'
+  ...
+# Subtest: core-only default refuses adapter activation and admits no arbitrary package
+ok 17 - core-only default refuses adapter activation and admits no arbitrary package
+  ---
+  duration_ms: 1.036379
+  type: 'test'
+  ...
+# Subtest: immutable admitted package/version and main must match current instance
+ok 18 - immutable admitted package/version and main must match current instance
+  ---
+  duration_ms: 0.55165
+  type: 'test'
+  ...
+# Subtest: Node injection flags are forbidden regardless of test profile environment switches
+ok 19 - Node injection flags are forbidden regardless of test profile environment switches
+  ---
+  duration_ms: 0.439421
+  type: 'test'
+  ...
+# Subtest: dynamic modules, exec, compact and extension starts are blocked
+ok 20 - dynamic modules, exec, compact and extension starts are blocked
+  ---
+  duration_ms: 0.662957
+  type: 'test'
+  ...
+# Subtest: host environment and configuration cannot enable preload/shell/compact/plugins
+ok 21 - host environment and configuration cannot enable preload/shell/compact/plugins
+  ---
+  duration_ms: 0.395985
+  type: 'test'
+  ...
+# Subtest: profile rejects JavaScript adapter, duplicates, unknown fields and escaped main paths
+ok 22 - profile rejects JavaScript adapter, duplicates, unknown fields and escaped main paths
+  ---
+  duration_ms: 0.285259
+  type: 'test'
+  ...
+# Subtest: entry check accepts real admitted file and rejects symlink/entry/package-version substitutions
+ok 23 - entry check accepts real admitted file and rejects symlink/entry/package-version substitutions
+  ---
+  duration_ms: 1.705275
+  type: 'test'
+  ...
+# Subtest: all six original executable inputs and three source mirrors are bound to actual SHA256
+ok 24 - all six original executable inputs and three source mirrors are bound to actual SHA256
+  ---
+  duration_ms: 17.775635
+  type: 'test'
+  ...
+# Subtest: all transformed executable variants pass the real Node parser
+ok 25 - all transformed executable variants pass the real Node parser
+  ---
+  duration_ms: 350.033735
+  type: 'test'
+  ...
+# Subtest: mandatory build gate rejects unpatched artifacts, modified helper and missing profile
+ok 26 - mandatory build gate rejects unpatched artifacts, modified helper and missing profile
+  ---
+  duration_ms: 44.079381
+  type: 'test'
+  ...
+# Subtest: mandatory gate rejects controller version drift, extra profile packages and bad UTF8
+ok 27 - mandatory gate rejects controller version drift, extra profile packages and bad UTF8
+  ---
+  duration_ms: 40.125458
+  type: 'test'
+  ...
+# Subtest: mandatory gate rejects symlink code/profile and unexpected catalogue fields
+ok 28 - mandatory gate rejects symlink code/profile and unexpected catalogue fields
+  ---
+  duration_ms: 27.735284
+  type: 'test'
+  ...
+# Subtest: cjs: real patched processMessage denies privileged actions before their original bodies
+ok 29 - cjs: real patched processMessage denies privileged actions before their original bodies
+  ---
+  duration_ms: 12.194691
+  type: 'test'
+  ...
+# Subtest: cjs: ordinary getInterfaces still passes original command route
+ok 30 - cjs: ordinary getInterfaces still passes original command route
+  ---
+  duration_ms: 4.33542
+  type: 'test'
+  ...
+# Subtest: cjs: real normal start denies Node preload before adapter lookup or fork
+ok 31 - cjs: real normal start denies Node preload before adapter lookup or fork
+  ---
+  duration_ms: 4.96027
+  type: 'test'
+  ...
+# Subtest: cjs: real scheduled start rechecks altered instance before fork
+ok 32 - cjs: real scheduled start rechecks altered instance before fork
+  ---
+  duration_ms: 4.765467
+  type: 'test'
+  ...
+# Subtest: cjs: real automatic install/upgrade functions produce no installer action
+ok 33 - cjs: real automatic install/upgrade functions produce no installer action
+  ---
+  duration_ms: 8.585032
+  type: 'test'
+  ...
+# Subtest: cjs: real CLI dispatch denies aliases and installation commands before DB/installer access
+ok 34 - cjs: real CLI dispatch denies aliases and installation commands before DB/installer access
+  ---
+  duration_ms: 2.597566
+  type: 'test'
+  ...
+# Subtest: cjs: real Install._npmInstall method rejects directly invoked package install
+ok 35 - cjs: real Install._npmInstall method rejects directly invoked package install
+  ---
+  duration_ms: 1.148377
+  type: 'test'
+  ...
+# Subtest: esm: real patched processMessage denies privileged actions before their original bodies
+ok 36 - esm: real patched processMessage denies privileged actions before their original bodies
+  ---
+  duration_ms: 5.672171
+  type: 'test'
+  ...
+# Subtest: esm: ordinary getInterfaces still passes original command route
+ok 37 - esm: ordinary getInterfaces still passes original command route
+  ---
+  duration_ms: 14.646198
+  type: 'test'
+  ...
+# Subtest: esm: real normal start denies Node preload before adapter lookup or fork
+ok 38 - esm: real normal start denies Node preload before adapter lookup or fork
+  ---
+  duration_ms: 5.486011
+  type: 'test'
+  ...
+# Subtest: esm: real scheduled start rechecks altered instance before fork
+ok 39 - esm: real scheduled start rechecks altered instance before fork
+  ---
+  duration_ms: 5.342285
+  type: 'test'
+  ...
+# Subtest: esm: real automatic install/upgrade functions produce no installer action
+ok 40 - esm: real automatic install/upgrade functions produce no installer action
+  ---
+  duration_ms: 10.342195
+  type: 'test'
+  ...
+# Subtest: esm: real CLI dispatch denies aliases and installation commands before DB/installer access
+ok 41 - esm: real CLI dispatch denies aliases and installation commands before DB/installer access
+  ---
+  duration_ms: 2.303915
+  type: 'test'
+  ...
+# Subtest: esm: real Install._npmInstall method rejects directly invoked package install
+ok 42 - esm: real Install._npmInstall method rejects directly invoked package install
+  ---
+  duration_ms: 1.141156
+  type: 'test'
+  ...
+1..42
+# tests 42
+# suites 0
+# pass 42
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 683.542189

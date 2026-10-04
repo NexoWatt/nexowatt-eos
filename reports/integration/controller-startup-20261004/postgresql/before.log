@@ -1,0 +1,123 @@
+✔ upstream host metadata contains the real exotic process.env object (2.539776ms)
+✖ own trusted host writes commit without copying process environment into storage or event (7.309533ms)
+✖ subsequent host network metadata update preserves the stored host and callbacks (2.516031ms)
+✖ unrelated object and foreign host retain strict exotic-prototype rejection (3.017044ms)
+✔ forged administrator options do not admit controller environment metadata (2.356241ms)
+✖ known nonadministrator writer cannot use the trusted host normalization (4.055384ms)
+✖ ordinary document errors retain safe diagnostic codes through the actual transaction boundary (4.848435ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 2
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 299.10269
+
+✖ failing tests:
+
+test at tests/postgresql/host-object.test.cjs:57:1
+✖ own trusted host writes commit without copying process environment into storage or event (7.309533ms)
+  Error: EOS_PG_TRANSACTION_FAILED
+      at fail (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:9:33)
+      at Store.transaction (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:124:124)
+      at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:59:22)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    code: 'EOS_PG_TRANSACTION_FAILED'
+  }
+
+test at tests/postgresql/host-object.test.cjs:69:1
+✖ subsequent host network metadata update preserves the stored host and callbacks (2.516031ms)
+  Error: EOS_PG_TRANSACTION_FAILED
+      at fail (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:9:33)
+      at Store.transaction (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:124:124)
+      at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:71:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    code: 'EOS_PG_TRANSACTION_FAILED'
+  }
+
+test at tests/postgresql/host-object.test.cjs:83:1
+✖ unrelated object and foreign host retain strict exotic-prototype rejection (3.017044ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    Comparison {
+  +   code: 'EOS_PG_TRANSACTION_FAILED'
+  -   code: 'EOS_PG_DOCUMENT_INVALID'
+    }
+  
+      at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:98:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: EOS_PG_TRANSACTION_FAILED
+        at fail (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:9:33)
+        at Store.transaction (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:124:124)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:98:9)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'EOS_PG_DOCUMENT_INVALID' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/postgresql/host-object.test.cjs:113:1
+✖ known nonadministrator writer cannot use the trusted host normalization (4.055384ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    Comparison {
+  +   code: 'EOS_PG_TRANSACTION_FAILED'
+  -   code: 'EOS_PG_DOCUMENT_INVALID'
+    }
+  
+      at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:122:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: EOS_PG_TRANSACTION_FAILED
+        at fail (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:9:33)
+        at Store.transaction (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:124:124)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:122:5)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'EOS_PG_DOCUMENT_INVALID' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/postgresql/host-object.test.cjs:126:1
+✖ ordinary document errors retain safe diagnostic codes through the actual transaction boundary (4.848435ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    Comparison {
+  +   code: 'EOS_PG_TRANSACTION_FAILED'
+  -   code: 'EOS_PG_DOCUMENT_INVALID'
+    }
+  
+      at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:129:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: EOS_PG_TRANSACTION_FAILED
+        at fail (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:9:33)
+        at Store.transaction (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/runtime/postgresql/packages/store/index.cjs:124:124)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/postgresql/host-object.test.cjs:129:9)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'EOS_PG_DOCUMENT_INVALID' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

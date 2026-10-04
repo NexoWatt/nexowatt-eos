@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "finding": "EOS-PID-STATE-001",
+  "createdAt": "2026-10-04T09:37:12.427194+00:00",
+  "baseCommit": "a02bba50978fa0f9bac893e1921487b457298e7f",
+  "nodeVersion": "v24.19.0",
+  "command": "node --test --test-reporter=tap tests/system/controller-pid-state.test.cjs tests/system/controller-profile.test.cjs",
+  "scope": "Exact published upstream source functions, build contracts and filesystem-backed lifecycle fixture with mapped fixed PID path and injected EROFS boundary; no native systemd or Pi run.",
+  "fixedPath": "/var/lib/nexowatt-eos/iobroker-data/pids.txt",
+  "files": [
+    {
+      "path": "runtime/controller-profile/pid-state.cjs",
+      "bytes": 6136,
+      "sha256": "ea4cb9cef24e96a0423821af98b182ba534dd37d236959982ec75a7a2f8c85e8"
+    },
+    {
+      "path": "tests/system/controller-pid-state.test.cjs",
+      "bytes": 11551,
+      "sha256": "14b8d84f3c3ea8925e3b89fef479dec3cdd8611064e9f38d7a7e10025d8e2f50"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/source-common-db-tools.original.txt",
+      "bytes": 139159,
+      "sha256": "73535c3fe5c52e0ddf697e4222e8d1e4fb1d4cc15cc047be166224310c0974d5"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/cjs-common-db-tools.original.txt",
+      "bytes": 93309,
+      "sha256": "471884540adde741e539be9dd8f6decddca9971685d359ccab487a1476d0e727"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/esm-common-db-tools.original.txt",
+      "bytes": 124999,
+      "sha256": "0aed4f76a9a5d61752ff34268a67db016e92e505667ed981c727270d0b23c122"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/common-db-7.2.2.LICENSE",
+      "bytes": 1135,
+      "sha256": "65bf446696eb13c7d8b051f87019e116eb046b8ce296d7acc78d8d22ef8aa26e"
+    },
+    {
+      "path": "reports/integration/controller-pid-state-20261004/raw/tests.tap",
+      "bytes": 9238,
+      "sha256": "8c661e89b24c8bbf0a2a3113b6673f431e24d0ae49b262e3a41803c40d426804"
+    }
+  ],
+  "sourceFixtures": {
+    "cjsAndEsm": "Authenticated published R6 archive (size and SHA-256); actual @iobroker/js-controller-common-db@7.2.2 files copied verbatim.",
+    "archiveBytes": 97478929,
+    "archiveSha256": "9975190781ce5d5843f38658de11d153119eb8c5e7cd781485af08342571f1ba",
+    "sourceUrl": "https://raw.githubusercontent.com/ioBroker/ioBroker.js-controller/v7.2.2/packages/common-db/src/lib/common/tools.ts",
+    "sourceCommitFromInstalledPackage": "a4a6e05f3e5f71205de0d1b1215baf33600aef9e",
+    "license": "MIT",
+    "licenseFile": "tests/system/controller-profile-fixtures/common-db-7.2.2.LICENSE"
+  },
+  "earlierTestAttempt": "Initial 12/13 pass, one assertion expected a later file/path error while module resolution rejected the symlink earlier; regression assertion corrected and expanded to both module flavors. No safety check removed.",
+  "productionApproved": false,
+  "piRuntimeAcceptance": "OPEN",
+  "systemdAcceptance": "OPEN",
+  "results": {
+    "tests": 42,
+    "passed": 42,
+    "failed": 0,
+    "skipped": 0,
+    "newPidTests": 13,
+    "existingControllerProfileTests": 29
+  }
+}

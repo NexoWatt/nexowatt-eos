@@ -2,6 +2,16 @@
 
 Entwicklungsprofil `0.2.0-dev.8`, Backendpakete `0.1.0-dev.2`.
 Aktueller Änderungsnachweis: `docs/security/ADAPTER_CHANNEL_DEV8_DE.md`.
+Nachtrag 04.10.2026: Der echte Controller 7.2.2 erzeugt Host-Metadaten mit
+dem Node-Objekt `process.env`. Dessen nicht einfacher Prototyp wurde von der
+Objects-Dokumentprüfung abgewiesen und erschien an der Transaktionsgrenze als
+`EOS_PG_TRANSACTION_FAILED`. Nur beim eigenen Host, für privilegierte
+Serviceoperationen und bei exakter Objektidentität wird dieses Feld nun durch
+leere Metadaten ersetzt. Umgebungsgeheimnisse werden dabei nicht persistiert;
+andere Prototypen und Dokumentgrenzen bleiben gesperrt. Feste Diagnosecodes der
+Dokumentprüfung bleiben erhalten. JavaScript-Nachtest und offene Pi-Abnahme:
+`reports/integration/controller-startup-20261004/postgresql/README.md`.
+Das ist eine neue Quellkorrektur, keine Änderung bestehender signierter Archive.
 Nachtrag 03.10.2026: Der Objects-Client verwirft Objekt-/Dateiänderungen aus
 einer getrennten Verbindung auch dann, wenn sie bereits eingereiht sind oder
 ihre Rechteprüfung verspätet endet. Dieser Quellfix gehört in eine neue signierte

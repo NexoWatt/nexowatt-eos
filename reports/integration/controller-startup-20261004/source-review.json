@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "a02bba50978fa0f9bac893e1921487b457298e7f",
+  "review": "Independent read-only agent review plus primary-agent code inspection",
+  "reviewFindings": "No blocker found for source publication within these four files. This does not approve a Pi repair or a release.",
+  "independentTests": {
+    "hostObject": 7,
+    "pidState": 13,
+    "diagnostic": 12,
+    "passed": 32,
+    "failed": 0
+  },
+  "primaryRerun": {
+    "command": "node --test --test-reporter=tap tests/system/controller-pid-state.test.cjs tests/system/first-start-diagnostic.test.cjs",
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "node": "24.19.0",
+    "raw": "root-pid-diagnostic-review.tap"
+  },
+  "files": {
+    "runtime/postgresql/packages/db-objects-postgresql/auth.cjs": "dcfdeb710b78fca4dae8bca3480a0b4092a606694a5cc94c13e6bc37926def63",
+    "runtime/postgresql/packages/db-objects-postgresql/index.cjs": "65e55c87b9ee0c02deeda9e356e8d1e57cfa19d1df4e92921c73024e8d8eb76b",
+    "runtime/controller-profile/pid-state.cjs": "ea4cb9cef24e96a0423821af98b182ba534dd37d236959982ec75a7a2f8c85e8",
+    "tools/system/diagnose-first-start.cjs": "fac0edd88e504b0539c2160614ef346484098704d5919782ca63fdcb4a9af44d"
+  },
+  "nativePostgresqlExecutedLocally": false,
+  "piExecuted": false,
+  "sourcePublicationApproved": true,
+  "recoveryApproved": false,
+  "productionReleaseApproved": false
+}

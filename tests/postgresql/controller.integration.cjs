@@ -11,6 +11,7 @@ const crypto = require('node:crypto');
 const { createRequire } = require('node:module');
 const { spawn } = require('node:child_process');
 const { stageLaboratory, validateExperimentalProfile } = require('../../runtime/postgresql/integration.cjs');
+const { waitController } = require('../../runtime/bootstrap/initialize.cjs');
 
 const required = name => { const value = process.env[name]; if (!value || !path.isAbsolute(value)) throw new Error(`ABSOLUTE_${name}_REQUIRED`); return value; };
 if (process.env.EOS_TEST_PG_FRESH !== '1') throw new Error('EXPLICIT_EMPTY_POSTGRESQL_LAB_REQUIRED');
@@ -43,11 +44,14 @@ function connect(Client, connection, change) {
   });
 }
 
-test('actual controller setup, startup and cross-process states over PostgreSQL TLS without a Redis server', { timeout: 150000 }, async t => {
+test('actual controller setup, startup and cross-process states over PostgreSQL TLS without a Redis server', { timeout: 270000 }, async t => {
   assert.equal(process.version, 'v24.21.0');
   const parent = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-pg-controller-'));
   const children = [], clients = []; const secrets = [];
-  t.after(async () => { for (const child of children) await stop(child); await Promise.allSettled(clients.map(client => client.destroy())); fs.rmSync(parent, { recursive: true, force: true }); });
+  let readOnlyController;
+  t.after(async () => { for (const child of children) await stop(child); await Promise.allSettled(clients.map(client => client.destroy()));
+    if (readOnlyController) fs.chmodSync(readOnlyController, 0o755);
+    fs.rmSync(parent, { recursive: true, force: true }); });
   const redact = text => { for (const secret of secrets) text = text.replaceAll(secret, '[REDACTED]'); return text.replace(/-----BEGIN [\s\S]*?-----END [^-]+-----/g, '[PEM REDACTED]').slice(-16000); };
   const stage = async (name, operation) => { let passed = false; await t.test(name, async () => { await operation(); passed = true; }); if (!passed) throw new Error('PG_LAB_STAGE_FAILED'); };
   const assembled = stageLaboratory({ baseApp, pgClientRoot, packageRoot: path.resolve(__dirname, '../../runtime/postgresql/packages'), directory: path.join(parent, 'lab'),
@@ -88,7 +92,11 @@ test('actual controller setup, startup and cross-process states over PostgreSQL 
   });
   fs.writeFileSync(path.join(assembled.data, 'iobroker.json'), JSON.stringify(config), { mode: 0o600, flag: 'wx' });
   fs.mkdirSync(path.join(controller, 'tmp'), { recursive: true });
-  const options = { cwd: assembled.app, env: { ...process.env, IOBROKER_DATA_DIR: assembled.data, CI: 'true', SENTRY_DSN: '', NODE_PATH: '', NODE_OPTIONS: '' } };
+  // The controller receives laboratory values only, never GitHub credentials or
+  // arbitrary runner environment. The sentinel proves host metadata strips env.
+  const options = { cwd: assembled.app, env: { PATH: process.env.PATH, HOME: parent, LANG: 'C.UTF-8',
+    IOBROKER_DATA_DIR: assembled.data, CI: 'true', SENTRY_DSN: '', NODE_PATH: '', NODE_OPTIONS: '',
+    EOS_NATIVE_ENV_SENTINEL: 'non-secret-must-not-reach-host-object' } };
   await stage('ordinary controller CLI setup uses dynamically loaded PostgreSQL clients', async () => {
     const child = launch(process.execPath, [path.join(controller, 'iobroker.js'), 'setup'], options); children.push(child);
     const timer = setTimeout(() => child.kill('SIGTERM'), 45000);
@@ -101,15 +109,68 @@ test('actual controller setup, startup and cross-process states over PostgreSQL 
   const configuration = await objects.getObjectAsync('system.config'); assert.equal(configuration?.type, 'config');
   const instances = await objects.getObjectViewAsync('system', 'instance', {}); assert.equal(instances.rows.length, 0, 'physical adapters must not be started by this harness');
   await states.subscribe('system.host.eos-postgresql-lab.*');
-  const child = launch(process.execPath, [path.join(controller, 'controller.js')], options); children.push(child);
-  try {
-    await wait(async () => { if (child.exitCode !== null) throw new Error('PG_LAB_CONTROLLER_EXIT'); return (await states.getState('system.host.eos-postgresql-lab.pid'))?.val === child.pid; }, 45000);
-    assert.equal((await objects.getObjectAsync('system.host.eos-postgresql-lab')).common.installedVersion, '7.2.2');
-    await wait(() => events.some(event => event.id === 'system.host.eos-postgresql-lab.alive' && event.state?.val === true));
-    assert.equal(child.exitCode, null);
-  } catch (error) { t.diagnostic(redact(child.output)); throw error; }
+  const nativeProfile = process.env.EOS_TEST_NATIVE_PROFILE === '1';
+  const pidFile = '/var/lib/nexowatt-eos/iobroker-data/pids.txt';
+  const normalStopCode = appRequire('@iobroker/js-controller-common').EXIT_CODES.JS_CONTROLLER_STOPPED;
+  assert.equal(normalStopCode, 1, 'pinned controller 7.2.2 normal stop convention');
+  if (nativeProfile) {
+    assert.notEqual(process.getuid(), 0, 'read-only permission test must run unprivileged');
+    assert.equal(appRequire('@iobroker/js-controller-common-db/tools').getPidsFileName(), pidFile);
+    assert.equal(fs.existsSync(pidFile), false, 'fresh isolated runner PID state required');
+    fs.chmodSync(controller, 0o555); readOnlyController = controller;
+    assert.throws(() => fs.writeFileSync(path.join(controller, 'pids.txt'), '[0]', { flag: 'wx' }), { code: 'EACCES' });
+    // Core-only startup never invokes upstream storePids(), which is triggered
+    // by adapter lifecycle. This is an explicit directory/accessor probe, not
+    // a claim that the controller generated a PID list in this adapter-free run.
+    fs.writeFileSync(pidFile, '[]\n', { mode: 0o600, flag: 'wx' });
+    try {
+      assert.deepEqual(JSON.parse(fs.readFileSync(pidFile)), []);
+      assert.equal(fs.statSync(pidFile).uid, process.getuid());
+      assert.equal(fs.statSync(pidFile).mode & 0o077, 0);
+    } finally { fs.unlinkSync(pidFile); }
+  }
+  let child;
+  const boot = async () => {
+    const eventOffset = events.length;
+    child = launch(process.execPath, [path.join(controller, 'controller.js')], options); children.push(child);
+    try {
+      await wait(async () => { if (child.exitCode !== null || child.signalCode !== null) throw new Error('PG_LAB_CONTROLLER_EXIT');
+        return (await states.getState('system.host.eos-postgresql-lab.pid'))?.val === child.pid; }, 45000);
+      const host = await objects.getObjectAsync('system.host.eos-postgresql-lab');
+      assert.equal(host.common.installedVersion, '7.2.2');
+      assert.equal(host.type, 'host'); assert.deepEqual(host.native.process.env, {});
+      assert.equal(JSON.stringify(host).includes('non-secret-must-not-reach-host-object'), false);
+      await wait(() => events.slice(eventOffset).some(event => event.id === 'system.host.eos-postgresql-lab.alive' && event.state?.val === true));
+      assert.equal((await states.getState('system.host.eos-postgresql-lab.alive')).val, true);
+      const readiness = await waitController({ objects, states, config, controllerPid: child.pid, timeoutMs: 30000, pollMs: 100 });
+      assert.equal(readiness.status, 'CONTROLLER_READY');
+      assert.equal(readiness.heartbeatVerified, true); assert.equal(readiness.pidVerified, true);
+      assert.equal(child.exitCode, null);
+      if (nativeProfile) {
+        assert.equal(fs.existsSync(path.join(controller, 'pids.txt')), false);
+      }
+    } catch (error) { t.diagnostic(redact(child.output)); throw error; }
+  };
+  await stage('actual controller persists host object and publishes fresh alive/PID via native mTLS PostgreSQL', boot);
+  await stage('controller stops cleanly and restarts with a fresh PID and host-object readback', async () => {
+    const oldPid = child.pid;
+    await stop(child);
+    assert.equal(child.exitCode, normalStopCode);
+    await boot(); assert.notEqual(child.pid, oldPid);
+  });
+  await stage('final controller stop completes without a release-tree PID write', async () => {
+    await stop(child); assert.equal(child.exitCode, normalStopCode);
+    if (nativeProfile) {
+      assert.equal(fs.existsSync(path.join(controller, 'pids.txt')), false);
+      if (fs.existsSync(pidFile)) assert.equal(JSON.parse(fs.readFileSync(pidFile)).includes(child.pid), false);
+    }
+  });
   t.diagnostic(JSON.stringify({ controllerVersion: '7.2.2', databaseType: 'postgresql', redisServerStarted: false,
     physicalAdaptersStarted: false, hardwareAcceptance: false, productionBootstrapTested: false,
+    nativePostgresqlTested: true, controllerRestartTested: true, hostEnvironmentExcluded: true,
+    productionControllerReadinessFunctionTested: true,
+    relocatedPidAccessorAndDirectoryTested: nativeProfile, actualAdapterPidWriterLifecycleTested: false,
+    immutableControllerDirectoryByMode: nativeProfile, actualSystemdMountRestrictionsTested: false,
     expectedBaseLockSha256: assembled.manifest.expectedBaseLockSha256, expectedPgLockSha256: assembled.manifest.expectedPgLockSha256,
     overlays: assembled.manifest.overlays, baseManifestSha256: hash(JSON.stringify(assembled.manifest.baseManifest)),
     driverManifestSha256: hash(JSON.stringify(assembled.manifest.driverManifest)),

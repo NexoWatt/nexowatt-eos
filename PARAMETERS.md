@@ -1,5 +1,16 @@
 # NexoWatt EOS review profile — parameters
 
+## Failed first-start diagnosis (2026-10-04)
+
+`tools/system/diagnose-first-start.cjs` is a standalone files-only diagnostic.
+It accepts no arguments and requires Linux/root to inspect the fixed protected
+state paths. It does not connect to PostgreSQL, execute installed modules,
+control services or alter a maintenance lock. Output is restricted to known
+enums and Boolean comparisons; no credentials or complete device identities
+are returned. `ok` describes report generation, never recovery eligibility.
+See [operator procedure](docs/operations/FIRST_START_DIAGNOSTIC_DE.md).
+Historical signed R4/R5/R6 payloads do not contain this new helper.
+
 ## Current public R6 TEST update (2026-10-04)
 
 The current operator command is always the one published in the README on `main`.

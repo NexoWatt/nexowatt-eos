@@ -56,23 +56,36 @@ function protectAcl(oldObject, nextObject, options) {
     if (!oldObject && nextObject.acl && (nextObject.acl.owner !== options.user || !options.groups.includes(nextObject.acl.ownerGroup))) throw denied();
 }
 
+function prepareHostDocument(id, document, options, hostname) {
+    // Controller 7.2.2 places the actual Node process.env object into its own
+    // host metadata. That object has an exotic prototype and can contain
+    // secrets. Admit only this exact trusted service shape, omit environment
+    // contents, and still validate every remaining document field normally.
+    // Do not mutate the caller or broadly accept custom prototypes/toJSON.
+    const plain = value => value !== null && typeof value === 'object' && !Array.isArray(value) && [Object.prototype, null].includes(Object.getPrototypeOf(value));
+    if (!plain(document) || !plain(document.native) || !plain(document.native.process)) return document;
+    if (id !== `system.host.${hostname}` || document.type !== 'host' || !admin(options) || document.native.process.env !== process.env) return document;
+    return { ...document, native: { ...document.native, process: { ...document.native.process, env: {} } } };
+}
+
+function documentError(code) { const error = new Error(code); error.code = code; return error; }
 function validateDocument(document) {
     const visited = new Set();
     let count = 0;
     function walk(value, depth) {
-        if (++count > 100000 || depth > 64) throw new Error('EOS_PG_DOCUMENT_LIMIT');
+        if (++count > 100000 || depth > 64) throw documentError('EOS_PG_DOCUMENT_LIMIT');
         if (value === null || typeof value === 'string' || typeof value === 'boolean') return;
         if (typeof value === 'number' && Number.isFinite(value)) return;
-        if (!value || typeof value !== 'object' || visited.has(value) || (!Array.isArray(value) && Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null)) throw new Error('EOS_PG_DOCUMENT_INVALID');
+        if (!value || typeof value !== 'object' || visited.has(value) || (!Array.isArray(value) && Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null)) throw documentError('EOS_PG_DOCUMENT_INVALID');
         visited.add(value);
         for (const key of Object.keys(value)) {
-            if (['__proto__', 'prototype', 'constructor'].includes(key)) throw new Error('EOS_PG_DOCUMENT_UNSAFE_KEY');
+            if (['__proto__', 'prototype', 'constructor'].includes(key)) throw documentError('EOS_PG_DOCUMENT_UNSAFE_KEY');
             if (value[key] !== undefined) walk(value[key], depth + 1);
         }
         visited.delete(value);
     }
-    if (!document || typeof document !== 'object' || Array.isArray(document)) throw new Error('EOS_PG_DOCUMENT_INVALID');
+    if (!document || typeof document !== 'object' || Array.isArray(document)) throw documentError('EOS_PG_DOCUMENT_INVALID');
     walk(document, 0);
 }
 
-module.exports = { ADMIN, ADMIN_GROUP, rights, denied, parse, resolve, cleanOptions, admin, requireRight, objectRight, protectAcl, validateDocument };
+module.exports = { ADMIN, ADMIN_GROUP, rights, denied, parse, resolve, cleanOptions, admin, requireRight, objectRight, protectAcl, prepareHostDocument, validateDocument };

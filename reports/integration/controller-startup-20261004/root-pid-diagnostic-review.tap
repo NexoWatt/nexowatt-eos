@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: actual cjs input and output are pinned; modified input is rejected
+ok 1 - actual cjs input and output are pinned; modified input is rejected
+  ---
+  duration_ms: 2.851949
+  type: 'test'
+  ...
+# Subtest: actual esm input and output are pinned; modified input is rejected
+ok 2 - actual esm input and output are pinned; modified input is rejected
+  ---
+  duration_ms: 1.343269
+  type: 'test'
+  ...
+# Subtest: actual source input and output are pinned; modified input is rejected
+ok 3 - actual source input and output are pinned; modified input is rejected
+  ---
+  duration_ms: 1.406445
+  type: 'test'
+  ...
+# Subtest: unknown file and second application of transform are rejected
+ok 4 - unknown file and second application of transform are rejected
+  ---
+  duration_ms: 1.487827
+  type: 'test'
+  ...
+# Subtest: both complete transformed executable modules pass the actual Node parser
+ok 5 - both complete transformed executable modules pass the actual Node parser
+  ---
+  duration_ms: 332.740774
+  type: 'test'
+  ...
+# Subtest: new build gate rejects unpatched output and verifies both exact patched files
+ok 6 - new build gate rejects unpatched output and verifies both exact patched files
+  ---
+  duration_ms: 13.274325
+  type: 'test'
+  ...
+# Subtest: all original files are checked before any output is changed
+ok 7 - all original files are checked before any output is changed
+  ---
+  duration_ms: 2.847531
+  type: 'test'
+  ...
+# Subtest: wrong package version and altered ESM export are rejected
+ok 8 - wrong package version and altered ESM export are rejected
+  ---
+  duration_ms: 4.907919
+  type: 'test'
+  ...
+# Subtest: nested common-db copy used by a host/CLI consumer is rejected
+ok 9 - nested common-db copy used by a host/CLI consumer is rejected
+  ---
+  duration_ms: 3.126371
+  type: 'test'
+  ...
+# Subtest: symlink output leaf and parent are rejected without changing external bytes
+ok 10 - symlink output leaf and parent are rejected without changing external bytes
+  ---
+  duration_ms: 8.351968
+  type: 'test'
+  ...
+# Subtest: actual upstream PID writer/read/cleanup contract (cjs)
+ok 11 - actual upstream PID writer/read/cleanup contract (cjs)
+  ---
+  duration_ms: 15.707948
+  type: 'test'
+  ...
+# Subtest: actual upstream PID writer/read/cleanup contract (esm)
+ok 12 - actual upstream PID writer/read/cleanup contract (esm)
+  ---
+  duration_ms: 5.877809
+  type: 'test'
+  ...
+# Subtest: existing systemd and provisioning contracts keep code immutable and PID state private
+ok 13 - existing systemd and provisioning contracts keep code immutable and PID state private
+  ---
+  duration_ms: 0.630689
+  type: 'test'
+  ...
+# Subtest: failed R4 first-start summary is useful and does not change bytes, ownership, mode, links or directories
+ok 14 - failed R4 first-start summary is useful and does not change bytes, ownership, mode, links or directories
+  ---
+  duration_ms: 6.897661
+  type: 'test'
+  ...
+# Subtest: hostile strings in every displayed field never enter output
+ok 15 - hostile strings in every displayed field never enter output
+  ---
+  duration_ms: 4.587478
+  type: 'test'
+  ...
+# Subtest: even well-shaped unknown hex identifiers and signed-looking hashes are not echoed
+ok 16 - even well-shaped unknown hex identifiers and signed-looking hashes are not echoed
+  ---
+  duration_ms: 3.287974
+  type: 'test'
+  ...
+# Subtest: release and setup binding differences remain visible only as booleans
+ok 17 - release and setup binding differences remain visible only as booleans
+  ---
+  duration_ms: 1.558233
+  type: 'test'
+  ...
+# Subtest: final symlink and hardlink are rejected before parsing their contents
+ok 18 - final symlink and hardlink are rejected before parsing their contents
+  ---
+  duration_ms: 3.228264
+  type: 'test'
+  ...
+# Subtest: symlinked onboarding ancestor is rejected without following it
+ok 19 - symlinked onboarding ancestor is rejected without following it
+  ---
+  duration_ms: 2.448531
+  type: 'test'
+  ...
+# Subtest: private-file and parent-directory permission boundaries are enforced
+ok 20 - private-file and parent-directory permission boundaries are enforced
+  ---
+  duration_ms: 2.852259
+  type: 'test'
+  ...
+# Subtest: oversized, nonregular and invalid JSON records are bounded safe failures
+ok 21 - oversized, nonregular and invalid JSON records are bounded safe failures
+  ---
+  duration_ms: 14.324188
+  type: 'test'
+  ...
+# Subtest: malformed UTF-8 is rejected without an error detail or partial content
+ok 22 - malformed UTF-8 is rejected without an error detail or partial content
+  ---
+  duration_ms: 2.153208
+  type: 'test'
+  ...
+# Subtest: unsafe current pointer never leaks its target
+ok 23 - unsafe current pointer never leaks its target
+  ---
+  duration_ms: 3.610659
+  type: 'test'
+  ...
+# Subtest: untrusted owner and missing setup identity do not admit onboarding records
+ok 24 - untrusted owner and missing setup identity do not admit onboarding records
+  ---
+  duration_ms: 4.396711
+  type: 'test'
+  ...
+# Subtest: CLI rejects any input/root/bypass flag; privilege errors have constant output
+ok 25 - CLI rejects any input/root/bypass flag; privilege errors have constant output
+  ---
+  duration_ms: 0.967995
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 470.170014

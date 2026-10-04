@@ -1,5 +1,20 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# Aktuell: R6-Testupdate für den eingerichteten Pi
+# Controller-Startfehler wird korrigiert (04.10.2026)
+
+Ein echter R4-Erststart ist mit `EOS_PG_TRANSACTION_FAILED` beim Host-Objekt
+und `CONTROLLER_NOT_READY` abgebrochen. Zusätzlich versucht der Controller,
+`pids.txt` im schreibgeschützten Release abzulegen. Diese Fehler sind im
+[aktuellen Änderungs- und Prüfbericht](reports/integration/controller-startup-20261004/README.md)
+dokumentiert. Die Quellkorrekturen ändern bereits signierte Pakete nicht.
+
+**Der folgende R6-Befehl repariert diesen abgebrochenen Erststart nicht.** Er
+setzt einen abgeschlossenen Erststart voraus; R6 enthält die neu festgestellten
+Controller-Korrekturen noch nicht. Bei bestehender Wartungssperre den
+[nur lesenden Diagnoseweg](docs/operations/FIRST_START_DIAGNOSTIC_DE.md) verwenden.
+Sperre und vorhandene Einrichtung erhalten. Ein geprüfter Wiederherstellungsweg
+für diesen Zustand ist noch nicht veröffentlicht.
+
+# Veröffentlicht: R6-Testupdate für den eingerichteten Pi
 
 **test.3 Revision 6, Sequenz 9 ist signiert, veröffentlicht und öffentlich
 zurückgelesen.** R6 enthält das NexoWatt-Branding, die Browser-/Login-Korrekturen
