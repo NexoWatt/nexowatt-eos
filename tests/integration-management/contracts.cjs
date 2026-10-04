@@ -118,3 +118,36 @@ console.log=()=>{};
     assert.equal(detection.status, 0);
     assert.deepEqual(JSON.parse(detection.stdout), { isCI: false });
 });
+test('authenticated license results require real authorization, validity and the enrolled UUID without exporting secrets', () => {
+    const { loginToken, licenseSummary } = require('./authenticated-license.cjs');
+    const uuid = crypto.randomUUID(), token = crypto.randomBytes(32).toString('base64url');
+    assert.equal(loginToken({ status: 200, data: { access_token: token } }), token);
+    for (const response of [{ status: 302, data: { access_token: token } }, { status: 200, data: {} }, { status: 200, data: { access_token: 'private\r\nheader' } }]) {
+        assert.throws(() => loginToken(response), { code: 'MANAGEMENT_ADMIN_LOGIN_FAILED' });
+    }
+    const result = { status: 200, data: { v: 1, valid: true, code: 'LICENSE_VALID', uuid, edition: 'home', rawToken: token } };
+    assert.deepEqual(licenseSummary(result, uuid), { authenticated: true, licenseValid: true, code: 'LICENSE_VALID', uuidMatched: true });
+    for (const response of [{ ...result, status: 401 }, { ...result, data: { ...result.data, valid: false } },
+        { ...result, data: { ...result.data, code: 'LICENSE_MISSING' } }, { ...result, data: { ...result.data, uuid: crypto.randomUUID() } }]) {
+        assert.throws(() => licenseSummary(response, uuid), { code: 'MANAGEMENT_LICENSE_STATUS_FAILED' });
+    }
+});
+test('private runtime log reads only new bounded bytes per boot and rejects unsafe files', t => {
+    const { RuntimeLog } = require('./runtime-log.cjs');
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-private-log-')); t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+    const file = path.join(root, 'runtime.2026-10-04.log');
+    fs.writeFileSync(file, 'old error: private-old-content\n[EOS licensing] LICENSE_VALID\n', { mode: 0o600 });
+    const first = new RuntimeLog(root); assert.deepEqual(first.scan(), { bytesRead: 0, indicators: [] });
+    fs.appendFileSync(file, 'new info: [EOS licensing] LICENSE_VALID\n');
+    assert.deepEqual(first.scan().indicators, ['LICENSE_VALID']);
+    const second = new RuntimeLog(root); assert.deepEqual(second.scan(), { bytesRead: 0, indicators: [] });
+    fs.appendFileSync(file, 'new \u001b[31merror\u001b[39m: private-secret TypeError: hidden-value\n');
+    assert.deepEqual(second.scan().indicators, ['RUNTIME_ERROR_LOGGED', 'TYPE_ERROR']);
+    assert.ok(!JSON.stringify(second.scan()).includes('private-secret'));
+    fs.chmodSync(file, 0o644); assert.throws(() => second.scan(), /MANAGEMENT_LOG_BOUNDARY/); fs.chmodSync(file, 0o600);
+    fs.truncateSync(file, 0); assert.throws(() => second.scan(), /MANAGEMENT_LOG_TRUNCATED/);
+    fs.unlinkSync(file); fs.mkdirSync(file); assert.throws(() => second.scan(), /MANAGEMENT_LOG_BOUNDARY/); fs.rmdirSync(file);
+    fs.symlinkSync('missing-private-log', file); assert.throws(() => second.scan(), /MANAGEMENT_LOG_BOUNDARY/); fs.unlinkSync(file);
+    assert.equal(spawnSync('mkfifo', [file], { timeout: 5000, stdio: 'ignore' }).status, 0);
+    assert.throws(() => second.scan(), /MANAGEMENT_LOG_BOUNDARY/);
+});

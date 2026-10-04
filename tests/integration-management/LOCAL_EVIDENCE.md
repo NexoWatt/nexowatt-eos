@@ -1,8 +1,8 @@
 # Lokaler Vorprüfungsnachweis – 04.10.2026
 
-**8/8 PASS, 0 übersprungen.** Rohbeleg: `local-preflight.tap`, SHA-256
-`60da3d488fd6dfd7d4aebdd93f2000a9a4a5ed8020446e0e900859df399499d5`.
-Alle acht Management-CJS-Dateien und die PostgreSQL-Labor-Fixture bestehen
+**10/10 PASS, 0 übersprungen.** Rohbeleg: `local-preflight.tap`, SHA-256
+`4af9389f20b00dbb474b9b0c7991b455114ee8cc564711a468e2f6b0853b4224`.
+Alle zehn Management-CJS-Dateien und die PostgreSQL-Labor-Fixture bestehen
 `node --check`; `git diff --check` ist erfolgreich.
 
 Umgebung: Linux x64, Node **24.19.0**, UID 0. Die native Integration verlangt
@@ -31,15 +31,38 @@ Arbeitsumgebung kann keine Netzwerkinterfaces auflisten (`uv_interface_addresses
 Es gibt keinen OS-Mock, keinen manuell ersetzten UUID-Wert und keine Ausnahme vom
 Lizenzvalidator. Der normale UUID-/Lizenzpfad muss im nativen Gesamtlauf bestehen.
 
+Der neunte Vertrag prüft die begrenzte Auswertung von OAuth-/Lizenzstatus-
+Antwortformen: fehlende Anmeldung, ungültiger Token, abgelehnte oder fremd
+gebundene Lizenz scheitern; der Ergebnisbericht enthält keine UUID oder Tokens.
+Das ist Parservalidierung, kein lokaler HTTPS-Anmeldenachweis.
+Der zehnte Vertrag prüft echte private Dateien: pro Start nur neue Bytes,
+farbige Fehlerzeilen erkannt, keine Rohtexte ausgegeben, unprivate Dateien,
+Trunkierung, Verzeichnis, Symlink und FIFO abgewiesen. Der Leser prüft vor dem
+Öffnen den regulären Dateityp und verwendet zusätzlich `O_NOFOLLOW|O_NONBLOCK`.
+
+Zusätzlicher tatsächlicher Logger-Versuch: der authentifizierte R7-Export
+`@iobroker/js-controller-common-db/build/cjs/lib/common/logger.js:logger` wurde
+mit `loggerConfiguration(privateTempDirectory)`, `umask(0o077)` und ausschließlich
+abgeschalteter Konsolenausgabe ausgeführt. Nach `log.info` und 500 ms lieferte
+der gleiche `RuntimeLog`-Leser:
+`{"actualR7Logger":true,"dateFilenameMatched":true,"privateFileMode":384,"bytesReadPositive":true,"indicators":["LICENSE_VALID"]}`.
+Der tatsächliche Dateiname entsprach `runtime.YYYY-MM-DD.log`, Modus 384 ist
+oktales 0600. Der Versuch belegt Datei-Transport und Leser, keinen Adapterstart.
+
 Dateibindung der Fullmanagement-Testlogik:
 `management.integration.cjs` SHA-256
-`9ac43df3dc0d35872c7dd0a1c0b361714c0f99b8e6495f082dd93fee37a96593`.
+`9eaab61db2d7ee452199c032ee6d064dc51a07de9bbde9f5b66f6f33141ffb97`.
+`authenticated-license.cjs` SHA-256
+`ccc784d9f2e438429209a8b90ae5be5c8c8ff026bdc0d4db2f865d5e98c8beea`.
+`runtime-log.cjs` SHA-256
+`a1f03530769aa70034983c54cdbc4aa14ecf2d3b4c59a15edd05478973dfab22`.
 `environment.cjs` SHA-256
 `e0ebd31f427ccabf712467f07918551b16e3d59a88901c2373c988aa0a6a1616`.
 `tests/postgresql/fixtures/lab-cluster.cjs` SHA-256
 `78be6ae90f7660da129d7b3a802d4e5bef1aae58e31f9077f345a83c3c499e1c`.
-Die native Ausführung gegen PostgreSQL 17.11, tatsächliche Listenerbereitschaft,
-PID-Lebenszyklus und Neustart sind erst durch den kommenden CI-Lauf nachweisbar.
+Der vierte native Lauf belegt PostgreSQL 17.11 und tatsächliche Listenerbereitschaft.
+Echte HTTPS-Anmeldung, PID-Lebenszyklus und Neustart dieser neuen Harness-Fassung
+sind erst durch den kommenden CI-Lauf nachweisbar.
 Pi-/systemd-/Browser-/Reboot-/Anlagenabnahme bleibt **OFFEN**.
 
 ## Erster nativer CI-Lauf: Fixturefehler vor Controllerstart
@@ -90,3 +113,27 @@ Produkt-Lizenzvalidator wies diesen korrekt ab. CLI und Controller erhalten jetz
 Providerumgebung wird übernommen und keine UUID manuell ersetzt. Normaler
 nativer UUID-/Lizenzpfad und vollständiger Managementstart bleiben bis zum
 kommenden erfolgreichen Gesamtlauf **OFFEN**.
+
+## Vierter nativer CI-Lauf: Readiness bestätigt, stdout-Nachweis korrigiert
+
+Quellstand `83a8dab5138842cc06ac63d25a8d022dca611fb2`, Artefakt `11309007699`:
+normale UUID, Lizenzprüfung/Speicher, Enrollment und Uploads bestanden.
+Core war nach 825 ms bereit, beide Adapter meldeten nach 6054 ms `alive`.
+Die historische Einmalprobe sah nach 22 ms Admin bereit und UI noch nicht bereit;
+die korrigierte Produktionsprobe erreichte beide nach 3434 ms innerhalb ihres
+festen 5-Sekunden-Budgets. Controller-Prozessfehlerindikatoren waren leer.
+
+Der Test scheiterte danach am eigenen Warten auf `LICENSE_VALID` in der
+Controller-stdout-Ausgabe. Der echte Controller verwirft jedoch stdout seiner
+Daemon-Adapter; diese Bedingung war als Lizenznachweis ungeeignet. Die PID-Prüfung
+und der Neustart wurden noch nicht erreicht. Das ist kein nachgewiesener
+Produkt-Lizenzfehler und kein vollständiger Fullmanagement-PASS.
+
+Korrektur ausschließlich im Test: tatsächliches Admin-OAuth-Login und geschützte
+Lizenzstatusabfrage mit gemeinsamer 5-Sekunden-Frist, unveränderter TLS-Prüfung
+und exakter UUID-/Lizenzbindung. Der echte private Datei-Logger liefert frische
+Adapterfehler pro Start und nach beiden Stopps; alte Zeilen können den zweiten
+Start nicht bestehen lassen. Die PID-Datei muss die aktuelle Controller-PID und
+genau die beiden bestätigten Adapter-PIDs enthalten; alle müssen leben. Das
+Readiness-Gate und die Produkt-App bleiben unverändert. Nächster nativer Lauf
+und physische Pi-Abnahme bleiben **OFFEN**.

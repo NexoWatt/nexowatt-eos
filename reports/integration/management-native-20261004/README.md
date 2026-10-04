@@ -56,3 +56,33 @@ Die Prozessindikatoren ordnen das erwartete `PERMISSION_DENIED` ausschließlich
 dem Setup-CLI zu. Noch kein Controllerstart; daher weiterhin keine vollständige
 Management- oder Pi-Abnahme. Dieser Laborbefund erklärt nicht nachträglich den
 unvollständig protokollierten früheren R7-Abbruch auf dem Pi.
+
+## Vierter Lauf: echte HTTPS-Bereitschaft nachgewiesen
+
+Quellcommit `83a8dab5138842cc06ac63d25a8d022dca611fb2`,
+[Securitylauf 37217178522](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37217178522),
+Managementjob `111479950840`, Artefakt `11309007699` unter `fourth-ci/`.
+Normale UUID-Erzeugung, vollständige Erstregistrierung, signierte Lizenzablage
+und Upload beider zugelassenen Managementpakete bestehen mit nativer PostgreSQL.
+Controller, Admin und UI starten tatsächlich aus dem authentifizierten R7-App-Baum.
+
+Die alte einmalige HTTPS-Prüfung erreicht Admin, verfehlt aber die UI nach 22 ms.
+Die korrigierte Produktionsprüfung erreicht beide Oberflächen innerhalb ihres
+unveränderten Zeitbudgets nach 3434 ms. Dies reproduziert den Bereitschaftsfehler
+und belegt dessen Korrektur im nativen Labor. Es beweist nicht, dass dies die
+einzige Ursache des unvollständig protokollierten früheren Pi-Abbruchs war.
+
+Der Gesamtlauf scheitert anschließend in der zusätzlichen Stufe
+`license-and-pids` mit `MANAGEMENT_DEADLINE`. Die Testannahme, der tatsächliche
+Adapter müsse `LICENSE_VALID` in die Standardausgabe des Controllers schreiben,
+ist falsch: Der Controller ignoriert die Standardausgabe seiner Adapterprozesse.
+Die Lizenzablage ist bestanden; ein ungültiger laufender Lizenzstatus ist damit
+weder nachgewiesen noch ausgeschlossen. Die nachgelagerte PID-Prüfung und der
+Neustart wurden noch nicht erreicht. Der Ersatz muss den echten authentifizierten
+Admin-Lizenzstatus prüfen und Adapterfehler über frische private Laufzeitprotokolle
+erfassen. Keine Produktvalidierung wird dafür abgeschwächt.
+
+Der getrennte native Core-Test und CodeQL (Lauf `37217178519`) bestehen.
+Noch keine erfolgreiche vollständige Managementabnahme, R8-Signierung oder
+Pi-/Anlagenfreigabe. Nicht erreichte boolesche Nachweisfelder in den unveränderten
+Artefakten bedeuten fehlenden Nachweis, keinen beobachteten App-Baum-Unterschied.

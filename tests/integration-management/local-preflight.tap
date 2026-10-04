@@ -2,57 +2,69 @@ TAP version 13
 # Subtest: entire authentic R7 manifest and signed payload match the fixed management baseline
 ok 1 - entire authentic R7 manifest and signed payload match the fixed management baseline
   ---
-  duration_ms: 1424.695894
+  duration_ms: 1513.559821
   type: 'test'
   ...
 # Subtest: a substituted trust key is rejected before any extracted code is used
 ok 2 - a substituted trust key is rejected before any extracted code is used
   ---
-  duration_ms: 1.836664
+  duration_ms: 1.744766
   type: 'test'
   ...
 # Subtest: real R7 license core accepts the ephemeral signed entitlement and encrypted store, rejects a different UUID
 ok 3 - real R7 license core accepts the ephemeral signed entitlement and encrypted store, rejects a different UUID
   ---
-  duration_ms: 16.965662
+  duration_ms: 17.06439
   type: 'test'
   ...
 # Subtest: root fixture refuses accidental execution outside explicit disposable-host authorization
 ok 4 - root fixture refuses accidental execution outside explicit disposable-host authorization
   ---
-  duration_ms: 1.954892
+  duration_ms: 1.871656
   type: 'test'
   ...
 # Subtest: HTTPS diagnostics expose only fixed stage/code/reason and the expected fixed port
 ok 5 - HTTPS diagnostics expose only fixed stage/code/reason and the expected fixed port
   ---
-  duration_ms: 0.814836
+  duration_ms: 0.763819
   type: 'test'
   ...
 # Subtest: management fixture preserves the exact production PostgreSQL admission profile
 ok 6 - management fixture preserves the exact production PostgreSQL admission profile
   ---
-  duration_ms: 5.639337
+  duration_ms: 4.733353
   type: 'test'
   ...
 # Subtest: bootstrap diagnostics retain known phase failures without exposing messages, values or paths
 ok 7 - bootstrap diagnostics retain known phase failures without exposing messages, values or paths
   ---
-  duration_ms: 0.299201
+  duration_ms: 0.250477
   type: 'test'
   ...
 # Subtest: actual R7 CI sentinel fails real licensing and the product child environment disables CI detection
 ok 8 - actual R7 CI sentinel fails real licensing and the product child environment disables CI detection
   ---
-  duration_ms: 252.52709
+  duration_ms: 253.469004
   type: 'test'
   ...
-1..8
-# tests 8
+# Subtest: authenticated license results require real authorization, validity and the enrolled UUID without exporting secrets
+ok 9 - authenticated license results require real authorization, validity and the enrolled UUID without exporting secrets
+  ---
+  duration_ms: 1.463572
+  type: 'test'
+  ...
+# Subtest: private runtime log reads only new bounded bytes per boot and rejects unsafe files
+ok 10 - private runtime log reads only new bounded bytes per boot and rejects unsafe files
+  ---
+  duration_ms: 8.283586
+  type: 'test'
+  ...
+1..10
+# tests 10
 # suites 0
-# pass 8
+# pass 10
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 1796.574319
+# duration_ms 1897.000081

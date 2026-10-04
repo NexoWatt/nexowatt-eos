@@ -35,7 +35,10 @@ Nur `management.tap` und `management-evidence.json` als Artefakte übernehmen.
 Keine kompletten Lab-Verzeichnisse, PostgreSQL-Metadaten, Konfigurationen,
 Schlüssel, Lizenzen oder Adapterlogs veröffentlichen. Der Test gibt ausschließlich
 feste Fehlerindikatoren und relative Zeitabstände aus; rohe Prozessausgaben
-bleiben begrenzt im Speicher. Ein Fehler enthält daher eventuell nur den
+bleiben begrenzt im Speicher. Der echte Datei-Logger schreibt ausschließlich in
+das private Datenverzeichnis. Pro Start werden nur neue Bytes ausgewertet,
+höchstens 2 MiB je Datei und 4 MiB insgesamt; Rohlogs werden nicht übernommen.
+Ein Fehler enthält daher eventuell nur den
 gescheiterten Prüfschritt. Bootstrap/Enrollment erfasst acht feste Teilschritte
 und eine begrenzte Instanzzahl. Eine literale Fehlercode-Liste erhält bekannte
 Bootstrap-, Lizenz- und Dateizugriffsfehler ohne Rohtexte. Prozessindikatoren
@@ -70,8 +73,13 @@ strengen HTTPS-Antworten noch höchstens 90 Sekunden, meldet aber weiterhin
 
 Admin muss den genauen lokalen Login-Redirect liefern; UI muss unangemeldete
 strikte Authentifizierung und Schreibschutz melden. Zusätzlich muss der echte
-Admin-Lizenzdienst `LICENSE_VALID` erreichen. Genau zwei zugelassene Instanzen,
-ausbleibende erkannte Laufzeitfehler, reale private PID-Schreibvorgänge und ein
+Admin-Lizenzdienst nach einer tatsächlichen OAuth-Anmeldung mit dem frisch
+erzeugten Dienstpasswort über die geschützte Statusroute `LICENSE_VALID` für die
+registrierte UUID melden. Anmeldung und Statusabfrage teilen ein striktes
+5-Sekunden-Budget mit CA-/Hostnameprüfung und TLS 1.3. Passwort, Token und UUID
+erscheinen nicht im Prüfbericht. Genau zwei zugelassene Instanzen,
+ausbleibende erkannte Laufzeitfehler einschließlich beider Stopps, reale private
+PID-Schreibvorgänge mit den drei aktuellen lebenden Controller-/Adapter-PIDs und ein
 zweiter erfolgreicher Start werden geprüft. App-Bytes und Konfiguration dürfen
 sich nicht ändern; nur Unix-Dateirechte bilden das schreibgeschützte Release ab.
 
@@ -95,6 +103,9 @@ echten Produktionsvalidator die Zulassung des festen Managementprofils sowie
 die Ablehnung abweichender Hosts, Ports und Datenbanknamen. Diese Prüfungen
 simulieren keine erfolgreiche TLS-Verbindung. Syntax und diese Vorprüfungen sind lokal ausführbar.
 Die aktuelle Arbeitsumgebung hat nur UID 0 in ihrer UID-Map und keinen nativen
-PostgreSQL-Server. **Native Fullmanagement-Ausführung ist bis zum tatsächlichen
-CI-Ergebnis OFFEN.** Pi/ARM64, systemd-Mount-Policies, Browser-Login, Reboot,
+PostgreSQL-Server. Der vierte native Lauf erreichte beide HTTPS-Endpunkte innerhalb
+des Produktionsbudgets; der Gesamtlauf scheiterte noch an einem ungültigen
+stdout-Lizenznachweis der Harness. **Vollständiger nativer Fullmanagement-PASS mit
+echter Anmeldung, PID-Prüfung und Neustart ist bis zum nächsten tatsächlichen
+CI-Ergebnis OFFEN.** Pi/ARM64, systemd-Mount-Policies, Browser-/UI-Interaktion, Reboot,
 physische Adapter und Anlagenbetrieb bleiben eigenständige offene Abnahmen.

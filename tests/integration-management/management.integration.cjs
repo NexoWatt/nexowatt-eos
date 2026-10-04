@@ -29,14 +29,9 @@ function launch(args, options) {
     child.output = ''; child.seen = new Set();
     // Keep private bounded diagnostics in memory, never print or artifact raw
     // adapter output (which can contain interfaces, URLs or device identifiers).
-    const signals = { LICENSE_VALID: '[EOS licensing] LICENSE_VALID', LICENSE_MISSING: '[EOS licensing] LICENSE_MISSING',
-        TLS_PROVISIONING: 'EOS_TLS_PROVISIONING_REQUIRED', PG_TRANSACTION: 'EOS_PG_TRANSACTION_FAILED',
-        READ_ONLY_WRITE: 'EROFS', PERMISSION_DENIED: 'EACCES', TYPE_ERROR: 'TypeError:', REFERENCE_ERROR: 'ReferenceError:',
-        OAUTH_DEPENDENCY: 'EOS_OAUTH_DEPENDENCY', UNCAUGHT_EXCEPTION: 'uncaught exception', UNHANDLED_REJECTION: 'UnhandledPromiseRejection' };
     for (const stream of [child.stdout, child.stderr]) stream.on('data', bytes => {
         child.output = (child.output + bytes).slice(-1048576);
-        for (const [code, needle] of Object.entries(signals)) if (child.output.includes(needle)) child.seen.add(code);
-        if (/\b(?:error|fatal):/i.test(child.output)) child.seen.add('RUNTIME_ERROR_LOGGED');
+        for (const code of require('./runtime-log.cjs').indicators(child.output)) child.seen.add(code);
     });
     child.completion = new Promise(resolve => { child.once('error', () => resolve(-1)); child.once('exit', code => resolve(code)); });
     return child;
@@ -61,9 +56,9 @@ async function connect(Client, connection) {
         catch { clearTimeout(timer); reject(new Error('MANAGEMENT_CLIENT_FAILED')); }
     });
 }
-async function until(check, budget = 15000) {
+async function until(check, budget = 15000, code = 'MANAGEMENT_DEADLINE') {
     const end = Date.now() + budget;
-    while (!await check()) { if (Date.now() >= end) fail('MANAGEMENT_DEADLINE'); await delay(100); }
+    while (!await check()) { if (Date.now() >= end) fail(code); await delay(100); }
 }
 function readonlyTree(directory) {
     for (const name of fs.readdirSync(directory)) {
@@ -90,13 +85,24 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         sourceAppBytesUnchanged: false, lifecycleScriptsExecuted: false, nativeModulesRebuilt: false, mockedRuntimeDependencies: false,
         physicalAdaptersStarted: false, actualSystemdMountPolicy: false, physicalPiAcceptance: false, productionReleaseApproved: false,
         productionReadinessPassed: false, restartPassed: false, boots: [], stages: [], bootstrapSteps: [] };
-    let active;
+    let active, servicePassword, licenseUuid, activeLog, activeBoot;
+    function checkRuntime() {
+        if (!activeLog || !activeBoot) return;
+        activeBoot.runtimeLog = activeLog.scan();
+        const runtimeCodes = new Set([...active.seen, ...activeBoot.runtimeLog.indicators]);
+        if (['TYPE_ERROR', 'REFERENCE_ERROR', 'PG_TRANSACTION', 'TLS_PROVISIONING', 'READ_ONLY_WRITE', 'PERMISSION_DENIED',
+            'UNCAUGHT_EXCEPTION', 'UNHANDLED_REJECTION', 'RUNTIME_ERROR_LOGGED'].some(code => runtimeCodes.has(code))) fail('MANAGEMENT_RUNTIME_ERROR');
+    }
     t.after(async () => {
+        let logFailure;
         for (const child of children) await stop(child);
+        try { checkRuntime(); }
+        catch (error) { logFailure = require('./diagnostics.cjs').stageFailure(error); evidence.logReadFailure = logFailure; }
         await Promise.allSettled(clients.map(client => client.destroy()));
         evidence.runtimeIndicators = [...new Set(children.flatMap(child => [...child.seen]))].sort();
         evidence.processIndicators = children.map(child => ({ scope: child.evidenceScope || 'unknown', indicators: [...child.seen].sort() }));
         fs.writeFileSync(path.join(root, 'management-evidence.json'), JSON.stringify(evidence, null, 2) + '\n', { mode: 0o600 });
+        if (logFailure) fail(logFailure);
     });
     const stage = async (name, operation) => {
         let passed = false, failureCode = null;
@@ -132,7 +138,9 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
     config.dataDir = data;
     Object.assign(config.system, { hostname: 'eos-management-lab', compact: false, allowShellCommands: false, statisticsInterval: 1000, checkDiskInterval: 0 });
     config.multihostService = { enabled: false }; config.plugins = { sentry: { enabled: false } };
-    config.log = { level: 'info', noStdout: false, transport: { file1: { type: 'file', enabled: false } } };
+    const runtimeLogDirectory = path.join(data, 'management-private-logs');
+    fs.mkdirSync(runtimeLogDirectory, { mode: 0o700 });
+    config.log = require('./runtime-log.cjs').loggerConfiguration(runtimeLogDirectory);
     bootstrap.assertRuntimeConfig(config);
     await stage('fresh isolated native database uses separate least-privilege mTLS identities', async () => {
         for (const domain of ['objects', 'states']) {
@@ -174,13 +182,14 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
             assert.equal(evidence.initialInstanceCount, 0);
         });
         await bootstrapStep('production-initialize', () => bootstrap.initialize({ objects, states, config, ...pinned }));
-        const password = crypto.randomBytes(32).toString('base64url');
-        const passwordHash = await bootstrapStep('password-hash', () => enrollment.passwordHash(password));
+        servicePassword = crypto.randomBytes(32).toString('base64url');
+        const passwordHash = await bootstrapStep('password-hash', () => enrollment.passwordHash(servicePassword));
         await bootstrapStep('production-enrollment', () => enrollment.enrollFirstRun({ objects, states, config, app, passwordHash, verifyFresh,
             settings: { siteName: 'Native management laboratory', language: 'de', timeZone: 'Europe/Berlin', licenseMode: 'verified',
                 deviceMode: 'disabled-pending-acceptance', safetyAcknowledged: true, plant: { mode: 'deferred', reason: 'no-plant-connected' },
                 devicePlan: { status: 'none', devices: [], confirmed: true } } }));
         const uuid = await bootstrapStep('license-uuid-read', async () => (await objects.getObjectAsync('system.meta.uuid')).native.uuid);
+        licenseUuid = uuid;
         const core = appRequire('iobroker.eos-admin/build/lib/eosLicenseCore.js');
         const trust = await bootstrapStep('license-trust-read', async () => JSON.parse(fs.readFileSync('/etc/nexowatt-eos/license-trust.json')));
         const issuer = await bootstrapStep('license-issuer-read', async () => fs.readFileSync(path.join(root, 'ephemeral-license-issuer.pem')));
@@ -202,6 +211,7 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
     async function boot() {
         const startedAt = Date.now(), row = { stage: 'controller', legacySingleProbe: null, productionProbe: null };
         evidence.boots.push(row);
+        activeBoot = row; activeLog = new (require('./runtime-log.cjs').RuntimeLog)(runtimeLogDirectory);
         active = launch([path.join(controller, 'controller.js')], options); children.push(active);
         active.evidenceScope = 'controller';
         await bootstrap.waitController({ objects, states, config, controllerPid: active.pid, timeoutMs: 30000, pollMs: 100 });
@@ -227,20 +237,29 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
             row.observedMs = Date.now() - startedAt;
             fail('MANAGEMENT_PRODUCTION_READINESS_FAILED');
         }
-        row.stage = 'license-and-pids';
+        row.stage = 'authenticated-license';
         assert.equal(active.exitCode, null); assert.equal(active.signalCode, null);
-        await until(() => active.seen.has('LICENSE_VALID'));
+        row.license = await require('./authenticated-license.cjs').verifyLicenseOverHttps({ ca, password: servicePassword, uuid: licenseUuid });
+        row.stage = 'pids';
         await until(async () => {
-            try { const pids = JSON.parse(fs.readFileSync(path.join(data, 'pids.txt'))); return Array.isArray(pids) && pids.length === 3 && new Set(pids).size === 3 && pids.includes(active.pid) && pids.every(pid => Number.isSafeInteger(pid) && pid > 1); }
+            try {
+                const pids = JSON.parse(fs.readFileSync(path.join(data, 'pids.txt')));
+                const adapterStates = await Promise.all(enrollment.SPECS.map(spec => states.getState(`system.adapter.${spec.name}.0.sigKill`)));
+                const expected = [active.pid, ...adapterStates.map(state => state?.ack === true ? state.val : null)];
+                return Array.isArray(pids) && pids.length === 3 && new Set(pids).size === 3 && new Set(expected).size === 3 && expected.every(pid => pids.includes(pid)) &&
+                    pids.every(pid => { if (!Number.isSafeInteger(pid) || pid < 2) return false; process.kill(pid, 0); return true; });
+            }
             catch { return false; }
-        });
+        }, 15000, 'MANAGEMENT_PID_DEADLINE');
+        row.pids = { count: 3, currentControllerAndAdmittedAdapters: true, allAlive: true };
         const pidStat = fs.statSync(path.join(data, 'pids.txt'));
         assert.equal(pidStat.uid, process.getuid()); assert.equal(pidStat.mode & 0o077, 0);
         assert.equal(fs.existsSync(path.join(controller, 'pids.txt')), false);
         await enrollment.verify({ objects, config, app });
         await delay(1500);
         assert.equal(active.exitCode, null);
-        assert.ok(!['TYPE_ERROR', 'REFERENCE_ERROR', 'PG_TRANSACTION', 'TLS_PROVISIONING', 'READ_ONLY_WRITE', 'PERMISSION_DENIED', 'UNCAUGHT_EXCEPTION', 'UNHANDLED_REJECTION', 'RUNTIME_ERROR_LOGGED'].some(code => active.seen.has(code)));
+        row.stage = 'runtime-errors'; checkRuntime();
+        assert.ok(row.runtimeLog.bytesRead > 0);
         assert.ok(fs.readFileSync(configFile).equals(configBytes));
         row.stage = 'complete';
         return active.pid;
@@ -249,11 +268,11 @@ test('actual signed R7 controller, Admin and UI over native PostgreSQL and produ
         await boot(); evidence.productionReadinessPassed = true;
     });
     await stage('actual adapter PID-writer lifecycle and clean controller restart retain readiness and enrollment', async () => {
-        const previous = active.pid; await stop(active); assert.equal(active.exitCode, normalStop);
+        const previous = active.pid; await stop(active); checkRuntime(); assert.equal(active.exitCode, normalStop);
         const next = await boot(); assert.notEqual(next, previous); evidence.restartPassed = true;
     });
     await stage('final shutdown leaves exact admitted instance scope and unchanged signed application bytes', async () => {
-        await stop(active); assert.equal(active.exitCode, normalStop);
+        await stop(active); checkRuntime(); assert.equal(active.exitCode, normalStop);
         await enrollment.verify({ objects, config, app });
         assert.ok(JSON.stringify(contentRows(app)) === JSON.stringify(before));
         evidence.sourceAppBytesUnchanged = true;

@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "kind": "native-management-integration",
+  "sourceReleaseId": "d400cab68939e60e22b619b78b3ecc4a4043afbfe6e21696934db42ba586d5a3",
+  "sourceSequence": 10,
+  "nativePostgresql": "17.11",
+  "node": "v24.21.0",
+  "hostArch": "x64",
+  "signedPayloadPlatform": "linux-arm64",
+  "sourceAppBytesUnchanged": false,
+  "lifecycleScriptsExecuted": false,
+  "nativeModulesRebuilt": false,
+  "mockedRuntimeDependencies": false,
+  "physicalAdaptersStarted": false,
+  "actualSystemdMountPolicy": false,
+  "physicalPiAcceptance": false,
+  "productionReleaseApproved": false,
+  "productionReadinessPassed": false,
+  "restartPassed": false,
+  "boots": [
+    {
+      "stage": "license-and-pids",
+      "legacySingleProbe": {
+        "elapsedMs": 22,
+        "admin": true,
+        "ui": false,
+        "adminFailure": null,
+        "uiFailure": {
+          "code": "ONBOARD_HTTPS_NOT_READY",
+          "stage": "unknown",
+          "reason": "unknown",
+          "port": 8188
+        }
+      },
+      "productionProbe": {
+        "elapsedMs": 3434,
+        "admin": true,
+        "ui": true,
+        "adminFailure": null,
+        "uiFailure": null
+      },
+      "coreReadyMs": 825,
+      "adaptersAliveMs": 6054,
+      "productionReadyMs": 9496
+    }
+  ],
+  "stages": [
+    {
+      "name": "fresh isolated native database uses separate least-privilege mTLS identities",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "ordinary setup loads actual PostgreSQL wrappers with read-only config",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production bootstrap and first-run enrollment retain strong accounts and no physical adapters",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production CLI uploads only the two admitted management packages",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production readiness reaches actual Admin HTTPS login redirect and strict unauthenticated UI status",
+      "passed": false,
+      "failureCode": "MANAGEMENT_DEADLINE"
+    }
+  ],
+  "bootstrapSteps": [
+    {
+      "name": "fresh-instance-count",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-initialize",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "password-hash",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-enrollment",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-uuid-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-trust-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-issuer-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-verify-and-store",
+      "passed": true,
+      "failureCode": null
+    }
+  ],
+  "initialInstanceCount": 0,
+  "runtimeIndicators": [
+    "PERMISSION_DENIED"
+  ],
+  "processIndicators": [
+    {
+      "scope": "cli-setup",
+      "indicators": [
+        "PERMISSION_DENIED"
+      ]
+    },
+    {
+      "scope": "cli-upload-admin",
+      "indicators": []
+    },
+    {
+      "scope": "cli-upload-ui",
+      "indicators": []
+    },
+    {
+      "scope": "controller",
+      "indicators": []
+    }
+  ]
+}
