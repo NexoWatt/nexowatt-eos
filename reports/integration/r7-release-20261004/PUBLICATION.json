@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "kind": "published-r7-failed-r4-first-start-recovery",
+  "checkedAt": "2026-10-04T10:34:14.576407+00:00",
+  "repository": "NexoWatt/nexowatt-eos",
+  "reviewedSourceCommit": "f30efe63de7a03e30792c704b5b3f466570cd406",
+  "buildRequestCommit": "b1be8531551764877eb37f61b6f83ef54c2721c6",
+  "assetCommit": "be4da7c316467e5b274b1e2f293e3dc4ef72721b",
+  "entryCommit": "8a274b113609176585d884bb6ee180cde25b1e1c",
+  "commandCommit": "02dac8d27d2981ebf9fc5882ce3315eef806f442",
+  "releaseId": "d400cab68939e60e22b619b78b3ecc4a4043afbfe6e21696934db42ba586d5a3",
+  "releaseSequence": 10,
+  "deliveryRevision": 7,
+  "archive": {
+    "bytes": 97495870,
+    "sha256": "a8273ad1bf23bdd2ae50f45afea8875c04e31c40464dea3c3a2c5ffca921b64a"
+  },
+  "publicKeySha256": "a6a11d0d02b058a15d78a1aa81a22e488d120ee3ab9f11e1bd35a3aafad6d522",
+  "signedPayloadFiles": 22841,
+  "sourceChecks": [
+    {
+      "name": "EOS security regression",
+      "runId": 37194771468,
+      "conclusion": "success"
+    },
+    {
+      "name": "EOS workflow validation",
+      "runId": 37194771508,
+      "conclusion": "success"
+    },
+    {
+      "name": "CodeQL",
+      "runId": 37194771459,
+      "conclusion": "success"
+    }
+  ],
+  "deliveryRun": {
+    "runId": 37195008931,
+    "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/37195008931",
+    "headCommit": "b1be8531551764877eb37f61b6f83ef54c2721c6",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "request",
+        "jobId": 111414949206,
+        "conclusion": "success"
+      },
+      {
+        "name": "native-postgresql-controller",
+        "jobId": 111415059766,
+        "conclusion": "success"
+      },
+      {
+        "name": "build",
+        "jobId": 111415683634,
+        "conclusion": "success"
+      },
+      {
+        "name": "publish",
+        "jobId": 111416118786,
+        "conclusion": "success"
+      },
+      {
+        "name": "public-command",
+        "jobId": 111416567695,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "assembledModuleTests": {
+    "adminOAuth": 7,
+    "objectsLifecycle": 6,
+    "actualHostObject": 7,
+    "failed": 0,
+    "skipped": 0
+  },
+  "recoveryTests": {
+    "coordinatorContracts": 32,
+    "authenticR4Collector": 10,
+    "failed": 0
+  },
+  "authenticatedR4TransitionPassed": true,
+  "independentArchiveReconstructionPassed": true,
+  "unchangedHistoricalDeliveryFiles": 118,
+  "publicAssetReadbackReport": "delivery/public-recovery-test3-r7/remote-readback.json",
+  "publicCommandVerificationReport": "delivery/public-recovery-test3-r7/command-verification.json",
+  "additionalOperatorCommandReadback": {
+    "schemaVersion": 1,
+    "actualPublicHttpsDownload": true,
+    "redirectsAllowed": false,
+    "assets": [
+      {
+        "name": "recover.sh",
+        "url": "https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/8a274b113609176585d884bb6ee180cde25b1e1c/delivery/public-recovery-test3-r7/recover.sh",
+        "bytes": 29923,
+        "sha256": "86f176d5bcb2ebeea48093e327e116282c47e8984dca9e85f5aa89a63abf2d00",
+        "exactPinMatch": true
+      },
+      {
+        "name": "RECOVERY_COMMAND.txt",
+        "url": "https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/02dac8d27d2981ebf9fc5882ce3315eef806f442/delivery/public-recovery-test3-r7/RECOVERY_COMMAND.txt",
+        "bytes": 1008,
+        "sha256": "e089b0476f07b40fa87fa32937154a3cb6100b197ad29929551dcbae183f2848",
+        "exactPinMatch": true
+      }
+    ]
+  },
+  "publishedCommandMatchesGitAndPins": true,
+  "operatorRecoveryPathAvailable": true,
+  "recoveryScope": "authenticated-r4-failed-first-start-only",
+  "credentialsAndSetupReset": false,
+  "actualPiRecoveryPerformed": false,
+  "actualPiLoginVerified": false,
+  "actualPiRebootVerified": false,
+  "physicalControlEnabled": false,
+  "productionReleaseApproved": false
+}

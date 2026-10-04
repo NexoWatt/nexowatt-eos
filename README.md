@@ -1,20 +1,57 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# Controller-Startfehler wird korrigiert (04.10.2026)
+# R7: Wiederherstellung des abgebrochenen R4-Erststarts
 
-Ein echter R4-Erststart ist mit `EOS_PG_TRANSACTION_FAILED` beim Host-Objekt
-und `CONTROLLER_NOT_READY` abgebrochen. Zusätzlich versucht der Controller,
-`pids.txt` im schreibgeschützten Release abzulegen. Diese Fehler sind im
-[aktuellen Änderungs- und Prüfbericht](reports/integration/controller-startup-20261004/README.md)
-dokumentiert. Die Quellkorrekturen ändern bereits signierte Pakete nicht.
+**test.3 Revision 7, Sequenz 10 ist signiert, veröffentlicht und öffentlich
+zurückgelesen.** Dieser Weg ist für den gemeldeten R4-Erststart vorgesehen,
+bei dem PostgreSQL läuft, der Controller aber mit `EOS_PG_TRANSACTION_FAILED`
+und `CONTROLLER_NOT_READY` abgebrochen ist. R7 korrigiert die Speicherung des
+Host-Objekts und den PID-Dateipfad im schreibgeschützten Release.
 
-**Der folgende R6-Befehl repariert diesen abgebrochenen Erststart nicht.** Er
-setzt einen abgeschlossenen Erststart voraus; R6 enthält die neu festgestellten
-Controller-Korrekturen noch nicht. Bei bestehender Wartungssperre den
-[nur lesenden Diagnoseweg](docs/operations/FIRST_START_DIAGNOSTIC_DE.md) verwenden.
-Sperre und vorhandene Einrichtung erhalten. Ein geprüfter Wiederherstellungsweg
-für diesen Zustand ist noch nicht veröffentlicht.
+Der Helfer prüft den vorhandenen R4-Stand, die gespeicherte Einrichtung und die
+Wartungssperre, übernimmt den passenden Fehlstart und prüft Controller sowie
+beide HTTPS-Webadapter. Passwort, UUID, vorhandene Lizenz und Daten bleiben
+erhalten. Für abgeschlossene Einrichtungen oder andere Ausgangsstände ist
+dieser Wiederherstellungsbefehl nicht vorgesehen.
 
-# Veröffentlicht: R6-Testupdate für den eingerichteten Pi
+Den vollständigen Befehl einmal im SSH-Terminal des betroffenen Pi ausführen:
+
+```bash
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-recovery-r7-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29923 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/8a274b113609176585d884bb6ee180cde25b1e1c/delivery/public-recovery-test3-r7/recover.sh -o "$d/recover.sh"; [[ -f "$d/recover.sh" && ! -L "$d/recover.sh" && $(/usr/bin/stat -c %h "$d/recover.sh") == 1 && $(/usr/bin/stat -c %u "$d/recover.sh") == 0 && $(/usr/bin/stat -c %s "$d/recover.sh") == 29923 ]] || exit 1; printf '\''%s  %s\n'\'' '\''86f176d5bcb2ebeea48093e327e116282c47e8984dca9e85f5aa89a63abf2d00'\'' "$d/recover.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/recover.sh"'
+```
+
+Erfolg zeigt `"phase":"FIRST_START_RECOVERED"`, `"sequence":10` und anschließend
+`EOS: Erststart-Wiederherstellung abgeschlossen. Bitte den Admin-Login pruefen.`
+Danach die Dienste prüfen:
+
+```sh
+systemctl show nexowatt-eos-controller.service nexowatt-eos-postgresql.service \
+  --property=Id,ActiveState,SubState,Result,ExecMainStatus,NRestarts
+```
+
+Beide Dienste sollen `ActiveState=active` und `SubState=running` melden.
+Anschließend über die bisherige HTTPS-Adresse als `admin` mit dem bestehenden
+Passwort anmelden, abmelden und erneut anmelden. Erst danach einen normalen
+Neustart prüfen. Die zusätzliche lokale Statusprüfung und der Fehlerfall stehen
+in der [R7-Anleitung](docs/operations/RECOVER_R4_FIRST_START_R7_DE.md).
+
+[Wiederherstellungsbefehl als Textdatei](delivery/public-recovery-test3-r7/RECOVERY_COMMAND.txt) ·
+[Veröffentlichungsnachweis](reports/integration/r7-release-20261004/PUBLICATION.json) ·
+[R7-Build und native Controllerprüfung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37195008931) ·
+[Controller-Korrekturen und Prüfgrenzen](reports/integration/controller-startup-20261004/README.md).
+
+Geprüft sind der Paketbau und der native Controllerstart mit PostgreSQL 17.11,
+Node 24.21.0 und Controller 7.2.2 auf Linux x64, einschließlich Host-Speicherung,
+Bereitschaft, Stoppen und erneutem Start. Auch die Regressionen für die
+Admin-Anmeldung, den Objects-Lifecycle und das Host-Objekt im signierten Paket
+sind bestanden. Der konkrete R4→R7-Wechsel auf dem Pi,
+Browser-Login, Geräteneustart und Backup/Restore bleiben zu bestätigen.
+Physische Anlagenbefehle bleiben gesperrt; R7 ist ein Teststand.
+
+# Historisch: R6-Testupdate für vollständig eingerichtete R4-/R5-Teststände
+
+R6 enthält die hier beschriebenen Controllerkorrekturen nicht und repariert
+keinen abgebrochenen Erststart. Der folgende veröffentlichte Bestandsupdateweg
+bleibt für seinen bisherigen Anwendungsbereich dokumentiert.
 
 **test.3 Revision 6, Sequenz 9 ist signiert, veröffentlicht und öffentlich
 zurückgelesen.** R6 enthält das NexoWatt-Branding, die Browser-/Login-Korrekturen
@@ -62,8 +99,8 @@ Dies ist ein Testkandidat, keine Produktions- oder CRA-Konformitätsfreigabe.
 
 Der [historische R5-Reparaturweg](docs/operations/TEST_R4_R5_REPAIR_ENTRY_DE.md)
 und die [historische R4-Erstinstallation](docs/operations/STABILITY_TEST4_DE.md)
-bleiben als unveränderte Lieferstände dokumentiert. Für das hier beschriebene
-Bestandsupdate gilt ausschließlich der R6-Befehl oben.
+bleiben als unveränderte Lieferstände dokumentiert. Für dieses historische
+R4-/R5-Bestandsupdate gilt ausschließlich der R6-Befehl oben.
 <!-- EOS_PRIVATE_GITHUB_INSTALL_END -->
 
 ## Quellaktualisierung vom 04.10.2026
@@ -93,15 +130,17 @@ R6 enthält diese Änderungen sowie die oben genannten Branding- und Paketkorrek
 Die historischen R4/R5-Dateien bleiben unverändert.
 Installation, Einrichtung und Anlagenfreigabe bleiben getrennt.
 
-[**Aktuelles Pi-Testupdate**](docs/operations/TEST_R6_UPDATE_DE.md) ·
+[**R7: abgebrochenen R4-Erststart wiederherstellen**](docs/operations/RECOVER_R4_FIRST_START_R7_DE.md) ·
+[Historisches R6-Bestandsupdate](docs/operations/TEST_R6_UPDATE_DE.md) ·
 [Ein-Befehl-Download vorbereiten](docs/operations/ONE_COMMAND_INSTALLATION_DE.md) ·
 [Ersteinrichtung und offene Abnahme](docs/operations/FIRST_START_INSTALLATION_DE.md) ·
 [Sicherheitsgrenzen](docs/security/FIRST_START_DE.md) ·
-[Aktuelle Test- und Buildnachweise](reports/integration/installable-test3-r6-20261004/).
+[R7-Test- und Buildnachweise](reports/integration/installable-test3-r7-20261004/).
 
-**Der signierte ARM64-Testkandidat `0.2.0-test.3`, Revision 6, ist veröffentlicht.**
-Updatebefehl, SBOM und konkrete Nachweise stehen oben. Die alten Revisionen
-bleiben historisch erhalten. NWL3 lizenziert Home/Pro für das System; bestehende
+**Der signierte ARM64-Testkandidat `0.2.0-test.3`, Revision 7, ist veröffentlicht.**
+Der oben gebundene R7-Befehl gilt nur für den abgebrochenen R4-Erststart.
+R6 und die älteren Revisionen bleiben historisch erhalten. NWL3 lizenziert
+Home/Pro für das System; bestehende
 NWL2-Lizenzen behalten ihre ursprünglichen Grenzen.
 
 **Der neue Quellstand ist keine auf dem Pi abgeschlossene Installation.**
