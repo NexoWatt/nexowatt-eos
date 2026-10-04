@@ -1,0 +1,53 @@
+TAP version 13
+# Subtest: maintained OAuth serves TLS password login, refresh, revocation and denied alternate grants
+    # Subtest: password login issues cookie flags and usable access token
+    ok 1 - password login issues cookie flags and usable access token
+      ---
+      duration_ms: 542.040703
+      type: 'test'
+      ...
+    # Subtest: correct first-start password still logs in after the previous two-second deadline
+    ok 2 - correct first-start password still logs in after the previous two-second deadline
+      ---
+      duration_ms: 2620.807782
+      type: 'test'
+      ...
+    # Subtest: invalid credentials cannot issue a token
+    ok 3 - invalid credentials cannot issue a token
+      ---
+      duration_ms: 512.929067
+      type: 'test'
+      ...
+    # Subtest: refresh retains proof and issues usable successor token
+    ok 4 - refresh retains proof and issues usable successor token
+      ---
+      duration_ms: 7.326436
+      type: 'test'
+      ...
+    # Subtest: credential change invalidates access and refresh token
+    ok 5 - credential change invalidates access and refresh token
+      ---
+      duration_ms: 5.925022
+      type: 'test'
+      ...
+    # Subtest: SSO and authorization-code grants remain unavailable
+    ok 6 - SSO and authorization-code grants remain unavailable
+      ---
+      duration_ms: 5.5034
+      type: 'test'
+      ...
+    1..6
+ok 1 - maintained OAuth serves TLS password login, refresh, revocation and denied alternate grants
+  ---
+  duration_ms: 4255.014849
+  type: 'test'
+  ...
+1..1
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4389.390158
