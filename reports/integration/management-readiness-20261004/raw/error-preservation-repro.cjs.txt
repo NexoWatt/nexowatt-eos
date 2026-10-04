@@ -1,0 +1,41 @@
+'use strict';
+// Execute the existing coordinator with its unchanged filesystem fixture.
+// Systemd, signature/native checks, and failing readiness are explicit doubles.
+const fs = require('node:fs');
+const path = require('node:path');
+const Module = require('node:module');
+const assert = require('node:assert/strict');
+const root = '/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos';
+const file = path.join(root, 'tests/system/recover-r4-first-start-to-r7.test.cjs');
+const source = fs.readFileSync(file, 'utf8');
+const prefix = source.slice(0, source.indexOf("test('successful recovery"));
+assert.ok(prefix.includes('function fixture(t)'));
+const moduleObject = new Module(file, module);
+moduleObject.filename = file;
+moduleObject.paths = Module._nodeModulePaths(path.dirname(file));
+moduleObject._compile(prefix + '\nmodule.exports = { fixture, repair };\n', file);
+const { fixture, repair } = moduleObject.exports;
+(async () => {
+  const results = [];
+  for (const sourceCode of ['REPAIR_DB_TIMEOUT', 'ONBOARD_ADAPTERS_NOT_READY', 'ONBOARD_HTTPS_NOT_READY']) {
+    const cleanup = [];
+    try {
+      const f = fixture({ after: callback => cleanup.push(callback) });
+      f.dependencies.readiness = async () => { throw Object.assign(new Error(sourceCode), { code: sourceCode }); };
+      let failure;
+      try { await repair.update(f.options, f.dependencies); } catch (error) { failure = error; }
+      assert.equal(failure?.code, 'REPAIR_TRIAL_FAILED_RESTORED_STOPPED');
+      const journal = f.journal();
+      assert.equal(journal.phase, 'RESTORED_STOPPED');
+      assert.equal(JSON.stringify(journal).includes(sourceCode), false);
+      results.push({ sourceCode, returnedCode: failure.code,
+        causeRetained: failure.cause !== undefined, journalPhase: journal.phase,
+        originalCodeInJournal: false, controllerStopped: f.active() === 'inactive',
+        priorStateRestored: fs.readFileSync(f.at('/etc/nexowatt-eos/release-state.json')).equals(f.state) });
+    } finally { for (const callback of cleanup) await callback(); }
+  }
+  const report = { actualCoordinator: true, realTemporaryFiles: true, actualSystemd: false,
+    actualPostgresql: false, actualPi: false, results };
+  fs.writeFileSync(path.join(__dirname, 'error-preservation-result.json'), JSON.stringify(report, null, 2) + '\n');
+  process.stdout.write(JSON.stringify(report, null, 2) + '\n');
+})().catch(error => { process.stderr.write(String(error.code || error.message) + '\n'); process.exitCode = 1; });

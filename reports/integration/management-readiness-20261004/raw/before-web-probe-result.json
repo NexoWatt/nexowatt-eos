@@ -1,0 +1,20 @@
+{
+  "source": "tools/system/onboard-ui.cjs",
+  "sourceSha256": "8da02f876a9ebe377898a123ac537553edb5be0c8ce5f49bc38e9cf2473b13e8",
+  "environment": {
+    "node": "24.19.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "actualPredicates": true,
+  "actualLoopbackTls13": true,
+  "actualAdapters": false,
+  "actualPi": false,
+  "heartbeatFixtureAccepted": true,
+  "firstProbeCode": "ONBOARD_HTTPS_NOT_READY",
+  "firstRejectedAfterMs": 7,
+  "listenerScheduledAfterMs": 1000,
+  "bothProbesPassedAfterListenerOpened": true,
+  "totalMs": 1016,
+  "conclusion": "Fresh adapter alive states do not cause probeWeb to wait for HTTPS. A listener available within its nominal 5-second request budget still fails the initial one-shot call."
+}

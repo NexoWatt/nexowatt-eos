@@ -1,0 +1,10 @@
+{
+  "command": "node --test --test-concurrency=1 tests/onboarding/web-readiness.test.cjs tests/integration/onboard-ui.test.cjs",
+  "tests": 35,
+  "passed": 34,
+  "failed": 1,
+  "failingTest": "concurrent release change is rejected after acquiring the maintenance lock",
+  "fixedDiagnostic": "Unexpected import node:perf_hooks",
+  "resolution": "Keep the monotone clock import scoped to probeWeb; unchanged VM snapshot fixture does not execute that function. No existing test altered.",
+  "note": "Initial console outcome preserved as structured diagnostic; the final rerun is recorded in full TAP."
+}

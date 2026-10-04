@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "changeId": "EOS-MANAGEMENT-HTTPS-READINESS-20261004",
+  "verifiedAt": "2026-10-04T15:45:55.628713+00:00",
+  "sourceBaseCommit": "acf8ae84189c6d36d3c2055d6ef445c9a6db0aeb",
+  "uncommittedChanges": true,
+  "environment": {
+    "platform": "linux",
+    "architecture": "x64",
+    "nodeVersion": "24.19.0"
+  },
+  "command": "node --test --test-reporter=tap --test-concurrency=1 tests/onboarding/web-readiness.test.cjs tests/integration/onboard-ui.test.cjs",
+  "tests": {
+    "total": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0
+  },
+  "proofScope": {
+    "actualProductPredicates": true,
+    "actualTls13Loopback": true,
+    "actualAdapterProcesses": false,
+    "actualPostgresql": false,
+    "actualSystemd": false,
+    "actualArm64": false,
+    "piExecuted": false,
+    "piFailureSoleCauseProven": false,
+    "signedR7Changed": false,
+    "productionReleaseApproved": false
+  },
+  "retryContract": {
+    "totalBudgetMs": 5000,
+    "retryDelayMs": 200,
+    "retryBeforeResponseOnly": true,
+    "retryCodes": [
+      "ECONNREFUSED",
+      "ECONNRESET"
+    ],
+    "responseAndTlsContractChanged": false
+  },
+  "independentSourceReview": "No concrete security/correctness blocker reported by r8_recovery_review; independent test rerun recorded separately if available.",
+  "files": [
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "bytes": 16018,
+      "sha256": "afc872c23990ab57281115b09776a58fd9fa793e2fd70bd7312c31c7df215b50"
+    },
+    {
+      "path": "tests/onboarding/web-readiness.test.cjs",
+      "bytes": 8426,
+      "sha256": "799a0109d658e1a2260ce0aab229c7f0796aea2e7bd1c08480dec8ce5e44def0"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/README.md",
+      "bytes": 5060,
+      "sha256": "3e4252f51af2430c3a0372ecdd7b8e895792db1f7d714f21c0b7bd78b202cccc"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/raw/before-error-preservation-result.json",
+      "bytes": 1048,
+      "sha256": "b66f18b8f0d8a75024a27512adb414a713e87b727eadf71132374630f3dd51dc"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/raw/before-web-probe-result.json",
+      "bytes": 733,
+      "sha256": "44317f112af7a22eb9459d6ddc71eb9ba5d84603e3ed4596fcc45c138d709c56"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/raw/error-preservation-repro.cjs.txt",
+      "bytes": 2503,
+      "sha256": "3837d42cba35d6abbb7c7cec65b22715e835dde308ed2bb240de92ec6ec4e906"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/raw/initial-test-diagnostic.json",
+      "bytes": 601,
+      "sha256": "d7d0345f1362397b40f5d03dac15309342cad28989538367a4d57011d06261f8"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/raw/onboard-ui.before.cjs.txt",
+      "bytes": 14158,
+      "sha256": "8da02f876a9ebe377898a123ac537553edb5be0c8ce5f49bc38e9cf2473b13e8"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/raw/web-probe-repro.cjs.txt",
+      "bytes": 4286,
+      "sha256": "290e52efe33c957bb15f37f4b23a615a3b88b66a28622961672b6d7825bc8314"
+    },
+    {
+      "path": "reports/integration/management-readiness-20261004/raw/web-readiness.tap",
+      "bytes": 6631,
+      "sha256": "28c13e32d204472935d84eaacb310e2b2eb0ce184c2e7fd41dd44d3077df5206"
+    }
+  ]
+}

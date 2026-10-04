@@ -1,0 +1,77 @@
+'use strict';
+// Diagnostic only: actual R7 predicates and real loopback TLS; adapter states
+// and HTTP handlers are controlled fixtures, not an actual adapter/Pi run.
+const fs = require('node:fs');
+const path = require('node:path');
+const os = require('node:os');
+const https = require('node:https');
+const net = require('node:net');
+const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
+const repo = '/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos';
+const source = path.join(repo, 'tools/system/onboard-ui.cjs');
+const { waitAdapters, probeWeb } = require(source);
+const listen = (server, port) => new Promise((resolve, reject) => {
+  server.once('error', reject);
+  server.listen(port, '127.0.0.1', () => { server.removeListener('error', reject); resolve(); });
+});
+const close = server => new Promise(resolve => server.close(() => resolve()));
+(async () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-probe-tls-'));
+  fs.chmodSync(directory, 0o700);
+  const servers = [];
+  try {
+    for (const port of [8081, 8188]) {
+      const reserve = net.createServer(); await listen(reserve, port); await close(reserve);
+    }
+    execFileSync('/usr/bin/openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes',
+      '-keyout', path.join(directory, 'key.pem'), '-out', path.join(directory, 'cert.pem'),
+      '-days', '1', '-subj', '/CN=localhost', '-addext', 'subjectAltName=DNS:localhost,IP:127.0.0.1'],
+    { stdio: 'ignore', timeout: 10000 });
+    const ca = fs.readFileSync(path.join(directory, 'cert.pem'));
+    const key = fs.readFileSync(path.join(directory, 'key.pem'));
+    const seen = [];
+    const readyStates = { getState: async id => { seen.push(id); return { val: true, ack: true, ts: Date.now() }; } };
+    for (const port of [8081, 8188]) {
+      servers.push(https.createServer({ cert: ca, key, minVersion: 'TLSv1.3', maxVersion: 'TLSv1.3' }, (req, res) => {
+        if (port === 8081) {
+          res.writeHead(302, { Location: '/index.html?login&href=%2Fnexowatt%2Flicense%2Fstatus' });
+          res.end('Redirecting to login');
+        } else {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ ok: true, enabled: true, strict: true, authed: false, protectWrites: true, isAdmin: false }));
+        }
+      }));
+    }
+    const startedAt = Date.now();
+    await waitAdapters(readyStates, startedAt);
+    let firstCode = null;
+    const opening = new Promise((resolve, reject) => setTimeout(() => {
+      Promise.all(servers.map((server, i) => listen(server, [8081, 8188][i]))).then(resolve, reject);
+    }, 1000));
+    try { await probeWeb(8188, ca); } catch (error) { firstCode = error.code; }
+    const firstRejectedAfterMs = Date.now() - startedAt;
+    assert.equal(firstCode, 'ONBOARD_HTTPS_NOT_READY');
+    assert.ok(firstRejectedAfterMs < 1000, 'one-shot rejects before scheduled listener opens');
+    await opening;
+    await Promise.all([8081, 8188].map(port => probeWeb(port, ca)));
+    const result = {
+      source: 'tools/system/onboard-ui.cjs',
+      sourceSha256: crypto.createHash('sha256').update(fs.readFileSync(source)).digest('hex'),
+      environment: { node: process.versions.node, platform: process.platform, arch: process.arch },
+      actualPredicates: true, actualLoopbackTls13: true, actualAdapters: false, actualPi: false,
+      heartbeatFixtureAccepted: seen.length === 2,
+      firstProbeCode: firstCode, firstRejectedAfterMs,
+      listenerScheduledAfterMs: 1000,
+      bothProbesPassedAfterListenerOpened: true,
+      totalMs: Date.now() - startedAt,
+      conclusion: 'Fresh adapter alive states do not cause probeWeb to wait for HTTPS. A listener available within its nominal 5-second request budget still fails the initial one-shot call.'
+    };
+    fs.writeFileSync(path.join(__dirname, 'web-probe-result.json'), JSON.stringify(result, null, 2) + '\n');
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+  } finally {
+    await Promise.all(servers.map(close));
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+})().catch(error => { process.stderr.write(String(error.code || error.message) + '\n'); process.exitCode = 1; });

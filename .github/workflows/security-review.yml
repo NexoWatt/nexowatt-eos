@@ -250,6 +250,10 @@ jobs:
             tests/postgresql/provision-permissions.test.cjs \
             tests/adapter-channel/channel.test.cjs
 
+      - name: Require bounded management HTTPS readiness with real TLS
+        # Fixed production ports must run separately from other network fixtures.
+        run: node --test --test-reporter=tap --test-concurrency=1 tests/onboarding/web-readiness.test.cjs
+
       - name: Keep R6 build, derivative SBOM and publication contracts active
         # These source fixtures do not rebuild or overwrite an immutable release.
         run: |
@@ -362,3 +366,86 @@ jobs:
           The controller directory is read-only by Unix file modes. This is not a systemd mount-policy test, ARM64/Pi acceptance, full Admin/UI integration, device activation or production approval.
           Only the step results establish whether these native tests passed; this scope statement is not a success claim. Historical immutable signed deliveries remain unchanged.
           SUMMARY
+
+  native-management:
+    name: Native PostgreSQL mTLS Admin and UI startup and restart
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout reviewed full management integration sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+
+      - name: Use the qualified management Node release
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+
+      - name: Prepare an isolated disposable management laboratory
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$EUID" -ne 0 ]]
+          [[ ! -e /etc/nexowatt-eos && ! -L /etc/nexowatt-eos ]]
+          [[ ! -e /var/lib/nexowatt-eos && ! -L /var/lib/nexowatt-eos ]]
+          lab_root=$(mktemp -d "$RUNNER_TEMP/eos-native-management.XXXXXXXX")
+          echo "EOS_MANAGEMENT_LAB_ROOT=$lab_root" >> "$GITHUB_ENV"
+          git rev-parse HEAD
+          node --version
+
+      - name: Build pinned native PostgreSQL and install locked test dependencies
+        run: bash tests/integration-controller/prepare-native.sh "$EOS_MANAGEMENT_LAB_ROOT"
+
+      - name: Authenticate the exact R7 application before native management testing
+        run: |
+          set -euo pipefail
+          node tests/integration-management/prepare-bundle.cjs "$EOS_MANAGEMENT_LAB_ROOT" \
+            "$GITHUB_WORKSPACE/delivery/test-pi-0.2.0-test.3-r7/eos-0.2.0-test.3-linux-arm64.tar.gz" \
+            "$GITHUB_WORKSPACE/delivery/test-pi-0.2.0-test.3-r7/release-public.pem"
+
+      - name: Check authenticated management baseline and fixture contracts
+        run: |
+          EOS_MANAGEMENT_R7_BUNDLE="$EOS_MANAGEMENT_LAB_ROOT/r7/bundle" \
+          EOS_MANAGEMENT_R7_KEY="$EOS_MANAGEMENT_LAB_ROOT/management-public.pem" \
+            node --test tests/integration-management/contracts.cjs
+
+      - name: Prepare fresh fixed paths in the disposable GitHub runner
+        env:
+          EOS_DISPOSABLE_MANAGEMENT_LAB: '1'
+        run: |
+          set -euo pipefail
+          sudo --preserve-env=GITHUB_ACTIONS,EOS_DISPOSABLE_MANAGEMENT_LAB "$(command -v node)" \
+            tests/integration-management/prepare-fixed-root.cjs "$EOS_MANAGEMENT_LAB_ROOT" "$(id -u)" "$(id -g)"
+
+      - name: Require real Admin and UI HTTPS readiness and controller restart
+        run: |
+          set -euo pipefail
+          umask 077
+          node tests/integration-management/run-native.cjs "$EOS_MANAGEMENT_LAB_ROOT" | tee "$EOS_MANAGEMENT_LAB_ROOT/management.tap"
+
+      - name: Preserve only bounded management evidence
+        if: always() && env.EOS_MANAGEMENT_LAB_ROOT != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: native-management-evidence
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ env.EOS_MANAGEMENT_LAB_ROOT }}/management.tap
+            ${{ env.EOS_MANAGEMENT_LAB_ROOT }}/management-evidence.json
+
+      - name: State full management laboratory scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          The mandatory x64 laboratory starts the actual authenticated R7 application, including Admin and NexoWatt UI, against native PostgreSQL 17.11 with mutual TLS 1.3.
+          It exercises the current R8 startup readiness source, fresh adapter heartbeat, protected HTTPS/authentication endpoints, controlled stop and restart in a fresh disposable runner.
+          No private configuration, certificate key or license is included in the uploaded evidence. Success is established only by the test step outcome.
+          This is not a systemd mount-policy test, native ARM64/Pi acceptance, physical adapter activation, login acceptance or production approval.
+          SCOPE

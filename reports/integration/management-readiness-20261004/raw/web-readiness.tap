@@ -1,0 +1,221 @@
+TAP version 13
+# Subtest: onboarding accepts file paths only and rejects duplicate/unknown options
+ok 1 - onboarding accepts file paths only and rejects duplicate/unknown options
+  ---
+  duration_ms: 1.200456
+  type: 'test'
+  ...
+# Subtest: secret source ownership, modes, size and link checks
+ok 2 - secret source ownership, modes, size and link checks
+  ---
+  duration_ms: 1.992918
+  type: 'test'
+  ...
+# Subtest: old true heartbeat cannot pass new startup readiness
+ok 3 - old true heartbeat cannot pass new startup readiness
+  ---
+  duration_ms: 200.347444
+  type: 'test'
+  ...
+# Subtest: new acknowledged heartbeat passes only both expected instances
+ok 4 - new acknowledged heartbeat passes only both expected instances
+  ---
+  duration_ms: 1.091942
+  type: 'test'
+  ...
+# Subtest: upload unit carries immutable config bind and unprivileged account
+ok 5 - upload unit carries immutable config bind and unprivileged account
+  ---
+  duration_ms: 0.539181
+  type: 'test'
+  ...
+# Subtest: onboarding public trust and secret modes survive restrictive inherited umask
+ok 6 - onboarding public trust and secret modes survive restrictive inherited umask
+  ---
+  duration_ms: 60.084757
+  type: 'test'
+  ...
+# Subtest: failure to revoke the trial permit still attempts to stop the controller
+ok 7 - failure to revoke the trial permit still attempts to stop the controller
+  ---
+  duration_ms: 0.286331
+  type: 'test'
+  ...
+# Subtest: failed revocation and failed stop report the more specific stop failure
+ok 8 - failed revocation and failed stop report the more specific stop failure
+  ---
+  duration_ms: 0.210887
+  type: 'test'
+  ...
+# Subtest: concurrent release change is rejected after acquiring the maintenance lock
+ok 9 - concurrent release change is rejected after acquiring the maintenance lock
+  ---
+  duration_ms: 3.077189
+  type: 'test'
+  ...
+# Subtest: readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+ok 10 - readiness requires the fixed Admin/UI anonymous security contract over checked TLS
+  ---
+  duration_ms: 1.578524
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected success
+ok 11 - readiness rejects admin unexpected success
+  ---
+  duration_ms: 0.516107
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unrelated forbidden response
+ok 12 - readiness rejects admin unrelated forbidden response
+  ---
+  duration_ms: 0.715276
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin external redirect
+ok 13 - readiness rejects admin external redirect
+  ---
+  duration_ms: 0.290347
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin protocol relative redirect
+ok 14 - readiness rejects admin protocol relative redirect
+  ---
+  duration_ms: 0.404088
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin unexpected local redirect
+ok 15 - readiness rejects admin unexpected local redirect
+  ---
+  duration_ms: 0.255004
+  type: 'test'
+  ...
+# Subtest: readiness rejects admin extra redirect parameters
+ok 16 - readiness rejects admin extra redirect parameters
+  ---
+  duration_ms: 1.488439
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous writes
+ok 17 - readiness rejects UI anonymous writes
+  ---
+  duration_ms: 0.415034
+  type: 'test'
+  ...
+# Subtest: readiness rejects UI anonymous admin
+ok 18 - readiness rejects UI anonymous admin
+  ---
+  duration_ms: 0.293011
+  type: 'test'
+  ...
+# Subtest: readiness rejects unverified peer
+ok 19 - readiness rejects unverified peer
+  ---
+  duration_ms: 0.254283
+  type: 'test'
+  ...
+# Subtest: readiness rejects old TLS version
+ok 20 - readiness rejects old TLS version
+  ---
+  duration_ms: 0.529577
+  type: 'test'
+  ...
+# Subtest: readiness rejects oversized body
+ok 21 - readiness rejects oversized body
+  ---
+  duration_ms: 0.515506
+  type: 'test'
+  ...
+# Subtest: readiness rejects invalid UI JSON
+ok 22 - readiness rejects invalid UI JSON
+  ---
+  duration_ms: 0.507243
+  type: 'test'
+  ...
+# Subtest: HTTPS readiness uses strict contracts within one listener-start budget
+    # Subtest: fresh adapter heartbeats before a delayed real TLS listener now pass
+    ok 1 - fresh adapter heartbeats before a delayed real TLS listener now pass
+      ---
+      duration_ms: 422.985443
+      type: 'test'
+      ...
+    # Subtest: pre-response connection reset is retried and then strict TLS succeeds
+    ok 2 - pre-response connection reset is retried and then strict TLS succeeds
+      ---
+      duration_ms: 412.645489
+      type: 'test'
+      ...
+    # Subtest: Admin requires its exact local login redirect
+    ok 3 - Admin requires its exact local login redirect
+      ---
+      duration_ms: 6.756965
+      type: 'test'
+      ...
+    # Subtest: wrong CA is rejected once
+    ok 4 - wrong CA is rejected once
+      ---
+      duration_ms: 254.881778
+      type: 'test'
+      ...
+    # Subtest: TLS 1.2 is rejected once
+    ok 5 - TLS 1.2 is rejected once
+      ---
+      duration_ms: 255.788351
+      type: 'test'
+      ...
+    # Subtest: HTTP error is rejected once
+    ok 6 - HTTP error is rejected once
+      ---
+      duration_ms: 257.409676
+      type: 'test'
+      ...
+    # Subtest: weakened anonymous authorization is rejected once
+    ok 7 - weakened anonymous authorization is rejected once
+      ---
+      duration_ms: 256.746628
+      type: 'test'
+      ...
+    # Subtest: oversized body is rejected once and the socket is closed
+    ok 8 - oversized body is rejected once and the socket is closed
+      ---
+      duration_ms: 256.069181
+      type: 'test'
+      ...
+    # Subtest: connection reset after HTTP headers is not retried
+    ok 9 - connection reset after HTTP headers is not retried
+      ---
+      duration_ms: 281.263156
+      type: 'test'
+      ...
+    # Subtest: invalid port creates no connection
+    ok 10 - invalid port creates no connection
+      ---
+      duration_ms: 0.602357
+      type: 'test'
+      ...
+    # Subtest: never-listening endpoint exhausts one five-second budget and leaves no retries
+    ok 11 - never-listening endpoint exhausts one five-second budget and leaves no retries
+      ---
+      duration_ms: 5303.420506
+      type: 'test'
+      ...
+    # Subtest: a delayed listener that never responds shares the original deadline and closes
+    ok 12 - a delayed listener that never responds shares the original deadline and closes
+      ---
+      duration_ms: 5104.786517
+      type: 'test'
+      ...
+    1..12
+ok 23 - HTTPS readiness uses strict contracts within one listener-start budget
+  ---
+  duration_ms: 13526.348014
+  type: 'test'
+  ...
+1..23
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13966.671128

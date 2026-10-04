@@ -73,73 +73,33 @@ async function waitAdapters(states, startedAt, timeoutMs = 30000) {
     fail('ONBOARD_ADAPTERS_NOT_READY');
 }
 function probeWeb(port, ca) {
-    const { performance } = require('node:perf_hooks');
     return new Promise((resolve, reject) => {
-        const failure = reason => Object.assign(new Error('ONBOARD_HTTPS_NOT_READY'), {
-            code: 'ONBOARD_HTTPS_NOT_READY', stage: 'https-probe', reason,
-            ...([8081, 8188].includes(port) ? { port } : {}),
+        if (![8081, 8188].includes(port)) return reject(Object.assign(new Error('ONBOARD_HTTPS_NOT_READY'), { code: 'ONBOARD_HTTPS_NOT_READY' }));
+        const request = https.get({ host: '127.0.0.1', port, servername: 'localhost', ca,
+            path: port === 8081 ? '/nexowatt/license/status' : '/api/strict-auth/status',
+            minVersion: 'TLSv1.3', maxVersion: 'TLSv1.3', rejectUnauthorized: true, agent: false });
+        let done = false;
+        const finish = ok => { if (done) return; done = true; clearTimeout(timer); request.destroy(); ok ? resolve() : reject(Object.assign(new Error('ONBOARD_HTTPS_NOT_READY'), { code: 'ONBOARD_HTTPS_NOT_READY' })); };
+        const timer = setTimeout(() => finish(false), 5000);
+        request.once('error', () => finish(false));
+        request.once('response', response => {
+            if (!response.socket.authorized || response.socket.getProtocol() !== 'TLSv1.3') return finish(false);
+            let bytes = 0; const chunks = [];
+            response.on('data', chunk => { bytes += chunk.length; if (bytes > 16384) finish(false); else chunks.push(chunk); });
+            response.once('error', () => finish(false)); response.once('aborted', () => finish(false));
+            response.once('end', () => {
+                // The complete Admin authentication middleware redirects before
+                // the license handler. Require its exact local login target;
+                // never follow redirects or accept an arbitrary successful page.
+                if (port === 8081) return finish(response.statusCode === 302 &&
+                    response.headers.location === '/index.html?login&href=%2Fnexowatt%2Flicense%2Fstatus');
+                try {
+                    const body = JSON.parse(Buffer.concat(chunks));
+                    finish(response.statusCode === 200 && body.ok === true && body.enabled === true && body.strict === true &&
+                        body.authed === false && body.protectWrites === true && body.isAdmin === false);
+                } catch { finish(false); }
+            });
         });
-        if (![8081, 8188].includes(port)) return reject(failure('input'));
-        // An adapter heartbeat precedes its ready handler and HTTPS listen.
-        // Share one monotone deadline across listener retries and response I/O.
-        const deadline = performance.now() + 5000;
-        let done = false, request, response, retryTimer, deadlineTimer;
-        const finish = (ok, reason = 'response') => {
-            if (done) return;
-            if (performance.now() >= deadline) { ok = false; reason = 'deadline'; }
-            done = true; clearTimeout(deadlineTimer); clearTimeout(retryTimer);
-            request?.destroy(); response?.destroy?.();
-            ok ? resolve() : reject(failure(reason));
-        };
-        const attempt = () => {
-            if (done) return;
-            if (performance.now() >= deadline) return finish(false, 'deadline');
-            let settled = false, receivedResponse = false;
-            let current;
-            try {
-                current = https.get({ host: '127.0.0.1', port, servername: 'localhost', ca,
-                    path: port === 8081 ? '/nexowatt/license/status' : '/api/strict-auth/status',
-                    minVersion: 'TLSv1.3', maxVersion: 'TLSv1.3', rejectUnauthorized: true, agent: false });
-                request = current;
-            } catch { return finish(false, 'transport'); }
-            current.on('error', error => {
-                if (done || settled) return;
-                settled = true;
-                if (!receivedResponse && ['ECONNREFUSED', 'ECONNRESET'].includes(error?.code)) {
-                    current.destroy(); request = undefined;
-                    if (performance.now() >= deadline) return finish(false, 'deadline');
-                    retryTimer = setTimeout(attempt, 200);
-                } else finish(false, 'transport');
-            });
-            current.once('response', incoming => {
-                if (done || settled) { incoming.destroy?.(); return; }
-                receivedResponse = true; response = incoming;
-                if (!incoming.socket?.authorized || incoming.socket.getProtocol() !== 'TLSv1.3') return finish(false, 'tls');
-                let bytes = 0; const chunks = [];
-                incoming.on('data', chunk => {
-                    if (done || settled) return;
-                    bytes += chunk.length;
-                    if (bytes > 16384) finish(false, 'size'); else chunks.push(chunk);
-                });
-                incoming.once('error', () => finish(false, 'transport'));
-                incoming.once('aborted', () => finish(false, 'transport'));
-                incoming.once('end', () => {
-                    if (done || settled) return;
-                    settled = true;
-                    // Require the exact local login target; never follow a
-                    // redirect or accept a response that weakens authentication.
-                    if (port === 8081) return finish(incoming.statusCode === 302 &&
-                        incoming.headers.location === '/index.html?login&href=%2Fnexowatt%2Flicense%2Fstatus');
-                    try {
-                        const body = JSON.parse(Buffer.concat(chunks));
-                        finish(incoming.statusCode === 200 && body.ok === true && body.enabled === true && body.strict === true &&
-                            body.authed === false && body.protectWrites === true && body.isAdmin === false);
-                    } catch { finish(false); }
-                });
-            });
-        };
-        deadlineTimer = setTimeout(() => finish(false, 'deadline'), Math.max(0, deadline - performance.now()));
-        attempt();
     });
 }
 function readOnboardingInputs(options, app) {
