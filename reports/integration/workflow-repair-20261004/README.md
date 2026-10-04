@@ -66,13 +66,37 @@ erst durch den nachfolgenden GitHub-Lauf bestätigt.
 - [Installer-Befehle, Rohlogs und Dateibindung](installers/local-results.json)
 - [Trigger-/Eingabenaudit, R6-Prüfungen und Action-Herkunft](scope/review.json)
 - [actionlint: zwölf Workflows bestanden, fehlerhafte YAML-Abhängigkeit abgewiesen](validation/result.json)
+- [README-Push: zweimal öffentlich geprüft, keine neuen Workflows gestartet](documentation-push.json)
 
 Die neuen Installer-Verträge wurden zusätzlich in einer getrennten
 Quellprüfung ausgeführt: neun bestanden. Dies ist ein zweiter technischer
-Review, keine unabhängige Zertifizierung. GitHub-Commit und konkrete
-Run-/Jobresultate werden nach der Veröffentlichung separat ergänzt. Lokale
-Vertragsprüfungen bestätigen keine native Installation. Ein erfolgreicher
-Workflow-Status bestätigt nur die darin tatsächlich ausgeführten Schritte.
+Review, keine unabhängige Zertifizierung. Lokale Vertragsprüfungen bestätigen
+keine native Installation.
+
+## Tatsächlicher GitHub-Nachlauf
+
+Commit [`ad6f95a38b48d7688c3fdf35c5969570f4598f9f`](https://github.com/NexoWatt/nexowatt-eos/commit/ad6f95a38b48d7688c3fdf35c5969570f4598f9f):
+**alle fünf automatischen Prüfworkflows und alle zehn zugehörigen Jobs erfolgreich.**
+
+| Workflow | Ausgeführter GitHub-Lauf | Ergebnis |
+| --- | --- | --- |
+| EOS installer contracts | [37189029655](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37189029655) | Node-Richtlinie und tatsächliche Node-22/24/26-Matrix bestanden |
+| EOS unsupported-platform guards | [37189029678](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37189029678) | Plattform-Verträge bestanden |
+| EOS security regression | [37189029664](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37189029664) | Alle drei Architektur-/Sicherheits-/Produktjobs bestanden |
+| EOS workflow validation | [37189029679](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37189029679) | Workflow-Syntax und Ausdrücke bestanden |
+| CodeQL | [37189029657](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37189029657) | Analyse erfolgreich abgeschlossen |
+
+[Öffentlich zurückgelesene Run-/Job-/Schrittergebnisse](CI_RESULT.json).
+Ein zusätzlicher Dependabot-Aktualisierungslauf ist dort separat erfasst und
+wird nicht als EOS-Produktprüfung gezählt. Der anschließend veröffentlichte
+README-Commit `015da22b2626257be7e2f8ba97dcc96bcc53a3ce` änderte ausschließlich
+die README; zwei API-Abfragen fanden dafür keine Workflows. Der R6-Befehl ist
+weiterhin bytegleich (995 Bytes, SHA-256 `3102921943b4a03737ffe27d048dd045d787d380481be919364116d3c10e96e7`).
+
+Die anfänglich als ausstehend markierten Hosted-Läufe in den eingefrorenen
+lokalen Teilberichten sind damit für diesen Commit konkret nachgetragen.
+Ein erfolgreicher Workflow-Status bestätigt nur die darin tatsächlich
+ausgeführten Schritte; er bestätigt keine Abwesenheit aller Scannerbefunde.
 
 ## Restarbeit und Abgrenzung
 
