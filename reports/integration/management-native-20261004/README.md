@@ -155,3 +155,21 @@ also 18.139.920 Byte mehr als dessen unveränderte 1-GiB-Grenze. Keine einzelne
 Datei überschreitet das bestehende 128-MiB-Dateilimit. Der Aufruf liegt vor
 Payloadaufbereitung und Signierung. Die R8-Builder-/Verifier-Korrektur muss diese
 getrennte Archivhistorie prüfen, ohne Produkt-/Payloadgrenzen zu verändern.
+
+## Finaler Quellstand und erfolgreiche zweite R8-Auslieferung
+
+Quellcommit `7a25001609a30b6b9cbb10b98fea244de5d8c6cf` ändert ausschließlich die
+Hersteller-Historieninventur und Nachweise, keine Laufzeit-/Recovery-/System-
+oder Harnessquelle. [Securitylauf 37221025203](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37221025203)
+besteht alle fünf Jobs. Managementjob `111491217237`, Artefakt `11309979551` unter
+`seventh-ci/`: 8/8 PASS, vollständige Bereitschaft nach 8389 und 5562 ms,
+Anmeldung/Lizenz/PIDs/Neustart korrekt, unveränderte App. CodeQL `37221025240` besteht.
+
+Der ausschließlich daran gebundene Marker `f35789c8453be7ce9bca0bbbf3be870e0ed0a836`
+startet [Auslieferungslauf 37221151680](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37221151680).
+Alle sechs Jobs einschließlich Builder, unabhängiger Rekonstruktion und öffentlicher
+Veröffentlichung bestehen. Managementjob `111491778953`, Artefakt `11310342400`
+unter `second-delivery-ci/`: erneut 8/8 PASS, Bereitschaft nach 8388 und 5759 ms,
+alle Lizenz-/UUID-/PID-Prüfungen erfolgreich und keine App-Dateidifferenz.
+[Veröffentlichter R8-Stand und konkrete Grenzen](../r8-release-20261004/README.md).
+Der physische Pi-Wiederanlauf wird durch diese Labornachweise weiterhin nicht behauptet.

@@ -1,41 +1,26 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# Pi-Test offen: R7-Reparatur vorerst nicht erneut ausführen
+# R8: Wiederherstellung nach dem zurückgenommenen R7-Erststart
 
-Die Pi-Rückmeldung vom 04.10.2026 bestätigt einen erfolgreichen R7-Controllerstart,
-anschließend jedoch einen fehlgeschlagenen Abschluss und die Rücksetzung auf R4
-(`RESTORED_STOPPED`, Sequenz 7, beide Wartungssperren erhalten). Der ursprüngliche
-Fehler wird vom R7-Helfer nicht ausreichend erhalten. Zusätzlich wurde eine
-Startreihenfolge-Lücke zwischen Adapter-`alive` und HTTPS-Bereitschaft reproduziert.
-Die konkrete Ursache dieses Pi-Abbruchs ist damit noch nicht eindeutig bewiesen.
+**test.3 Revision 8, Sequenz 11 ist signiert, veröffentlicht und öffentlich
+zurückgelesen.** Die aktuellen Sicherheitsprüfungen, CodeQL und der vollständige
+Auslieferungslauf sind grün. Dieser Weg gilt für den gemeldeten Pi-Zustand:
+authentifiziertes R4, Sequenz 7, nach R7-Rücksetzung `RESTORED_STOPPED`, erhaltene
+Wartungssperren und noch kein abgeschlossener Erststart.
 
-**Den folgenden R7-Befehl vorerst nicht für weitere Reparaturversuche verwenden.**
-Vorhandene Sperren und Einrichtung erhalten. Korrekturen und ein geprüfter
-Folgeweg für diesen zurückgesetzten Zustand sind in Arbeit.
-[Pi-Befund und aktueller Nachweisstand](reports/integration/r7-release-20261004/README.md).
+R8 übernimmt die geprüften PostgreSQL-/PID-Korrekturen und repariert die
+HTTPS-Bereitschaftsprüfung nach dem Adapterstart. Der neue Wiederherstellungshelfer
+bewahrt bei einem Fehler dessen ursprüngliche Phase und festen Fehlercode.
+Vorhandene Einrichtung, Passwörter, UUID, Lizenz und Zertifikate werden erhalten.
+Ein anderer Ausgangsstand führt zum Abbruch.
 
-# Historisch veröffentlicht: R7-Wiederherstellung des R4-Erststarts
-
-**test.3 Revision 7, Sequenz 10 ist signiert, veröffentlicht und öffentlich
-zurückgelesen.** Dieser Weg ist für den gemeldeten R4-Erststart vorgesehen,
-bei dem PostgreSQL läuft, der Controller aber mit `EOS_PG_TRANSACTION_FAILED`
-und `CONTROLLER_NOT_READY` abgebrochen ist. R7 korrigiert die Speicherung des
-Host-Objekts und den PID-Dateipfad im schreibgeschützten Release.
-
-Der Helfer prüft den vorhandenen R4-Stand, die gespeicherte Einrichtung und die
-Wartungssperre, übernimmt den passenden Fehlstart und prüft Controller sowie
-beide HTTPS-Webadapter. Passwort, UUID, vorhandene Lizenz und Daten bleiben
-erhalten. Für abgeschlossene Einrichtungen oder andere Ausgangsstände ist
-dieser Wiederherstellungsbefehl nicht vorgesehen.
-
-Den vollständigen Befehl einmal im SSH-Terminal des betroffenen Pi ausführen:
+Den vollständigen Befehl einmal im SSH-Terminal des betroffenen Test-Pi ausführen:
 
 ```bash
-/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-recovery-r7-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29923 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/8a274b113609176585d884bb6ee180cde25b1e1c/delivery/public-recovery-test3-r7/recover.sh -o "$d/recover.sh"; [[ -f "$d/recover.sh" && ! -L "$d/recover.sh" && $(/usr/bin/stat -c %h "$d/recover.sh") == 1 && $(/usr/bin/stat -c %u "$d/recover.sh") == 0 && $(/usr/bin/stat -c %s "$d/recover.sh") == 29923 ]] || exit 1; printf '\''%s  %s\n'\'' '\''86f176d5bcb2ebeea48093e327e116282c47e8984dca9e85f5aa89a63abf2d00'\'' "$d/recover.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/recover.sh"'
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-recovery-r8-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 30009 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/3b5bd2e9debce2f9bfe1aa5c6446f6c2a9e3027e/delivery/public-recovery-test3-r8/recover.sh -o "$d/recover.sh"; [[ -f "$d/recover.sh" && ! -L "$d/recover.sh" && $(/usr/bin/stat -c %h "$d/recover.sh") == 1 && $(/usr/bin/stat -c %u "$d/recover.sh") == 0 && $(/usr/bin/stat -c %s "$d/recover.sh") == 30009 ]] || exit 1; printf '\''%s  %s\n'\'' '\''c4e82b8299f35e85469cacfdc22fa784364bd5d1e0ac128d3bc7c2fd5b29d35f'\'' "$d/recover.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/recover.sh"'
 ```
 
-Erfolg zeigt `"phase":"FIRST_START_RECOVERED"`, `"sequence":10` und anschließend
-`EOS: Erststart-Wiederherstellung abgeschlossen. Bitte den Admin-Login pruefen.`
-Danach die Dienste prüfen:
+Erfolg zeigt `"phase":"FIRST_START_RECOVERED"` und `"sequence":11`.
+Anschließend beide Dienste prüfen:
 
 ```sh
 systemctl show nexowatt-eos-controller.service nexowatt-eos-postgresql.service \
@@ -43,23 +28,30 @@ systemctl show nexowatt-eos-controller.service nexowatt-eos-postgresql.service \
 ```
 
 Beide Dienste sollen `ActiveState=active` und `SubState=running` melden.
-Anschließend über die bisherige HTTPS-Adresse als `admin` mit dem bestehenden
-Passwort anmelden, abmelden und erneut anmelden. Erst danach einen normalen
-Neustart prüfen. Die zusätzliche lokale Statusprüfung und der Fehlerfall stehen
-in der [R7-Anleitung](docs/operations/RECOVER_R4_FIRST_START_R7_DE.md).
+Danach an der bisherigen HTTPS-Adresse als `admin` mit dem vorhandenen Passwort
+anmelden, abmelden und erneut anmelden. Erst nach erfolgreicher Anmeldung den
+normalen Geräteneustart prüfen. Bei einem Fehler die festen Diagnosefelder und
+den Dienstzustand auswerten; Sperren und historische Journale erhalten und den
+Befehl nicht blind wiederholen.
 
-[Wiederherstellungsbefehl als Textdatei](delivery/public-recovery-test3-r7/RECOVERY_COMMAND.txt) ·
-[Veröffentlichungsnachweis](reports/integration/r7-release-20261004/PUBLICATION.json) ·
-[R7-Build und native Controllerprüfung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37195008931) ·
-[Controller-Korrekturen und Prüfgrenzen](reports/integration/controller-startup-20261004/README.md).
+[Vollständiger R8-Befehl als Textdatei](delivery/public-recovery-test3-r8/RECOVERY_COMMAND.txt) ·
+[Ablauf und Fehlerbehandlung](docs/operations/RECOVER_R4_RESTORED_R7_TO_R8_DE.md) ·
+[Veröffentlichung und Prüfnachweise](reports/integration/r8-release-20261004/README.md) ·
+[Erfolgreicher Auslieferungslauf](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37221151680).
 
-Geprüft sind der Paketbau und der native Controllerstart mit PostgreSQL 17.11,
-Node 24.21.0 und Controller 7.2.2 auf Linux x64, einschließlich Host-Speicherung,
-Bereitschaft, Stoppen und erneutem Start. Auch die Regressionen für die
-Admin-Anmeldung, den Objects-Lifecycle und das Host-Objekt im signierten Paket
-sind bestanden. Der konkrete R4→R7-Wechsel auf dem Pi,
-Browser-Login, Geräteneustart und Backup/Restore bleiben zu bestätigen.
-Physische Anlagenbefehle bleiben gesperrt; R7 ist ein Teststand.
+Der native Linux-x64-Test mit Node 24.21.0 und PostgreSQL 17.11 besteht Einrichtung
+unter Schreibschutz, Controller/Admin/UI, echte HTTPS-Anmeldung, gültige Lizenz,
+aktuelle Prozesskennungen, Stop und Neustart sowie den unveränderten App-Dateibaum.
+Alle 22.842 signierten Dateien wurden zusätzlich unabhängig geprüft. Der konkrete
+Wiederanlauf auf dem Pi, Browserbedienung, Geräteneustart und reale Geräteanbindungen
+bleiben zu bestätigen. Physische Anlagenbefehle bleiben gesperrt; R8 ist ein Teststand.
+
+## Historischer R7-Versuch
+
+Der gemeldete R7-Versuch erreichte die Controller-Bereitschaft, wurde danach jedoch
+auf R4 zurückgesetzt. Für diesen zurückgesetzten Zustand gilt der obige R8-Weg.
+Den historischen R7-Befehl dafür nicht erneut verwenden.
+[Pi-Rückmeldung und damaliger Nachweisstand](reports/integration/r7-release-20261004/README.md).
 
 # Historisch: R6-Testupdate für vollständig eingerichtete R4-/R5-Teststände
 

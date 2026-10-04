@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "kind": "published-r8-restored-r7-first-start-recovery",
+  "checkedAt": "2026-10-04T17:55:05.261Z",
+  "repository": "NexoWatt/nexowatt-eos",
+  "reviewedSourceCommit": "7a25001609a30b6b9cbb10b98fea244de5d8c6cf",
+  "buildRequestCommit": "f35789c8453be7ce9bca0bbbf3be870e0ed0a836",
+  "assetCommit": "39e68025c7aec2d3f470b3a7e9dcf151f176b7bd",
+  "entryCommit": "3b5bd2e9debce2f9bfe1aa5c6446f6c2a9e3027e",
+  "commandCommit": "88242415156c1d15e4089ec9e5115dc38f9df416",
+  "releaseId": "eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7",
+  "releaseSequence": 11,
+  "deliveryRevision": 8,
+  "archive": {
+    "bytes": 97504932,
+    "sha256": "b7c38754cd572cb42462d525337a417d436f31dbf4d149bb9708187881e6c5d3"
+  },
+  "publicKeySha256": "bc104daef9346ef31fe7b51d447bc8d3c5103aa5e6cf532e7a83ea17551280c5",
+  "signedPayloadFiles": 22842,
+  "sourceChecks": [
+    {
+      "name": "EOS security regression",
+      "runId": 37221025203,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 111491217202,
+          "name": "Node 24 bootstrap, onboarding and transport contracts",
+          "conclusion": "success"
+        },
+        {
+          "id": 111491217217,
+          "name": "Build, syntax and isolated security regression",
+          "conclusion": "success"
+        },
+        {
+          "id": 111491217237,
+          "name": "Native PostgreSQL mTLS Admin and UI startup and restart",
+          "conclusion": "success"
+        },
+        {
+          "id": 111491217247,
+          "name": "Architecture contracts and partial source SBOM",
+          "conclusion": "success"
+        },
+        {
+          "id": 111491217327,
+          "name": "Native PostgreSQL 17.11 mTLS controller startup and restart",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "CodeQL",
+      "runId": 37221025240,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 111491217100,
+          "name": "Analyze (javascript)",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "deliveryRun": {
+    "runId": 37221151680,
+    "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/37221151680",
+    "headCommit": "f35789c8453be7ce9bca0bbbf3be870e0ed0a836",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 111491584953,
+        "name": "Validate explicit reviewed R8 build request",
+        "conclusion": "success"
+      },
+      {
+        "id": 111491778953,
+        "name": "Native PostgreSQL mTLS Admin and UI startup and restart",
+        "conclusion": "success"
+      },
+      {
+        "id": 111491779012,
+        "name": "Native PostgreSQL 17.11 mTLS controller startup and restart",
+        "conclusion": "success"
+      },
+      {
+        "id": 111492791816,
+        "name": "build",
+        "conclusion": "success"
+      },
+      {
+        "id": 111493409376,
+        "name": "publish",
+        "conclusion": "success"
+      },
+      {
+        "id": 111493860163,
+        "name": "public-command",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "nativeManagement": {
+    "sourceRunId": 37221025203,
+    "sourceJobId": 111491217237,
+    "sourceArtifactId": 11309979551,
+    "sourceArtifactSha256": "d323aa7802c29a33fac32dbf9d1567b9deaaf059fae4e7aeec8d76411b5351ff",
+    "deliveryRunId": 37221151680,
+    "deliveryJobId": 111491778953,
+    "deliveryArtifactId": 11310342400,
+    "deliveryArtifactSha256": "2d0f975715b1e72f64b3ddf762da6f17f431e894cdbcb53fbcb306cafa5dd8b3",
+    "eachRun": {
+      "tests": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "host": "linux-x64",
+    "node": "24.21.0",
+    "postgresql": "17.11",
+    "mutualTls": "TLSv1.3",
+    "ordinarySetupAndUploadsUnderReadOnlyApplication": true,
+    "actualAdminHttpsLoginPassed": true,
+    "authenticatedLicenseAndUuidBindingPassed": true,
+    "exactLiveControllerAndAdapterPidsPassed": true,
+    "startAndRestartPassed": true,
+    "freshPrivateRuntimeLogsChecked": true,
+    "signedApplicationBytesUnchanged": true,
+    "rawLogsPublished": false
+  },
+  "recoveryTests": {
+    "coordinatorContracts": 68,
+    "authenticR4Collector": 10,
+    "failed": 0
+  },
+  "authenticatedR4TransitionPassed": true,
+  "independentArchiveReconstructionPassed": true,
+  "publicAssetReadbackReport": "delivery/public-recovery-test3-r8/remote-readback.json",
+  "publicCommandVerificationReport": "delivery/public-recovery-test3-r8/command-verification.json",
+  "publicHttpsAssetReadbackPassed": true,
+  "publicHttpsEntryReadbackPassed": true,
+  "publishedCommand": {
+    "bytes": 1008,
+    "sha256": "870cd63b5430668d13442f07669d43ea302e077597c9e214e0f11e31a1682d0d",
+    "source": "GitHub connector immutable command commit",
+    "bytesAndSha256Verified": true,
+    "shellSyntaxChecked": true,
+    "executed": false
+  },
+  "additionalIndependentArchiveReadback": "published-readback.json",
+  "operatorRecoveryPathAvailable": true,
+  "recoveryScope": "authenticated-r4-after-r7-restored-stopped-only",
+  "credentialsAndSetupReset": false,
+  "actualPiRecoveryPerformed": false,
+  "actualPiLoginVerified": false,
+  "actualPiRebootVerified": false,
+  "actualSystemdMountPolicyTested": false,
+  "physicalControlEnabled": false,
+  "productionReleaseApproved": false,
+  "assembledModuleTests": {
+    "adminOAuth": 7,
+    "objectsLifecycle": 6,
+    "actualHostObject": 7,
+    "failed": 0,
+    "skipped": 0
+  }
+}

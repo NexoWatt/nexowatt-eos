@@ -1,11 +1,12 @@
-# R8-Kandidat nach gestopptem R7-Rückfall
+# Veröffentlichter R8-Teststand nach gestopptem R7-Rückfall
 
-Stand 04.10.2026: neue Herstellerwerkzeuge für Revision 8 / Sequenz 11 von
-`0.2.0-test.3`, Linux ARM64 mit Node 24.21.0. **Noch nicht signiert, veröffentlicht
-oder auf dem Pi geprüft.** Der R7-Versuch erreichte laut Pi-Rückmeldung die
-Controller-Bereitschaft und wurde anschließend zurückgenommen. Die ursprüngliche
-Fehlerphase ist nicht erhalten; zurück blieb ein gesperrter, gestoppter R4-Stand. Die neuen Werkzeuge behandeln
-nur diesen eng bestimmten Wiederaufnahmeweg; sie überschreiben keine R7-Lieferung.
+Stand 04.10.2026: Revision 8 / Sequenz 11 von `0.2.0-test.3`, Linux ARM64
+mit Node 24.21.0, ist **signiert, veröffentlicht und öffentlich zurückgelesen**.
+Quellprüfungen, CodeQL und der vollständige Auslieferungslauf sind erfolgreich.
+[Veröffentlichung, feste Identitäten und Prüfnachweise](../r8-release-20261004/README.md).
+Der tatsächliche Pi-Wiederanlauf bleibt offen. Der Wiederherstellungsweg gilt
+nur für das authentifizierte R4 nach dem zurückgenommenen R7-Erststart mit
+`RESTORED_STOPPED`; keine historische Lieferung wird überschrieben.
 
 ## Tatsächliche Ableitung
 
@@ -99,10 +100,11 @@ App-Identität, verpflichtenden Hoständerungen, vollständige Rekonstruktion un
 Publikationsgrenzen; 14/14 und 17/17 Tests wurden dabei nochmals ausgeführt.
 Dies ist keine unabhängige Zertifizierung oder zusätzliche Signatur-/Pi-Prüfung.
 
-Offen bleiben sauberer finaler Quellcommit, verpflichtender nativer Test des
-vollständigen Managementstarts, signierter Kandidatenbau, unabhängiger Archiv-
-Readback und tatsächlicher Pi-Wiederanlauf. Ein bestandener nativer x64-Lauf wäre
-kein ARM64-/Systemd-/Anlagentest und keine Produktionsfreigabe.
+Die anschließend durchgeführten nativen Managementprüfungen, der signierte Bau,
+die vollständige unabhängige Rekonstruktion und der öffentliche Readback sind
+im verlinkten Veröffentlichungsnachweis bestanden dokumentiert. Offen bleiben
+tatsächlicher Pi-Wiederanlauf, Browserbedienung, Systemd-Mount-Abnahme,
+Geräteneustart und Anlagenbetrieb; keine Produktionsfreigabe.
 
 ## Korrektur des historischen Größeninventars
 
@@ -129,5 +131,6 @@ Links, übergroße Einzeldateien, privilegierte Modi und unsichere Pfade bleiben
 gesperrt. Details und Quellpins: `history-limit-fix.json`; rohe Nachweise:
 `history-limit-contracts.tap` und `history-limit-publication.log`.
 
-Dieser Nachweis ist kein neuer Signatur-, Pi- oder Hardwarelauf. Der neue
-Quellcommit muss die verpflichtende Pipeline erneut vollständig bestehen.
+Dieser lokale Nachweis ist kein Signatur-, Pi- oder Hardwarelauf. Der korrigierte
+Quellcommit hat die verpflichtende Pipeline anschließend vollständig bestanden;
+siehe [Veröffentlichungsnachweis](../r8-release-20261004/README.md).

@@ -1,5 +1,10 @@
 # R8 nach zurückgenommenem R7-Erststartversuch
 
+Stand 04.10.2026: **R8 / Sequenz 11 ist signiert und veröffentlicht.**
+[Vollständiger, fest gebundener Pi-Befehl](../../delivery/public-recovery-test3-r8/RECOVERY_COMMAND.txt)
+und [Veröffentlichungsnachweis mit erfolgreichen Prüfläufen](../../reports/integration/r8-release-20261004/README.md).
+Der Befehl verlangt keinen GitHub-Token und setzt die Einrichtung nicht zurück.
+
 Dieser Wiederherstellungsweg gilt ausschließlich für den veröffentlichten R7-Versuch, dessen privates Journal `RESTORED_STOPPED` meldet und dessen aktueller Release wieder das authentifizierte R4 mit Sequenz 7 ist. Ziel ist ein separat signiertes R8 mit Sequenz 11. Ein vorhandener Erststartabschluss, ein laufender alter Koordinator, abweichende Dateien oder ein anderer Ausgangsstand führen zum Abbruch.
 
 Der Helfer `tools/system/recover-r4-restored-r7-to-r8.cjs` wird ausschließlich durch einen veröffentlichten Einstieg mit festen Release- und Schlüsselbindungen aufgerufen. Seine Argumente sind `--bundle`, `--public-key`, `--expected-release-id` und `--expected-key-sha256`. `--quiesce-incomplete` gehört zum selben geschützten Systemd-Aufruf. Es gibt keine Force-, Passwort-, Zielverzeichnis- oder Entsperroption. Dieses Dokument enthält keinen ungepinnten Download- oder Reparaturbefehl.
@@ -17,3 +22,20 @@ Bei einem Fehler bleiben die ursprüngliche Fehlerphase und der feste Fehlercode
 `RESTORED_STOPPED` bestätigt nur die geprüfte Rücksetzung dieses Versuchs auf das gestoppte R4 hinter den Sperren. `RECOVERY_REQUIRED` bestätigt weder einen erfolgreichen Stop noch eine vollständige oder dauerhaft gespeicherte Rücksetzung. Auch nach einem Datei- oder Synchronisierungsfehler versucht der Helfer die Aktivierungssperre unabhängig vom Guard wiederherzustellen. Fremde Zustände werden nicht überschrieben. Bei einem Fehler weder Sperren löschen noch den Befehl blind wiederholen; die festen Diagnosefelder und den Dienstzustand auswerten.
 
 Die [gezielten Tests und ihre Grenzen](../../reports/integration/r8-restored-recovery-20261004/README.md) sind separat dokumentiert. Ein erfolgreicher Quelltest ist keine Bestätigung des konkreten Pi-Wechsels, Browser-Logins, Geräteneustarts oder Backup/Restore. Physische Anlagensteuerung und Produktionsfreigabe bleiben gesperrt.
+
+
+## Prüfung nach dem Wiederherstellungsversuch
+
+Bei Erfolg meldet die Ausgabe `FIRST_START_RECOVERED` und Sequenz 11. Danach:
+
+```sh
+systemctl show nexowatt-eos-controller.service nexowatt-eos-postgresql.service \
+  --property=Id,ActiveState,SubState,Result,ExecMainStatus,NRestarts
+```
+
+Beide Dienste müssen aktiv laufen. An der vorhandenen HTTPS-Adresse mit dem
+bestehenden Admin-Passwort anmelden, abmelden und erneut anmelden. Anschließend
+den normalen Geräteneustart prüfen. Erst diese Ergebnisse bestätigen den
+konkreten Pi-Wiederanlauf; der erfolgreiche native x64-Lauf ersetzt ihn nicht.
+Bei Fehlschlag nur die festen Terminal-Diagnosefelder und den Dienstzustand teilen;
+private Journale, Konfigurationen, Schlüssel und vollständige Rohlogs nicht veröffentlichen.
