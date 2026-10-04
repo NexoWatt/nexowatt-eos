@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: R6 update transport binds immutable commit, key, archive and exact test scope
+ok 1 - R6 update transport binds immutable commit, key, archive and exact test scope
+  ---
+  duration_ms: 2.462323
+  type: 'test'
+  ...
+# Subtest: malformed metadata, key substitution, old release and broad admission are rejected
+ok 2 - malformed metadata, key substitution, old release and broad admission are rejected
+  ---
+  duration_ms: 1.572304
+  type: 'test'
+  ...
+# Subtest: entry embeds exact reviewed extractors, authenticates assets, and supervises updater
+ok 3 - entry embeds exact reviewed extractors, authenticates assets, and supervises updater
+  ---
+  duration_ms: 10.571649
+  type: 'test'
+  ...
+# Subtest: outer one-line command checks protected root, complete size and digest before execution
+ok 4 - outer one-line command checks protected root, complete size and digest before execution
+  ---
+  duration_ms: 3.672849
+  type: 'test'
+  ...
+# Subtest: only a complete hash-matching download reaches the execution boundary
+ok 5 - only a complete hash-matching download reaches the execution boundary
+  ---
+  duration_ms: 12.796305
+  type: 'test'
+  ...
+# Subtest: download hash failure never reaches the execution boundary
+ok 6 - download hash failure never reaches the execution boundary
+  ---
+  duration_ms: 12.717376
+  type: 'test'
+  ...
+# Subtest: download size failure never reaches the execution boundary
+ok 7 - download size failure never reaches the execution boundary
+  ---
+  duration_ms: 10.235659
+  type: 'test'
+  ...
+# Subtest: download failure failure never reaches the execution boundary
+ok 8 - download failure failure never reaches the execution boundary
+  ---
+  duration_ms: 4.592507
+  type: 'test'
+  ...
+# Subtest: download symlink failure never reaches the execution boundary
+ok 9 - download symlink failure never reaches the execution boundary
+  ---
+  duration_ms: 5.338038
+  type: 'test'
+  ...
+# Subtest: download hardlink failure never reaches the execution boundary
+ok 10 - download hardlink failure never reaches the execution boundary
+  ---
+  duration_ms: 6.854358
+  type: 'test'
+  ...
+# Subtest: download refuses to overwrite existing data
+ok 11 - download refuses to overwrite existing data
+  ---
+  duration_ms: 4.043831
+  type: 'test'
+  ...
+# Subtest: embedded extractor works as packaged and rejects hash, traversal, links and existing output
+ok 12 - embedded extractor works as packaged and rejects hash, traversal, links and existing output
+  ---
+  duration_ms: 311.897471
+  type: 'test'
+  ...
+# Subtest: supervisor rejects absent/malformed invocation and clears inherited Node/Python options
+ok 13 - supervisor rejects absent/malformed invocation and clears inherited Node/Python options
+  ---
+  duration_ms: 81.544256
+  type: 'test'
+  ...
+# Subtest: both historical release and key pins are forbidden as R6 target
+ok 14 - both historical release and key pins are forbidden as R6 target
+  ---
+  duration_ms: 0.866343
+  type: 'test'
+  ...
+# Subtest: R6 script selects only the new updater/output and preserves bounded checked TLS downloads
+ok 15 - R6 script selects only the new updater/output and preserves bounded checked TLS downloads
+  ---
+  duration_ms: 0.537008
+  type: 'test'
+  ...
+# Subtest: public readback accepts only byte-identical regular files and independently checked pins
+ok 16 - public readback accepts only byte-identical regular files and independently checked pins
+  ---
+  duration_ms: 4.770234
+  type: 'test'
+  ...
+# Subtest: publication permits only all three new entry files at the exact source commit
+ok 17 - publication permits only all three new entry files at the exact source commit
+  ---
+  duration_ms: 38.161597
+  type: 'test'
+  ...
+# Subtest: publication rejects an unrelated untracked file
+ok 18 - publication rejects an unrelated untracked file
+  ---
+  duration_ms: 28.486361
+  type: 'test'
+  ...
+# Subtest: publication rejects a staged source change
+ok 19 - publication rejects a staged source change
+  ---
+  duration_ms: 27.902583
+  type: 'test'
+  ...
+# Subtest: publication rejects missing generated files and local modification after staging
+ok 20 - publication rejects missing generated files and local modification after staging
+  ---
+  duration_ms: 35.788258
+  type: 'test'
+  ...
+# Subtest: publication rejects symlink entries rather than following them
+ok 21 - publication rejects symlink entries rather than following them
+  ---
+  duration_ms: 31.904647
+  type: 'test'
+  ...
+# Subtest: command report binds the committed entry and only the two new command files publish
+ok 22 - command report binds the committed entry and only the two new command files publish
+  ---
+  duration_ms: 46.756107
+  type: 'test'
+  ...
+# Subtest: command report rejects a mutable or mismatched command without writing evidence
+ok 23 - command report rejects a mutable or mismatched command without writing evidence
+  ---
+  duration_ms: 34.537552
+  type: 'test'
+  ...
+# Subtest: R6 command requires full remote asset readback rather than a bare success flag
+ok 24 - R6 command requires full remote asset readback rather than a bare success flag
+  ---
+  duration_ms: 2.18085
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 562.214212

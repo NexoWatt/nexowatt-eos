@@ -1,5 +1,41 @@
 # NexoWatt EOS review profile — parameters
 
+## R6 TEST update preparation (2026-10-04)
+
+The current operator command is always the one published in the README on `main`.
+The separately prepared R6 path updates an exactly authenticated, completed R4
+or R5 TEST installation directly to revision 6 / signed sequence 9. It does not
+provide a fresh installation or a general key-rotation interface. See
+[R6 procedure and target tests](docs/operations/TEST_R6_UPDATE_DE.md).
+
+Manufacturer-only builder
+`reports/integration/installable-test3-r6-20261004/build-revision.cjs` takes no
+arguments in CI. Its optional `--base-directory <absolute-path>` selects a local
+copy of the same immutable R5 delivery; exact archive, key and release pins are
+still mandatory. It requires a clean reviewed Git commit and never persists the
+ephemeral private TEST signing key. It writes only the new R6 delivery and its
+evidence; historical R4/R5 archives are not overwritten.
+
+The new target tool `tools/system/update-test-to-r6.cjs` requires exactly
+`--bundle`, `--public-key`, `--expected-release-id`, and
+`--expected-key-sha256`. Those values are supplied by the generated, pinned
+download entry, not collected as secrets from the user. No force, target-root,
+host-check bypass or password option is exposed. The cleanup entry
+`--quiesce-incomplete` is reserved for the same protected systemd invocation.
+
+`tools/bootstrap/build-public-r6-update-entry.cjs --asset-commit <40hex>` builds
+the new entry from the real, signature-verified R6 archive; after committing the
+entry, `--entry-commit <40hex>` creates its pinned command.
+`tools/bootstrap/prepare-public-r6-update-publication.cjs` accepts the separate
+manufacturer checks `--readback <asset-commit>`,
+`--command-report <entry-commit>`, or `--check-stage entry|command <HEAD>`.
+No one of these manufacturer commands updates a Pi.
+
+The R6 workflow supports resuming entry publication after the immutable archive
+was published: a subsequent run verifies the existing archive again and may
+create only its missing entry. Existing signed deliveries and existing entries
+remain immutable. A failed build cannot enter the publication path.
+
 ## Active public one-command TEST download
 
 The user made the repository public on 03.10.2026. The active README entry uses

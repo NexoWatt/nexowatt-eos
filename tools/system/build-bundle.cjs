@@ -140,7 +140,7 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile }) {
         copyRuntimeLicenses(destination, 'app/');
         copyDirectory(path.join(REPO, 'runtime'), path.join(destination, 'runtime'));
         fs.mkdirSync(path.join(destination, 'tools')); fs.mkdirSync(path.join(destination, 'tools/system'));
-        for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'prepare-onboarding.cjs', 'prepare-first-start-context.cjs', 'finalize-onboarding.cjs', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs', 'update-test-r4-to-r5.cjs']) {
+        for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'prepare-onboarding.cjs', 'prepare-first-start-context.cjs', 'finalize-onboarding.cjs', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs', 'update-test-r4-to-r5.cjs', 'update-test-to-r6.cjs']) {
             fs.copyFileSync(path.join(REPO, 'tools/system', file), path.join(destination, 'tools/system', file), fs.constants.COPYFILE_EXCL);
         }
         fs.mkdirSync(path.join(destination, 'tools/integration'));

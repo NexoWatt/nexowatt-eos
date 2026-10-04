@@ -204,6 +204,8 @@ jobs:
             tests/bootstrap/public-entry.test.cjs \
             tests/bootstrap/public-repair-entry.test.cjs \
             tests/bootstrap/public-repair-publication.test.cjs \
+            tests/bootstrap/public-r6-update-entry.test.cjs \
+            tests/bootstrap/public-r6-update-publication.test.cjs \
             tests/onboarding/configuration.test.cjs \
             tests/onboarding/enrollment.test.cjs \
             tests/onboarding/frontend.test.cjs \
@@ -211,6 +213,8 @@ jobs:
             tests/onboarding/server.test.cjs \
             tests/onboarding/shutdown.test.cjs \
             components/admin/test/eos-session-security.test.cjs \
+            components/admin/test/eos-login-recovery.test.cjs \
+            components/backitup/test/publish-asset-reference.js \
             components/admin/test/eos-license-core.test.cjs \
             components/admin/test/eos-license-service.test.cjs \
             components/admin/test/eos-license-client.test.cjs \
@@ -218,6 +222,8 @@ jobs:
             components/admin/test/eos-license-trust.test.cjs \
             components/admin/test/eos-license-build-parity.test.cjs \
             tests/system/admin-startup-branding.test.cjs \
+            tests/integration/admin-browser-cache.test.cjs \
+            tests/integration/branding.test.cjs \
             tests/postgresql/store.test.cjs \
             tests/postgresql/store-channel-hardening.test.cjs \
             tests/postgresql/states.test.cjs \
@@ -231,7 +237,8 @@ jobs:
           sudo -- "$(command -v node)" --test \
             tests/system/sudo-policy.test.cjs \
             tests/system/preflight-installation.test.cjs \
-            tests/system/update-test-r4-to-r5.test.cjs
+            tests/system/update-test-r4-to-r5.test.cjs \
+            tests/system/update-test-to-r6.test.cjs
 
       - name: Run download, host preparation and recovery guard fixtures
         run: |

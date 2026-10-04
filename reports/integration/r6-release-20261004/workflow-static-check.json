@@ -1,0 +1,165 @@
+{
+  "checkedAt": "2026-10-04T07:46:07.650969+00:00",
+  "scope": "YAML parse, all embedded Bash syntax, pinned action refs, minimum job dependency and permissions inspection; no GitHub execution claimed",
+  "workflows": [
+    {
+      "path": ".github/workflows/eos-r6-test-delivery.yml",
+      "sha256": "4cb69c0118ae7a47f8c490b761fdb2097ea0e2fb6ac63238544fccf709cb2b6f",
+      "yamlParsed": true,
+      "pinnedActions": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+        "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+        "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+      ],
+      "shellSteps": [
+        {
+          "job": "build",
+          "step": "Preserve signed historical deliveries",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "build",
+          "step": "Check derivative and publication contracts",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "build",
+          "step": "Build, sign and reread the derivative archive",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "build",
+          "step": "Exercise the assembled Admin and Objects backend",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "build",
+          "step": "Record acceptance scope",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "publish",
+          "step": "Validate and copy only new generated files",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "publish",
+          "step": "Publish only to unchanged main by normal fast-forward",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "public-command",
+          "step": "Require published R6 and preserve any existing entry",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "public-command",
+          "step": "Verify transport and narrow publication boundaries",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "public-command",
+          "step": "Build from signed archive and independently reread public assets",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "public-command",
+          "step": "Create two local immutable commits with a command pinned to the entry commit",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "public-command",
+          "step": "Publish both commits only to unchanged main by normal fast-forward",
+          "bashSyntax": "PASS"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "1c9fae7e6ae60ab8029cd5c8f924cedeacb43a99244f6462ee953e1bc567234b",
+      "yamlParsed": true,
+      "pinnedActions": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020"
+      ],
+      "shellSteps": [
+        {
+          "job": "architecture-checks",
+          "step": "Install hash-locked development validators",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "architecture-checks",
+          "step": "Run isolated positive and negative tool tests",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "architecture-checks",
+          "step": "Validate design links, examples and partial source inventory",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "architecture-checks",
+          "step": "State architecture verification scope",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "focused-security-checks",
+          "step": "Record source and tool versions",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "focused-security-checks",
+          "step": "Build distribution scripts without dependencies or deployment",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "focused-security-checks",
+          "step": "Check source and generated shell syntax",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "focused-security-checks",
+          "step": "Run isolated Node security tests",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "focused-security-checks",
+          "step": "Run isolated Python security tests",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "focused-security-checks",
+          "step": "State verification scope",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "product-contract-checks",
+          "step": "Record source and verify fixture tools",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "product-contract-checks",
+          "step": "Run selected dependency-free product contracts and local TLS tests",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "product-contract-checks",
+          "step": "Run isolated ownership and sudo denial contracts",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "product-contract-checks",
+          "step": "Run download, host preparation and recovery guard fixtures",
+          "bashSyntax": "PASS"
+        },
+        {
+          "job": "product-contract-checks",
+          "step": "State product contract verification scope",
+          "bashSyntax": "PASS"
+        }
+      ]
+    }
+  ]
+}

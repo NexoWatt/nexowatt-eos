@@ -1,0 +1,283 @@
+TAP version 13
+# Subtest: NexoWatt EOS profile backup
+    # Subtest: creates a protected profile archive with a verifiable manifest and no vendor secret by default
+    not ok 1 - creates a protected profile archive with a verifiable manifest and no vendor secret by default
+      ---
+      duration_ms: 23.032086
+      type: 'test'
+      location: '/workspace/scratch/a8835322738f/tmp/r6-backup-package/test/eos-profile.js:90:5'
+      failureType: 'testCodeFailure'
+      error: |-
+        The input did not match the regular expression /^nexowattEOS_2026_08_17-18_17_04_test_backupconfig\.tar\.gz$/. Input:
+        
+        'nexowattEOS_2026_08_17-20_17_04_test_backupconfig.tar.gz'
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected:
+      actual: 'nexowattEOS_2026_08_17-20_17_04_test_backupconfig.tar.gz'
+      operator: 'match'
+      stack: |-
+        TestContext.<anonymous> (/workspace/scratch/a8835322738f/tmp/r6-backup-package/test/eos-profile.js:99:20)
+        process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+        async Test.run (node:internal/test_runner/test:1389:7)
+        async Promise.all (index 0)
+        async Suite.run (node:internal/test_runner/test:1869:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+      ...
+    # Subtest: keeps a valid profile archive when only status-state publication fails
+    ok 2 - keeps a valid profile archive when only status-state publication fails
+      ---
+      duration_ms: 8.268659
+      type: 'test'
+      ...
+    1..2
+not ok 1 - NexoWatt EOS profile backup
+  ---
+  duration_ms: 32.896936
+  type: 'suite'
+  location: '/workspace/scratch/a8835322738f/tmp/r6-backup-package/test/eos-profile.js:89:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: ignores a bucket or directory name entered as CLI path and falls back to influx
+ok 2 - ignores a bucket or directory name entered as CLI path and falls back to influx
+  ---
+  duration_ms: 0.920495
+  type: 'test'
+  ...
+# Subtest: accepts an absolute CLI path
+ok 3 - accepts an absolute CLI path
+  ---
+  duration_ms: 0.216586
+  type: 'test'
+  ...
+# Subtest: builds a local InfluxDB 2 backup without putting the token on the command line
+ok 4 - builds a local InfluxDB 2 backup without putting the token on the command line
+  ---
+  duration_ms: 0.968877
+  type: 'test'
+  ...
+# Subtest: builds a remote HTTPS backup with host and TLS skip flag
+ok 5 - builds a remote HTTPS backup with host and TLS skip flag
+  ---
+  duration_ms: 0.275475
+  type: 'test'
+  ...
+# Subtest: requires a token for InfluxDB 2.x
+ok 6 - requires a token for InfluxDB 2.x
+  ---
+  duration_ms: 0.328444
+  type: 'test'
+  ...
+# Subtest: builds restore invocation without exposing the token
+ok 7 - builds restore invocation without exposing the token
+  ---
+  duration_ms: 0.366301
+  type: 'test'
+  ...
+# Subtest: formats a missing CLI error with a clear installation hint
+ok 8 - formats a missing CLI error with a clear installation hint
+  ---
+  duration_ms: 0.247633
+  type: 'test'
+  ...
+# Subtest: write validation uses the writable subdirectory, not the root-owned mount root
+ok 9 - write validation uses the writable subdirectory, not the root-owned mount root
+  ---
+  duration_ms: 5.166021
+  type: 'test'
+  ...
+# Subtest: read listing needs read/search rights only and never creates or probes
+ok 10 - read listing needs read/search rights only and never creates or probes
+  ---
+  duration_ms: 1.773047
+  type: 'test'
+  ...
+# Subtest: read mode can read a read-only mounted card without writing
+ok 11 - read mode can read a read-only mounted card without writing
+  ---
+  duration_ms: 1.899297
+  type: 'test'
+  ...
+# Subtest: backup refuses a read-only mounted card
+ok 12 - backup refuses a read-only mounted card
+  ---
+  duration_ms: 2.556215
+  type: 'test'
+  ...
+# Subtest: backup refuses a subdirectory without write access, naming the actual directory
+ok 13 - backup refuses a subdirectory without write access, naming the actual directory
+  ---
+  duration_ms: 2.354732
+  type: 'test'
+  ...
+# Subtest: read listing refuses a subdirectory without read access
+ok 14 - read listing refuses a subdirectory without read access
+  ---
+  duration_ms: 1.128107
+  type: 'test'
+  ...
+# Subtest: backup writes a probe only in the actual backup directory
+ok 15 - backup writes a probe only in the actual backup directory
+  ---
+  duration_ms: 1.906248
+  type: 'test'
+  ...
+# Subtest: failed actual write probe rejects backup and cleanup is attempted
+ok 16 - failed actual write probe rejects backup and cleanup is attempted
+  ---
+  duration_ms: 1.213886
+  type: 'test'
+  ...
+# Subtest: missing directory during listing is distinct from a missing card and never created
+ok 17 - missing directory during listing is distinct from a missing card and never created
+  ---
+  duration_ms: 0.998943
+  type: 'test'
+  ...
+# Subtest: new backup may create its directory if the parent permits it
+ok 18 - new backup may create its directory if the parent permits it
+  ---
+  duration_ms: 1.374478
+  type: 'test'
+  ...
+# Subtest: directory creation failure is explicit and does not attempt a probe
+ok 19 - directory creation failure is explicit and does not attempt a probe
+  ---
+  duration_ms: 1.189049
+  type: 'test'
+  ...
+# Subtest: missing SD mount never falls back to a directory on the system disk
+ok 20 - missing SD mount never falls back to a directory on the system disk
+  ---
+  duration_ms: 0.911191
+  type: 'test'
+  ...
+# Subtest: SD removal during the checks aborts before any probe is written
+ok 21 - SD removal during the checks aborts before any probe is written
+  ---
+  duration_ms: 0.830299
+  type: 'test'
+  ...
+# Subtest: system disk, symlink, non-directory and different filesystem remain excluded
+    # Subtest: system disk
+    ok 1 - system disk
+      ---
+      duration_ms: 0.910199
+      type: 'test'
+      ...
+    # Subtest: symlink
+    ok 2 - symlink
+      ---
+      duration_ms: 1.072563
+      type: 'test'
+      ...
+    # Subtest: plain file
+    ok 3 - plain file
+      ---
+      duration_ms: 2.267706
+      type: 'test'
+      ...
+    # Subtest: nested filesystem
+    ok 4 - nested filesystem
+      ---
+      duration_ms: 0.905783
+      type: 'test'
+      ...
+    1..4
+ok 22 - system disk, symlink, non-directory and different filesystem remain excluded
+  ---
+  duration_ms: 5.798146
+  type: 'test'
+  ...
+# Subtest: listing an empty card returns an empty list instead of logging a permissions error
+ok 23 - listing an empty card returns an empty list instead of logging a permissions error
+  ---
+  duration_ms: 1.137341
+  type: 'test'
+  ...
+# Subtest: Linux permissions: non-root process succeeds with non-writable mount root and writable child
+not ok 24 - Linux permissions: non-root process succeeds with non-writable mount root and writable child
+  ---
+  duration_ms: 0.656277
+  type: 'test'
+  location: '/workspace/scratch/a8835322738f/tmp/r6-backup-package/test/sd-card-access.js:211:1'
+  failureType: 'testCodeFailure'
+  error: "EINVAL: invalid argument, chown '/tmp/nexowatt-sd-permission-jQQlKr/card/nexowatt-eos-backups'"
+  code: 'EINVAL'
+  stack: |-
+    Object.chownSync (node:fs:2217:11)
+    TestContext.<anonymous> (/workspace/scratch/a8835322738f/tmp/r6-backup-package/test/sd-card-access.js:222:32)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: excludes the system mmc device and offers a separately mounted SD card
+ok 25 - excludes the system mmc device and offers a separately mounted SD card
+  ---
+  duration_ms: 1.939848
+  type: 'test'
+  ...
+# Subtest: still excludes the system mmc device when root is reported as /dev/root
+ok 26 - still excludes the system mmc device when root is reported as /dev/root
+  ---
+  duration_ms: 0.501254
+  type: 'test'
+  ...
+# Subtest: offers a removable USB card reader but excludes a non-removable USB SSD
+ok 27 - offers a removable USB card reader but excludes a non-removable USB SSD
+  ---
+  duration_ms: 0.297888
+  type: 'test'
+  ...
+# Subtest: normalizes safe relative subdirectories and rejects traversal or absolute paths
+ok 28 - normalizes safe relative subdirectories and rejects traversal or absolute paths
+  ---
+  duration_ms: 0.537548
+  type: 'test'
+  ...
+# Subtest: keeps the newest three InfluxDB generations and marks older archives for deletion
+ok 29 - keeps the newest three InfluxDB generations and marks older archives for deletion
+  ---
+  duration_ms: 7.150747
+  type: 'test'
+  ...
+# Subtest: keeps three generations per configured InfluxDB suffix and ignores unrelated files
+ok 30 - keeps three generations per configured InfluxDB suffix and ignores unrelated files
+  ---
+  duration_ms: 0.211888
+  type: 'test'
+  ...
+# Subtest: uses only logger methods that exist in the backup execution context
+not ok 31 - uses only logger methods that exist in the backup execution context
+  ---
+  duration_ms: 0.287142
+  type: 'test'
+  location: '/workspace/scratch/a8835322738f/tmp/r6-backup-package/test/sd-card.js:268:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open 'build/lib/scripts/01-mount.js'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:484:20)
+    TestContext.<anonymous> (/workspace/scratch/a8835322738f/tmp/r6-backup-package/test/sd-card.js:275:24)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..31
+# tests 36
+# suites 1
+# pass 33
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 129.925914

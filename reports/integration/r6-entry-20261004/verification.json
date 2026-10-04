@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "EOS-R6-PUBLIC-UPDATE-ENTRY-20261004",
+  "date": "2026-10-04T07:20:09.844381+00:00",
+  "sourceBaseline": "e699a6d575974574ffc4f48d47fe647f6f147f2a",
+  "scope": "R4/R5 -> R6 public update entry generation/publication gates; no target update or public download executed by these tests",
+  "target": {
+    "deliveryRevision": 6,
+    "releaseSequence": 9,
+    "platform": "linux-arm64",
+    "deliveryPath": "delivery/test-pi-0.2.0-test.3-r6",
+    "publicEntryPath": "delivery/public-update-test3-r6"
+  },
+  "tests": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tests/bootstrap/public-r6-update-entry.test.cjs",
+      "tests/bootstrap/public-r6-update-publication.test.cjs"
+    ],
+    "raw": "reports/integration/r6-entry-20261004/raw/public-r6-update.tap",
+    "sha256": "4cdda2c8d86decea9be8dcc7817166905c65a6dd0b259ec6086bc3373b895726",
+    "tests": 24,
+    "pass": 24,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "files": [
+    {
+      "path": "tools/bootstrap/build-public-r6-update-entry.cjs",
+      "sha256": "d95fa4cc595fdb83b979c45cc8a8fa9989dec45eb08c48a7b1571d212f5ab8dc"
+    },
+    {
+      "path": "tools/bootstrap/prepare-public-r6-update-publication.cjs",
+      "sha256": "65945d5f78b3958864b3b4c06e25e35b58ebefd241468ddfaa67c27a0b043bf4"
+    },
+    {
+      "path": "tests/bootstrap/public-r6-update-entry.test.cjs",
+      "sha256": "73cf76eca5ee86cb5fa6c6f42289e2de21a2b9d59094d77d31c68139018907df"
+    },
+    {
+      "path": "tests/bootstrap/public-r6-update-publication.test.cjs",
+      "sha256": "980e8b05d6d584edffdebc3834f9e877bd5c11cebd6e2b923a5b9a2a5f3df6d6"
+    }
+  ],
+  "historicalFilesPreserved": [
+    {
+      "path": "tools/bootstrap/build-public-repair-entry.cjs",
+      "sha256": "2c3d13f02f7cd1164f89b2e665a39711cdbd57299a00470ad2f135461f0848ca",
+      "unchangedFromCommit": "e699a6d575974574ffc4f48d47fe647f6f147f2a"
+    },
+    {
+      "path": "tools/bootstrap/prepare-public-repair-publication.cjs",
+      "sha256": "41dc544092ac907972fac73c2c6b10e039e88bf05dffb55e165b0db9e9369b19",
+      "unchangedFromCommit": "e699a6d575974574ffc4f48d47fe647f6f147f2a"
+    },
+    {
+      "path": "tools/system/update-test-r4-to-r5.cjs",
+      "sha256": "da84940bbef31f0c37b7bddba43ba19530a7832b1a887fa7da9ff24366b7c8ae",
+      "unchangedFromCommit": "e699a6d575974574ffc4f48d47fe647f6f147f2a"
+    }
+  ],
+  "generatedScriptSyntaxChecked": true,
+  "realBashSizeHashAndExtractionTests": true,
+  "gitPublicationTestsUseTemporaryRepositories": true,
+  "tlsPolicyStaticallyChecked": true,
+  "realPublicHttpsReadbackExecuted": false,
+  "r6BundleVerifiedByThisReport": false,
+  "targetUpdateExecuted": false,
+  "hardwareAcceptance": "OPEN",
+  "productionReleaseApproved": false,
+  "CRAConformityClaimed": false,
+  "IECConformityClaimed": false
+}

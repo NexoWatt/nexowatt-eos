@@ -26,7 +26,7 @@ test('prepared release inventory binds updater implementation, policy, initial s
     fs.writeFileSync(catalogFile, '{}\n');
     fs.writeFileSync(sbomFile, '{"bomFormat":"CycloneDX","components":[]}\n');
     const rows = preparePayload({ appDirectory: app, destination, catalogFile, sbomFile });
-    for (const name of ['LICENSE', 'licenses/upstream/LICENSE.ioBroker-Installer.txt', 'runtime/os-updates/runner.py', 'system/test-base/os-updates/policy.json', 'system/test-base/os-updates/initial-status.json',
+    for (const name of ['LICENSE', 'licenses/upstream/LICENSE.ioBroker-Installer.txt', 'tools/system/update-test-to-r6.cjs', 'runtime/os-updates/runner.py', 'system/test-base/os-updates/policy.json', 'system/test-base/os-updates/initial-status.json',
         'system/test-base/systemd/nexowatt-eos-os-updates.service', 'system/test-base/systemd/nexowatt-eos-os-updates.timer']) {
         const bytes = fs.readFileSync(path.join(REPO, name));
         const row = rows.find(row => row.path === name);

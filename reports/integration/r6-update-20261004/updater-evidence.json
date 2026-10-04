@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "id": "EOS-R6-TARGETED-TEST-UPDATE-20261004",
+  "utc": "2026-10-04T07:25:21.273748+00:00",
+  "basisCommit": "e699a6d575974574ffc4f48d47fe647f6f147f2a",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "command": "node --test --test-reporter=tap tests/system/update-test-to-r6.test.cjs",
+  "tests": {
+    "tests": 60,
+    "pass": 60,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "rawEvidence": {
+    "path": "reports/integration/r6-update-20261004/updater-tests.tap",
+    "sha256": "f8669c7eef25cea0a5ddf02d17ac28a472e19eaadab5945f6c8e67630fa3f8ef"
+  },
+  "sourceFiles": {
+    "tools/system/update-test-to-r6.cjs": {
+      "sha256": "8cbc44bd7d1be935233188c0c0e7247d343b665aa3506ab833df6899ae95e8af",
+      "unchangedFromBase": false
+    },
+    "tests/system/update-test-to-r6.test.cjs": {
+      "sha256": "5b7b1d6a1309f4a73eb1534f1d00c508c15e988b8c47cc7782d609c4c24bf5a1",
+      "unchangedFromBase": false
+    },
+    "tools/system/update-test-r4-to-r5.cjs": {
+      "sha256": "da84940bbef31f0c37b7bddba43ba19530a7832b1a887fa7da9ff24366b7c8ae",
+      "unchangedFromBase": true
+    },
+    "tests/system/update-test-r4-to-r5.test.cjs": {
+      "sha256": "2bacdddefefd70a6fa7f5b17513865bb11ab7af777da71f7a5e6643780bfc833",
+      "unchangedFromBase": true
+    },
+    "runtime/release/maintenance.cjs": {
+      "sha256": "69b9c32239453107817eefd21402c457a6491b43d8adb97f4976a21560606985",
+      "unchangedFromBase": true
+    },
+    "runtime/release/installed-check.cjs": {
+      "sha256": "34ba7b7215ff0f73aa312aa3f985be406dd710e44f68bd1d66210ada9f1bcaa5",
+      "unchangedFromBase": true
+    },
+    "runtime/release/bundle.cjs": {
+      "sha256": "9c3c8f38672d84d7adbb6b05eb4b13e3c35483ced63a427697370aeb7c5c2e3b",
+      "unchangedFromBase": true
+    },
+    "tools/system/finalize-onboarding.cjs": {
+      "sha256": "c169c2bd536717691d2f0705b941109e80a21649cd777b8a57da8453aa843509",
+      "unchangedFromBase": true
+    }
+  },
+  "scope": {
+    "temporaryFilesystemTransactions": true,
+    "realAtomicWriteFsyncAndPointerSwitch": true,
+    "realCandidateEd25519AndContentNegativeTests": true,
+    "systemd": "explicit test double; not executed",
+    "nativeArm64": "explicit test double; not executed",
+    "baselineInstalledInventory": "explicit test double; production calls checkInstalled and public-key pins",
+    "readiness": "explicit test double; existing production DB/adapter/HTTPS readiness code retained",
+    "piTested": false,
+    "productionApproved": false,
+    "complianceClaim": false
+  },
+  "targetContract": {
+    "baselineSequences": [
+      7,
+      8
+    ],
+    "targetSequence": 9,
+    "releaseVersion": "0.2.0-test.3",
+    "nodeVersion": "24.21.0",
+    "platform": "linux-arm64",
+    "profile": "test",
+    "targetReleaseAndKey": "Mandatory CLI pins independently bound by immutable public entry; must differ from both pinned baselines",
+    "priorMarker": "R4 origin under R5 accepted only with exact protected ACTIVE R4-to-R5 journal and retained authenticated R4 payload",
+    "journal": "/etc/nexowatt-eos/test-update-r6-status.json"
+  },
+  "open": [
+    "Final R6 manifest/catalog transition binding is validated by the bundle build against actual authenticated inputs.",
+    "Actual Pi/systemd/ARM64/native/DB/HTTPS and interruption tests are not performed here."
+  ]
+}

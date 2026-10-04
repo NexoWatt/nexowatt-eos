@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "kind": "r6-local-build-publication-contract-verification",
+  "observedAt": "2026-10-04T07:47:53.292Z",
+  "baseSourceCommit": "e699a6d575974574ffc4f48d47fe647f6f147f2a",
+  "sourceTreeClean": false,
+  "host": "linux-x64",
+  "node": "24.19.0",
+  "commands": [
+    {
+      "command": "node --test --test-reporter=tap reports/integration/installable-test3-r6-20261004/build-revision.test.cjs tests/integration/r6-derivative-sbom.test.cjs tests/system/os-updates-host-contract.test.cjs",
+      "passed": 18,
+      "failed": 0,
+      "raw": "reports/integration/installable-test3-r6-20261004/local-contract-tests.tap"
+    },
+    {
+      "command": "python3 -I -B reports/integration/installable-test3-r6-20261004/publish-candidate.test.py",
+      "passed": 9,
+      "failed": 0,
+      "raw": "reports/integration/installable-test3-r6-20261004/local-publisher-tests.txt"
+    }
+  ],
+  "scope": "Isolated local tests and historical Git pin checks; synthetic negative fixtures are not a signed release or Pi execution.",
+  "actualSignedCandidateVerified": false,
+  "piUpdatePerformed": false,
+  "productionReleaseApproved": false,
+  "inputsAndEvidence": [
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/README.md",
+      "bytes": 5626,
+      "sha256": "e36705aef4ca83d11c51507bcf35f51c4e3fce3288081e64b1c03116cab0eee5"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/build-revision.cjs",
+      "bytes": 22207,
+      "sha256": "7a1d02c72d3972e25753b47a083fb877466a4ffd716c551dea0c5f346e5b6e02"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/build-revision.test.cjs",
+      "bytes": 7708,
+      "sha256": "a183d87b3cc0083dacf8014f4652df9b2160e94e9c4d70f455dfe749d138080f"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/local-contract-tests.tap",
+      "bytes": 4285,
+      "sha256": "987168465a578f4aa4ced527a12344c5e7f5fa90edb286635d3880c2a2cbf2b4"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/local-publisher-tests.txt",
+      "bytes": 107,
+      "sha256": "0816065fe0d5a82ace2cd6e57c13acf798ab7e69d339f516b2e112daecf68ee0"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/publish-candidate.py",
+      "bytes": 7357,
+      "sha256": "f25dd57807cba482897b82546d46452d8a4b28ad84f220bc0eb8f3975ac4da44"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/publish-candidate.test.py",
+      "bytes": 6921,
+      "sha256": "2d4dfe6b6603115546a2cc62dd34df65ad9646c87826b394965ae7e820a3f6c3"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/verify-candidate.cjs",
+      "bytes": 9482,
+      "sha256": "a1b587cacdccc9f3fb65a74a740422fc4467ee907064982ddfe801a65d3dfcbb"
+    },
+    {
+      "path": "tools/integration/bind-r6-derivative-sbom.cjs",
+      "bytes": 7712,
+      "sha256": "b7915302974a2308c367ff01e81908a6d6252a62c34b32bf6e3d38400f2de500"
+    },
+    {
+      "path": "tests/integration/r6-derivative-sbom.test.cjs",
+      "bytes": 5828,
+      "sha256": "3927fc11ee648284fd983cd21f6dcdde4dea565be768db2455f183e996b988bc"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "bytes": 14400,
+      "sha256": "690ac5d6da94998ec4b2dca9bc6479c141d2c01e36f3dec484b950342670c3a1"
+    },
+    {
+      "path": "tests/system/os-updates-host-contract.test.cjs",
+      "bytes": 6321,
+      "sha256": "4860a5fa5d2a0003384d69d1528385142f11d88f3fa141ab11a861f2a8f396fd"
+    },
+    {
+      "path": "tools/system/update-test-to-r6.cjs",
+      "bytes": 26080,
+      "sha256": "8cbc44bd7d1be935233188c0c0e7247d343b665aa3506ab833df6899ae95e8af"
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/local-unsigned-payload-verification.json",
+      "bytes": 826486,
+      "sha256": "9b34c7441cc0639c0500c741b6b00d41e24b6dcc9b4aea0360f7f22a53bf6107"
+    }
+  ],
+  "localUnsignedPayloadVerified": true,
+  "localUnsignedPayloadEvidence": "reports/integration/installable-test3-r6-20261004/local-unsigned-payload-verification.json",
+  "authenticatedBaselineTransitions": [
+    7,
+    8
+  ],
+  "backupPreparation": {
+    "source": "reports/integration/r6-backup-package-20261004/evidence.json",
+    "bytes": 5006,
+    "sha256": "865fc6e220453fe577ae9eea648384a0ffb231d9c520a9eb84aee9c8f76fcb68",
+    "priorPreparationIncludedTranspilation": true,
+    "assemblyTranspilationPerformed": false,
+    "scope": "Two prebuilt helpers recovered before assembly with pinned TypeScript; exact existing Backup manifest hashes restored."
+  }
+}

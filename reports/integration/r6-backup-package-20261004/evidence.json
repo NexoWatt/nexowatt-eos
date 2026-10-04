@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "id": "EOS-R6-BACKUP-PACKAGE-20261004",
+  "utc": "2026-10-04T07:44:42.452347+00:00",
+  "basisCommit": "e699a6d575974574ffc4f48d47fe647f6f147f2a",
+  "component": "iobroker.nexowatt-backup@1.0.10",
+  "compiledFileRecovery": {
+    "build/lib/sdCard.js": {
+      "bytes": 18024,
+      "sha256": "1701698d9ebf11c729b2435850fe4bb85609be53c2899cf15ce682561d560e3d",
+      "matchesExistingManifest": true,
+      "source": "src/lib/sdCard.ts",
+      "sourceSha256": "efe992166653a3670c4508d75fa5589bd9623c1bb12d2d18848d118681685c35",
+      "sourceByteIdenticalToOriginalZip": true,
+      "originalZipContainedCompiledFile": false
+    },
+    "build/lib/influxDbCli.js": {
+      "bytes": 5585,
+      "sha256": "24aacfe56d1d80504cc47e265f7dc92a11043e89711c9940a8af90ee766f9627",
+      "matchesExistingManifest": true,
+      "source": "src/lib/influxDbCli.ts",
+      "sourceSha256": "99dce2428d838d5ced01fd5a07dcdb2b195736e6ec30455fa458cdc1d315ac88",
+      "sourceByteIdenticalToOriginalZip": true,
+      "originalZipContainedCompiledFile": false
+    },
+    "scripts/validate-publish.cjs": {
+      "bytes": 25412,
+      "sha256": "494bcf31fd388d01c3c0d905b3d13a8711359a2735b10cf50808a5dbee4f6b81"
+    },
+    "release-manifest.json": {
+      "bytes": 21376,
+      "sha256": "07cb7f570ad56b4922151f6a1a49c75b8acd4aff694da26a43fc4fb7da92dcfb"
+    },
+    "test/publish-asset-reference.js": {
+      "bytes": 2264,
+      "sha256": "978a097ad328ae350f238f9c687041650b9566743cae207a56af1789aadd2b7f"
+    }
+  },
+  "compiler": {
+    "version": "6.0.3",
+    "tarballUrl": "https://registry.npmjs.org/typescript/-/typescript-6.0.3.tgz",
+    "lockedIntegrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
+    "tarballSha256": "33cd0ee1beaa8c9e9d15a9da836c62ddea4c34a42d7c2d349dbc80d94165d22a",
+    "integrityVerified": true,
+    "lifecycleScriptsExecuted": false,
+    "lockfileModified": false,
+    "buildMethod": "ts.transpileModule with actual tsconfig.build.json; remove only final excluded sourceMappingURL pragma; no source modifications, no whole-project semantic typecheck",
+    "reproducer": "reports/integration/r6-backup-package-20261004/reproduce-two-modules.cjs"
+  },
+  "testEnvironment": {
+    "platform": "linux",
+    "architecture": "x64",
+    "node": "24.19.0",
+    "packageRoot": "/workspace/scratch/a8835322738f/tmp/r6-backup-package",
+    "packageSource": "Verified R5 iobroker.nexowatt-backup package overlaid with current component source/artifacts",
+    "dependencyRoot": "/workspace/scratch/a8835322738f/build/r6-preview/r5/bundle/payload/app/node_modules",
+    "TZ": "UTC",
+    "uidMap": "0 0 1"
+  },
+  "tests": {
+    "assetResolver": {
+      "passed": 3,
+      "failed": 0
+    },
+    "publishValidator": {
+      "passed": true,
+      "sha256VerifiedReleaseFiles": 131
+    },
+    "offline": {
+      "passed": 35,
+      "failed": 0,
+      "explicitlyExcluded": 1,
+      "excludedCase": "Linux permissions: non-root process succeeds with non-writable mount root and writable child",
+      "reason": "Initial real chown to UID/GID 65534 failed EINVAL; runtime maps only UID 0. Non-root OS permission boundary remains OPEN."
+    }
+  },
+  "rawEvidence": {
+    "asset-reference-tests-initial.tap": {
+      "sha256": "71ddfe548738bc48d7d92a598ae30196f8fb54058f5e444c615bbe0672eca8de",
+      "bytes": 1538
+    },
+    "asset-reference-tests.tap": {
+      "sha256": "cdbd22e61fa58a42e4c4e264b3210b883d51fa1912ad0dd06f36dca0fb198ffd",
+      "bytes": 717
+    },
+    "compiler-output.json": {
+      "sha256": "6eacc10177519459ea35f3c5d5c176d1a180d3d1c5442bf6efdd20c039ac9d70",
+      "bytes": 1515
+    },
+    "offline-tests-initial.tap": {
+      "sha256": "2406107dee82fd306f71645cec7fba55f9877664a7319a403ae261fe09ca9627",
+      "bytes": 10113
+    },
+    "offline-tests.tap": {
+      "sha256": "a6abedf6f9ceed388aeca669cfefbd9a29aae69d05de2ca97e81352bc9abd776",
+      "bytes": 7142
+    },
+    "package-validator-initial.log": {
+      "sha256": "1d45ef1adb8b5d804ec12229c639de8b63b18a2db5bd2800fc1323ce956ca305",
+      "bytes": 957
+    },
+    "package-validator.log": {
+      "sha256": "dfb27bb5a6d9f6bed004c4a215a5a691b12b10dfc6fbeed00a19375b4f3b607a",
+      "bytes": 609
+    },
+    "reproduce-two-modules.cjs": {
+      "sha256": "df5209d915e37e38b920e7a5d5d7ad2900f3c7a884279b3e34a40e3eac2578b7",
+      "bytes": 2704
+    }
+  },
+  "initialAttempts": "Kept original resolver failure and first offline log. Resolver corrected to exactly one module script; timezone and CWD invocation corrected. Unsupported UID-mapping permission case explicitly excluded, not counted as passed.",
+  "open": [
+    "Real non-root Linux SD-card permission test requires a runner with mapped non-root UID; not completed here.",
+    "No physical SD device, InfluxDB service, Pi/ARM64 installation or production approval.",
+    "Unchanged existing Influx remote skip-verify behavior was not modified or newly hardened by restoring identical compiled bytes."
+  ]
+}

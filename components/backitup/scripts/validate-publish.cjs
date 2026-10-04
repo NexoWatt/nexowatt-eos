@@ -404,12 +404,22 @@ for (const [file, content, builder] of [
     }
 }
 
-const tabHtml = readText('admin/tab_m.html');
-const tabAssetMatch = tabHtml.match(/src=["']\.\/assets\/([^"']+\.js)["']/);
-if (!tabAssetMatch) {
-    fail('admin/tab_m.html verweist auf kein JavaScript-Bundle.');
+function resolveTabScriptAsset(html) {
+    const modules = [...html.matchAll(/<script\b[^>]*>/gi)]
+        .filter(([tag]) => /\stype=(["'])module\1/i.test(tag));
+    if (modules.length !== 1) return null;
+    const script = modules[0][0].match(/\ssrc=(["'])([^"']+)\1/i);
+    if (!script) return null;
+    // Only generated local asset filenames and the EOS date cache key are valid.
+    // Never join an arbitrary URL, query value, encoded slash or traversal path.
+    const asset = script[2].match(/^\.\/assets\/([A-Za-z0-9_-]+\.js)(?:\?v=eos-[0-9]{8})?$/);
+    return asset ? `admin/assets/${asset[1]}` : null;
 }
-const tabAsset = tabAssetMatch ? `admin/assets/${tabAssetMatch[1]}` : '';
+const tabHtml = readText('admin/tab_m.html');
+const tabAsset = resolveTabScriptAsset(tabHtml);
+if (!tabAsset) {
+    fail('admin/tab_m.html verweist auf kein zulässiges lokales JavaScript-Bundle.');
+}
 const tabBundle = tabAsset ? readText(tabAsset) : '';
 for (const expected of [
     'SYSTEM WIRD GELADEN',

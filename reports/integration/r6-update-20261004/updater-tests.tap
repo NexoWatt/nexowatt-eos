@@ -1,0 +1,370 @@
+TAP version 13
+# Subtest: R4: CLI requires explicit absolute input paths and both independent new trust pins
+ok 1 - R4: CLI requires explicit absolute input paths and both independent new trust pins
+  ---
+  duration_ms: 1.90957
+  type: 'test'
+  ...
+# Subtest: R4: baseline must exactly match allowed release, sequence, key, runtime, profile and schema
+ok 2 - R4: baseline must exactly match allowed release, sequence, key, runtime, profile and schema
+  ---
+  duration_ms: 0.36567
+  type: 'test'
+  ...
+# Subtest: R4: transition rejects schema/unit mutation, new service, admission expansion and stale sequence
+ok 3 - R4: transition rejects schema/unit mutation, new service, admission expansion and stale sequence
+  ---
+  duration_ms: 1.181366
+  type: 'test'
+  ...
+# Subtest: R4: successful update preserves configuration, first-start provenance and old release; checks readiness before unlock
+ok 4 - R4: successful update preserves configuration, first-start provenance and old release; checks readiness before unlock
+  ---
+  duration_ms: 13.944358
+  type: 'test'
+  ...
+# Subtest: R4: wrong new key pin fails before stage or stop
+ok 5 - R4: wrong new key pin fails before stage or stop
+  ---
+  duration_ms: 2.520418
+  type: 'test'
+  ...
+# Subtest: R4: installed unit drift fails before runtime mutation
+ok 6 - R4: installed unit drift fails before runtime mutation
+  ---
+  duration_ms: 2.399767
+  type: 'test'
+  ...
+# Subtest: R4: existing maintenance lock is not removed or overwritten
+ok 7 - R4: existing maintenance lock is not removed or overwritten
+  ---
+  duration_ms: 2.671035
+  type: 'test'
+  ...
+# Subtest: R4: native failure removes only its own pre-transition lock and does not stop running controller
+ok 8 - R4: native failure removes only its own pre-transition lock and does not stop running controller
+  ---
+  duration_ms: 3.338137
+  type: 'test'
+  ...
+# Subtest: R4: readiness failure restores only old pointer/state, retains lock, never restarts old controller
+ok 9 - R4: readiness failure restores only old pointer/state, retains lock, never restarts old controller
+  ---
+  duration_ms: 4.859163
+  type: 'test'
+  ...
+# Subtest: R4: foreign state change during trial is not overwritten; stop and retain lock
+ok 10 - R4: foreign state change during trial is not overwritten; stop and retain lock
+  ---
+  duration_ms: 4.485272
+  type: 'test'
+  ...
+# Subtest: R4: foreign pointer during trial is not overwritten
+ok 11 - R4: foreign pointer during trial is not overwritten
+  ---
+  duration_ms: 4.322156
+  type: 'test'
+  ...
+# Subtest: R4: initial failed controller is repairable without database reinitialization
+ok 12 - R4: initial failed controller is repairable without database reinitialization
+  ---
+  duration_ms: 4.919074
+  type: 'test'
+  ...
+# Subtest: R4: pre-activation configuration race is detected; credentials are not written back
+ok 13 - R4: pre-activation configuration race is detected; credentials are not written back
+  ---
+  duration_ms: 3.501413
+  type: 'test'
+  ...
+# Subtest: R4: failed stop leaves lock and reports recovery required without claiming restored service
+ok 14 - R4: failed stop leaves lock and reports recovery required without claiming restored service
+  ---
+  duration_ms: 3.356745
+  type: 'test'
+  ...
+# Subtest: R4: journal failure during trial still attempts physical restoration and preserves the lock
+ok 15 - R4: journal failure during trial still attempts physical restoration and preserves the lock
+  ---
+  duration_ms: 3.583826
+  type: 'test'
+  ...
+# Subtest: R4: signature rejection does not acquire maintenance lock or execute candidate code
+ok 16 - R4: signature rejection does not acquire maintenance lock or execute candidate code
+  ---
+  duration_ms: 1.732444
+  type: 'test'
+  ...
+# Subtest: R4: directory fsync failure after successful unlock recreates gate before restoring old release
+ok 17 - R4: directory fsync failure after successful unlock recreates gate before restoring old release
+  ---
+  duration_ms: 4.837821
+  type: 'test'
+  ...
+# Subtest: R4: repair requires systemd invocation identity; unsupervised CLI cannot start maintenance
+ok 18 - R4: repair requires systemd invocation identity; unsupervised CLI cannot start maintenance
+  ---
+  duration_ms: 1.486094
+  type: 'test'
+  ...
+# Subtest: R4: false executable trust result is rejected before any service command or staging
+ok 19 - R4: false executable trust result is rejected before any service command or staging
+  ---
+  duration_ms: 1.468226
+  type: 'test'
+  ...
+# Subtest: R4: ExecStopPost quiesces only its own incomplete repair, including a failed permit revocation
+ok 20 - R4: ExecStopPost quiesces only its own incomplete repair, including a failed permit revocation
+  ---
+  duration_ms: 0.309745
+  type: 'test'
+  ...
+# Subtest: R4: malformed protected lock falls back only to its own bounded journal; valid foreign lock wins
+ok 21 - R4: malformed protected lock falls back only to its own bounded journal; valid foreign lock wins
+  ---
+  duration_ms: 0.303276
+  type: 'test'
+  ...
+# Subtest: R4: both prior release IDs and keys are refused as target trust
+ok 22 - R4: both prior release IDs and keys are refused as target trust
+  ---
+  duration_ms: 0.465089
+  type: 'test'
+  ...
+# Subtest: R4: wrong or unknown installed baseline is rejected without effects
+ok 23 - R4: wrong or unknown installed baseline is rejected without effects
+  ---
+  duration_ms: 1.816179
+  type: 'test'
+  ...
+# Subtest: R4: completion marker rejects foreign origin or physical-control admission before mutation
+ok 24 - R4: completion marker rejects foreign origin or physical-control admission before mutation
+  ---
+  duration_ms: 6.762865
+  type: 'test'
+  ...
+# Subtest: R4: root ownership denial, source symlinks and hardlinks fail before mutation
+ok 25 - R4: root ownership denial, source symlinks and hardlinks fail before mutation
+  ---
+  duration_ms: 4.127194
+  type: 'test'
+  ...
+# Subtest: R4: candidate payload and signature tampering hit the real verifier before lock or staging
+ok 26 - R4: candidate payload and signature tampering hit the real verifier before lock or staging
+  ---
+  duration_ms: 8.799946
+  type: 'test'
+  ...
+# Subtest: R4: candidate may only use seq9, test3, ARM64, exact node and unchanged catalog admission
+ok 27 - R4: candidate may only use seq9, test3, ARM64, exact node and unchanged catalog admission
+  ---
+  duration_ms: 0.732391
+  type: 'test'
+  ...
+# Subtest: R4: successful state changes to seq9 while all baseline bytes and provenance stay intact
+ok 28 - R4: successful state changes to seq9 while all baseline bytes and provenance stay intact
+  ---
+  duration_ms: 3.537096
+  type: 'test'
+  ...
+# Subtest: R5: CLI requires explicit absolute input paths and both independent new trust pins
+ok 29 - R5: CLI requires explicit absolute input paths and both independent new trust pins
+  ---
+  duration_ms: 0.239329
+  type: 'test'
+  ...
+# Subtest: R5: baseline must exactly match allowed release, sequence, key, runtime, profile and schema
+ok 30 - R5: baseline must exactly match allowed release, sequence, key, runtime, profile and schema
+  ---
+  duration_ms: 0.123826
+  type: 'test'
+  ...
+# Subtest: R5: transition rejects schema/unit mutation, new service, admission expansion and stale sequence
+ok 31 - R5: transition rejects schema/unit mutation, new service, admission expansion and stale sequence
+  ---
+  duration_ms: 0.188894
+  type: 'test'
+  ...
+# Subtest: R5: successful update preserves configuration, first-start provenance and old release; checks readiness before unlock
+ok 32 - R5: successful update preserves configuration, first-start provenance and old release; checks readiness before unlock
+  ---
+  duration_ms: 3.62643
+  type: 'test'
+  ...
+# Subtest: R5: wrong new key pin fails before stage or stop
+ok 33 - R5: wrong new key pin fails before stage or stop
+  ---
+  duration_ms: 1.850491
+  type: 'test'
+  ...
+# Subtest: R5: installed unit drift fails before runtime mutation
+ok 34 - R5: installed unit drift fails before runtime mutation
+  ---
+  duration_ms: 1.865063
+  type: 'test'
+  ...
+# Subtest: R5: existing maintenance lock is not removed or overwritten
+ok 35 - R5: existing maintenance lock is not removed or overwritten
+  ---
+  duration_ms: 1.901618
+  type: 'test'
+  ...
+# Subtest: R5: native failure removes only its own pre-transition lock and does not stop running controller
+ok 36 - R5: native failure removes only its own pre-transition lock and does not stop running controller
+  ---
+  duration_ms: 2.281409
+  type: 'test'
+  ...
+# Subtest: R5: readiness failure restores only old pointer/state, retains lock, never restarts old controller
+ok 37 - R5: readiness failure restores only old pointer/state, retains lock, never restarts old controller
+  ---
+  duration_ms: 4.156687
+  type: 'test'
+  ...
+# Subtest: R5: foreign state change during trial is not overwritten; stop and retain lock
+ok 38 - R5: foreign state change during trial is not overwritten; stop and retain lock
+  ---
+  duration_ms: 3.962656
+  type: 'test'
+  ...
+# Subtest: R5: foreign pointer during trial is not overwritten
+ok 39 - R5: foreign pointer during trial is not overwritten
+  ---
+  duration_ms: 3.41974
+  type: 'test'
+  ...
+# Subtest: R5: initial failed controller is repairable without database reinitialization
+ok 40 - R5: initial failed controller is repairable without database reinitialization
+  ---
+  duration_ms: 3.095753
+  type: 'test'
+  ...
+# Subtest: R5: pre-activation configuration race is detected; credentials are not written back
+ok 41 - R5: pre-activation configuration race is detected; credentials are not written back
+  ---
+  duration_ms: 2.503823
+  type: 'test'
+  ...
+# Subtest: R5: failed stop leaves lock and reports recovery required without claiming restored service
+ok 42 - R5: failed stop leaves lock and reports recovery required without claiming restored service
+  ---
+  duration_ms: 2.569241
+  type: 'test'
+  ...
+# Subtest: R5: journal failure during trial still attempts physical restoration and preserves the lock
+ok 43 - R5: journal failure during trial still attempts physical restoration and preserves the lock
+  ---
+  duration_ms: 3.068161
+  type: 'test'
+  ...
+# Subtest: R5: signature rejection does not acquire maintenance lock or execute candidate code
+ok 44 - R5: signature rejection does not acquire maintenance lock or execute candidate code
+  ---
+  duration_ms: 1.738183
+  type: 'test'
+  ...
+# Subtest: R5: directory fsync failure after successful unlock recreates gate before restoring old release
+ok 45 - R5: directory fsync failure after successful unlock recreates gate before restoring old release
+  ---
+  duration_ms: 3.968073
+  type: 'test'
+  ...
+# Subtest: R5: repair requires systemd invocation identity; unsupervised CLI cannot start maintenance
+ok 46 - R5: repair requires systemd invocation identity; unsupervised CLI cannot start maintenance
+  ---
+  duration_ms: 1.841768
+  type: 'test'
+  ...
+# Subtest: R5: false executable trust result is rejected before any service command or staging
+ok 47 - R5: false executable trust result is rejected before any service command or staging
+  ---
+  duration_ms: 1.394285
+  type: 'test'
+  ...
+# Subtest: R5: ExecStopPost quiesces only its own incomplete repair, including a failed permit revocation
+ok 48 - R5: ExecStopPost quiesces only its own incomplete repair, including a failed permit revocation
+  ---
+  duration_ms: 0.085398
+  type: 'test'
+  ...
+# Subtest: R5: malformed protected lock falls back only to its own bounded journal; valid foreign lock wins
+ok 49 - R5: malformed protected lock falls back only to its own bounded journal; valid foreign lock wins
+  ---
+  duration_ms: 0.123886
+  type: 'test'
+  ...
+# Subtest: R5: both prior release IDs and keys are refused as target trust
+ok 50 - R5: both prior release IDs and keys are refused as target trust
+  ---
+  duration_ms: 0.075473
+  type: 'test'
+  ...
+# Subtest: R5: wrong or unknown installed baseline is rejected without effects
+ok 51 - R5: wrong or unknown installed baseline is rejected without effects
+  ---
+  duration_ms: 1.46373
+  type: 'test'
+  ...
+# Subtest: R5: completion marker rejects foreign origin or physical-control admission before mutation
+ok 52 - R5: completion marker rejects foreign origin or physical-control admission before mutation
+  ---
+  duration_ms: 6.187379
+  type: 'test'
+  ...
+# Subtest: R5: root ownership denial, source symlinks and hardlinks fail before mutation
+ok 53 - R5: root ownership denial, source symlinks and hardlinks fail before mutation
+  ---
+  duration_ms: 4.146001
+  type: 'test'
+  ...
+# Subtest: R5: candidate payload and signature tampering hit the real verifier before lock or staging
+ok 54 - R5: candidate payload and signature tampering hit the real verifier before lock or staging
+  ---
+  duration_ms: 6.9337
+  type: 'test'
+  ...
+# Subtest: R5: candidate may only use seq9, test3, ARM64, exact node and unchanged catalog admission
+ok 55 - R5: candidate may only use seq9, test3, ARM64, exact node and unchanged catalog admission
+  ---
+  duration_ms: 0.335965
+  type: 'test'
+  ...
+# Subtest: R5: successful state changes to seq9 while all baseline bytes and provenance stay intact
+ok 56 - R5: successful state changes to seq9 while all baseline bytes and provenance stay intact
+  ---
+  duration_ms: 3.498949
+  type: 'test'
+  ...
+# Subtest: R5: R5-native completion does not require an R4 migration journal
+ok 57 - R5: R5-native completion does not require an R4 migration journal
+  ---
+  duration_ms: 3.19364
+  type: 'test'
+  ...
+# Subtest: R5: inherited R4 completion requires exact successful protected R4-to-R5 provenance
+ok 58 - R5: inherited R4 completion requires exact successful protected R4-to-R5 provenance
+  ---
+  duration_ms: 11.456879
+  type: 'test'
+  ...
+# Subtest: R5: inherited R4 completion refuses unavailable authenticated historical release
+ok 59 - R5: inherited R4 completion refuses unavailable authenticated historical release
+  ---
+  duration_ms: 1.635266
+  type: 'test'
+  ...
+# Subtest: R5: legacy provenance race after validation aborts without overwriting foreign journal
+ok 60 - R5: legacy provenance race after validation aborts without overwriting foreign journal
+  ---
+  duration_ms: 4.169351
+  type: 'test'
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 60
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 291.615699
