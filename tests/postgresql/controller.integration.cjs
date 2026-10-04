@@ -90,7 +90,17 @@ test('actual controller setup, startup and cross-process states over PostgreSQL 
       } finally { await client.end(); }
     }
   });
-  fs.writeFileSync(path.join(assembled.data, 'iobroker.json'), JSON.stringify(config), { mode: 0o600, flag: 'wx' });
+  const configFile = path.join(assembled.data, 'iobroker.json');
+  const configBytes = Buffer.from(JSON.stringify(config));
+  // The product initialize service bind-mounts its root-managed configuration
+  // read-only. Upstream 7.2.2 setup still tries to persist Redis-only retry
+  // options for every backend and catches a denied write. A writable laboratory
+  // config instead acquired retry_max_delay and correctly failed the strict PG
+  // validator at controller startup. Reproduce the product's denied-write
+  // behavior; never restore an unchecked setup mutation or relax validation.
+  assert.notEqual(process.getuid(), 0, 'read-only configuration contract requires an unprivileged laboratory process');
+  fs.writeFileSync(configFile, configBytes, { mode: 0o400, flag: 'wx' });
+  assert.throws(() => fs.accessSync(configFile, fs.constants.W_OK), { code: 'EACCES' });
   fs.mkdirSync(path.join(controller, 'tmp'), { recursive: true });
   // The controller receives laboratory values only, never GitHub credentials or
   // arbitrary runner environment. The sentinel proves host metadata strips env.
@@ -101,7 +111,15 @@ test('actual controller setup, startup and cross-process states over PostgreSQL 
     const child = launch(process.execPath, [path.join(controller, 'iobroker.js'), 'setup'], options); children.push(child);
     const timer = setTimeout(() => child.kill('SIGTERM'), 45000);
     const hardTimer = setTimeout(() => child.kill('SIGKILL'), 52000);
-    try { const code = await child.completion; if (code !== 0) t.diagnostic(redact(child.output)); assert.equal(code, 0); } finally { clearTimeout(timer); clearTimeout(hardTimer); }
+    try {
+      const code = await child.completion;
+      if (code !== 0) t.diagnostic(redact(child.output));
+      assert.equal(code, 0);
+      assert.match(child.output, /Could not update ioBroker configuration: EACCES/,
+        'pinned CLI must encounter the intentionally read-only configuration');
+      assert.equal(fs.readFileSync(configFile).equals(configBytes), true, 'setup must not change the authenticated configuration');
+      validateExperimentalProfile(JSON.parse(fs.readFileSync(configFile)), validateConnection);
+    } finally { clearTimeout(timer); clearTimeout(hardTimer); }
   });
   const events = [];
   const objects = await connect(appRequire('@iobroker/db-objects-postgresql').Client, config.objects, () => {}); clients.push(objects);
@@ -168,6 +186,7 @@ test('actual controller setup, startup and cross-process states over PostgreSQL 
   t.diagnostic(JSON.stringify({ controllerVersion: '7.2.2', databaseType: 'postgresql', redisServerStarted: false,
     physicalAdaptersStarted: false, hardwareAcceptance: false, productionBootstrapTested: false,
     nativePostgresqlTested: true, controllerRestartTested: true, hostEnvironmentExcluded: true,
+    configurationReadOnlyByMode: true, setupConfigurationBytesPreserved: true,
     productionControllerReadinessFunctionTested: true,
     relocatedPidAccessorAndDirectoryTested: nativeProfile, actualAdapterPidWriterLifecycleTested: false,
     immutableControllerDirectoryByMode: nativeProfile, actualSystemdMountRestrictionsTested: false,
