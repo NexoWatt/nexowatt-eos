@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: upstream host metadata contains the real exotic process.env object
+ok 1 - upstream host metadata contains the real exotic process.env object
+  ---
+  duration_ms: 2.007526
+  type: 'test'
+  ...
+# Subtest: own trusted host writes commit without copying process environment into storage or event
+ok 2 - own trusted host writes commit without copying process environment into storage or event
+  ---
+  duration_ms: 9.033453
+  type: 'test'
+  ...
+# Subtest: subsequent host network metadata update preserves the stored host and callbacks
+ok 3 - subsequent host network metadata update preserves the stored host and callbacks
+  ---
+  duration_ms: 3.201823
+  type: 'test'
+  ...
+# Subtest: unrelated object and foreign host retain strict exotic-prototype rejection
+ok 4 - unrelated object and foreign host retain strict exotic-prototype rejection
+  ---
+  duration_ms: 2.30786
+  type: 'test'
+  ...
+# Subtest: forged administrator options do not admit controller environment metadata
+ok 5 - forged administrator options do not admit controller environment metadata
+  ---
+  duration_ms: 1.293045
+  type: 'test'
+  ...
+# Subtest: known nonadministrator writer cannot use the trusted host normalization
+ok 6 - known nonadministrator writer cannot use the trusted host normalization
+  ---
+  duration_ms: 1.399988
+  type: 'test'
+  ...
+# Subtest: ordinary document errors retain safe diagnostic codes through the actual transaction boundary
+ok 7 - ordinary document errors retain safe diagnostic codes through the actual transaction boundary
+  ---
+  duration_ms: 1.463493
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 202.637359

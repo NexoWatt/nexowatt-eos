@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: queued object change is not delivered after database disconnect
+ok 1 - queued object change is not delivered after database disconnect
+  ---
+  duration_ms: 2.057652
+  type: 'test'
+  ...
+# Subtest: late ACL result cannot deliver an object from the disconnected generation
+ok 2 - late ACL result cannot deliver an object from the disconnected generation
+  ---
+  duration_ms: 1.055807
+  type: 'test'
+  ...
+# Subtest: reconnect drops old queued changes and delivers only new changes
+ok 3 - reconnect drops old queued changes and delivers only new changes
+  ---
+  duration_ms: 3.278819
+  type: 'test'
+  ...
+# Subtest: destroy invalidates an asynchronous ACL result
+ok 4 - destroy invalidates an asynchronous ACL result
+  ---
+  duration_ms: 1.065511
+  type: 'test'
+  ...
+# Subtest: late file ACL callback does not notify after disconnect
+ok 5 - late file ACL callback does not notify after disconnect
+  ---
+  duration_ms: 1.039863
+  type: 'test'
+  ...
+# Subtest: late protocol check cannot report an already disconnected client as connected
+ok 6 - late protocol check cannot report an already disconnected client as connected
+  ---
+  duration_ms: 1.336591
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 199.727483
