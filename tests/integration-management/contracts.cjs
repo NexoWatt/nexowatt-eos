@@ -48,3 +48,21 @@ test('HTTPS diagnostics expose only fixed stage/code/reason and the expected fix
     assert.deepEqual(probeFailure({ code: 'ONBOARD_HTTPS_NOT_READY', stage: 'https-probe', reason: 'deadline', message: secret }, 8188),
         { code: 'ONBOARD_HTTPS_NOT_READY', stage: 'https-probe', reason: 'deadline', port: 8188 });
 });
+test('management fixture preserves the exact production PostgreSQL admission profile', () => {
+    const { resolveLabProfile } = require('../postgresql/fixtures/lab-cluster.cjs');
+    const { assertRuntimeConfig } = require('../../runtime/bootstrap/initialize.cjs');
+    assert.deepEqual(resolveLabProfile(), { port: null, database: 'eos_lab' });
+    assert.deepEqual(resolveLabProfile('management'), { port: 15432, database: 'eos' });
+    for (const input of [null, true, 15432, {}, 'eos', '127.0.0.1', 'management;DROP DATABASE eos']) {
+        assert.throws(() => resolveLabProfile(input), { code: 'EOS_PG_LAB_PROFILE' });
+    }
+    const config = { system: { hostname: 'eos-management-lab', compact: false, allowShellCommands: false },
+        multihostService: { enabled: false }, plugins: { sentry: { enabled: false } } };
+    for (const domain of ['objects', 'states']) config[domain] = { type: 'postgresql', host: '127.0.0.1', ...resolveLabProfile('management'),
+        user: 'eos_' + domain, options: { ssl: { ca: 'admission-only-ca', cert: domain + '-admission-cert', key: domain + '-admission-key' } } };
+    assert.equal(assertRuntimeConfig(config), config);
+    for (const [field, value] of [['port', 5432], ['database', 'eos_lab'], ['host', 'localhost']]) {
+        const altered = structuredClone(config); altered.objects[field] = value;
+        assert.throws(() => assertRuntimeConfig(altered), { code: 'POSTGRESQL_LOCAL_PROFILE_REQUIRED' });
+    }
+});

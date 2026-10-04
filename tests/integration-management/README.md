@@ -43,6 +43,12 @@ und über den echten R7-Lizenzspeicher verschlüsselt; sie ist kein Lizenz-Bypas
 
 Der native Test verwendet PostgreSQL **17.11**, getrennte `eos_objects`/
 `eos_states`-Rollen ohne Superuser/BypassRLS und gegenseitiges TLS 1.3. Die
+Labor-Fixture wird ausdrücklich mit `profile: 'management'` auf dem festen
+Produkt-Endpunkt `127.0.0.1:15432`, Datenbank `eos`, gestartet. Ein belegter
+Port führt zum Fehler; vorhandene Server werden weder verwendet noch gestoppt.
+Der bisherige Core-only-Test behält seinen dynamischen Port und `eos_lab`.
+Die unveränderte Produktions-Konfigurationsprüfung bleibt verbindlich.
+Die
 Produktionserzeuger erstellen echte HTTPS-Zertifikate an den fest vorgeschriebenen
 Pfaden. Produktions-Bootstrap, Erstregistrierung, Upload-CLI, Adapter-PID-Datei,
 Enrollment-Verifikation und Neustart laufen gegen die echten Module.
@@ -77,7 +83,10 @@ node --test tests/integration-management/contracts.cjs
 
 Die expliziten Vorprüfungen authentifizieren sämtliche 22.841 R7-Dateien und
 prüfen mit dem echten Lizenzkern die ephemere Lizenz einschließlich falscher UUID
-und verschlüsseltem Speicher. Syntax und diese Vorprüfungen sind lokal ausführbar.
+und verschlüsseltem Speicher. Zusätzliche Konfigurationsverträge prüfen mit dem
+echten Produktionsvalidator die Zulassung des festen Managementprofils sowie
+die Ablehnung abweichender Hosts, Ports und Datenbanknamen. Diese Prüfungen
+simulieren keine erfolgreiche TLS-Verbindung. Syntax und diese Vorprüfungen sind lokal ausführbar.
 Die aktuelle Arbeitsumgebung hat nur UID 0 in ihrer UID-Map und keinen nativen
 PostgreSQL-Server. **Native Fullmanagement-Ausführung ist bis zum tatsächlichen
 CI-Ergebnis OFFEN.** Pi/ARM64, systemd-Mount-Policies, Browser-Login, Reboot,

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "kind": "r8-restored-r7-recovery-coordinator-contracts",
+  "date": "2026-10-04",
+  "sourceFiles": [
+    {
+      "path": "tools/system/recover-r4-restored-r7-to-r8.cjs",
+      "sha256": "136637eaeadabf6c5d0d10504efcfac8968cfd674d9128c8402d460d35fcaf68"
+    },
+    {
+      "path": "tests/system/recover-r4-restored-r7-to-r8.test.cjs",
+      "sha256": "160815c826742f43fc511a7eb16589332eead472f2ee95f3faf9e451724aea5b"
+    },
+    {
+      "path": "tools/system/recover-r4-first-start-to-r7.cjs",
+      "sha256": "c33d40dca4aada60ddf861d70c9445c9a6cdff1fc64f49a2799a8683e87aa971"
+    },
+    {
+      "path": "tools/system/onboard-ui.cjs",
+      "sha256": "afc872c23990ab57281115b09776a58fd9fa793e2fd70bd7312c31c7df215b50"
+    },
+    {
+      "path": "reports/integration/r8-restored-recovery-20261004/coordinator-tests.tap",
+      "sha256": "a4656ecf676522b379b7a81b3083e39250f5bdde96c31006a61313f383b4af49"
+    }
+  ],
+  "command": "node --test --test-reporter=tap tests/system/recover-r4-restored-r7-to-r8.test.cjs",
+  "runtime": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x86_64"
+  },
+  "tests": {
+    "passed": 68,
+    "failed": 0,
+    "skipped": 0
+  },
+  "targetSequence": 11,
+  "retainedR7": {
+    "sequence": 10,
+    "phase": "RESTORED_STOPPED",
+    "releaseId": "d400cab68939e60e22b619b78b3ecc4a4043afbfe6e21696934db42ba586d5a3",
+    "publicKeySha256": "a6a11d0d02b058a15d78a1aa81a22e488d120ee3ab9f11e1bd35a3aafad6d522"
+  },
+  "realFilesystemTransitions": true,
+  "servicesInjected": true,
+  "packageVerificationInjected": true,
+  "nativeProbeInjected": true,
+  "enrollmentCollectorInjected": true,
+  "readinessTransportInjected": true,
+  "historicalR7HelperUnchanged": true,
+  "nativeSystemdTransitionPerformed": false,
+  "actualPiRecoveryPerformed": false,
+  "actualPiLoginVerified": false,
+  "actualPiRebootVerified": false,
+  "physicalControlEnabled": false,
+  "productionReleaseApproved": false
+}

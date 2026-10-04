@@ -2,39 +2,45 @@ TAP version 13
 # Subtest: entire authentic R7 manifest and signed payload match the fixed management baseline
 ok 1 - entire authentic R7 manifest and signed payload match the fixed management baseline
   ---
-  duration_ms: 1412.687975
+  duration_ms: 1453.226171
   type: 'test'
   ...
 # Subtest: a substituted trust key is rejected before any extracted code is used
 ok 2 - a substituted trust key is rejected before any extracted code is used
   ---
-  duration_ms: 1.70243
+  duration_ms: 2.074892
   type: 'test'
   ...
 # Subtest: real R7 license core accepts the ephemeral signed entitlement and encrypted store, rejects a different UUID
 ok 3 - real R7 license core accepts the ephemeral signed entitlement and encrypted store, rejects a different UUID
   ---
-  duration_ms: 14.800711
+  duration_ms: 16.628845
   type: 'test'
   ...
 # Subtest: root fixture refuses accidental execution outside explicit disposable-host authorization
 ok 4 - root fixture refuses accidental execution outside explicit disposable-host authorization
   ---
-  duration_ms: 1.32264
+  duration_ms: 1.826077
   type: 'test'
   ...
 # Subtest: HTTPS diagnostics expose only fixed stage/code/reason and the expected fixed port
 ok 5 - HTTPS diagnostics expose only fixed stage/code/reason and the expected fixed port
   ---
-  duration_ms: 0.665872
+  duration_ms: 0.745492
   type: 'test'
   ...
-1..5
-# tests 5
+# Subtest: management fixture preserves the exact production PostgreSQL admission profile
+ok 6 - management fixture preserves the exact production PostgreSQL admission profile
+  ---
+  duration_ms: 5.182917
+  type: 'test'
+  ...
+1..6
+# tests 6
 # suites 0
-# pass 5
+# pass 6
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 1510.927437
+# duration_ms 1571.24789

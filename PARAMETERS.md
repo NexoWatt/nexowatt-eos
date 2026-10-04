@@ -11,6 +11,36 @@ are returned. `ok` describes report generation, never recovery eligibility.
 See [operator procedure](docs/operations/FIRST_START_DIAGNOSTIC_DE.md).
 Historical signed R4/R5/R6 payloads do not contain this new helper.
 
+## R8 recovery after an R7 rollback (2026-10-04)
+
+`tools/system/recover-r4-restored-r7-to-r8.cjs` is a separate coordinator for
+exactly authenticated R4 sequence 7 with the retained published R7 journal in
+`RESTORED_STOPPED`. It accepts the same four pinned bundle/key arguments as
+R7; no force, arbitrary root, credential replacement or validation bypass is
+available. The protected R7 journal, guard, original R4 state and historical
+release signatures must agree before any mutation. The R7 evidence remains
+unchanged. Separate R8 gates preserve a stopped recovery state on failure.
+Fixed `failureStage`, `failureCode` and `failureReason` values survive rollback;
+private exception text and device configuration are not exposed.
+See [R8 eligibility and failure handling](docs/operations/RECOVER_R4_RESTORED_R7_TO_R8_DE.md).
+
+Management readiness uses fresh adapter heartbeats followed by concurrent
+strict HTTPS checks on ports 8081 and 8188. Each endpoint has one monotonic
+5000 ms budget including bounded listener retries; only connection refusal or
+reset before any response is retried. TLS 1.3, trusted CA/hostname, exact login
+redirect and strict anonymous UI authorization predicates remain mandatory.
+The source CI and R8 delivery require real native PostgreSQL/Admin/UI startup
+and restart in a disposable unprivileged laboratory. Native x64 success does
+not establish Pi, systemd, browser login or plant acceptance.
+
+Manufacturer commands `build-public-r8-recovery-entry.cjs` and
+`prepare-public-r8-recovery-publication.cjs` under `tools/bootstrap/` use the
+same stage-specific argument forms as R7. They authenticate the new sequence-11
+archive and retained R7 identity before generating a pinned public entry.
+The initial build requires a marker-only child commit bound to its exact source
+parent; manual dispatch can only resume an already published R8. No signed R8
+or usable operator command is implied until publication and readback succeed.
+
 ## R7 failed first-start recovery tools (2026-10-04)
 
 `tools/system/recover-r4-first-start-to-r7.cjs` is a separate, narrowly scoped

@@ -26,7 +26,15 @@ function run(command,args,options={}) {
   }
   return result.stdout;
 }
-async function startLab({binDirectory=process.env.EOS_PG_BIN_DIRECTORY,schemaFile}={}) {
+function resolveLabProfile(profile='laboratory') {
+  // Two fixed fixture profiles, never arbitrary connection input. Management
+  // invokes the unchanged product bootstrap, which requires port15432/db eos.
+  if(profile==='laboratory')return {port:null,database:'eos_lab'};
+  if(profile==='management')return {port:15432,database:'eos'};
+  throw Object.assign(new Error('EOS_PG_LAB_PROFILE'),{code:'EOS_PG_LAB_PROFILE'});
+}
+async function startLab({binDirectory=process.env.EOS_PG_BIN_DIRECTORY,schemaFile,profile='laboratory'}={}) {
+  const selected=resolveLabProfile(profile);
   if(typeof process.getuid!=='function' || process.getuid()===0) {
     const error=new Error('PostgreSQL laboratory requires an unprivileged OS account; root execution is refused.');
     error.code='EOS_PG_LAB_REQUIRES_NONROOT'; throw error;
@@ -77,25 +85,25 @@ async function startLab({binDirectory=process.env.EOS_PG_BIN_DIRECTORY,schemaFil
     run('openssl',['req','-new',...newKeyArgs,'-x509','-days','2','-subj','/CN=EOS wrong test CA','-keyout',cert('wrong-ca.key'),'-out',cert('wrong-ca.crt')]);
     for(const entry of await fsp.readdir(certDirectory))await fsp.chmod(cert(entry),entry.endsWith('.key')?0o600:0o644);
     run(bin('initdb'),['-D',dataDirectory,'--username=eos_lab_owner','--auth-local=peer','--auth-host=scram-sha-256','--encoding=UTF8','--no-locale','--data-checksums']);
-    const port=await unusedLoopbackPort();
+    const port=selected.port??await unusedLoopbackPort();
     // Values originate exclusively in this private generated directory.
     const conf=["listen_addresses='127.0.0.1'",`port=${port}`,`unix_socket_directories='${socketDirectory.replaceAll("'","''")}'`,'unix_socket_permissions=0700','max_connections=40',"shared_buffers='32MB'",'ssl=on',"ssl_min_protocol_version='TLSv1.3'",`ssl_cert_file='${cert('server.crt').replaceAll("'","''")}'`,`ssl_key_file='${cert('server.key').replaceAll("'","''")}'`,`ssl_ca_file='${cert('ca.crt').replaceAll("'","''")}'`,"password_encryption='scram-sha-256'","authentication_timeout='5s'","statement_timeout='5s'","idle_in_transaction_session_timeout='5s'","log_statement='none'","log_min_error_statement='panic'",'logging_collector=off'];
     await fsp.writeFile(path.join(dataDirectory,'postgresql.conf'),`${conf.join('\n')}\n`,{mode:0o600});
-    await fsp.writeFile(path.join(dataDirectory,'pg_hba.conf'),'local all eos_lab_owner peer map=lab_owner\nlocal all all reject\nhostnossl all all 0.0.0.0/0 reject\nhostssl eos_lab eos_objects,eos_states 127.0.0.1/32 cert\nhostssl eos_tls_probe eos_tls_probe 127.0.0.1/32 cert\nhostssl all all 0.0.0.0/0 reject\nhost all all ::0/0 reject\n',{mode:0o600});
+    await fsp.writeFile(path.join(dataDirectory,'pg_hba.conf'),`local all eos_lab_owner peer map=lab_owner\nlocal all all reject\nhostnossl all all 0.0.0.0/0 reject\nhostssl ${selected.database} eos_objects,eos_states 127.0.0.1/32 cert\nhostssl eos_tls_probe eos_tls_probe 127.0.0.1/32 cert\nhostssl all all 0.0.0.0/0 reject\nhost all all ::0/0 reject\n`,{mode:0o600});
     await fsp.writeFile(path.join(dataDirectory,'pg_ident.conf'),`lab_owner ${username} eos_lab_owner\n`,{mode:0o600});
     started=true; // Even a startup timeout must take the stop/status path before cleanup.
     run(bin('pg_ctl'),['-D',dataDirectory,'-l',path.join(directory,'server.log'),'-w','-t','10','start'],{timeout:15000});
     const psqlArgs=['-X','-v','ON_ERROR_STOP=1','-h',socketDirectory,'-p',String(port),'-U','eos_lab_owner'];
-    run(bin('psql'),[...psqlArgs,'-d','postgres'],{input:'CREATE DATABASE eos_lab;\nCREATE ROLE eos_tls_probe LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\nCREATE DATABASE eos_tls_probe;\nREVOKE ALL ON DATABASE eos_tls_probe FROM PUBLIC;\nGRANT CONNECT ON DATABASE eos_tls_probe TO eos_tls_probe;\n'});
-    if(schemaFile)run(bin('psql'),[...psqlArgs,'-d','eos_lab','-f',path.resolve(schemaFile)]);
-    const metadata={labOnly:true,version,directory,dataDirectory,socketDirectory,binDirectory,host:'127.0.0.1',port,database:'eos_lab',bootstrapDbUser:'eos_lab_owner',osUid:process.getuid(),serverName:'localhost',caFile:cert('ca.crt'),roles:Object.fromEntries(['eos_objects','eos_states','eos_tls_probe'].map(role=>[role,{certFile:cert(`${role}.crt`),keyFile:cert(`${role}.key`)}]))};
-    return {metadata,stop,psql(sql,database='eos_lab'){return run(bin('psql'),[...psqlArgs,'-d',database],{input:sql});}};
+    run(bin('psql'),[...psqlArgs,'-d','postgres'],{input:`CREATE DATABASE ${selected.database};\nCREATE ROLE eos_tls_probe LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;\nCREATE DATABASE eos_tls_probe;\nREVOKE ALL ON DATABASE eos_tls_probe FROM PUBLIC;\nGRANT CONNECT ON DATABASE eos_tls_probe TO eos_tls_probe;\n`});
+    if(schemaFile)run(bin('psql'),[...psqlArgs,'-d',selected.database,'-f',path.resolve(schemaFile)]);
+    const metadata={labOnly:true,version,directory,dataDirectory,socketDirectory,binDirectory,host:'127.0.0.1',port,database:selected.database,bootstrapDbUser:'eos_lab_owner',osUid:process.getuid(),serverName:'localhost',caFile:cert('ca.crt'),roles:Object.fromEntries(['eos_objects','eos_states','eos_tls_probe'].map(role=>[role,{certFile:cert(`${role}.crt`),keyFile:cert(`${role}.key`)}]))};
+    return {metadata,stop,psql(sql,database=selected.database){return run(bin('psql'),[...psqlArgs,'-d',database],{input:sql});}};
   }catch(error){
     try{await stop();}catch(cleanupError){error.cleanupError=cleanupError.message;}
     throw error;
   }
 }
-module.exports={startLab};
+module.exports={startLab,resolveLabProfile};
 if(require.main===module) {
   startLab({schemaFile:process.env.EOS_PG_SCHEMA_FILE}).then(lab=>{
     process.stdout.write(`${JSON.stringify(lab.metadata,null,2)}\n`);

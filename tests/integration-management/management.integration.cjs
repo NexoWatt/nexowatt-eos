@@ -19,7 +19,7 @@ const app = path.join(root, 'management-app');
 const data = '/var/lib/nexowatt-eos/iobroker-data';
 const controller = path.join(app, 'node_modules/iobroker.js-controller');
 const metadata = JSON.parse(fs.readFileSync(path.join(root, 'management-pg-paths.json')));
-if (metadata.labOnly !== true || metadata.database !== 'eos_lab' || metadata.host !== '127.0.0.1' || metadata.osUid !== process.getuid()) throw new Error('MANAGEMENT_PRIVATE_DATABASE_REQUIRED');
+if (metadata.labOnly !== true || metadata.database !== 'eos' || metadata.port !== 15432 || metadata.host !== '127.0.0.1' || metadata.osUid !== process.getuid()) throw new Error('MANAGEMENT_PRIVATE_DATABASE_REQUIRED');
 const silent = Object.fromEntries(['silly', 'debug', 'info', 'warn', 'error'].map(k => [k, () => {}]));
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));

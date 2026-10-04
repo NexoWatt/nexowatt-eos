@@ -1,0 +1,418 @@
+TAP version 13
+# Subtest: R8 retry: successful recovery creates completion after readiness and preserves existing config/old release
+ok 1 - R8 retry: successful recovery creates completion after readiness and preserves existing config/old release
+  ---
+  duration_ms: 19.897507
+  type: 'test'
+  ...
+# Subtest: R8 retry: completed first-start refuses before stage/stop and retains original lock
+ok 2 - R8 retry: completed first-start refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.458592
+  type: 'test'
+  ...
+# Subtest: R8 retry: prior R8 recovery refuses before stage/stop and retains original lock
+ok 3 - R8 retry: prior R8 recovery refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.0986
+  type: 'test'
+  ...
+# Subtest: R8 retry: R6 attempt refuses before stage/stop and retains original lock
+ok 4 - R8 retry: R6 attempt refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.229046
+  type: 'test'
+  ...
+# Subtest: R8 retry: existing permit refuses before stage/stop and retains original lock
+ok 5 - R8 retry: existing permit refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 2.831299
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign lock refuses before stage/stop and retains original lock
+ok 6 - R8 retry: foreign lock refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.076858
+  type: 'test'
+  ...
+# Subtest: R8 retry: live old coordinator refuses before stage/stop and retains original lock
+ok 7 - R8 retry: live old coordinator refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.082166
+  type: 'test'
+  ...
+# Subtest: R8 retry: wrong key pin refuses before stage/stop and retains original lock
+ok 8 - R8 retry: wrong key pin refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.138841
+  type: 'test'
+  ...
+# Subtest: R8 retry: wrong release sequence refuses before stage/stop and retains original lock
+ok 9 - R8 retry: wrong release sequence refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.398682
+  type: 'test'
+  ...
+# Subtest: R8 retry: installed unit drift refuses before stage/stop and retains original lock
+ok 10 - R8 retry: installed unit drift refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.207294
+  type: 'test'
+  ...
+# Subtest: R8 retry: DB enrollment rejected refuses before stage/stop and retains original lock
+ok 11 - R8 retry: DB enrollment rejected refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 4.101188
+  type: 'test'
+  ...
+# Subtest: R8 retry: active controller refuses before stage/stop and retains original lock
+ok 12 - R8 retry: active controller refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 3.200404
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at stage retains locked stopped R4 and never reports success
+ok 13 - R8 retry: fault at stage retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 5.59143
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at native retains locked stopped R4 and never reports success
+ok 14 - R8 retry: fault at native retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 4.477174
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at readiness retains locked stopped R4 and never reports success
+ok 15 - R8 retry: fault at readiness retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 7.626401
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at verify-live retains locked stopped R4 and never reports success
+ok 16 - R8 retry: fault at verify-live retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 7.887803
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at enable nexowatt-eos.target retains locked stopped R4 and never reports success
+ok 17 - R8 retry: fault at enable nexowatt-eos.target retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 7.995475
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at disable nexowatt-eos-setup.target retains locked stopped R4 and never reports success
+ok 18 - R8 retry: fault at disable nexowatt-eos-setup.target retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 9.678357
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at ACTIVE-journal retains locked stopped R4 and never reports success
+ok 19 - R8 retry: fault at ACTIVE-journal retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 7.547772
+  type: 'test'
+  ...
+# Subtest: R8 retry: unrestored phase rejects retained R7 history before any mutations
+ok 20 - R8 retry: unrestored phase rejects retained R7 history before any mutations
+  ---
+  duration_ms: 2.891799
+  type: 'test'
+  ...
+# Subtest: R8 retry: active phase rejects retained R7 history before any mutations
+ok 21 - R8 retry: active phase rejects retained R7 history before any mutations
+  ---
+  duration_ms: 3.646895
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign target rejects retained R7 history before any mutations
+ok 22 - R8 retry: foreign target rejects retained R7 history before any mutations
+  ---
+  duration_ms: 2.804388
+  type: 'test'
+  ...
+# Subtest: R8 retry: wrong sequence rejects retained R7 history before any mutations
+ok 23 - R8 retry: wrong sequence rejects retained R7 history before any mutations
+  ---
+  duration_ms: 2.710657
+  type: 'test'
+  ...
+# Subtest: R8 retry: wrong operation ID rejects retained R7 history before any mutations
+ok 24 - R8 retry: wrong operation ID rejects retained R7 history before any mutations
+  ---
+  duration_ms: 4.245145
+  type: 'test'
+  ...
+# Subtest: R8 retry: wrong invocation ID rejects retained R7 history before any mutations
+ok 25 - R8 retry: wrong invocation ID rejects retained R7 history before any mutations
+  ---
+  duration_ms: 3.190009
+  type: 'test'
+  ...
+# Subtest: R8 retry: unknown fields rejects retained R7 history before any mutations
+ok 26 - R8 retry: unknown fields rejects retained R7 history before any mutations
+  ---
+  duration_ms: 5.080852
+  type: 'test'
+  ...
+# Subtest: R8 retry: noncanonical original bytes rejects retained R7 history before any mutations
+ok 27 - R8 retry: noncanonical original bytes rejects retained R7 history before any mutations
+  ---
+  duration_ms: 3.109578
+  type: 'test'
+  ...
+# Subtest: R8 retry: different original state bytes rejects retained R7 history before any mutations
+ok 28 - R8 retry: different original state bytes rejects retained R7 history before any mutations
+  ---
+  duration_ms: 4.795633
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign original onboarding rejects retained R7 history before any mutations
+ok 29 - R8 retry: foreign original onboarding rejects retained R7 history before any mutations
+  ---
+  duration_ms: 3.175056
+  type: 'test'
+  ...
+# Subtest: R8 retry: physical control flag rejects retained R7 history before any mutations
+ok 30 - R8 retry: physical control flag rejects retained R7 history before any mutations
+  ---
+  duration_ms: 3.921609
+  type: 'test'
+  ...
+# Subtest: R8 retry: production flag rejects retained R7 history before any mutations
+ok 31 - R8 retry: production flag rejects retained R7 history before any mutations
+  ---
+  duration_ms: 3.577221
+  type: 'test'
+  ...
+# Subtest: R8 retry: changed guard bytes refuses without deleting the R7 gate
+ok 32 - R8 retry: changed guard bytes refuses without deleting the R7 gate
+  ---
+  duration_ms: 5.28256
+  type: 'test'
+  ...
+# Subtest: R8 retry: readable guard refuses without deleting the R7 gate
+ok 33 - R8 retry: readable guard refuses without deleting the R7 gate
+  ---
+  duration_ms: 2.791549
+  type: 'test'
+  ...
+# Subtest: R8 retry: symlink guard refuses without deleting the R7 gate
+ok 34 - R8 retry: symlink guard refuses without deleting the R7 gate
+  ---
+  duration_ms: 2.637196
+  type: 'test'
+  ...
+# Subtest: R8 retry: hardlink guard refuses without deleting the R7 gate
+ok 35 - R8 retry: hardlink guard refuses without deleting the R7 gate
+  ---
+  duration_ms: 5.346112
+  type: 'test'
+  ...
+# Subtest: R8 retry: oversized guard refuses without deleting the R7 gate
+ok 36 - R8 retry: oversized guard refuses without deleting the R7 gate
+  ---
+  duration_ms: 5.933304
+  type: 'test'
+  ...
+# Subtest: R8 retry: missing guard refuses without deleting the R7 gate
+ok 37 - R8 retry: missing guard refuses without deleting the R7 gate
+  ---
+  duration_ms: 3.325531
+  type: 'test'
+  ...
+# Subtest: R8 retry: live retained coordinator PID 100 rejects before changes
+ok 38 - R8 retry: live retained coordinator PID 100 rejects before changes
+  ---
+  duration_ms: 3.009056
+  type: 'test'
+  ...
+# Subtest: R8 retry: live retained coordinator PID 101 rejects before changes
+ok 39 - R8 retry: live retained coordinator PID 101 rejects before changes
+  ---
+  duration_ms: 5.580023
+  type: 'test'
+  ...
+# Subtest: R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=active,MainPID=0,ControlPID=0
+ok 40 - R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=active,MainPID=0,ControlPID=0
+  ---
+  duration_ms: 4.975574
+  type: 'test'
+  ...
+# Subtest: R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=failed,MainPID=51,ControlPID=0
+ok 41 - R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=failed,MainPID=51,ControlPID=0
+  ---
+  duration_ms: 2.502935
+  type: 'test'
+  ...
+# Subtest: R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=inactive,MainPID=0,ControlPID=52
+ok 42 - R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=inactive,MainPID=0,ControlPID=52
+  ---
+  duration_ms: 2.625459
+  type: 'test'
+  ...
+# Subtest: R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=inactive
+ok 43 - R8 retry: unquiesced/incomplete previous service evidence rejects: ActiveState=inactive
+  ---
+  duration_ms: 2.963317
+  type: 'test'
+  ...
+# Subtest: R8 retry: R7 installed authentication is mandatory and scoped before stage
+ok 44 - R8 retry: R7 installed authentication is mandatory and scoped before stage
+  ---
+  duration_ms: 4.715112
+  type: 'test'
+  ...
+# Subtest: R8 retry: changed historical first-start-recovery-r7.json before adoption is not overwritten
+ok 45 - R8 retry: changed historical first-start-recovery-r7.json before adoption is not overwritten
+  ---
+  duration_ms: 5.080762
+  type: 'test'
+  ...
+# Subtest: R8 retry: changed historical .first-start-recovery-r7.guard before adoption is not overwritten
+ok 46 - R8 retry: changed historical .first-start-recovery-r7.guard before adoption is not overwritten
+  ---
+  duration_ms: 4.339487
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign pointer during trial remains untouched behind recovery-required gate
+ok 47 - R8 retry: foreign pointer during trial remains untouched behind recovery-required gate
+  ---
+  duration_ms: 11.178994
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign state during trial remains untouched behind recovery-required gate
+ok 48 - R8 retry: foreign state during trial remains untouched behind recovery-required gate
+  ---
+  duration_ms: 6.067997
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign completion during trial remains untouched behind recovery-required gate
+ok 49 - R8 retry: foreign completion during trial remains untouched behind recovery-required gate
+  ---
+  duration_ms: 6.34961
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign lock during trial remains untouched behind recovery-required gate
+ok 50 - R8 retry: foreign lock during trial remains untouched behind recovery-required gate
+  ---
+  duration_ms: 6.031822
+  type: 'test'
+  ...
+# Subtest: R8 retry: foreign guard during trial remains untouched behind recovery-required gate
+ok 51 - R8 retry: foreign guard during trial remains untouched behind recovery-required gate
+  ---
+  duration_ms: 6.524364
+  type: 'test'
+  ...
+# Subtest: R8 retry: HTTPS cause/stage survives rollback while raw details never leave the exception boundary
+ok 52 - R8 retry: HTTPS cause/stage survives rollback while raw details never leave the exception boundary
+  ---
+  duration_ms: 6.361017
+  type: 'test'
+  ...
+# Subtest: R8 retry: stop failure preserves original cause and does not claim RESTORED_STOPPED
+ok 53 - R8 retry: stop failure preserves original cause and does not claim RESTORED_STOPPED
+  ---
+  duration_ms: 6.149149
+  type: 'test'
+  ...
+# Subtest: R8 retry: unknown error code and stage are reduced to fixed output
+ok 54 - R8 retry: unknown error code and stage are reduced to fixed output
+  ---
+  duration_ms: 0.097577
+  type: 'test'
+  ...
+# Subtest: R8 retry: crash quiesce belongs only to the same R8 invocation and never adopts retained R7
+ok 55 - R8 retry: crash quiesce belongs only to the same R8 invocation and never adopts retained R7
+  ---
+  duration_ms: 0.275785
+  type: 'test'
+  ...
+# Subtest: R8 retry: crash quiesce still stops if permit revocation fails
+ok 56 - R8 retry: crash quiesce still stops if permit revocation fails
+  ---
+  duration_ms: 0.164137
+  type: 'test'
+  ...
+# Subtest: R8 retry: CLI accepts only pinned R8 options and exposes no force/root or retained-key override
+ok 57 - R8 retry: CLI accepts only pinned R8 options and exposes no force/root or retained-key override
+  ---
+  duration_ms: 2.371417
+  type: 'test'
+  ...
+# Subtest: R8 retry: directory fsync failure after own .activation.lock unlink rebuilds both gates before restoring
+ok 58 - R8 retry: directory fsync failure after own .activation.lock unlink rebuilds both gates before restoring
+  ---
+  duration_ms: 10.342421
+  type: 'test'
+  ...
+# Subtest: R8 retry: directory fsync failure after own .first-start-recovery-r8.guard unlink rebuilds both gates before restoring
+ok 59 - R8 retry: directory fsync failure after own .first-start-recovery-r8.guard unlink rebuilds both gates before restoring
+  ---
+  duration_ms: 11.253566
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at atomic lock-before boundary retains gates and original evidence
+ok 60 - R8 retry: fault at atomic lock-before boundary retains gates and original evidence
+  ---
+  duration_ms: 6.751595
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at atomic state-after boundary retains gates and original evidence
+ok 61 - R8 retry: fault at atomic state-after boundary retains gates and original evidence
+  ---
+  duration_ms: 7.622015
+  type: 'test'
+  ...
+# Subtest: R8 retry: fault at atomic TRIAL-report boundary retains gates and original evidence
+ok 62 - R8 retry: fault at atomic TRIAL-report boundary retains gates and original evidence
+  ---
+  duration_ms: 7.903488
+  type: 'test'
+  ...
+# Subtest: R8 retry: source-verification stage and signature code survive pre-mutation rejection
+ok 63 - R8 retry: source-verification stage and signature code survive pre-mutation rejection
+  ---
+  duration_ms: 2.821784
+  type: 'test'
+  ...
+# Subtest: R8 retry: real readiness coordinator preserves failed UI probe when client cleanup also fails
+ok 64 - R8 retry: real readiness coordinator preserves failed UI probe when client cleanup also fails
+  ---
+  duration_ms: 6.510042
+  type: 'test'
+  ...
+# Subtest: R8 retry: client cleanup failure after healthy probes has a distinct fixed stage/code
+ok 65 - R8 retry: client cleanup failure after healthy probes has a distinct fixed stage/code
+  ---
+  duration_ms: 0.307041
+  type: 'test'
+  ...
+# Subtest: R8 retry: persistent directory fsync failure after guard removal still reconstructs the activation gate
+ok 66 - R8 retry: persistent directory fsync failure after guard removal still reconstructs the activation gate
+  ---
+  duration_ms: 7.450787
+  type: 'test'
+  ...
+# Subtest: R8 retry: partial own guard recreation never prevents rebuilding the boot activation gate
+ok 67 - R8 retry: partial own guard recreation never prevents rebuilding the boot activation gate
+  ---
+  duration_ms: 8.32412
+  type: 'test'
+  ...
+# Subtest: R8 retry: non-Error readiness rejection still stops and restores behind both gates
+ok 68 - R8 retry: non-Error readiness rejection still stops and restores behind both gates
+  ---
+  duration_ms: 5.658992
+  type: 'test'
+  ...
+1..68
+# tests 68
+# suites 0
+# pass 68
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 509.823277

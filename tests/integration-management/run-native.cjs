@@ -15,7 +15,7 @@ async function run(input) {
     if (marker.kind !== 'disposable-native-management-lab' || marker.root !== root || marker.uid !== process.getuid()) throw new Error('MANAGEMENT_FIXED_FIXTURE_REQUIRED');
     const data = '/var/lib/nexowatt-eos/iobroker-data';
     if (fs.readdirSync(data).length || fs.statSync(data).uid !== process.getuid() || (fs.statSync(data).mode & 0o777) !== 0o700) throw new Error('MANAGEMENT_FRESH_DATA_REQUIRED');
-    const lab = await startLab({ binDirectory: path.join(root, 'postgresql/bin'), schemaFile: path.resolve(__dirname, '../../runtime/postgresql/schema.sql') });
+    const lab = await startLab({ binDirectory: path.join(root, 'postgresql/bin'), schemaFile: path.resolve(__dirname, '../../runtime/postgresql/schema.sql'), profile: 'management' });
     const metadata = path.join(root, 'management-pg-paths.json');
     let timer, hardTimer, child;
     try {
