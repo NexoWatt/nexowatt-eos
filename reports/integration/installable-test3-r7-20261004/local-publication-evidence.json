@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-04T10:11:10.975486+00:00",
+  "scope": "Final reviewed R7 request, delivery and public command source contracts; no GitHub run or Pi execution claim",
+  "supersedesEarlierSnapshot": {
+    "createdAt": "2026-10-04T09:45:28.064120+00:00",
+    "workflowSha256": "b8a7cbdae053c797851c7f4af723d9b8a8bdc04cf28beb45b8b156b53c1d2635",
+    "reason": "Added source-bound request, public entry/readback/command phases and mandatory same-run authenticated recovery checks."
+  },
+  "results": {
+    "publisherTestsPassed": 16,
+    "publisherTestsFailed": 0,
+    "recoveryContractsPassed": 32,
+    "recoveryContractsFailed": 0,
+    "authenticatedR4CollectorPassed": 10,
+    "authenticatedR4CollectorFailed": 0,
+    "requestBoundaryCasesPassed": 8,
+    "requestBoundaryCases": [
+      "valid accepted",
+      "wrong parent rejected",
+      "additional source change rejected",
+      "unknown field rejected",
+      "duplicate key rejected",
+      "Boolean schema version rejected",
+      "manual resume accepted",
+      "wrong HEAD rejected"
+    ],
+    "pythonSyntaxPassed": true,
+    "yamlAndWorkflowBoundaryChecksPassed": true,
+    "embeddedBashSyntaxPassed": 21,
+    "embeddedJavaScriptSyntaxPassed": 2,
+    "embeddedPythonSyntaxPassed": 1,
+    "recoveryChecksPrecedeSigningInSameRun": true,
+    "actionlint": {
+      "command": "bash tools/ci/check-workflows.sh",
+      "version": "1.7.12",
+      "exitCode": 0,
+      "scope": "All workflow files after recovery-gate addition",
+      "earlierAttempt": "Proxy CONNECT timeout; final attempt passed"
+    },
+    "githubDeliveryWorkflow": "NOT EXECUTED",
+    "piRuntime": "OPEN"
+  },
+  "files": [
+    {
+      "path": ".github/workflows/eos-r7-test-delivery.yml",
+      "bytes": 30378,
+      "sha256": "0fc8563f15419ca88fcffe738fa94eb1b2e17e384e7ee2658ac8829320886f28"
+    },
+    {
+      "path": "reports/integration/installable-test3-r7-20261004/publish-candidate.py",
+      "bytes": 8487,
+      "sha256": "c0f04b2a633b55e442ae09724ab08080074220aa37556fad83f2da314f964c12"
+    },
+    {
+      "path": "reports/integration/installable-test3-r7-20261004/publish-candidate.test.py",
+      "bytes": 10849,
+      "sha256": "958476b718aec6354a4a36ed2ecf94e95898d2a4564a45513f13a012f39383ef"
+    },
+    {
+      "path": "reports/integration/installable-test3-r7-20261004/PUBLICATION.md",
+      "bytes": 6507,
+      "sha256": "85794e43655423b983197a004c5c77d998bc93c7a92d0f999be88091ccfe7b70"
+    },
+    {
+      "path": "reports/integration/installable-test3-r7-20261004/local-publication-tests.log",
+      "bytes": 266,
+      "sha256": "85981bf081fb76809f11d16a7de5356450ee31d35fd1225b1e990512406c8aa6"
+    }
+  ]
+}

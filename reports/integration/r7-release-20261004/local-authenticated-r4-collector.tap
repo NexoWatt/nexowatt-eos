@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: actual authenticated R4 schema2 handoff reaches complete collector with real enrollment and encrypted license
+ok 1 - actual authenticated R4 schema2 handoff reaches complete collector with real enrollment and encrypted license
+  ---
+  duration_ms: 56.328896
+  type: 'test'
+  ...
+# Subtest: actual authenticated R4 unlicensed handoff remains unlicensed without creating license storage
+ok 2 - actual authenticated R4 unlicensed handoff remains unlicensed without creating license storage
+  ---
+  duration_ms: 9.867567
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses later schema3 substitution
+ok 3 - real R4 collector refuses later schema3 substitution
+  ---
+  duration_ms: 11.772363
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses pending enrollment
+ok 4 - real R4 collector refuses pending enrollment
+  ---
+  duration_ms: 9.524151
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses changed stored password
+ok 5 - real R4 collector refuses changed stored password
+  ---
+  duration_ms: 9.199232
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses changed stored UUID
+ok 6 - real R4 collector refuses changed stored UUID
+  ---
+  duration_ms: 9.053853
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses changed encrypted license
+ok 7 - real R4 collector refuses changed encrypted license
+  ---
+  duration_ms: 12.283091
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses different authenticated token in encrypted store
+ok 8 - real R4 collector refuses different authenticated token in encrypted store
+  ---
+  duration_ms: 13.39801
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses malformed historical settings
+ok 9 - real R4 collector refuses malformed historical settings
+  ---
+  duration_ms: 11.605583
+  type: 'test'
+  ...
+# Subtest: real R4 collector refuses foreign PostgreSQL object namespace
+ok 10 - real R4 collector refuses foreign PostgreSQL object namespace
+  ---
+  duration_ms: 8.043182
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1593.574159

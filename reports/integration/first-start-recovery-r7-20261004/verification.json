@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "change": "EOS-FIRST-START-RECOVERY-R7-01",
+  "baseCommit": "4366f8a0c5b9e41ecd1fd5c02ca28cd651e02a57",
+  "at": "2026-10-04T09:56:26.487262+00:00",
+  "node": "v24.19.0",
+  "environment": "Linux x64 filesystem/state-transition tests; authentic R4 app/policy/enrollment/AES license; PG transport and OS UID boundaries injected; no Pi",
+  "runs": [
+    {
+      "command": "node --test --test-reporter=tap tests/system/recover-r4-first-start-to-r7.test.cjs",
+      "exitCode": 0,
+      "tests": 32,
+      "passed": 32,
+      "raw": "tests.tap"
+    },
+    {
+      "command": "node --test --test-reporter=tap tests/system/recover-r4-first-start.integration.cjs",
+      "exitCode": 0,
+      "tests": 10,
+      "passed": 10,
+      "raw": "r4-collector-integration.tap"
+    }
+  ],
+  "historicalR4": {
+    "archiveSha256": "c1d418a66b3678fb19f4487ece9871da81cf7a583af59a6d889c799d7c6dd1b3",
+    "releaseId": "15d65328b06e5d4d3a72b2ee440159aa36e07ce300d45888762519b66652ffa8",
+    "sequence": 7,
+    "keySha256": "d35d09a005703eecf1b5a8843b553064c5ab90758cfc71a634599459cda6e8b3",
+    "policySha256": "7c1ce7527ce9df41e3773ac9a3ca4122cc1af263b6ad5bf749ec1815abc595b1",
+    "serverSha256": "2c59c6876734be1c806112b84d96b0892d1013aee507667dd5a8485f034f590a",
+    "handoffSchema": 2
+  },
+  "files": {
+    "tools/system/recover-r4-first-start-to-r7.cjs": "c33d40dca4aada60ddf861d70c9445c9a6cdff1fc64f49a2799a8683e87aa971",
+    "tests/system/recover-r4-first-start-to-r7.test.cjs": "14b56f7d8ca5a03a30facbf5a2d2352660636570284ee6de2f9149b9caf36cf1",
+    "tests/system/recover-r4-first-start.integration.cjs": "b8f10d279e6c3ded3f2382f8abe9d5456d4d89b40e48c1d8f4eb9442b3edf920",
+    "docs/operations/RECOVER_R4_FIRST_START_R7_DE.md": "5448c63957c5e1e01d95e113460e67bdb8df30e8ec6f4b12b15f04f13b568a22",
+    "reports/integration/first-start-recovery-r7-20261004/README.md": "06d54e815b3bbc0cb9e4f181a9bd4c5df0896160929c39e6000f81ff8a3b8e75",
+    "reports/integration/first-start-recovery-r7-20261004/tests.tap": "aa066008d65240f51d305ee7cb7890a91d3d31fe1f40742c03b376e45fae00fe",
+    "reports/integration/first-start-recovery-r7-20261004/r4-collector-integration.tap": "cab829a2039799e17043de880225f2db8f1304300b345dee66cb6d9e83e421ad"
+  },
+  "hardwareTested": false,
+  "productionReleaseApproved": false
+}

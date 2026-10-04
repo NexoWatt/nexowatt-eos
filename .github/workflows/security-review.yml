@@ -221,6 +221,8 @@ jobs:
             tests/bootstrap/public-repair-publication.test.cjs \
             tests/bootstrap/public-r6-update-entry.test.cjs \
             tests/bootstrap/public-r6-update-publication.test.cjs \
+            tests/bootstrap/public-r7-recovery-entry.test.cjs \
+            tests/bootstrap/public-r7-recovery-publication.test.cjs \
             tests/onboarding/configuration.test.cjs \
             tests/onboarding/enrollment.test.cjs \
             tests/onboarding/frontend.test.cjs \
@@ -253,6 +255,14 @@ jobs:
         run: |
           node --test reports/integration/installable-test3-r6-20261004/build-revision.test.cjs tests/integration/r6-derivative-sbom.test.cjs
           python3 -I -B reports/integration/installable-test3-r6-20261004/publish-candidate.test.py
+
+      - name: Check R7 candidate and failed first-start recovery contracts
+        run: |
+          node --test reports/integration/installable-test3-r7-20261004/build-revision.test.cjs tests/system/recover-r4-first-start-to-r7.test.cjs
+          python3 -I -B reports/integration/installable-test3-r7-20261004/publish-candidate.test.py
+          r4_fixture=$(mktemp -d "$RUNNER_TEMP/eos-r4-recovery-fixture.XXXXXXXX")
+          python3 -I -B tools/system/extract-test-bundle.py --archive delivery/test-pi-0.2.0-test.3-r4/eos-0.2.0-test.3-linux-arm64.tar.gz --destination "$r4_fixture/extracted" --sha256 c1d418a66b3678fb19f4487ece9871da81cf7a583af59a6d889c799d7c6dd1b3
+          EOS_R4_RECOVERY_BUNDLE="$r4_fixture/extracted/bundle" EOS_R4_RECOVERY_KEY="$GITHUB_WORKSPACE/delivery/test-pi-0.2.0-test.3-r4/release-public.pem" node --test tests/system/recover-r4-first-start.integration.cjs
 
       - name: Run isolated ownership and sudo denial contracts
         # These reviewed fixtures write temporary /root trees. Host commands and

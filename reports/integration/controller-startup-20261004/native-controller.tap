@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: actual controller setup, startup and cross-process states over PostgreSQL TLS without a Redis server
+    # Subtest: both mTLS identities see physically empty runtime tables before setup
+    ok 1 - both mTLS identities see physically empty runtime tables before setup
+      ---
+      duration_ms: 30.58837
+      type: 'test'
+      ...
+    # Subtest: ordinary controller CLI setup uses dynamically loaded PostgreSQL clients
+    ok 2 - ordinary controller CLI setup uses dynamically loaded PostgreSQL clients
+      ---
+      duration_ms: 1896.033694
+      type: 'test'
+      ...
+    # Subtest: actual controller persists host object and publishes fresh alive/PID via native mTLS PostgreSQL
+    ok 3 - actual controller persists host object and publishes fresh alive/PID via native mTLS PostgreSQL
+      ---
+      duration_ms: 713.477113
+      type: 'test'
+      ...
+    # Subtest: controller stops cleanly and restarts with a fresh PID and host-object readback
+    ok 4 - controller stops cleanly and restarts with a fresh PID and host-object readback
+      ---
+      duration_ms: 1633.252433
+      type: 'test'
+      ...
+    # Subtest: final controller stop completes without a release-tree PID write
+    ok 5 - final controller stop completes without a release-tree PID write
+      ---
+      duration_ms: 1021.356521
+      type: 'test'
+      ...
+    1..5
+ok 1 - actual controller setup, startup and cross-process states over PostgreSQL TLS without a Redis server
+  ---
+  duration_ms: 7560.318118
+  type: 'test'
+  ...
+# {"controllerVersion":"7.2.2","databaseType":"postgresql","redisServerStarted":false,"physicalAdaptersStarted":false,"hardwareAcceptance":false,"productionBootstrapTested":false,"nativePostgresqlTested":true,"controllerRestartTested":true,"hostEnvironmentExcluded":true,"configurationReadOnlyByMode":true,"setupConfigurationBytesPreserved":true,"productionControllerReadinessFunctionTested":true,"relocatedPidAccessorAndDirectoryTested":true,"actualAdapterPidWriterLifecycleTested":false,"immutableControllerDirectoryByMode":true,"actualSystemdMountRestrictionsTested":false,"expectedBaseLockSha256":"74ed56efa6719fe99c552563bea7314fee2c65f8c1fa4f9e852671a264e56ce0","expectedPgLockSha256":"14be123455221a016f33ad20abf98a2f40caf5827b998969a6616226e19753c4","overlays":[{"name":"@nexowatt/eos-postgresql-store","version":"0.1.0-dev.2","files":[{"path":"LICENSE","type":"file","mode":420,"size":2957,"sha256":"311c596719197c13443e64e890d45158f576dad94d6c44935b31c3b6d5fdfa2e"},{"path":"NOTICE.md","type":"file","mode":420,"size":711,"sha256":"568eb21c19fae161a239fed97f68f529ff4e9fc6d9719cd30dda6ad6fcb880d8"},{"path":"index.cjs","type":"file","mode":420,"size":20427,"sha256":"901f4a37df2d9ef69d8bd81903dc232eec1871e99f4fb243b6d9880e04651cab"},{"path":"package.json","type":"file","mode":420,"size":414,"sha256":"34609878e788780dc845f71b90ed17c758a85cbaf3cfd416bd93feaa5437b19f"}]},{"name":"@iobroker/db-objects-postgresql","version":"0.1.0-dev.2","files":[{"path":"LICENSE","type":"file","mode":420,"size":2957,"sha256":"311c596719197c13443e64e890d45158f576dad94d6c44935b31c3b6d5fdfa2e"},{"path":"NOTICE.md","type":"file","mode":420,"size":711,"sha256":"568eb21c19fae161a239fed97f68f529ff4e9fc6d9719cd30dda6ad6fcb880d8"},{"path":"README.md","type":"file","mode":420,"size":6998,"sha256":"274c2e8e3258a0398618d0c75c70b55d00c62fe4ff2fee8beaa0f293c498ca57"},{"path":"auth.cjs","type":"file","mode":420,"size":5786,"sha256":"dcfdeb710b78fca4dae8bca3480a0b4092a606694a5cc94c13e6bc37926def63"},{"path":"facade.cjs","type":"file","mode":420,"size":5771,"sha256":"c5af1ed63dc25d0f2d3655c1ecfbdb7a98ab9418330c79689dac0ba84a2aa26a"},{"path":"index.cjs","type":"file","mode":420,"size":22024,"sha256":"65e55c87b9ee0c02deeda9e356e8d1e57cfa19d1df4e92921c73024e8d8eb76b"},{"path":"package.json","type":"file","mode":420,"size":551,"sha256":"6240f9dabe72b421c540318f82edb4726b140f24e85c54b80269761aad24cde7"},{"path":"views.cjs","type":"file","mode":420,"size":2567,"sha256":"53c339eff8692c167c41a71356d74d5b18ccd2de27a871c7705b33e572919881"}]},{"name":"@iobroker/db-states-postgresql","version":"0.1.0-dev.2","files":[{"path":"LICENSE","type":"file","mode":420,"size":2957,"sha256":"311c596719197c13443e64e890d45158f576dad94d6c44935b31c3b6d5fdfa2e"},{"path":"LICENSES/PREVIOUS-package.json","type":"file","mode":420,"size":379,"sha256":"c00982497317a263a64dcffb903f0c692f6b8eb912766c77fdc18a1f4b11ccbf"},{"path":"NOTICE.md","type":"file","mode":420,"size":1095,"sha256":"402e7b109d75058f0aa4df751b76ed4ccede1907de67b68e02938c2dd61395a6"},{"path":"README.md","type":"file","mode":420,"size":6196,"sha256":"74a24ac83a315d21df4d8d27627714899a8f104d937231897f3799c200b4d8ac"},{"path":"index.cjs","type":"file","mode":420,"size":20869,"sha256":"28038ebfe48b6d76446c70906a2ae60026a92856bdfd78bbf14742fa78987b83"},{"path":"package.json","type":"file","mode":420,"size":416,"sha256":"a01504abfcd05780a2c30feb239cb2474c522f6f14d8e3ad059a0dec9e1c81cf"}]}],"baseManifestSha256":"3a05ee37f270acb34bb465b4c0434abb33ff80d2b70ea3ce46a7810cc36e8f37","driverManifestSha256":"7b745124e272e46777737e42449211d2c41755833b505996935bf54130847fbc","assemblySha256":"262e6dcf76ca3c8b58953c059c4e271911fabe2c3f7347313b8e675d1efca4bb"}
+1..1
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7639.848655

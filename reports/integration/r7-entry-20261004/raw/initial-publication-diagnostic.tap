@@ -1,0 +1,192 @@
+TAP version 13
+# Subtest: R7 recovery transport binds immutable commit, key, archive and exact test scope
+ok 1 - R7 recovery transport binds immutable commit, key, archive and exact test scope
+  ---
+  duration_ms: 2.253871
+  type: 'test'
+  ...
+# Subtest: malformed metadata, key substitution, old release and broad admission are rejected
+ok 2 - malformed metadata, key substitution, old release and broad admission are rejected
+  ---
+  duration_ms: 1.458244
+  type: 'test'
+  ...
+# Subtest: entry embeds exact reviewed extractors, authenticates assets, and supervises updater
+ok 3 - entry embeds exact reviewed extractors, authenticates assets, and supervises updater
+  ---
+  duration_ms: 12.299153
+  type: 'test'
+  ...
+# Subtest: outer one-line command checks protected root, complete size and digest before execution
+ok 4 - outer one-line command checks protected root, complete size and digest before execution
+  ---
+  duration_ms: 2.764358
+  type: 'test'
+  ...
+# Subtest: only a complete hash-matching download reaches the execution boundary
+ok 5 - only a complete hash-matching download reaches the execution boundary
+  ---
+  duration_ms: 9.826593
+  type: 'test'
+  ...
+# Subtest: download hash failure never reaches the execution boundary
+ok 6 - download hash failure never reaches the execution boundary
+  ---
+  duration_ms: 10.282909
+  type: 'test'
+  ...
+# Subtest: download size failure never reaches the execution boundary
+ok 7 - download size failure never reaches the execution boundary
+  ---
+  duration_ms: 8.516692
+  type: 'test'
+  ...
+# Subtest: download failure failure never reaches the execution boundary
+ok 8 - download failure failure never reaches the execution boundary
+  ---
+  duration_ms: 5.461035
+  type: 'test'
+  ...
+# Subtest: download symlink failure never reaches the execution boundary
+ok 9 - download symlink failure never reaches the execution boundary
+  ---
+  duration_ms: 4.543905
+  type: 'test'
+  ...
+# Subtest: download hardlink failure never reaches the execution boundary
+ok 10 - download hardlink failure never reaches the execution boundary
+  ---
+  duration_ms: 5.569439
+  type: 'test'
+  ...
+# Subtest: download refuses to overwrite existing data
+ok 11 - download refuses to overwrite existing data
+  ---
+  duration_ms: 2.732721
+  type: 'test'
+  ...
+# Subtest: embedded extractor works as packaged and rejects hash, traversal, links and existing output
+ok 12 - embedded extractor works as packaged and rejects hash, traversal, links and existing output
+  ---
+  duration_ms: 315.808831
+  type: 'test'
+  ...
+# Subtest: supervisor rejects absent/malformed invocation and clears inherited Node/Python options
+ok 13 - supervisor rejects absent/malformed invocation and clears inherited Node/Python options
+  ---
+  duration_ms: 67.332066
+  type: 'test'
+  ...
+# Subtest: all R4/R5/R6 release and key pins are forbidden as R7 target; only R4 is an accepted starting baseline
+ok 14 - all R4/R5/R6 release and key pins are forbidden as R7 target; only R4 is an accepted starting baseline
+  ---
+  duration_ms: 0.795477
+  type: 'test'
+  ...
+# Subtest: R7 recovery script selects only the new updater/output and preserves bounded checked TLS downloads
+ok 15 - R7 recovery script selects only the new updater/output and preserves bounded checked TLS downloads
+  ---
+  duration_ms: 0.504519
+  type: 'test'
+  ...
+# Subtest: entry refuses broad recovery scope and requires the actual signed helper bytes
+ok 16 - entry refuses broad recovery scope and requires the actual signed helper bytes
+  ---
+  duration_ms: 6.266887
+  type: 'test'
+  ...
+# Subtest: public readback accepts only byte-identical regular files and independently checked pins
+ok 17 - public readback accepts only byte-identical regular files and independently checked pins
+  ---
+  duration_ms: 3.942401
+  type: 'test'
+  ...
+# Subtest: publication permits only all three new entry files at the exact source commit
+ok 18 - publication permits only all three new entry files at the exact source commit
+  ---
+  duration_ms: 31.612215
+  type: 'test'
+  ...
+# Subtest: publication rejects an unrelated untracked file
+ok 19 - publication rejects an unrelated untracked file
+  ---
+  duration_ms: 27.544888
+  type: 'test'
+  ...
+# Subtest: publication rejects a staged source change
+ok 20 - publication rejects a staged source change
+  ---
+  duration_ms: 26.477641
+  type: 'test'
+  ...
+# Subtest: publication rejects missing generated files and local modification after staging
+ok 21 - publication rejects missing generated files and local modification after staging
+  ---
+  duration_ms: 33.583616
+  type: 'test'
+  ...
+# Subtest: publication rejects symlink entries rather than following them
+ok 22 - publication rejects symlink entries rather than following them
+  ---
+  duration_ms: 26.846186
+  type: 'test'
+  ...
+# Subtest: command report binds the committed entry and only the two new command files publish
+ok 23 - command report binds the committed entry and only the two new command files publish
+  ---
+  duration_ms: 48.177601
+  type: 'test'
+  ...
+# Subtest: command report rejects a mutable or mismatched command without writing evidence
+ok 24 - command report rejects a mutable or mismatched command without writing evidence
+  ---
+  duration_ms: 39.403381
+  type: 'test'
+  ...
+# Subtest: R7 recovery command requires full remote asset readback rather than a bare success flag
+not ok 25 - R7 recovery command requires full remote asset readback rather than a bare success flag
+  ---
+  duration_ms: 2.102803
+  type: 'test'
+  location: '/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/bootstrap/public-r7-recovery-publication.test.cjs:113:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /PUBLIC_R7_RECOVERY_PUBLICATION_REJECTED/. Input:
+    
+    'Error: PUBLIC_R7_RECOVERY_ENTRY_REJECTED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'PUBLIC_R7_RECOVERY_ENTRY_REJECTED'
+  stack: |-
+    fail (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tools/bootstrap/build-public-r7-recovery-entry.cjs:34:28)
+    validateConfig (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tools/bootstrap/build-public-r7-recovery-entry.cjs:60:56)
+    validateReadback (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tools/bootstrap/prepare-public-r7-recovery-publication.cjs:81:20)
+    /workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/bootstrap/public-r7-recovery-publication.test.cjs:123:29
+    getActual (node:assert:611:5)
+    strict.throws (node:assert:759:24)
+    TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/bootstrap/public-r7-recovery-publication.test.cjs:123:16)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/a8835322738f/recovery-work/nexowatt-eos/tests/bootstrap/public-r7-recovery-publication.test.cjs:123:16)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 24
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 540.479413

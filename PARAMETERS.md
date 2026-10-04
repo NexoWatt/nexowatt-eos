@@ -11,6 +11,29 @@ are returned. `ok` describes report generation, never recovery eligibility.
 See [operator procedure](docs/operations/FIRST_START_DIAGNOSTIC_DE.md).
 Historical signed R4/R5/R6 payloads do not contain this new helper.
 
+## R7 failed first-start recovery tools (2026-10-04)
+
+`tools/system/recover-r4-first-start-to-r7.cjs` is a separate, narrowly scoped
+coordinator for the authenticated R4 sequence-7 failed first-start state. It
+requires exactly `--bundle`, `--public-key`, `--expected-release-id`, and
+`--expected-key-sha256`, supplied by a pinned entry for a new signed R7
+sequence-10 package. No force, alternate-root or host-validation bypass is
+exposed. `--quiesce-incomplete` is reserved for the same systemd invocation.
+It verifies the historical schema-2 handoff and existing enrollment/license
+bindings before adopting the old maintenance lock. It preserves existing
+credentials and requires successful runtime checks before completing setup.
+See [scope and failure handling](docs/operations/RECOVER_R4_FIRST_START_R7_DE.md).
+
+The new manufacturer commands are
+`tools/bootstrap/build-public-r7-recovery-entry.cjs --asset-commit <40hex>` and,
+after publication of that entry, `--entry-commit <40hex>`.
+`tools/bootstrap/prepare-public-r7-recovery-publication.cjs` accepts
+`--readback <asset-commit>`, `--command-report <entry-commit>`, or
+`--check-stage entry|command <HEAD>`. They require the actual signature-verified
+R7 archive and verify the packaged coordinator's source binding. These
+manufacturer commands do not repair a Pi. A completed R4/R5/R6 installation
+does not meet this particular recovery tool's eligibility conditions.
+
 ## Current public R6 TEST update (2026-10-04)
 
 The current operator command is always the one published in the README on `main`.

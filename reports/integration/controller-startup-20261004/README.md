@@ -58,9 +58,18 @@ Wiederherstellungsfreigabe.
 Die Teilberichte in diesem Verzeichnis nennen ausgeführte Befehle, Ergebnisse
 und die jeweils verwendete Umgebung. Tests mit echten Controllerfunktionen
 und SQL-Testdoubles belegen JavaScript-Verhalten, keinen nativen PostgreSQL-
-oder Pi-Lauf. Ein separater nativer PostgreSQL-/Controllerlauf wird als eigener
-Nachweis geführt; sein Ergebnis darf erst nach tatsächlichem Abschluss als
-bestanden gelten.
+oder Pi-Lauf.
+
+Der getrennte native Lauf gegen Quellstand `1572dcd2968e6794adf4ab539efde68463cbe241`
+ist inzwischen bestanden: PostgreSQL 17.11, Node 24.21.0 und Controller 7.2.2
+auf dem unprivilegierten Linux-x64-Runner. Er prüft beide mTLS-Identitäten,
+Setup mit unveränderlicher Konfiguration, tatsächliche Host-Speicherung,
+die originale `waitController`-Bereitschaftsfunktion sowie Stoppen und
+erneuten Start. [Ergebnis und Grenzen](native-ci-result.json),
+[native TAP-Ausgabe](native-controller.tap). Der erste Lauf scheiterte an
+einer schreibbaren Laborkonfiguration; die
+[belegte Fixturekorrektur](native-harness/README.md) bildet die bestehende
+schreibgeschützte Produktkonfiguration ab und lockert keine Runtime-Regel.
 
 Offen bleiben der gezielte Paketwechsel auf dem betroffenen Pi, vollständiger
 Erststartabschluss, HTTPS-Anmeldung, Dienst-/Geräteneustart und Backup/Restore.

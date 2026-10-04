@@ -1,0 +1,202 @@
+TAP version 13
+# Subtest: R4: successful recovery creates completion after readiness and preserves existing config/old release
+ok 1 - R4: successful recovery creates completion after readiness and preserves existing config/old release
+  ---
+  duration_ms: 16.650963
+  type: 'test'
+  ...
+# Subtest: R4: completed first-start refuses before stage/stop and retains original lock
+ok 2 - R4: completed first-start refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 2.432675
+  type: 'test'
+  ...
+# Subtest: R4: prior recovery refuses before stage/stop and retains original lock
+ok 3 - R4: prior recovery refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.705211
+  type: 'test'
+  ...
+# Subtest: R4: R6 attempt refuses before stage/stop and retains original lock
+ok 4 - R4: R6 attempt refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.720294
+  type: 'test'
+  ...
+# Subtest: R4: existing permit refuses before stage/stop and retains original lock
+ok 5 - R4: existing permit refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.988898
+  type: 'test'
+  ...
+# Subtest: R4: foreign lock refuses before stage/stop and retains original lock
+ok 6 - R4: foreign lock refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.726314
+  type: 'test'
+  ...
+# Subtest: R4: live old coordinator refuses before stage/stop and retains original lock
+ok 7 - R4: live old coordinator refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.625141
+  type: 'test'
+  ...
+# Subtest: R4: wrong key pin refuses before stage/stop and retains original lock
+ok 8 - R4: wrong key pin refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.769618
+  type: 'test'
+  ...
+# Subtest: R4: wrong release sequence refuses before stage/stop and retains original lock
+ok 9 - R4: wrong release sequence refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.875978
+  type: 'test'
+  ...
+# Subtest: R4: installed unit drift refuses before stage/stop and retains original lock
+ok 10 - R4: installed unit drift refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.972193
+  type: 'test'
+  ...
+# Subtest: R4: DB enrollment rejected refuses before stage/stop and retains original lock
+ok 11 - R4: DB enrollment rejected refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 2.069558
+  type: 'test'
+  ...
+# Subtest: R4: active controller refuses before stage/stop and retains original lock
+ok 12 - R4: active controller refuses before stage/stop and retains original lock
+  ---
+  duration_ms: 1.870741
+  type: 'test'
+  ...
+# Subtest: R4: fault at stage retains locked stopped R4 and never reports success
+ok 13 - R4: fault at stage retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 3.024764
+  type: 'test'
+  ...
+# Subtest: R4: fault at native retains locked stopped R4 and never reports success
+ok 14 - R4: fault at native retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 2.487577
+  type: 'test'
+  ...
+# Subtest: R4: fault at readiness retains locked stopped R4 and never reports success
+ok 15 - R4: fault at readiness retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 6.113263
+  type: 'test'
+  ...
+# Subtest: R4: fault at verify-live retains locked stopped R4 and never reports success
+ok 16 - R4: fault at verify-live retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 4.275883
+  type: 'test'
+  ...
+# Subtest: R4: fault at enable nexowatt-eos.target retains locked stopped R4 and never reports success
+ok 17 - R4: fault at enable nexowatt-eos.target retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 4.994423
+  type: 'test'
+  ...
+# Subtest: R4: fault at disable nexowatt-eos-setup.target retains locked stopped R4 and never reports success
+ok 18 - R4: fault at disable nexowatt-eos-setup.target retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 5.268054
+  type: 'test'
+  ...
+# Subtest: R4: fault at ACTIVE-journal retains locked stopped R4 and never reports success
+ok 19 - R4: fault at ACTIVE-journal retains locked stopped R4 and never reports success
+  ---
+  duration_ms: 5.867214
+  type: 'test'
+  ...
+# Subtest: R4: exact completed DB bindings are required; pending or changed password/settings/UUID are rejected
+ok 20 - R4: exact completed DB bindings are required; pending or changed password/settings/UUID are rejected
+  ---
+  duration_ms: 0.759321
+  type: 'test'
+  ...
+# Subtest: R4: crash quiesce only revokes the owning R7 trial and still stops when revoke fails
+ok 21 - R4: crash quiesce only revokes the owning R7 trial and still stops when revoke fails
+  ---
+  duration_ms: 0.327061
+  type: 'test'
+  ...
+# Subtest: R4: read-only PostgreSQL snapshot requires TLS1.3 and issues only bounded SELECT inside read-only transaction
+ok 22 - R4: read-only PostgreSQL snapshot requires TLS1.3 and issues only bounded SELECT inside read-only transaction
+  ---
+  duration_ms: 1.65127
+  type: 'test'
+  ...
+# Subtest: R4: TLS downgrade rejects read-only snapshot and closes connection
+ok 23 - R4: TLS downgrade rejects read-only snapshot and closes connection
+  ---
+  duration_ms: 0.419771
+  type: 'test'
+  ...
+# Subtest: R4: untrusted peer rejects read-only snapshot and closes connection
+ok 24 - R4: untrusted peer rejects read-only snapshot and closes connection
+  ---
+  duration_ms: 0.204176
+  type: 'test'
+  ...
+# Subtest: R4: oversized query result rejects read-only snapshot and closes connection
+ok 25 - R4: oversized query result rejects read-only snapshot and closes connection
+  ---
+  duration_ms: 0.223525
+  type: 'test'
+  ...
+# Subtest: R4: SQL size guard rejection rejects read-only snapshot and closes connection
+ok 26 - R4: SQL size guard rejection rejects read-only snapshot and closes connection
+  ---
+  duration_ms: 0.251148
+  type: 'test'
+  ...
+# Subtest: R4: object/key mismatch rejects read-only snapshot and closes connection
+ok 27 - R4: object/key mismatch rejects read-only snapshot and closes connection
+  ---
+  duration_ms: 0.267371
+  type: 'test'
+  ...
+# Subtest: R4: foreign pointer during trial is not overwritten and remains stopped behind recovery gate
+ok 28 - R4: foreign pointer during trial is not overwritten and remains stopped behind recovery gate
+  ---
+  duration_ms: 5.110407
+  type: 'test'
+  ...
+# Subtest: R4: foreign completion appearing during trial is not deleted
+ok 29 - R4: foreign completion appearing during trial is not deleted
+  ---
+  duration_ms: 4.294121
+  type: 'test'
+  ...
+# Subtest: R4: foreign lock appearing during trial is not removed and its permit is not revoked
+ok 30 - R4: foreign lock appearing during trial is not removed and its permit is not revoked
+  ---
+  duration_ms: 4.523154
+  type: 'test'
+  ...
+# Subtest: R4: PostgreSQL emitted connection error is handled, bounded and never propagated with private details
+ok 31 - R4: PostgreSQL emitted connection error is handled, bounded and never propagated with private details
+  ---
+  duration_ms: 0.483456
+  type: 'test'
+  ...
+# Subtest: R4: dangling foreign permit is detected and never replaced
+ok 32 - R4: dangling foreign permit is detected and never replaced
+  ---
+  duration_ms: 1.459683
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 215.814037

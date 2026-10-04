@@ -1,0 +1,518 @@
+name: EOS R7 signed startup repair and public command
+
+# Published revisions are immutable. Source regressions run in security-review.yml;
+# a separate, source-bound request commit starts delivery after review.
+# Normal source/document pushes never trigger this delivery workflow.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - reports/integration/installable-test3-r7-20261004/BUILD_REQUEST.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eos-r7-delivery-main
+  cancel-in-progress: false
+
+jobs:
+  request:
+    name: Validate explicit reviewed R7 build request
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout the exact request and its parent
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+          submodules: false
+      - name: Require one source-bound request-only commit for automatic delivery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B - <<'PY'
+          import json, os, re, subprocess
+          marker = 'reports/integration/installable-test3-r7-20261004/BUILD_REQUEST.json'
+          def need(value):
+              if not value:
+                  raise SystemExit('R7_BUILD_REQUEST_REJECTED')
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True, timeout=15).strip()
+          need(git('rev-parse', 'HEAD') == os.environ['GITHUB_SHA'])
+          event = os.environ['GITHUB_EVENT_NAME']
+          need(event in ('push', 'workflow_dispatch'))
+          if event == 'push':
+              parents = git('rev-list', '--parents', '-n', '1', 'HEAD').split()
+              need(len(parents) == 2)
+              changed = git('diff-tree', '--no-commit-id', '--name-status', '-r', 'HEAD').splitlines()
+              need(changed in [['A\t' + marker], ['M\t' + marker]])
+              raw = git('show', 'HEAD:' + marker)
+              need(len(raw.encode('utf-8')) <= 4096)
+              def pairs(items):
+                  result = {}
+                  for key, value in items:
+                      need(key not in result)
+                      result[key] = value
+                  return result
+              request = json.loads(raw, object_pairs_hook=pairs)
+              need(type(request) is dict and set(request) == {'schemaVersion', 'deliveryRevision', 'sourceCommit'})
+              need(type(request['schemaVersion']) is int and request['schemaVersion'] == 1)
+              need(type(request['deliveryRevision']) is int and request['deliveryRevision'] == 7)
+              need(type(request['sourceCommit']) is str and re.fullmatch('[a-f0-9]{40}', request['sourceCommit']))
+              need(request['sourceCommit'] == parents[1])
+          print('Explicit R7 request gate passed; native, build and publication gates remain mandatory.')
+          PY
+
+  native-postgresql-controller:
+    needs: request
+    name: Native PostgreSQL 17.11 mTLS controller startup and restart
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout reviewed native integration sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Use the qualified controller Node release
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+
+      - name: Prepare private nonroot laboratory and fixed PID state directory
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$EUID" -ne 0 ]]
+          [[ ! -e /var/lib/nexowatt-eos && ! -L /var/lib/nexowatt-eos ]]
+          lab_root=$(mktemp -d "$RUNNER_TEMP/eos-native-pg.XXXXXXXX")
+          echo "EOS_NATIVE_LAB_ROOT=$lab_root" >> "$GITHUB_ENV"
+          sudo install -d -m 0755 /var/lib/nexowatt-eos
+          sudo install -d -m 0700 -o "$(id -u)" -g "$(id -g)" /var/lib/nexowatt-eos/iobroker-data
+          git rev-parse HEAD
+          node --version
+
+      - name: Build pinned native PostgreSQL and install locked test dependencies
+        run: bash tests/integration-controller/prepare-native.sh "$EOS_NATIVE_LAB_ROOT"
+
+      - name: Check host-object regression with actual locked controller dependencies
+        run: |
+          set -euo pipefail
+          NODE_PATH="$EOS_NATIVE_LAB_ROOT/controller/node_modules:$EOS_NATIVE_LAB_ROOT/pg-client/node_modules" \
+            node --test --test-reporter=tap tests/postgresql/host-object.test.cjs | tee "$EOS_NATIVE_LAB_ROOT/host-object-regression.tap"
+
+      - name: Run actual controller host write, readiness, stop and restart over mTLS
+        run: |
+          set -euo pipefail
+          umask 077
+          node tests/integration-controller/run-native.cjs "$EOS_NATIVE_LAB_ROOT" | tee "$EOS_NATIVE_LAB_ROOT/native-controller.tap"
+
+      - name: Preserve bounded native test and source transformation evidence
+        if: always() && env.EOS_NATIVE_LAB_ROOT != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-r7-native-controller-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ env.EOS_NATIVE_LAB_ROOT }}/native-controller.tap
+            ${{ env.EOS_NATIVE_LAB_ROOT }}/host-object-regression.tap
+            ${{ env.EOS_NATIVE_LAB_ROOT }}/controller-profile.json
+            ${{ env.EOS_NATIVE_LAB_ROOT }}/pid-profile.json
+
+      - name: State native test scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          This job builds checksum-pinned PostgreSQL 17.11 and runs it as the ordinary Linux runner user, with a fresh loopback-only database and mutual TLS 1.3.
+          The actual locked js-controller 7.2.2 receives current EOS controller/PID transformations and current PostgreSQL backend source. Its real host-object write/readback, alive/process-PID states and process restart are checked. Fixed PID-path resolution, denied code writes and private data-directory writes are checked; the core-only native run does not exercise an adapter PID-writer lifecycle.
+          The original production waitController function checks acknowledged fresh heartbeat, host version and exact process PID. The separate host-object regression uses real controller modules with explicitly simulated SQL.
+          The controller directory is read-only by Unix file modes. This is not a systemd mount-policy test, ARM64/Pi acceptance, full Admin/UI integration, device activation or production approval.
+          Only the step results establish whether these native tests passed; this scope statement is not a success claim. Historical immutable signed deliveries remain unchanged.
+          SUMMARY
+
+  build:
+    needs: native-postgresql-controller
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    outputs:
+      ready: ${{ steps.fresh.outputs.ready }}
+      existing_commit: ${{ steps.fresh.outputs.existing_commit }}
+      artifact_id: ${{ steps.archive.outputs.artifact-id }}
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout the exact authorized main commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Preserve signed historical deliveries
+        id: fresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -e delivery/test-pi-0.2.0-test.3-r7 || test -L delivery/test-pi-0.2.0-test.3-r7; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'R7 already exists; new bytes require a new revision.' >> "$GITHUB_STEP_SUMMARY"
+            test -d delivery/test-pi-0.2.0-test.3-r7 && test ! -L delivery/test-pi-0.2.0-test.3-r7
+            printf 'existing_commit=%s\n' "$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select the pinned build runtime
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Check source, derivative and publication contracts
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test reports/integration/installable-test3-r7-20261004/build-revision.test.cjs tests/system/controller-pid-state.test.cjs tests/system/controller-profile.test.cjs
+          python3 -I -B reports/integration/installable-test3-r7-20261004/publish-candidate.test.py
+          node --test tests/bootstrap/public-r7-recovery-entry.test.cjs tests/bootstrap/public-r7-recovery-publication.test.cjs
+          node --test tests/postgresql/store.test.cjs tests/postgresql/store-channel-hardening.test.cjs tests/postgresql/states.test.cjs
+      - name: Require failed first-start recovery and authenticated R4 collector contracts
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/system/recover-r4-first-start-to-r7.test.cjs
+          r4_fixture=$(mktemp -d "$RUNNER_TEMP/eos-r4-recovery-fixture.XXXXXXXX")
+          trap 'rm -rf -- "$r4_fixture"' EXIT
+          python3 -I -B tools/system/extract-test-bundle.py --archive delivery/test-pi-0.2.0-test.3-r4/eos-0.2.0-test.3-linux-arm64.tar.gz --destination "$r4_fixture/extracted" --sha256 c1d418a66b3678fb19f4487ece9871da81cf7a583af59a6d889c799d7c6dd1b3
+          EOS_R4_RECOVERY_BUNDLE="$r4_fixture/extracted/bundle" EOS_R4_RECOVERY_KEY="$GITHUB_WORKSPACE/delivery/test-pi-0.2.0-test.3-r4/release-public.pem" node --test tests/system/recover-r4-first-start.integration.cjs
+      - name: Build, sign and reread the derivative archive
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node reports/integration/installable-test3-r7-20261004/build-revision.cjs
+      - name: Exercise the assembled Admin, Objects lifecycle and actual host-object writer
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NODE_PATH="$GITHUB_WORKSPACE/.work/runtime-test3-r7-20261004/app/node_modules"
+          export EOS_ADMIN_DEPENDENCIES="$NODE_PATH"
+          export EOS_TEST_SESSION_MODULE="$NODE_PATH/iobroker.eos-admin/build/lib/eosSessionSecurity.js"
+          export EOS_TEST_OBJECTS_MODULE="$NODE_PATH/@iobroker/db-objects-postgresql/index.cjs"
+          node --test --test-reporter=tap components/admin/test/eos-appliance-oauth.integration.cjs > reports/integration/installable-test3-r7-20261004/assembled-admin-oauth.tap
+          node --test --test-reporter=tap tests/postgresql/objects-lifecycle.test.cjs > reports/integration/installable-test3-r7-20261004/assembled-objects-lifecycle.tap
+          node --test --test-reporter=tap tests/postgresql/host-object.test.cjs > reports/integration/installable-test3-r7-20261004/assembled-host-object.tap
+      - name: Retain exact generated candidate and evidence
+        id: archive
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-r7-candidate-${{ github.sha }}
+          path: |
+            delivery/test-pi-0.2.0-test.3-r7/
+            reports/integration/installable-test3-r7-20261004/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - name: Record acceptance scope
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          Linux x64 derivative assembly from a signature-verified R6 ARM64 app with exact PID and PostgreSQL source overlays.
+          Changed bytes receive a new file table, catalog digests, derivative SBOM and ephemeral TEST signature. No fresh npm dependency rebuild is claimed.
+          Archive rereading is required. No Pi installation, real systemd update, password login or plant acceptance is established here.
+          Publication retains immutable signed files and evidence; it does not activate devices or constitute CRA conformity.
+          SCOPE
+
+  publish:
+    needs: build
+    if: needs.build.outputs.ready == 'true' && github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    outputs:
+      commit: ${{ steps.publish.outputs.commit }}
+    steps:
+      - name: Checkout the same reviewed source without stored credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Download only this build's immutable artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: ${{ runner.temp }}/eos-r7-candidate
+          merge-multiple: true
+          digest-mismatch: error
+      - name: Select the same runtime for independent candidate verification
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Validate and copy only new generated files
+        env:
+          EOS_CANDIDATE: ${{ runner.temp }}/eos-r7-candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B reports/integration/installable-test3-r7-20261004/publish-candidate.py "$EOS_CANDIDATE" "$GITHUB_SHA"
+          git add -- delivery/test-pi-0.2.0-test.3-r7 reports/integration/installable-test3-r7-20261004
+          git diff --cached --check
+      - name: Publish only to unchanged main by normal fast-forward
+        id: publish
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-git-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$GITHUB_SHA" || { echo 'main advanced during build; concurrent work is preserved.' >&2; exit 1; }
+          test -n "$(git diff --cached --name-only)"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: publish immutable EOS test.3 revision 7 update candidate'
+          git push origin HEAD:refs/heads/main
+          printf 'commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          printf 'Published test delivery commit: `%s`\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+
+  public-command:
+    needs: [build, publish]
+    if: always() && needs.build.result == 'success' && (needs.publish.result == 'success' || needs.publish.result == 'skipped') && (needs.publish.outputs.commit != '' || needs.build.outputs.existing_commit != '') && github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      EOS_PUBLICATION_HEAD: ${{ needs.publish.outputs.commit || needs.build.outputs.existing_commit }}
+    steps:
+      - name: Checkout the published asset or authorized resume commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.publish.outputs.commit || needs.build.outputs.existing_commit }}
+          persist-credentials: false
+          submodules: false
+
+      - name: Select the pinned verification runtime
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+
+      - name: Check public recovery transport and stage boundaries
+        run: node --test tests/bootstrap/public-r7-recovery-entry.test.cjs tests/bootstrap/public-r7-recovery-publication.test.cjs
+
+      - name: Authenticate R7 and determine the immutable publication phase
+        id: phase
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const cp = require('node:child_process');
+          const crypto = require('node:crypto');
+          const entry = require('./tools/bootstrap/build-public-r7-recovery-entry.cjs');
+          const publication = require('./tools/bootstrap/prepare-public-r7-recovery-publication.cjs');
+          const { readFileLimited } = require('./runtime/release/bundle.cjs');
+          const { verifyTestArchive } = require('./tools/integration/create-test-archive.cjs');
+          const need = value => { if (!value) throw new Error('R7_ENTRY_RESUME_REJECTED'); };
+          const read = (file, max = 1048576) => readFileLimited(file, max).bytes;
+          const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+          const git = args => cp.execFileSync('git', args, { encoding: 'utf8', timeout: 30000 }).trim();
+          need(git(['rev-parse', 'HEAD']) === process.env.EOS_PUBLICATION_HEAD);
+          need(!git(['status', '--porcelain=v1', '--untracked-files=all']));
+          const deliveryBytes = read(`${entry.DELIVERY}/delivery.json`, 65536);
+          const delivery = JSON.parse(deliveryBytes);
+          const key = read(`${entry.DELIVERY}/release-public.pem`, 16384);
+          const config = entry.configFor(process.env.EOS_PUBLICATION_HEAD, delivery, key);
+          const checked = verifyTestArchive({ archivePath: `${entry.DELIVERY}/${entry.ARCHIVE}`, publicKey: key,
+            expectedReleaseId: config.releaseId, platform: 'linux-arm64' });
+          need(checked.manifest.sequence === 10 && checked.manifest.profile === 'test' && checked.manifest.nodeVersion === '24.21.0' && checked.manifest.releaseVersion === '0.2.0-test.3');
+          need(checked.archiveSha256 === config.archive.sha256 && checked.archiveBytes === config.archive.bytes);
+          entry.validateRecoveryBinding(checked, read('tools/system/recover-r4-first-start-to-r7.cjs'));
+          let mode = 'fresh';
+          if (fs.existsSync(entry.OUTPUT) || fs.lstatSync(entry.OUTPUT, { throwIfNoEntry: false })) {
+            const stat = fs.lstatSync(entry.OUTPUT); need(stat.isDirectory() && !stat.isSymbolicLink());
+            const names = fs.readdirSync(entry.OUTPUT).sort();
+            const initial = ['recover.sh', 'preparation.json', 'remote-readback.json'].sort();
+            const complete = [...initial, 'RECOVERY_COMMAND.txt', 'command-verification.json'].sort();
+            need(JSON.stringify(names) === JSON.stringify(initial) || JSON.stringify(names) === JSON.stringify(complete));
+            for (const name of names) {
+              const file = `${entry.OUTPUT}/${name}`; read(file);
+              need(/^100644 [a-f0-9]{40} 0\t[^\n]+$/.test(git(['ls-files', '--stage', '--', file])));
+            }
+            const preparation = JSON.parse(read(`${entry.OUTPUT}/preparation.json`));
+            const remote = JSON.parse(read(`${entry.OUTPUT}/remote-readback.json`));
+            const script = read(`${entry.OUTPUT}/recover.sh`);
+            const existingConfig = entry.configFor(preparation.assetCommit, delivery, key);
+            need(JSON.stringify(existingConfig) === JSON.stringify(preparation.config));
+            publication.validateReadback(remote, preparation);
+            need(preparation.deliveryMetadata?.bytes === deliveryBytes.length && preparation.deliveryMetadata?.sha256 === sha(deliveryBytes));
+            need(preparation.installer?.bytes === script.length && preparation.installer?.sha256 === sha(script));
+            need(script.equals(entry.render(existingConfig, read('tools/system/extract-test-bundle.py', 262144), read('tools/integration/test-archive.py', 262144))));
+            mode = names.length === initial.length ? 'command' : 'complete';
+            if (mode === 'complete') {
+              const proof = JSON.parse(read(`${entry.OUTPUT}/command-verification.json`));
+              need(proof.schemaVersion === 1 && proof.kind === 'eos-public-r7-recovery-command-verification' && proof.recoveryScope === entry.SCOPE);
+              need(proof.sourceAndHistoricalFilesChanged === false && proof.targetRecoveryExecuted === false && proof.productionReleaseApproved === false);
+              need(/^[a-f0-9]{40}$/.test(proof.entryCommit || ''));
+              const command = read(`${entry.OUTPUT}/RECOVERY_COMMAND.txt`, 65536);
+              need(command.equals(Buffer.from(entry.commandFor(proof.entryCommit, script))));
+              need(proof.commandMatchesPinnedEntry === true && proof.script?.bytes === script.length && proof.script?.sha256 === sha(script));
+              need(proof.command?.bytes === command.length && proof.command?.sha256 === sha(command));
+              need(proof.assetCommit === preparation.assetCommit && proof.releaseId === delivery.releaseId);
+              const assetReadback = read(`${entry.OUTPUT}/remote-readback.json`);
+              need(proof.assetReadback?.bytes === assetReadback.length && proof.assetReadback?.sha256 === sha(assetReadback));
+              need(proof.publicEntryReadback?.exactBytesEqual === true && proof.publicEntryReadback?.sha256 === sha(script) && proof.publicEntryReadback?.bytes === script.length);
+              need(proof.publicEntryReadback.publicHttpsDownloadExecuted === true && proof.publicEntryReadback.redirectsAllowed === false);
+              need(proof.publicEntryReadback.url === `https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/${proof.entryCommit}/${entry.OUTPUT}/recover.sh`);
+            }
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `mode=${mode}\n`);
+          console.log(`Authenticated R7 public-entry phase: ${mode}`);
+          NODE
+
+      - name: Build a new entry and reread all public release assets
+        if: steps.phase.outputs.mode == 'fresh'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/bootstrap/build-public-r7-recovery-entry.cjs --asset-commit "$EOS_PUBLICATION_HEAD"
+          node tools/bootstrap/prepare-public-r7-recovery-publication.cjs --readback "$EOS_PUBLICATION_HEAD"
+          git add -- delivery/public-recovery-test3-r7/recover.sh delivery/public-recovery-test3-r7/preparation.json delivery/public-recovery-test3-r7/remote-readback.json
+          git diff --cached --check
+          node tools/bootstrap/prepare-public-r7-recovery-publication.cjs --check-stage entry "$EOS_PUBLICATION_HEAD"
+
+      - name: Publish the entry before creating its public recovery command
+        if: steps.phase.outputs.mode == 'fresh'
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-r7-entry-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$EOS_PUBLICATION_HEAD" || { echo 'main advanced; concurrent work is preserved.' >&2; exit 1; }
+          node tools/bootstrap/prepare-public-r7-recovery-publication.cjs --check-stage entry "$EOS_PUBLICATION_HEAD"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: publish immutable EOS R7 recovery entry and public asset readback'
+          test "$(git rev-parse HEAD~1)" = "$EOS_PUBLICATION_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          git push origin HEAD:refs/heads/main
+          printf 'Public recovery entry commit: `%s`\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Download the actual public entry and bind the one-command recovery
+        if: steps.phase.outputs.mode == 'fresh' || steps.phase.outputs.mode == 'command'
+        id: command
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          eos_entry_commit=$(git rev-parse HEAD)
+          eos_script=delivery/public-recovery-test3-r7/recover.sh
+          eos_size=$(stat -c %s -- "$eos_script")
+          eos_sha=$(sha256sum -- "$eos_script" | cut -d ' ' -f 1)
+          eos_download=$(mktemp "$RUNNER_TEMP/eos-r7-public-script.XXXXXXXX")
+          trap 'rm -f "$eos_download"' EXIT
+          eos_url="https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/$eos_entry_commit/delivery/public-recovery-test3-r7/recover.sh"
+          curl -q --proto '=https' --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --retry 3 --retry-delay 2 --retry-max-time 120 --retry-all-errors --max-filesize "$eos_size" "$eos_url" -o "$eos_download"
+          test "$(stat -c %s -- "$eos_download")" = "$eos_size"
+          printf '%s  %s\n' "$eos_sha" "$eos_download" | sha256sum --check --status
+          cmp --silent -- "$eos_script" "$eos_download"
+          node tools/bootstrap/build-public-r7-recovery-entry.cjs --entry-commit "$eos_entry_commit"
+          node tools/bootstrap/prepare-public-r7-recovery-publication.cjs --command-report "$eos_entry_commit"
+          EOS_ENTRY_COMMIT="$eos_entry_commit" EOS_PUBLIC_ENTRY="$eos_download" node <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const { readFileLimited } = require('./runtime/release/bundle.cjs');
+          const output = 'delivery/public-recovery-test3-r7';
+          const local = readFileLimited(`${output}/recover.sh`, 1048576).bytes;
+          const remote = readFileLimited(process.env.EOS_PUBLIC_ENTRY, 1048576).bytes;
+          if (!local.equals(remote)) throw new Error('R7_PUBLIC_ENTRY_READBACK_REJECTED');
+          const file = `${output}/command-verification.json`;
+          const report = JSON.parse(readFileLimited(file, 65536).bytes);
+          if (report.entryCommit !== process.env.EOS_ENTRY_COMMIT) throw new Error('R7_PUBLIC_ENTRY_READBACK_REJECTED');
+          report.publicEntryReadback = {
+            url: `https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/${report.entryCommit}/${output}/recover.sh`,
+            bytes: remote.length, sha256: crypto.createHash('sha256').update(remote).digest('hex'),
+            exactBytesEqual: true, publicHttpsDownloadExecuted: true, redirectsAllowed: false, checkedAt: new Date().toISOString()
+          };
+          fs.writeFileSync(file, JSON.stringify(report, null, 2) + '\n');
+          NODE
+          git add -- delivery/public-recovery-test3-r7/RECOVERY_COMMAND.txt delivery/public-recovery-test3-r7/command-verification.json
+          git diff --cached --check
+          node tools/bootstrap/prepare-public-r7-recovery-publication.cjs --check-stage command "$eos_entry_commit"
+          printf 'entry_commit=%s\n' "$eos_entry_commit" >> "$GITHUB_OUTPUT"
+
+      - name: Publish only the verified command to unchanged main
+        if: steps.phase.outputs.mode == 'fresh' || steps.phase.outputs.mode == 'command'
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+          EOS_ENTRY_COMMIT: ${{ steps.command.outputs.entry_commit }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-r7-command-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$EOS_ENTRY_COMMIT" || { echo 'main advanced after entry readback; concurrent work is preserved.' >&2; exit 1; }
+          node tools/bootstrap/prepare-public-r7-recovery-publication.cjs --check-stage command "$EOS_ENTRY_COMMIT"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'docs: publish EOS R7 recovery command after exact public entry readback'
+          test "$(git rev-parse HEAD~1)" = "$EOS_ENTRY_COMMIT"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          git push origin HEAD:refs/heads/main
+          printf 'Recovery command commit: `%s`\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Signed public assets and the actual public recover.sh were read back. No Pi recovery, login or plant acceptance is established by publication.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve an already complete immutable public command
+        if: steps.phase.outputs.mode == 'complete'
+        run: echo 'R7 archive, entry and command are already complete and authenticated; no files are replaced.' >> "$GITHUB_STEP_SUMMARY"
