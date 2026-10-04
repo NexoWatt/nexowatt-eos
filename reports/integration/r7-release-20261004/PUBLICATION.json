@@ -109,33 +109,84 @@
   "operatorRecoveryPathAvailable": true,
   "recoveryScope": "authenticated-r4-failed-first-start-only",
   "credentialsAndSetupReset": false,
-  "actualPiRecoveryPerformed": false,
+  "actualPiRecoveryPerformed": true,
   "actualPiLoginVerified": false,
   "actualPiRebootVerified": false,
   "physicalControlEnabled": false,
   "productionReleaseApproved": false,
+  "actualPiRecoverySucceeded": false,
+  "previousUserObservations": [
+    {
+      "reportedAt": "2026-10-04T12:46:41+02:00",
+      "source": "user-provided systemctl show output",
+      "controller": {
+        "Result": "exit-code",
+        "NRestarts": 0,
+        "ExecMainStatus": 1,
+        "ActiveState": "failed",
+        "SubState": "failed"
+      },
+      "postgresql": {
+        "Result": "success",
+        "NRestarts": 0,
+        "ExecMainStatus": 0,
+        "ActiveState": "active",
+        "SubState": "running"
+      },
+      "installedReleaseConfirmed": false,
+      "recoveryCommandExecutionConfirmed": false,
+      "recoveryResultKnown": false,
+      "cause": "UNDETERMINED",
+      "nextEvidence": "Original R7 terminal result, selected release/recovery state, bounded controller and recovery service journal",
+      "piAcceptance": "OPEN"
+    }
+  ],
   "latestUserObservation": {
-    "reportedAt": "2026-10-04T12:46:41+02:00",
-    "source": "user-provided systemctl show output",
-    "controller": {
-      "Result": "exit-code",
-      "NRestarts": 0,
-      "ExecMainStatus": 1,
-      "ActiveState": "failed",
-      "SubState": "failed"
+    "reportedAt": "2026-10-04T17:29:17+02:00",
+    "source": "user-provided service journal and subsequent selected recovery status",
+    "recoveryCommandExecutionConfirmed": true,
+    "targetReleaseId": "d400cab68939e60e22b619b78b3ecc4a4043afbfe6e21696934db42ba586d5a3",
+    "targetPublicKeySha256": "a6a11d0d02b058a15d78a1aa81a22e488d120ee3ab9f11e1bd35a3aafad6d522",
+    "trial": {
+      "signatureVerifiedAt": "2026-10-04T12:45:29+02:00",
+      "sequence": 10,
+      "signedPayloadFiles": 22841,
+      "postgresqlMtlsReady": true,
+      "tls": "TLSv1.3",
+      "controllerReadyAt": "2026-10-04T12:45:30+02:00",
+      "heartbeatVerified": true,
+      "pidVerified": true,
+      "controllerServiceStartedAt": "2026-10-04T12:45:31+02:00",
+      "adminStartedAt": "2026-10-04T12:45:30+02:00",
+      "uiStartedAt": "2026-10-04T12:45:34+02:00",
+      "priorHostWriteOrReadOnlyPidErrorsObserved": false
     },
-    "postgresql": {
-      "Result": "success",
-      "NRestarts": 0,
-      "ExecMainStatus": 0,
-      "ActiveState": "active",
-      "SubState": "running"
+    "shutdown": {
+      "explicitServiceStopAt": "2026-10-04T12:45:35+02:00",
+      "controllerReceivedSigterm": true,
+      "adapterExitStatuses": [
+        0,
+        0
+      ],
+      "processesExitedAt": "2026-10-04T12:45:37+02:00",
+      "controllerExitStatus": 1,
+      "recoveryExitStatus": 1,
+      "controllerExitProvesOriginalFailure": false
     },
-    "installedReleaseConfirmed": false,
-    "recoveryCommandExecutionConfirmed": false,
-    "recoveryResultKnown": false,
+    "selectedStatus": {
+      "node": "v24.21.0",
+      "arch": "arm64",
+      "sequence": 7,
+      "recoveryPhase": "RESTORED_STOPPED",
+      "releaseMatches": false,
+      "activationLock": true,
+      "recoveryGuard": true,
+      "firstStartCompletePresent": false
+    },
+    "rollbackReported": true,
+    "successfulR7ActivationConfirmed": false,
     "cause": "UNDETERMINED",
-    "nextEvidence": "Original R7 terminal result, selected release/recovery state, bounded controller and recovery service journal",
+    "nextEvidence": "Original recovery terminal error and targeted post-start readiness evidence",
     "piAcceptance": "OPEN"
   }
 }

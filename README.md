@@ -1,5 +1,19 @@
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
-# R7: Wiederherstellung des abgebrochenen R4-Erststarts
+# Pi-Test offen: R7-Reparatur vorerst nicht erneut ausführen
+
+Die Pi-Rückmeldung vom 04.10.2026 bestätigt einen erfolgreichen R7-Controllerstart,
+anschließend jedoch einen fehlgeschlagenen Abschluss und die Rücksetzung auf R4
+(`RESTORED_STOPPED`, Sequenz 7, beide Wartungssperren erhalten). Der ursprüngliche
+Fehler wird vom R7-Helfer nicht ausreichend erhalten. Zusätzlich wurde eine
+Startreihenfolge-Lücke zwischen Adapter-`alive` und HTTPS-Bereitschaft reproduziert.
+Die konkrete Ursache dieses Pi-Abbruchs ist damit noch nicht eindeutig bewiesen.
+
+**Den folgenden R7-Befehl vorerst nicht für weitere Reparaturversuche verwenden.**
+Vorhandene Sperren und Einrichtung erhalten. Korrekturen und ein geprüfter
+Folgeweg für diesen zurückgesetzten Zustand sind in Arbeit.
+[Pi-Befund und aktueller Nachweisstand](reports/integration/r7-release-20261004/README.md).
+
+# Historisch veröffentlicht: R7-Wiederherstellung des R4-Erststarts
 
 **test.3 Revision 7, Sequenz 10 ist signiert, veröffentlicht und öffentlich
 zurückgelesen.** Dieser Weg ist für den gemeldeten R4-Erststart vorgesehen,
