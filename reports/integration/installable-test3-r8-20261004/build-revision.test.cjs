@@ -5,8 +5,8 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const cp = require('node:child_process');
-const { sha256, inventory } = require('../../../runtime/release/bundle.cjs');
-const { BASE, R4, NEXT, METADATA, REQUIRED_RECOVERY, HISTORICAL_RECOVERY, READINESS_TOOL, sourceEntries, assertUnchangedApp, assertHostChangeScope, retainedR7Evidence, transitionEvidence, deliveryMetadata, verificationMetadata, main } = require('./build-revision.cjs');
+const { LIMITS, sha256, inventory } = require('../../../runtime/release/bundle.cjs');
+const { BASE, R4, NEXT, METADATA, REQUIRED_RECOVERY, HISTORICAL_RECOVERY, READINESS_TOOL, sourceEntries, historicalInventory, assertUnchangedApp, assertHostChangeScope, retainedR7Evidence, transitionEvidence, deliveryMetadata, verificationMetadata, main } = require('./build-revision.cjs');
 const { exactSourceBindings, assertFullPayload, assertReports } = require('./verify-candidate.cjs');
 const { bindDerivative } = require('../../../tools/integration/bind-r8-derivative-sbom.cjs');
 const ROOT = path.resolve(__dirname, '../../..');
@@ -15,6 +15,46 @@ function temp(t) {
     t.after(() => fs.rmSync(directory, { recursive: true, force: true })); return directory;
 }
 function write(root, name, bytes) { fs.mkdirSync(path.dirname(path.join(root, name)), { recursive: true }); fs.writeFileSync(path.join(root, name), bytes); }
+test('separate historical archives can exceed one payload ceiling while the actual payload limit still rejects them', t => {
+    const root = temp(t);
+    // Sparse fixtures reproduce the real aggregate overflow without storing
+    // another GiB of release artifacts in the repository or CI artifact.
+    for (let i = 0; i < 8; i++) {
+        const file = path.join(root, `release-${i}.tar.gz`), fd = fs.openSync(file, 'wx');
+        try { fs.ftruncateSync(fd, LIMITS.fileBytes); } finally { fs.closeSync(fd); }
+    }
+    write(root, 'release-8.txt', 'x');
+    assert.equal(LIMITS.bytes, 1024 * 1024 * 1024);
+    assert.equal(LIMITS.fileBytes, 128 * 1024 * 1024);
+    assert.throws(() => inventory(root), { code: 'BUNDLE_SIZE' });
+    const historical = historicalInventory(root);
+    assert.equal(historical.length, 9);
+    assert.equal(historical.reduce((sum, row) => sum + row.size, 0), LIMITS.bytes + 1);
+    const emptyArchiveHash = sha256(Buffer.alloc(LIMITS.fileBytes));
+    for (const row of historical.slice(0, 8)) assert.equal(row.sha256, emptyArchiveHash);
+    assert.equal(historical[8].sha256, sha256(Buffer.from('x')));
+});
+test('historical inventory preserves ordinary sorted file hashes, sizes and executable modes', t => {
+    const root = temp(t);
+    write(root, 'z/readme.txt', 'history'); write(root, 'a/entry.sh', '#!/bin/sh\n'); write(root, 'top.txt', 'root');
+    fs.chmodSync(path.join(root, 'a/entry.sh'), 0o755);
+    assert.deepEqual(historicalInventory(root), inventory(root));
+});
+test('historical inventory retains bounded regular files and rejects links, unsafe paths and privileged modes', t => {
+    for (const [prepare, code] of [
+        [root => fs.symlinkSync('/etc/passwd', path.join(root, 'linked-file')), 'R8_HISTORY_FILE'],
+        [root => fs.symlinkSync('/tmp', path.join(root, 'linked-directory')), 'R8_HISTORY_FILE'],
+        [root => { write(root, 'one', 'x'); fs.linkSync(path.join(root, 'one'), path.join(root, 'two')); }, 'BUNDLE_FILE'],
+        [root => { write(root, 'privileged', 'x'); fs.chmodSync(path.join(root, 'privileged'), 0o4644); }, 'R8_HISTORY_MODE'],
+        [root => { const fd = fs.openSync(path.join(root, 'oversized'), 'wx'); try { fs.ftruncateSync(fd, LIMITS.fileBytes + 1); } finally { fs.closeSync(fd); } }, 'BUNDLE_FILE'],
+        [root => write(root, 'unsafe:name', 'x'), 'BUNDLE_PATH'],
+        [root => write(root, Array(49).fill('deep').join('/') + '/file', 'x'), 'BUNDLE_PATH'],
+    ]) {
+        const root = temp(t); prepare(root); assert.throws(() => historicalInventory(root), { code });
+    }
+    const parent = temp(t); fs.mkdirSync(path.join(parent, 'actual')); fs.symlinkSync(path.join(parent, 'actual'), path.join(parent, 'redirect'));
+    assert.throws(() => historicalInventory(path.join(parent, 'redirect')), { code: 'BUNDLE_DIRECTORY' });
+});
 test('R7 baseline is exactly pinned to historical metadata/key; R8 uses a fresh sequence and path', () => {
     const tracked = file => cp.execFileSync('git', ['show', 'HEAD:' + BASE.directory + '/' + file], { cwd: ROOT, timeout: 10000 });
     const metadata = JSON.parse(tracked('delivery.json'));

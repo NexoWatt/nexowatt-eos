@@ -115,3 +115,43 @@ leere Controller-`tmp`-Verzeichnis erklärt eine Dateidifferenz nicht.
 Die vier übrigen Security-Jobs einschließlich nativem Core-Neustart sind grün.
 R8 bleibt bis zur geklärten und bestandenen letzten Phase unsigniert; keine
 Pi-, systemd-, Browser- oder Anlagenabnahme wird aus diesem Lauf abgeleitet.
+
+## Sechster Lauf: vollständige native Managementabnahme bestanden
+
+Quellcommit `ffe4d54221d8518471cebcaa16abcbc93ae392d3`,
+[Securitylauf 37219317424](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37219317424),
+Managementjob `111486240716`, Artefakt `11310076557` unter `sixth-ci/`:
+**8/8 PASS, 0 Fehler, 0 übersprungen.** Der App-Schreibschutz gilt jetzt bereits
+vor gewöhnlichem Setup und Upload. Beide Starts bestehen aktuelle Heartbeats,
+HTTPS-Bereitschaft, echte Admin-Anmeldung, gültige gerätegebundene Lizenz und
+die exakten drei lebenden Prozesse. Frische Adapterlogs und beide Stopps bestehen.
+Die Abschlussprüfung bestätigt unveränderte Einrichtung und **0 hinzugefügte,
+0 entfernte, 0 veränderte Anwendungsdateien**. Der normale zweite Controllerstop
+hat den tatsächlichen Upstream-Exitcode 1 ohne Signal.
+
+Die vollständige Bereitschaft wird nach 8902 und 5249 ms erreicht. Alle fünf
+Security-Jobs sind erfolgreich; auch [CodeQL 37219317491](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37219317491)
+ist vollständig bestanden. Dies bestätigt das native Linux-x64-Labor mit
+Node 24.21.0 und PostgreSQL 17.11, keinen physischen Pi-/Systemd-Mount-/Browser-
+oder Anlagenbetrieb.
+
+## Wiederholung im ersten R8-Auslieferungslauf
+
+Der Markercommit `301afe587a3f63cc909cc95e7d1af4b92f4b82b2` bindet ausschließlich
+den zuvor geprüften unmittelbaren Elterncommit `ffe4d54221d8518471cebcaa16abcbc93ae392d3`.
+[Auslieferungslauf 37219795121](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37219795121)
+besteht Request-Gate und beide nativen Pflichtprüfungen. Managementjob
+`111487790517`, Artefakt `11309931680` unter `first-delivery-ci/`: erneut **8/8 PASS**,
+beide Starts mit Anmeldung/Lizenz/PID korrekt, alle Abschlussfelder erfolgreich,
+0 Dateidifferenzen. Bereitschaft nach 7791 beziehungsweise 5147 ms.
+
+Erst der getrennte Buildjob `111488548753` bricht mit `BUNDLE_SIZE` ab; keine
+Lieferung und kein Pi-Befehl wurden veröffentlicht. Die Verträge einschließlich
+68 Recoveryprüfungen und 10 Prüfungen am authentischen R4-Paket bestehen davor.
+Ursache ist die Hersteller-Historieninventur: Sie behandelt alle alten
+`delivery/`-Archive gemeinsam als einen Runtime-Payload. Der vollständige
+Git-Baum des Markercommits enthält dort 123 Dateien mit 1.091.881.744 Byte,
+also 18.139.920 Byte mehr als dessen unveränderte 1-GiB-Grenze. Keine einzelne
+Datei überschreitet das bestehende 128-MiB-Dateilimit. Der Aufruf liegt vor
+Payloadaufbereitung und Signierung. Die R8-Builder-/Verifier-Korrektur muss diese
+getrennte Archivhistorie prüfen, ohne Produkt-/Payloadgrenzen zu verändern.

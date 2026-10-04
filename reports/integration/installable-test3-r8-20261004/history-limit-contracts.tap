@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: separate historical archives can exceed one payload ceiling while the actual payload limit still rejects them
+ok 1 - separate historical archives can exceed one payload ceiling while the actual payload limit still rejects them
+  ---
+  duration_ms: 10976.759947
+  type: 'test'
+  ...
+# Subtest: historical inventory preserves ordinary sorted file hashes, sizes and executable modes
+ok 2 - historical inventory preserves ordinary sorted file hashes, sizes and executable modes
+  ---
+  duration_ms: 9.759739
+  type: 'test'
+  ...
+# Subtest: historical inventory retains bounded regular files and rejects links, unsafe paths and privileged modes
+ok 3 - historical inventory retains bounded regular files and rejects links, unsafe paths and privileged modes
+  ---
+  duration_ms: 70.807334
+  type: 'test'
+  ...
+# Subtest: R7 baseline is exactly pinned to historical metadata/key; R8 uses a fresh sequence and path
+ok 4 - R7 baseline is exactly pinned to historical metadata/key; R8 uses a fresh sequence and path
+  ---
+  duration_ms: 54.191098
+  type: 'test'
+  ...
+# Subtest: all executable backend sources are explicitly mapped to the actual installed npm copies
+ok 5 - all executable backend sources are explicitly mapped to the actual installed npm copies
+  ---
+  duration_ms: 68.647383
+  type: 'test'
+  ...
+# Subtest: recovery transition pins identify actual retained R4 sequence 7 and public key
+ok 6 - recovery transition pins identify actual retained R4 sequence 7 and public key
+  ---
+  duration_ms: 21.865508
+  type: 'test'
+  ...
+# Subtest: R4 transition proof checks actual schema versions, admission and protected files without authorizing migration
+ok 7 - R4 transition proof checks actual schema versions, admission and protected files without authorizing migration
+  ---
+  duration_ms: 1.469281
+  type: 'test'
+  ...
+# Subtest: manufacturer builder rejects unsupported argument and target-repair interfaces
+ok 8 - manufacturer builder rejects unsupported argument and target-repair interfaces
+  ---
+  duration_ms: 0.67824
+  type: 'test'
+  ...
+# Subtest: whole R7 app identity rejects changed bytes, modes, additions, omissions and duplicate rows
+ok 9 - whole R7 app identity rejects changed bytes, modes, additions, omissions and duplicate rows
+  ---
+  duration_ms: 0.388625
+  type: 'test'
+  ...
+# Subtest: independent source binding requires both runtime and app copies plus exact host declarations
+ok 10 - independent source binding requires both runtime and app copies plus exact host declarations
+  ---
+  duration_ms: 15.111844
+  type: 'test'
+  ...
+# Subtest: complete payload comparison rejects altered executable modes, policy, inventory, SBOM and licenses
+ok 11 - complete payload comparison rejects altered executable modes, policy, inventory, SBOM and licenses
+  ---
+  duration_ms: 0.664841
+  type: 'test'
+  ...
+# Subtest: published delivery, proof report and checksum twins must equal recomputed trusted metadata
+ok 12 - published delivery, proof report and checksum twins must equal recomputed trusted metadata
+  ---
+  duration_ms: 1.115068
+  type: 'test'
+  ...
+# Subtest: host gate requires changed readiness, new R8 helper and byte-identical historical R7 helper
+ok 13 - host gate requires changed readiness, new R8 helper and byte-identical historical R7 helper
+  ---
+  duration_ms: 0.273772
+  type: 'test'
+  ...
+# Subtest: retained attempt provenance binds the actual R7 identity but does not claim target journal verification
+ok 14 - retained attempt provenance binds the actual R7 identity but does not claim target journal verification
+  ---
+  duration_ms: 0.18628
+  type: 'test'
+  ...
+# Subtest: host-only SBOM changes metadata and preserves every component, pedigree and graph declaration
+ok 15 - host-only SBOM changes metadata and preserves every component, pedigree and graph declaration
+  ---
+  duration_ms: 48.813925
+  type: 'test'
+  ...
+# Subtest: host-only SBOM refuses code, lock, metadata, permissions and file-set changes
+ok 16 - host-only SBOM refuses code, lock, metadata, permissions and file-set changes
+  ---
+  duration_ms: 26.282975
+  type: 'test'
+  ...
+# Subtest: host-only SBOM requires immutable source and prior release identifiers
+ok 17 - host-only SBOM requires immutable source and prior release identifiers
+  ---
+  duration_ms: 1.289731
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11873.056752

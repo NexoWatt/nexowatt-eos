@@ -8,7 +8,7 @@ const cp = require('node:child_process');
 const { sha256, readFileLimited, inventory } = require('../../../runtime/release/bundle.cjs');
 const { verifyTestArchive, canonicalInventory } = require('../../../tools/integration/create-test-archive.cjs');
 const { appRows, bindDerivative } = require('../../../tools/integration/bind-r8-derivative-sbom.cjs');
-const { BASE, NEXT, METADATA, REQUIRED_RECOVERY, HISTORICAL_RECOVERY, READINESS_TOOL, sourceEntries, assertUnchangedApp, verifyBase, authenticateR4, transitionEvidence, assertBackendMetadata, retainedR7Evidence, assertHostChangeScope, deliveryMetadata, verificationMetadata } = require('./build-revision.cjs');
+const { BASE, NEXT, METADATA, REQUIRED_RECOVERY, HISTORICAL_RECOVERY, READINESS_TOOL, sourceEntries, historicalInventory, assertUnchangedApp, verifyBase, authenticateR4, transitionEvidence, assertBackendMetadata, retainedR7Evidence, assertHostChangeScope, deliveryMetadata, verificationMetadata } = require('./build-revision.cjs');
 const { copyDirectory, preparePayload, componentRows, validatePayload } = require('../../../tools/system/build-bundle.cjs');
 const { componentTreeDigest } = require('../../../runtime/policy/admission.cjs');
 const pid = require('../../../runtime/controller-profile/pid-state.cjs');
@@ -124,7 +124,7 @@ function main(argv = process.argv.slice(2)) {
     assertFullPayload(expectedBinding, binding);
     let historicalCount = 0;
     for (const directory of new Set([baseDirectory, path.join(ROOT, 'delivery')])) if (fs.existsSync(directory))
-        historicalCount += inventory(directory).filter(row => !path.join(directory, row.path).startsWith(path.join(ROOT, NEXT) + path.sep)).length;
+        historicalCount += historicalInventory(directory).filter(row => !path.join(directory, row.path).startsWith(path.join(ROOT, NEXT) + path.sep)).length;
     const release = { ...final, signingPublicKeySha256: sha256(key) };
     const expectedDelivery = deliveryMetadata({ previousDelivery: base.delivery, release, sourceCommit: expectedCommit, installedComponents: reconstructed.installedComponents });
     const expectedVerification = verificationMetadata({ sourceCommit: expectedCommit, timestamp, release, historicalCount, authenticatedBaselineTransition: reconstructed.authenticatedBaselineTransition, retainedReleaseProvenance: reconstructed.retainedReleaseProvenance });

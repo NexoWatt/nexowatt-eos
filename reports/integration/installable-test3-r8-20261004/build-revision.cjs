@@ -53,6 +53,29 @@ function sourceEntries() {
         return spec.files.map(file => ({ source: source + '/' + file, target: 'node_modules/' + spec.package + '/' + file }));
     }).sort((a, b) => a.target.localeCompare(b.target));
 }
+// Independent historical deliveries are not one installable payload. Retain
+// the normal file/path/link/mode/count guards, but do not add archive bytes
+// across releases to the product's unchanged 1-GiB payload-size ceiling.
+function historicalInventory(directory) {
+    const root = bundle.trustedDirectory(directory), rows = [];
+    let count = 0;
+    function walk(relative = '') {
+        const entries = fs.opendirSync(path.join(root, relative));
+        try { for (let entry; (entry = entries.readSync()) !== null;) {
+            if (++count > bundle.LIMITS.entries) fail('R8_HISTORY_SIZE');
+            const name = bundle.safeRelative(relative ? `${relative}/${entry.name}` : entry.name);
+            if (entry.isDirectory()) walk(name);
+            else if (entry.isFile()) {
+                if (rows.length >= bundle.LIMITS.files) fail('R8_HISTORY_SIZE');
+                const { bytes, mode } = bundle.readFileLimited(path.join(root, name));
+                if (mode & 0o7000) fail('R8_HISTORY_MODE');
+                rows.push({ path: name, size: bytes.length, sha256: bundle.sha256(bytes), mode: mode & 0o111 ? 0o755 : 0o644 });
+            } else fail('R8_HISTORY_FILE');
+        } } finally { entries.closeSync(); }
+    }
+    walk();
+    return rows.sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
+}
 function verifyBase(baseDirectory) {
     const archive = path.join(baseDirectory, BASE.archive), key = bundle.readFileLimited(path.join(baseDirectory, 'release-public.pem'), 16384).bytes;
     const bytes = bundle.readFileLimited(archive, 100 * 1024 * 1024).bytes;
@@ -201,7 +224,7 @@ function main(argv = process.argv.slice(2)) {
     if (fs.existsSync(destination)) fail('R8_IMMUTABLE_DESTINATION_EXISTS');
     const baseDirectory = argv[1] || path.join(ROOT, BASE.directory), historical = [];
     for (const directory of new Set([baseDirectory, path.join(ROOT, 'delivery')])) if (fs.existsSync(directory))
-        for (const row of bundle.inventory(directory)) historical.push({ ...row, absolute: path.join(directory, row.path) });
+        for (const row of historicalInventory(directory)) historical.push({ ...row, absolute: path.join(directory, row.path) });
     fs.mkdirSync(path.join(ROOT, '.work'), { recursive: true });
     const work = path.join(ROOT, WORK), prepared = prepareApp({ baseDirectory, work, sourceCommit: commit, timestamp });
     const payload = path.join(work, 'payload'), candidate = prepareCandidatePayload(prepared, payload);
@@ -240,7 +263,7 @@ function main(argv = process.argv.slice(2)) {
     process.stdout.write(JSON.stringify({ ok: true, deliveryDirectory: NEXT, releaseId: signed.releaseId,
         archiveSha256: signed.archiveSha256, publicKeySha256: signed.signingPublicKeySha256, operatorRecoveryPathAvailable: false }) + '\n');
 }
-module.exports = { BASE, R4, NEXT, WORK, REQUIRED_RECOVERY, HISTORICAL_RECOVERY, READINESS_TOOL, BACKENDS, METADATA, sourceEntries, assertUnchangedApp, verifyBase, authenticateR4, transitionEvidence, assertBackendMetadata, retainedR7Evidence, assertHostChangeScope, prepareApp, prepareCandidatePayload, deliveryMetadata, verificationMetadata, main };
+module.exports = { BASE, R4, NEXT, WORK, REQUIRED_RECOVERY, HISTORICAL_RECOVERY, READINESS_TOOL, BACKENDS, METADATA, sourceEntries, historicalInventory, assertUnchangedApp, verifyBase, authenticateR4, transitionEvidence, assertBackendMetadata, retainedR7Evidence, assertHostChangeScope, prepareApp, prepareCandidatePayload, deliveryMetadata, verificationMetadata, main };
 if (require.main === module) {
     try { main(); } catch (error) { process.stderr.write((/^[A-Z0-9_]+$/.test(error.code || error.message || '') ? error.code || error.message : 'R8_BUILD_FAILED') + '\n'); process.exitCode = 1; }
 }

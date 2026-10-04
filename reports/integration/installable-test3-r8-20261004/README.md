@@ -103,3 +103,31 @@ Offen bleiben sauberer finaler Quellcommit, verpflichtender nativer Test des
 vollständigen Managementstarts, signierter Kandidatenbau, unabhängiger Archiv-
 Readback und tatsächlicher Pi-Wiederanlauf. Ein bestandener nativer x64-Lauf wäre
 kein ARM64-/Systemd-/Anlagentest und keine Produktionsfreigabe.
+
+## Korrektur des historischen Größeninventars
+
+Der erste verpflichtende R8-Lauf `37219795121` bestand beide nativen Tests und
+brach danach im Builder mit `BUNDLE_SIZE` ab. Die frühen 123 historischen
+Lieferdateien summieren sich auf 1.091.881.744 Byte und wurden irrtümlich wie
+ein einzelner Payload gegen dessen 1-GiB-Grenze geprüft. Das aktuelle R7-Archiv
+ist mit 97.495.870 Byte kleiner als die unveränderte Einzeldateigrenze.
+
+Builder und Verifier inventarisieren historische Lieferungen jetzt mit einem
+eigenen Scanner. Er hält die bisherigen Grenzen für Einzeldateien, Dateizahl,
+Verzeichnistiefe und Einträge sowie sämtliche Pfad-, Link- und Modusprüfungen
+ein. Nur die Summe verschiedener alter Archive ist keine Payloadgröße mehr.
+Die Produktgrenzen und die vollständige Prüfung jedes neuen Payloads bleiben
+unverändert. Alle historischen Dateien werden weiterhin einzeln gehasht und
+vor der Veröffentlichung auf unveränderte Bytes geprüft.
+
+17/17 Builder-/Verifier-/SBOM-Verträge einschließlich drei neuer Regressionen
+und 17/17 Publikationsverträge bestanden unter lokalem Node 24.19.0. Die
+Regression erzeugt tatsächlich eine sparse Dateisammlung von 1 GiB plus einem
+Byte: Der bestehende Payloadscanner verweigert sie weiterhin, während das
+Historieninventar sämtliche Dateien korrekt erfasst. Unsichere Dateitypen,
+Links, übergroße Einzeldateien, privilegierte Modi und unsichere Pfade bleiben
+gesperrt. Details und Quellpins: `history-limit-fix.json`; rohe Nachweise:
+`history-limit-contracts.tap` und `history-limit-publication.log`.
+
+Dieser Nachweis ist kein neuer Signatur-, Pi- oder Hardwarelauf. Der neue
+Quellcommit muss die verpflichtende Pipeline erneut vollständig bestehen.

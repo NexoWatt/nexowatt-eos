@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "timestamp": "2026-10-04T17:30:04.366613+00:00",
+  "scope": "R8 manufacturer historical inventory correction; no product payload limit change",
+  "failedCiRun": 37219795121,
+  "failedCiBuildJob": 111488548753,
+  "baseSourceCommit": "301afe587a3f63cc909cc95e7d1af4b92f4b82b2",
+  "sourceTreeClean": false,
+  "observedFailure": "BUNDLE_SIZE before prepareApp",
+  "historicalDelivery": {
+    "files": 123,
+    "bytes": 1091881744,
+    "payloadCeilingBytes": 1073741824,
+    "excessBytes": 18139920,
+    "largestFileBytes": 97495870,
+    "sizeEvidence": "Independent read-only GitHub tree API review of marker 301afe587a3f63cc909cc95e7d1af4b92f4b82b2"
+  },
+  "rootCause": "builder and verifier applied the single-payload aggregate size limit to all independent historical release archives together",
+  "correction": "Dedicated historical inventory retains bounded files, paths, links, modes, depth, entry and file counts without a cross-release payload-size sum",
+  "payloadLimitsChanged": false,
+  "payloadCeilingBytes": 1073741824,
+  "individualFileCeilingBytes": 134217728,
+  "runtimeBundleSourceByteIdenticalToBase": true,
+  "builderContracts": {
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "raw": "history-limit-contracts.tap"
+  },
+  "publisherContracts": {
+    "passed": 17,
+    "failed": 0,
+    "raw": "history-limit-publication.log"
+  },
+  "largeRegression": {
+    "bytes": 1073741825,
+    "files": 9,
+    "sparse": true,
+    "originalPayloadInventoryRejected": "BUNDLE_SIZE",
+    "historicalInventoryPassed": true
+  },
+  "host": "linux-x64",
+  "node": "24.19.0",
+  "sourceFiles": [
+    {
+      "path": "reports/integration/installable-test3-r8-20261004/build-revision.cjs",
+      "sha256": "163351366696d858ba5860e8407d6966d39c99dc061637165701d933705d6586"
+    },
+    {
+      "path": "reports/integration/installable-test3-r8-20261004/verify-candidate.cjs",
+      "sha256": "5757aa148e31f3da39b75ca61bdbaa88682734923dc1b017c62b2564e5e7ee1c"
+    },
+    {
+      "path": "reports/integration/installable-test3-r8-20261004/build-revision.test.cjs",
+      "sha256": "ed3e1d4b82096bf5fabc4c7977fd93582b9ac0e5e0849c18c5d8d56a30e8757b"
+    },
+    {
+      "path": "runtime/release/bundle.cjs",
+      "sha256": "9c3c8f38672d84d7adbb6b05eb4b13e3c35483ced63a427697370aeb7c5c2e3b"
+    }
+  ],
+  "candidateSigned": false,
+  "candidatePublished": false,
+  "nativeTestsRepeatedForThisFix": false,
+  "piExecuted": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "independentAiReview": {
+    "performed": true,
+    "concreteBlockers": 0,
+    "builderContractsRepeatedPassed": 17,
+    "node": "24.19.0",
+    "runtimeBundleDiffEmpty": true,
+    "independentCertification": false
+  }
+}
