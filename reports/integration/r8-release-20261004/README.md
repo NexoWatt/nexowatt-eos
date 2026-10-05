@@ -45,3 +45,31 @@ bleibt gesperrt; keine Produktionsfreigabe. Die unveränderten Liefermetadaten
 geben den Buildzeitpunkt vor Veröffentlichung des öffentlichen Einstiegs wieder;
 dessen jetzige Verfügbarkeit ist ausschließlich in diesem separaten
 Veröffentlichungsnachweis ergänzt.
+
+## Pi-Rückmeldung vom 05.10.2026
+
+Der Nutzer meldet weiterhin Controller `failed` mit `ExecMainStatus=1` und
+PostgreSQL `active/running`. Der ausschließlich lesende Auszug der fünf
+R8-Diagnosefelder meldet `R8_DIAGNOSEDATEI_NICHT_VORHANDEN`.
+Die mitgelieferten letzten 80 Controller-Journaleinträge reichen vom
+03.10.2026, 21:50:02, bis 04.10.2026, 12:45:37 (jeweils UTC+02:00).
+Sie zeigen die alten R4-PID-Schreibfehler und den bekannten R7-Probelauf mit
+Sequenz 10, `CONTROLLER_READY`, anschließendem SIGTERM und gestoppten Adaptern.
+Ein R8-Controllerstart, Sequenz 11 oder `FIRST_START_RECOVERED` ist darin
+nicht nachgewiesen. Private Rohlogs und Netzwerkadressen werden nicht übernommen.
+
+Aus dieser Rückmeldung folgt kein neuer reproduzierter R8-Laufzeitfehler.
+Offen bleibt, ob R8 noch nicht ausgeführt wurde oder bereits vor Anlage des
+Journals beziehungsweise vor dem Controllerstart abbrach. Das fehlende Journal
+allein beweist keine der beiden Möglichkeiten. Nächster benötigter Beleg ist
+die Terminalausgabe des festen R8-Reparaturbefehls. Der Einstieg verwendet
+`systemd-run --wait --pipe --collect`; sein Fehler-JSON muss daher nicht im
+Systemd-Journal vorhanden sein. Eine bereits erfolgte Ausführung wird nicht
+blind wiederholt, und vorhandene Wartungssperren bleiben erhalten.
+
+Der öffentliche Stand `247066badf7feb643ec593a830ec03b5e2375e03` und die drei oben
+verlinkten erfolgreichen CI-Läufe wurden am 05.10. nochmals abgeglichen. Seit
+dem geprüften Quellcommit sind nur Liefer- und Nachweisdateien hinzugekommen;
+Laufzeitcode, Tests und Workflows sind unverändert. Diese Rückmeldung wurde
+inhaltlich geprüft; es wurde kein neuer Testlauf, Paketbau oder Pi-Eingriff
+ausgeführt. Die Zielgeräteabnahme bleibt offen.
