@@ -64,3 +64,18 @@ bereits vorhandene Betriebssystemwerkzeuge. Die lokale PGlite-Testabhängigkeit
 gehört ausschließlich zum Entwicklungsprüfstand.
 
 [Bedienung und Fehlerbehandlung](../../../docs/operations/COMPLETE_R8_ADMIN_SETUP_DE.md).
+
+## Veröffentlichung
+
+Quellen veröffentlicht auf `main` als `44768e2bfaed979663f52efc730bc61dfe1e1f81`. Python und SQL
+wurden anschließend über die öffentliche GitHub-Schnittstelle vom exakten
+Commit zurückgelesen und bytegenau mit den geprüften Dateien verglichen.
+Der getrennte Befehls-/Dokumentationscommit bindet beide Downloads an diese
+Quellrevision und deren SHA-256. Die GitHub-Läufe dieses Quellstands sind
+[Security](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37355237825),
+[Workflowprüfung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37355237848)
+und [CodeQL](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37355237867);
+die Workflowprüfung war erfolgreich, Security und CodeQL beim
+Veröffentlichen des Befehls noch in Arbeit. Äußere und innere Bash-Syntax des
+fest gebundenen Befehls wurden mit `bash -n` geprüft; der Pi-Befehl selbst
+wurde hier nicht gegen ein Gerät ausgeführt.

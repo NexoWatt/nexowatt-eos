@@ -1,0 +1,13 @@
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c '
+set -euo pipefail
+umask 077
+[[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]]
+(( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1
+d=$(/usr/bin/mktemp -d /root/eos-admin-r8-XXXXXXXX)
+base=https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/44768e2bfaed979663f52efc730bc61dfe1e1f81/tools/system
+/usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 6410 "$base/complete-r8-admin-setup.py" -o "$d/complete-r8-admin-setup.py"
+/usr/bin/printf "%s  %s\n" "605e0e723e41e39e03885e6ede36a5a95e325f537b2740299956c1d6b87a8d3e" "$d/complete-r8-admin-setup.py" | /usr/bin/sha256sum --check --status
+/usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 6150 "$base/complete-r8-admin-setup.sql" -o "$d/complete-r8-admin-setup.sql"
+/usr/bin/printf "%s  %s\n" "091406fd74dd9a1814c5c20d0f588ae7dc97f1020609ac581612bdfd0b79d8b3" "$d/complete-r8-admin-setup.sql" | /usr/bin/sha256sum --check --status
+/usr/bin/python3 -I -B "$d/complete-r8-admin-setup.py"
+'

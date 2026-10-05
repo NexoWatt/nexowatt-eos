@@ -5,6 +5,7 @@ Assistenten anzeigen. Die Ursache ist korrigiert; für den bereits eingerichtete
 R8-Test-Pi gibt es eine kleine, transaktionale Datenbankkorrektur. Sie erhält
 Passwort, UUID, EOS-Lizenz und Einstellungen. Telemetrie bleibt deaktiviert.
 
+[Vollständiger Pi-Befehl](docs/operations/R8_ADMIN_SETUP_COMMAND.txt) ·
 [R8-Admin-Korrektur und Ablauf](docs/operations/COMPLETE_R8_ADMIN_SETUP_DE.md) ·
 [Prüfbelege und noch offene Geräteabnahme](reports/integration/admin-wizard-20261005/README.md).
 Die nachstehende R4/R7-Wiederherstellung nicht erneut auf einem bereits

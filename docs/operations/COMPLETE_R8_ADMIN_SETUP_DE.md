@@ -37,8 +37,8 @@ Es werden keine signierten Paketinhalte verändert, keine Pakete installiert und
 keine Dienste neu gestartet. Der Quellcodefix allein ändert den bereits
 installierten R8-Pi nicht; dafür ist diese ausdrückliche Bestandskorrektur nötig.
 
-Der veröffentlichte, auf Commit und Dateihashes festgelegte Befehl steht nach
-der Veröffentlichung in `R8_ADMIN_SETUP_COMMAND.txt` im selben Verzeichnis.
+Der auf Commit und Dateihashes festgelegte Befehl steht in
+[R8_ADMIN_SETUP_COMMAND.txt](R8_ADMIN_SETUP_COMMAND.txt).
 Den vollständigen Befehl einmal im SSH-Terminal des betroffenen Test-Pi ausführen.
 Er lädt zwei kleine geprüfte Dateien in ein neues privates Root-Verzeichnis.
 Erwartete Ausgabe:
