@@ -1,5 +1,10 @@
 # Veröffentlichter R8-Wiederherstellungsweg – 04.10.2026
 
+**Nachtrag 05.10.2026:** Der Nutzer hat den erfolgreichen R8-Wiederherstellungslauf
+auf seinem Pi mit `FIRST_START_RECOVERED`, Sequenz 11 und Dienstresultat
+`success` / Exitcode 0 zurückgemeldet. [Bereinigter Rückmeldebeleg](pi-recovery-observation-20261005.json).
+Browser-Anmeldung, normaler Geräteneustart und Anlagenabnahme bleiben offen.
+
 R8 / Sequenz 11 ist signiert und veröffentlicht. [Quell-Security](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37221025203),
 [CodeQL](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37221025240) und der
 [Auslieferungslauf](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37221151680)
@@ -39,14 +44,15 @@ gelesen und auf exakt 1008 Byte, SHA-256 und Shellsyntax geprüft, ohne ihn ausz
 - [Fester R8-Kopierbefehl](../../../delivery/public-recovery-test3-r8/RECOVERY_COMMAND.txt)
 - [Ablauf und Nachprüfung auf dem Pi](../../../docs/operations/RECOVER_R4_RESTORED_R7_TO_R8_DE.md)
 
-Der konkrete Pi-Wiederanlauf, Browserbedienung, Geräteneustart, Backup/Restore und
-reale Anlagenanbindungen sind noch nicht bestätigt. Physische Anlagensteuerung
+Zum Veröffentlichungszeitpunkt waren Pi-Wiederanlauf, Browserbedienung,
+Geräteneustart, Backup/Restore und reale Anlagenanbindungen noch nicht bestätigt.
+Der spätere Pi-Recoverylauf ist unten separat dokumentiert. Physische Anlagensteuerung
 bleibt gesperrt; keine Produktionsfreigabe. Die unveränderten Liefermetadaten
 geben den Buildzeitpunkt vor Veröffentlichung des öffentlichen Einstiegs wieder;
 dessen jetzige Verfügbarkeit ist ausschließlich in diesem separaten
 Veröffentlichungsnachweis ergänzt.
 
-## Pi-Rückmeldung vom 05.10.2026
+## Erste Pi-Rückmeldung vom 05.10.2026, vor der Erfolgsmeldung
 
 Der Nutzer meldet weiterhin Controller `failed` mit `ExecMainStatus=1` und
 PostgreSQL `active/running`. Der ausschließlich lesende Auszug der fünf
@@ -73,3 +79,27 @@ dem geprüften Quellcommit sind nur Liefer- und Nachweisdateien hinzugekommen;
 Laufzeitcode, Tests und Workflows sind unverändert. Diese Rückmeldung wurde
 inhaltlich geprüft; es wurde kein neuer Testlauf, Paketbau oder Pi-Eingriff
 ausgeführt. Die Zielgeräteabnahme bleibt offen.
+
+## Erfolgreiche R8-Wiederherstellung auf dem Pi, 05.10.2026
+
+Die nachfolgende Terminalrückmeldung des Nutzers zeigt die Ausführung des festen
+R8-Befehls: erwartete Release-ID
+`eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7`,
+`FIRST_START_RECOVERED`, Sequenz 11, Systemd-Ergebnis `success` und Exitcode 0.
+Gemeldete Laufzeit: 4 min 59,742 s; CPU-Zeit: 34,674 s. Dies ist ein vom Nutzer
+übermittelter Zielgerätebeleg, kein direkter Fernzugriff oder eigener neuer Testlauf.
+
+`REPAIR_NO_INCOMPLETE_TRIAL` ist der normale erfolgreiche Aufräum-Nachlauf bei
+bereits aufgehobener Aktivierungssperre. Das vorherige `signatureVerified:false`
+mit `codeExecuted:false` stammt nur vom Entpacker. Die anschließende
+R8-Koordinatorprüfung verlangt die gültige Signatur und Dateihashes vor der
+Umstellung. Diese Trennung wurde im unveränderten Quellcode abgeglichen.
+
+Damit ist die bisher offene tatsächliche Ausführung dieses R8-Wiederherstellungswegs
+auf dem Nutzer-Pi erfolgreich zurückgemeldet. Noch ausstehend sind eine separate
+Dienststatusaufnahme danach, Browser-Login/Logout/Login, normaler Geräteneustart,
+Backup/Restore, Dauerbetrieb und reale Geräteanbindungen. Die festen Felder
+`hardwareTested:false`, `physicalControlEnabled:false` und
+`productionReleaseApproved:false` bleiben unverändert; der gemeldete Erfolg ist
+keine allgemeine Hardware-, Anlagen- oder Produktionsfreigabe. Keine Änderung
+an Laufzeitcode, signierten Lieferdateien oder dem bestehenden Prüfstand.

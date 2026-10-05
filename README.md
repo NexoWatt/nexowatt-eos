@@ -42,8 +42,9 @@ Befehl nicht blind wiederholen.
 Der native Linux-x64-Test mit Node 24.21.0 und PostgreSQL 17.11 besteht Einrichtung
 unter Schreibschutz, Controller/Admin/UI, echte HTTPS-Anmeldung, gültige Lizenz,
 aktuelle Prozesskennungen, Stop und Neustart sowie den unveränderten App-Dateibaum.
-Alle 22.842 signierten Dateien wurden zusätzlich unabhängig geprüft. Der konkrete
-Wiederanlauf auf dem Pi, Browserbedienung, Geräteneustart und reale Geräteanbindungen
+Alle 22.842 signierten Dateien wurden zusätzlich unabhängig geprüft. Der erste
+R8-Wiederherstellungslauf auf dem Nutzer-Pi wurde am 05.10.2026 erfolgreich
+zurückgemeldet. Browserbedienung, Geräteneustart und reale Geräteanbindungen
 bleiben zu bestätigen. Physische Anlagenbefehle bleiben gesperrt; R8 ist ein Teststand.
 
 ## Historischer R7-Versuch
