@@ -1,6 +1,6 @@
 # Aktueller Entwicklungsstand: zentrale EOS-Lizenz und Admin-Logos
 
-Die sechs eigenen Adapter beziehen ihre Freigabe aus der zentralen EOS-Lizenz.
+Die sechs eigenen Adapter beziehen ihre Freigabe aus der zentralen EOS-Lizenz (NWL3).
 Die UI benötigt keinen eigenen Schlüssel mehr. Unveränderte NexoWatt-Adapter
 starten nur innerhalb des zugelassenen EOS-Systems; kleine Admin-Logos wurden
 auf die vorhandenen NexoWatt-Grafiken umgestellt.
@@ -12,6 +12,7 @@ Die ältere Erststart-Wiederherstellung unten nicht erneut darauf ausführen.
 
 [Änderung, zentrale Aktivierung und Grenzen](docs/development/EOS_CENTRAL_LICENSE_2026-10-05_DE.md) ·
 [Gemeinsame lokale Prüfbelege](reports/integration/central-license-20261005/README.md) ·
+[NWL3-Prüfung](reports/integration/nwl3-20261005/README.md) ·
 [Bisherige R8-Admin-Korrektur](docs/operations/COMPLETE_R8_ADMIN_SETUP_DE.md).
 
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->

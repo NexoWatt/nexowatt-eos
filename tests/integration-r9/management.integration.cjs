@@ -70,11 +70,11 @@ async function observation(probe, ca) {
         adminFailure: detail(results[0], 8081), uiFailure: detail(results[1], 8188) };
 }
 
-test('actual prepared R9 controller, Admin and UI: native PostgreSQL, HTTPS, central license and immutable EOS admission', { timeout: 530000 }, async t => {
+test('actual prepared R9 controller, Admin and UI: native PostgreSQL, HTTPS, central NWL3 license and immutable EOS admission', { timeout: 530000 }, async t => {
     assert.equal(process.version, 'v24.21.0');
     const children = [], clients = [], evidence = { schemaVersion: 1, kind: 'eos-r9-native-management', sourceReleaseId: fixture.previousReleaseId,
         sourceSequence: 11, targetSequence: 12, sourceCommit: fixture.sourceCommit, fixtureReleaseId: fixture.releaseId,
-        appContentSha256: fixture.appContentSha256, nodeVersion: process.versions.node, sequence: 12, passed: false,
+        appContentSha256: fixture.appContentSha256, nodeVersion: process.versions.node, sequence: 12, licenseFormat: 'NWL3', passed: false,
         signed: false, unsignedFixture: true, hardwareTested: false, checks: {}, candidateSigned: false, fixedRootOwnedEosPaths: true, nativePostgresql: '17.11', node: process.version, hostArch: process.arch, signedPayloadPlatform: 'linux-arm64',
         sourceAppBytesUnchanged: false, lifecycleScriptsExecuted: false, nativeModulesRebuilt: false, mockedRuntimeDependencies: false,
         physicalAdaptersStarted: false, actualSystemdMountPolicy: false, physicalPiAcceptance: false, productionReleaseApproved: false,
@@ -283,7 +283,7 @@ test('actual prepared R9 controller, Admin and UI: native PostgreSQL, HTTPS, cen
         evidence.checks.initiallyUnlicensed = true; evidence.checks.adminHttpsLogin = true; evidence.checks.uiHttpsLogin = true;
         evidence.unlicensedStartup = { centralAdminReachable: true, uiDenied: true, noLocalKey: true };
     });
-    await stage('central HTTPS Home activation propagates actual three/two quota lease without restart', async () => {
+    await stage('central HTTPS NWL3 Home activation propagates policy three/two quota lease without restart', async () => {
         const pid = active.pid;
         const status = await licenseSession.activate('home');
         await waitUiLicense(true, 'home', 3, 2);
@@ -304,10 +304,10 @@ test('actual prepared R9 controller, Admin and UI: native PostgreSQL, HTTPS, cen
         evidence.revocation = { status, uiDenied: true, controllerUnchanged: true };
         expectedEdition = null;
     });
-    await stage('central HTTPS Pro reactivation propagates signed seven/four quotas and Pro features', async () => {
+    await stage('central HTTPS NWL3 Pro reactivation propagates policy fifty/ten quotas and Pro features', async () => {
         const pid = active.pid;
         const status = await licenseSession.activate('pro');
-        await waitUiLicense(true, 'pro', 7, 4);
+        await waitUiLicense(true, 'pro', 50, 10);
         const ui = await licenseSession.uiInfo('pro');
         const features = await licenseSession.uiFeatures('pro');
         assert.equal(active.pid, pid); assert.equal(active.exitCode, null);

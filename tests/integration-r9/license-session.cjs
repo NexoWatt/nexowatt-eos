@@ -8,7 +8,8 @@ const { performance } = require('node:perf_hooks');
 
 const DEADLINE_MS = 5000;
 const KID = 'nativeManagementLab';
-const LIMITS = Object.freeze({ home: Object.freeze({ chargePoints: 3, batteries: 2 }), pro: Object.freeze({ chargePoints: 7, batteries: 4 }) });
+// NWL3 capacities are trusted product policy, never issuer-supplied claims.
+const LIMITS = Object.freeze({ home: Object.freeze({ chargePoints: 3, batteries: 2 }), pro: Object.freeze({ chargePoints: 50, batteries: 10 }) });
 const FEATURES = Object.freeze({
     home: Object.freeze(['energy', 'wallet', 'smartHome', 'microgridSlave']),
     pro: Object.freeze(['energy', 'wallet', 'smartHome', 'microgridSlave', 'microgridMaster', 'multisite', 'billing']),
@@ -49,7 +50,7 @@ function statusSummary(result, uuid, expectedEdition) {
     const data = result?.data;
     if (result?.status !== 200 || !exact(data, ['v', 'valid', 'code', 'uuid', 'edition', 'expiresAt', 'limits', 'features']) ||
         data.v !== 1 || data.uuid !== uuid || typeof data.valid !== 'boolean' ||
-        !(data.expiresAt === null || (Number.isSafeInteger(data.expiresAt) && data.expiresAt >= 0))) fail('R9_LICENSE_STATUS');
+        data.expiresAt !== null) fail('R9_LICENSE_STATUS');
     if (!data.valid) {
         if (expectedEdition || data.code !== 'LICENSE_MISSING' || data.edition !== null || data.expiresAt !== null ||
             !exact(data.limits, []) || !sameList(data.features, [])) fail('R9_LICENSE_STATUS');
@@ -84,14 +85,14 @@ function issueToken({ core, issuer, uuid, edition }) {
     if (!Object.hasOwn(LIMITS, edition)) fail('R9_LICENSE_EDITION');
     try {
         const now = Date.now();
-        const claims = { v: 2, kid: KID, licenseId: `ephemeral-native-r9-${edition}`, uuid, edition,
-            issuedAt: now - 1000, notBefore: now - 1000, expiresAt: now + 1800000,
-            adapters: ['nexowatt-ui'], limits: { ...LIMITS[edition] } };
-        const message = 'NWL2.' + Buffer.from(JSON.stringify(claims)).toString('base64url');
+        const claims = { v: 3, kid: KID, licenseId: `ephemeral-native-r9-${edition}`, uuid, edition,
+            issuedAt: now - 1000, notBefore: now - 1000, expiresAt: null, scope: 'system' };
+        const message = 'NWL3.' + Buffer.from(JSON.stringify(claims)).toString('base64url');
         const token = message + '.' + crypto.sign(null, Buffer.from(message, 'ascii'), issuer).toString('base64url');
         const publicKeys = { [KID]: crypto.createPublicKey(issuer).export({ type: 'spki', format: 'pem' }).toString() };
         const verified = core.verifyLicense(token, { uuid, publicKeys, now });
-        if (verified.edition !== edition || verified.uuid !== uuid || !sameList(verified.features, FEATURES[edition]) ||
+        if (verified.v !== 3 || verified.scope !== 'system' || verified.expiresAt !== null || !sameList(verified.adapters, []) ||
+            verified.edition !== edition || verified.uuid !== uuid || !sameList(verified.features, FEATURES[edition]) ||
             verified.limits.chargePoints !== LIMITS[edition].chargePoints || verified.limits.batteries !== LIMITS[edition].batteries) fail('R9_LICENSE_FIXTURE');
         return token;
     } catch { fail('R9_LICENSE_FIXTURE'); }

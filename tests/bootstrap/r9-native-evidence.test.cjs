@@ -7,14 +7,15 @@ const tap = 'TAP version 13\nok 1 - fixture\n1..1\n# tests 1\n# pass 1\n# fail 0
 function fixture() { return { sourceCommit, appContentSha256, tap,
     preparation: { schemaVersion: 1, kind: 'unsigned-r9-native-preparation', signed: false, sequence: 12, nodeVersion: '24.21.0', sourceCommit, appContentSha256,
         previousSignatureVerified: true, previousReleaseId: 'eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7' },
-    evidence: { schemaVersion: 1, kind: 'eos-r9-native-management', passed: true, signed: false, sequence: 12, nodeVersion: '24.21.0', sourceCommit,
+    evidence: { schemaVersion: 1, kind: 'eos-r9-native-management', passed: true, signed: false, sequence: 12, nodeVersion: '24.21.0', sourceCommit, licenseFormat: 'NWL3',
         appContentSha256, hardwareTested: false, productionReleaseApproved: false, checks: Object.fromEntries(CHECKS.map(name => [name, true])) } }; }
 test('native gate requires exact source and unsigned app content before signing', () => { assert.equal(validate(fixture()).ok, true); });
 test('failed, absent, skipped, ambiguous or unrelated source evidence blocks signing', () => {
     for (const change of [v => { v.sourceCommit = 'c'.repeat(40); }, v => { v.appContentSha256 = 'd'.repeat(64); },
         v => { v.evidence.passed = false; }, v => { v.evidence.signed = true; }, v => { v.evidence.hardwareTested = true; },
         v => { v.preparation.previousSignatureVerified = false; }, v => { v.evidence.productionReleaseApproved = true; },
-        v => { v.evidence.sequence = 11; }, v => { v.evidence.nodeVersion = '24.19.0'; }]) {
+        v => { v.evidence.sequence = 11; }, v => { v.evidence.nodeVersion = '24.19.0'; },
+        v => { v.evidence.licenseFormat = 'NWL2'; }, v => { delete v.evidence.licenseFormat; }]) {
         const value = fixture(); change(value); assert.throws(() => validate(value));
     }
     for (const check of CHECKS) { const value = fixture(); value.evidence.checks[check] = false; assert.throws(() => validate(value)); }

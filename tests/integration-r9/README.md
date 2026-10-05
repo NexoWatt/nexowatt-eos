@@ -60,15 +60,23 @@ Plattformprüfer außerhalb des zugelassenen Einstiegspunkts auf und muss mit
    Produktions-HTTPS-Readiness aus `tools/system/onboard-ui.cjs`.
 3. Unlizenzierter Start: EOS-Admin bleibt nach echter OAuth-Anmeldung erreichbar,
    UI sperrt Bedienung und zeigt zentrale Verwaltung nach strikter Anmeldung.
-4. Über die echte zentrale Aktivierungsroute signierte Home-Lizenz aktivieren:
+4. Über die echte zentrale Aktivierungsroute signierte **NWL3-Home-Lizenz** aktivieren:
    UI übernimmt drei Ladepunkte und zwei Speicher ohne Neustart.
 5. Über die zentrale Löschroute entziehen: tatsächliche UI-Lease und
    Kontingentstates werden gesperrt, während Managementprozesse weiterlaufen.
-6. Signierte Pro-Lizenz aktivieren: UI übernimmt sieben Ladepunkte, vier Speicher
-   und Pro-Merkmale ohne Neustart. Die native Fixture verwendet bewusst kleinere
-   signierte Kontingente als mögliche Produktmaxima.
+6. Signierte **NWL3-Pro-Lizenz** aktivieren: UI übernimmt 50 Ladepunkte, zehn
+   Speicher und Pro-Merkmale ohne Neustart, gemäß aktueller zentraler Produktpolicy.
 7. Controller samt Admin/UI sauber neu starten; gültiger zentraler Pro-Status,
    HTTPS, Enrollment, PIDs und unveränderte App-Bytes bleiben erhalten.
+
+Beide NWL3-Schlüssel enthalten `v:3`, `scope:'system'`, identische
+`issuedAt`/`notBefore` und `expiresAt:null`. Sie enthalten keine `adapters`,
+`limits` oder `features`: Diese Berechtigungen leitet der tatsächliche Admin-Core
+aus seiner Home-/Pro-Policy ab. Die Fixture prüft jede selbst signierte Lizenz
+vor der echten HTTPS-Aktivierung zusätzlich mit dem Core aus der vorbereiteten
+App. Die dauerhaft gültige Lizenz ist ausschließlich an die zufällige Labor-UUID
+und den ephemeren Labor-Vertrauensanker gebunden. Admin meldet `expiresAt:null`;
+die UI meldet weiterhin `expiresAt:0` und eine begrenzte, erneuerbare `validUntil`-Lease.
 
 Die automatischen Zustandsprüfungen beobachten die echten PostgreSQL-States,
 bevor die nächste UI-HTTP-Abfrage eine zusätzliche Refreshanforderung auslösen
@@ -89,7 +97,7 @@ Veröffentlichbare bereinigte Ergebnisse sind genau:
 - `r9-native-prepared.json`
 
 Evidence: `schemaVersion:1`, `kind:eos-r9-native-management`, `sourceCommit`,
-`sequence:12`, `nodeVersion:24.21.0`, `appContentSha256`, `passed`, `signed:false`,
+`sequence:12`, `nodeVersion:24.21.0`, `licenseFormat:NWL3`, `appContentSha256`, `passed`, `signed:false`,
 `unsignedFixture:true`, `hardwareTested:false`, `productionReleaseApproved:false`.
 `checks` enthält nur tatsächlich nach bestandenen Stufen gesetzte Booleans:
 `postgresqlMtls`, `platformDeniesUnadmittedProcess`, `initiallyUnlicensed`,
@@ -115,7 +123,11 @@ es gibt keinen allgemeinen Lösch-/Reparaturbefehl für Produktivhosts.
 
 `node --test tests/integration-r9/fixture.test.cjs tests/integration-r9/license-session.test.cjs`
 prüft Metadaten, Ablehnung des Roothelfers außerhalb des expliziten Kontexts,
-Hashprojektion, echte NWL2-Signaturprüfung und geheimnisfreie Resultatvalidierung.
+Hashprojektion, echte NWL3-Signatur-/Policyprüfung und geheimnisfreie
+Resultatvalidierung. Signierte NWL3-Claims mit zusätzlichen Kontingenten,
+Adapterlisten, Features oder abweichenden Zeitregeln müssen abgewiesen werden.
+Ein separater lokaler NWL2-Kompatibilitätstest behält die engen 7/4-Kontingente;
+NWL2 ist nicht das Lizenzformat des nativen Integrationsablaufs.
 Diese Contracttests sind **kein nativer Lauf**. Lokaler Stand siehe
 `LOCAL_EVIDENCE.md`. Ein x64-Nativerfolg ist kein ARM64-/Pi-, systemd-Service-,
 Browser- oder Anlagenbeleg und keine Produktionsfreigabe.

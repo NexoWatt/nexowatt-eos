@@ -9,6 +9,15 @@ an ihre Anfrage gebundene Freigaben. Die UI enthält keinen zweiten Schlüsselwe
 Alte UI-Schlüssel werden weder übernommen noch gelöscht und erteilen keine Rechte.
 Anmeldung und zentrale Aktivierung bleiben auf einem echten EOS ohne Lizenz möglich.
 
+Das aktuelle Schlüsselformat ist **NWL3**: Ed25519-signiert, an die System-UUID
+gebunden, mit `v: 3`, Edition `home`/`pro` und `scope: "system"`. Die Freigaben
+stammen aus der vertrauenswürdigen Produktpolicy, nicht aus frei hinzugefügten
+Tokenfeldern. Home gilt für 3 Ladepunkte/2 Speicher, Pro für 50/10. Alle eigenen
+Adapter erhalten daraus ihre zentrale Freigabe; es ist kein zweiter UI-Schlüssel
+nötig. Vorhandene NWL2-Verifikation bleibt für gültige Altformate erhalten.
+Der R9-Signierlauf verlangt ausdrücklich einen echten nativen NWL3-Aktivierungs-,
+Widerrufs- und Wiederaktivierungsnachweis; reine NWL2-Evidenz genügt nicht.
+
 ## Komponenten und Verhalten
 
 | Komponente | Version | Änderung |

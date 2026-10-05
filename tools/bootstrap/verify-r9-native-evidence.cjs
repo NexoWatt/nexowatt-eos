@@ -37,11 +37,11 @@ function validate({ preparation, evidence, tap, sourceCommit, appContentSha256 }
         preparation.appContentSha256 !== appContentSha256 || preparation.previousSignatureVerified !== true ||
         preparation.previousReleaseId !== 'eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7' ||
         evidence?.schemaVersion !== 1 || evidence.kind !== 'eos-r9-native-management' || evidence.passed !== true || evidence.signed !== false ||
-        evidence.sequence !== 12 || evidence.nodeVersion !== '24.21.0' || evidence.sourceCommit !== sourceCommit ||
+        evidence.sequence !== 12 || evidence.nodeVersion !== '24.21.0' || evidence.sourceCommit !== sourceCommit || evidence.licenseFormat !== 'NWL3' ||
         evidence.appContentSha256 !== appContentSha256 || evidence.hardwareTested !== false || evidence.productionReleaseApproved !== false ||
         !evidence.checks || Object.keys(evidence.checks).length !== CHECKS.length || CHECKS.some(name => evidence.checks[name] !== true)) fail();
     const tests = passedTap(tap);
-    return { ok: true, sourceCommit, appContentSha256, nativeTestsPassed: tests, signed: false, hardwareTested: false, productionReleaseApproved: false };
+    return { ok: true, sourceCommit, appContentSha256, nativeTestsPassed: tests, licenseFormat: 'NWL3', signed: false, hardwareTested: false, productionReleaseApproved: false };
 }
 function verifyNativeEvidence({ directory, sourceCommit, files, appPrefix = 'app/' }) {
     if (!path.isAbsolute(directory || '') || fs.lstatSync(directory).isSymbolicLink()) fail();

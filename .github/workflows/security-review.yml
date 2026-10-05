@@ -282,6 +282,8 @@ jobs:
       - name: Check R9 six-adapter derivative and healthy R8 update contracts
         run: |
           node --test reports/integration/installable-test3-r9-20261005/build-revision.test.cjs tests/integration/r9-derivative-sbom.test.cjs tests/system/sbom-binding.test.cjs tests/system/update-test-to-r9.test.cjs
+          node --test tests/bootstrap/public-r9-update-entry.test.cjs tests/bootstrap/public-r9-update-publication.test.cjs tests/bootstrap/r9-delivery-workflow.test.cjs tests/bootstrap/r9-native-evidence.test.cjs
+          python3 -I -B tests/bootstrap/r9-candidate-publication.test.py
 
       - name: Run isolated ownership and sudo denial contracts
         # These reviewed fixtures write temporary /root trees. Host commands and

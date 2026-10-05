@@ -12,11 +12,11 @@ nicht durchgeführt und bleibt bis zum tatsächlichen CI-Lauf OFFEN.**
 
 Tatsächlich ausgeführt:
 
-- `node --test --test-reporter=tap tests/integration-r9/fixture.test.cjs tests/integration-r9/license-session.test.cjs`: **10/10 bestanden**, keine Skips.
+- `node --test --test-reporter=tap tests/integration-r9/fixture.test.cjs tests/integration-r9/license-session.test.cjs`: **12/12 bestanden**, keine Skips.
 - `node --check` für Nativeharness, Appvorbereitung, Roothelper und Supervisor: bestanden.
 - `git diff --check -- tests/integration-r9`: bestanden.
 
-Die Contracttests führen die echte NWL2-Signatur-/Claimprüfung durch und prüfen
+Die Contracttests führen die echte NWL3-Signatur-/Policyprüfung durch und prüfen
 metadatengebundene Ablehnung, Contenthash-Projektion sowie begrenzte, bereinigte
 HTTPS-/UI-Ergebnisvalidierung. Sie erzeugen keine Produktionslizenz und sind
 kein Ersatz für die Netzwerk-/Lifecycle-Prüfung im nativen Harness.
@@ -32,5 +32,16 @@ passend zum zunächst fehlenden Lizenzdatensatz. Die Anleitung enthält die
 benötigte gelockte UI-Abhängigkeitsinstallation vor der TS-Paritätsprüfung.
 HTTP-Routen, CSRF-Header, UI-Cookiename, Home-/Pro-Featurezuordnung,
 Kontingentstates und Rückgabeformate wurden gegen die aktuellen Produktquellen
-abgeglichen. 10/10 lokale Contracttests und Syntaxprüfung danach erneut bestanden;
+abgeglichen. 12/12 lokale Contracttests und Syntaxprüfung danach erneut bestanden;
 Quellenbindung und TAP sind aktualisiert. Native Ausführung bleibt offen.
+
+NWL3-Folgeänderung: Der native Ablauf aktiviert jetzt ausschließlich signierte
+NWL3-Systemschlüssel für Home → Entzug → Pro. Das feste Evidencefeld
+`licenseFormat:NWL3` bindet dieses Format an die weiterhin 14 nativen Checks.
+Die Token enthalten keine übergebenen Kontingente oder Adapterlisten; der echte
+Admin-Core leitet Home 3/2 und Pro 50/10 aus der unveränderten Produktpolicy ab.
+`expiresAt:null` und gleiche Ausstellungs-/Startzeit werden geprüft; zusätzliche
+Claims und zeitlich begrenzte NWL3-Lizenzen werden abgewiesen. Enge NWL2-Limits
+7/4 bleiben ausschließlich in einem separaten lokalen Kompatibilitätstest.
+Admin-Status, begrenzte UI-Lease und aktuelle src/build-Verträge wurden erneut
+abgeglichen. Kein neuer nativer Lauf wird durch diese lokalen Belege behauptet.
