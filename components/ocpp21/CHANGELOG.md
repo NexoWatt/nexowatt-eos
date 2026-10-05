@@ -1,5 +1,11 @@
 # Changelog
 
+## EOS integration (2026-10-05)
+
+- Require an admitted EOS runtime and fresh Home/Pro energy entitlement from EOS Admin at startup and before new device control. Automatically start after central activation.
+- Preserve established protocol sessions, telemetry and equipment limits on license loss; discard queued or remembered control transitions. Bundle the central license client without additional npm runtime dependencies.
+- Require a complete physical connector inventory for licensed OCPP control; reject unknown or inconsistent topology and new unlicensed authorization.
+
 ## 0.4.0 (2026-08-12)
 
 - Replace the former deep per-protocol object tree with compact station-level folders: `info`, `health`, `measurements`, `vehicle`, `transactions` and `control`.

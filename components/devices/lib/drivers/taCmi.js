@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 const axios = require('axios');
 const { createHttpSecurity, requestWithDeadline } = require('../httpSecurity');
 const ModbusRTU = require('modbus-serial');
@@ -474,10 +476,17 @@ class TaCmiDriver {
     await this._setRuntimeState('cMI_BRIDGE_CLIENT_LAST_SEEN_MS', this.bridgeLastClientMs);
   }
 
+  suspendLicensedControl() {
+    this._freshTxAnalog = new Set();
+    this._freshTxDigital = new Set();
+  }
+
   _getHolding(address) {
     this.bridgeLastClientMs = Date.now();
     const txChannel = Number(address) - this.txAnalogBase + 1;
     if (txChannel >= 1 && txChannel <= MAX_ANALOG_CHANNELS) {
+      assertLicensedControl(this.adapter);
+      if (this._freshTxAnalog && !this._freshTxAnalog.has(txChannel)) throw new Error('EOS license requires a fresh CMI command');
       const raw = this._bridgeValueToRaw('toCmi', txChannel, this.txAnalog[txChannel - 1]);
       return encodeInt16(raw);
     }
@@ -489,7 +498,11 @@ class TaCmiDriver {
   _getCoil(address) {
     this.bridgeLastClientMs = Date.now();
     const txChannel = Number(address) - this.txDigitalBase + 1;
-    if (txChannel >= 1 && txChannel <= MAX_DIGITAL_CHANNELS) return !!this.txDigital[txChannel - 1];
+    if (txChannel >= 1 && txChannel <= MAX_DIGITAL_CHANNELS) {
+      assertLicensedControl(this.adapter);
+      if (this._freshTxDigital && !this._freshTxDigital.has(txChannel)) throw new Error('EOS license requires a fresh CMI command');
+      return !!this.txDigital[txChannel - 1];
+    }
     const rxChannel = Number(address) - this.rxDigitalBase + 1;
     if (rxChannel >= 1 && rxChannel <= MAX_DIGITAL_CHANNELS) return !!this.rxDigital[rxChannel - 1];
     return false;
@@ -763,8 +776,14 @@ class TaCmiDriver {
     return out;
   }
 
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
     await this.connect();
+    assertLicensedControl(this.adapter);
     const src = dp && dp.source ? dp.source : {};
     if (src.kind !== 'taCmiBridge' || src.direction !== 'toCmi') {
       throw new Error(`TA CMI JSON API is read-only; datapoint ${dp && dp.id ? dp.id : ''} is not a writable bridge value`);
@@ -773,6 +792,7 @@ class TaCmiDriver {
     if (!channel) throw new Error('Invalid TA CMI bridge channel');
     if (src.valueType === 'digital') {
       this.txDigital[channel - 1] = !!value;
+      this._freshTxDigital?.add(channel);
       return;
     }
     let engineering = Number(value);
@@ -781,6 +801,7 @@ class TaCmiDriver {
     if (entry && Number.isFinite(entry.min)) engineering = Math.max(entry.min, engineering);
     if (entry && Number.isFinite(entry.max)) engineering = Math.min(entry.max, engineering);
     this.txAnalog[channel - 1] = engineering;
+    this._freshTxAnalog?.add(channel);
   }
 }
 

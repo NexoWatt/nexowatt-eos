@@ -31,6 +31,10 @@ Tailscale-Adresssperre. Tatsächliche VPN-/Firewall-/SAN-Tests stehen noch aus.
 
 ## Zentrale Lizenz und Migration
 
+Nachtrag 05.10.2026: Die UI fordert keinen eigenen Schlüssel an. Alte lokale
+Schlüssel-/Statushilfen sind entfernt; Status und Ablauf folgen ausschließlich
+der zentralen EOS-Freigabe. Siehe [Änderung, 52 Komponentenprüfungen und Grenzen](../reports/EOS_CENTRAL_LICENSE_UI_2026-10-05_DE.md).
+
 Die aktualisierte [Home/Pro-Rechte- und Kontingentprüfung](EOS_LICENSE_ENTITLEMENTS_2026-10-03_DE.md)
 beschreibt die gemeinsame serverseitige Freigabe für Module und App-Center,
 Null-/Teilmengen sowie die getrennte Lease- und Vertragsgültigkeit.

@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl } = require('../licenseControl');
+
 const ModbusRTU = require('modbus-serial');
 
 /**
@@ -108,7 +110,7 @@ class ModbusRtuBus {
         return await fn(this.client);
       } catch (e) {
         // Mark as disconnected so next operation tries to reconnect
-        this.connected = false;
+        if (e?.name !== 'LicenseError') this.connected = false;
         throw e;
       }
     });
@@ -129,17 +131,17 @@ class ModbusRtuBus {
   }
 
   // Write helpers
-  writeCoil(unitId, timeoutMs, addr, value) {
-    return this._exec(unitId, timeoutMs, (c) => c.writeCoil(addr, value));
+  writeCoil(unitId, timeoutMs, addr, value, authorize = () => assertLicensedControl(this.adapter)) {
+    return this._exec(unitId, timeoutMs, (c) => { authorize(); return c.writeCoil(addr, value); });
   }
-  writeRegister(unitId, timeoutMs, addr, value) {
-    return this._exec(unitId, timeoutMs, (c) => c.writeRegister(addr, value));
+  writeRegister(unitId, timeoutMs, addr, value, authorize = () => assertLicensedControl(this.adapter)) {
+    return this._exec(unitId, timeoutMs, (c) => { authorize(); return c.writeRegister(addr, value); });
   }
-  writeRegisters(unitId, timeoutMs, addr, values) {
-    return this._exec(unitId, timeoutMs, (c) => c.writeRegisters(addr, values));
+  writeRegisters(unitId, timeoutMs, addr, values, authorize = () => assertLicensedControl(this.adapter)) {
+    return this._exec(unitId, timeoutMs, (c) => { authorize(); return c.writeRegisters(addr, values); });
   }
-  writeCoils(unitId, timeoutMs, addr, values) {
-    return this._exec(unitId, timeoutMs, (c) => c.writeCoils(addr, values));
+  writeCoils(unitId, timeoutMs, addr, values, authorize = () => assertLicensedControl(this.adapter)) {
+    return this._exec(unitId, timeoutMs, (c) => { authorize(); return c.writeCoils(addr, values); });
   }
 }
 

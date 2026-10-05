@@ -10,7 +10,7 @@ function createRuntime(protocol, driver) {
   const states = new Map();
   const adapter = {
     namespace: 'nexowatt-devices.0',
-    log: { debug() {}, info() {}, warn() {}, error() {} },
+    _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} },
     async setStateAsync(id, state) { states.set(id, { ...state }); },
     async getStateAsync() { return null; },
   };

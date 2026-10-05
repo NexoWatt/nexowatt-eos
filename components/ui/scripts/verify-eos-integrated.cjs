@@ -6,7 +6,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const net = require('node:net');
-const integrated = require('../lib/eos-integrated');
+const { integrated } = require('./eos-license-fixture.cjs');
 const tlsFixture = require('./eos-tls-fixture.cjs');
 const { createHarness } = require('./verify-stable-1.0.9-access.cjs');
 
@@ -70,6 +70,7 @@ test('UI-LICENSE: central numeric limits, no secrets/UUID returned and no local 
     assert.equal(save.status,409);assert.equal(save.data.error,'CENTRAL_LICENSE_MANAGEMENT');assert.equal(h.saved.length,0);
     assert.equal(typeof h.adapter._nwLicenseSecret,'undefined');assert.equal(typeof h.adapter._nwEvaluateLicense,'undefined');
     assert.equal(typeof h.adapter._nwGetConfiguredLicenseKey,'undefined');
+    assert.equal(typeof h.adapter._nwIsLicenseValid,'undefined');
   }finally{await guard?.stop();await h.close();}
 });
 
@@ -183,4 +184,31 @@ test('UI-START: cold lifecycle starts HTTPS/onboarding but never constructs Mesh
     assert.equal(info.status,200);assert.equal(info.data.valid,false);
     assert.equal((await h.request('/api/set',{token,method:'POST',body:{value:true}})).status,503);
   }finally{await h.close();}
+});
+
+
+test('UI-LICENSE: forged local license state never opens UI, changes central status or accepts a second key', async () => {
+  const h = await createHarness();
+  try {
+    h.adapter.config.licenseKey = 'fixture-local-key-not-authority';
+    h.adapter._nwLicenseOk = true;
+    h.adapter._nwLicenseInfo = { ok: true, type: 'trial', edition: 'eos', msg: 'forged-valid', daysRemaining: 999 };
+    h.adapter._nwCentralLicense = { isAllowed: () => false, getStatus: () => ({ valid: false, code: 'LICENSE_DENIED' }) };
+    const token = await h.login('admin');
+    const info = await h.request('/api/license/info', { token });
+    assert.equal(info.status, 200); assert.equal(info.data.valid, false); assert.equal(info.data.edition, 'none');
+    assert.equal(info.data.type, 'central'); assert.equal(info.data.daysRemaining, 0);
+    assert.doesNotMatch(info.text, /forged-valid|fixture-local-key/);
+    assert.equal((await h.request('/api/license/features', { token })).status, 403);
+    assert.equal((await h.request('/', { token })).status, 403);
+    const page = await h.request('/license.html', { token });
+    assert.equal(page.status, 200); assert.match(page.text, /Ein zusätzlicher UI-Lizenzschlüssel ist nicht erforderlich/);
+    assert.doesNotMatch(page.text, /<(?:input|textarea)|nw-license-(?:save|key)/i);
+    for (const body of [{ licenseKey: 'fixture-new-key' }, { licenseKey: '' }, { clear: true }, { token: 'fixture-import' }]) {
+      const response = await h.request('/api/license/save', { token, method: 'POST', body });
+      assert.equal(response.status, 409); assert.equal(response.data.error, 'CENTRAL_LICENSE_MANAGEMENT');
+    }
+    assert.equal(h.saved.length, 0); assert.equal(h.adapter.config.licenseKey, 'fixture-local-key-not-authority');
+    assert.equal((await h.request('/api/license/save', { method: 'POST', body: {} })).status, 401);
+  } finally { await h.close(); }
 });

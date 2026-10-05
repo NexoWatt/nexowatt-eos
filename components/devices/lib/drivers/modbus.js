@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 /*
   Modbus driver (RTU + ASCII + TCP) with support for:
   - FC1/FC3/FC4 reads
@@ -2493,9 +2495,10 @@ class ModbusDriver {
 
   async _mbWriteCoil(addr, value, unitIdOverride = null) {
     return await this._withIoLock(async () => {
+      assertLicensedControl(this.adapter);
       const uid = this._operationUnitId(unitIdOverride);
-      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeCoil(uid, this.timeoutMs, addr, value);
-      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeCoil(uid, this.timeoutMs, addr, value);
+      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeCoil(uid, this.timeoutMs, addr, value, () => assertLicensedControl(this.adapter));
+      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeCoil(uid, this.timeoutMs, addr, value, () => assertLicensedControl(this.adapter));
       if (!this.client) {
         const err = new Error('Port Not Open');
         err.code = 'ERR_SOCKET_CLOSED';
@@ -2508,9 +2511,10 @@ class ModbusDriver {
 
   async _mbWriteCoils(addr, values, unitIdOverride = null) {
     return await this._withIoLock(async () => {
+      assertLicensedControl(this.adapter);
       const uid = this._operationUnitId(unitIdOverride);
-      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeCoils(uid, this.timeoutMs, addr, values);
-      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeCoils(uid, this.timeoutMs, addr, values);
+      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeCoils(uid, this.timeoutMs, addr, values, () => assertLicensedControl(this.adapter));
+      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeCoils(uid, this.timeoutMs, addr, values, () => assertLicensedControl(this.adapter));
       if (!this.client) {
         const err = new Error('Port Not Open');
         err.code = 'ERR_SOCKET_CLOSED';
@@ -2523,9 +2527,10 @@ class ModbusDriver {
 
   async _mbWriteRegister(addr, value, unitIdOverride = null) {
     return await this._withIoLock(async () => {
+      assertLicensedControl(this.adapter);
       const uid = this._operationUnitId(unitIdOverride);
-      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeRegister(uid, this.timeoutMs, addr, value);
-      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeRegister(uid, this.timeoutMs, addr, value);
+      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeRegister(uid, this.timeoutMs, addr, value, () => assertLicensedControl(this.adapter));
+      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeRegister(uid, this.timeoutMs, addr, value, () => assertLicensedControl(this.adapter));
       if (!this.client) {
         const err = new Error('Port Not Open');
         err.code = 'ERR_SOCKET_CLOSED';
@@ -2538,9 +2543,10 @@ class ModbusDriver {
 
   async _mbWriteRegisters(addr, values, unitIdOverride = null) {
     return await this._withIoLock(async () => {
+      assertLicensedControl(this.adapter);
       const uid = this._operationUnitId(unitIdOverride);
-      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeRegisters(uid, this.timeoutMs, addr, values);
-      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeRegisters(uid, this.timeoutMs, addr, values);
+      if (this.protocol === 'modbusRtu') return await this.rtuBus.writeRegisters(uid, this.timeoutMs, addr, values, () => assertLicensedControl(this.adapter));
+      if (this.protocol === 'modbusAscii') return await this.asciiBus.writeRegisters(uid, this.timeoutMs, addr, values, () => assertLicensedControl(this.adapter));
       if (!this.client) {
         const err = new Error('Port Not Open');
         err.code = 'ERR_SOCKET_CLOSED';
@@ -3813,7 +3819,12 @@ async readDatapoints(datapoints) {
     return { effectiveValue: normalized };
   }
 
-  async writeDatapoint(dp, value, options = {}) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value, options = {}) {
+    assertLicensedControl(this.adapter);
     let writeContext = null;
 
     const setWriteContext = (src, fc, addr, raw, words, unitId) => {

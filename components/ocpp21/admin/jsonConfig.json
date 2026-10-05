@@ -180,6 +180,49 @@
           "min": 5,
           "max": 120,
           "default": 20
+        },
+        "chargePointInventory": {
+          "type": "table",
+          "label": {
+            "en": "Complete physical connector inventory (required for control)",
+            "de": "Vollständiges physisches Ladepunktinventar (für Steuerung erforderlich)"
+          },
+          "newLine": true,
+          "sm": 12,
+          "md": 12,
+          "items": [
+            {
+              "type": "text",
+              "attr": "stationIdentity",
+              "title": {
+                "en": "Station identity (exact OCPP identity)",
+                "de": "Station (exakte OCPP-Identität)"
+              },
+              "width": "60%"
+            },
+            {
+              "type": "number",
+              "attr": "evseId",
+              "title": "EVSE ID",
+              "default": 1,
+              "min": 1,
+              "max": 1000,
+              "width": "20%"
+            },
+            {
+              "type": "number",
+              "attr": "connectorId",
+              "title": "Connector ID",
+              "default": 1,
+              "min": 1,
+              "max": 1000,
+              "width": "20%"
+            }
+          ],
+          "help": {
+            "en": "Declare every physical connector, including offline ones. OCPP 1.6 uses EVSE ID 1. Empty or inconsistent inventories deny control. Licensing is managed only in EOS Admin.",
+            "de": "Alle physischen Ladepunkte eintragen, auch offline. OCPP 1.6 nutzt EVSE-ID 1. Leeres oder widersprüchliches Inventar sperrt die Steuerung. Lizenzverwaltung nur im EOS Admin."
+          }
         }
       }
     },

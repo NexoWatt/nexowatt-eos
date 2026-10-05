@@ -8,7 +8,8 @@ const crypto = require('node:crypto');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { EosLicenseService, LEASE_MS } = require('../src/lib/eosLicenseService');
+const loadLicenseModule = require('./lib/load-eos-license-module.cjs');
+const { EosLicenseService, LEASE_MS } = loadLicenseModule(require.resolve('../src/lib/eosLicenseService'));
 
 const UUID = '12345678-1234-4234-8234-123456789abc';
 const OTHER_UUID = '87654321-1234-4234-8234-123456789abc';
@@ -562,4 +563,38 @@ test('directory resolver failure is contained and keeps authority denied', async
     assert.equal(status.valid, false);
     assert.equal(status.code, 'SERVICE_UNAVAILABLE');
     assert.equal(f.logs.some(message => message.includes('private diagnostic')), false);
+});
+
+test('authority never starts or accepts activation outside an admitted EOS installation', async t => {
+    const f = await fixture(t);
+    let calls = 0;
+    const { EosLicenseService: PlatformBoundService } = loadLicenseModule(require.resolve('../src/lib/eosLicenseService'), () => {
+        calls++;
+        throw Object.assign(Error('EOS_PLATFORM_UNAVAILABLE'), { code: 'EOS_PLATFORM_UNAVAILABLE' });
+    });
+    const service = new PlatformBoundService(f.adapter, { directory: f.directory, publicKeys: f.publicKeys });
+    t.after(() => service.stop());
+    const status = await service.start();
+    assert.equal(status.valid, false); assert.equal(status.code, 'EOS_PLATFORM_UNAVAILABLE');
+    await assert.rejects(service.activate(f.systemToken()), { code: 'EOS_PLATFORM_UNAVAILABLE' });
+    denied(await service.check(SENDER, f.request()), 'EOS_PLATFORM_UNAVAILABLE');
+    assert.equal(calls, 3);
+    await assert.rejects(fs.stat(path.join(f.directory, 'license.enc')), { code: 'ENOENT' });
+});
+
+test('authority rechecks EOS admission and revokes an existing central license decision on platform loss', async t => {
+    const f = await fixture(t);
+    let admitted = true;
+    const { EosLicenseService: PlatformBoundService } = loadLicenseModule(require.resolve('../src/lib/eosLicenseService'), () => {
+        if (!admitted) throw Object.assign(Error('EOS_PLATFORM_PERMISSIONS'), { code: 'EOS_PLATFORM_PERMISSIONS' });
+        return true;
+    });
+    const service = new PlatformBoundService(f.adapter, { directory: f.directory, publicKeys: f.publicKeys, now: () => f.clock.wall, monotonic: () => f.clock.mono });
+    t.after(() => service.stop());
+    await service.start(); await service.activate(f.systemToken());
+    assert.equal((await service.check(SENDER, f.request())).valid, true);
+    admitted = false;
+    denied(await service.check(SENDER, f.request()), 'EOS_PLATFORM_PERMISSIONS');
+    assert.equal((await service.status()).valid, false);
+    await assert.rejects(service.activate(f.systemToken()), { code: 'EOS_PLATFORM_PERMISSIONS' });
 });

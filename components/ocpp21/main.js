@@ -1,5 +1,7 @@
 'use strict';
 const utils = require('@iobroker/adapter-core');
+const { createLicenseGuard } = require('./packages/eos-license-client');
+const { parseChargePointInventory, assertStationScope, isTelemetryRequest } = require('./ocpp/license-scope');
 const { OcppRpcServer } = require('./ocpp/server');
 const {
   sanitizeStationIdentity,
@@ -36,6 +38,10 @@ class NexoWattOcppAdapter extends utils.Adapter {
   constructor(options) {
     super({ ...options, name: 'ocpp21' });
     this.server = null;
+    this.licenseGuard = null;
+    this.chargePointInventory = null;
+    this._licenseStartupTimer = null;
+    this._licenseStarting = false;
     this.runtimeIndex = new Map();
 
     // Runtime caches to avoid excessive object creation overhead
@@ -145,7 +151,7 @@ class NexoWattOcppAdapter extends utils.Adapter {
       lastSocAt: 0,
       lastStatusAt: 0,
       heartbeatIntervalSec: Math.max(10, Number(this.config.heartbeatIntervalSec) || 300),
-      connectors: new Set(['1:1']),
+      connectors: new Set(old?.connectors || []), // Observed physical inventory survives reconnects.
       statuses: new Map(),
       transactionActive: false,
       chargingState: '',
@@ -453,7 +459,19 @@ class NexoWattOcppAdapter extends utils.Adapter {
     return selection.nextCursor;
   }
 
+  _assertLicensedStation(identity, payload = {}) {
+    if (!this.licenseGuard) throw new Error('EOS_LICENSE_REQUIRED');
+    this.licenseGuard.assertAllowed();
+    assertStationScope(this.chargePointInventory, this.runtimeIndex.get(identity), this.licenseGuard.getStatus().limits?.chargePoints, payload);
+  }
+
+  _isStationAuthorized(identity, payload = {}) {
+    try { this._assertLicensedStation(identity, payload); return true; } catch { return false; }
+  }
+
   async _callClient(identity, method, payload, options = {}) {
+    // Only the automatic measurement/status refresh may run while actuation is denied.
+    if (!isTelemetryRequest(method, payload, options)) this._assertLicensedStation(identity, payload);
     const entry = this.runtimeIndex.get(identity);
     if (!entry || !entry.client) throw new Error(`No connected charging station for ${identity}`);
     const timeoutMs = commandTimeoutMs(this.config.callTimeoutSec);
@@ -698,7 +716,7 @@ class NexoWattOcppAdapter extends utils.Adapter {
           try {
             entry.lastTriggerAt = Date.now();
             entry.lastTriggerMessage = requestedMessage;
-            const response = await this._callClient(identity, 'TriggerMessage', buildTriggerPayload(entry.proto, requestedMessage, evseId, connectorId), { capture: false });
+            const response = await this._callClient(identity, 'TriggerMessage', buildTriggerPayload(entry.proto, requestedMessage, evseId, connectorId), { capture: false, licenseTelemetry: true });
             const status = String(response && response.status || 'Unknown');
             entry.triggerSupport[requestedMessage] = status;
             if (isTriggerAccepted(response)) {
@@ -1632,6 +1650,44 @@ class NexoWattOcppAdapter extends utils.Adapter {
     // Never leave persisted online/fresh flags true after an unclean restart.
     await this._resetPersistedHealth();
 
+    try {
+      this.chargePointInventory = parseChargePointInventory(this.config.chargePointInventory || []);
+    } catch {
+      this.log.error('OCPP startup denied: invalid physical charge point inventory.');
+      return;
+    }
+    this.licenseGuard = createLicenseGuard(this, {
+      feature: 'energy',
+      required: { chargePoints: this.chargePointInventory.count },
+      onLost: () => {
+        // Preserve active sessions and device-enforced limits. No reset, stop or profile clear.
+        this.log.warn('EOS license unavailable: new OCPP authorizations and commands are blocked; telemetry remains active.');
+        for (const entry of this.runtimeIndex.values()) entry.smartChargingGeneration++;
+      },
+    });
+    await this.licenseGuard.start();
+    this._licenseStartupTimer = setInterval(() => { void this._startLicensedRuntime(); }, 1000);
+    this._licenseStartupTimer.unref?.();
+    await this._startLicensedRuntime();
+  }
+
+  async _startLicensedRuntime() {
+    if (this._shuttingDown || this.server || this._licenseStarting || !this.licenseGuard?.isAllowed()) return;
+    this._licenseStarting = true;
+    try {
+      await this._startOcppRuntime();
+      clearInterval(this._licenseStartupTimer);
+      this._licenseStartupTimer = null;
+    } catch {
+      if (this.server) await this.server.close().catch(() => undefined);
+      this.server = null;
+      this.log.error('OCPP startup unavailable; waiting for current EOS permission and valid runtime configuration.');
+    } finally {
+      this._licenseStarting = false;
+    }
+  }
+
+  async _startOcppRuntime() {
     const allowlist = Array.isArray(this.config.identityAllowlist)
       ? this.config.identityAllowlist.map(String).map((v) => v.trim()).filter(Boolean)
       : String(this.config.identityAllowlist || '').split(',').map((v) => v.trim()).filter(Boolean);
@@ -1771,6 +1827,7 @@ class NexoWattOcppAdapter extends utils.Adapter {
         ensureStructure: this.ensureStructure.bind(this),
       },
       runtime: {
+        isStationAuthorized: this._isStationAuthorized.bind(this),
         resolveIdentity: this.resolveStationIdentity.bind(this),
         indexClient: this._indexClient.bind(this),
         unindexClient: this._unindexClient.bind(this),
@@ -1798,6 +1855,7 @@ class NexoWattOcppAdapter extends utils.Adapter {
       .concat(ctx.config.enable21 ? ['ocpp2.1'] : []);
     if (protocols.length === 0) throw new Error('At least one OCPP protocol must be enabled');
 
+    this.licenseGuard.assertAllowed();
     this.server = new OcppRpcServer(ctx, { port: ctx.config.port, protocols, strictMode: false });
     await this.server.listen();
     this.subscribeStates('*');
@@ -1810,6 +1868,10 @@ class NexoWattOcppAdapter extends utils.Adapter {
 
   async onStateChange(id, state) {
     if (!state || state.ack || this._shuttingDown) return;
+    if (!this.licenseGuard?.isAllowed()) {
+      this.log.warn('OCPP command denied: EOS_LICENSE_REQUIRED');
+      return;
+    }
     const rel = this._stripNs(id);
     const match = (patterns) => {
       for (const pattern of Array.isArray(patterns) ? patterns : [patterns]) {
@@ -2031,12 +2093,15 @@ class NexoWattOcppAdapter extends utils.Adapter {
 
   async onUnload(cb) {
     this._shuttingDown = true;
+    clearInterval(this._licenseStartupTimer);
+    this._licenseStartupTimer = null;
     if (this._watchdogTimer) {
       clearInterval(this._watchdogTimer);
       this._watchdogTimer = null;
     }
     const identities = [...this.runtimeIndex.keys()];
     try {
+      await this.licenseGuard?.stop();
       if (this.server) await this.server.close();
       for (const identity of identities) {
         try { await this._setDisconnectedHealth(identity, 'adapter-stopped'); } catch (e) { /* best effort during shutdown */ }

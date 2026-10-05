@@ -25,19 +25,23 @@
     "README.md",
     "README.de.md",
     "CHANGELOG.md",
-    "NEXOWATT_REVIEW.md"
+    "NEXOWATT_REVIEW.md",
+    "packages/eos-license-client",
+    "LICENSING_20261005_DE.md"
   ],
   "scripts": {
     "start": "node main.js",
-    "test": "npm run test:core && npm run test:package && npm run test:unit && npm run test:integration && npm run test:security",
+    "test": "npm run test:core && npm run test:package && npm run test:unit && npm run test:integration",
     "test:package": "mocha test/package.js --exit",
-    "test:unit": "mocha test/unit.js --exit",
-    "test:integration": "mocha test/integration.js --exit",
+    "test:unit": "node --test test/license.test.cjs",
+    "test:integration": "node --test test/secure-transport.test.js",
     "test:core": "node --test test/core.test.js",
-    "test:security": "node --test test/secure-transport.test.js"
+    "test:security": "node --test test/secure-transport.test.js",
+    "test:license": "node --test test/license.test.cjs",
+    "test:controller:upstream": "mocha test/integration.js --exit"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.0.0 <23 || >=24.0.0 <25"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.1.0",

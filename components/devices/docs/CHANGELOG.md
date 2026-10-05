@@ -1,5 +1,12 @@
 # Technische Versionshinweise
 
+## EOS-Integration 2026-10-05 – Arbeitsstand auf 0.5.169
+
+- EOS-Plattformbindung und zentrale Home-/Pro-Lizenz von `eos-admin.0` vor Gerätestart und sämtlichen Gerätebefehlen erzwingen; Client vollständig lokal enthalten.
+- Inventar aller Devices-Instanzen konservativ aus kanonischen Templates zählen; unlesbare/unbekannte Konfiguration verweigert Steuerung.
+- Lizenzverlust verwirft alte Aufträge, erhält Telemetrie und sendet keinen pauschalen Stopp. Nach zentraler Freigabe erfolgt der Erststart automatisch; laufende Geräte nehmen neue Befehle wieder an.
+- [Änderungs-/Prüfvermerk und Hausanlagen-Testanleitung](EOS_CENTRAL_LICENSE_2026-10-05.md). Noch keine Paketveröffentlichung oder Hardwarefreigabe.
+
 ## 0.5.169 – Implementierungsprüfung und TESVOLT-Datenempfang
 
 - Automatische EMS-/V2-Erkennung wartet auf aktuelle, auswertbare Telemetrie. Alte Metadaten können das falsche Format nicht mehr festlegen.

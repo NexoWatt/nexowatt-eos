@@ -45,7 +45,7 @@ function loadModbusDriver() {
 }
 
 function adapterStub() {
-  return { log: { debug() {}, info() {}, warn() {}, error() {} } };
+  return { _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} } };
 }
 
 function toHexByte(value) {

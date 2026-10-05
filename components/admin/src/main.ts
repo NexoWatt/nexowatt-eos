@@ -477,6 +477,14 @@ class Admin extends Adapter {
      * Is called when databases are connected and adapter received configuration.
      */
     onReady = async (): Promise<void> => {
+        // Management stays reachable without a license on EOS so the operator
+        // can activate it. A standalone upstream installation is unsupported.
+        try {
+            require('../packages/eos-license-client').assertEosPlatform('eos-admin');
+        } catch {
+            this.log.error('EOS_PLATFORM_REQUIRED');
+            return;
+        }
         assertOauthDependency();
         if (this.config.auth !== true) this.log.warn('EOS security profile requires login; legacy auth=false is overridden at runtime.');
         this.config = applyProfile(this.config);

@@ -452,7 +452,7 @@ test('OCPP 1.6 keeps concurrent transactions mapped to their original connector'
       connectorBase: (identity, evseId, connectorId) => `${identity}.connectors.${evseId}_${connectorId}`,
       ensureConnectorStructure: async (identity, evseId, connectorId) => `${identity}.connectors.${evseId}_${connectorId}`,
     },
-    runtime: { noteMessage() {} }, dp: { async capture() {} },
+    runtime: { noteMessage() {}, isStationAuthorized() { return true; } }, dp: { async capture() {} },
   };
   register16(client, ctx);
 

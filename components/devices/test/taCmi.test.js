@@ -86,7 +86,7 @@ function makeRuntime() {
 
 function makeAdapter() {
   return {
-    log: { debug() {}, info() {}, warn() {}, error() {} },
+    _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} },
     async getStateAsync() { return null; },
   };
 }

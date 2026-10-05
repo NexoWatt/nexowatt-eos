@@ -50,3 +50,11 @@ reports/integration/installable-test3-r4-20261003/*.log -whitespace
 reports/integration/r6-backup-package-20261004/asset-reference-tests-initial.tap -whitespace
 reports/integration/r6-backup-package-20261004/offline-tests-initial.tap -whitespace
 reports/integration/r6-backup-package-20261004/package-validator-initial.log -whitespace
+
+# Preserve current raw test output and existing compiler bytes used by the R9
+# package overlay. These narrow rules do not disable functional/package checks.
+components/backitup/reports/license-20261005/*.log -whitespace
+components/ui/reports/security/central-license-20261005/*.log -whitespace
+components/ui/reports/security/central-license-20261005/central-license-first-attempt.tap -whitespace
+components/backitup/build/lib/restore/grafana.js whitespace=-blank-at-eol
+components/backitup/build/lib/scripts/40-ccu.js whitespace=-blank-at-eol

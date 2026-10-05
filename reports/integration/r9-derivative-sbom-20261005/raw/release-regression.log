@@ -1,0 +1,30 @@
+✔ signed offline bundle verifies and stages exactly the authenticated files (11.808499ms)
+✔ wrong signer and modified signed manifest are rejected (3.467961ms)
+✔ private signing key cannot be supplied as the public installation trust anchor (1.931837ms)
+✔ tampered payload cannot be staged (2.581992ms)
+✔ unlisted payload, missing file, and unexpected bundle file are rejected (3.031827ms)
+✔ downgrade/replay, wrong platform and untested node are rejected (3.08077ms)
+✔ source and payload symlinks and hardlinks cannot introduce outside bytes (4.955612ms)
+✔ symlinked parent and setuid files are rejected (0.980591ms)
+✔ path traversal, absolute/control/ambiguous paths are rejected (0.255614ms)
+✔ manifest validates strict types, duplicate paths and finite bounds (2.211566ms)
+✔ staging refuses a group/world writable release destination (1.859819ms)
+✔ signing never overwrites an earlier release or allows output inside source (1.641482ms)
+✔ RSA signing keys are not silently accepted as Ed25519 (89.351312ms)
+✔ key generator refuses overwrite and protects private material (27.781504ms)
+✔ verify checks signed package identity, digest, policy and exact runtime (55.639613ms)
+✔ signed stale upstream SBOM cannot describe locally transformed runtime (36.411957ms)
+✔ inventory generation never turns installed code into an approved adapter (18.259064ms)
+✔ changed package tree and pending catalog do not become approved by signing (16.702148ms)
+✔ URL/range root dependencies and lifecycle scripts are rejected (17.295108ms)
+✔ installed check validates retained signature and detects changed release bytes (31.333712ms)
+✔ bundle preparation removes npm executable links and rejects other symlinks (14.211743ms)
+✔ CLI rejects duplicate, missing and extra options before work (0.337456ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 306.105171

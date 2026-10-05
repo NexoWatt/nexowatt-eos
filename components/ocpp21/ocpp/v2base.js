@@ -88,7 +88,7 @@ function registerV2Handlers(client, ctx, protocol) {
     const token = p.idToken && p.idToken.idToken;
     const tokenType = p.idToken && p.idToken.type;
     if (token) defer('Authorize', () => ctx.states.setRfid(id, token, tokenType));
-    return { idTokenInfo: { status: 'Accepted' } };
+    return { idTokenInfo: { status: ctx.runtime?.isStationAuthorized?.(id) === true ? 'Accepted' : 'Blocked' } };
   });
 
   handle('StatusNotification', ({ params }) => {
@@ -141,7 +141,11 @@ function registerV2Handlers(client, ctx, protocol) {
         ts,
       });
     });
-    return p.idToken ? { idTokenInfo: { status: 'Accepted' } } : {};
+    // TransactionEvent reconciles an existing physical event (including offline
+    // sessions). Preserve its acknowledgement, but never grant a fresh token
+    // acceptance while the central license or connector scope is denied.
+    return p.idToken && ctx.runtime?.isStationAuthorized?.(id, { evse: p.evse }) === true
+      ? { idTokenInfo: { status: 'Accepted' } } : {};
   });
 
   handle('FirmwareStatusNotification', ({ params }) => {

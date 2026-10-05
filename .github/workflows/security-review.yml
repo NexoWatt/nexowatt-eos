@@ -238,6 +238,8 @@ jobs:
             components/admin/test/eos-license-http.test.cjs \
             components/admin/test/eos-license-trust.test.cjs \
             components/admin/test/eos-license-build-parity.test.cjs \
+            components/admin/test/eos-license-platform.test.cjs \
+            components/admin/test/eos-branding-assets.test.cjs \
             tests/system/admin-startup-branding.test.cjs \
             tests/system/controller-pid-state.test.cjs \
             tests/system/first-start-diagnostic.test.cjs \
@@ -276,6 +278,10 @@ jobs:
           node --test reports/integration/installable-test3-r8-20261004/build-revision.test.cjs tests/system/recover-r4-restored-r7-to-r8.test.cjs
           python3 -I -B reports/integration/installable-test3-r8-20261004/publish-candidate.test.py
           node --test tests/bootstrap/public-r8-recovery-entry.test.cjs tests/bootstrap/public-r8-recovery-publication.test.cjs tests/bootstrap/r8-delivery-workflow.test.cjs
+
+      - name: Check R9 six-adapter derivative and healthy R8 update contracts
+        run: |
+          node --test reports/integration/installable-test3-r9-20261005/build-revision.test.cjs tests/integration/r9-derivative-sbom.test.cjs tests/system/sbom-binding.test.cjs tests/system/update-test-to-r9.test.cjs
 
       - name: Run isolated ownership and sudo denial contracts
         # These reviewed fixtures write temporary /root trees. Host commands and
@@ -464,4 +470,129 @@ jobs:
           It exercises the current R8 startup readiness source, fresh adapter heartbeat, protected HTTPS/authentication endpoints, controlled stop and restart in a fresh disposable runner.
           No private configuration, certificate key or license is included in the uploaded evidence. Success is established only by the test step outcome.
           This is not a systemd mount-policy test, native ARM64/Pi acceptance, physical adapter activation, login acceptance or production approval.
+          SCOPE
+
+  own-adapter-licensing:
+    name: Current own-adapter EOS admission and central licensing
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      TZ: UTC
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout reviewed adapter sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Use qualified Node release
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Install only locked test and compiler dependencies
+        run: |
+          set -euo pipefail
+          for component in ui eebus ocpp21 backitup; do
+            npm --prefix "components/$component" ci --ignore-scripts --no-audit --no-fund
+          done
+      - name: Require identical clients and actual early management admission
+        run: node --test tests/integration/own-adapter-admission.test.cjs
+      - name: Check current UI licensing and authenticated management boundaries
+        working-directory: components/ui
+        run: |
+          node --test scripts/verify-eos-integrated.cjs scripts/verify-eos-auth-security.cjs test/eos-license-entitlements.test.cjs
+          npm run check:ts-runtime-executables
+          npm run check:ts-runtime-mirrors
+          npm run typecheck:runtime-mirrors
+          npm run docs:check
+      - name: Check current Devices command queues and license lifecycle
+        working-directory: components/devices
+        run: node --test test/licenseControl.test.js
+      - name: Check current EEBUS build, licensing and protocol regressions
+        working-directory: components/eebus
+        run: npm test
+      - name: Check current OCPP licensing and real TLS regressions
+        working-directory: components/ocpp21
+        run: npm test
+      - name: Check current Backup licensing, recovery admission and published files
+        working-directory: components/backitup
+        run: |
+          ./node_modules/.bin/tsc -p tsconfig.build.json --noEmit
+          npm run test:offline
+          node scripts/validate-publish.cjs
+      - name: State source test scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          Current source and shipped-code tests cover all six own central-license clients, platform admission, lease expiry, later activation and guarded command queues.
+          Protocol peers and device buses remain laboratory fixtures. Real EOS management startup is a separate native job; Pi and physical commissioning remain open.
+          SCOPE
+
+  native-r9:
+    name: Current R9 Admin UI central license native PostgreSQL qualification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact source including authenticated R8 history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Use qualified Node release
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Prepare isolated native R9 laboratory
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$EUID" -ne 0 ]]
+          [[ ! -e /etc/nexowatt-eos && ! -L /etc/nexowatt-eos ]]
+          [[ ! -e /var/lib/nexowatt-eos && ! -L /var/lib/nexowatt-eos ]]
+          [[ ! -e /opt/nexowatt && ! -L /opt/nexowatt ]]
+          lab_root=$(mktemp -d "$RUNNER_TEMP/eos-r9.XXXXXXXX")
+          echo "EOS_R9_LAB_ROOT=$lab_root" >> "$GITHUB_ENV"
+          node --test tests/integration-r9/fixture.test.cjs tests/integration-r9/license-session.test.cjs
+      - name: Build pinned PostgreSQL and locked test dependencies
+        run: bash tests/integration-controller/prepare-native.sh "$EOS_R9_LAB_ROOT"
+      - name: Prepare current six-adapter application over authenticated R8
+        run: |
+          npm --prefix components/ui ci --ignore-scripts --no-audit --no-fund
+          node tests/integration-r9/prepare-app.cjs "$EOS_R9_LAB_ROOT" "$GITHUB_WORKSPACE/delivery/test-pi-0.2.0-test.3-r8"
+      - name: Prepare root-owned EOS fixture without runtime bypass
+        env:
+          EOS_DISPOSABLE_MANAGEMENT_LAB: '1'
+          EOS_DISPOSABLE_R9_LAB: '1'
+        run: |
+          sudo --preserve-env=GITHUB_ACTIONS,EOS_DISPOSABLE_MANAGEMENT_LAB,EOS_DISPOSABLE_R9_LAB "$(command -v node)" \
+            tests/integration-r9/prepare-fixed-root.cjs "$EOS_R9_LAB_ROOT" "$(id -u)" "$(id -g)"
+      - name: Require current actual HTTPS login central licensing and restart
+        run: |
+          set -euo pipefail
+          umask 077
+          node tests/integration-r9/run-native.cjs "$EOS_R9_LAB_ROOT" | tee "$EOS_R9_LAB_ROOT/r9-native.tap"
+      - name: Preserve bounded source-bound native evidence
+        if: always() && env.EOS_R9_LAB_ROOT != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-r9-native-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ env.EOS_R9_LAB_ROOT }}/r9-native.tap
+            ${{ env.EOS_R9_LAB_ROOT }}/r9-native-evidence.json
+            ${{ env.EOS_R9_LAB_ROOT }}/r9-native-prepared.json
+      - name: State native qualification scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          This job tests the current unsigned R9 application, authenticating its R8 baseline and binding the six current source overlays by content digest.
+          Actual Admin/UI use root-owned EOS paths and real PostgreSQL 17.11 mTLS with Node 24.21.0. No product admission or license verifier is mocked.
+          The release signer requires this successful exact-source/application evidence. Pi, actual systemd mount policy and physical adapter commissioning remain open.
           SCOPE

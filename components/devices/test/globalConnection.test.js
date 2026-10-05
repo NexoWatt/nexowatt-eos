@@ -19,6 +19,7 @@ function createAdapter(devices) {
     }
     on() {}
     subscribeStates() {}
+    async subscribeForeignObjectsAsync() {}
     async getForeignObjectsAsync() { return {}; }
     async setObjectNotExistsAsync() {}
     async setStateAsync(id, value) { this.states.set(id, value); this.writes.push({ id, ...value }); }
@@ -42,6 +43,8 @@ function createAdapter(devices) {
     clearInterval(timer) { timers.delete(timer); },
     require(request) {
       if (request === '@iobroker/adapter-core') return { Adapter };
+      if (request === './lib/eos-license-client') return { assertEosPlatform() {} };
+      if (request === './lib/licenseInventory') return { createInventoryLicenseGuard() { return { async start() { return true; }, assertAllowed() {}, isAllowed() { return true; }, async stop() {} }; } };
       if (request === './lib/deviceRuntime') return { DeviceRuntime };
       return nativeRequire(request);
     },

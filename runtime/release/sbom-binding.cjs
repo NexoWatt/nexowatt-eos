@@ -8,11 +8,7 @@ const serialport = require('../native/serialport-contract.cjs');
 const PACKAGE = '(?:@[a-z0-9._~-]+/)?[a-z0-9._~-]+';
 const PACKAGE_PATH = new RegExp(`^(?:node_modules/${PACKAGE}/)*node_modules/${PACKAGE}$`);
 const PACKAGE_OWNER = new RegExp(`^((?:node_modules/${PACKAGE}/)*node_modules/${PACKAGE})(?:/|$)`);
-const EMBEDDED = Object.freeze({
-    'node_modules/iobroker.eos-admin/adminWww/lib/js/crypto-js': 'crypto-js',
-    'node_modules/iobroker.eos-admin/packages/eos-license-client': '@nexowatt/eos-license-client',
-    'node_modules/iobroker.nexowatt-ui/packages/eos-license-client': '@nexowatt/eos-license-client',
-});
+const EMBEDDED = Object.freeze(require('./embedded-packages.json'));
 function reject(code) { const error = new Error(code); error.code = code; throw error; }
 function properties(rows) {
     const out = Object.create(null);
@@ -28,7 +24,8 @@ function properties(rows) {
     }
     return out;
 }
-function verifySbomBinding(payload, files, profile) {
+function verifySbomBinding(payload, files, profile, release) {
+    if (release !== undefined && (!Number.isSafeInteger(release?.sequence) || release.sequence < 1)) reject('SBOM_RELEASE_CONTEXT');
     const rows = new Map(files.map(row => [row.path, row]));
     function load(relative) {
         if (!rows.has(relative)) reject('SBOM_FILE_MISSING');
@@ -117,6 +114,44 @@ function verifySbomBinding(payload, files, profile) {
         if (!declared || manifest.name !== name || manifest.version !== declared.component.version ||
             declared.props['eos:manifest-sha256'] !== rows.get(filename).sha256 ||
             declared.props['eos:tree-sha256'] !== sha256(Buffer.from(JSON.stringify(tree)))) reject('SBOM_EMBEDDED');
+        if (['dependencies', 'optionalDependencies', 'peerDependencies'].some(key => Object.keys(manifest[key] || {}).length)) reject('SBOM_EMBEDDED_DEPENDENCIES');
+        const owner = relative.split('/').slice(0, 2).join('/'), ownerManifest = load(`app/${owner}/package.json`);
+        const parents = bom.components.filter(component => component.name === ownerManifest.name && component.version === ownerManifest.version);
+        const childRef = declared.component['bom-ref'];
+        const parentEdges = bom.dependencies.filter(dep => parents.length === 1 && dep.ref === parents[0]['bom-ref']);
+        const childEdges = bom.dependencies.filter(dep => dep.ref === childRef);
+        const incoming = bom.dependencies.filter(dep => dep.dependsOn.includes(childRef));
+        if (parentEdges.length !== 1 || parentEdges[0].dependsOn.filter(ref => ref === childRef).length !== 1 ||
+            incoming.length !== 1 || incoming[0] !== parentEdges[0] || childEdges.length !== 1 || childEdges[0].dependsOn.length) reject('SBOM_EMBEDDED_PARENT');
+    }
+    const r9Assembly = 'authenticated-r8-tree-with-six-own-adapter-source-overlays';
+    const newClientPresent = Object.entries(EMBEDDED).some(([relative, name]) => name === '@nexowatt/eos-license-client' &&
+        !relative.startsWith('node_modules/iobroker.eos-admin/') && !relative.startsWith('node_modules/iobroker.nexowatt-ui/') && rows.has(`app/${relative}/package.json`));
+    // The verified release sequence is authoritative. New actual client paths
+    // are also a fail-closed trigger for standalone inventory checks; deleting
+    // a self-declared SBOM marker cannot disable the R9 binding contract.
+    if (release?.sequence === 12 || newClientPresent || props['eos:sbom:assembly'] === r9Assembly) {
+        if (props['eos:sbom:assembly'] !== r9Assembly) reject('SBOM_DERIVATIVE_BINDING');
+        const appRows = files.filter(row => row.path.startsWith('app/')).map(row => ({ path: row.path.slice(4), size: row.size, sha256: row.sha256, mode: row.mode }));
+        const contentRows = rows => rows.map(({ path, size, sha256 }) => ({ path, size, sha256 }));
+        const digest = rows => sha256(Buffer.from(JSON.stringify(rows)));
+        if (props['eos:sbom:actual-app-file-table-sha256'] !== digest(contentRows(appRows)) ||
+            props['eos:sbom:actual-app-mode-table-sha256'] !== digest(appRows) ||
+            props['eos:sbom:application-unchanged'] !== 'false' ||
+            props['eos:sbom:fresh-npm-resolution'] !== 'false' || props['eos:sbom:fresh-vulnerability-scan'] !== 'false') reject('SBOM_DERIVATIVE_BINDING');
+        for (const spec of require('../product/scope.cjs').SPECS.filter(spec => spec.source)) {
+            const relative = `node_modules/${spec.package}`;
+            const components = bom.components.filter(component => component.name === spec.package && component.version === spec.version);
+            if (components.length !== 1) reject('SBOM_DERIVATIVE_BINDING');
+            const component = components[0], cp = properties(component.properties || []);
+            const tree = appRows.filter(row => row.path.startsWith(relative + '/'));
+            if (component.modified !== true || Object.hasOwn(component, 'hashes') || !component.pedigree?.ancestors?.length ||
+                cp['eos:derivative:installed-path'] !== relative || cp['eos:derivative:tree-sha256'] !== digest(contentRows(tree)) ||
+                cp['eos:derivative:mode-tree-sha256'] !== digest(tree)) reject('SBOM_DERIVATIVE_BINDING');
+        }
+        const clients = [...embedded.values()].filter(row => row.component.name === '@nexowatt/eos-license-client');
+        if (clients.length !== 6 || clients.some(row => row.component.version !== '1.0.2') ||
+            new Set(clients.map(row => row.props['eos:tree-sha256'])).size !== 1) reject('SBOM_DERIVATIVE_BINDING');
     }
     if (profile !== undefined) {
         // The release caller supplies verifyBuildProfile's independently
@@ -151,4 +186,4 @@ function verifySbomBinding(payload, files, profile) {
     return { installedPackages: count, uniqueNpmComponents: installed.size, embeddedPackages: embedded.size,
         scope: 'npm-and-explicit-vendored-packages', fullOperatingSystemInventory: false };
 }
-module.exports = { verifySbomBinding };
+module.exports = { verifySbomBinding, EMBEDDED };

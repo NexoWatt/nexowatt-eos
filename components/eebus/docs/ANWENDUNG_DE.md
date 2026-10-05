@@ -1,5 +1,12 @@
 # NexoWatt EOS EEBUS Adapter - Anwendung und Feldtest
 
+Der Betrieb erfordert die zugelassene EOS-Laufzeit und eine zentral im EOS Admin
+aktivierte Home-/Pro-Lizenz. Keine Lizenz im EEBUS-Adapter eintragen. Der Adapter
+wartet bei fehlender Freigabe und startet nach Aktivierung automatisch. Bei
+Lizenzverlust bleiben Telemetrie und bestehende Gerätebegrenzungen erhalten;
+neue Steuerung und automatische Folgebefehle bleiben gesperrt. Nach Reaktivierung
+sind frische CLS-/Bedienbefehle erforderlich. [Prüfstand und Testanleitung](LICENSING_20261005_DE.md).
+
 Diese Anleitung beschreibt die Nutzung von `iobroker.eebus` ab Version `0.2.2` auf NexoWatt EOS.
 
 > **Status:** Feldtest-Core. Discovery, lokale SHIP-Identität, Pairing-/Trust-Zustände und SPINE-Discovery sind implementiert. Das Lesen und insbesondere das Schreiben müssen mit jedem realen Gerät und dessen unterstützten EEBUS Use Cases geprüft werden, bevor die Funktion produktiv genutzt wird.

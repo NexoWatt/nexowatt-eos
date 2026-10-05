@@ -11,11 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('test_base_sbom', ROOT / 'tools/sbom/test_base.py')
 base = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(base)
-EMBEDDED = {
-    'node_modules/iobroker.eos-admin/adminWww/lib/js/crypto-js': 'crypto-js',
-    'node_modules/iobroker.eos-admin/packages/eos-license-client': '@nexowatt/eos-license-client',
-    'node_modules/iobroker.nexowatt-ui/packages/eos-license-client': '@nexowatt/eos-license-client',
-}
+EMBEDDED = json.loads((ROOT / 'runtime/release/embedded-packages.json').read_text())
 
 def native_binding(app, bom, evidence_path):
     """Attribute exactly reviewed derivative native packages, never upstream bytes."""
@@ -123,7 +119,7 @@ def bind(app, npm_sbom, transform=None, native_evidence=None):
         if manifest.get('name') != expected_name or not isinstance(manifest.get('version'), str):
             raise base.EvidenceError('EMBEDDED_IDENTITY')
         # Any separately declared dependencies need another evidence source.
-        if manifest.get('dependencies') or manifest.get('optionalDependencies'):
+        if manifest.get('dependencies') or manifest.get('optionalDependencies') or manifest.get('peerDependencies'):
             raise base.EvidenceError('EMBEDDED_DEPENDENCIES_UNINVENTORIED')
         files, total = [], 0
         for item in sorted(directory.rglob('*')):

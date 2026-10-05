@@ -523,13 +523,13 @@ test('message dispatch denies every chat capability before any privileged MCP co
     assert.ok(replies.every(row => row[2].error === 'EOS_SIGNED_MAINTENANCE_REQUIRED'));
 });
 
-async function runStartupSecret(systemConfig, persistenceFails = false) {
+async function runStartupSecret(systemConfig, persistenceFails = false, platformAllowed = true) {
     const code = read('build/main.js');
     const start = code.indexOf('onReady = async () => {');
     const followingComment = /\n\s*\/\*\*/.exec(code.slice(start));
     assert.ok(start >= 0 && followingComment, 'Shipped startup method is available');
     const body = code.slice(start, start + followingComment.index);
-    const calls = { init: 0, persistence: 0, randomSizes: [], events: [], errors: [] };
+    const calls = { init: 0, persistence: 0, platformChecks: 0, objectReads: 0, randomSizes: [], events: [], errors: [] };
     const random = { randomBytes(size, callback) {
         calls.randomSizes.push(size);
         const bytes = crypto.randomBytes(size);
@@ -541,6 +541,15 @@ async function runStartupSecret(systemConfig, persistenceFails = false) {
     const sessionModule = { EosSessionSecurity: class {} };
     const sandbox = {
         console, Buffer, __dirname: path.join(root, 'build'), systemLanguage: 'en',
+        // Isolate only the platform-attestation boundary. The actual shipped
+        // onReady gate still runs; all later secret/persistence behavior is real.
+        require(name) {
+            assert.equal(name, '../packages/eos-license-client');
+            return { assertEosPlatform(adapter) {
+                assert.equal(adapter, 'eos-admin'); calls.platformChecks++;
+                if (!platformAllowed) throw new Error('EOS_PLATFORM_REQUIRED');
+            } };
+        },
         _nodeCrypto: random, node_crypto_1: random,
         _nodePath: path, node_path_1: path,
         _adapterCore: adapterCore, adapter_core_1: adapterCore,
@@ -556,7 +565,7 @@ async function runStartupSecret(systemConfig, persistenceFails = false) {
     Object.assign(adapter, {
         config: {},
         log: { ...quietLog, error(message) { calls.errors.push(String(message)); } },
-        async getForeignObjectAsync(id) { assert.equal(id, 'system.config'); return copy(systemConfig); },
+        async getForeignObjectAsync(id) { calls.objectReads++; assert.equal(id, 'system.config'); return copy(systemConfig); },
         async extendForeignObjectAsync(id, value) {
             calls.persistence++;
             assert.equal(id, 'system.config');
@@ -575,6 +584,14 @@ async function runStartupSecret(systemConfig, persistenceFails = false) {
     await new Promise(resolve => setImmediate(resolve));
     return { adapter, calls };
 }
+
+test('platform denial stops startup before secrets, accounts, license service and web initialization', async () => {
+    const { calls } = await runStartupSecret({ common: {}, native: {} }, false, false);
+    assert.equal(calls.platformChecks, 1);
+    assert.equal(calls.objectReads, 0); assert.equal(calls.init, 0); assert.equal(calls.persistence, 0);
+    assert.deepEqual(calls.randomSizes, []); assert.deepEqual(calls.events, []);
+    assert.deepEqual(calls.errors, ['EOS_PLATFORM_REQUIRED']);
+});
 
 test('fresh session secret uses 32 random bytes and is persisted before web startup', async () => {
     const first = await runStartupSecret({ common: {}, native: {} });

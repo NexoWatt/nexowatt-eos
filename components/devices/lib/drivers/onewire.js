@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const { applyNumericTransforms } = require('../utils');
@@ -145,7 +147,12 @@ class OneWireDriver {
     }
   }
 
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
     const src = dp?.source || {};
     if (src.kind !== 'onewire') throw new Error('Invalid source kind');
 

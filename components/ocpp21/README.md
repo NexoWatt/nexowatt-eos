@@ -1,5 +1,14 @@
 # NexoWatt OCPP
 
+Requires an admitted NexoWatt EOS runtime and a fresh Home/Pro `energy` entitlement
+from `eos-admin.0`. Manage activation only in EOS Admin; a waiting adapter starts
+automatically. License loss blocks new authorization and control while preserving
+protocol sessions, telemetry and existing charging profiles. Commission the
+complete physical `chargePointInventory` before control (exact station identity,
+EVSE ID and connector ID; EVSE 1 for OCPP 1.6). Empty or inconsistent inventory
+permits diagnostics only. See [migration and operating details](README.de.md) and
+the [test record](LICENSING_20261005_DE.md).
+
 **NexoWatt OCPP** is the local OCPP CSMS adapter for the **NexoWatt Energy Operation System (EOS)**. EOS is based on ioBroker, therefore the technical adapter ID `ocpp21`, package name `iobroker.ocpp21`, instance paths and existing installations remain compatible.
 
 OCPP **1.6J**, **2.0.1** and **2.1** are supported on the same server port.

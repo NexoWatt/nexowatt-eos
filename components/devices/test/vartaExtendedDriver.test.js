@@ -28,7 +28,7 @@ function fixture(key = 'pulseNeo', options = {}) {
   let timerEnd = clock.now + (options.timerSeconds || 0) * 1000;
   const setTimer = seconds => { timerEnd = clock.now + seconds * 1000; };
   const calls = [];
-  const adapter = { namespace: 'nexowatt-devices.0', log: { debug() {}, info() {}, warn() {}, error() {} } };
+  const adapter = { namespace: 'nexowatt-devices.0', _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} } };
   const device = { id: `varta-ext-${++sequence}`, protocol: 'modbusTcp', vartaAllowControlWrites: true, vartaLimitClass: 'residential', ...options.config,
     connection: { host: options.host || `varta-ext-${sequence}`, port: 502, unitId: 255, ...options.connection } };
   const driver = new VartaModbusDriver(adapter, device, template, {});

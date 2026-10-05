@@ -1,15 +1,18 @@
-# R8 bereits eingerichtet: zusätzlichen Admin-Startassistenten entfernen
+# Aktueller Entwicklungsstand: zentrale EOS-Lizenz und Admin-Logos
 
-Nach erfolgreicher EOS-Einrichtung kann R8 noch den überflüssigen ioBroker-
-Assistenten anzeigen. Die Ursache ist korrigiert; für den bereits eingerichteten
-R8-Test-Pi gibt es eine kleine, transaktionale Datenbankkorrektur. Sie erhält
-Passwort, UUID, EOS-Lizenz und Einstellungen. Telemetrie bleibt deaktiviert.
+Die sechs eigenen Adapter beziehen ihre Freigabe aus der zentralen EOS-Lizenz.
+Die UI benötigt keinen eigenen Schlüssel mehr. Unveränderte NexoWatt-Adapter
+starten nur innerhalb des zugelassenen EOS-Systems; kleine Admin-Logos wurden
+auf die vorhandenen NexoWatt-Grafiken umgestellt.
 
-[Vollständiger Pi-Befehl](docs/operations/R8_ADMIN_SETUP_COMMAND.txt) ·
-[R8-Admin-Korrektur und Ablauf](docs/operations/COMPLETE_R8_ADMIN_SETUP_DE.md) ·
-[Prüfbelege und noch offene Geräteabnahme](reports/integration/admin-wizard-20261005/README.md).
-Die nachstehende R4/R7-Wiederherstellung nicht erneut auf einem bereits
-eingerichteten R8-System ausführen.
+Der gemeinsame **R9-Teststand wird noch qualifiziert**. Ein neuer Pi-Updatebefehl
+folgt erst nach erfolgreicher nativer Prüfung, Signierung und öffentlichem
+Dateirücklesen. Der eingerichtete R8-Pi bleibt bis dahin auf seinem Stand.
+Die ältere Erststart-Wiederherstellung unten nicht erneut darauf ausführen.
+
+[Änderung, zentrale Aktivierung und Grenzen](docs/development/EOS_CENTRAL_LICENSE_2026-10-05_DE.md) ·
+[Gemeinsame lokale Prüfbelege](reports/integration/central-license-20261005/README.md) ·
+[Bisherige R8-Admin-Korrektur](docs/operations/COMPLETE_R8_ADMIN_SETUP_DE.md).
 
 <!-- EOS_PRIVATE_GITHUB_INSTALL_START -->
 # R8: Wiederherstellung nach dem zurückgenommenen R7-Erststart

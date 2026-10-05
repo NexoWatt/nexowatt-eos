@@ -45,7 +45,7 @@ function loadDeviceRuntime() {
 function createAliasDefinitions(adapterOverride) {
   const DeviceRuntime = loadDeviceRuntime();
   const template = getTemplate(runtimeTemplates);
-  const adapter = adapterOverride || { log: { debug() {}, info() {}, warn() {}, error() {} } };
+  const adapter = adapterOverride || { _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} } };
   const runtime = new DeviceRuntime(adapter, {
     id: 'evcs1',
     templateId,
@@ -189,7 +189,7 @@ test('ABL live-current aliases compare per-phase current instead of summing ampe
 test('ABL live measurement aliases are actively reset on null, missing and offline input', async () => {
   const writes = new Map();
   const adapter = {
-    log: { debug() {}, info() {}, warn() {}, error() {} },
+    _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} },
     async setStateAsync(id, state) {
       writes.set(String(id), state && state.val);
     },

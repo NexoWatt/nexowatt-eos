@@ -1,6 +1,23 @@
 # Hersteller, Key-Generator und verschlüsselte Lizenzablage
 
-Stand: EOS Admin 7.10.11 / Offline-Key-Generator 1.0.0, Integrations-Teststand vom 30.09.2026.
+Stand: EOS Admin 7.10.11 / Client 1.0.2, Quellintegration vom 05.10.2026.
+
+## Aktueller zentraler Systemvertrag
+
+Aktuelle NWL3-Keys signieren UUID, Home/Pro-Edition, Gültigkeit und `scope: "system"`.
+Der Admin leitet aus seiner Produktpolicy Home mit 3 Ladepunkten/2 Speichern oder
+Pro mit 50 Ladepunkten/10 Speichern ab. Verbraucher nutzen ausschließlich die
+kurze Freigabe aus `eos-admin`; sie erhalten keinen eigenen Schlüssel. NWL2 bleibt
+mit den bisherigen engeren signierten Adapterlisten und Mengen kompatibel. Die
+unten beschriebene NWL2-Erstellung ist der historische Formatvertrag, keine
+zusätzliche Schlüsselpflicht für neue Adapter.
+
+Der Admin-Lizenzdienst ist an die geschützte aktive EOS-Installation und seinen
+freigegebenen Startpfad gebunden. Ein kopierter Admin in gewöhnlichem ioBroker
+kann deshalb auch mit gültigem Token keine Betriebsfreigabe erteilen. Die
+Plattformprüfung erfolgt vor Initialisierung und Import sowie bei jeder
+Lizenzbewertung. Ohne Lizenz bleibt die Verwaltung auf EOS zur Aktivierung
+erreichbar. [Plattformvertrag und Grenzen](ADAPTER_INTEGRATION.md).
 
 ## Separater Offline-Key-Generator
 
@@ -62,7 +79,7 @@ Beide Editionen: energy, wallet, smartHome, microgridSlave. Pro zusätzlich: mic
 
 ## Vertrauensanker auf dem Gerät
 
-Standardpfad: `/etc/nexowatt/license-trust.json`. Alternativ kann der OS-Serviceadministrator vor Prozessstart `NEXOWATT_LICENSE_TRUST_FILE` auf einen absoluten Pfad setzen. Diese Einstellung wird nicht über die Admin-Weboberfläche angeboten.
+Das integrierte EOS-Profil verwendet fest `/etc/nexowatt-eos/license-trust.json`. Es gibt dafür keinen Adapter-, Web- oder Umgebungsschalter. Die Bereitstellung erfolgt durch die autorisierten OS-Installations-/Wartungswerkzeuge.
 
 Dateiinhalt ist ein JSON-Objekt: Schlüsselkennung auf öffentlichen PEM-Text. Es wird absichtlich keine nutzbare Beispiel-Schlüsseldatei mitgeliefert. Der Hersteller exportiert den öffentlichen Teil aus dem neu eingerichteten Generator. Fingerabdruck und Übergabeweg separat prüfen; anschließend den Export durch den OS-Serviceadministrator kontrolliert bereitstellen.
 

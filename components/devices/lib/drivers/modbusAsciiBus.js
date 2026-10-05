@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl } = require('../licenseControl');
+
 const { SerialPort } = require('serialport');
 
 /**
@@ -363,10 +365,11 @@ class ModbusAsciiBus {
     });
   }
 
-  async _transact(unitId, timeoutMs, fc, payloadBytes, parseResponse) {
+  async _transact(unitId, timeoutMs, fc, payloadBytes, parseResponse, authorize) {
     return await this._enqueue(async () => {
       await this.ensureConnected();
       if (!this.port || !this.connected) throw new Error('Modbus ASCII: not connected');
+      if (authorize) authorize();
 
       // Drop stale RX state from previous transactions but keep debug trace for diagnostics.
       this._rxText = '';
@@ -458,25 +461,25 @@ class ModbusAsciiBus {
     });
   }
 
-  writeCoil(unitId, timeoutMs, addr, value) {
+  writeCoil(unitId, timeoutMs, addr, value, authorize = () => assertLicensedControl(this.adapter)) {
     const a = Number(addr || 0) & 0xFFFF;
     const v = value ? 0xFF00 : 0x0000;
     return this._transact(unitId, timeoutMs, 0x05, [a >> 8, a & 0xFF, v >> 8, v & 0xFF], (bytes) => {
       if (bytes.length < 6) throw new Error('Modbus ASCII: invalid FC5 response length');
       return { address: ((bytes[2] & 0xFF) << 8) | (bytes[3] & 0xFF), value: ((bytes[4] & 0xFF) << 8) | (bytes[5] & 0xFF) };
-    });
+    }, authorize);
   }
 
-  writeRegister(unitId, timeoutMs, addr, value) {
+  writeRegister(unitId, timeoutMs, addr, value, authorize = () => assertLicensedControl(this.adapter)) {
     const a = Number(addr || 0) & 0xFFFF;
     const v = Number(value || 0) & 0xFFFF;
     return this._transact(unitId, timeoutMs, 0x06, [a >> 8, a & 0xFF, v >> 8, v & 0xFF], (bytes) => {
       if (bytes.length < 6) throw new Error('Modbus ASCII: invalid FC6 response length');
       return { address: ((bytes[2] & 0xFF) << 8) | (bytes[3] & 0xFF), value: ((bytes[4] & 0xFF) << 8) | (bytes[5] & 0xFF) };
-    });
+    }, authorize);
   }
 
-  writeRegisters(unitId, timeoutMs, addr, values) {
+  writeRegisters(unitId, timeoutMs, addr, values, authorize = () => assertLicensedControl(this.adapter)) {
     const a = Number(addr || 0) & 0xFFFF;
     const vals = Array.isArray(values) ? values : [values];
     const regs = regsToBytes(vals);
@@ -484,10 +487,10 @@ class ModbusAsciiBus {
     return this._transact(unitId, timeoutMs, 0x10, [a >> 8, a & 0xFF, qty >> 8, qty & 0xFF, regs.length & 0xFF, ...regs], (bytes) => {
       if (bytes.length < 6) throw new Error('Modbus ASCII: invalid FC16 response length');
       return { address: ((bytes[2] & 0xFF) << 8) | (bytes[3] & 0xFF), length: ((bytes[4] & 0xFF) << 8) | (bytes[5] & 0xFF) };
-    });
+    }, authorize);
   }
 
-  writeCoils(unitId, timeoutMs, addr, values) {
+  writeCoils(unitId, timeoutMs, addr, values, authorize = () => assertLicensedControl(this.adapter)) {
     const a = Number(addr || 0) & 0xFFFF;
     const vals = Array.isArray(values) ? values.map(v => !!v) : [!!values];
     const packed = packBits(vals);
@@ -495,7 +498,7 @@ class ModbusAsciiBus {
     return this._transact(unitId, timeoutMs, 0x0F, [a >> 8, a & 0xFF, qty >> 8, qty & 0xFF, packed.length & 0xFF, ...packed], (bytes) => {
       if (bytes.length < 6) throw new Error('Modbus ASCII: invalid FC15 response length');
       return { address: ((bytes[2] & 0xFF) << 8) | (bytes[3] & 0xFF), length: ((bytes[4] & 0xFF) << 8) | (bytes[5] & 0xFF) };
-    });
+    }, authorize);
   }
 }
 

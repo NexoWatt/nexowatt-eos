@@ -4,6 +4,33 @@
 
 Unterstützt werden OCPP **1.6J**, **2.0.1** und **2.1** über denselben Server-Port.
 
+## Zentrale EOS-Lizenz und Ladepunktinventar
+
+Der Adapter benötigt die zugelassene EOS-Laufzeit und die zentral in `eos-admin.0`
+aktivierte Home-/Pro-Funktion `energy`. Es gibt keine adaptereigenen Lizenzdaten.
+Nach zentraler Aktivierung startet ein wartender Adapter automatisch. Bei
+Lizenzverlust bleiben bestehende OCPP-Sitzungen, Messdaten und bereits wirksame
+Ladeprofile erhalten. Neue Autorisierungen und Bedien-/Steuerbefehle sind
+gesperrt; es erfolgt kein pauschaler Reset, Ladestopp oder Löschen von Profilen.
+
+**Umstellung bestehender Instanzen:** In der Konfiguration das vollständige
+physische Ladepunktinventar `chargePointInventory` eintragen: pro Anschluss
+exakte OCPP-Stationsidentität, EVSE-ID und Connector-ID. Bei OCPP 1.6 ist die
+EVSE-ID immer 1. Auch zeitweise getrennte Anschlüsse zählen. Home umfasst höchstens
+drei Ladepunkte; maßgeblich ist stets die tatsächlich erteilte zentrale Lizenz.
+Die Tabelle enthält keine Lizenzschlüssel. Ein leeres Inventar erlaubt bei
+gültiger Lizenz die Diagnose, sperrt aber die Steuerung. Unbekannte Stationen,
+beobachtete zusätzliche Anschlüsse und nicht lizenzierte Gesamtmengen werden
+verweigert. Die bisherigen synthetischen Vorgaben `1:1` und optionale
+Diagnoseobjekte belegen keinen vollständigen physischen Bestand.
+
+Die Inventarzahl ist eine lokale Instanzprüfung. Die Inbetriebnahme muss den
+gesamten Anlagenbestand über mehrere Instanzen hinweg mit der zentralen Lizenz
+abgleichen; daraus folgt keine globale reservierende Kontingentvergabe.
+Nach Reaktivierung werden alte Bedienbefehle nicht nachgeholt; neue Sollwerte
+bewusst senden. Migration, Sicherung/Rückfall und offene Geräteprüfung stehen
+im [Prüfvermerk](LICENSING_20261005_DE.md).
+
 ## Kompakte Datenpunktstruktur
 
 Die Station erhält nur noch wenige fachliche Hauptordner:

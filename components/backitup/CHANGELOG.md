@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased (2026-10-05)
+
+- Zentrale EOS-Home-/Pro-Freigabe für Start, Zeitpläne, Backup-/Restore- und Dateiverwaltung; automatische Wiederaufnahme nach Aktivierung.
+- Getrennter Restore benötigt einen authentifizierten, archivgebundenen Einmalauftrag vor dem Controller-Stopp.
+- Lizenzverlust beendet neue Aufgaben und Token-Erneuerung; laufende autorisierte Archive/Wiederherstellungen dürfen sicher abschließen.
+- Gezielte Negativ-/Wiederanlaufprüfungen und Betriebsanleitung ergänzt.
+
 ## 1.0.10 (2026-09-16)
 - SD-Backup-Liste prüft den tatsächlichen Sicherungsunterordner statt Schreibrechte am Mount-Root.
 - Reines Lesen/Herunterladen führt weder mkdir noch Schreibprobe aus; fehlendes Zielverzeichnis wird bei der Liste als leer behandelt.

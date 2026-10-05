@@ -1,0 +1,228 @@
+TAP version 13
+# Subtest: NexoWatt EOS profile backup
+    # Subtest: creates a protected profile archive with a verifiable manifest and no vendor secret by default
+    ok 1 - creates a protected profile archive with a verifiable manifest and no vendor secret by default
+      ---
+      duration_ms: 24.58287
+      type: 'test'
+      ...
+    # Subtest: keeps a valid profile archive when only status-state publication fails
+    ok 2 - keeps a valid profile archive when only status-state publication fails
+      ---
+      duration_ms: 6.577437
+      type: 'test'
+      ...
+    1..2
+ok 1 - NexoWatt EOS profile backup
+  ---
+  duration_ms: 32.607636
+  type: 'suite'
+  ...
+# Subtest: ignores a bucket or directory name entered as CLI path and falls back to influx
+ok 2 - ignores a bucket or directory name entered as CLI path and falls back to influx
+  ---
+  duration_ms: 0.853149
+  type: 'test'
+  ...
+# Subtest: accepts an absolute CLI path
+ok 3 - accepts an absolute CLI path
+  ---
+  duration_ms: 0.126099
+  type: 'test'
+  ...
+# Subtest: builds a local InfluxDB 2 backup without putting the token on the command line
+ok 4 - builds a local InfluxDB 2 backup without putting the token on the command line
+  ---
+  duration_ms: 1.144275
+  type: 'test'
+  ...
+# Subtest: builds a remote HTTPS backup with host and TLS skip flag
+ok 5 - builds a remote HTTPS backup with host and TLS skip flag
+  ---
+  duration_ms: 0.297156
+  type: 'test'
+  ...
+# Subtest: requires a token for InfluxDB 2.x
+ok 6 - requires a token for InfluxDB 2.x
+  ---
+  duration_ms: 0.44684
+  type: 'test'
+  ...
+# Subtest: builds restore invocation without exposing the token
+ok 7 - builds restore invocation without exposing the token
+  ---
+  duration_ms: 0.350656
+  type: 'test'
+  ...
+# Subtest: formats a missing CLI error with a clear installation hint
+ok 8 - formats a missing CLI error with a clear installation hint
+  ---
+  duration_ms: 0.162704
+  type: 'test'
+  ...
+# Subtest: write validation uses the writable subdirectory, not the root-owned mount root
+ok 9 - write validation uses the writable subdirectory, not the root-owned mount root
+  ---
+  duration_ms: 7.884947
+  type: 'test'
+  ...
+# Subtest: read listing needs read/search rights only and never creates or probes
+ok 10 - read listing needs read/search rights only and never creates or probes
+  ---
+  duration_ms: 1.664785
+  type: 'test'
+  ...
+# Subtest: read mode can read a read-only mounted card without writing
+ok 11 - read mode can read a read-only mounted card without writing
+  ---
+  duration_ms: 1.559987
+  type: 'test'
+  ...
+# Subtest: backup refuses a read-only mounted card
+ok 12 - backup refuses a read-only mounted card
+  ---
+  duration_ms: 1.586657
+  type: 'test'
+  ...
+# Subtest: backup refuses a subdirectory without write access, naming the actual directory
+ok 13 - backup refuses a subdirectory without write access, naming the actual directory
+  ---
+  duration_ms: 2.71641
+  type: 'test'
+  ...
+# Subtest: read listing refuses a subdirectory without read access
+ok 14 - read listing refuses a subdirectory without read access
+  ---
+  duration_ms: 1.264816
+  type: 'test'
+  ...
+# Subtest: backup writes a probe only in the actual backup directory
+ok 15 - backup writes a probe only in the actual backup directory
+  ---
+  duration_ms: 2.567417
+  type: 'test'
+  ...
+# Subtest: failed actual write probe rejects backup and cleanup is attempted
+ok 16 - failed actual write probe rejects backup and cleanup is attempted
+  ---
+  duration_ms: 1.342322
+  type: 'test'
+  ...
+# Subtest: missing directory during listing is distinct from a missing card and never created
+ok 17 - missing directory during listing is distinct from a missing card and never created
+  ---
+  duration_ms: 1.360028
+  type: 'test'
+  ...
+# Subtest: new backup may create its directory if the parent permits it
+ok 18 - new backup may create its directory if the parent permits it
+  ---
+  duration_ms: 1.767018
+  type: 'test'
+  ...
+# Subtest: directory creation failure is explicit and does not attempt a probe
+ok 19 - directory creation failure is explicit and does not attempt a probe
+  ---
+  duration_ms: 1.740899
+  type: 'test'
+  ...
+# Subtest: missing SD mount never falls back to a directory on the system disk
+ok 20 - missing SD mount never falls back to a directory on the system disk
+  ---
+  duration_ms: 1.143183
+  type: 'test'
+  ...
+# Subtest: SD removal during the checks aborts before any probe is written
+ok 21 - SD removal during the checks aborts before any probe is written
+  ---
+  duration_ms: 1.266288
+  type: 'test'
+  ...
+# Subtest: system disk, symlink, non-directory and different filesystem remain excluded
+    # Subtest: system disk
+    ok 1 - system disk
+      ---
+      duration_ms: 1.192076
+      type: 'test'
+      ...
+    # Subtest: symlink
+    ok 2 - symlink
+      ---
+      duration_ms: 6.491228
+      type: 'test'
+      ...
+    # Subtest: plain file
+    ok 3 - plain file
+      ---
+      duration_ms: 0.978757
+      type: 'test'
+      ...
+    # Subtest: nested filesystem
+    ok 4 - nested filesystem
+      ---
+      duration_ms: 0.945658
+      type: 'test'
+      ...
+    1..4
+ok 22 - system disk, symlink, non-directory and different filesystem remain excluded
+  ---
+  duration_ms: 10.308318
+  type: 'test'
+  ...
+# Subtest: listing an empty card returns an empty list instead of logging a permissions error
+ok 23 - listing an empty card returns an empty list instead of logging a permissions error
+  ---
+  duration_ms: 1.088091
+  type: 'test'
+  ...
+# Subtest: excludes the system mmc device and offers a separately mounted SD card
+ok 24 - excludes the system mmc device and offers a separately mounted SD card
+  ---
+  duration_ms: 3.012985
+  type: 'test'
+  ...
+# Subtest: still excludes the system mmc device when root is reported as /dev/root
+ok 25 - still excludes the system mmc device when root is reported as /dev/root
+  ---
+  duration_ms: 0.540641
+  type: 'test'
+  ...
+# Subtest: offers a removable USB card reader but excludes a non-removable USB SSD
+ok 26 - offers a removable USB card reader but excludes a non-removable USB SSD
+  ---
+  duration_ms: 0.405878
+  type: 'test'
+  ...
+# Subtest: normalizes safe relative subdirectories and rejects traversal or absolute paths
+ok 27 - normalizes safe relative subdirectories and rejects traversal or absolute paths
+  ---
+  duration_ms: 0.855472
+  type: 'test'
+  ...
+# Subtest: keeps the newest three InfluxDB generations and marks older archives for deletion
+ok 28 - keeps the newest three InfluxDB generations and marks older archives for deletion
+  ---
+  duration_ms: 12.185932
+  type: 'test'
+  ...
+# Subtest: keeps three generations per configured InfluxDB suffix and ignores unrelated files
+ok 29 - keeps three generations per configured InfluxDB suffix and ignores unrelated files
+  ---
+  duration_ms: 0.317255
+  type: 'test'
+  ...
+# Subtest: uses only logger methods that exist in the backup execution context
+ok 30 - uses only logger methods that exist in the backup execution context
+  ---
+  duration_ms: 0.537185
+  type: 'test'
+  ...
+1..30
+# tests 35
+# suites 1
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 136.074443

@@ -1,5 +1,10 @@
 # Changelog
 
+## EOS integration (2026-10-05)
+
+- Require an admitted EOS runtime and fresh Home/Pro energy entitlement from EOS Admin at startup and before new device control. Automatically start after central activation.
+- Preserve established protocol sessions, telemetry and equipment limits on license loss; discard queued or remembered control transitions. Bundle the central license client without additional npm runtime dependencies.
+
 ## 0.3.0 (2026-08-05)
 
 - Added versioned direct `ioBroker.eebus` -> `nexowatt-ui` §14a API; no manual CLS datapoint mapping is required in direct mode.

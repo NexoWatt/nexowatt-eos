@@ -38,7 +38,7 @@ function make(key = 'threePhaseHv', options = {}) {
   // expected answers from the decoder/template being tested.
   for (const [a, n] of [[0, p.single ? 0x300 : p.hv ? 0x600 : 0x500], [1, 1], [2, 0x0105], [3, 0x4148], [4, 0x3132], [5, 0x3334], [6, 0x3536], [7, 0x3738]]) map.set(a, n);
   for (const [a, n] of (p.single ? [[18, 0x0201], [59, 2], [182, 1234], [183, 5123], [184, 65], [186, 1200], [187, 1300], [190, 65536 - 1234], [191, 65536 - 2500], [169, 65536 - 400], [70, 18], [72, 0xffff], [73, 1], [193, 5001]] : [[22, 0x0203], [24, 1], [25, 0], [500, 2], [587, 5123], [588, 65], [590, 65536 - 1234], [591, 65536 - 2500], [625, 0x3cb0], [690, 0xffff], [636, 0xc350], [694, 0], [653, 0x1170], [659, 1], [672, 1200], [673, 1300], [514, 18], [516, 0xffff], [517, 1], [638, 5001]])) map.set(a, n);
-  const adapter = { log: { warn() {}, debug() {}, info() {}, error() {} } };
+  const adapter = { _licenseGuard: { assertAllowed() {} }, log: { warn() {}, debug() {}, info() {}, error() {} } };
   const device = { id: 'deye', protocol: 'modbusRtu', ...options.device, connection: { path: '/dev/test-deye', minCommandIntervalMs: 0, ...options.connection } };
   const driver = new DeyeModbusDriver(adapter, device, template, {});
   const calls = [];

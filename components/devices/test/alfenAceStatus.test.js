@@ -40,7 +40,7 @@ function loadModbusDriver() {
 
 const ModbusDriver = loadModbusDriver();
 const DeviceRuntime = compatibility.loadDeviceRuntime(path.join(root, 'lib/deviceRuntime.js'));
-const adapter = { log: { debug() {}, info() {}, warn() {}, error() {} } };
+const adapter = { _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} } };
 
 function createDriver(t) {
   const driver = new ModbusDriver(adapter, {

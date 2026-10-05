@@ -24,7 +24,7 @@ function loadDriver(name, replacements) {
 
 function httpDriver(request) {
   const { HttpDriver } = loadDriver('http.js', { axios: { create() { return { request }; } } });
-  return new HttpDriver({ log }, { id: 'http', connection: {} }, {}, {});
+  return new HttpDriver({ _licenseGuard: { assertAllowed() {} }, log }, { id: 'http', connection: {} }, {}, {});
 }
 
 const httpDp = (id, requestPath) => ({ id, type: 'number', rw: 'ro', source: { kind: 'http', path: requestPath, jsonPath: '$.value' } });
@@ -69,7 +69,7 @@ function udpDriver() {
   const { UdpDriver } = loadDriver('udp.js', {
     'node:dgram': { createSocket() { const socket = new Socket(); sockets.push(socket); return socket; } },
   });
-  const driver = new UdpDriver({ log }, { id: 'keba', connection: { host: '192.0.2.1', port: 7090, timeoutMs: 100 } }, {}, {});
+  const driver = new UdpDriver({ _licenseGuard: { assertAllowed() {} }, log }, { id: 'keba', connection: { host: '192.0.2.1', port: 7090, timeoutMs: 100 } }, {}, {});
   return { driver, sockets };
 }
 

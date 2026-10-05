@@ -11,6 +11,8 @@ interface AccessTokens {
 }
 
 class TokenRefresher {
+    private destroyed = false;
+    private readonly abortRefresh = new AbortController();
     adapter: ioBroker.Adapter;
     stateName: string;
     refreshTokenTimeout: ioBroker.Timeout | undefined;
@@ -26,9 +28,11 @@ class TokenRefresher {
         this.url = oauthURL;
         this.name = stateName.replace('info.', '').replace('Tokens', '').replace('tokens', '');
         this.readyPromise = this.adapter.getStateAsync(this.stateName).then(async state => {
+            if (this.destroyed) return;
             await this.adapter
                 .subscribeStatesAsync(this.stateName)
                 .catch(error => this.adapter.log.error(`Cannot read tokens: ${error}`));
+            if (this.destroyed) return;
 
             if (state?.val) {
                 this.accessToken = JSON.parse(state.val as string);
@@ -43,7 +47,11 @@ class TokenRefresher {
                 }
             } else if (adapter.config.dropboxAccessJson) {
                 adapter.log.warn('Your token will be updated');
-                const response = await axios.post(this.url, { refresh_token: adapter.config.dropboxAccessJson });
+                const response = await axios.post(this.url, { refresh_token: adapter.config.dropboxAccessJson }, {
+                    timeout: 5000, signal: AbortSignal.any([this.abortRefresh.signal, AbortSignal.timeout(5000)]),
+                    maxRedirects: 0, maxContentLength: 65536, maxBodyLength: 65536,
+                });
+                if (this.destroyed) return;
                 if (response.status !== 200) {
                     this.adapter.log.error(`Cannot refresh tokens: ${response.statusText}`);
                     return;
@@ -74,6 +82,8 @@ class TokenRefresher {
     }
 
     destroy(): void {
+        this.destroyed = true;
+        this.abortRefresh.abort();
         if (this.refreshTokenTimeout) {
             this.adapter.clearTimeout(this.refreshTokenTimeout);
             this.refreshTokenTimeout = undefined;
@@ -81,6 +91,7 @@ class TokenRefresher {
     }
 
     onStateChange(id: string, state: ioBroker.State | null | undefined): void {
+        if (this.destroyed) return;
         if (state?.ack && id.endsWith(`.${this.stateName}`)) {
             if (JSON.stringify(this.accessToken) !== state.val) {
                 try {
@@ -96,6 +107,7 @@ class TokenRefresher {
 
     async getAccessToken(): Promise<string | undefined> {
         await this.readyPromise;
+        if (this.destroyed) return undefined;
         if (!this.accessToken?.access_token) {
             this.adapter.log.error(`No accessToken for ${this.name} found`);
             return undefined;
@@ -111,6 +123,7 @@ class TokenRefresher {
     }
 
     async refreshTokens(retriesLeft = 5): Promise<void> {
+        if (this.destroyed) return;
         if (this.refreshTokenTimeout) {
             this.adapter.clearTimeout(this.refreshTokenTimeout);
             this.refreshTokenTimeout = undefined;
@@ -133,7 +146,11 @@ class TokenRefresher {
 
         if (expiresIn <= 0) {
             try {
-                const response = await axios.post(this.url, this.accessToken);
+                const response = await axios.post(this.url, this.accessToken, {
+                    timeout: 5000, signal: AbortSignal.any([this.abortRefresh.signal, AbortSignal.timeout(5000)]),
+                    maxRedirects: 0, maxContentLength: 65536, maxBodyLength: 65536,
+                });
+                if (this.destroyed) return;
                 if (response.status !== 200) {
                     throw new Error(`Status ${response.status}: ${response.statusText}`);
                 }
@@ -154,6 +171,7 @@ class TokenRefresher {
                     throw new Error('Response did not include accessToken');
                 }
             } catch (error) {
+                if (this.destroyed) return;
                 this.adapter.log.warn(`Token refresh failed: ${(error as Error).message}`);
                 if (retriesLeft > 0) {
                     const retryDelay = 30_000; // 30 Seconds
@@ -172,6 +190,7 @@ class TokenRefresher {
             }
         }
 
+        if (this.destroyed) return;
         if (expiresIn > 600_000) {
             expiresIn = 600_000;
         }

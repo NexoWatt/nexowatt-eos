@@ -52,7 +52,7 @@ function templateCompatibilityHash(template) {
 }
 
 function buildRuntime(DeviceRuntime, template, id = 'compat') {
-  const adapter = { log: { debug() {}, info() {}, warn() {}, error() {} } };
+  const adapter = { _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} } };
   const runtime = new DeviceRuntime(adapter, {
     id,
     templateId: template.id,

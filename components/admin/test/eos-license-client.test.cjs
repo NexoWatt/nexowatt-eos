@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
     createLicenseGuard, LicenseError, COMMAND, MAX_TIMEOUT_MS, MAX_LEASE_MS,
-} = require('../packages/eos-license-client');
+} = require('./lib/load-eos-license-module.cjs')(require.resolve('../packages/eos-license-client'));
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 function grant(request, changes = {}) {

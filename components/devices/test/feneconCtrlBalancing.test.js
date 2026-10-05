@@ -62,7 +62,7 @@ function float32Registers(value) {
 function createDriver(template) {
   const logs = [];
   const adapter = {
-    log: {
+    _licenseGuard: { assertAllowed() {} }, log: {
       debug(message) { logs.push({ level: 'debug', message }); },
       info(message) { logs.push({ level: 'info', message }); },
       warn(message) { logs.push({ level: 'warn', message }); },

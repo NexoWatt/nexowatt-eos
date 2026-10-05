@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 const dgram = require('node:dgram');
 const { isIP } = require('node:net');
 const { sleep, getByJsonPath, applyNumericTransforms } = require('../utils');
@@ -88,19 +90,19 @@ class UdpDriver {
     this.connected = false;
   }
 
-  async _sendAndReceive(cmd) {
+  async _sendAndReceive(cmd, control = false) {
     // Polls and control writes share one reply socket. Every operation must use
     // the same queue: the read-only busy flag cannot serialize incoming writes.
     const generation = this._requestGeneration;
     const operation = this._requestTail.then(async () => {
       if (generation !== this._requestGeneration) throw new Error('UDP request cancelled by disconnect');
-      return this._sendAndReceiveNow(cmd, generation);
+      return this._sendAndReceiveNow(cmd, generation, control);
     });
     this._requestTail = operation.catch(() => {});
     return operation;
   }
 
-  async _sendAndReceiveNow(cmd, generation) {
+  async _sendAndReceiveNow(cmd, generation, control = false) {
     await this._ensureSocket();
     if (generation !== this._requestGeneration || !this.socket) throw new Error('UDP request cancelled by disconnect');
     const socket = this.socket;
@@ -141,6 +143,7 @@ class UdpDriver {
       socket.once('close', onClose);
 
       try {
+        if (control) assertLicensedControl(this.adapter);
         socket.send(payload, 0, payload.length, this.port, this.host, (err) => {
           if (err) onError(err);
         });
@@ -228,7 +231,12 @@ class UdpDriver {
   /**
    * Writes a single datapoint.
    */
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
     const src = dp.source || {};
     if (src.kind !== 'udp') throw new Error('Invalid source kind');
 
@@ -245,7 +253,7 @@ class UdpDriver {
       throw new Error('No UDP write command defined');
     }
 
-    const replyText = await this._sendAndReceive(cmd);
+    const replyText = await this._sendAndReceive(cmd, true);
     // We treat any response as success; optionally parse.
     const parsed = this._parseJsonReply(replyText);
     if (parsed && parsed.ok === false) {

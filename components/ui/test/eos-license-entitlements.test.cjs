@@ -12,8 +12,10 @@ const ts = require('typescript');
 const flags = require('../ems/services/feature-flags');
 const storage = require('../ems/modules/storage-control');
 const core = require('../../admin/src/lib/eosLicenseCore');
-const { EosLicenseService } = require('../../admin/src/lib/eosLicenseService');
-const { createLicenseGuard } = require('../packages/eos-license-client');
+// Root-protected platform admission is explicitly substituted only in this isolated fixture.
+const { loadLicenseModule } = require('../scripts/eos-license-fixture.cjs');
+const { EosLicenseService } = loadLicenseModule(path.join(__dirname, '../../admin/src/lib/eosLicenseService.js'));
+const { createLicenseGuard } = loadLicenseModule(path.join(__dirname, '../packages/eos-license-client/index.js'));
 const firstStart = require('../../../runtime/bootstrap/first-start-configuration.cjs');
 const planPolicy = require('../../../runtime/onboarding/configuration.cjs');
 const { configuredSettings } = require('../../../tests/onboarding/fixtures.cjs');
@@ -191,4 +193,29 @@ test('authentic zero battery entitlement also blocks a single storage, and narro
   assert.equal(front.call('_maxEvcsCount'), 1);
   const patch = f.adapter._nwApplyLicenseLimitsToInstallerPatch({ settingsConfig: { evcsCount: 8, evcsList: [1, 2, 3] } });
   assert.equal(patch.settingsConfig.evcsCount, 1); assert.equal(patch.settingsConfig.evcsList.length, 1);
+});
+
+test('license status page reads central entitlement, contains no key submission and expires its display', async () => {
+  const elements = new Map(['nw-license-status', 'nw-license-back', 'nw-license-reload'].map(id => [id, { textContent: '', href: '', addEventListener() {} }]));
+  const timers = [], intervals = [], requests = [];
+  let authed = true;
+  let response = { valid: true, edition: 'hems', validUntil: Date.now() + 14000 };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../www/license.js'), 'utf8'), {
+    window: { location: { href: 'https://fixture.invalid:8188/license.html' }, NW_AUTH: { requireCapability: async capability => { assert.equal(capability, 'license.manage'); return authed; } } },
+    document: { getElementById: id => elements.get(id) }, URL, Date, AbortSignal,
+    fetch: async (url, options) => { requests.push({ url, options }); return { ok: true, json: async () => response }; },
+    setInterval: fn => { intervals.push(fn); return intervals.length; },
+    setTimeout: fn => { timers.push(fn); return timers.length; }, clearTimeout() {},
+  });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(elements.get('nw-license-back').href, 'https://fixture.invalid:8081/');
+  assert.match(elements.get('nw-license-status').textContent, /Zentrale Home-Lizenz aktiv/);
+  assert.equal(requests[0].url, '/api/license/info'); assert.equal(requests[0].options.body, undefined);
+  timers[0](); assert.match(elements.get('nw-license-status').textContent, /abgelaufen/);
+  response = { valid: false, edition: 'eos', validUntil: Date.now() + 14000 };
+  intervals[0](); await new Promise(resolve => setImmediate(resolve));
+  assert.match(elements.get('nw-license-status').textContent, /Keine aktuelle Lizenzfreigabe/);
+  authed = false; intervals[0](); await new Promise(resolve => setImmediate(resolve));
+  assert.match(elements.get('nw-license-status').textContent, /Admin-Anmeldung erforderlich/);
+  assert.equal(requests.length, 2, 'no license request before Admin capability');
 });

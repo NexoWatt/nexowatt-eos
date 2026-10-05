@@ -77,7 +77,7 @@ function runtimeFor(t, connector, port) {
   const template = require('../lib/templates.json').templates.find(t => t.id === `evcs.oem.modbusV1003.connector${connector}`);
   const states = new Map();
   const adapter = {
-    namespace: 'nexowatt-devices.0', log: { debug() {}, info() {}, warn() {}, error() {} },
+    namespace: 'nexowatt-devices.0', _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} },
     async setStateAsync(id, state) { states.set(id, state); },
     async getStateAsync(id) { return states.get(id.replace(/^nexowatt-devices\.0\./, '')) || null; },
   };

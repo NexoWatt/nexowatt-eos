@@ -51,7 +51,7 @@ function loadDriver() {
 }
 
 const ModbusDriver = loadDriver();
-const adapter = { log: { debug() {}, info() {}, warn() {}, error() {} } };
+const adapter = { _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} } };
 
 function modbusException(code, message) {
   const err = new Error(message || `Modbus exception ${code}`);

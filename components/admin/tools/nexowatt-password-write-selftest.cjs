@@ -27,8 +27,11 @@ const Harness = sandbox.module.exports;
   };
   const harness = new Harness(adapter);
   await harness.setEosUserPassword('system.user.user', 'NexoWatt2025!');
-  assert.deepEqual(calls[0], ['revoke'], 'Existing sessions must be revoked before the password write');
-  assert.deepEqual(calls[1].slice(0, 3), ['set', 'user', 'NexoWatt2025!']);
+  // The controller atomically validates proof and writes the new hash. Revoking
+  // before this write invalidates its own proof; revoke immediately afterwards,
+  // before verification can report success or yield further access.
+  assert.deepEqual(calls[0].slice(0, 3), ['set', 'user', 'NexoWatt2025!']);
+  assert.deepEqual(calls[1], ['revoke'], 'Existing sessions must be revoked immediately after the atomic password write');
   assert.deepEqual(calls[2].slice(0, 3), ['check', 'user', 'NexoWatt2025!']);
   await harness.updateEosAccountMetadata('system.user.user', (native, account) => {
     account.passwordInitialized = true;

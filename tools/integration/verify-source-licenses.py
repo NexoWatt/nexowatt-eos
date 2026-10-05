@@ -69,7 +69,8 @@ def main(baseline):
     check('root-publication-disabled', root_package.get('private') is True and 'publishConfig' not in root_package)
     for component in ['ocpp21', 'backitup']:
         common = json.loads(current(f'components/{component}/io-package.json'))['common']
-        check('adapter-limited-license:' + component, common.get('license') == 'SEE LICENSE IN LICENSE'
+        check('adapter-limited-license:' + component,
+              common.get('licenseInformation', {}).get('license', common.get('license')) == 'SEE LICENSE IN LICENSE'
               and common['licenseInformation']['type'] == 'limited')
     lock = json.loads(current('components/backitup/package-lock.json'))
     check('backup-lock-root-license', lock['packages']['']['license'] == 'SEE LICENSE IN LICENSE')

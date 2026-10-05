@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const assetCache = require('./nexowatt-browser-asset-version.cjs');
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -38,8 +39,8 @@ for (const forbidden of [
     must(!sourceJs.includes(forbidden), `global page placement remains active: ${forbidden}`);
 }
 
-must(index.includes(`eos-auto-update.js?v=${cacheTag}`), `auto-update JavaScript cache key ${cacheTag} missing`);
-must(index.includes(`eos-auto-update.css?v=${cacheTag}`), `auto-update CSS cache key ${cacheTag} missing`);
+must(index.includes(`eos-auto-update.js?eos=${assetCache}`), `auto-update JavaScript cache key ${cacheTag} missing`);
+must(index.includes(`eos-auto-update.css?eos=${assetCache}`), `auto-update CSS cache key ${cacheTag} missing`);
 must(sourceCss.includes('visible only inside the System Settings dialog'), 'CSS ownership comment missing');
 must(sourceCss.includes('[data-context="system-settings"]'), 'System Settings CSS scope marker missing');
 

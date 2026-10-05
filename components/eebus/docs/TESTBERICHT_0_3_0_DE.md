@@ -1,5 +1,8 @@
 # Testbericht – NexoWatt EOS EEBUS Adapter 0.3.0
 
+Nachtrag 05.10.2026: [Zentrale EOS-Lizenzgrenzen, Änderung und aktuelle Prüfbelege](LICENSING_20261005_DE.md).
+Die folgenden historischen Aussagen bleiben auf ihren damaligen Umfang begrenzt.
+
 **Stand:** 05.08.2026  
 **Prüfumfang:** Direkte §14a-/CLS-Anbindung an NexoWatt EOS, IF_CLS_CTRL/LPC-Parser, Heartbeat/Failsafe, korrelierte SPINE-Rückmeldung und Paketstruktur.
 

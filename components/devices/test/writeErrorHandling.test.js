@@ -21,7 +21,7 @@ function createRuntime() {
   let writeCalls = 0;
   const adapter = {
     namespace: 'nexowatt-devices.0',
-    log: { debug() {}, info() {}, warn() {}, error() {} },
+    _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} },
     async setStateAsync(id, state) {
       states.set(id, { ...state });
     },

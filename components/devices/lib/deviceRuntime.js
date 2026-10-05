@@ -1,6 +1,8 @@
 'use strict';
 
 const path = require('path');
+const { assertLicensedControl, runLicensedControl } = require('./licenseControl');
+const { LicenseError } = require('./eos-license-client');
 const { roundTo, normalizeValueByUnit } = require('./utils');
 const {
   SCHEMA_VERSION: ALIAS_SCHEMA_VERSION,
@@ -6550,6 +6552,7 @@ class DeviceRuntime {
 
   async start() {
     if (this.started) return;
+    assertLicensedControl(this.adapter);
     this.started = true;
 
     if (this.cfg.enabled === false) {
@@ -7108,6 +7111,30 @@ class DeviceRuntime {
     await this._updateAliases({}, { connected: !!this._connOk, lastError: msg }).catch(() => {});
   }
 
+  async _runAutomaticControl(operation) {
+    if (this._licensedCommandRequired) return;
+    return runLicensedControl(this.adapter, operation);
+  }
+
+  async _writeLicensedDatapoint(...args) {
+    if (this._licensedCommandRequired) throw new LicenseError('FRESH_COMMAND_REQUIRED');
+    return runLicensedControl(this.adapter, () => this.driver.writeDatapoint(...args));
+  }
+
+  suspendLicensedControl() {
+    this._licensedCommandRequired = true;
+    // Discard pending intent, never manufacture an emergency hardware command.
+    this._writeQueue.clear();
+    this._lastWriteByDpId.clear();
+    this._lastCommandedValueByDpId.clear();
+    this._restoreFallback.clear();
+    for (const timer of this._postWriteRepeatTimersByDpId.values()) clearTimeout(timer);
+    this._postWriteRepeatTimersByDpId.clear();
+    if (this._restoreTimer) clearTimeout(this._restoreTimer);
+    this._restoreTimer = null;
+    if (this.driver && typeof this.driver.suspendLicensedControl === 'function') this.driver.suspendLicensedControl();
+  }
+
   async stop() {
     this._pollLoopActive = false;
     if (this.pollTimer) {
@@ -7404,6 +7431,8 @@ class DeviceRuntime {
   }
 
   _enqueueWrite(ackRelId, dp, deviceValue, ackVal, meta = {}) {
+    assertLicensedControl(this.adapter);
+    if (this._licensedCommandRequired) throw new LicenseError('FRESH_COMMAND_REQUIRED');
     if (!dp || !dp.id) return;
 
     const bypassUnsupportedCooldown = !!(meta && meta.bypassUnsupportedCooldown === true);
@@ -7496,7 +7525,11 @@ class DeviceRuntime {
     return it.value;
   }
 
-  async _flushWriteQueueOnce() {
+  async _flushWriteQueueOnce(...args) {
+    return this._runAutomaticControl(() => this._flushWriteQueueOnceAuthorized(...args));
+  }
+
+  async _flushWriteQueueOnceAuthorized() {
     if (!this._isWriteQueueEnabled() || this._writeBusy) return;
     if (!this.driver || typeof this.driver.writeDatapoint !== 'function') return;
     if (!this._writeQueue || this._writeQueue.size === 0) return;
@@ -7512,7 +7545,7 @@ class DeviceRuntime {
         return;
       }
 
-      const result = await this.driver.writeDatapoint(entry.dp, entry.deviceValue);
+      const result = await this._writeLicensedDatapoint(entry.dp, entry.deviceValue);
       this._recordWrite(entry.dp.id, { skipPostWriteRepeat: entry.meta?.skipPostWriteRepeat === true });
       const isCurrent = () => this._writeQueue.get(key) === entry;
       if (!isCurrent()) return;
@@ -7618,6 +7651,17 @@ class DeviceRuntime {
 
   async handleStateChange(fullId, state) {
     if (!state || state.ack) return;
+    try {
+      await runLicensedControl(this.adapter, () => this._handleLicensedStateChange(fullId, state));
+    } catch (error) { await this._setError(error).catch(() => {}); }
+  }
+
+  async _handleLicensedStateChange(fullId, state) {
+    if (!state || state.ack) return;
+    try { assertLicensedControl(this.adapter); } catch (error) {
+      await this._setError(error).catch(() => {});
+      return;
+    }
     // Convert full id -> relative id
     const relPrefix = this.adapter.namespace + '.';
     const relId = fullId.startsWith(relPrefix) ? fullId.substring(relPrefix.length) : fullId;
@@ -7630,6 +7674,7 @@ class DeviceRuntime {
     const aliasDef = this.aliasByStateRelId.get(relId);
     if (aliasDef) {
       if (!(aliasDef.rw === 'rw' || aliasDef.rw === 'wo')) return;
+      this._licensedCommandRequired = false;
       if (!this.driver || typeof this.driver.writeDatapoint !== 'function') return;
 
       // Keep the alias target outside the try block.  A later direct datapoint variable named
@@ -7684,7 +7729,7 @@ class DeviceRuntime {
 
         // Optional pre-writes (template hinted), e.g. writing a control mode before an active power setpoint.
         await this._maybeExecutePreWritesForDp(aliasTargetDp.id);
-        const writeResult = await this.driver.writeDatapoint(aliasTargetDp, toDev);
+        const writeResult = await this._writeLicensedDatapoint(aliasTargetDp, toDev);
         const effectiveToDev = writeResult && writeResult.effectiveValue !== undefined
           ? writeResult.effectiveValue
           : toDev;
@@ -7738,6 +7783,7 @@ class DeviceRuntime {
     const dp = this.dpByStateRelId.get(relId);
     if (!dp) return;
     if (!(dp.rw === 'rw' || dp.rw === 'wo')) return;
+    this._licensedCommandRequired = false;
     if (!this.driver || typeof this.driver.writeDatapoint !== 'function') return;
 
     try {
@@ -7753,7 +7799,7 @@ class DeviceRuntime {
 
       // Optional pre-writes (template hinted), e.g. writing a control mode before an active power setpoint.
       await this._maybeExecutePreWritesForDp(dp.id);
-      const writeResult = await this.driver.writeDatapoint(dp, state.val);
+      const writeResult = await this._writeLicensedDatapoint(dp, state.val);
       const effectiveValue = writeResult && writeResult.effectiveValue !== undefined
         ? writeResult.effectiveValue
         : state.val;
@@ -7958,7 +8004,7 @@ class DeviceRuntime {
 
           if (hasEver && this._autoWatchdogControlEverActive && !recent && !this._autoWatchdogControlDisabled) {
             try {
-              await this.driver.writeDatapoint(disable.dp, disable.value);
+              await this._writeLicensedDatapoint(disable.dp, disable.value);
               this._recordWrite(disable.dp.id);
               await this._ackWrittenValue(disable.dp, disable.value);
               this._autoWatchdogControlDisabled = true;
@@ -7996,7 +8042,7 @@ class DeviceRuntime {
         this._watchdogCounter = next;
 
         for (const t of activeTargets) {
-          await this.driver.writeDatapoint(t.dp, next);
+          await this._writeLicensedDatapoint(t.dp, next);
           this._recordWrite(t.dp.id);
           await this._ackWrittenValue(t.dp, next);
         }
@@ -8010,8 +8056,8 @@ class DeviceRuntime {
     };
 
     // Fire once shortly after start, then periodically
-    this.watchdogStartTimer = setTimeout(() => { tick(); }, startDelayMs);
-    this.watchdogTimer = setInterval(() => { tick(); }, periodMs);
+    this.watchdogStartTimer = setTimeout(() => { this._runAutomaticControl(tick).catch(() => {}); }, startDelayMs);
+    this.watchdogTimer = setInterval(() => { this._runAutomaticControl(tick).catch(() => {}); }, periodMs);
 
     this.adapter.log.info(`[${this.cfg.id}] AutoWatchdog enabled: dpIds=[${targets.map(t => t.dp.id).join(', ')}], periodMs=${periodMs}, activeForMs=${cfg.activeForMs || 0}`);
   }
@@ -8305,7 +8351,11 @@ class DeviceRuntime {
     }
   }
 
-  async _restoreSetpointsOnce(reason = '') {
+  async _restoreSetpointsOnce(...args) {
+    return this._runAutomaticControl(() => this._restoreSetpointsOnceAuthorized(...args));
+  }
+
+  async _restoreSetpointsOnceAuthorized(reason = '') {
     const cfg = this._restoreCfg;
     if (!cfg || !Array.isArray(cfg.dpIds) || !cfg.dpIds.length) return;
     if (this._restoreBusy) return;
@@ -8370,7 +8420,7 @@ class DeviceRuntime {
         if (queueing) {
           this._enqueueWrite(null, dp, val, val);
         } else {
-          await this.driver.writeDatapoint(dp, val);
+          await this._writeLicensedDatapoint(dp, val);
           this._recordWrite(dp.id);
           await this._ackWrittenValue(dp, val);
         }
@@ -8499,7 +8549,7 @@ class DeviceRuntime {
         if (this._isWriteQueueEnabled()) {
           this._enqueueWrite(null, dp, val, val, { skipPostWriteRepeat: true, isPostWriteRepeat: true });
         } else {
-          await this.driver.writeDatapoint(dp, val);
+          await this._writeLicensedDatapoint(dp, val);
           this._recordWrite(dp.id, { skipPostWriteRepeat: true });
           await this._ackWrittenValue(dp, val);
         }
@@ -8999,7 +9049,7 @@ class DeviceRuntime {
             if (this._isWriteQueueEnabled()) {
               this._enqueueWrite(null, setDp, setVal, setVal, { skipPostWriteRepeat: true, isSetpointKeepalive: true });
             } else {
-              await this.driver.writeDatapoint(setDp, setVal);
+              await this._writeLicensedDatapoint(setDp, setVal);
               this._recordWrite(setDp.id, { skipPostWriteRepeat: true });
               await this._ackWrittenValue(setDp, setVal);
             }
@@ -9050,8 +9100,8 @@ class DeviceRuntime {
     };
 
     // Slightly delayed first check, then periodically
-    setTimeout(() => { tick().catch(() => {}); }, 2000);
-    this._setpointKeepaliveTimer = setInterval(() => { tick().catch(() => {}); }, periodMs);
+    setTimeout(() => { this._runAutomaticControl(tick).catch(() => {}); }, 2000);
+    this._setpointKeepaliveTimer = setInterval(() => { this._runAutomaticControl(tick).catch(() => {}); }, periodMs);
     const enabledMsg = `[${this.cfg.id}] SetpointKeepalive enabled: targets=[${cfg.targets.map(t => t.setpointDpId).join(', ')}], periodMs=${periodMs}`;
     const keepaliveLogLevel = String(cfg.logLevel || 'info').toLowerCase();
     if (keepaliveLogLevel === 'silent' || keepaliveLogLevel === 'none' || keepaliveLogLevel === 'off') {
@@ -9123,6 +9173,7 @@ class DeviceRuntime {
         if (!this.started) return;
         if (!this.driver || typeof this.driver.refreshSungrowSignedPowerControlHeartbeats !== 'function') return;
         if (!this._connOk) return;
+        assertLicensedControl(this.adapter);
         await this.driver.refreshSungrowSignedPowerControlHeartbeats({ reason: 'external-ems-heartbeat' });
       } catch (e) {
         // Heartbeat refresh is best-effort. Transport errors will also surface via the poll loop.
@@ -9136,9 +9187,9 @@ class DeviceRuntime {
     // bunch heartbeat writes with initial read/write commands.
     this._sungrowHeartbeatStartTimer = setTimeout(() => {
       this._sungrowHeartbeatStartTimer = null;
-      tick().catch(() => {});
+      this._runAutomaticControl(tick).catch(() => {});
     }, Math.min(3000, intervalMs));
-    this._sungrowHeartbeatTimer = setInterval(() => { tick().catch(() => {}); }, intervalMs);
+    this._sungrowHeartbeatTimer = setInterval(() => { this._runAutomaticControl(tick).catch(() => {}); }, intervalMs);
     this.adapter.log.debug(`[${this.cfg.id}] Sungrow External EMS heartbeat auto-refresh enabled: intervalMs=${intervalMs}`);
   }
 
@@ -9187,7 +9238,7 @@ class DeviceRuntime {
         const dp = this._getDpById(step.dpId);
         if (!dp) continue;
         if (!(dp.rw === 'rw' || dp.rw === 'wo')) continue;
-        await this.driver.writeDatapoint(dp, step.value);
+        await this._writeLicensedDatapoint(dp, step.value);
         // Track pre-write activity as well (important for fail-safe logic).
         this._recordWrite(dp.id);
         await this._ackWrittenValue(dp, step.value);

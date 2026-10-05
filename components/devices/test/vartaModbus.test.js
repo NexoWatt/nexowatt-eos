@@ -46,7 +46,7 @@ function makeDriver(key = 'pulseNeo', options = {}) {
   const clock = options.clock || { now: 10000 };
   const calls = [];
   const warnings = [];
-  const adapter = { namespace: 'nexowatt-devices.0', log: { debug() {}, info() {}, warn(msg) { warnings.push(msg); }, error() {} } };
+  const adapter = { namespace: 'nexowatt-devices.0', _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn(msg) { warnings.push(msg); }, error() {} } };
   // Preserve the original public-table regression independently of the new
   // extended-profile tests, including its exact wire register matrix.
   const config = { id: `varta${++sequence}`, templateId: template.id, protocol: 'modbusTcp', vartaExtendedEnabled: false, ...options.config,

@@ -13,12 +13,15 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { spawnSync } = require('child_process');
+const { apply: applyBrandingAssets } = require('./nexowatt-build-branding-assets.cjs');
 const root = path.resolve(__dirname, '..');
 const adminWww = path.join(root, 'adminWww');
 const buildInfo = JSON.parse(fs.readFileSync(path.join(root, 'NEXOWATT_EOS_BUILD_INFO.json'), 'utf8'));
 const runtime = buildInfo.runtimeEntry;
 const fail = message => { throw new Error(`[NexoWatt EOS post-build guard] ${message}`); };
 const read = file => fs.readFileSync(file, 'utf8');
+
+applyBrandingAssets();
 
 // Normalize and verify every generated bootstrap before inspecting runtime
 // invariants. This prevents a malformed manual/source patch such as
@@ -105,10 +108,16 @@ if (accountManagement.includes('new MutationObserver')) fail('account-management
 
 const eosAssistPath = path.join(adminWww, 'js', 'eos-assistant.js');
 const eosAssist = read(eosAssistPath);
-for (const marker of ['eos-assist-root', 'EOS Assist', 'EOS Hilfe']) {
-    if (!eosAssist.includes(marker)) fail(`custom EOS Assist missing marker ${marker}`);
+if (eosAssist !== read(path.join(root, 'src-admin/public/js/eos-assistant.js'))) {
+    fail('stable assistant source/runtime drift');
 }
-if (eosAssist.includes('disabled-market-hotfix')) fail('custom EOS Assist is disabled');
+// The stable profile intentionally disables both assistant entry points. Use
+// the existing config/browser/backend contract, not the obsolete active UI.
+const assistantCheck = spawnSync(process.execPath, [path.join(root, 'tools', 'nexowatt-assistant-separation-selftest.cjs')], {
+    cwd: root,
+    encoding: 'utf8',
+});
+if (assistantCheck.status !== 0) fail(`stable assistant separation failed: ${(assistantCheck.stderr || assistantCheck.stdout || '').trim()}`);
 
 const importCheck = spawnSync(process.execPath, [path.join(root, 'tools', 'nexowatt-import-integrity-selftest.cjs')], {
     cwd: root,

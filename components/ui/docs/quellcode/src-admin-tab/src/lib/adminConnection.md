@@ -65,10 +65,6 @@ Parameter sind die Namen aus der Signatur, keine geratenen Datenverträge. Die A
 | [`readRuntimeAuthStatus`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L616) | instance, conn | Date.now, buildRuntimeBaseUrl, encodeURIComponent, fetchJsonWithTimeout, getInstance, getRuntimePorts |
 | [`loginRuntimeAuth`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L634) | instance, user, password, conn | Date.now, Number, String, buildRuntimeBaseUrl, encodeURIComponent, getInstance, getRuntimePorts, postJsonWithTimeout |
 | [`logoutRuntimeAuth`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L654) | instance, conn | Date.now, buildRuntimeBaseUrl, encodeURIComponent, getInstance, getRuntimePorts, postJsonWithTimeout |
-| [`readRuntimeLicenseInfo`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L680) | instance, conn | getInstance, readAdapterPort, tryPort, withTimeout |
-| [`tryPort`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L696) | port | Date.now, Number, buildRuntimeBaseUrl, encodeURIComponent, fetchJsonWithTimeout, tried.add, tried.has |
-| [`saveRuntimeLicenseKey`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L734) | instance, licenseKey, conn | Date.now, String, buildRuntimeBaseUrl, encodeURIComponent, getInstance, ports.filter, ports.push, postJsonWithTimeout, readAdapterPort |
-| [`readLicenseStatus`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L768) | instance, conn | Number, Promise.all, String, getAdminConnection, getInstance, getState |
-| [`openExternal`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L827) | url | – |
-| [`notificationMailRequest`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L839) | payload | Number, buildRuntimeBaseUrl, fetchJsonWithTimeout, getRuntimePorts, postJsonWithTimeout |
-| [`meshCoordinatorRequest`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L857) | suffix, payload | Number, buildRuntimeBaseUrl, fetchJsonWithTimeout, getRuntimePorts, postJsonWithTimeout |
+| [`openExternal`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L680) | url | – |
+| [`notificationMailRequest`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L692) | payload | Number, buildRuntimeBaseUrl, fetchJsonWithTimeout, getRuntimePorts, postJsonWithTimeout |
+| [`meshCoordinatorRequest`](../../../../../src-admin-tab/src/lib/adminConnection.ts#L710) | suffix, payload | Number, buildRuntimeBaseUrl, fetchJsonWithTimeout, getRuntimePorts, postJsonWithTimeout |

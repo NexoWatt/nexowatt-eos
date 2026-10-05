@@ -83,7 +83,7 @@ function registerHandlers(client, ctx) {
   handle('Authorize', ({ params }) => {
     const idTag = params && params.idTag;
     if (idTag) defer('Authorize', () => ctx.states.setRfid(id, idTag, undefined));
-    return { idTagInfo: { status: 'Accepted' } };
+    return { idTagInfo: { status: ctx.runtime?.isStationAuthorized?.(id) === true ? 'Accepted' : 'Blocked' } };
   });
 
   handle('Heartbeat', () => {
@@ -123,6 +123,9 @@ function registerHandlers(client, ctx) {
 
   handle('StartTransaction', ({ params }) => {
     const p = params || {};
+    if (ctx.runtime?.isStationAuthorized?.(id, { connectorId: p.connectorId }) !== true) {
+      return { transactionId: 0, idTagInfo: { status: 'Blocked' } };
+    }
     if (!(client._transactions instanceof Map)) client._transactions = new Map();
     let txId;
     do {

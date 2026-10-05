@@ -10,6 +10,8 @@ Alle technischen Markdown-Dateien des Adapters liegen bewusst in diesem Ordner. 
 
 ## Standard und Freigabe
 
+- [Zentrale EOS-Lizenz, Geräteinventar und Betriebsprüfung](EOS_CENTRAL_LICENSE_2026-10-05.md)
+
 - [Implementierungsprüfung und TESVOLT-Datenempfang 0.5.169](IMPLEMENTATION_AUDIT_0.5.169.md)
 
 - [Alias Contract v1](ALIAS_CONTRACT_V1_0.5.144.md)

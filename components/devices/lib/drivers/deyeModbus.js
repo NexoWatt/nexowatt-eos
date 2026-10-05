@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 const { ModbusDriver } = require('./modbus');
 const { getDeyeProfile, registersForProfile, decode, readGroups } = require('../deyeProtocol');
 const error = (code, text) => Object.assign(new Error(text), { code });
@@ -117,7 +119,12 @@ class DeyeModbusDriver extends ModbusDriver {
     out['diagnostics.note'] = notes.join(' ');
     return out;
   }
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
     const d = this.byId.get(String(dp?.id || ''));
     // Match only our immutable allowlist by ID. Never trust edited datapoint
     // source/write addresses, generic unlock hints or dynamic-control aliases.

@@ -3016,7 +3016,7 @@ class App extends Router<AppProps, AppState> {
                                                     : undefined
                                             }
                                             alt="NexoWatt EOS"
-                                            src="img/no-image.svg"
+                                            src="img/eos/eos-logo.svg"
                                         />
                                     )}
                                 </a>
@@ -3325,7 +3325,7 @@ class App extends Router<AppProps, AppState> {
                         <Connecting />
                     ) : null}
                     {this.renderShowGuiSettings()}
-                    {/* NexoWatt EOS: upstream ioBroker assistant / external AI binding disabled. Custom EOS Assist remains active. */}
+                    {/* NexoWatt EOS stable profile: upstream assistant and custom EOS Assist are disabled. */}
                 </ThemeProvider>
             </StyledEngineProvider>
         );

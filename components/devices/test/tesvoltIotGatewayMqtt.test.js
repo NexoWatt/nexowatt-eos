@@ -77,7 +77,7 @@ function createHarness() {
     },
   };
   const adapter = {
-    log: {
+    _licenseGuard: { assertAllowed() {} }, log: {
       debug(message) { logs.push({ level: 'debug', message }); },
       info(message) { logs.push({ level: 'info', message }); },
       warn(message) { logs.push({ level: 'warn', message }); },
@@ -134,7 +134,7 @@ function createRuntimeHarness(template) {
   const states = new Map();
   const adapter = {
     namespace: 'nexowatt-devices.0',
-    log: { debug() {}, info() {}, warn() {}, error() {} },
+    _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} },
     async setStateAsync(id, state) { states.set(id, { ...state }); },
     async getStateAsync() { return null; },
   };

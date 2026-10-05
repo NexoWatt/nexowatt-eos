@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: CLI requires explicit new trust, absolute paths and supervised invocation
+ok 1 - CLI requires explicit new trust, absolute paths and supervised invocation
+  ---
+  duration_ms: 7.64808
+  type: 'test'
+  ...
+# Subtest: only exact healthy R8 baseline state and exact R8 completion are accepted
+ok 2 - only exact healthy R8 baseline state and exact R8 completion are accepted
+  ---
+  duration_ms: 20.869962
+  type: 'test'
+  ...
+# Subtest: transition allows source/version changes but refuses sequence, system/schema and admission changes
+ok 3 - transition allows source/version changes but refuses sequence, system/schema and admission changes
+  ---
+  duration_ms: 1.280008
+  type: 'test'
+  ...
+# Subtest: successful R9 installs state before trial start and preserves exact R8 completion/configuration
+ok 4 - successful R9 installs state before trial start and preserves exact R8 completion/configuration
+  ---
+  duration_ms: 8.941844
+  type: 'test'
+  ...
+# Subtest: baseline readiness failure never stages, locks or stops an unhealthy controller
+ok 5 - baseline readiness failure never stages, locks or stops an unhealthy controller
+  ---
+  duration_ms: 2.89643
+  type: 'test'
+  ...
+# Subtest: trust, signature, owner, linked state and installed-unit drift fail before mutation
+ok 6 - trust, signature, owner, linked state and installed-unit drift fail before mutation
+  ---
+  duration_ms: 13.857986
+  type: 'test'
+  ...
+# Subtest: pre-existing foreign coordinator lock and guard survive unmodified
+ok 7 - pre-existing foreign coordinator lock and guard survive unmodified
+  ---
+  duration_ms: 7.149463
+  type: 'test'
+  ...
+# Subtest: staging/native/report failure before stop leaves old controller running and removes only own gates
+ok 8 - staging/native/report failure before stop leaves old controller running and removes only own gates
+  ---
+  duration_ms: 13.078247
+  type: 'test'
+  ...
+# Subtest: trial failure restarts only authenticated healthy R8 and unlocks after readiness
+ok 9 - trial failure restarts only authenticated healthy R8 and unlocks after readiness
+  ---
+  duration_ms: 13.999248
+  type: 'test'
+  ...
+# Subtest: fallback readiness failure leaves exact R8 stopped and locked
+ok 10 - fallback readiness failure leaves exact R8 stopped and locked
+  ---
+  duration_ms: 16.219785
+  type: 'test'
+  ...
+# Subtest: foreign state, current, completion and coordinator bytes are never overwritten
+ok 11 - foreign state, current, completion and coordinator bytes are never overwritten
+  ---
+  duration_ms: 29.967896
+  type: 'test'
+  ...
+# Subtest: failed controller stop never claims restored state or unlocks
+ok 12 - failed controller stop never claims restored state or unlocks
+  ---
+  duration_ms: 5.234834
+  type: 'test'
+  ...
+# Subtest: state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+ok 13 - state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+  ---
+  duration_ms: 50.379601
+  type: 'test'
+  ...
+# Subtest: failure to record durable rollback leaves old release stopped and locked
+ok 14 - failure to record durable rollback leaves old release stopped and locked
+  ---
+  duration_ms: 10.353525
+  type: 'test'
+  ...
+# Subtest: ExecStopPost only quiesces same invocation seq12; malformed protected lock requires matching journal
+ok 15 - ExecStopPost only quiesces same invocation seq12; malformed protected lock requires matching journal
+  ---
+  duration_ms: 0.525918
+  type: 'test'
+  ...
+# Subtest: failure serializer exposes only fixed codes, stages and reasons
+ok 16 - failure serializer exposes only fixed codes, stages and reasons
+  ---
+  duration_ms: 0.868942
+  type: 'test'
+  ...
+# Subtest: real candidate signature and payload tampering are refused before any service effect
+ok 17 - real candidate signature and payload tampering are refused before any service effect
+  ---
+  duration_ms: 15.523831
+  type: 'test'
+  ...
+# Subtest: second guard durability failure reconstructs activation gate first and stops our trial
+ok 18 - second guard durability failure reconstructs activation gate first and stops our trial
+  ---
+  duration_ms: 6.477746
+  type: 'test'
+  ...
+# Subtest: protected configuration drift before stop aborts without overwriting or stopping healthy R8
+ok 19 - protected configuration drift before stop aborts without overwriting or stopping healthy R8
+  ---
+  duration_ms: 3.60341
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 350.919635

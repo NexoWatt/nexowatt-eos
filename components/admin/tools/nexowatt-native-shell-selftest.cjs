@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const assetCache = require('./nexowatt-browser-asset-version.cjs');
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
@@ -19,9 +20,9 @@ const bootstrap = read(`adminWww/assets/bootstrap-COulQZax-${runtime}.js`);
 
 for (const marker of [
   'class="eos-native-shell"',
-  `nexowatt-native-shell.css?v=${shellTag}`,
-  `nexowatt-native-shell.js?v=${shellTag}`,
-  `eos-native-security.js?v=${shellTag}`,
+  `nexowatt-native-shell.css?eos=${assetCache}`,
+  `nexowatt-native-shell.js?eos=${assetCache}`,
+  `eos-native-security.js?eos=${assetCache}`,
 ]) if (!index.includes(marker)) fail(`index missing ${marker}`);
 
 for (const legacy of ['eos-branding.js', 'eos-security-ui.js', 'eos-console-quiet.js', 'eos-objects-state-tools.js']) {

@@ -41,7 +41,8 @@ while (queue.length) {
         while ((match = pattern.exec(text))) {
             const specifier = match[1];
             if (!specifier.startsWith('.')) continue;
-            let target = path.resolve(path.dirname(file), specifier);
+            // Cache queries belong to browser module URLs, not filenames.
+            let target = path.resolve(path.dirname(file), specifier.split(/[?#]/, 1)[0]);
             if (!path.extname(target)) target += '.js';
             if (!fs.existsSync(target)) missing.push(`${path.relative(root, file)} -> ${specifier}`);
             else if (target.endsWith('.js')) queue.push(target);

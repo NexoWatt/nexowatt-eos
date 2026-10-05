@@ -20,7 +20,7 @@ function createRuntime(templateId, deviceId = 'evcs1') {
   const writes = [];
   const adapter = {
     namespace: 'nexowatt-devices.0',
-    log: { debug() {}, info() {}, warn() {}, error() {} },
+    _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} },
     async setStateAsync(id, state) {
       writes.push({ id: String(id), val: state && state.val, ack: state && state.ack });
     },

@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 /*
   CAN bus driver (SocketCAN via can-utils)
 
@@ -401,7 +403,12 @@ class CanbusDriver {
     return {};
   }
 
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
     const src = dp?.source || {};
     if (src.kind !== 'canbus') throw new Error('Datapoint has no CANbus source');
 

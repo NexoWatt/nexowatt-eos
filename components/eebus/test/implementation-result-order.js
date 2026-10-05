@@ -9,6 +9,7 @@ const { EebusRuntime } = require('../build/lib/eebusRuntime');
 class FakeAdapter {
     constructor() {
         this.namespace = 'eebus.0';
+        this.isEosLicenseAllowed = () => true;
         this.log = { debug() {}, warn() {}, info() {}, error() {} };
         this.states = new Map();
     }

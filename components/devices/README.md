@@ -1,6 +1,7 @@
 # nexowatt-devices (ioBroker Adapter)
 
-**nexowatt-devices** ist ein eigenständiger Multi‑Protokoll‑Geräteadapter für ioBroker.
+**nexowatt-devices** ist der Multi‑Protokoll‑Geräteadapter für NexoWatt EOS.
+Der Betrieb erfordert ein geprüftes EOS-System und die zentrale Home-/Pro-Lizenz in `eos-admin.0`; separate Adapter-Lizenzschlüssel gibt es nicht.
 Er bietet eine **Kategorien → Hersteller → Treiber/Template**‑Konfiguration und erzeugt die
 zugehörigen Datenpunkte automatisch in ioBroker.
 
@@ -9,6 +10,7 @@ zugehörigen Datenpunkte automatisch in ioBroker.
 
 Die technische Dokumentation ist gebündelt im Ordner [`docs/`](docs/README.md):
 
+- [Zentrale EOS-Lizenz: Betrieb, Grenzen und Prüfbelege](docs/EOS_CENTRAL_LICENSE_2026-10-05.md)
 - [Dokumentationsübersicht](docs/README.md)
 - [VARTA Extended 14 – zusätzliche Register, Grenzen, Pextra und Freigaben](docs/VARTA_MODBUS_EXTENDED14_0.5.167.md)
 - [DEYE-Teststart und Veröffentlichung – Korrektur 0.5.166](docs/DEYE_TEST_STARTUP_0.5.166.md)

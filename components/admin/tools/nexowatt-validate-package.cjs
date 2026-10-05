@@ -204,7 +204,7 @@ const shellTag = String(buildInfo.shellCacheTag || shellCache);
 // Reviewed prebuilt hotfix namespace. The inherited v84/library and stable
 // overlay identities stay unchanged; all affected product resources and the
 // application import closure use the newer, explicitly required cache key.
-const assetCache = '20261004';
+const assetCache = require('./nexowatt-browser-asset-version.cjs');
 if (!runtime || !Number.isFinite(runtimeNumber)) fail(`invalid runtimeEntry ${runtime}`);
 if (!Number.isFinite(shellCache)) fail(`invalid shellCacheVersion ${buildInfo.shellCacheVersion}`);
 for (const html of [index, read('src-admin/index.html')]) {

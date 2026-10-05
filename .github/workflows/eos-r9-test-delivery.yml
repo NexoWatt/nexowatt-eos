@@ -1,0 +1,342 @@
+name: EOS R9 signed healthy R8 update and public command
+
+# A marker-only push requests delivery. Signing waits for the exact Security run.
+# Ordinary source/document pushes and generated delivery commits never request it.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/eos-r9-build-request.json]
+  workflow_run:
+    workflows: [EOS security regression]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: eos-r9-delivery-main
+  cancel-in-progress: false
+
+jobs:
+  request:
+    if: github.repository == 'NexoWatt/nexowatt-eos' && (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == 'NexoWatt/nexowatt-eos' && github.event.workflow_run.head_branch == 'main'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      eligible: ${{ steps.gate.outputs.eligible }}
+      source_commit: ${{ steps.gate.outputs.source_commit }}
+      security_run_id: ${{ steps.gate.outputs.security_run_id }}
+      security_run_attempt: ${{ steps.gate.outputs.security_run_attempt }}
+    env:
+      EOS_SOURCE_COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
+    steps:
+      - name: Checkout exact native-tested request source and historical lock evidence
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+          fetch-depth: 0
+          submodules: false
+      - name: Validate marker-only source-parent binding and exact successful Security event
+        id: gate
+        run: node tools/bootstrap/check-r9-delivery-request.cjs
+
+  build:
+    needs: request
+    if: needs.request.outputs.eligible == 'true' && github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    outputs:
+      ready: ${{ steps.fresh.outputs.ready }}
+      existing_commit: ${{ steps.fresh.outputs.existing_commit }}
+      artifact_id: ${{ steps.archive.outputs.artifact-id }}
+      source_commit: ${{ needs.request.outputs.source_commit }}
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      EOS_SOURCE_COMMIT: ${{ needs.request.outputs.source_commit }}
+    steps:
+      - name: Checkout the exact authorized main commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.request.outputs.source_commit }}
+          persist-credentials: false
+          fetch-depth: 0
+          submodules: false
+      - name: Preserve signed historical deliveries
+        id: fresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -e delivery/test-pi-0.2.0-test.3-r9 || test -L delivery/test-pi-0.2.0-test.3-r9; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'R9 already exists; new bytes require a new revision.' >> "$GITHUB_STEP_SUMMARY"
+            # A prior run may have published the immutable archive but failed
+            # before publishing its command. The entry job authenticates it again.
+            test -d delivery/test-pi-0.2.0-test.3-r9 && test ! -L delivery/test-pi-0.2.0-test.3-r9
+            printf 'existing_commit=%s\n' "$EOS_SOURCE_COMMIT" >> "$GITHUB_OUTPUT"
+          else
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select the pinned build runtime
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Select one bounded digest-bearing artifact from the exact Security run
+        id: native-artifact
+        if: steps.fresh.outputs.ready == 'true'
+        env:
+          EOS_SECURITY_RUN_ID: ${{ needs.request.outputs.security_run_id }}
+          EOS_ARTIFACT_TOKEN: ${{ github.token }}
+        run: node tools/bootstrap/find-r9-native-artifact.cjs
+      - name: Download only the exact successful Security run's native evidence
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ steps.native-artifact.outputs.artifact_id }}
+          run-id: ${{ needs.request.outputs.security_run_id }}
+          github-token: ${{ github.token }}
+          repository: NexoWatt/nexowatt-eos
+          path: ${{ runner.temp }}/eos-r9-native
+          merge-multiple: true
+          digest-mismatch: error
+      - name: Install locked UI compiler for exact TypeScript parity without lifecycle scripts
+        if: steps.fresh.outputs.ready == 'true'
+        run: npm ci --ignore-scripts --no-audit --no-fund --prefix components/ui
+      - name: Check update, evidence and narrow publication contracts
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/bootstrap/public-r9-update-entry.test.cjs tests/bootstrap/public-r9-update-publication.test.cjs tests/bootstrap/r9-delivery-workflow.test.cjs tests/bootstrap/r9-native-evidence.test.cjs
+          python3 -I -B tests/bootstrap/r9-candidate-publication.test.py
+          node --test reports/integration/installable-test3-r9-20261005/build-revision.test.cjs tests/integration/r9-derivative-sbom.test.cjs
+          sudo -- "$(command -v node)" --test tests/system/update-test-to-r9.test.cjs
+      - name: Build, sign and reread the derivative archive
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node reports/integration/installable-test3-r9-20261005/build-revision.cjs --native-evidence "$RUNNER_TEMP/eos-r9-native"
+      - name: Bind the successful source run and retain only sanitized native evidence
+        if: steps.fresh.outputs.ready == 'true'
+        env:
+          EOS_SECURITY_RUN_ID: ${{ needs.request.outputs.security_run_id }}
+          EOS_SECURITY_RUN_ATTEMPT: ${{ needs.request.outputs.security_run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B - <<'PY'
+          import json, os, pathlib, shutil, stat
+          source = pathlib.Path(os.environ['RUNNER_TEMP']) / 'eos-r9-native'
+          names = {'r9-native.tap', 'r9-native-evidence.json', 'r9-native-prepared.json'}
+          assert source.is_dir() and not source.is_symlink() and {p.name for p in source.iterdir()} == names
+          destination = pathlib.Path('reports/integration/installable-test3-r9-20261005')
+          for name in sorted(names):
+              file = source / name
+              info = file.lstat()
+              assert stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and info.st_size <= 4 * 1024 * 1024
+              with file.open('rb') as incoming, (destination / name).open('xb') as outgoing:
+                  shutil.copyfileobj(incoming, outgoing)
+          record = dict(schemaVersion=1, repository='NexoWatt/nexowatt-eos', workflowPath='.github/workflows/security-review.yml',
+              runId=int(os.environ['EOS_SECURITY_RUN_ID']), runAttempt=int(os.environ['EOS_SECURITY_RUN_ATTEMPT']),
+              headSha=os.environ['EOS_SOURCE_COMMIT'], event='push', conclusion='success')
+          with (destination / 'native-workflow.json').open('x') as output:
+              json.dump(record, output, indent=2); output.write('\n')
+          PY
+      - name: Retain exact generated candidate and evidence
+        id: archive
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-r9-candidate-${{ needs.request.outputs.source_commit }}
+          path: |
+            delivery/test-pi-0.2.0-test.3-r9/
+            reports/integration/installable-test3-r9-20261005/
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+      - name: Record acceptance scope
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          Linux x64 derivative assembly from the exact authenticated R8 ARM64 app with six source-bound own-package overlays.
+          Signing requires the exact successful Security run and its unsigned native app inventory hash. Third-party runtime bytes remain immutable.
+          Changed bytes receive a new file table, catalog digests, derivative SBOM and ephemeral TEST signature. No fresh npm dependency rebuild is claimed.
+          Archive rereading is required. No Pi installation, real systemd update, password login or plant acceptance is established here.
+          Publication retains immutable signed files and evidence; it does not activate devices or constitute CRA conformity.
+          SCOPE
+
+  publish:
+    needs: [request, build]
+    if: needs.build.outputs.ready == 'true' && github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    outputs:
+      commit: ${{ steps.publish.outputs.commit }}
+    env:
+      EOS_SOURCE_COMMIT: ${{ needs.build.outputs.source_commit }}
+    steps:
+      - name: Checkout the same reviewed source without stored credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.build.outputs.source_commit }}
+          persist-credentials: false
+          fetch-depth: 0
+          submodules: false
+      - name: Download only this build's immutable artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ needs.build.outputs.artifact_id }}
+          path: ${{ runner.temp }}/eos-r9-candidate
+          merge-multiple: true
+          digest-mismatch: error
+      - name: Select the same runtime for independent candidate verification
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Install the same locked UI compiler for independent reconstruction
+        run: npm ci --ignore-scripts --no-audit --no-fund --prefix components/ui
+      - name: Validate and copy only new generated files
+        env:
+          EOS_CANDIDATE: ${{ runner.temp }}/eos-r9-candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -I -B tools/bootstrap/publish-r9-candidate.py "$EOS_CANDIDATE" "$EOS_SOURCE_COMMIT"
+          git add -- delivery/test-pi-0.2.0-test.3-r9 reports/integration/installable-test3-r9-20261005
+          git diff --cached --check
+      - name: Publish only to unchanged main by normal fast-forward
+        id: publish
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-git-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$EOS_SOURCE_COMMIT" || { echo 'main advanced during build; concurrent work is preserved.' >&2; exit 1; }
+          test -n "$(git diff --cached --name-only)"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: publish immutable EOS test.3 revision 9 update candidate'
+          git push origin HEAD:refs/heads/main
+          printf 'commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          printf 'Published test delivery commit: `%s`\n' "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+
+  public-command:
+    needs: [build, publish]
+    if: always() && needs.build.result == 'success' && (needs.publish.result == 'success' || needs.publish.result == 'skipped') && (needs.publish.outputs.commit != '' || needs.build.outputs.existing_commit != '') && github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      EOS_ASSET_COMMIT: ${{ needs.publish.outputs.commit || needs.build.outputs.existing_commit }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the exact authorized main commit without stored credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.publish.outputs.commit || needs.build.outputs.existing_commit }}
+          persist-credentials: false
+          fetch-depth: 0
+          submodules: false
+      - name: Require published R9 and preserve any existing entry
+        id: fresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test ! -d delivery/test-pi-0.2.0-test.3-r9 || test -L delivery/test-pi-0.2.0-test.3-r9; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'R9 archive is not yet published; no update entry created.' >> "$GITHUB_STEP_SUMMARY"
+          elif test -e delivery/public-update-test3-r9 || test -L delivery/public-update-test3-r9; then
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            echo 'Update entry already exists and remains immutable.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Select the pinned build runtime
+        if: steps.fresh.outputs.ready == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - name: Verify transport and narrow publication boundaries
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test tests/bootstrap/public-r9-update-entry.test.cjs tests/bootstrap/public-r9-update-publication.test.cjs
+      - name: Build from signed archive and independently reread public assets
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EOS_ASSET_COMMIT"
+          node tools/bootstrap/build-public-r9-update-entry.cjs --asset-commit "$EOS_ASSET_COMMIT"
+          node tools/bootstrap/prepare-public-r9-update-publication.cjs --readback "$EOS_ASSET_COMMIT"
+          git add -- delivery/public-update-test3-r9/update.sh delivery/public-update-test3-r9/preparation.json delivery/public-update-test3-r9/remote-readback.json
+          git diff --cached --check
+          node tools/bootstrap/prepare-public-r9-update-publication.cjs --check-stage entry "$EOS_ASSET_COMMIT"
+      - name: Create two local immutable commits with a command pinned to the entry commit
+        if: steps.fresh.outputs.ready == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: publish pinned EOS R9 public update entry and asset readback'
+          eos_entry_commit=$(git rev-parse HEAD)
+          node tools/bootstrap/build-public-r9-update-entry.cjs --entry-commit "$eos_entry_commit"
+          node tools/bootstrap/prepare-public-r9-update-publication.cjs --command-report "$eos_entry_commit"
+          git add -- delivery/public-update-test3-r9/UPDATE_COMMAND.txt delivery/public-update-test3-r9/command-verification.json
+          git diff --cached --check
+          node tools/bootstrap/prepare-public-r9-update-publication.cjs --check-stage command "$eos_entry_commit"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'docs: publish EOS R9 update command bound to the immutable entry'
+          test "$(git rev-parse HEAD~2)" = "$EOS_ASSET_COMMIT"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+      - name: Publish both commits only to unchanged main by normal fast-forward
+        if: steps.fresh.outputs.ready == 'true'
+        env:
+          EOS_REPO_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +x
+          set -euo pipefail
+          umask 077
+          eos_askpass=$(mktemp "$RUNNER_TEMP/eos-r9-entry-askpass.XXXXXXXX")
+          trap 'rm -f "$eos_askpass"' EXIT
+          cat > "$eos_askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$EOS_REPO_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$eos_askpass"
+          export GIT_ASKPASS="$eos_askpass" GIT_TERMINAL_PROMPT=0
+          eos_remote=$(git ls-remote origin refs/heads/main | cut -f1)
+          test "$eos_remote" = "$EOS_ASSET_COMMIT" || { echo 'main advanced; concurrent work is preserved and nothing is pushed.' >&2; exit 1; }
+          test "$(git rev-parse HEAD~2)" = "$EOS_ASSET_COMMIT"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          git push origin HEAD:refs/heads/main
+          printf 'Update entry commit: `%s`\nCommand commit: `%s`\n' "$(git rev-parse HEAD~1)" "$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Public assets were reread byte-for-byte. No target update, real systemd interruption, Pi login or plant acceptance is established by this workflow.' >> "$GITHUB_STEP_SUMMARY"

@@ -5,6 +5,8 @@ const path = require('path');
 const utils = require('@iobroker/adapter-core');
 
 const { DeviceRuntime } = require('./lib/deviceRuntime');
+const { createInventoryLicenseGuard } = require('./lib/licenseInventory');
+const { assertEosPlatform } = require('./lib/eos-license-client');
 
 async function listSerialPortsForAdmin(adapter) {
   // Returns a stable list of serial port paths that can be shown in Admin UI.
@@ -241,6 +243,7 @@ class NexowattDevicesAdapter extends utils.Adapter {
     this.on('stateChange', this.onStateChange.bind(this));
     this.on('unload', this.onUnload.bind(this));
     this.on('message', this.onMessage.bind(this));
+    this.on('objectChange', this.onObjectChange.bind(this));
 
     this.templateRegistry = { templates: [], byId: {} };
     this.deviceRuntimes = [];
@@ -249,6 +252,9 @@ class NexowattDevicesAdapter extends utils.Adapter {
     this._globalConnectionValue = undefined;
     this._globalConnectionUpdate = Promise.resolve();
     this._unloading = false;
+    this._licenseGuard = null;
+    this._devicesStarting = null;
+    this._devicesInitialized = false;
   }
 
   _refreshGlobalConnection() {
@@ -267,6 +273,11 @@ class NexowattDevicesAdapter extends utils.Adapter {
   }
 
   async onReady() {
+    // Validate the installed EOS release/profile before migrations or devices.
+    try { assertEosPlatform(this.name); } catch (_) {
+      this.log.error('EOS platform validation failed; device startup denied');
+      return;
+    }
     // Automatic environment migration (no manual user steps)
     await autoFixAdminUI(this);
     await autoMigrateLegacyDevicesJson(this);
@@ -298,6 +309,18 @@ class NexowattDevicesAdapter extends utils.Adapter {
     const devicesCfg = Array.isArray(this.config.devices) ? this.config.devices : safeJsonParse(this.config.devicesJson || '[]', []);
     const devices = Array.isArray(devicesCfg) ? devicesCfg : [];
 
+    this._licenseGuard = createInventoryLicenseGuard(this, this.templateRegistry.byId, devices, ({ code }) => {
+      this._licenseControlEpoch = (this._licenseControlEpoch || 0) + 1;
+      for (const runtime of this.deviceRuntimes) runtime.suspendLicensedControl();
+      this._startingRuntime?.suspendLicensedControl();
+      this.log.warn(`EOS device control unavailable: ${code}`);
+      // Telemetry/physical protections stay active; never inject a generic stop.
+    });
+    await this.subscribeForeignObjectsAsync('system.adapter.nexowatt-devices.*');
+    if (!(await this._licenseGuard.start())) {
+      this.log.warn('EOS central license or device inventory denied startup; awaiting central authorization');
+    }
+
     const globalConfig = {
       pollIntervalMs: Number(this.config.pollIntervalMs || 5000),
       modbusTimeoutMs: Number(this.config.modbusTimeoutMs || 2000),
@@ -320,10 +343,39 @@ class NexowattDevicesAdapter extends utils.Adapter {
       );
     }
 
-    // create runtimes
+    this._configuredDevices = devices;
+    this._deviceGlobalConfig = globalConfig;
+    await this._ensureDevicesStarted();
+
+    // subscribe to all device states (writes)
+    this.subscribeStates('devices.*');
+
+    // Track telemetry liveness throughout operation, including loss/recovery.
+    await this._refreshGlobalConnection();
+    if (!this._unloading) {
+      this._globalConnectionTimer = setInterval(() => {
+        this._ensureDevicesStarted().then(() => this._refreshGlobalConnection()).catch(e => {
+          this.log.debug(`Global connection update failed: ${e.message || e}`);
+        });
+      }, 1000);
+    }
+  }
+
+  _ensureDevicesStarted() {
+    if (this._devicesStarting) return this._devicesStarting;
+    if (this._unloading || this._devicesInitialized || !this._licenseGuard?.isAllowed()) return Promise.resolve();
+    this._devicesStarting = this._startConfiguredDevices().finally(() => { this._devicesStarting = null; });
+    return this._devicesStarting;
+  }
+
+  async _startConfiguredDevices() {
+    const devices = this._configuredDevices;
+    const globalConfig = this._deviceGlobalConfig;
+    // Resume only missing runtime initialization, single-flight after authorization.
     for (const d of devices) {
+      if (this._unloading || !this._licenseGuard.isAllowed()) return;
       try {
-        if (!d || !d.id) continue;
+        if (!d || !d.id || this.deviceById.has(d.id)) continue;
         const tpl = this.templateRegistry.byId[d.templateId];
         if (!tpl) {
           this.log.warn(`[${d.id}] Template not found: ${d.templateId}`);
@@ -336,33 +388,30 @@ class NexowattDevicesAdapter extends utils.Adapter {
 
         const rt = new DeviceRuntime(this, d, tpl, globalConfig);
         await rt.initObjects();
+        this._licenseGuard.assertAllowed();
+        this._startingRuntime = rt;
         await rt.start();
+        this._startingRuntime = null;
+        if (this._unloading) { await rt.stop(); return; }
 
         this.deviceRuntimes.push(rt);
         this.deviceById.set(d.id, rt);
       } catch (e) {
+        if (this._startingRuntime) await this._startingRuntime.stop().catch(() => {});
+        this._startingRuntime = null;
+        if (!this._licenseGuard.isAllowed()) return;
         this.log.warn(`Failed to start device: ${e.message || e}`);
       }
     }
 
-    // subscribe to all device states (writes)
-    this.subscribeStates('devices.*');
-
-    // Track telemetry liveness throughout operation, including loss/recovery.
-    await this._refreshGlobalConnection();
-    if (!this._unloading) {
-      this._globalConnectionTimer = setInterval(() => {
-        this._refreshGlobalConnection().catch(e => {
-          this.log.debug(`Global connection update failed: ${e.message || e}`);
-        });
-      }, 1000);
-    }
+    this._devicesInitialized = true;
   }
 
   async onStateChange(id, state) {
     // Ignore acked states here. Otherwise every internal setState() from the poll loop
     // re-enters the dispatcher and creates avoidable event churn / RAM pressure.
     if (!id || !state || state.ack) return;
+    if (!this._licenseGuard?.isAllowed()) return;
 
     // dispatch to runtime by prefix match
     for (const rt of this.deviceRuntimes) {
@@ -376,6 +425,13 @@ class NexowattDevicesAdapter extends utils.Adapter {
         }
         return;
       }
+    }
+  }
+
+  onObjectChange(id) {
+    if (/^system\.adapter\.nexowatt-devices\.(?:0|[1-9][0-9]*)$/.test(id || '') && this._licenseGuard) {
+      this._licenseGuard.invalidate();
+      void this._licenseGuard.refresh();
     }
   }
 
@@ -526,6 +582,7 @@ class NexowattDevicesAdapter extends utils.Adapter {
       this._globalConnectionTimer = null;
     }
     try {
+      if (this._licenseGuard) await this._licenseGuard.stop();
       for (const rt of this.deviceRuntimes) {
         try { await rt.stop(); } catch (e) { /* ignore */ }
       }

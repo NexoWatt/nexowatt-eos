@@ -33,7 +33,7 @@
     "wallbox"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22.0.0 <23 || >=24.0.0 <25"
   },
   "files": [
     "admin",
@@ -42,7 +42,8 @@
     "LICENSE",
     "README.md",
     "CHANGELOG.md",
-    "docs"
+    "docs",
+    "packages/eos-license-client"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -52,8 +53,8 @@
     "watch": "tsc -p tsconfig.json --watch",
     "lint": "eslint .",
     "check": "npm run build && npm run lint",
-    "test": "npm run build && npm run test:config && npm run test:cls-control && npm run test:nexowatt-bridge && npm run test:implementation-result-order && npm run test:package && npm run test:security",
-    "test:package": "node test/package.js",
+    "test": "npm run build && npm run test:config && npm run test:cls-control && npm run test:nexowatt-bridge && npm run test:implementation-result-order && npm run test:package && npm run test:security && npm run test:license",
+    "test:package": "mocha test/package.js --exit",
     "test:integration": "mocha --exit test/integration/**/*.test.js",
     "release": "release-script",
     "test:config": "node test/config.js",
@@ -61,7 +62,8 @@
     "test:nexowatt-bridge": "node test/nexowatt-bridge.js",
     "test:cls-control": "node test/cls-control-parser.js",
     "test:implementation-result-order": "node test/implementation-result-order.js",
-    "test:security": "node --test test/ship-security.test.cjs test/ship-resource.integration.test.cjs"
+    "test:security": "node --test test/ship-security.test.cjs test/ship-resource.integration.test.cjs",
+    "test:license": "node --test test/license.test.cjs"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.3.2",
@@ -82,7 +84,8 @@
     "@types/ws": "^8.18.1",
     "eslint": "^9.25.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "mocha": "11.8.0"
   },
   "contributors": []
 }

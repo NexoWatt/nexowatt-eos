@@ -6,6 +6,18 @@ This adapter exposes **NexoWatt EOS** as a local EEBUS **Energy Management Syste
 
 > Status: field-test core. Version `0.3.0` adds the direct IF_CLS_CTRL/LPC bridge to NexoWatt EOS without manual CLS datapoint mapping. LPC commands are forwarded through a versioned in-memory adapter API, trigger an immediate full EOS control cycle and receive a positive correlated SPINE result only after that cycle succeeds, followed by the effective controller readback. SHIP/SPINE interoperability still requires validation with real CLS/control boxes before production or certification-level use.
 
+## EOS license
+
+This adapter operates only inside the admitted NexoWatt EOS release with a current
+Home or Pro `energy` entitlement from `eos-admin.0`. Activation and renewal take
+place centrally in EOS Admin; this adapter has no license key, token or license
+configuration. A waiting adapter starts automatically after central activation.
+On license loss, existing SHIP sessions, telemetry and result acknowledgements
+remain; new writes, pairing changes and CLS forwarding are denied. Existing
+equipment limits are held, and old automatic CLS transitions are discarded. A
+fresh licensed command is needed after reactivation. See the
+[change and test record](docs/LICENSING_20261005_DE.md).
+
 ## German operator guide
 
 A German step-by-step setup, pairing, read/write and troubleshooting guide is available in [docs/ANWENDUNG_DE.md](docs/ANWENDUNG_DE.md).

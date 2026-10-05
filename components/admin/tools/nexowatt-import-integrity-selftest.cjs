@@ -20,7 +20,8 @@ const importPatterns = [
 ];
 
 function resolveReference(file, specifier) {
-  let target = path.resolve(path.dirname(file), specifier);
+  // A browser query/fragment changes module identity, not its on-disk path.
+  let target = path.resolve(path.dirname(file), specifier.split(/[?#]/, 1)[0]);
   if (!path.extname(target)) target += '.js';
   return target;
 }

@@ -76,5 +76,32 @@ class EmbeddedTests(unittest.TestCase):
     def test_unknown_embedded_dependencies_are_not_silently_omitted(self):
         self.write(self.embedded / 'package.json', {'name': 'crypto-js', 'version': '4.2.0', 'dependencies': {'unknown': '*'}})
         with self.assertRaisesRegex(module.base.EvidenceError, 'EMBEDDED_DEPENDENCIES_UNINVENTORIED'): module.bind(self.app, self.npm)
+    def test_all_six_client_paths_have_distinct_refs_and_their_actual_owner(self):
+        lock = json.loads((self.app / 'package-lock.json').read_text())
+        bom = json.loads(self.npm.read_text())
+        client_paths = [relative for relative, name in module.EMBEDDED.items() if name == '@nexowatt/eos-license-client']
+        self.assertEqual(len(client_paths), 6)
+        for relative in client_paths:
+            owner = relative.split('/')[1]
+            directory = self.app / 'node_modules' / owner
+            if not directory.exists():
+                directory.mkdir(parents=True)
+                self.write(directory / 'package.json', {'name': owner, 'version': '1.0.0'})
+                lock['packages']['node_modules/' + owner] = {'version': '1.0.0'}
+                bom['components'].append({'type': 'application', 'name': owner, 'version': '1.0.0', 'bom-ref': owner})
+                bom['dependencies'][0]['dependsOn'].append(owner)
+                bom['dependencies'].append({'ref': owner, 'dependsOn': []})
+            client = self.app / relative; client.mkdir(parents=True)
+            self.write(client / 'package.json', {'name': '@nexowatt/eos-license-client', 'version': '1.0.2'})
+            (client / 'index.js').write_text('identical local source')
+        self.write(self.app / 'package-lock.json', lock); self.write(self.npm, bom)
+        bound, coverage = module.bind(self.app, self.npm)
+        self.assertEqual(coverage['embeddedPackageCount'], 7)
+        for relative in client_paths:
+            owner = relative.split('/')[1]
+            parent = next(row for row in bound['components'] if row['name'] == owner)
+            ref = 'eos-embedded:' + relative
+            self.assertIn(ref, next(row for row in bound['dependencies'] if row['ref'] == parent['bom-ref'])['dependsOn'])
+            self.assertEqual(next(row for row in bound['dependencies'] if row['ref'] == ref)['dependsOn'], [])
 
 if __name__ == '__main__': unittest.main()

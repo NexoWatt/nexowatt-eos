@@ -6,6 +6,7 @@ const fs = require('node:fs/promises');
 const { constants } = require('node:fs');
 const path = require('node:path');
 const { performance } = require('node:perf_hooks');
+const { assertEosPlatform } = require('../../packages/eos-license-client/eos-platform');
 const { TextDecoder } = require('node:util');
 const { EncryptedLicenseStore, verifyLicense, validatePublicKeys, normalizeUuid } = require('./eosLicenseCore');
 
@@ -13,7 +14,7 @@ const LEASE_MS = 15000;
 const CLOCK_TOLERANCE_MS = 2000;
 const DB_TIMEOUT_MS = 2000;
 const REQUEST_FEATURES = new Set(['energy', 'wallet', 'smartHome', 'microgridSlave', 'microgridMaster', 'multisite', 'billing']);
-const safeCode = error => /^(?:LICENSE|STORAGE|TRUST|SERVICE)_[A-Z_]+$/.test(error?.code || '') ? error.code : 'SERVICE_UNAVAILABLE';
+const safeCode = error => /^(?:LICENSE|STORAGE|TRUST|SERVICE|EOS_PLATFORM)_[A-Z_]+$/.test(error?.code || '') ? error.code : 'SERVICE_UNAVAILABLE';
 const failure = code => Object.assign(new Error(code), { code });
 
 async function readTrustFile(filename) {
@@ -131,6 +132,7 @@ class EosLicenseService {
     async start() {
         return this.run(async () => {
             try {
+                assertEosPlatform('eos-admin');
                 const object = await this.readObject('system.meta.uuid');
                 this.uuid = normalizeUuid(object?.native?.uuid);
                 const directory = this.options.directory || this.options.resolveDirectory?.();
@@ -185,6 +187,7 @@ class EosLicenseService {
     async evaluate() {
         try {
             this.ensureRunning();
+            assertEosPlatform('eos-admin');
             if (!this.keys || !this.store || !this.uuid) throw failure(this.code || 'SERVICE_UNAVAILABLE');
             this.clock();
             const object = await this.readObject('system.meta.uuid');
@@ -227,6 +230,7 @@ class EosLicenseService {
 
     activate(token) {
         return this.run(async () => {
+            assertEosPlatform('eos-admin');
             if (!this.keys || !this.store || !this.uuid) throw failure(this.code);
             this.clock();
             const object = await this.readObject('system.meta.uuid');

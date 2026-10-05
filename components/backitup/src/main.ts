@@ -6,6 +6,7 @@ import { existsSync, chmodSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, 
 import { join, resolve as resolvePath } from 'node:path';
 import { getAbsoluteDefaultDataDir, Adapter, type AdapterOptions } from '@iobroker/adapter-core'; // Get common adapter utils
 import * as schedule from 'node-schedule';
+import { createLicenseGuard } from '../packages/eos-license-client';
 
 import * as tools from './lib/tools';
 import executeScripts from './lib/execute';
@@ -82,6 +83,12 @@ function serverPort(server: HttpModule.Server): number {
 type DetectedFile = BackItUpStorageEngineResultFile & { date?: Date | string; storage?: string };
 
 class NexoWattBackup extends Adapter {
+    private licenseGuard: ReturnType<typeof createLicenseGuard>;
+    private operationalReady = false;
+    private filesystemInitialized = false;
+    private eventPasswordsDecrypted = false;
+    private initializingLicensedWork = false;
+    private licenseMonitor: NodeJS.Timeout | undefined;
     private timerOutput: NodeJS.Timeout | undefined;
     private timerOutput2: NodeJS.Timeout | undefined;
     private timerUmount1: NodeJS.Timeout | undefined;
@@ -105,6 +112,10 @@ class NexoWattBackup extends Adapter {
 
     public constructor(options: Partial<AdapterOptions> = {}) {
         super({ ...options, name: 'nexowatt-backup' });
+        this.licenseGuard = createLicenseGuard(this, {
+            feature: 'energy',
+            onLost: () => this.stopLicensedWork(),
+        });
 
         this.on('stateChange', this.onStateChange.bind(this));
         this.on('ready', this.onReady.bind(this));
@@ -112,7 +123,30 @@ class NexoWattBackup extends Adapter {
         this.on('message', this.onMessage.bind(this));
     }
 
+    /** Stop admission of new work; an already admitted archive/restore may finish safely. */
+    private stopLicensedWork(): void {
+        this.operationalReady = false;
+        for (const job of Object.values(this.backupTimeSchedules)) job?.cancel();
+        clearTimeout(this.timerMain);
+        clearTimeout(this.slaveTimeOut);
+        clearTimeout(this.waitToSlaveBackup);
+        this.dropBoxTokenRefresher?.destroy();
+        for (const server of [this.dlServer, this.ulServer]) {
+            server?.closeAllConnections();
+            server?.close();
+        }
+        this.dlServer = undefined;
+        this.ulServer = undefined;
+    }
+
+    /** Public only for the restore dispatcher; never grants offline adapter access. */
+    public assertLicensedOperation(): void {
+        this.licenseGuard.assertAllowed();
+        if (!this.operationalReady) throw new Error('EOS_BACKUP_NOT_READY');
+    }
+
     private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
+        if (!this.operationalReady || !this.licenseGuard.isAllowed()) return;
         this.dropBoxTokenRefresher?.onStateChange(id, state);
 
         if (id === `${this.namespace}.info.dropboxTokens`) {
@@ -176,16 +210,33 @@ class NexoWattBackup extends Adapter {
         }
     }
 
-    private async onReady(): Promise<void> {
+    private async synchronizeLicensedWork(): Promise<void> {
+        if (this.initializingLicensedWork || this.operationalReady || this.taskRunning || !this.licenseGuard.isAllowed()) return;
+        this.initializingLicensedWork = true;
         try {
             await this.main();
         } catch {
-            //ignore errors
+            this.stopLicensedWork();
+            this.log.error('EOS_BACKUP_START_DENIED');
+        } finally {
+            this.initializingLicensedWork = false;
         }
+    }
+
+    private async onReady(): Promise<void> {
+        this.licenseMonitor = setInterval(() => { void this.synchronizeLicensedWork(); }, 5000);
+        this.licenseMonitor.unref();
+        if (!(await this.licenseGuard.start())) {
+            this.log.warn('EOS_LICENSE_REQUIRED: waiting for Home or Pro activation in eos-admin');
+            return;
+        }
+        await this.synchronizeLicensedWork();
     }
 
     // is called when adapter shuts down - callback has to be called under any circumstances!
     private onUnload(callback: () => void): void {
+        clearInterval(this.licenseMonitor);
+        void this.licenseGuard.stop();
         try {
             this.dropBoxTokenRefresher?.destroy();
             this.log.info('cleaned everything up...');
@@ -228,6 +279,18 @@ class NexoWattBackup extends Adapter {
 
     private async onMessage(obj: ioBroker.Message): Promise<void> {
         if (obj) {
+            if (obj.command === 'eos.license.status') {
+                if (obj.callback) this.sendTo(obj.from, obj.command, this.licenseGuard.getStatus(), obj.callback);
+                return;
+            }
+            if (obj.command !== 'serverClose') {
+                try {
+                    this.assertLicensedOperation();
+                } catch {
+                    if (obj.callback) this.sendTo(obj.from, obj.command, { error: 'EOS_LICENSE_REQUIRED' }, obj.callback);
+                    return;
+                }
+            }
             switch (obj.command) {
                 case 'list':
                     try {
@@ -746,6 +809,12 @@ class NexoWattBackup extends Adapter {
         config: BackItUpExecuteConfig,
         cb?: (error?: Error | string | null) => void,
     ): Promise<void> {
+        try {
+            this.assertLicensedOperation();
+        } catch {
+            cb?.('EOS_LICENSE_REQUIRED');
+            return;
+        }
         if (this.taskRunning) {
             setTimeout(() => void this.startBackup(config, cb), 10000);
             return;
@@ -859,6 +928,7 @@ class NexoWattBackup extends Adapter {
 
     // function to create Backup schedules (Backup time)
     private createBackupSchedule(): void {
+        this.assertLicensedOperation();
         for (const type in this.backupConfig) {
             if (!Object.prototype.hasOwnProperty.call(this.backupConfig, type)) {
                 continue;
@@ -878,6 +948,7 @@ class NexoWattBackup extends Adapter {
                 }
                 const cron = config.ownCron ? time : `10 ${time[1]} ${time[0]} */${config.everyXDays} * * `;
                 this.backupTimeSchedules[type] = schedule.scheduleJob(cron, async () => {
+                    if (!this.operationalReady || !this.licenseGuard.isAllowed()) return;
                     const sysCheck = await systemCheck.storageSizeCheck(this, 'nexowatt-backup', this.log);
 
                     if ((sysCheck && sysCheck.ready && sysCheck.ready === true) || this.config.cifsEnabled === true) {
@@ -958,7 +1029,10 @@ class NexoWattBackup extends Adapter {
             this.log.error(`Unable to read iobroker path: +${e}`);
         }
 
-        this.decryptEvents(secret);
+        if (!this.eventPasswordsDecrypted) {
+            this.decryptEvents(secret);
+            this.eventPasswordsDecrypted = true;
+        }
 
         const hostName = this.config.minimalNameSuffix ? this.config.minimalNameSuffix.replace(/[.;, ]/g, '_') : '';
         const ignoreErrors = this.config.ignoreErrors;
@@ -2007,6 +2081,7 @@ class NexoWattBackup extends Adapter {
      * @param num index into `this.config.slaveInstance`
      */
     private async startSlaveBackup(slaveInstance: string, num: number | null): Promise<void> {
+        if (!this.operationalReady || !this.licenseGuard.isAllowed()) return;
         let waitForInstance = 1000;
 
         if (num === null || num === undefined) {
@@ -2016,6 +2091,7 @@ class NexoWattBackup extends Adapter {
         try {
             const currentState = await this.getForeignStateAsync(`system.adapter.${slaveInstance}.alive`);
 
+            if (!this.operationalReady || !this.licenseGuard.isAllowed()) return;
             if (currentState && currentState.val === false) {
                 waitForInstance = 10000;
                 this.log.debug(`Try to start ${slaveInstance}`);
@@ -2028,6 +2104,7 @@ class NexoWattBackup extends Adapter {
         this.waitToSlaveBackup = setTimeout(async () => {
             try {
                 const currentStateAfter = await this.getForeignStateAsync(`system.adapter.${slaveInstance}.alive`);
+                if (!this.operationalReady || !this.licenseGuard.isAllowed()) return;
 
                 /** Moves on to the next slave, or finishes the round. */
                 const advance = (): void => {
@@ -2216,6 +2293,13 @@ class NexoWattBackup extends Adapter {
         }
         const port = existsSync('/opt/scripts/.docker_config/.thisisdocker') ? 9081 : 0;
 
+        downloadServer.use((_req, res, next) => {
+            if (!this.operationalReady || !this.licenseGuard.isAllowed()) {
+                res.status(403).json({ error: 'EOS_LICENSE_REQUIRED' });
+                return;
+            }
+            next();
+        });
         downloadServer.use(express.static(join(tools.getIobDir(), 'backups')));
 
         let httpServer: HttpModule.Server | undefined;
@@ -2279,6 +2363,13 @@ class NexoWattBackup extends Adapter {
 
         const uploadServer = express();
         uploadServer.use(cors());
+        uploadServer.use((_req, res, next) => {
+            if (!this.operationalReady || !this.licenseGuard.isAllowed()) {
+                res.status(403).json({ error: 'EOS_LICENSE_REQUIRED' });
+                return;
+            }
+            next();
+        });
 
         const storage = multer.diskStorage({
             destination: (req, file, callback) => callback(null, backupDir),
@@ -2327,6 +2418,7 @@ class NexoWattBackup extends Adapter {
     }
 
     private async renewOnedriveToken(): Promise<void> {
+        if (!this.operationalReady || !this.licenseGuard.isAllowed()) return;
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const Onedrive = (require('./lib/oneDriveLib') as { default: typeof OnedriveType }).default;
         const onedrive = new Onedrive();
@@ -2379,45 +2471,48 @@ class NexoWattBackup extends Adapter {
      *
      */
     private async main(): Promise<void> {
-        this.createBashScripts();
-        this.readLogFile();
+        this.licenseGuard.assertAllowed();
+        // Filesystem recovery cleanup runs once per process, never on a license renewal.
+        if (!this.filesystemInitialized) {
+            this.createBashScripts();
+            this.readLogFile();
 
-        if (!existsSync(join(tools.getIobDir(), 'backups'))) {
-            this.createBackupDir();
+            if (!existsSync(join(tools.getIobDir(), 'backups'))) {
+                this.createBackupDir();
+            }
+            if (existsSync(`${bashDir}/.redis.info`)) {
+                this.deleteHideFiles();
+            }
+            if (existsSync(join(tools.getIobDir(), 'backups/tmp'))) {
+                this.delTmp();
+            }
+            this.clearBashDir();
+
+            this.timerMain = setTimeout(() => {
+                if (existsSync(`${bashDir}/.mount`)) {
+                    this.umount();
+                }
+                if (this.config.startAllRestore && !existsSync(`${bashDir}/.startAll`)) {
+                    this.setStartAll();
+                }
+            }, 10000);
+
+            this.filesystemInitialized = true;
         }
-        if (existsSync(`${bashDir}/.redis.info`)) {
-            this.deleteHideFiles();
+
+        const obj = await this.getForeignObjectAsync('system.config');
+        this.licenseGuard.assertAllowed();
+        if (obj?.common?.language) this.systemLang = obj.common.language;
+        await this.initConfig(obj?.native?.secret || 'Zgfr56gFe87jJOM');
+        this.licenseGuard.assertAllowed();
+        this.operationalReady = true;
+        await this.checkStates();
+        this.assertLicensedOperation();
+        if (this.config.hostType !== 'Slave') {
+            this.createBackupSchedule();
+            void this.nextBackup(true, null);
+            void this.detectLatestBackupFile();
         }
-        if (existsSync(join(tools.getIobDir(), 'backups/tmp'))) {
-            this.delTmp();
-        }
-        this.clearBashDir();
-
-        this.timerMain = setTimeout(() => {
-            if (existsSync(`${bashDir}/.mount`)) {
-                this.umount();
-            }
-            if (this.config.startAllRestore && !existsSync(`${bashDir}/.startAll`)) {
-                this.setStartAll();
-            }
-        }, 10000);
-
-        void this.getForeignObject('system.config', async (err, obj) => {
-            if (obj?.common?.language) {
-                this.systemLang = obj.common.language;
-            }
-
-            await this.initConfig(obj?.native?.secret || 'Zgfr56gFe87jJOM');
-
-            void this.checkStates();
-
-            if (this.config.hostType !== 'Slave') {
-                this.createBackupSchedule();
-                void this.nextBackup(true, null);
-
-                void this.detectLatestBackupFile();
-            }
-        });
 
         // subscribe on all variables of this adapter instance with pattern "adapterName.X.memory*"
         this.subscribeStates('oneClick.*');

@@ -1,5 +1,8 @@
 # NexoWatt OCPP 0.4.0 – Zuverlässigkeitsprüfung
 
+Nachtrag 05.10.2026: [Zentrale EOS-Lizenzgrenzen, Änderung und aktuelle Prüfbelege](LICENSING_20261005_DE.md).
+Die folgenden historischen Aussagen bleiben auf ihren damaligen Umfang begrenzt.
+
 Stand: 12.08.2026
 
 ## Prüfumfang

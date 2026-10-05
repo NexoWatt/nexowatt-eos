@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const assetCache = require('./nexowatt-browser-asset-version.cjs');
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
@@ -17,6 +18,6 @@ if (src.includes('.eos-object-value-cell {\n    width: 100% !important')) fail('
 const buildInfo = JSON.parse(read('NEXOWATT_EOS_BUILD_INFO.json'));
 const shellVersion = String(buildInfo.shellCacheTag || buildInfo.shellCacheVersion || buildInfo.brandingCacheVersion);
 const index = read('adminWww/index.html');
-if (!index.includes(`css/nexowatt-native-shell.css?v=${shellVersion}`)) fail(`native shell CSS cache key is not ${shellVersion}`);
-if (!index.includes(`js/nexowatt-native-shell.js?v=${shellVersion}`)) fail(`native shell JS cache key is not ${shellVersion}`);
+if (!index.includes(`css/nexowatt-native-shell.css?eos=${assetCache}`)) fail(`native shell CSS cache key is not ${shellVersion}`);
+if (!index.includes(`js/nexowatt-native-shell.js?eos=${assetCache}`)) fail(`native shell JS cache key is not ${shellVersion}`);
 console.log('[NexoWatt EOS value column] OK');

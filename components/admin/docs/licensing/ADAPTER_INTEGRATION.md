@@ -1,12 +1,12 @@
 # Zentrale Lizenzfreigabe für NexoWatt EOS-Adapter
 
-Stand: EOS Admin 7.10.11 / Client 1.0.1 · 30.09.2026 · Protokoll v1 · Clientmodul `packages/eos-license-client/`.
+Stand: EOS Admin 7.10.11 / Client 1.0.2 · 05.10.2026 · Protokoll v1 · Clientmodul `packages/eos-license-client/`.
 
-Diese Datei beschreibt die verbindliche Einbindung der zentralen Lizenzprüfung in
-weitere EOS-Adapter. In diesem Repository sind der Admin-Dienst und der gemeinsame
-Client enthalten. Die anderen Adapter wurden mit diesem Lieferstand **noch nicht
-umgebaut oder am Gerät geprüft**. Ihre vorhandenen lokalen Lizenzprüfungen werden
-erst mit der jeweiligen Integration abgelöst.
+Diese Datei beschreibt den gemeinsamen Lizenzvertrag für eigene EOS-Adapter.
+Der zentrale Admin-Dienst und der Client verwenden unverändert das lokale
+Nachrichtenprotokoll v1. Die konkrete Einbindung, Zählweise und sicheren
+Fehlerpfade jedes Verbraucheradapters werden in dessen eigenen Prüfbelegen
+festgehalten; die Clientprüfung allein bestätigt keine Geräteintegration.
 
 ## Grundregel und Vertrauensgrenze
 
@@ -32,6 +32,47 @@ Angreifer, der zugleich auf den lokalen Ablageschlüssel oder den Prozess zugrei
 kann. Für diese weitergehende Grenze sind getrennte Betriebssystemidentitäten,
 restriktive Schnittstellen und gegebenenfalls ein hardwaregebundener Schlüssel
 gesondert umzusetzen und nachzuweisen.
+
+## Bindung an die EOS-Installation
+
+Vor jeder neuen Clientanfrage und bei Start, Status, Lizenzimport sowie laufender
+Prüfung des Admin-Dienstes wird die lokale EOS-Installation kontrolliert. Ein
+gewöhnliches ioBroker mit kopiertem Adapter oder allein umbenanntem Admin erhält
+keine Freigabe, auch wenn eine formal gültige UUID-Lizenz vorhanden ist.
+
+`assertEosPlatform(adapterName)` verlangt Linux und die geschützte aktive
+`/etc/nexowatt-eos/release-state.json`. Schema, Release-ID, Node-Version und
+Schlüsselfingerabdruck müssen dem installierten Profil entsprechen. Unter
+`/opt/nexowatt/eos/releases/<releaseId>/app/node_modules/` müssen das
+Controllerprofil `iobroker.js-controller/eos-test-profile.json`, das eigene
+Paket mit seiner freigegebenen Version und der tatsächlich gestartete
+`require.main.filename` zusammenpassen. Controllerpaket und Profilversion müssen
+übereinstimmen. Der Root-verwaltete Symlink `/opt/nexowatt/eos/current` muss
+exakt auf dasselbe aktive Release zeigen; nur dieser kontrollierte Zeiger darf
+ein Symlink sein. Die Prüfung erfindet keine separate Aktivierungsdatei und
+fordert keine eigene Adapterlizenz an.
+
+Alle gelesenen Dateien und jeder Pfadvorfahr gehören Root und sind weder gruppen-
+noch weltbeschreibbar. Symlinks, mehrfach verlinkte Dateien, ersetzte
+Dateideskriptoren, übergroße oder ungültige Daten führen zu `EOS_PLATFORM_*` und
+Sperre. Die vorhandene signierte Releaseprüfung beim Dienststart bleibt eine
+getrennte Voraussetzung; diese kleine Adapterprüfung ersetzt keinen kompletten
+Signatur-/Hashvergleich des Lieferbaums. Der aktuelle Installationsvertrag trägt
+`profile: "test"`; andere Profile müssen vor Einführung ausdrücklich unterstützt
+und geprüft werden.
+
+Es gibt keinen Umgebungs-, Konfigurations- oder Guard-Schalter zum Überspringen
+der Plattformprüfung. Isolierte Tests ersetzen die Dateisystemschnittstelle oder
+die Plattformabhängigkeit ausdrücklich im Testlader. Solche Tests belegen keine
+native Installation. Das Admin-Verwaltungsfrontend bleibt ohne aktivierte Lizenz
+zur Einrichtung erreichbar; außerhalb der bestätigten EOS-Plattform erteilt sein
+Lizenzdienst dennoch keine Aktivierung oder Betriebsfreigabe.
+
+Plattformverlust wird bei der nächsten regulären Prüfung erkannt. Bestehende
+Freigaben haben weiterhin maximal 15 Sekunden Laufzeit; der Client prüft die
+Plattform normalerweise alle fünf Sekunden. Root oder bereits ausgeführter
+manipulierter Runtimecode kann diese lokalen Prüfungen ändern. Diese Grenze ist
+kein unüberwindbarer Kopierschutz und keine Hardwareattestierung.
 
 ## Clientmodul übernehmen
 
@@ -161,15 +202,17 @@ Schutzfunktionen erforderlich.
 
 ## Home und Pro
 
-Nicht nur die Edition als Boolean prüfen. Entscheidend sind die ausdrücklich
-freigegebene Funktion, Adapterliste und Mengen in der signierten Lizenz.
+Nicht nur die Edition als Boolean prüfen. Bei aktuellen NWL3-Systemlizenzen
+leitet der vertrauenswürdige Admin aus der signierten Edition die Funktionen und
+Mengen ab. NWL3 gilt für das System; zusätzliche Adapterkeys sind nicht nötig.
+Vorhandene NWL2-Lizenzen behalten ihre engeren signierten Adapterlisten und Mengen.
 
 | Eigenschaft | Home | Pro |
 | --- | --- | --- |
-| Ladepunkte | maximal 3, tatsächlicher lizenzierter Wert kann kleiner sein | expliziter signierter Wert; technisches Schema höchstens 1.000 |
+| Ladepunkte (NWL3) | maximal 3 | maximal 50 |
 | Batteriesysteme | maximal 2 | maximal 10 |
 | Unterstützte Funktionsnamen | `energy`, `wallet`, `smartHome`, `microgridSlave` | zusätzlich `microgridMaster`, `multisite`, `billing` |
-| Freigegebene Adapter | jeweiliger Adaptername muss in der signierten Liste enthalten sein | ebenso |
+| Freigegebene Adapter (NWL3) | aktivierte lokale Instanzen; Plattformprüfung bleibt verpflichtend | ebenso |
 
 Ein Funktionsname im Schema bedeutet nicht, dass er automatisch in jeder Lizenz
 enthalten ist. Bei einer Pro-Funktion muss der Adapter diese konkrete Funktion
@@ -202,7 +245,8 @@ werden.
 Ziel ist eine explizite Instanz, standardmäßig `eos-admin.0`. Befehl:
 `eos.license.check`. Der Client nutzt `adapter.sendTo`; der Admin prüft zusätzlich
 den vom ioBroker-Nachrichtenbus gelieferten Absender `system.adapter.NAME.N`,
-die aktivierte Instanz, den Instanznamen und die signierte Adapterfreigabe.
+die aktivierte Instanz, den Instanznamen und den verifizierten Systemumfang
+beziehungsweise die engere signierte NWL2-Adapterfreigabe.
 
 ```javascript
 // Anfrage: nonce ist pro Request kryptografisch zufällig, 32 kleine Hex-Zeichen.
@@ -261,10 +305,14 @@ belegen:
 Reproduzierbare Clientprüfung in diesem Repository:
 
 ```bash
-node --test test/eos-license-client.test.cjs
+node --test test/eos-license-*.test.cjs
 ```
 
-Diese automatisierten Clienttests verwenden einen simulierten ioBroker-Transport.
+Diese automatisierten Tests verwenden einen simulierten ioBroker-Transport und
+eine ausdrücklich simulierte EOS-Plattform. Die gesonderten Plattformtests prüfen
+positive und negative Pfad-/Rechte-/Metadatenfälle mit einem Dateisystemmodell.
 Sie sind keine Geräteprüfung und kein Nachweis einer unabhängigen Zertifizierung
 oder vollständigen IEC-/CRA-Konformität. Die Integration aller ausgelieferten
 Adapter und systemweite Mengenkontrolle bleiben eigene Freigabeschritte.
+
+Änderung und konkrete Rohbelege: [EOS-Plattformbindung 05.10.2026](../../reports/security/eos-platform-2026-10-05/README.md).

@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 const fs = require('node:fs');
 const mqtt = require('mqtt');
 const { getByJsonPath, applyNumericTransforms, coerceBoolean } = require('../utils');
@@ -1296,6 +1298,15 @@ class MqttDriver {
     this.writeGroupTimers.set(groupName, timer);
   }
 
+  suspendLicensedControl() {
+    this._licensedCommandRequired = true;
+    this._stopWriteGroupTimers();
+    for (const state of this.writeGroupStates.values()) {
+      state.requiresFreshCommand = true;
+      state.lastExternalWriteAt = 0;
+    }
+  }
+
   _stopWriteGroupTimers() {
     for (const timer of this.writeGroupTimers.values()) {
       try { clearInterval(timer); } catch (_) {}
@@ -1400,7 +1411,11 @@ class MqttDriver {
     }
   }
 
-  async _publishWriteGroupValue(state, group, requestedValue, origin) {
+  async _publishWriteGroupValue(...args) {
+    return runLicensedControl(this.adapter, () => this._publishAuthorizedWriteGroupValue(...args));
+  }
+
+  async _publishAuthorizedWriteGroupValue(state, group, requestedValue, origin) {
     if (!state || !state.dp) throw new Error('Missing MQTT write-group command datapoint');
     if (!this.connected || !this.client) throw new Error('MQTT not connected');
 
@@ -1676,6 +1691,7 @@ class MqttDriver {
   }
 
   async _publish(topic, payload, options, requireConnected) {
+    if (this._licensedCommandRequired) throw new Error('EOS license requires a fresh MQTT command');
     if (this.isTesvolt) {
       this._assertTesvoltWriteEnabled();
       const controlTopic = this._resolveWriteTopic('EMS/V2/Inverter/Control');
@@ -1686,6 +1702,7 @@ class MqttDriver {
     if (!this.client) throw new Error('MQTT not connected');
     if (requireConnected && !this.connected) throw new Error('MQTT not connected');
     await new Promise((resolve, reject) => {
+      assertLicensedControl(this.adapter);
       this.client.publish(topic, payload, options, (error) => error ? reject(error) : resolve());
     });
   }
@@ -1695,7 +1712,13 @@ class MqttDriver {
     return {};
   }
 
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
+    this._licensedCommandRequired = false;
     if (this.isTesvolt) this._assertTesvoltWriteEnabled();
     const source = dp.source || {};
     if (!this.client) throw new Error('MQTT not connected');

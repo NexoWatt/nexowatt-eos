@@ -175,6 +175,9 @@ export class NexoWattPara14aBridge {
         clsCommand: ClsControlCommand,
         reason?: Para14aBridgeReason,
     ): Promise<Para14aBridgeAcceptance> {
+        if (this.adapter.isEosLicenseAllowed?.() !== true) {
+            return { accepted: false, queued: false, reason: 'EOS_LICENSE_REQUIRED', commandId: clsCommand.commandId };
+        }
         if (clsCommand.operation !== 'limitConsumption' && clsCommand.operation !== 'release') {
             return {
                 accepted: false,
@@ -448,6 +451,9 @@ export class NexoWattPara14aBridge {
             }, timeoutMs);
 
             try {
+                if (command === NEXOWATT_PARA14A_COMMAND && this.adapter.isEosLicenseAllowed?.() !== true) {
+                    throw new Error('EOS_LICENSE_REQUIRED');
+                }
                 this.adapter.sendTo(targetInstance, command, message, (response: T) => {
                     if (settled) return;
                     settled = true;

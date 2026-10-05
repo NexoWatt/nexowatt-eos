@@ -28,7 +28,7 @@ async function createDriver(namespace = 'nexowatt-devices.0', topicMode = 'ems')
   let aliveCount = 0;
   const adapter = {
     namespace,
-    log: { info() {}, warn() {}, error() {}, debug() {} },
+    _licenseGuard: { assertAllowed() {} }, log: { info() {}, warn() {}, error() {}, debug() {} },
     async setStateAsync(id, value) { states.set(id, value.val); },
   };
   const driver = new MqttDriver(adapter, {

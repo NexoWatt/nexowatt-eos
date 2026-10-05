@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 const { performance } = require('node:perf_hooks');
 const { ModbusDriver } = require('./modbus');
 const { TABLE_VERSION, getVartaProfile, registersForProfile, decodeWords, scaleValue, buildReadGroups } = require('../vartaProtocol');
@@ -254,7 +256,12 @@ class VartaModbusDriver extends ModbusDriver {
     return this._diagnostics(out, notes, true, scalingValid);
   }
 
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
     // Authoritative model-specific allowlist, NOT a caller-provided FC/address.
     // Only explicitly selected SF configuration writes are permitted.
     const def = this.byId.get(String(dp?.id || ''));

@@ -90,7 +90,9 @@ test('known vendored files must be present and bound by exact tree hash', t => {
     const component = { name: '@nexowatt/eos-license-client', version: '1.0.0', 'bom-ref': `eos-embedded:${relative}`,
         properties: Object.entries({ 'eos:scope': 'embedded-package-files-observed-in-runtime-tree', 'eos:installed-path': relative,
             'eos:manifest-sha256': rows[0].sha256, 'eos:tree-sha256': sha256(Buffer.from(JSON.stringify(rows))) }).map(([name, value]) => ({ name, value })) };
-    f.bom.components.push(component); assert.equal(f.check().embeddedPackages, 1);
+    f.bom.components.push(component);
+    f.bom.dependencies.push({ ref: 'admin', dependsOn: [component['bom-ref']] }, { ref: component['bom-ref'], dependsOn: [] });
+    assert.equal(f.check().embeddedPackages, 1);
     f.write(`app/${relative}/extra.js`, 'changed');
     assert.throws(f.check, { code: 'SBOM_EMBEDDED' });
 });

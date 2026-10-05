@@ -404,7 +404,7 @@ class WizardDialog extends Component<WizardDialogProps, WizardDialogState> {
                     <img
                         src={Logo}
                         style={styles.logo}
-                        alt="logo"
+                        alt="NexoWatt EOS"
                     />
                     {I18n.t('Initial ioBroker setup')}{' '}
                     <ToggleThemeMenu

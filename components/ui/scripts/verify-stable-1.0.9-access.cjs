@@ -9,7 +9,7 @@ const Module = require('node:module');
 const vm = require('node:vm');
 const realExpress = require('express');
 const tlsFixture = require('./eos-tls-fixture.cjs');
-const integrated = require('../lib/eos-integrated');
+const { integrated, loadLicenseModule } = require('./eos-license-fixture.cjs');
 const realHttps = require('node:https');
 
 function loadAdapter() {
@@ -36,7 +36,16 @@ function loadAdapter() {
       } };
       return request === 'express' ? express : fixtureLoad.call(this, request, ...args);
     };
-    return { factory: require('../main'), ...fixture.exports };
+    const mainPath = require.resolve('../main');
+    const factory = require(mainPath);
+    const mainModule = require.cache[mainPath];
+    const originalRequire = mainModule.require.bind(mainModule);
+    // The isolated cold-start fixture substitutes platform admission only for
+    // this module's deferred require too. Product code has no test switch;
+    // genuine fixed-path admission is tested in the native R9 laboratory.
+    const central = loadLicenseModule(path.join(__dirname, '../packages/eos-license-client/index.js'));
+    mainModule.require = request => request === './packages/eos-license-client' ? central : originalRequire(request);
+    return { factory, ...fixture.exports };
   } finally { Module._load = originalLoad; }
 }
 const { factory, internal } = loadAdapter();

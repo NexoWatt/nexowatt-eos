@@ -4,6 +4,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const assetCache = require('./nexowatt-browser-asset-version.cjs');
 
 const root = path.resolve(__dirname, '..');
 const read = relative => fs.readFileSync(path.join(root, relative), 'utf8');
@@ -32,9 +33,9 @@ const cleanupSource = read('tools/nexowatt-clean-legacy-runtime.cjs');
 // visible header happened to contain "user". Only authenticated backend policy may define the role.
 for (const html of [index, sourceIndex]) {
     assert.doesNotMatch(html, /nexowatt-role-security\.js/i, 'legacy heuristic role guard is still loaded');
-    assert.match(html, /eos-role-bootstrap\.js\?eos=20261004/, 'authoritative role bootstrap cache tag is missing');
-    assert.match(html, /eos-policy-client\.js\?eos=20261004/, 'authoritative policy client cache tag is missing');
-    assert.match(html, /eos-role-ui\.js\?eos=20261004/, 'authoritative role UI cache tag is missing');
+    assert.ok(html.includes(`eos-role-bootstrap.js?eos=${assetCache}"`), 'authoritative role bootstrap cache tag is missing');
+    assert.ok(html.includes(`eos-policy-client.js?eos=${assetCache}"`), 'authoritative policy client cache tag is missing');
+    assert.ok(html.includes(`eos-role-ui.js?eos=${assetCache}"`), 'authoritative role UI cache tag is missing');
 }
 assert.equal(fs.existsSync(path.join(root, 'adminWww/nexowatt-role-security.js')), false, 'legacy runtime still exists');
 assert.equal(fs.existsSync(path.join(root, 'build/lib/eosRoleSecurity.js')), false, 'legacy backend heuristic still exists');

@@ -42,6 +42,7 @@ export class EebusRuntime {
     private readonly clsSources = new Map<string, ClsSourceRuntimeState>();
     private readonly trustCache = new Map<string, boolean>();
     private bridge?: NexoWattPara14aBridge;
+    private controlEpoch = 0;
 
     public constructor(
         private readonly adapter: any,
@@ -52,7 +53,12 @@ export class EebusRuntime {
         this.autoAcceptNewDevices = config.autoAcceptNewDevices;
     }
 
+    private assertLicensed(): void {
+        if (this.adapter.isEosLicenseAllowed?.() !== true) throw new Error('EOS_LICENSE_REQUIRED');
+    }
+
     public async start(): Promise<void> {
+        this.assertLicensed();
         this.endpoint = new ShipEndpoint(
             this.adapter,
             { ...this.config, autoAcceptNewDevices: this.autoAcceptNewDevices },
@@ -93,6 +99,16 @@ export class EebusRuntime {
         });
         await this.adapter.setStateAsync('discovery.enabled', { val: this.config.discoveryEnabled, ack: true });
         await this.adapter.setStateAsync('pairing.autoAcceptNewDevices', { val: this.autoAcceptNewDevices, ack: true });
+    }
+
+    public suspendControl(): void {
+        this.controlEpoch++;
+        // Never replay an old LPC, expiry release or failsafe after reactivation.
+        // Existing equipment limits stay unchanged until a fresh licensed command.
+        for (const source of this.clsSources.values()) {
+            source.lastCommand = undefined;
+            source.lastRegularCommand = undefined;
+        }
     }
 
     public async stop(): Promise<void> {
@@ -139,6 +155,7 @@ export class EebusRuntime {
 
     public async handleStateChange(id: string, state: ioBroker.State): Promise<void> {
         if (!state || state.ack) return;
+        this.assertLicensed();
 
         if (id.endsWith('.pairing.autoAcceptNewDevices')) {
             this.autoAcceptNewDevices = Boolean(state.val);
@@ -162,6 +179,7 @@ export class EebusRuntime {
     }
 
     private async processCommand(command: DeviceCommand): Promise<void> {
+        this.assertLicensed();
         if (command.channel === 'control' && command.stateName === 'connect') {
             if (Boolean(command.value)) await this.connectDevice(command.deviceId);
             await this.adapter.setStateAsync(`devices.${command.deviceId}.control.connect`, { val: false, ack: true });
@@ -184,6 +202,7 @@ export class EebusRuntime {
             const trusted = command.stateName === 'reject' ? false : Boolean(command.value);
             this.trustCache.set(command.deviceId, trusted);
             await this.objectFactory.publishTrust(command.deviceId, trusted, command.stateName === 'approve' ? 'local-approve-button' : 'local-user');
+            this.assertLicensed();
             if (trusted) {
                 await this.endpoint?.approveDevice(command.deviceId);
             } else {
@@ -215,6 +234,7 @@ export class EebusRuntime {
             return;
         }
 
+        this.assertLicensed(); // Recheck after asynchronous DB/trust work, immediately before the device write.
         const payload = commandDraft.datagram || commandDraft;
         const sent = this.endpoint?.sendSpine(command.deviceId, payload) || false;
         if (!sent) {
@@ -240,12 +260,15 @@ export class EebusRuntime {
         await this.adapter.setStateAsync('discovery.lastDiscovery', { val: jsonStringifySafe(node), ack: true });
         await this.objectFactory.publishGlobalPairingCounts(Array.from(this.nodes.keys()));
 
-        if (this.config.autoConnectEnabled && node.serviceType !== 'incoming') {
-            void this.connectDevice(node.safeId);
+        if (this.adapter.isEosLicenseAllowed?.() === true && this.config.autoConnectEnabled && node.serviceType !== 'incoming') {
+            void this.connectDevice(node.safeId).catch(() => {
+                this.adapter.log.warn('EEBUS automatic connection skipped: no current permission or connection failed.');
+            });
         }
     }
 
     private async connectDevice(deviceId: string): Promise<void> {
+        this.assertLicensed();
         const node = this.nodes.get(deviceId);
         if (!node) {
             await this.adapter.setStateAsync(`devices.${deviceId}.connection.lastError`, { val: 'Device is unknown or has no mDNS target.', ack: true });
@@ -471,7 +494,9 @@ export class EebusRuntime {
 
         let rejectionReason = '';
         const commandLimitW = finiteNumberOrNull(command.limitW);
-        if (!this.config.autoApplyClsLimits) {
+        if (this.adapter.isEosLicenseAllowed?.() !== true) {
+            rejectionReason = 'EOS_LICENSE_REQUIRED';
+        } else if (!this.config.autoApplyClsLimits) {
             rejectionReason = 'Automatic application of CLS limits is disabled.';
         } else if (command.active && (commandLimitW === null || commandLimitW <= 0)) {
             rejectionReason = 'Active CLS command has no valid positive consumption limit and no accepted value to merge.';
@@ -485,13 +510,14 @@ export class EebusRuntime {
             return;
         }
 
+        const controlEpoch = this.controlEpoch;
         const acceptance = await this.bridge!.dispatchLimit(
             command,
             command.active ? 'lpc' : 'release',
         );
         const acceptedAtMs = Number(acceptance.acceptedAtMs) || Date.now();
 
-        if (acceptance.accepted) {
+        if (acceptance.accepted && controlEpoch === this.controlEpoch && this.adapter.isEosLicenseAllowed?.() === true) {
             source.lastCommand = command;
             source.lastRegularCommand = command;
             source.expiryReleasedForCommandId = '';
@@ -755,7 +781,7 @@ export class EebusRuntime {
     }
 
     private async superviseClsSources(): Promise<void> {
-        if (!this.bridge) return;
+        if (!this.bridge || this.adapter.isEosLicenseAllowed?.() !== true) return;
         const now = Date.now();
         for (const source of this.clsSources.values()) {
             if (source.transitionInFlight) continue;

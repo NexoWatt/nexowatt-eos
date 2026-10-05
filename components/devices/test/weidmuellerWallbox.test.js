@@ -138,7 +138,7 @@ test('Modbus driver reads low-word-first values and writes exact CH-W-B commands
   }
 
   const template = getTemplate(runtimeTemplates);
-  const adapter = { log: { debug() {}, info() {}, warn() {}, error() {} } };
+  const adapter = { _licenseGuard: { assertAllowed() {} }, log: { debug() {}, info() {}, warn() {}, error() {} } };
   const driver = new ModbusDriver(adapter, {
     id: 'weidmueller-test',
     protocol: 'modbusTcp',

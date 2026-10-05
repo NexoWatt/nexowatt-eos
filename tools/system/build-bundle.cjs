@@ -116,7 +116,7 @@ function validatePayload(payload, manifest) {
         const relativePath = 'node_modules/iobroker.js-controller/package.json';
         profile.files.push({ relativePath, sha256: sha256(readFileLimited(path.join(payload, 'app', relativePath)).bytes) });
     }
-    const sbom = verifySbomBinding(payload, manifest.files, profile);
+    const sbom = verifySbomBinding(payload, manifest.files, profile, { sequence: manifest.sequence });
     // Every advertised platform must match the installed native payload. A
     // cross-built ARM tree remains untested on hardware until the Pi accepts it.
     if (!Array.isArray(manifest.platforms) || !manifest.platforms.length) reject('BUILD_ARCHITECTURE');
@@ -140,7 +140,7 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile }) {
         copyRuntimeLicenses(destination, 'app/');
         copyDirectory(path.join(REPO, 'runtime'), path.join(destination, 'runtime'));
         fs.mkdirSync(path.join(destination, 'tools')); fs.mkdirSync(path.join(destination, 'tools/system'));
-        for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'prepare-onboarding.cjs', 'prepare-first-start-context.cjs', 'finalize-onboarding.cjs', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs', 'update-test-r4-to-r5.cjs', 'update-test-to-r6.cjs', 'diagnose-first-start.cjs', 'recover-r4-first-start-to-r7.cjs', 'recover-r4-restored-r7-to-r8.cjs']) {
+        for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'prepare-onboarding.cjs', 'prepare-first-start-context.cjs', 'finalize-onboarding.cjs', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs', 'update-test-r4-to-r5.cjs', 'update-test-to-r6.cjs', 'diagnose-first-start.cjs', 'recover-r4-first-start-to-r7.cjs', 'recover-r4-restored-r7-to-r8.cjs', 'update-test-to-r9.cjs']) {
             fs.copyFileSync(path.join(REPO, 'tools/system', file), path.join(destination, 'tools/system', file), fs.constants.COPYFILE_EXCL);
         }
         fs.mkdirSync(path.join(destination, 'tools/integration'));

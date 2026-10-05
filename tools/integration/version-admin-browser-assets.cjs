@@ -8,7 +8,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const REPO = path.resolve(__dirname, '../..');
-const VERSION = '20261004';
+const VERSION = require('../../components/admin/tools/nexowatt-browser-asset-version.cjs');
 const SEEDS = ['index-CQZugZ1z-v84.js', 'bootstrap-COulQZax-v84.js'];
 const LOCAL_JS = /(["'])((?:\.\/)?[A-Za-z0-9_.-]+\.js)(?:\?[^"']*)?\1/g;
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
@@ -53,6 +53,9 @@ function apply(repository = REPO) {
             (_, start, resource, end) => `${start}${resource}?eos=${VERSION}${end}`);
         if (!updated.includes(`name="nexowatt-eos-asset-version"`)) {
             updated = updated.replace('<head>', `<head>\n        <meta name="nexowatt-eos-asset-version" content="${VERSION}" />`);
+        } else {
+            updated = updated.replace(/(name="nexowatt-eos-asset-version" content=")[^"]*(")/,
+                (_, start, end) => `${start}${VERSION}${end}`);
         }
         if (source !== updated) { fs.writeFileSync(filename, updated); changes.push(relative); }
     }
@@ -64,7 +67,7 @@ module.exports = { VERSION, SEEDS, LOCAL_JS, closure, versionSource, apply };
 if (require.main === module) {
     if (process.argv.length !== 2) throw new Error('CACHE_USAGE');
     const report = apply();
-    const directory = path.join(REPO, 'reports/integration/admin-browser-cache-20261004');
+    const directory = path.join(REPO, `reports/integration/admin-browser-cache-${VERSION}`);
     fs.mkdirSync(directory, { recursive: true });
     fs.writeFileSync(path.join(directory, 'asset-versioning.json'), `${JSON.stringify(report, null, 2)}\n`);
     process.stdout.write(`EOS Admin ${VERSION}: ${report.affectedModules.length} application modules, ${report.changedFiles.length} changed files, library contents preserved.\n`);

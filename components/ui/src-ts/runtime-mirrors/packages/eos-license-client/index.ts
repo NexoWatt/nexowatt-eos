@@ -19,7 +19,7 @@
  * - Der nächste Schritt ist pro Modul echte Typisierung statt pauschalem No-Check.
  * - Fachliche Kommentare markieren die Abschnitte, die später einzeln migriert werden.
  *
- * Original-Hash: 0f9c3e5d0f2ab31e8bac47cc315b05d994f9ab0ddf1650d807c7b03be8abc4a5
+ * Original-Hash: 5f646955eddb90efaa870e8bb7b5207d31c2787d10d2ff58394de88a3fe3a906
  */
 
 /**
@@ -40,6 +40,7 @@
  */
 const { randomBytes } = require('node:crypto');
 const { performance } = require('node:perf_hooks');
+const { assertEosPlatform } = require('./eos-platform');
 
 const COMMAND = 'eos.license.check';
 const MAX_LEASE_MS = 15_000;
@@ -368,6 +369,12 @@ function createLicenseGuard(adapter, options = {}) {
             return pending.promise; // Coalesce concurrent callers; each dispatched request has a new nonce.
         }
         isAllowed(); // Expire a stale lease before initiating a new request.
+        try {
+            assertEosPlatform(name);
+        } catch (error) {
+            invalidate(/^EOS_PLATFORM_[A-Z_]+$/.test(error?.code || '') ? error.code : 'EOS_PLATFORM_UNAVAILABLE');
+            return Promise.resolve(false);
+        }
         let nonce;
         try {
             nonce = randomBytes(16).toString('hex');
@@ -474,4 +481,4 @@ function createLicenseGuard(adapter, options = {}) {
     });
 }
 
-module.exports = Object.freeze({ createLicenseGuard, LicenseError, COMMAND, MAX_LEASE_MS, MAX_TIMEOUT_MS, REFRESH_INTERVAL_MS });
+module.exports = Object.freeze({ assertEosPlatform, createLicenseGuard, LicenseError, COMMAND, MAX_LEASE_MS, MAX_TIMEOUT_MS, REFRESH_INTERVAL_MS });

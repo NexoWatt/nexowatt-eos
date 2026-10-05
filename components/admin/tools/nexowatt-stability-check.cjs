@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const assetCache = require('./nexowatt-browser-asset-version.cjs');
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
@@ -40,17 +41,17 @@ for (const [name, value] of [
 const index = read('adminWww/index.html');
 for (const marker of [
   `hostInit-${runtime}.js?v=${runtimeNo}`,
-  `index-CQZugZ1z-${runtime}.js?v=${runtimeNo}`,
-  `eos-manual-write-policy.js?v=${shellTag}`,
-  `eos-role-bootstrap.js?v=${shellTag}`,
-  `eos-policy-client.js?v=${shellTag}`,
-  `nexowatt-native-shell.js?v=${shellTag}`,
-  `eos-native-security.js?v=${shellTag}`,
-  `eos-role-ui.js?v=${shellTag}`,
-  `eos-auto-update.js?v=${autoUpdateTag}`,
-  `eos-auto-update.css?v=${autoUpdateTag}`,
-  `eos-assistant.js?v=${shellTag}`,
-  `nexowatt-native-shell.css?v=${shellTag}`,
+  `index-CQZugZ1z-${runtime}.js?eos=${assetCache}`,
+  `eos-manual-write-policy.js?eos=${assetCache}`,
+  `eos-role-bootstrap.js?eos=${assetCache}`,
+  `eos-policy-client.js?eos=${assetCache}`,
+  `nexowatt-native-shell.js?eos=${assetCache}`,
+  `eos-native-security.js?eos=${assetCache}`,
+  `eos-role-ui.js?eos=${assetCache}`,
+  `eos-auto-update.js?eos=${assetCache}`,
+  `eos-auto-update.css?eos=${assetCache}`,
+  `eos-assistant.js?eos=${assetCache}`,
+  `nexowatt-native-shell.css?eos=${assetCache}`,
   `nexowatt-stable-v${shellTag}.js?v=${shellTag}`,
 ]) if (!index.includes(marker)) fail(`index missing ${marker}`);
 for (const old of ['eos-branding.js','eos-branding.css','eos-security-ui.js','eos-console-quiet.js','eos-objects-state-tools.js']) {

@@ -83,6 +83,7 @@ function createDriver(t, connection = {}, stateValues = {}) {
   const deviceId = `test-${t.id}`;
   const statePrefix = `nexowatt-devices.0.devices.${deviceId}.`;
   const adapter = {
+    _licenseGuard: { assertAllowed() {} },
     log,
     namespace: 'nexowatt-devices.0',
     async getStateAsync(id) {
@@ -113,7 +114,7 @@ function createDriver(t, connection = {}, stateValues = {}) {
 }
 
 function buildAliases(t, id = 'evcs-test') {
-  const runtime = new DeviceRuntime({ log }, {
+  const runtime = new DeviceRuntime({ _licenseGuard: { assertAllowed() {} }, log }, {
     id,
     templateId: t.id,
     category: t.category,
@@ -517,7 +518,7 @@ function queuedRuntime() {
   const { runtime, byPath } = buildAliases(template(connectorIds[0]), 'dc');
   const states = new Map();
   runtime.adapter = {
-    namespace: 'nexowatt-devices.0', log,
+    namespace: 'nexowatt-devices.0', log, _licenseGuard: { assertAllowed() {} },
     async setStateAsync(id, state) { states.set(id, state); },
     async getStateAsync() { return null; },
   };

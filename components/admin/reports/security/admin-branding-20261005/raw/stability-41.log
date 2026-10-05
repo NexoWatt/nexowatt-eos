@@ -1,0 +1,54 @@
+
+> iobroker.eos-admin@7.10.11 test:eos-security-upgrade
+> node --test test/eos-session-security.test.cjs test/eos-web-resources.test.cjs && node tools/nexowatt-lock-provenance-selftest.cjs
+
+(node:1266) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ pinned upstream password login, token pair and refresh work with security binding (7.852036ms)
+✔ actual controller group view display keys do not replace canonical object identities (0.33331ms)
+✔ malformed or duplicate canonical group objects fail closed before credential verification (1.385446ms)
+✔ all devices access and refresh tokens reject changed password without waiting for object event (2.875829ms)
+✔ disable, deletion and changed group ACL independently invalidate both token classes (2.788809ms)
+✔ observed disable then re-enable cannot resurrect old token after snapshot returns to original (1.190013ms)
+✔ legacy and unbound external tokens are rejected and direct internal minting is denied (0.789813ms)
+✔ proof cannot be forged by passing a user-shaped object or copied authenticated identity (0.420891ms)
+✔ password mutation during credential verification and before token save fails closed (0.61421ms)
+✔ refresh credential cannot cross revocation between lookup and save (0.876153ms)
+✔ restart generation does not accept previously saved capabilities (0.532788ms)
+✔ session database failures and bounded stalled reads fail closed without unbounded backlog (77.085307ms)
+✔ socket revocation synchronously blocks commands, clears subscriptions and closes every connection (0.618176ms)
+✔ metadata-only account updates do not revoke established capabilities (0.816523ms)
+✔ expired access and refresh capabilities fail closed in the common session reader (0.41403ms)
+✔ late socket authentication cannot reopen a connection after revocation (0.288192ms)
+✔ real five-second watchdog closes a socket after a missed credential object event (5250.519219ms)
+✔ password verification has a separate budget without relaxing database reads (101.467347ms)
+✔ timed-out authentication retains two work slots, refuses backlog and never grants late proof (30.07893ms)
+✔ bad passwords and revocation during slow verification still cannot receive proofs (102.320942ms)
+✔ HTTPS accepts bounded JSON with explicit TLS verification, identity encoding and no pooling (4.358711ms)
+✔ HTTPS rejects scheme, credentials, fragments, alternate port and non-allowlisted host before transport (1.457975ms)
+✔ HTTPS rejects redirects without contacting redirect targets (0.859608ms)
+✔ HTTPS rejects oversized declared and streamed responses and compressed bodies (2.393136ms)
+✔ HTTPS rejects malformed or primitive JSON without exposing body/error text (2.172795ms)
+✔ HTTPS hard deadline destroys a request before response including DNS/connect stalls (21.545409ms)
+✔ HTTPS hard deadline also bounds slow response bodies (21.657983ms)
+✔ HTTP bind is literal loopback unless TLS enabled; nonloopback Host and peer are rejected (1.882831ms)
+✔ gzip preview returns text but rejects bombs, oversized input, and invalid gzip (44.039409ms)
+✔ gzip preview concurrency is bounded independently of compressed size (21.490082ms)
+✔ system-info calls coalesce and cache npm version; no shell is used (1.954498ms)
+✔ upload budget admits two across routes; third denied and aborted temporary files cleaned (69.708526ms)
+✔ upload parser receives actual total/file/part limits and private temporary directory (33.902511ms)
+✔ restore storage does not follow existing destination symlink and persists restrictive permissions (34.58336ms)
+✔ retained upload data counts against shared quota at the next admission (34.441367ms)
+✔ upload total deadline aborts a still-active parser and removes its partial directory (53.685564ms)
+✔ upload admission rejects low disk space before constructing parser (1.856312ms)
+✔ synchronous parser initialization failure releases reserved capacity (63.850105ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5713.9019
+[NexoWatt lock provenance] OK (11 admission/denial cases; no network or package execution)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.

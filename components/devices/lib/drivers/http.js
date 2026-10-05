@@ -1,5 +1,7 @@
 'use strict';
 
+const { assertLicensedControl, runLicensedControl } = require('../licenseControl');
+
 const axios = require('axios');
 const { createHttpSecurity, requestWithDeadline } = require('../httpSecurity');
 const { getByJsonPath, applyNumericTransforms, coerceBoolean } = require('../utils');
@@ -196,7 +198,12 @@ class HttpDriver {
     return out;
   }
 
-  async writeDatapoint(dp, value) {
+  async writeDatapoint(...args) {
+    return runLicensedControl(this.adapter, () => this._writeAuthorizedDatapoint(...args));
+  }
+
+  async _writeAuthorizedDatapoint(dp, value) {
+    assertLicensedControl(this.adapter);
     const src = dp.source || {};
     const method = (src.writeMethod || src.method || 'POST').toUpperCase();
 

@@ -5,7 +5,7 @@ const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
 const manifestPath = path.join(root, 'release-manifest.json');
-const controlledRoots = ['admin', 'build', 'docs'];
+const controlledRoots = ['admin', 'build', 'docs', 'packages'];
 
 function fail(message, error) {
     console.error(`\n[NexoWatt EOS Backup] Publish-Vorbereitung fehlgeschlagen: ${message}`);

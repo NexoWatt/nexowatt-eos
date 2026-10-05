@@ -106,7 +106,10 @@
     "test/sd-card.js",
     "test/influxdb-cli.js",
     "test/sd-card-access.js",
-    "test/helpers/sd-card-permission-child.cjs"
+    "test/helpers/sd-card-permission-child.cjs",
+    "packages/eos-license-client/",
+    "test/license-guard.js",
+    "docs/de/lizenzbetrieb.md"
   ],
   "scripts": {
     "test": "npm run test:package && npm run test:types && npm run test:unit && npm run test:eos-profile && npm run test:sd-card && npm run test:influxdb-cli",
@@ -141,12 +144,13 @@
     "lint": "eslint -c eslint.config.mjs",
     "lint-frontend": "cd src-admin && eslint -c eslint.config.mjs && cd ../src-tab && eslint -c eslint.config.mjs",
     "test:eos-profile": "node --test test/eos-profile.js",
-    "test:offline": "node --test test/eos-profile.js test/sd-card.js test/influxdb-cli.js test/sd-card-access.js",
+    "test:offline": "node --test test/eos-profile.js test/sd-card.js test/influxdb-cli.js test/sd-card-access.js test/license-guard.js",
     "verify:publish": "npm run prepare:publish && npm run test:offline && node scripts/validate-publish.cjs",
     "build:source": "node tasks.js && npm run build:backend",
     "prepare:publish": "node scripts/prepare-publish.cjs",
     "test:sd-card": "node --test test/sd-card.js test/sd-card-access.js",
-    "test:influxdb-cli": "node --test test/influxdb-cli.js"
+    "test:influxdb-cli": "node --test test/influxdb-cli.js",
+    "test:license": "node --test test/license-guard.js"
   },
   "readmeFilename": "README.md",
   "publishConfig": {

@@ -8,6 +8,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const crypto = require('node:crypto');
+const VERSION = require('../../components/admin/tools/nexowatt-browser-asset-version.cjs');
 const admin = path.resolve(__dirname, '../../components/admin');
 const read = file => fs.readFileSync(path.join(admin, file), 'utf8');
 const css = read('adminWww/css/eos-startup-branding.css');
@@ -17,8 +18,8 @@ test('startup branding is preloaded identically in source and delivered HTML', (
     for (const file of ['adminWww/index.html', 'src-admin/index.html']) {
         const html = read(file);
         assert.match(html, /class="eos-native-shell"/);
-        assert.match(html, /<link rel="stylesheet" href="(?:\.\/)?css\/eos-startup-branding\.css\?eos=20261004" \/>/);
-        assert.match(html, /<link rel="stylesheet" href="(?:\.\/)?css\/eos-product-loader\.css\?eos=20261004" \/>/);
+        assert.match(html, new RegExp(String.raw`<link rel="stylesheet" href="(?:\./)?css/eos-startup-branding\.css\?eos=${VERSION}" />`));
+        assert.match(html, new RegExp(String.raw`<link rel="stylesheet" href="(?:\./)?css/eos-product-loader\.css\?eos=${VERSION}" />`));
         assert.ok(html.indexOf('css/eos-startup-branding.css') < html.indexOf('js/eos-role-bootstrap.js'));
         assert.ok(html.indexOf('css/eos-product-loader.css') < html.indexOf('js/eos-role-bootstrap.js'));
     }

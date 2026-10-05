@@ -26,4 +26,4 @@ Parameter sind die Namen aus der Signatur, keine geratenen Datenverträge. Die A
 
 | Funktion / Methode | Parameter | Direkt sichtbare Aufrufe (Auszug) |
 | --- | --- | --- |
-| [`refresh`](../../../../../src-ts/runtime-executables/www/license.ts#L23) | – | AbortSignal.timeout, fetch, response.json |
+| [`refresh`](../../../../../src-ts/runtime-executables/www/license.ts#L25) | – | AbortSignal.timeout, Date.now, Math.max, clearTimeout, fetch, response.json, setTimeout |

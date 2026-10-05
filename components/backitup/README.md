@@ -60,3 +60,9 @@ EOS system profile archives are gzip-compressed TAR archives, not encrypted cont
 ## Attribution
 
 The current NexoWatt-specific distribution is proprietary and requires prior written permission from NexoWatt. Upstream MIT terms, third-party licenses and rights validly granted under earlier MIT distributions remain unaffected. See [LICENSE](LICENSE), [NOTICE.md](NOTICE.md) and the byte-preserved [previous MIT notice](LICENSES/PREVIOUS-MIT.txt).
+
+## Zentrale EOS-Lizenz
+
+Backup benötigt eine gültige Home- oder Pro-Freigabe über `eos-admin.0` und die
+geprüfte EOS-Laufzeit. Aktivierung und Verlängerung werden automatisch übernommen.
+[Verhalten bei Lizenzverlust und sichere Wiederherstellung](docs/de/lizenzbetrieb.md).

@@ -1,0 +1,95 @@
+TAP version 13
+# Subtest: licensed recovery admits exactly one bound restore without online Admin
+ok 1 - licensed recovery admits exactly one bound restore without online Admin
+  ---
+  duration_ms: 9.513112
+  type: 'test'
+  ...
+# Subtest: recovery staging fails closed on initial denial or lease loss during archive hashing
+ok 2 - recovery staging fails closed on initial denial or lease loss during archive hashing
+  ---
+  duration_ms: 1.452959
+  type: 'test'
+  ...
+# Subtest: plain staged config or missing process capability cannot authorize restore
+ok 3 - plain staged config or missing process capability cannot authorize restore
+  ---
+  duration_ms: 1.136213
+  type: 'test'
+  ...
+# Subtest: wrong capability consumes the ticket but never executes recovery
+ok 4 - wrong capability consumes the ticket but never executes recovery
+  ---
+  duration_ms: 4.954648
+  type: 'test'
+  ...
+# Subtest: changed archive, edited scope, expired admission and public ticket are rejected
+    # Subtest: archive
+    ok 1 - archive
+      ---
+      duration_ms: 2.470935
+      type: 'test'
+      ...
+    # Subtest: scope
+    ok 2 - scope
+      ---
+      duration_ms: 2.369498
+      type: 'test'
+      ...
+    # Subtest: expired
+    ok 3 - expired
+      ---
+      duration_ms: 1.695542
+      type: 'test'
+      ...
+    # Subtest: permissions
+    ok 4 - permissions
+      ---
+      duration_ms: 2.491865
+      type: 'test'
+      ...
+    1..4
+ok 5 - changed archive, edited scope, expired admission and public ticket are rejected
+  ---
+  duration_ms: 9.78881
+  type: 'test'
+  ...
+# Subtest: restore dispatcher rejects direct null-adapter or unlicensed invocation
+ok 6 - restore dispatcher rejects direct null-adapter or unlicensed invocation
+  ---
+  duration_ms: 1.40051
+  type: 'test'
+  ...
+# Subtest: startup denied then activation resumes; revocation blocks and renewal resumes exactly once
+ok 7 - startup denied then activation resumes; revocation blocks and renewal resumes exactly once
+  ---
+  duration_ms: 3.792466
+  type: 'test'
+  ...
+# Subtest: destroyed token refresher cannot restart after an in-flight state read
+ok 8 - destroyed token refresher cannot restart after an in-flight state read
+  ---
+  duration_ms: 33.416717
+  type: 'test'
+  ...
+# Subtest: native EOS system restore directs operator recovery before download or staging
+ok 9 - native EOS system restore directs operator recovery before download or staging
+  ---
+  duration_ms: 0.410826
+  type: 'test'
+  ...
+# Subtest: generated launch script never sends recovery capability into systemd properties or argv
+ok 10 - generated launch script never sends recovery capability into systemd properties or argv
+  ---
+  duration_ms: 0.349484
+  type: 'test'
+  ...
+1..10
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 141.398768

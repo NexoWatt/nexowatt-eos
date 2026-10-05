@@ -7,6 +7,7 @@
  */
 const { randomBytes } = require('node:crypto');
 const { performance } = require('node:perf_hooks');
+const { assertEosPlatform } = require('./eos-platform');
 
 const COMMAND = 'eos.license.check';
 const MAX_LEASE_MS = 15_000;
@@ -225,6 +226,12 @@ function createLicenseGuard(adapter, options = {}) {
             return pending.promise; // Coalesce concurrent callers; each dispatched request has a new nonce.
         }
         isAllowed(); // Expire a stale lease before initiating a new request.
+        try {
+            assertEosPlatform(name);
+        } catch (error) {
+            invalidate(/^EOS_PLATFORM_[A-Z_]+$/.test(error?.code || '') ? error.code : 'EOS_PLATFORM_UNAVAILABLE');
+            return Promise.resolve(false);
+        }
         let nonce;
         try {
             nonce = randomBytes(16).toString('hex');
@@ -309,4 +316,4 @@ function createLicenseGuard(adapter, options = {}) {
     });
 }
 
-module.exports = Object.freeze({ createLicenseGuard, LicenseError, COMMAND, MAX_LEASE_MS, MAX_TIMEOUT_MS, REFRESH_INTERVAL_MS });
+module.exports = Object.freeze({ assertEosPlatform, createLicenseGuard, LicenseError, COMMAND, MAX_LEASE_MS, MAX_TIMEOUT_MS, REFRESH_INTERVAL_MS });

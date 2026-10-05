@@ -1,0 +1,22 @@
+✔ actual runtime rejects uninitialized startup and writes without touching hardware (3.9428ms)
+✔ raw and alias controls require current authorization; loss retains telemetry and clears queued intent (1.783262ms)
+✔ an in-flight preparation cannot replay a prior epoch command after reauthorization (3.539625ms)
+✔ Modbus checks authorization after its IO lock, before every actual register write (1.4748ms)
+✔ MQTT cyclic publish is gated without disconnecting telemetry (0.868061ms)
+✔ queued UDP control rechecks after asynchronous socket setup (0.92762ms)
+✔ TA CMI outgoing registers require a fresh command after loss, incoming telemetry remains usable (3.507932ms)
+✔ inventory aggregates immutable template classes across instances; unknowns and edits deny (0.636053ms)
+✔ central Home authorization recovers, revocation denies, aggregate quantities reach the real client (5.803469ms)
+✔ main entry starts once after central activation and retains diagnostics while unlicensed (30.635417ms)
+✔ timed-out inventory reads remain single-flight and cannot reopen a stopped guard (2001.759022ms)
+✔ a valid central lease expires at the actual write boundary (36.970567ms)
+✔ shared Modbus Rtu bus rechecks the originating instance after its queue (1.117484ms)
+✔ shared Modbus Ascii bus rechecks the originating instance after its queue (1.017094ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2231.273472

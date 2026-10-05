@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const assetCache = require('./nexowatt-browser-asset-version.cjs');
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -53,8 +54,8 @@ must(web.includes('this.nexowattStableUpdateManager?.stop();'), 'auto-update man
 must(fs.existsSync(path.join(root, 'build/lib/eosRequestSecurity.js')), 'eosRequestSecurity runtime module missing');
 
 // 7.10.4 placement acceptance remains mandatory in 7.10.9: System Settings only.
-must(index.includes(`eos-auto-update.js?v=${autoTag}`), 'auto-update JavaScript cache key missing');
-must(index.includes(`eos-auto-update.css?v=${autoTag}`), 'auto-update CSS cache key missing');
+must(index.includes(`eos-auto-update.js?eos=${assetCache}`), 'auto-update JavaScript cache key missing');
+must(index.includes(`eos-auto-update.css?eos=${assetCache}`), 'auto-update CSS cache key missing');
 must(autoUi.includes('[role="dialog"][aria-labelledby="system-settings-dialog-title"]'), 'System Settings selector missing');
 must(autoUi.includes("root.dataset.context = 'system-settings'"), 'System Settings context missing');
 must(autoUi.includes('mount.content.insertBefore(root, mount.appBar.nextSibling)'), 'card is not placed below System Settings header');

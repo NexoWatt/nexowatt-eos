@@ -12,6 +12,7 @@ const {
 class FakeAdapter {
     constructor({ readyForControl = true, dropControlCallback = false, controlCallbackDelayMs = 0 } = {}) {
         this.namespace = 'eebus.0';
+        this.isEosLicenseAllowed = () => true;
         this.host = 'host-a';
         this.readyForControl = readyForControl;
         this.dropControlCallback = dropControlCallback;

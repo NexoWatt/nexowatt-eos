@@ -501,7 +501,7 @@ if (manifest && Array.isArray(manifest.files)) {
             fail(`SHA-256-Prüfung fehlgeschlagen: ${relativePath}`);
         }
     }
-    const controlledRoots = ['admin', 'build', 'docs'];
+    const controlledRoots = ['admin', 'build', 'docs', 'packages'];
     const actualControlled = controlledRoots.flatMap(walkFiles).sort();
     const expectedControlled = [...expectedMap.keys()]
         .filter(file => controlledRoots.some(rootName => file === rootName || file.startsWith(`${rootName}/`)))
@@ -524,11 +524,12 @@ if (manifest && Array.isArray(manifest.files)) {
 
 if (packageJson) {
     const files = Array.isArray(packageJson.files) ? packageJson.files : [];
-    for (const expected of ['admin/', 'build/', 'io-package.json', 'scripts/prepare-publish.cjs', 'scripts/validate-publish.cjs', 'test/eos-profile.js', 'test/sd-card.js', 'test/influxdb-cli.js', 'release-manifest.json']) {
+    for (const expected of ['admin/', 'build/', 'packages/eos-license-client/', 'test/license-guard.js', 'io-package.json', 'scripts/prepare-publish.cjs', 'scripts/validate-publish.cjs', 'test/eos-profile.js', 'test/sd-card.js', 'test/influxdb-cli.js', 'release-manifest.json']) {
         if (!files.includes(expected)) {
             fail(`package.json files-Whitelist enthält ${expected} nicht.`);
         }
     }
+    if (!packageJson.scripts?.['test:offline']?.includes('test/license-guard.js')) fail('Zentrale Lizenz-/Recoveryprüfungen fehlen im Offline-Gate.');
     const prepublishOnly = packageJson.scripts?.prepublishOnly || '';
     const preparePublish = packageJson.scripts?.['prepare:publish'] || '';
     const verifyPublish = packageJson.scripts?.['verify:publish'] || '';

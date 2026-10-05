@@ -20,7 +20,7 @@
  * 0.7.99: /api/state und /api/set TS-Shadow
  * - main.js führt jetzt nur diagnostische TS-Helfer für API-State/API-Set aus.
  * - Die produktive API-Antwort und Schreiblogik bleiben weiterhin JavaScript.
- * Original-Hash: 981fb920522a4fa1543dcaca70f1e48c86eb022a8149dd12b3151c5df9442cf3
+ * Original-Hash: dfb4a674927fc1d414aeb85b784b3c5ec873340f57755d4c3bec515d88c1f656
  * RC75-Prüfhinweis: Open-Meteo übernimmt den zentralen EOS-Admin-/Systemstandort,
  * veröffentlicht nur nutzbare Prognosekurven als aktiv und stellt PV-Flächen unabhängig
  * von verzögerter Settings-Hydrierung über eine einfache Endkundentabelle bereit.
@@ -2442,7 +2442,7 @@ class NexoWattVis extends utils.Adapter {
   }
   /**
    * Code-Teil: ensureLicenseStates
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
+   * Zweck: Stellt ausschließlich den zentralen EOS-Lizenzstatus bereit; lokale Werte erteilen keine Freigabe.
    * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
    * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
    */
@@ -2477,52 +2477,10 @@ class NexoWattVis extends utils.Adapter {
   /* Lizenz (Adapter-Freischaltung)                                        */
   /* --------------------------------------------------------------------- */
   /**
-   * Code-Teil: _nwNormalizeLicenseKey
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  /**
-   * Code-Teil: _nwLooksLikeMaskedLicenseKey
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  /**
-   * Code-Teil: _nwCleanLicenseKeyInput
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  /**
-   * Code-Teil: _nwReadNativeLicenseKeyFromObject
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  /**
-   * Code-Teil: _nwGetConfiguredLicenseKey
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  /**
-   * Code-Teil: _nwGetSystemUuid
-   * Zweck: Kapselt einen lokalen Verarbeitungsschritt, damit Aufrufer nicht direkt in Detaildaten eingreifen.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  /**
-   * Code-Teil: _nwExpectedLicenseKey
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  /**
-   * Lizenz-Editionen ab 0.8.3:
-   * - EOS ist das große Vollprodukt und erhält alle aktuellen und künftigen Features.
-   * - HEMS ist die kleinere Edition mit explizit freigegebenen Basis-/Steuerfunktionen.
-   * Alte gültige NW1-/NW1T-Schlüssel ohne Edition werden aus Kompatibilitätsgründen als EOS behandelt.
+   * Home/Pro bleiben die bestehende Produktmatrix; EOS/HEMS sind interne Aliase.
+   * Eine Edition allein erteilt keine Freigabe: aktuelle zentrale Lease,
+   * Featurezuordnung und signierte Stückzahlgrenzen werden gemeinsam geprüft.
+   * Legacy-NW1-Schlüssel sind in diesem Produktprofil außer Betrieb; Migration erfolgt im EOS Admin.
    */
   _nwNormalizeLicenseEdition(edition) {
     const e = String(edition || '').trim().toLowerCase();
@@ -2644,7 +2602,6 @@ class NexoWattVis extends utils.Adapter {
   }
 
   _nwBuildLicenseFeatureInfo() {
-    const info = (this._nwLicenseInfo && typeof this._nwLicenseInfo === 'object') ? this._nwLicenseInfo : {};
     const valid = this._nwCentralLicense?.isAllowed() === true;
     const lease = this._nwCentralLicense?.getStatus();
     let edition = this._nwCurrentLicenseEdition();
@@ -2667,13 +2624,13 @@ class NexoWattVis extends utils.Adapter {
       // Ablauf der zentralen Freigabe, nicht das Vertragsende der Lizenz.
       // Die echte Lizenzlaufzeit wird ausschließlich im EOS Admin angezeigt.
       validUntil: valid && lease?.valid === true ? Number(lease.validUntil || 0) : 0,
-      type: String(info.type || (valid ? 'full' : 'none')),
+      type: 'central',
       edition,
       editionLabel,
-      message: String(info.msg || (valid ? `${editionLabel} Lizenz gültig` : '')),
+      message: valid ? `Zentrale ${editionLabel}-Lizenz gültig.` : 'Zentrale Lizenzfreigabe nicht verfügbar.',
       expiresAt: 0,
       expiryManagedBy: 'eos-admin.0',
-      daysRemaining: Number(info.daysRemaining || 0),
+      daysRemaining: 0,
       maxWallboxes: this._nwLicenseMaxWallboxes(),
       maxStorages: this._nwLicenseMaxStorages(),
       storagePowerProfile,
@@ -2788,15 +2745,6 @@ class NexoWattVis extends utils.Adapter {
    * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
    */
   /**
-   * Code-Teil: _nwIsLicenseValid
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
-   * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-   * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-   */
-  _nwIsLicenseValid(uuid, enteredKey) {
-    return !!this._nwResolveFullLicense(uuid, enteredKey);
-  }
-  /**
    * Code-Teil: _nwClearTrialState
    * Zweck: Kapselt einen lokalen Verarbeitungsschritt, damit Aufrufer nicht direkt in Detaildaten eingreifen.
    * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
@@ -2804,20 +2752,20 @@ class NexoWattVis extends utils.Adapter {
    */
   /**
    * Code-Teil: _nwCheckTrialLicense
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
+   * Zweck: Stellt ausschließlich den zentralen EOS-Lizenzstatus bereit; lokale Werte erteilen keine Freigabe.
    * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
    * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
    */
   /**
    * Code-Teil: _nwEvaluateLicense
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
+   * Zweck: Stellt ausschließlich den zentralen EOS-Lizenzstatus bereit; lokale Werte erteilen keine Freigabe.
    * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
    * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
    */
   /**
    * Code-Teil: _nwRefreshLicenseFromConfiguredKey
    * Zweck: Aktualisiert den Laufzeit-Lizenzstatus aus der gespeicherten Adapter-Konfiguration.
-   * Zusammenhang: Wird beim Adapterstart, nach Lizenz-Speichern und beim App-Center-/VIS-Gate genutzt,
+   * Zusammenhang: Historischer Methodenname; fragt ausschließlich EOS Admin beim Start und für App-Center/VIS ab,
    * damit eine gerade aktivierte EOS-/HEMS-Lizenz ohne manuellen Neustart sofort sichtbar wird.
    */
   async _nwRefreshLicenseFromConfiguredKey(logResult = true) {
@@ -2842,7 +2790,7 @@ class NexoWattVis extends utils.Adapter {
   }
   /**
    * Code-Teil: _nwInitLicense
-   * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
+   * Zweck: Stellt ausschließlich den zentralen EOS-Lizenzstatus bereit; lokale Werte erteilen keine Freigabe.
    * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
    * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
    */
@@ -11598,6 +11546,14 @@ async migrateNativeConfig() {
  * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
  */
 async onReady() {
+    // License activation/status remains available on EOS; a plain ioBroker
+    // installation must not start the EOS management listener or mutate state.
+    try {
+      require('./packages/eos-license-client').assertEosPlatform('nexowatt-ui');
+    } catch (_) {
+      this.log.error('EOS_PLATFORM_REQUIRED');
+      return;
+    }
     // This delivered development profile deliberately has no physical activation switch.
     eosIntegrated.installPreviewWriteBoundary(this);
     try {
@@ -12385,7 +12341,7 @@ async onReady() {
     // jeden Aufruf selbst über `resolveStrictAccess` und `license.manage`.
     /**
      * Code-Teil: sendLicenseCors
-     * Zweck: Verarbeitet Lizenzdaten und schützt echte Schlüssel vor Platzhaltern.
+     * Zweck: Stellt ausschließlich den zentralen EOS-Lizenzstatus bereit; lokale Werte erteilen keine Freigabe.
      * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
      * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
      */
@@ -12428,7 +12384,7 @@ async onReady() {
       sendLicenseCors(req, res);
       res.status(204).end();
     });
-    // Abschnitt: Lizenz-API. Maskierte Platzhalter dürfen hier nie als echter Lizenzschlüssel gespeichert oder geprüft werden.
+    // Abschnitt: Nur lesender zentraler Lizenzstatus; keine Schlüsselannahme in der UI.
     // API-Kommentar: GET-Route. Zweck: stellt einen Web-/API-Endpunkt bereit. Zusammenhang: Frontend-Dateien in www/* können diesen Endpunkt direkt nutzen. Route/Handler: '/api/license/info', async (_req, res) => {
     app.get('/api/license/info', async (req, res) => {
       sendLicenseCors(req, res);
@@ -12452,12 +12408,12 @@ async onReady() {
       sendLicenseCors(req, res);
       res.status(204).end();
     });
-    // API-Kommentar: POST-Route. Zweck: stellt einen Web-/API-Endpunkt bereit. Zusammenhang: Frontend-Dateien in www/* können diesen Endpunkt direkt nutzen. Route/Handler: '/api/license/save', express.json({ limit: '64kb' }), async (req, res) => {
-    app.post('/api/license/save', express.json({ limit: '64kb' }), async (req, res) => {
+    // Kompatibilitätsantwort ohne Schlüsselparser oder Speicherwirkung.
+    app.post('/api/license/save', async (req, res) => {
       sendLicenseCors(req, res);
       try {
-        // Lizenzschlüssel sind ausschließlich für EOS-Administratoren freigegeben.
-        // Kunden und nicht angemeldete Aufrufe dürfen weder lesen noch ändern. Die Prüfung greift auch dann,
+        // Die alte Route nimmt für keine Rolle Schlüssel an. Der reine
+        // Verwaltungshinweis bleibt geschützt. Die Prüfung greift auch dann,
         // wenn die Lizenz-API vor dem normalen Lizenz-Gate registriert ist.
         {
           const access = await resolveStrictAccess(req);
@@ -12474,14 +12430,14 @@ async onReady() {
       } catch (error) {
         res.status(500).json({
           ok: false,
-          message: `Lizenz konnte nicht gespeichert werden: ${error && error.message ? error.message : String(error)}`,
+          message: 'Zentrale Lizenzverwaltung ist momentan nicht erreichbar.',
         });
       }
     });
 
     // -------------------------------------------------------------------
-    // License gate: the adapter/UI is locked until a valid license key is
-    // configured in the ioBroker Admin (Lizenz-Seite).
+    // Ausschließlich aktuelle zentrale EOS-Freigaben öffnen das UI-Gate.
+    // Lokale States, native Altwerte oder Browserangaben erteilen keine Rechte.
     // -------------------------------------------------------------------
     // API-Kommentar: USE-Route. Zweck: stellt einen Web-/API-Endpunkt bereit. Zusammenhang: Frontend-Dateien in www/* können diesen Endpunkt direkt nutzen. Route/Handler: (req, res, next) => {
     app.use(async (req, res, next) => {
@@ -12489,50 +12445,7 @@ async onReady() {
 
       if (this._nwCentralLicense?.isAllowed() === true) return next();
 
-      // Provide a helpful hint (especially for time‑limited trial keys)
-      // without exposing any internal generator logic.
-      const info = (this._nwLicenseInfo && typeof this._nwLicenseInfo === 'object') ? this._nwLicenseInfo : {};
-      const lType = String(info.type || '').trim();
-      const lMsgRaw = String(info.msg || '').trim();
-      const lMsg = lMsgRaw || 'Lizenz fehlt oder ist ungültig.';
-      const expiresAt = Number(info.expiresAt || 0);
-      const daysRemaining = (info.daysRemaining !== undefined && info.daysRemaining !== null) ? Number(info.daysRemaining) : null;
-      const isTrial = (lType === 'trial');
-      const isTrialExpired = isTrial && /abgelaufen/i.test(lMsg);
-      /**
-       * Code-Teil: esc
-       * Zweck: Kapselt einen lokalen Verarbeitungsschritt, damit Aufrufer nicht direkt in Detaildaten eingreifen.
-       * Zusammenhang: Teil von Adapterkern: Lifecycle, Webserver, API, States, EMS-Engine; Aufrufstellen und abhängige States/APIs beim Ändern mitprüfen.
-       * TypeScript: Parameter, Rückgabewert und verwendete Config-/State-Objekte später explizit typisieren.
-       */
-      const esc = (s) => String(s)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-
-      const headline = isTrialExpired
-        ? '⏳ Testphase abgelaufen'
-        : (isTrial ? '⏳ Testlizenz' : '🔒 Lizenz erforderlich');
-
-      let detailLine = '';
-      try {
-        if (isTrial && Number.isFinite(expiresAt) && expiresAt > 0) {
-          const dt = new Date(expiresAt);
-          const dtStr = dt.toLocaleString('de-DE');
-          if (isTrialExpired) {
-            detailLine = `<p><b>Hinweis:</b> Die Testlizenz ist abgelaufen (Ende: <code>${esc(dtStr)}</code>). Bitte eine Voll‑Lizenz eintragen.</p>`;
-          } else if (Number.isFinite(daysRemaining)) {
-            detailLine = `<p><b>Testlizenz:</b> Noch <code>${esc(daysRemaining)}</code> Tage (bis <code>${esc(dtStr)}</code>).</p>`;
-          } else {
-            detailLine = `<p><b>Testlizenz:</b> Gültig bis <code>${esc(dtStr)}</code>.</p>`;
-          }
-        }
-      } catch (_e) {
-        // ignore
-      }
-
+      // Status und Vertragslaufzeit liegen ausschließlich im EOS Admin.
       res.status(403);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.end(`<!doctype html>
@@ -12551,10 +12464,9 @@ async onReady() {
           </head>
           <body>
             <div class="card">
-              <h1>${headline}</h1>
-              <p><b>Status:</b> ${esc(lMsg)}</p>
-              ${detailLine}
-              <p>Die Bedienoberfläche und alle lizenzpflichtigen EOS-Bereiche bleiben bis zur Aktivierung gesperrt. Die Lizenzverwaltung selbst ist bewusst auch auf einem neuen, noch nicht lizenzierten System erreichbar.</p><p>Die Lizenz wird zentral im <b>EOS Admin</b> verwaltet. Über <b>Lizenz aktivieren</b> erreichst du nach der Admin-Anmeldung den Lizenzstatus und den Zugang zur zentralen Verwaltung. Die Gerätesteuerung bleibt in diesem Testprofil gesperrt.</p><div class="actions"><a class="btn primary" href="/license.html?nwAdmin=1">Lizenz aktivieren</a></div>
+              <h1>🔒 Zentrale EOS-Lizenz erforderlich</h1>
+              <p>Keine aktuelle zentrale Lizenzfreigabe verfügbar.</p>
+              <p>Die Bedienoberfläche und alle lizenzpflichtigen EOS-Bereiche bleiben bis zur Aktivierung gesperrt. Die Lizenzverwaltung selbst ist bewusst auch auf einem neuen, noch nicht lizenzierten System erreichbar.</p><p>Die Lizenz wird zentral im <b>EOS Admin</b> verwaltet. Über <b>Zentralen Lizenzstatus öffnen</b> erreichst du nach der Admin-Anmeldung den Lizenzstatus und den Zugang zur zentralen Verwaltung. Die Gerätesteuerung bleibt in diesem Testprofil gesperrt.</p><div class="actions"><a class="btn primary" href="/license.html?nwAdmin=1">Zentralen Lizenzstatus öffnen</a></div>
             </div>
           </body>
         </html>`);
@@ -15951,11 +15863,9 @@ app.get('/api/smarthome/type-detect', requireDpDiscovery, async (req, res) => {
     app.get('/api/installer/config', requireInstaller, async (_req, res) => {
       try {
         sendNoStore(res);
-        // A license can be saved through the Admin tab while the App-Center is already open.
-        // Refresh the runtime license cache here before filtering apps. This also covers the
-        // startup edge case where the HTTP gate is open but _nwLicenseInfo has not yet been
-        // populated, which otherwise made the App-Center show "Keine Lizenz" and no apps.
-        const hasFreshLicenseInfo = !!(this._nwLicenseInfo && typeof this._nwLicenseInfo === 'object' && this._nwLicenseInfo.ok === true && this._nwLicenseOk === true);
+        // Zentrale Aktivierung und Widerruf können bei geöffnetem App-Center erfolgen.
+        // Nur eine frische zentrale Lease zählt; lokale Statusspiegel sind keine Freigabe.
+        const hasFreshLicenseInfo = this._nwCentralLicense?.isAllowed() === true;
         if (!hasFreshLicenseInfo) {
           try { await this._nwRefreshLicenseFromConfiguredKey(false); } catch (_eLicRefresh) {}
         }
@@ -15994,7 +15904,7 @@ app.get('/api/smarthome/type-detect', requireDpDiscovery, async (req, res) => {
         const patch = body.patch && typeof body.patch === 'object' ? body.patch : {};
         const restartEms = body.restartEms !== false; // default true
 
-        const hasFreshLicenseInfo = !!(this._nwLicenseInfo && typeof this._nwLicenseInfo === 'object' && this._nwLicenseInfo.ok === true && this._nwLicenseOk === true);
+        const hasFreshLicenseInfo = this._nwCentralLicense?.isAllowed() === true;
         if (!hasFreshLicenseInfo) {
           try { await this._nwRefreshLicenseFromConfiguredKey(false); } catch (_eLicRefresh) {}
         }

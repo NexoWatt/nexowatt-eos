@@ -12,6 +12,8 @@
 import {
     appendFileSync,
     chmodSync,
+    copyFileSync,
+    unlinkSync,
     existsSync,
     mkdirSync,
     readFileSync,
@@ -24,6 +26,7 @@ import type * as ChildProcessModule from 'node:child_process';
 import type * as HttpModule from 'node:http';
 import type * as HttpsModule from 'node:https';
 import type * as ToolsModule from './tools';
+import type * as RestoreAuthorization from './restoreAuthorization';
 import type { BackItUpStorageEngine } from './list/types';
 import type { BackItUpContext } from './types';
 import type {
@@ -59,6 +62,7 @@ const DONE_MARKERS = [
     'javascript restore done',
 ];
 
+let detachedRecoveryAuthorized = false;
 let logWebIF = '';
 let statusColor = '';
 let restoreStatus = '';
@@ -198,7 +202,7 @@ export function getFile(
  *
  * @param bashDir directory holding stopIOB.sh / stopIOB.bat
  */
-function startDetachedRestore(bashDir: string): void {
+function startDetachedRestore(bashDir: string, key: string): void {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { spawn } = require('node:child_process') as typeof ChildProcessModule;
     const isWin = process.platform.startsWith('win');
@@ -207,6 +211,7 @@ function startDetachedRestore(bashDir: string): void {
         detached: true,
         cwd: __dirname,
         stdio: ['ignore', 'ignore', 'ignore'],
+        env: { ...process.env, NEXOWATT_RESTORE_KEY: key },
     };
 
     if (isWin) {
@@ -318,6 +323,31 @@ export function restore(
     log: BackItUpRestoreLogger,
     callback: (result: BackItUpRestoreResult) => void,
 ): void {
+    const assertLicensed = (): void => {
+        if (!adapter || typeof (adapter as ioBroker.Adapter & { assertLicensedOperation?: () => void }).assertLicensedOperation !== 'function') {
+            throw new Error('EOS_LICENSE_REQUIRED');
+        }
+        (adapter as ioBroker.Adapter & { assertLicensedOperation: () => void }).assertLicensedOperation();
+    };
+    if (adapter) {
+        try { assertLicensed(); } catch { callback({ error: 'EOS_LICENSE_REQUIRED' }); return; }
+    } else if (!detachedRecoveryAuthorized) {
+        callback({ error: 'EOS_RECOVERY_AUTH_REQUIRED' });
+        return;
+    } else {
+        detachedRecoveryAuthorized = false;
+    }
+    // EOS has no generic runtime sudo/service-stop permission. System restoration belongs
+    // to the separately authorized host recovery coordinator. Reject before downloading,
+    // staging a capability or stopping services, while licensed data-only restores remain.
+    if (adapter && process.platform === 'linux' && !existsSync('/opt/scripts/.docker_config/.thisisdocker')) {
+        const name = typeof fileName === 'string' ? fileName.split('/').pop()! : '';
+        if (/^(?:iobroker|redis)(?:[_.]|$)/.test(name)
+            || /^\d{4}_\d{2}_\d{2}-\d{2}_\d{2}_\d{2}_backupiobroker\.tar\.gz$/.test(name)) {
+            callback({ error: 'EOS_OPERATOR_RECOVERY_REQUIRED' });
+            return;
+        }
+    }
     options = JSON.parse(JSON.stringify(options));
 
     if (storageType === 'nas / copy') {
@@ -341,6 +371,8 @@ export function restore(
         const toSaveName = join(backupDir, name);
 
         getFile(options, storageType!, fileName!, toSaveName, log as unknown as ioBroker.Logger, err => {
+            // Downloads can outlive a lease. Check again before staging or executing any restore.
+            try { assertLicensed(); } catch { callback({ error: 'EOS_LICENSE_REQUIRED' }); return; }
             if (!err && existsSync(toSaveName)) {
                 let backupType = name.split('.')[0];
 
@@ -407,18 +439,24 @@ export function restore(
                 const _module = require(`./restore/${backupType}`) as BackItUpRestoreModule;
 
                 if (_module.isStop) {
+                    // Defence in depth for future stop-requiring formats, before staging.
+                    if (process.platform === 'linux' && !existsSync('/opt/scripts/.docker_config/.thisisdocker')) {
+                        callback({ error: 'EOS_OPERATOR_RECOVERY_REQUIRED' });
+                        return;
+                    }
                     if (backupType === 'iobroker' && existsSync(bashDir!)) {
                         // copy restore files
                         const restoreDir = join(bashDir!, 'restore');
                         const restoreSource = join(__dirname, 'restore');
 
-                        tools.copyFile(join(__dirname, 'restore.js'), join(bashDir!, 'restore.js'));
+                        copyFileSync(join(__dirname, 'restore.js'), join(bashDir!, 'restore.js'));
+                        copyFileSync(join(__dirname, 'restoreAuthorization.js'), join(bashDir!, 'restoreAuthorization.js'));
 
                         if (!existsSync(restoreDir)) {
                             mkdirSync(restoreDir);
                         }
 
-                        tools.copyFile(
+                        copyFileSync(
                             join(restoreSource, `${backupType}.js`),
                             join(restoreDir, `${backupType}.js`),
                         );
@@ -427,12 +465,20 @@ export function restore(
                     config.theme = currentTheme as string;
                     config.currentProtocol = currentProtocol as string;
                     config.bashDir = bashDir as string;
-                    writeFileSync(
-                        `${backupType === 'iobroker' ? bashDir : __dirname}/restore.json`,
-                        JSON.stringify(config, null, 2),
-                    );
-                    startDetachedRestore(bashDir!);
-                    callback?.({ error: '' });
+                    // The key travels only to this child. The file alone cannot authorize recovery.
+                    // eslint-disable-next-line @typescript-eslint/no-require-imports
+                    const authorization = require('./restoreAuthorization') as typeof RestoreAuthorization;
+                    void authorization.stageAuthorizedRestore(backupType === 'iobroker' ? bashDir! : __dirname, config, assertLicensed)
+                        .then(key => {
+                            try {
+                                assertLicensed();
+                                startDetachedRestore(bashDir!, key);
+                                callback?.({ error: '' });
+                            } catch {
+                                try { unlinkSync(join(backupType === 'iobroker' ? bashDir! : __dirname, 'restore.json')); } catch { /* remain denied */ }
+                                callback?.({ error: 'EOS_LICENSE_REQUIRED' });
+                            }
+                        }, () => callback?.({ error: 'EOS_RECOVERY_STAGING_FAILED' }));
                     return;
                 }
                 _module
@@ -533,10 +579,14 @@ function restoreIF(currentTheme: string, currentProtocol: string, bashDir: strin
 
 // The original only assigned module.exports in the `module.parent` branch. Exporting
 // unconditionally is equivalent: in the detached run below nothing reads the exports.
-if (!(typeof module !== 'undefined' && module.parent)) {
+async function runDetachedRestore(): Promise<void> {
     if (existsSync(`${__dirname}/restore.json`)) {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const config = require(`${__dirname}/restore.json`) as BackItUpRestoreOptions;
+        const authorization = require('./restoreAuthorization') as typeof RestoreAuthorization;
+        const key = process.env.NEXOWATT_RESTORE_KEY;
+        delete process.env.NEXOWATT_RESTORE_KEY;
+        const config = await authorization.consumeAuthorizedRestore(__dirname, key) as BackItUpRestoreOptions;
+        detachedRecoveryAuthorized = true;
         const logName = join(config.backupDir, 'logs.txt').replace(/\\/g, '/');
 
         startFinish = '[Restore]';
@@ -583,4 +633,12 @@ if (!(typeof module !== 'undefined' && module.parent)) {
     } else {
         console.log(`No config found at "${normalize(join(__dirname, 'restore.json'))}"`);
     }
+}
+
+if (!(typeof module !== 'undefined' && module.parent)) {
+    void runDetachedRestore().catch(() => {
+        // Never print ticket contents, config, archive paths or authorization material.
+        console.error('EOS_RECOVERY_AUTH_FAILED');
+        process.exitCode = 1;
+    });
 }
