@@ -254,6 +254,9 @@ jobs:
         # Fixed production ports must run separately from other network fixtures.
         run: node --test --test-reporter=tap --test-concurrency=1 tests/onboarding/web-readiness.test.cjs
 
+      - name: Check completed R8 Admin setup operator boundaries
+        run: python3 -I -B tests/system/test_complete_r8_admin_setup.py
+
       - name: Keep R6 build, derivative SBOM and publication contracts active
         # These source fixtures do not rebuild or overwrite an immutable release.
         run: |
@@ -349,6 +352,12 @@ jobs:
           umask 077
           node tests/integration-controller/run-native.cjs "$EOS_NATIVE_LAB_ROOT" | tee "$EOS_NATIVE_LAB_ROOT/native-controller.tap"
 
+      - name: Check R8 Admin setup transaction on native PostgreSQL
+        run: |
+          set -euo pipefail
+          EOS_PG_BIN_DIRECTORY="$EOS_NATIVE_LAB_ROOT/postgresql/bin" \
+            node --test --test-reporter=tap tests/system/complete-r8-admin-setup.test.cjs | tee "$EOS_NATIVE_LAB_ROOT/admin-setup-sql.tap"
+
       - name: Preserve bounded native test and source transformation evidence
         if: always() && env.EOS_NATIVE_LAB_ROOT != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -359,6 +368,7 @@ jobs:
           path: |
             ${{ env.EOS_NATIVE_LAB_ROOT }}/native-controller.tap
             ${{ env.EOS_NATIVE_LAB_ROOT }}/host-object-regression.tap
+            ${{ env.EOS_NATIVE_LAB_ROOT }}/admin-setup-sql.tap
             ${{ env.EOS_NATIVE_LAB_ROOT }}/controller-profile.json
             ${{ env.EOS_NATIVE_LAB_ROOT }}/pid-profile.json
 

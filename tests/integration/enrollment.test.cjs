@@ -54,6 +54,8 @@ test('initial enrollment stores only hash and disabled fixed instances; verifies
     const c = fixture(); const result = await enrollment.enroll(c);
     assert.equal(result.status, 'INTEGRATED_UI_LAB_VERIFIED'); assert.equal(result.adaptersEnabled, 0);
     assert.equal(result.physicalControlEnabled, false); assert.equal(c.fresh, 1);
+    assert.equal(c.docs.get('system.config').common.licenseConfirmed, true);
+    assert.equal(c.docs.get('system.config').common.diag, 'none');
     const password = c.docs.get('system.user.admin').common.password;
     enrollment.strongHash(password); assert.ok(!JSON.stringify([...c.docs]).includes(secret));
     const [, iterations, key, salt] = password.split('$');

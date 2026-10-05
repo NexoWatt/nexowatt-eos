@@ -1,0 +1,232 @@
+TAP version 13
+# Subtest: initial enrollment stores only hash and disabled fixed instances; verifies without writes
+ok 1 - initial enrollment stores only hash and disabled fixed instances; verifies without writes
+  ---
+  duration_ms: 3522.153413
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:0
+ok 2 - password rejects bounded invalid input string:0
+  ---
+  duration_ms: 0.389974
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:5
+ok 3 - password rejects bounded invalid input string:5
+  ---
+  duration_ms: 0.102684
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:129
+ok 4 - password rejects bounded invalid input string:129
+  ---
+  duration_ms: 0.118217
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:14
+ok 5 - password rejects bounded invalid input string:14
+  ---
+  duration_ms: 0.108082
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:21
+ok 6 - password rejects bounded invalid input string:21
+  ---
+  duration_ms: 0.114122
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 7 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.096995
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 8 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.216144
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:200
+ok 9 - password rejects bounded invalid input string:200
+  ---
+  duration_ms: 0.142624
+  type: 'test'
+  ...
+# Subtest: password allows long unicode passphrase without composition tricks
+ok 10 - password allows long unicode passphrase without composition tricks
+  ---
+  duration_ms: 0.343134
+  type: 'test'
+  ...
+# Subtest: rejects marker pending without repair
+ok 11 - rejects marker pending without repair
+  ---
+  duration_ms: 0.768693
+  type: 'test'
+  ...
+# Subtest: rejects config changed without repair
+ok 12 - rejects config changed without repair
+  ---
+  duration_ms: 0.848823
+  type: 'test'
+  ...
+# Subtest: rejects physical enabled without repair
+ok 13 - rejects physical enabled without repair
+  ---
+  duration_ms: 0.418587
+  type: 'test'
+  ...
+# Subtest: rejects core binding without repair
+ok 14 - rejects core binding without repair
+  ---
+  duration_ms: 0.455052
+  type: 'test'
+  ...
+# Subtest: rejects remote repo without repair
+ok 15 - rejects remote repo without repair
+  ---
+  duration_ms: 1.037666
+  type: 'test'
+  ...
+# Subtest: rejects automatic updates without repair
+ok 16 - rejects automatic updates without repair
+  ---
+  duration_ms: 1.988902
+  type: 'test'
+  ...
+# Subtest: rejects disabled admin without repair
+ok 17 - rejects disabled admin without repair
+  ---
+  duration_ms: 0.835422
+  type: 'test'
+  ...
+# Subtest: rejects world-readable service hash without repair
+ok 18 - rejects world-readable service hash without repair
+  ---
+  duration_ms: 0.805598
+  type: 'test'
+  ...
+# Subtest: rejects weak password without repair
+ok 19 - rejects weak password without repair
+  ---
+  duration_ms: 0.565037
+  type: 'test'
+  ...
+# Subtest: rejects extra executable without repair
+ok 20 - rejects extra executable without repair
+  ---
+  duration_ms: 1.091406
+  type: 'test'
+  ...
+# Subtest: rejects node arguments without repair
+ok 21 - rejects node arguments without repair
+  ---
+  duration_ms: 0.634901
+  type: 'test'
+  ...
+# Subtest: rejects remote host without repair
+ok 22 - rejects remote host without repair
+  ---
+  duration_ms: 0.643776
+  type: 'test'
+  ...
+# Subtest: rejects admin plaintext without repair
+ok 23 - rejects admin plaintext without repair
+  ---
+  duration_ms: 0.673259
+  type: 'test'
+  ...
+# Subtest: rejects UI no auth without repair
+ok 24 - rejects UI no auth without repair
+  ---
+  duration_ms: 1.423344
+  type: 'test'
+  ...
+# Subtest: rejects UI trusted header without repair
+ok 25 - rejects UI trusted header without repair
+  ---
+  duration_ms: 0.501702
+  type: 'test'
+  ...
+# Subtest: rejects UI path without repair
+ok 26 - rejects UI path without repair
+  ---
+  duration_ms: 0.628402
+  type: 'test'
+  ...
+# Subtest: controller alive blocks first mutation
+ok 27 - controller alive blocks first mutation
+  ---
+  duration_ms: 0.402854
+  type: 'test'
+  ...
+# Subtest: failed enrollment retains pending gate and never enables partially written instances
+ok 28 - failed enrollment retains pending gate and never enables partially written instances
+  ---
+  duration_ms: 2087.316763
+  type: 'test'
+  ...
+# Subtest: first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+ok 29 - first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+  ---
+  duration_ms: 22.793481
+  type: 'test'
+  ...
+# Subtest: configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+ok 30 - configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+  ---
+  duration_ms: 3.998004
+  type: 'test'
+  ...
+# Subtest: every partial object-store write keeps the start gate closed and refuses unsafe replay
+ok 31 - every partial object-store write keeps the start gate closed and refuses unsafe replay
+  ---
+  duration_ms: 16.938734
+  type: 'test'
+  ...
+# Subtest: configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+ok 32 - configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+  ---
+  duration_ms: 3.42883
+  type: 'test'
+  ...
+# Subtest: first-run marker and safety policy drift block subsequent enrollment verification
+ok 33 - first-run marker and safety policy drift block subsequent enrollment verification
+  ---
+  duration_ms: 14.403403
+  type: 'test'
+  ...
+# Subtest: minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+ok 34 - minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+  ---
+  duration_ms: 3.316542
+  type: 'test'
+  ...
+# Subtest: EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes
+ok 35 - EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes
+  ---
+  duration_ms: 7.307946
+  type: 'test'
+  ...
+# Subtest: historical wizard state remains verifiable and never creates a new boot gate or implicit repair
+ok 36 - historical wizard state remains verifiable and never creates a new boot gate or implicit repair
+  ---
+  duration_ms: 7.589383
+  type: 'test'
+  ...
+# Subtest: first start never replaces telemetry settings with implicit consent
+ok 37 - first start never replaces telemetry settings with implicit consent
+  ---
+  duration_ms: 0.594451
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5726.884614

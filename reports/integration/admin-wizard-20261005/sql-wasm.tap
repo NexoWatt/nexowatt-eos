@@ -1,0 +1,157 @@
+TAP version 13
+# Subtest: R8 Admin setup compatibility repair executes atomically under the objects role
+    # Subtest: missing flag becomes true; every other value and row is retained; one matching event is committed
+    ok 1 - missing flag becomes true; every other value and row is retained; one matching event is committed
+      ---
+      duration_ms: 30.108181
+      type: 'test'
+      ...
+    # Subtest: an explicit false flag is repaired
+    ok 2 - an explicit false flag is repaired
+      ---
+      duration_ms: 10.750441
+      type: 'test'
+      ...
+    # Subtest: repeating the repair preserves all bytes and emits no duplicate event
+    ok 3 - repeating the repair preserves all bytes and emits no duplicate event
+      ---
+      duration_ms: 5.547273
+      type: 'test'
+      ...
+    # Subtest: unfinished enrollment rejects without any write or event
+    ok 4 - unfinished enrollment rejects without any write or event
+      ---
+      duration_ms: 14.197887
+      type: 'test'
+      ...
+    # Subtest: unfinished first-start rejects without any write or event
+    ok 5 - unfinished first-start rejects without any write or event
+      ---
+      duration_ms: 13.009687
+      type: 'test'
+      ...
+    # Subtest: missing validated-configuration marker rejects without any write or event
+    ok 6 - missing validated-configuration marker rejects without any write or event
+      ---
+      duration_ms: 12.999712
+      type: 'test'
+      ...
+    # Subtest: physical-control admission rejects without any write or event
+    ok 7 - physical-control admission rejects without any write or event
+      ---
+      duration_ms: 11.047185
+      type: 'test'
+      ...
+    # Subtest: different runtime configuration binding rejects without any write or event
+    ok 8 - different runtime configuration binding rejects without any write or event
+      ---
+      duration_ms: 10.925723
+      type: 'test'
+      ...
+    # Subtest: string policy version rejects without any write or event
+    ok 9 - string policy version rejects without any write or event
+      ---
+      duration_ms: 12.161446
+      type: 'test'
+      ...
+    # Subtest: telemetry enabled rejects without any write or event
+    ok 10 - telemetry enabled rejects without any write or event
+      ---
+      duration_ms: 11.6045
+      type: 'test'
+      ...
+    # Subtest: active repository rejects without any write or event
+    ok 11 - active repository rejects without any write or event
+      ---
+      duration_ms: 12.191911
+      type: 'test'
+      ...
+    # Subtest: automatic updates enabled rejects without any write or event
+    ok 12 - automatic updates enabled rejects without any write or event
+      ---
+      duration_ms: 11.54426
+      type: 'test'
+      ...
+    # Subtest: repository configured rejects without any write or event
+    ok 13 - repository configured rejects without any write or event
+      ---
+      duration_ms: 10.826555
+      type: 'test'
+      ...
+    # Subtest: missing repository restriction rejects without any write or event
+    ok 14 - missing repository restriction rejects without any write or event
+      ---
+      duration_ms: 10.955498
+      type: 'test'
+      ...
+    # Subtest: wrong document identity rejects without any write or event
+    ok 15 - wrong document identity rejects without any write or event
+      ---
+      duration_ms: 12.571189
+      type: 'test'
+      ...
+    # Subtest: wrong document type rejects without any write or event
+    ok 16 - wrong document type rejects without any write or event
+      ---
+      duration_ms: 9.534349
+      type: 'test'
+      ...
+    # Subtest: nonboolean compatibility flag rejects without any write or event
+    ok 17 - nonboolean compatibility flag rejects without any write or event
+      ---
+      duration_ms: 13.524688
+      type: 'test'
+      ...
+    # Subtest: missing first-start record rejects without any write or event
+    ok 18 - missing first-start record rejects without any write or event
+      ---
+      duration_ms: 13.70582
+      type: 'test'
+      ...
+    # Subtest: invalid JSON rejects without any write or event
+    ok 19 - invalid JSON rejects without any write or event
+      ---
+      duration_ms: 9.011705
+      type: 'test'
+      ...
+    # Subtest: oversized object rejects without any write or event
+    ok 20 - oversized object rejects without any write or event
+      ---
+      duration_ms: 13.384518
+      type: 'test'
+      ...
+    # Subtest: expired or future-expiring configuration is rejected instead of revived
+    ok 21 - expired or future-expiring configuration is rejected instead of revived
+      ---
+      duration_ms: 10.700927
+      type: 'test'
+      ...
+    # Subtest: event insertion failure rolls the earlier object update back
+    ok 22 - event insertion failure rolls the earlier object update back
+      ---
+      duration_ms: 17.918753
+      type: 'test'
+      ...
+    # Subtest: already-true flag cannot bypass incomplete first-start checks
+    ok 23 - already-true flag cannot bypass incomplete first-start checks
+      ---
+      duration_ms: 11.84397
+      type: 'test'
+      ...
+    1..23
+ok 1 - R8 Admin setup compatibility repair executes atomically under the objects role
+  ---
+  duration_ms: 1781.601072
+  type: 'test'
+  ...
+# engine=PostgreSQL 18.3 (PGlite 0.5.8) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit; scope=WASM SQL/RLS only
+# sqlSha256=091406fd74dd9a1814c5c20d0f588ae7dc97f1020609ac581612bdfd0b79d8b3
+1..1
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1885.220662

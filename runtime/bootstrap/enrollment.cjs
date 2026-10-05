@@ -169,6 +169,7 @@ async function enrollFirstRun({ objects, states, config, app, passwordHash: hash
     const admin = structuredClone(await objects.getObjectAsync('system.user.admin'));
     const system = structuredClone(await objects.getObjectAsync('system.config'));
     if (!admin || admin.common?.enabled !== false || admin.common.password !== '' || !system) fail('ENROLLMENT_FRESH_ADMIN_REQUIRED');
+    if (system.common?.diag !== 'none') fail('ENROLLMENT_REPOSITORY_DRIFT');
     const marker = { _id: MARKER, type: 'meta', common: { name: 'EOS browser first-start enrollment', type: 'meta.user' },
         native: { profile: PROFILE, version: 2, state: 'pending', runtimeConfigSha256: digest(config), physicalControlEnabled: false,
             accountPolicyVersion: accountsPolicy.ACCOUNT_POLICY_VERSION, accounts: [], firstRunPolicyVersion: 1, firstRunBinding: binding },
@@ -188,8 +189,12 @@ async function enrollFirstRun({ objects, states, config, app, passwordHash: hash
     }
     if (settings.schemaVersion !== 3) {
         Object.assign(system.common, { siteName: settings.siteName, language: settings.language, timeZone: settings.timeZone });
-        await objects.setObjectAsync(system._id, system);
     }
+    // EOS already provisions the service password and management policy. This
+    // upstream compatibility flag suppresses its duplicate setup wizard; it is
+    // not telemetry consent or an EOS product license. diag remains 'none'.
+    system.common.licenseConfirmed = true;
+    await objects.setObjectAsync('system.config', system);
     admin.common = { ...admin.common, enabled: true, password: hashed, name: 'NexoWatt Service' };
     admin.acl = { ...accountsPolicy.PRIVATE_ACL };
     await objects.setObjectAsync(admin._id, admin);
@@ -213,7 +218,9 @@ async function enroll({ objects, states, config, app, password, accounts, verify
     const userDocs = [];
     for (const row of users) userDocs.push(accountsPolicy.userDocument(row, await passwordHash(row.password)));
     const admin = structuredClone(await objects.getObjectAsync('system.user.admin'));
+    const system = structuredClone(await objects.getObjectAsync('system.config'));
     if (!admin || admin.common?.enabled !== false || admin.common.password !== '') fail('ENROLLMENT_FRESH_ADMIN_REQUIRED');
+    if (system?.common?.diag !== 'none') fail('ENROLLMENT_REPOSITORY_DRIFT');
     const marker = { _id: MARKER, type: 'meta', common: { name: 'EOS integrated UI laboratory enrollment', type: 'meta.user' },
         native: { profile: PROFILE, version: 2, state: 'pending', runtimeConfigSha256: digest(config), physicalControlEnabled: false,
             accountPolicyVersion: accountsPolicy.ACCOUNT_POLICY_VERSION, accounts: accountsPolicy.inventory(users) },
@@ -225,6 +232,10 @@ async function enroll({ objects, states, config, app, password, accounts, verify
         const doc = instanceDocument(item, config.system.hostname);
         await objects.setObjectAsync(doc._id, doc);
     }
+    // The laboratory enrollment also supplies a complete authenticated setup.
+    // Preserve telemetry policy and all unrelated system configuration.
+    system.common.licenseConfirmed = true;
+    await objects.setObjectAsync('system.config', system);
     admin.common = { ...admin.common, enabled: true, password: hashed };
     admin.common.name = 'NexoWatt Service';
     admin.acl = { ...accountsPolicy.PRIVATE_ACL };

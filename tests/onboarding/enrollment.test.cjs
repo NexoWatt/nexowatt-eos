@@ -109,7 +109,7 @@ test('minimal first start enrolls admin only and preserves host defaults without
     const before = structuredClone(common);
     const result = await enrollment.enrollFirstRun(c);
     assert.equal(result.physicalControlEnabled, false);
-    assert.deepEqual(c.docs.get('system.config').common, before);
+    assert.deepEqual(c.docs.get('system.config').common, { ...before, licenseConfirmed: true });
     assert.equal(c.docs.get('system.config').common.siteName, undefined);
     const ui = c.docs.get('system.adapter.nexowatt-ui.0');
     assert.equal(ui.native.installerConfig, undefined);
@@ -117,4 +117,53 @@ test('minimal first start enrolls admin only and preserves host defaults without
     assert.deepEqual(c.docs.get(enrollment.FIRST_START_MARKER).native.settings, c.settings);
     assert.equal([...c.docs.values()].filter(doc => doc.type === 'user').length, 1);
     assert.equal((await enrollment.verify(c)).physicalControlEnabled, false);
+});
+
+test('EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes', async () => {
+    const c = fixture();
+    const system = c.docs.get('system.config');
+    Object.assign(system.common, { licenseConfirmed: false, vendorFlag: 'retain' });
+    system.native = { secret: crypto.randomBytes(32).toString('hex') };
+    c.docs.set('system.meta.uuid', { _id: 'system.meta.uuid', type: 'meta', native: { uuid: crypto.randomUUID() } });
+    const identity = structuredClone(c.docs.get('system.meta.uuid'));
+    const native = structuredClone(system.native);
+    // Execute the actual Admin gate expression to reproduce the browser decision;
+    // this is not a second handwritten implementation of the wizard predicate.
+    const adminSource = fs.readFileSync(path.join(__dirname, '../../components/admin/src-admin/src/App.tsx'), 'utf8');
+    const match = adminSource.match(/newState\.wizard = ([^;]+);/);
+    assert.ok(match, 'Admin wizard decision must remain covered');
+    const wizardVisible = common => require('node:vm').runInNewContext(match[1], { newState: { systemConfig: { common } } });
+    assert.equal(wizardVisible(system.common), true);
+    await enrollment.enrollFirstRun(c);
+    const common = c.docs.get('system.config').common;
+    assert.equal(wizardVisible(common), false);
+    assert.equal(common.licenseConfirmed, true);
+    assert.equal(common.diag, 'none');
+    assert.equal(common.vendorFlag, 'retain');
+    assert.deepEqual(c.docs.get('system.config').native, native);
+    assert.deepEqual(c.docs.get('system.meta.uuid'), identity);
+    assert.equal(c.docs.get(enrollment.FIRST_START_MARKER).native.settings.licenseMode, c.settings.licenseMode);
+    assert.equal(c.docs.get('system.user.admin').common.password, hashed);
+    const writes = c.writes;
+    await enrollment.enrollFirstRun(c);
+    assert.equal(c.writes, writes, 'identical handoff does not write again');
+});
+
+test('historical wizard state remains verifiable and never creates a new boot gate or implicit repair', async () => {
+    for (const mutate of [c => c.docs.get('system.config').common.licenseConfirmed = false,
+        c => delete c.docs.get('system.config').common.licenseConfirmed]) {
+        const c = fixture(); await enrollment.enrollFirstRun(c); mutate(c);
+        const before = structuredClone(c.docs.get('system.config'));
+        const writes = c.writes;
+        assert.equal((await enrollment.verify(c)).physicalControlEnabled, false);
+        await enrollment.enrollFirstRun(c);
+        assert.equal(c.writes, writes, 'verification does not repair unrequested drift');
+        assert.deepEqual(c.docs.get('system.config'), before);
+    }
+});
+
+test('first start never replaces telemetry settings with implicit consent', async () => {
+    const c = fixture(); c.docs.get('system.config').common.diag = 'extended';
+    await assert.rejects(enrollment.enrollFirstRun(c), /ENROLLMENT_REPOSITORY_DRIFT/);
+    assert.equal(c.writes, 0);
 });
