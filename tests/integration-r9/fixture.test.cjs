@@ -36,3 +36,12 @@ test('R9 diagnostics preserve only explicit fixed codes', () => {
     assert.equal(stageFailure({ code: 'R9_LICENSE_UI_COOKIE', message: 'private' }), 'R9_LICENSE_UI_COOKIE');
     assert.equal(stageFailure({ code: 'R9_LICENSE_PRIVATE_SECRET', message: 'private' }), 'MANAGEMENT_STAGE_FAILED');
 });
+test('root fixture diagnostics expose only allowlisted guard reasons, never exception text or paths', () => {
+    const { failureLine } = require('./prepare-fixed-root.cjs');
+    for (const reason of ['ROOT_UID', 'CI_CONTEXT', 'NODE_VERSION', 'LAB_OWNER', 'LAB_MODE', 'OPT_OWNER', 'OPT_MODE', 'PREPARATION_FILE']) {
+        assert.equal(failureLine({ reason, message: 'private-path-and-token' }), `R9_NATIVE_ROOT_FIXTURE_REJECTED:${reason}\n`);
+    }
+    for (const error of [null, new Error('private-path-and-token'), { reason: 'private-path-and-token' }, { code: 'OPT_MODE' }]) {
+        assert.equal(failureLine(error), 'R9_NATIVE_ROOT_FIXTURE_REJECTED:UNEXPECTED\n');
+    }
+});

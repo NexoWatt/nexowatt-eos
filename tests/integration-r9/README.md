@@ -121,6 +121,17 @@ es gibt keinen allgemeinen Lösch-/Reparaturbefehl für Produktivhosts.
 
 ## Lokale Prüfungen und Grenzen
 
+Diagnosenachtrag 07.10.2026: Der Root-Vorbereiter meldet bei einer Ablehnung
+zusätzlich einen festen, erlaubten Grund wie `OPT_MODE`, `LAB_OWNER` oder
+`NODE_VERSION`. Alle bisherigen Ablehnungsbedingungen bleiben unverändert.
+Unbekannte Fehler erscheinen nur als `UNEXPECTED`; Dateipfade, Ausnahmeinhalte,
+Schlüssel und Umgebungsvariablen werden nicht ausgegeben. Dies grenzt den am
+07.10.2026 vor dem nativen Test aufgetretenen CI-Abbruch ein, behebt ihn aber
+nicht durch Lockerung einer Schutzprüfung.
+Lokaler Diagnoselauf (Linux x64, Node 24.19.0): 13/13 Vertragsprüfungen bestanden,
+keine übersprungen; [Rohbeleg](evidence/root-guard-diagnostics-20261007.tap).
+Der tatsächliche Root-Aufbau und der native R9-Lauf sind damit nicht bestanden.
+
 `node --test tests/integration-r9/fixture.test.cjs tests/integration-r9/license-session.test.cjs`
 prüft Metadaten, Ablehnung des Roothelfers außerhalb des expliziten Kontexts,
 Hashprojektion, echte NWL3-Signatur-/Policyprüfung und geheimnisfreie
