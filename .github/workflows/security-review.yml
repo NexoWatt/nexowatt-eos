@@ -521,9 +521,18 @@ jobs:
       - name: Check current EEBUS build, licensing and protocol regressions
         working-directory: components/eebus
         run: npm test
-      - name: Check current OCPP licensing and real TLS regressions
+      - name: Check current OCPP core, package and licensing as the normal runner
         working-directory: components/ocpp21
-        run: npm test
+        run: |
+          npm run test:core
+          npm run test:package
+          npm run test:unit
+      - name: Check OCPP protected profiles and actual loopback mTLS in an isolated root fixture
+        working-directory: components/ocpp21
+        # Only this transport fixture needs real root-owned certificate files.
+        # It binds an ephemeral loopback port; no adapter main, physical station,
+        # dependency installation or product-directory setup runs as root.
+        run: sudo -- "$(command -v node)" --test test/secure-transport.test.js
       - name: Check current Backup licensing, recovery admission and published files
         working-directory: components/backitup
         run: |

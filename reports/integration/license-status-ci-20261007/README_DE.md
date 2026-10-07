@@ -144,3 +144,31 @@ Der bereinigte, an diesen Commit und App-Hash gebundene Beleg liegt in
 Admin/UI-Prüfungen bestanden. Der Gesamtlauf war wegen des oben dokumentierten
 TS-Spiegelabgleichs noch rot; dies wird nicht als vollständig grüne CI ausgegeben.
 Der nachfolgende Spiegelcommit braucht einen eigenen erfolgreichen Gesamtlauf.
+
+## OCPP-Transportfixture im normalen GitHub-Runner
+
+Auf `7bd9d63a71c57bf15c0a3cf06eee50ca940b57b0`, Lauf `37665136358`,
+bestanden nun auch sämtliche UI-Spiegel-, TypeScript- und Dokumentationsprüfungen,
+Devices und EEBUS. Die OCPP-Kern-, Paket- und Lizenztests bestanden ebenfalls.
+Die bisherige Transportfixture scheiterte vor dem TLS-Aufbau an `EACCES` beim
+Anlegen von `/root/eos-ocpp-security-*` als unprivilegierter Runner. Der lokale
+Root-Lauf konnte diesen Unterschied nicht aufdecken.
+
+Die CI führt nun dieselben vier OCPP-Prüfgruppen vollständig aus: Core, Paket
+und Lizenz als normaler Benutzer, ausschließlich die vorhandene isolierte
+Transportfixture mit `sudo node --test`. Diese Fixture verlangt UID 0 ausdrücklich,
+erzeugt eigene temporäre Schlüssel und bindet ausschließlich einen zufälligen
+Loopback-Port. Kein Adapter-Hauptprozess, Anlagenkontakt, Paketinstallationsskript
+oder Produktverzeichnis läuft dabei privilegiert. Der echte Profilleser und alle
+TLS-/SAN-/Zertifikats-Negativfälle bleiben unverändert. Ein Wechsel in ein
+schreibbares `/tmp` oder fingiertes Dateieigentum wäre keine gültige Korrektur.
+Ein Gesamttimeout begrenzt die Fixture auf 60 Sekunden. Das ist keine Aussage über
+die noch offene Dienstbenutzer-/Hardwareabnahme auf dem Pi.
+
+Lokal bestanden alle 13 Transportfälle ohne Skip; Rohbeleg
+`evidence/ocpp-root-transport.tap`, Eingabebindung in
+`evidence/ocpp-fixture-source-inputs.json`. Der lokale Workflow-Linter konnte
+sein fest gepinntes Werkzeug wegen Proxy-Timeout nicht laden; die verpflichtende
+GitHub-Workflowprüfung bleibt maßgeblich und wird nicht umgangen. Im vorherigen
+Lauf `37665136358` bestanden inzwischen alle sechs anderen Sicherheitsjobs,
+einschließlich der erneuten aktuellen R9-Qualifikation `112942316356`.

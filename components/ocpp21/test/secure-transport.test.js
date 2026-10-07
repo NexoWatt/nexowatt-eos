@@ -22,9 +22,14 @@ test('transport profile denies absent settings, plaintext flags, invalid and dup
   }
 });
 
-test('actual TLS1.3 OCPP upgrades require trusted mTLS and the enrolled DNS SAN', async t => {
-  // Root-owned fixtures exercise the actual root-file checks in this sandbox.
-  // This does not claim that service UID permissions have been accepted on Debian/Pi.
+test('actual TLS1.3 OCPP upgrades require trusted mTLS and the enrolled DNS SAN', { timeout: 60000 }, async t => {
+  // Run this file alone as root on a disposable Linux test host. The real
+  // profile reader requires root-owned, non-writable ancestors, so /tmp or
+  // pretending a runner-owned file belongs to root would not test that contract.
+  // The test creates only its own random directory and a loopback TLS endpoint;
+  // no adapter main or physical station runs. Service UID/Pi acceptance is separate.
+  assert.equal(typeof process.getuid === 'function' && process.getuid(), 0,
+    'OCPP protected-file fixture requires UID 0; see README.de.md. Do not run the adapter as root.');
   const directory = fs.mkdtempSync('/root/eos-ocpp-security-');
   const openssl = args => execFileSync('openssl', args, { cwd: directory, stdio: 'pipe', timeout: 5000 });
   function certificate(name, san, issuer = 'ca') {

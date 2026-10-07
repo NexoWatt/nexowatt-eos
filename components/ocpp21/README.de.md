@@ -258,11 +258,32 @@ Dependency-freie Kernprüfung:
 npm run test:core
 ```
 
-Vollständige Prüfung nach Installation der Entwicklungsabhängigkeiten:
+Vollständige Prüfung auf einem entbehrlichen Linux-Testsystem nach Installation
+der gesperrten Entwicklungsabhängigkeiten (`npm ci --ignore-scripts`). Die
+Kern-, Paket- und Lizenztests laufen als normaler Benutzer:
 
 ```bash
-npm test
+npm run test:core
+npm run test:package
+npm run test:unit
 ```
+
+Nur die gesonderte Transportprüfung benötigt echte root-eigene Dateien, weil
+sie den unveränderten geschützten Profilleser prüft:
+
+```bash
+sudo -- "$(command -v node)" --test test/secure-transport.test.js
+```
+
+Diese Prüfung erzeugt ein zufälliges eigenes Verzeichnis unter `/root` und einen
+TLS-Endpunkt auf einem zufälligen Port an `127.0.0.1`. Sie entfernt ihre Testdaten
+anschließend. Sie prüft den tatsächlichen OCPP-Frameaustausch sowie die Ablehnung
+falscher Zertifikate, Kennungen, unsicherer Dateirechte, Klartext und TLS 1.2.
+Sie startet weder den Adapter-Hauptprozess noch physische Stationen. Die gesamte
+Testsuite oder den Adapter mit `sudo npm test` zu starten ist nicht erforderlich.
+`npm test` enthält weiterhin alle vier Prüfgruppen und meldet ohne UID 0 beim
+geschützten Dateitest einen Fehler; kein Test wird stillschweigend übersprungen.
+Die Dienstbenutzerrechte auf Debian/ARM64 bleiben eine eigene Abnahme.
 
 Vor einem Produktivbetrieb bleibt ein Feldtest mit der konkreten Stations-Firmware erforderlich. Dabei sollten konstante Last, Sollwertänderungen, Ladeschluss, OCPP-Neuverbindung und ein mindestens mehrstündiger Dauerlauf geprüft werden.
 
