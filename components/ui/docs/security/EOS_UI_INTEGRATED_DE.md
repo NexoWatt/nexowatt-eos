@@ -13,6 +13,10 @@ am 64-KiB-Limit abgewiesen, noch vor Start des HTTPS-Listeners. Alle sechs
 Clientkopien wurden gemeinsam korrigiert; State-/Profillimits, Rootrechte und
 Prozessbindung bleiben unverändert. Regressionen prüfen reale Paketdateien,
 exakte Größenbegrenzung und Dateiwachstum während der Prüfung.
+Der zugehörige TypeScript-Parallelspiegel unter
+`src-ts/runtime-mirrors/packages/eos-license-client/eos-platform.ts` wird mit
+dem bestehenden Generator synchronisiert. Hash **und** Größenlimit-Logik müssen
+übereinstimmen; `check:ts-runtime-mirrors` und der Mirror-Typecheck bleiben Pflicht.
 
 | Verbindung | Durchsetzung und Grenze |
 |---|---|

@@ -119,3 +119,28 @@ kein belastbarer Produktsicherheitsnachweis. Die übrigen Audit-Einträge umfass
 auch Entwicklungswerkzeuge und abhängige Elternpakete, nicht elf unabhängig
 bestätigte Exploitpfade. Befundbewertung und geeignete Dependency-Upgrades bleiben
 ausdrücklich offen; kein Auditfilter wurde gesetzt und kein Befund unterdrückt.
+
+## Abgleich des UI-TypeScript-Spiegels
+
+Auf `203f8fa371700b8151cd15d4b374c0763a3c92f9`, Lauf `37664109237`,
+bestanden bereits beide echten Root-Dateirechtetests und alle 52 normalen
+UI-/Auth-/Lizenztests. Der anschließende Build-Abgleich entdeckte den noch alten
+TypeScript-Parallelspiegel des geänderten Plattformlesers. Mit dem bestehenden
+`sync:ts-runtime-mirrors`-Generator wurde ausschließlich dieser Spiegel erneuert
+(neues 128-KiB-Limit samt beiden Aufrufen und Herkunftshash). Manuell typisierte
+andere Spiegel wurden nicht verändert. Danach bestanden Executable-Abgleich
+(135 Dateien), Mirror-Abgleich (501 Dateien), Mirror-Typecheck, `docs:build`
+und `docs:check` (237 Quellbeschreibungen). Rohbeleg: `evidence/ui-build-mirror-check.log`.
+
+### Tatsächlicher nativer Erfolg auf 203f8fa
+
+Im selben Lauf `37664109237` bestand der aktuelle native R9-Job `112938797512`
+vollständig: echte PostgreSQL-17.11-mTLS-Verbindungen, Admin-/UI-HTTPS-Anmeldung,
+unlizenzierter Verwaltungsstart, NWL3 Home 3/2, Lizenzentzug, NWL3 Pro 50/10,
+Neustart mit erhaltener Freigabe, unveränderte App-Dateien und Ablehnung eines
+nicht zugelassenen Prozesses. Kein physischer Adapter wurde gestartet.
+Der bereinigte, an diesen Commit und App-Hash gebundene Beleg liegt in
+`evidence/r9-native-203f8fa.json`. Auch die historischen nativen Controller- und
+Admin/UI-Prüfungen bestanden. Der Gesamtlauf war wegen des oben dokumentierten
+TS-Spiegelabgleichs noch rot; dies wird nicht als vollständig grüne CI ausgegeben.
+Der nachfolgende Spiegelcommit braucht einen eigenen erfolgreichen Gesamtlauf.
