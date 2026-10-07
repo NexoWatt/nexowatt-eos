@@ -264,3 +264,37 @@ SBOM-Beleg benennt deshalb `vulnerabilityScanPerformed=false` und
 `operatingSystemInventoryIncluded=false`. Die elf OCPP-CI-Auditknoten sind weiter
 offen und keine aktuelle vollständige Bewertung der ausgelieferten Runtime.
 Die Benutzer-, Geräte- und Produktionsfreigaben bleiben wie oben abgegrenzt.
+
+### Abschluss der statischen Analyse und konkreter SBOM-Abgleich
+
+[CodeQL 37667636542](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37667636542)
+für denselben Quellcommit `ab95661` wurde erfolgreich abgeschlossen; der
+Ergebnisupload ist vollständig. `evidence/final-workflows-ab95661.json` bindet
+die drei abgeschlossenen Workflows. Der Job meldet 1.387 JavaScript-, 1.096
+TypeScript-, 41 HTML- und 15 Workflow-Dateien im Scan. Diese Zähler sind keine
+Nullbefund- oder vollständige Datenflussabdeckungszusage.
+
+Der CodeQL-Log enthält 17 Parserdiagnosen zu genau dem historischen
+`docs/security/evidence/admin-first-run/fixtures/WizardDialog.onClose.ts`.
+Dieser bytegebundene Auszug ist eine einzelne Methode aus einem fremden
+Upstream-Review von September, kein eigenständig parsebares TypeScript-Modul.
+Sein vorhandener Reproduktionsversuch setzt ausdrücklich den Klassenrahmen
+darum. Historische Rohbytes, Provenienz, Prüffälle und CodeQL-Konfiguration
+wurden nicht geändert, um Meldungen zu verbergen. Der Workflow ist erfolgreich;
+ein vollständig warnungsfreier Scan oder eine abgeschlossene Bewertung aller
+Code-Scanning-Alerts wird nicht behauptet.
+
+Der direkte Namens-/Versionsabgleich mit der ausgelieferten Runtime-SBOM zeigt:
+
+| Bereits im OCPP-CI-Audit genannt | Tatsächliche R9-SBOM | Einordnung |
+|---|---|---|
+| `node-forge` | `1.4.0` enthalten | Vom gemeldeten Advisory-Bereich erfasst; erreichbare Aufrufpfade und Abhilfe weiter zu bewerten. |
+| `ajv` | `8.14.0` enthalten, zusätzlich `8.20.0` und `6.15.0` | Die alte 8er-Version trifft den gemeldeten Bereich; Betroffenheit hängt beim genannten Advisory unter anderem vom `$data`-Aufrufpfad ab. Kein Unbedenklichkeitsnachweis. |
+| `esbuild` | `0.28.2` enthalten | Unterschied zur alten Entwicklungsabhängigkeit im CI-Audit; nicht automatisch derselbe Befund. |
+| `serialize-javascript`, `diff`, `mocha`, `@iobroker/testing` | Unter diesen Namen nicht in der Paketliste dieser Runtime-SBOM | Der CI-Auditbefund allein beweist ihre Auslieferung nicht; eingebettete/gebündelte Herkunft ist gesondert zu bewerten. |
+
+Das ist ein begrenzter Abgleich bestehender Befunde, kein neuer vollständiger
+Schwachstellenscan und keine VEX-Erklärung „nicht betroffen“. Die Priorität des
+offenen Abhängigkeitsbefunds bleibt hoch. Der signierte R9-Teststand ermöglicht
+die angeforderte Funktionsprüfung; eine Produktions-/CRA-Freigabe folgt daraus
+nicht.
