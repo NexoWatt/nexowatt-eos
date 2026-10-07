@@ -1,5 +1,14 @@
 # EOS: Änderungen, Migration und Freigabesperren
 
+**Nachtrag vom 07.10.2026:** Lizenzanzeige, tatsächlicher UI-Start und CI-Fixtures
+wurden nachgeprüft und korrigiert. Der quellgebundene
+[Prüfbericht](../../reports/integration/license-status-ci-20261007/README_DE.md)
+trennt Frontend-Regression, native PostgreSQL-/Admin-/UI-Tests, Adapterprotokolltests
+und noch offene Browser-/ARM64-/Pi-Abnahme. Die neuen OCPP-Abhängigkeitsbefunde
+bleiben im bestehenden Befundregister offen; grüne Funktionstests schließen sie
+nicht. Eine R9-Testlieferung verlangt zusätzlich die vorhandenen signierten,
+SBOM-gebundenen Build- und Readback-Gates. Keine neue Produktions-/CRA-Freigabe.
+
 **CI-Nachtrag vom 04.10.2026:** Die historischen Plattform-Installationsjobs
 wurden durch ausdrücklich begrenzte EOS-Installer-Vertragsprüfungen ersetzt.
 Schutzregeln für Plattform, Pfade, Rechte und gestoppten Dienst bleiben erhalten;

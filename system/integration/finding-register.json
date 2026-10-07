@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-10-02",
+  "date": "2026-10-07",
   "kind": "component-integration-open-findings",
   "previousFindingsPreserved": true,
   "entries": [
@@ -596,6 +596,63 @@
       "dueGate": "before extension activation; before product release",
       "evidenceId": "EOS-DEV8-CHANNEL-20261002",
       "classificationNote": "Development-source/architecture assessment; no automatic CVE claim, product release or plant acceptance."
+    },
+    {
+      "id": "EOS-LICENSE-STATUS-20261007",
+      "title": "Lizenzfeld vor Aktivierungsbestätigung geleert; gespeicherter Status nicht eindeutig sichtbar",
+      "state": "verified_local_scope",
+      "sourceObservationStatus": "confirmed-source-and-regression-test",
+      "sourceCommit": "47d67d9d2962e04dfc9276891f49c3ae211d6642",
+      "observationDocument": "reports/integration/license-status-ci-20261007/README_DE.md",
+      "priorityAsReviewed": "medium",
+      "requirementIds": [
+        "EOS-INT-REQ-008",
+        "EOS-INT-REQ-009"
+      ],
+      "remediationVerified": true,
+      "evidence": "reports/integration/license-status-ci-20261007/evidence/license-frontend-before.tap",
+      "verificationScope": "13 Regressionstests des ausgelieferten Frontend-JavaScripts; zentraler Home/Pro-Status zusätzlich im nativen x64-R9-Lauf. Echter Browser und Pi offen.",
+      "ownerRole": "EOS manufacturer development",
+      "nextStep": "Lizenz speichern, Seite neu öffnen und Status nach Pi-Neustart im echten Browser abnehmen."
+    },
+    {
+      "id": "EOS-PLATFORM-METADATA-20261007",
+      "title": "Tatsächliche UI-Paketmetadaten überschreiten bisheriges Zulassungslimit und verhindern Start",
+      "state": "verified_local_scope",
+      "sourceObservationStatus": "confirmed-source-and-native-x64-test",
+      "sourceCommit": "47d67d9d2962e04dfc9276891f49c3ae211d6642",
+      "observationDocument": "reports/integration/license-status-ci-20261007/README_DE.md",
+      "priorityAsReviewed": "high",
+      "requirementIds": [
+        "EOS-INT-REQ-002",
+        "EOS-INT-REQ-004",
+        "EOS-INT-REQ-014"
+      ],
+      "remediationVerified": true,
+      "evidence": "reports/integration/license-status-ci-20261007/evidence/platform-and-license-after.tap",
+      "verificationScope": "Alle sechs identischen Leser begrenzen ausschließlich Paketmetadaten auf 128 KiB. Übergrößen und Schutzgrenzen geprüft; tatsächlicher R9-Start mit PostgreSQL und Admin/UI auf x64 bestanden.",
+      "ownerRole": "EOS manufacturer development",
+      "nextStep": "Denselben signierten Teststand auf ARM64/Pi abnehmen."
+    },
+    {
+      "id": "EOS-OCPP-LOCK-AUDIT-20261007",
+      "title": "Neue OCPP-CI-Lockdatei enthält offene Advisory-Befunde",
+      "state": "open",
+      "sourceObservationStatus": "npm-advisory-findings-operation-impact-unverified",
+      "sourceCommit": "47d67d9d2962e04dfc9276891f49c3ae211d6642",
+      "observationDocument": "reports/integration/license-status-ci-20261007/README_DE.md",
+      "priorityAsReviewed": "high",
+      "requirementIds": [
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-020",
+        "EOS-INT-REQ-021"
+      ],
+      "remediationVerified": false,
+      "evidence": "reports/integration/license-status-ci-20261007/evidence/ocpp-lock-audit.json",
+      "verificationScope": "npm meldet elf betroffene Paketknoten: vier high, sechs moderate, einen low. Entwicklungs- und transitive Abhängigkeiten; keine Aussage über elf unabhängige Exploitpfade oder das tatsächliche Pi-Inventar.",
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before product release; immediately evaluate intended-operation exploitability",
+      "nextStep": "Mit der tatsächlichen Liefer-SBOM abgleichen, erreichbare Aufrufpfade bewerten und kompatible Dependency-Korrekturen prüfen; keine automatische Risikoakzeptanz."
     }
   ],
   "controllerScope": "system/integration/controller-observations.json",

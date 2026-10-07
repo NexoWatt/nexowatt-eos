@@ -1,3 +1,10 @@
+> Nachtrag vom 07.10.2026: Der [Lizenz-/CI-Prüfbericht](../../reports/integration/license-status-ci-20261007/README_DE.md)
+> bindet die nachfolgenden Korrekturen und nativen Nachweise an ihre tatsächlichen
+> Quellstände. Die drei neuen Einträge mit Datum `20261007` stehen im bestehenden
+> Befundregister; historische Einträge und vollständige Produktanforderungen
+> werden dadurch nicht pauschal geschlossen. Die neue OCPP-CI-Lockdatei ist
+> keine SBOM des ausgelieferten Systems und ihr Audit enthält offene Befunde.
+
 > Ergänzung dev8 vom 02.10.2026: `system/integration/requirements.json` enthält
 > den abgegrenzten Folgebeleg `EOS-DEV8-CHANNEL-20261002` für 158 gezielte
 > Prüfungen. Neue Befunde sind im vorhandenen Register ergänzt. Die übergreifenden

@@ -5,6 +5,32 @@ Dieser Bericht gehört zu den Änderungen im selben Commit; die Dateihashes im
 Nachweis binden die lokal geprüften Eingaben. Kein Installations-, Release-,
 Produktions- oder CRA-Konformitätsnachweis.
 
+**Nachtest vom 07.10.2026:** Auf `47d67d9d2962e04dfc9276891f49c3ae211d6642`
+bestand [EOS security regression 37666232804](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37666232804)
+vollständig mit allen sieben Jobs. Die Workflow-Syntaxprüfung
+`37666232772` bestand ebenfalls. Einträge weiter unten beschreiben ausdrücklich
+die erhaltenen früheren Zwischen- und Fehlstände. Die getrennte CodeQL-Analyse
+`37666232856` lief bei dieser Nachweissicherung noch; kein Nullbefund wird daraus
+abgeleitet.
+
+| Aktuelle CI-Prüfgruppe | Ergebnis |
+|---|---|
+| Build, Syntax und isolierte Sicherheitsregression | Bestanden |
+| Node-24-, Bootstrap-, Einrichtungs- und Transportverträge | Bestanden |
+| Eigene Adapter und zentrale Lizenzen | Bestanden; UI 52 plus 2 Root-Dateifälle, Devices 14, EEBUS Paket 50 plus Lizenz 21 plus Transport 6 und weitere Skripte, OCPP 25/46/7/13, Backup 50; kein übersprungener Ersatz für den Rechtefall |
+| Architektur und begrenzte Quell-SBOM | Bestanden; keine vollständige Geräte-SBOM |
+| Nativer PostgreSQL-Controllerstart und Neustart | Bestanden |
+| Nativer historischer Admin-/UI-Verbund | Bestanden |
+| Aktueller nativer R9-Verbund mit NWL3 Home/Pro | Bestanden; alle 14 benannten Prüfgrenzen, echte HTTPS-Anmeldungen und Neustart |
+
+Die aus GitHub gelesenen Job-/Schrittergebnisse und Artefakt-Digests stehen in
+`evidence/github-security-47d67d9.json`. Der per ZIP-Digest geprüfte native
+Originalbeleg liegt in `evidence/r9-native-47d67d9.json`; App-Inhaltshash:
+`cd2f9538116b68d1e4d62b6dc4b8c6160ffd30d5e0e0f26bcb650b6d021f39f3`.
+Er benennt den eigenen unsignierten Laboraufbau ausdrücklich. Eine spätere
+R9-Buildanforderung braucht den erneuten erfolgreichen Lauf ihres genauen
+Marker-Commits und darf diesen Beleg nicht auf einen fremden Commit umetikettieren.
+
 ## Bestätigte Ursachen und Änderungen
 
 1. Admin löschte die eingegebene Lizenz vor der Aktivierungsantwort. Jetzt erst
@@ -172,3 +198,32 @@ sein fest gepinntes Werkzeug wegen Proxy-Timeout nicht laden; die verpflichtende
 GitHub-Workflowprüfung bleibt maßgeblich und wird nicht umgangen. Im vorherigen
 Lauf `37665136358` bestanden inzwischen alle sechs anderen Sicherheitsjobs,
 einschließlich der erneuten aktuellen R9-Qualifikation `112942316356`.
+
+## Kurze Abnahme auf dem eigenen Pi nach dem passenden TEST-Update
+
+Der hier beschriebene Sollzustand muss auf der veröffentlichten R9-Lieferung
+mit diesen Quellen geprüft werden; alte R8-Seiten enthalten die Korrektur nicht.
+Vorher die Voraussetzungen und den Rückfallweg der
+[R9-Testanleitung](../../../docs/operations/TEST_R9_UPDATE_DE.md) beachten.
+
+1. Admin über die vertrauenswürdige Geräte-HTTPS-Verbindung öffnen und normal
+   anmelden. Im Lizenzbereich Geräte-UUID und vorhandenen Lizenzstatus prüfen.
+2. Einen für diese UUID erzeugten Home- oder Pro-NWL3-Schlüssel eingeben und
+   aktivieren. Erst nach bestätigter Speicherung darf das Eingabefeld leer
+   werden; gleichzeitig muss „EOS Home/Pro aktiviert · Lizenz gültig“ erscheinen.
+3. Seite neu laden und erneut anmelden: Edition, Gültigkeit und Prüfzeitpunkt
+   müssen weiterhin sichtbar sein. Der vollständige gespeicherte Schlüssel
+   wird bewusst nicht zurückgegeben.
+4. Nach einem kontrollierten Pi-Neustart Admin, UI und denselben Lizenzstatus
+   prüfen. Den Versions-/Release-Stand und das Ergebnis festhalten.
+5. Bei einem Fehler nur den angezeigten Diagnosecode und den Release-Stand
+   melden. Eine vorhandene gültige Lizenz nicht für einen Fehlertest löschen;
+   Schlüssel, Passwörter und private Zertifikate gehören nicht in Screenshots.
+
+Diese Bedienprüfung ist noch OFFEN. Die bereits bestandenen CI-Prüfungen
+ersetzen weder den echten Browser noch Dienstrechte, Update und Hardware auf
+dem Pi. Physische Adapter bleiben bis zur jeweiligen Anlagenabnahme gesperrt.
+Neue Befunde und nächste Schritte stehen mit den Kennungen
+`EOS-LICENSE-STATUS-20261007`, `EOS-PLATFORM-METADATA-20261007` und
+`EOS-OCPP-LOCK-AUDIT-20261007` im vorhandenen Befundregister; alte Befundzustände
+bleiben erhalten.
