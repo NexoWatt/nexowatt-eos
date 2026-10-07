@@ -1,0 +1,313 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@alcalzone/esbuild-register": {
+      "name": "@alcalzone/esbuild-register",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "esbuild"
+      ],
+      "effects": [
+        "@iobroker/testing"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@alcalzone/esbuild-register"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/testing",
+        "version": "6.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@iobroker/adapter-core": {
+      "name": "@iobroker/adapter-core",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@iobroker/js-controller-common-db"
+      ],
+      "effects": [],
+      "range": ">=3.4.3",
+      "nodes": [
+        "node_modules/@iobroker/adapter-core"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/js-controller-common-db": {
+      "name": "@iobroker/js-controller-common-db",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "node-forge"
+      ],
+      "effects": [
+        "@iobroker/adapter-core"
+      ],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/js-controller-common-db"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/testing": {
+      "name": "@iobroker/testing",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "@alcalzone/esbuild-register",
+        "mocha"
+      ],
+      "effects": [],
+      "range": ">=5.1.0",
+      "nodes": [
+        "node_modules/@iobroker/testing"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/testing",
+        "version": "6.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "ajv": {
+      "name": "ajv",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1113715,
+          "name": "ajv",
+          "dependency": "ajv",
+          "title": "ajv has ReDoS when using `$data` option",
+          "url": "https://github.com/advisories/GHSA-2g4f-4pwh-qvx6",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=7.0.0-alpha.0 <8.18.0"
+        }
+      ],
+      "effects": [
+        "ocpp-rpc"
+      ],
+      "range": "7.0.0-alpha.0 - 8.17.1",
+      "nodes": [
+        "node_modules/ajv"
+      ],
+      "fixAvailable": true
+    },
+    "diff": {
+      "name": "diff",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1112706,
+          "name": "diff",
+          "dependency": "diff",
+          "title": "jsdiff has a Denial of Service vulnerability in parsePatch and applyPatch",
+          "url": "https://github.com/advisories/GHSA-73rr-hh4g-fpgx",
+          "severity": "low",
+          "cwe": [
+            "CWE-400",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=6.0.0 <8.0.3"
+        }
+      ],
+      "effects": [
+        "mocha"
+      ],
+      "range": "6.0.0 - 8.0.2",
+      "nodes": [
+        "node_modules/diff"
+      ],
+      "fixAvailable": {
+        "name": "mocha",
+        "version": "12.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "esbuild": {
+      "name": "esbuild",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1102341,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild enables any website to send any requests to the development server and read the response",
+          "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-346"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=0.24.2"
+        }
+      ],
+      "effects": [
+        "@alcalzone/esbuild-register"
+      ],
+      "range": "<=0.24.2",
+      "nodes": [
+        "node_modules/esbuild"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/testing",
+        "version": "6.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    "mocha": {
+      "name": "mocha",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "diff",
+        "serialize-javascript"
+      ],
+      "effects": [
+        "@iobroker/testing"
+      ],
+      "range": "8.2.0 - 12.0.0-beta-3",
+      "nodes": [
+        "node_modules/mocha"
+      ],
+      "fixAvailable": {
+        "name": "mocha",
+        "version": "12.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    "node-forge": {
+      "name": "node-forge",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240912,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+          "severity": "high",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<=1.4.0"
+        }
+      ],
+      "effects": [
+        "@iobroker/js-controller-common-db"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/node-forge"
+      ],
+      "fixAvailable": true
+    },
+    "ocpp-rpc": {
+      "name": "ocpp-rpc",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "ajv"
+      ],
+      "effects": [],
+      "range": ">=2.1.2",
+      "nodes": [
+        "node_modules/ocpp-rpc"
+      ],
+      "fixAvailable": true
+    },
+    "serialize-javascript": {
+      "name": "serialize-javascript",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1113686,
+          "name": "serialize-javascript",
+          "dependency": "serialize-javascript",
+          "title": "Serialize JavaScript is Vulnerable to RCE via RegExp.flags and Date.prototype.toISOString()",
+          "url": "https://github.com/advisories/GHSA-5c6j-r48x-rmvq",
+          "severity": "high",
+          "cwe": [
+            "CWE-96"
+          ],
+          "cvss": {
+            "score": 8.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": "<=7.0.2"
+        },
+        {
+          "source": 1119440,
+          "name": "serialize-javascript",
+          "dependency": "serialize-javascript",
+          "title": "Serialize JavaScript has CPU Exhaustion Denial of Service via crafted array-like objects",
+          "url": "https://github.com/advisories/GHSA-qj8w-gfj5-8c6v",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-834"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=5.0.0 <7.0.5"
+        }
+      ],
+      "effects": [
+        "mocha"
+      ],
+      "range": "<=7.0.4",
+      "nodes": [
+        "node_modules/serialize-javascript"
+      ],
+      "fixAvailable": {
+        "name": "mocha",
+        "version": "12.0.3",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 1,
+      "moderate": 6,
+      "high": 4,
+      "critical": 0,
+      "total": 11
+    },
+    "dependencies": {
+      "prod": 26,
+      "dev": 111,
+      "optional": 11,
+      "peer": 111,
+      "peerOptional": 0,
+      "total": 247
+    }
+  }
+}

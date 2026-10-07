@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "kind": "local-source-regression",
+  "date": "2026-10-07",
+  "baseCommit": "592cbad4ad2c66e413c72a4efea7f37015cd2d4e",
+  "nodeVersion": "v24.19.0",
+  "platform": "linux",
+  "arch": "x64",
+  "files": [
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "8493a54fb42b7be1449e8058bb865c1f4910a570d33185ae6ac4c27ce076d2ab"
+    },
+    {
+      "path": "components/admin/public/nexowatt-license.js",
+      "sha256": "9fbdad42bafd83715952ae31db41262d1ffa2cdffc91f76c0f020bea4f3c3027"
+    },
+    {
+      "path": "components/admin/public/nexowatt-license.html",
+      "sha256": "b81d5f6e1e207ca20c9a312645cdb2ac250edf3c5e6bddb24412720c1864ce68"
+    },
+    {
+      "path": "components/admin/test/eos-license-frontend.test.cjs",
+      "sha256": "48bd6b651a5097e68a2f7b5debffdae845995f061e7110fb76b21fa60fd43898"
+    },
+    {
+      "path": "components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json",
+      "sha256": "fc911d26b895ef883bc50889f9e7c936c2ffc805c34c403297ec64ca5b57c0e3"
+    },
+    {
+      "path": "tests/integration-r9/prepare-fixed-root.cjs",
+      "sha256": "b922ca0bd313d6de2322a55ba9c1da7554c2dd3412bca8ada483f52eec49baa9"
+    },
+    {
+      "path": "tests/integration-r9/fixture.test.cjs",
+      "sha256": "0f40c5cb49b46e4ecfa16a93ae831060072ab6d5f62d39f4744e5cf3d48cdd22"
+    },
+    {
+      "path": "tests/integration/own-adapter-locks.test.cjs",
+      "sha256": "2ff5b1b36e31aa0420660f7679a1a39d37190665e74284792e7e9f198d0a3cef"
+    },
+    {
+      "path": "components/ocpp21/package-lock.json",
+      "sha256": "090ab8fe479486181db0887bedb3d3420e1a88cd21d83a9782a8c5afc82736c5"
+    }
+  ],
+  "nativeR9Passed": false,
+  "browserTested": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "openFindings": [
+    "native CI for changed candidate pending",
+    "OCPP audit: 4 high, 6 moderate, 1 low",
+    "local backup non-root fixture unavailable",
+    "browser download failed",
+    "ARM64/Pi and physical adapter qualification open"
+  ]
+}

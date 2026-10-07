@@ -19,7 +19,38 @@ Plattformprüfung erfolgt vor Initialisierung und Import sowie bei jeder
 Lizenzbewertung. Ohne Lizenz bleibt die Verwaltung auf EOS zur Aktivierung
 erreichbar. [Plattformvertrag und Grenzen](ADAPTER_INTEGRATION.md).
 
-## Separater Offline-Key-Generator
+## Aktivierungsstatus und Fehlerhilfe (07.10.2026)
+
+Im angemeldeten EOS-Admin die Lizenzverwaltung öffnen, die dort angezeigte UUID
+mit dem Lizenzauftrag vergleichen und den vollständigen `NWL3.…`-Code einfügen.
+„Prüfen und aktivieren“ wartet auf Verifikation, verschlüsselte Speicherung und
+Rückprüfung des zentralen Dienstes. Erst danach wird das Codefeld geleert und
+„EOS Home/Pro aktiviert“ angezeigt. UUID, Edition, Gültigkeit, Berechtigungen
+und Zeitpunkt der letzten bestätigten Abfrage bleiben separat sichtbar.
+Ein erneutes Öffnen oder „Status aktualisieren“ liest den Gerätestatus wieder;
+der gespeicherte Code wird nie an den Browser zurückgegeben.
+
+Bei Ablehnung bleibt die Eingabe erhalten. Ein ungültiger neuer Code überschreibt
+keine gültige vorhandene Lizenz. Nach fünf Sekunden ohne Bestätigung meldet die
+Seite einen unbestätigten Status: zuerst aktualisieren, da eine Speicherung auf
+dem Gerät bereits erfolgt sein könnte. Es gibt keine automatischen Import-Retries.
+Statusabfragen erfolgen beim Öffnen, manuell und nach einer bestätigten Änderung;
+der angezeigte Zeitpunkt ist kein fortlaufender Online- oder Anlagen-Nachweis.
+
+| Anzeige | Nächster sicherer Schritt |
+|---|---|
+| `LICENSE_KEY_UNKNOWN` | Bestehenden Herstellertresor und zugehörigen öffentlichen Geräte-Vertrauensanker prüfen; nicht zur Fehlerbehebung einen neuen Tresor anlegen. |
+| `LICENSE_UUID_MISMATCH` | Für die tatsächlich angezeigte EOS-UUID ausstellen. |
+| `LICENSE_SIGNATURE_INVALID` / `LICENSE_FORMAT_INVALID` | Vollständigen unveränderten Code übertragen; keine Zertifikatsdatei einfügen. |
+| `LICENSE_ADMIN_REQUIRED` | Erneut am EOS-Admin anmelden und Lizenzverwaltung dort öffnen. |
+| `UI_TIMEOUT` / unbestätigter Status | Verbindung und aktuellen Gerätestatus prüfen; keine erfolgreiche Aktivierung annehmen. |
+
+Alle Meldungen stammen aus festen, geheimnisfreien Fehlertexten. Rohantworten,
+Signierschlüssel, Passphrasen und Tokens erscheinen nicht in Fehlerausgaben oder
+Browser-Speicher. Die neuen Frontend-Vertragstests führen das ausgelieferte JS
+mit DOM-/HTTP-Fixtures aus; sie ersetzen keinen echten Browser-/Pi-Abnahmetest.
+
+## Separater Offline-Key-Generator (historischer NWL2-Vertrag)
 
 Der neue NexoWatt Offline-Key-Generator 1.0.0 wird als **separates vollständiges Paket** bereitgestellt. Er erzeugt UUID-gebundene Home- und Pro-Lizenzen im unten beschriebenen NWL2-Format. Der Admin enthält den Verifizierer und die zentrale Lizenzverwaltung; das Herstellerwerkzeug wird nicht in den Admin eingebaut. Es werden keine produktiven privaten oder öffentlichen Herstellerschlüssel vorgegeben. Das erste Schlüsselpaar entsteht erst auf dem Herstellerrechner.
 

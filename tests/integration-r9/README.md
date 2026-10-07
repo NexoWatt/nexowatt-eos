@@ -132,6 +132,19 @@ Lokaler Diagnoselauf (Linux x64, Node 24.19.0): 13/13 Vertragsprüfungen bestand
 keine übersprungen; [Rohbeleg](evidence/root-guard-diagnostics-20261007.tap).
 Der tatsächliche Root-Aufbau und der native R9-Lauf sind damit nicht bestanden.
 
+Fehlerkorrektur 07.10.2026: Lauf `37657806247`, Job `112917291785`, bestätigte
+`OPT_MODE`: Das root-eigene `/opt` des disponiblen Runners war für Gruppe oder
+Andere schreibbar. Nach erfolgreicher Kontext-, Pfad- und Kandidatenprüfung
+öffnet die Fixture ausschließlich `/opt` mit `O_DIRECTORY|O_NOFOLLOW`, prüft
+UID, Gerät und Inode und entfernt gegebenenfalls die Schreibbits `0022` per
+Dateideskriptor. Eigentümer, übrige Rechte und sämtliche Unterverzeichnisse
+bleiben unverändert. Anschließend werden Pfadidentität und Rechte erneut
+geprüft. Es gibt keine rekursive Rechtekorrektur und keine Änderung einer
+Produkt-Zulassungsprüfung. Fremdes Eigentum, Symlinks, ausgetauschte Inodes,
+bestehende EOS-Pfade oder fehlende CI-Zustimmung bleiben harte Ablehnungen.
+Die neuen Syscall-Simulationen prüfen diese Grenzen ohne lokale Rootpfade zu
+ändern. Der echte native CI-Lauf bleibt der separate Erfolgsnachweis.
+
 `node --test tests/integration-r9/fixture.test.cjs tests/integration-r9/license-session.test.cjs`
 prüft Metadaten, Ablehnung des Roothelfers außerhalb des expliziten Kontexts,
 Hashprojektion, echte NWL3-Signatur-/Policyprüfung und geheimnisfreie

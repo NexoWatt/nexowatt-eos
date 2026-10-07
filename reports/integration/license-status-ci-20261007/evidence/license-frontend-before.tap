@@ -1,0 +1,386 @@
+TAP version 13
+# Subtest: activation keeps entered token until a successful server confirmation and prevents double submit
+not ok 1 - activation keeps entered token until a successful server confirmation and prevents double submit
+  ---
+  duration_ms: 49.825784
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:34:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + ''
+    - 'NWL3.test-input.signature'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'NWL3.test-input.signature'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:39:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: confirmed home remains visible after a fresh page load without displaying the saved key
+not ok 2 - confirmed home remains visible after a fresh page load without displaying the saved key
+  ---
+  duration_ms: 10.37781
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:49:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /aktiviert/. Input:
+
+    'Lizenz gültig.'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Lizenz gültig.'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:51:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: confirmed pro remains visible after a fresh page load without displaying the saved key
+not ok 3 - confirmed pro remains visible after a fresh page load without displaying the saved key
+  ---
+  duration_ms: 9.482356
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:49:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /aktiviert/. Input:
+
+    'Lizenz gültig.'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Lizenz gültig.'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:51:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: rejected activation LICENSE_KEY_UNKNOWN keeps input, shows a useful fixed error and can refresh the preserved previous license
+not ok 4 - rejected activation LICENSE_KEY_UNKNOWN keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 11.8646
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:62:5'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + ''
+    - 'NWL3.test-input.signature'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'NWL3.test-input.signature'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:66:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: rejected activation LICENSE_UUID_MISMATCH keeps input, shows a useful fixed error and can refresh the preserved previous license
+not ok 5 - rejected activation LICENSE_UUID_MISMATCH keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 26.750342
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:62:5'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + ''
+    - 'NWL3.test-input.signature'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'NWL3.test-input.signature'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:66:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: rejected activation LICENSE_SIGNATURE_INVALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+not ok 6 - rejected activation LICENSE_SIGNATURE_INVALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 18.664784
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:62:5'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + ''
+    - 'NWL3.test-input.signature'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'NWL3.test-input.signature'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:66:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: rejected activation LICENSE_NOT_YET_VALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+not ok 7 - rejected activation LICENSE_NOT_YET_VALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 12.03431
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:62:5'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + ''
+    - 'NWL3.test-input.signature'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'NWL3.test-input.signature'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:66:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: rejected activation LICENSE_ADMIN_REQUIRED keeps input, shows a useful fixed error and can refresh the preserved previous license
+not ok 8 - rejected activation LICENSE_ADMIN_REQUIRED keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 4.70463
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:62:5'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + ''
+    - 'NWL3.test-input.signature'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'NWL3.test-input.signature'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:66:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: empty input and false or malformed successful responses never produce an activation success
+not ok 9 - empty input and false or malformed successful responses never produce an activation success
+  ---
+  duration_ms: 4.240379
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:76:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    empty input is not transmitted
+
+    2 !== 1
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:78:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: a timed-out write is explicitly unconfirmed, aborts at five seconds and retains input for diagnosis
+not ok 10 - a timed-out write is explicitly unconfirmed, aborts at five seconds and retains input for diagnosis
+  ---
+  duration_ms: 9.608401
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:89:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + ''
+    - 'NWL3.test-input.signature'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'NWL3.test-input.signature'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:98:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: HTML, oversized responses and arbitrary exception text never show a success or disclose response content
+not ok 11 - HTML, oversized responses and arbitrary exception text never show a success or disclose response content
+  ---
+  duration_ms: 11.989954
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:105:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+
+    'EOS Home' !== '–'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '–'
+  actual: 'EOS Home'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:110:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: confirmed removal clears edition and reports removal separately from an unconfirmed request
+not ok 12 - confirmed removal clears edition and reports removal separately from an unconfirmed request
+  ---
+  duration_ms: 14.342824
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:116:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Lizenz entfernt/. Input:
+
+    ''
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: ''
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:120:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: license page explains NWL3 input, retained activation status and intentional post-success clearing
+not ok 13 - license page explains NWL3 input, retained activation status and intentional post-success clearing
+  ---
+  duration_ms: 1.280198
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:123:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /placeholder="NWL3/. Input:
+
+    '<!doctype html>\n' +
+      '<html lang="de">\n' +
+      '<head>\n' +
+      '  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      '  <title>NexoWatt EOS · Lizenzverwaltung</title>\n' +
+      '  <style>\n' +
+      '    :root{font-family:Arial,sans-serif;color:#e9f4ee;background:#101b19;color-scheme:dark}\n' +
+      '    body{margin:0;padding:32px 20px}main{max-width:850px;margin:auto}a{color:#8ef0ac}\n' +
+      '    header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:28px;margin:12px 0}\n' +
+      '    h2{font-size:19px;margin-top:0}.card{padding:24px;margin:22px 0;border:1px solid #365047;border-radius:12px;background:#192924}\n' +
+      '    p{line-height:1.55;color:#c8d7cf}.status{font-size:21px;font-weight:700;color:#9ee9b1}.error{color:#ffb0a6}\n' +
+      '    dl{display:grid;grid-template-columns:160px 1fr;gap:12px}dt{color:#9bb4a8}dd{margin:0;overflow-wrap:anywhere}\n' +
+      '    label{display:block;font-weight:bold;margin:16px 0 10px}textarea{box-sizing:border-box;resize:vertical;width:100%;min-height:120px;padding:12px;border:1px solid #5f7f70;border-radius:6px;background:#0e1b16;color:#fff;font:14px monospace}\n' +
+      '    button{padding:12px 18px;border:0;border-radius:6px;background:#98e7a9;color:#0e2718;font-weight:700;cursor:pointer;margin:12px 10px 0 0}button.secondary{background:#304b3e;color:white}button:disabled{opacity:.5;cursor:wait}\n' +
+      '    small{color:#a3b9ae}#message{min-height:24px;white-space:pre-wrap}code{font-size:13px}.note{border-left:3px solid #8cdda3;padding-left:14px}\n' +
+      '    @media(max-width:600px){header{display:block}dl{grid-template-columns:1fr;gap:6px}dd{margin-bottom:10px}.card{padding:18px}}\n' +
+      '  </style>\n' +
+      '  <script defer src="/nexowatt/license/app.js"></script>\n' +
+      '</head>\n' +
+      '<body><main>\n' +
+      '  <header><div><small>NEXOWATT EOS</small><h1>Lizenzverwaltung</h1></div><a href="/">Zurück zum Admin</a></header>\n' +
+      '  <p>Home und Pro zentral für dieses EOS-System verwalten. Nur freigegebene Adapter mit eingebauter Lizenzprüfung erhalten eine Betriebsfreigabe.</p>\n' +
+      '  <section class="card" aria-labelledby="statusTitle"><h2 id="statusTitle">Aktueller Status</h2>\n' +
+      '    <p id="status" class="status" aria-live="polite">Wird geprüft …</p>\n' +
+      '    <dl><dt>System-UUID</dt><dd id="uuid">–</dd><dt>Edition</dt><dd id="edition">–</dd><dt>Gültig bis</dt><dd id="expiry">–</dd><dt>Ladepunkte / Speicher</dt><dd id="limits">–</dd><dt>Funktionen</dt><dd id="features">–</dd></dl>\n' +
+      '    <button id="refresh" class="secondary">Status aktualisieren</button>\n' +
+      '  </section>\n' +
+      '  <section class="card"><h2>Lizenz aktivieren</h2><p>Den für diese UUID ausgestellten Lizenzcode aus dem NexoWatt Key-Generator einfügen. Die Lizenz wird geprüft und verschlüsselt auf dem Gerät gespeichert.</p>\n' +
+      '    <p class="note">Dieser Teststand erwartet das signierte Format NWL2. Der bisherige Key-Generator muss dafür noch angebunden und gemeinsam geprüft werden. Alte NW1-Schlüssel werden nicht automatisch übernommen.</p>\n' +
+      '    <label for="token">Neuer Lizenzcode</label><textarea id="token" spellcheck="false" autocomplete="off" placeholder="NWL2.…" maxlength="16384"></textarea>\n' +
+      '    <button id="activate">Prüfen und aktivieren</button><button id="remove" class="secondary">Lizenz entfernen</button>\n' +
+      '    <p id="message" role="status" aria-live="polite"></p>\n' +
+      '    <small>Der gespeicherte Code wird nicht zurück angezeigt. Ein ungültiger Import ersetzt keine gültige Lizenz.</small>\n' +
+      '  </section>\n' +
+      '  <p>Ohne gültige Lizenz bleiben Lizenzverwaltung, Diagnose und Sicherheitswartung erreichbar. Die Betriebsfreigabe der angebundenen Adapter endet spätestens nach 15 Sekunden. Schutzfunktionen benötigen den im jeweiligen Adapter festgelegten sicheren Zustand.</p>\n' +
+      '</main></body></html>\n'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    <!doctype html>
+    <html lang="de">
+    <head>
+      <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>NexoWatt EOS · Lizenzverwaltung</title>
+      <style>
+        :root{font-family:Arial,sans-serif;color:#e9f4ee;background:#101b19;color-scheme:dark}
+        body{margin:0;padding:32px 20px}main{max-width:850px;margin:auto}a{color:#8ef0ac}
+        header{display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:28px;margin:12px 0}
+        h2{font-size:19px;margin-top:0}.card{padding:24px;margin:22px 0;border:1px solid #365047;border-radius:12px;background:#192924}
+        p{line-height:1.55;color:#c8d7cf}.status{font-size:21px;font-weight:700;color:#9ee9b1}.error{color:#ffb0a6}
+        dl{display:grid;grid-template-columns:160px 1fr;gap:12px}dt{color:#9bb4a8}dd{margin:0;overflow-wrap:anywhere}
+        label{display:block;font-weight:bold;margin:16px 0 10px}textarea{box-sizing:border-box;resize:vertical;width:100%;min-height:120px;padding:12px;border:1px solid #5f7f70;border-radius:6px;background:#0e1b16;color:#fff;font:14px monospace}
+        button{padding:12px 18px;border:0;border-radius:6px;background:#98e7a9;color:#0e2718;font-weight:700;cursor:pointer;margin:12px 10px 0 0}button.secondary{background:#304b3e;color:white}button:disabled{opacity:.5;cursor:wait}
+        small{color:#a3b9ae}#message{min-height:24px;white-space:pre-wrap}code{font-size:13px}.note{border-left:3px solid #8cdda3;padding-left:14px}
+        @media(max-width:600px){header{display:block}dl{grid-template-columns:1fr;gap:6px}dd{margin-bottom:10px}.card{padding:18px}}
+      </style>
+      <script defer src="/nexowatt/license/app.js"></script>
+    </head>
+    <body><main>
+      <header><div><small>NEXOWATT EOS</small><h1>Lizenzverwaltung</h1></div><a href="/">Zurück zum Admin</a></header>
+      <p>Home und Pro zentral für dieses EOS-System verwalten. Nur freigegebene Adapter mit eingebauter Lizenzprüfung erhalten eine Betriebsfreigabe.</p>
+      <section class="card" aria-labelledby="statusTitle"><h2 id="statusTitle">Aktueller Status</h2>
+        <p id="status" class="status" aria-live="polite">Wird geprüft …</p>
+        <dl><dt>System-UUID</dt><dd id="uuid">–</dd><dt>Edition</dt><dd id="edition">–</dd><dt>Gültig bis</dt><dd id="expiry">–</dd><dt>Ladepunkte / Speicher</dt><dd id="limits">–</dd><dt>Funktionen</dt><dd id="features">–</dd></dl>
+        <button id="refresh" class="secondary">Status aktualisieren</button>
+      </section>
+      <section class="card"><h2>Lizenz aktivieren</h2><p>Den für diese UUID ausgestellten Lizenzcode aus dem NexoWatt Key-Generator einfügen. Die Lizenz wird geprüft und verschlüsselt auf dem Gerät gespeichert.</p>
+        <p class="note">Dieser Teststand erwartet das signierte Format NWL2. Der bisherige Key-Generator muss dafür noch angebunden und gemeinsam geprüft werden. Alte NW1-Schlüssel werden nicht automatisch übernommen.</p>
+        <label for="token">Neuer Lizenzcode</label><textarea id="token" spellcheck="false" autocomplete="off" placeholder="NWL2.…" maxlength="16384"></textarea>
+        <button id="activate">Prüfen und aktivieren</button><button id="remove" class="secondary">Lizenz entfernen</button>
+        <p id="message" role="status" aria-live="polite"></p>
+        <small>Der gespeicherte Code wird nicht zurück angezeigt. Ein ungültiger Import ersetzt keine gültige Lizenz.</small>
+      </section>
+      <p>Ohne gültige Lizenz bleiben Lizenzverwaltung, Diagnose und Sicherheitswartung erreichbar. Die Betriebsfreigabe der angebundenen Adapter endet spätestens nach 15 Sekunden. Schutzfunktionen benötigen den im jeweiligen Adapter festgelegten sicheren Zustand.</p>
+    </main></body></html>
+
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-frontend.test.cjs:125:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 0
+# fail 13
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 584.48793

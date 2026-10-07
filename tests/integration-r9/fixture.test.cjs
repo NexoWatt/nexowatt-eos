@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
+const vm = require('node:vm');
 const { validatePreparation, contentRows, sha, BASE_RELEASE_ID } = require('./fixture.cjs');
 const root = '/tmp/r9-fixture-contract';
 const good = { schemaVersion: 1, kind: 'unsigned-r9-native-preparation', signed: false, unsignedFixture: true, sequence: 12, nodeVersion: '24.21.0',
@@ -44,4 +45,67 @@ test('root fixture diagnostics expose only allowlisted guard reasons, never exce
     for (const error of [null, new Error('private-path-and-token'), { reason: 'private-path-and-token' }, { code: 'OPT_MODE' }]) {
         assert.equal(failureLine(error), 'R9_NATIVE_ROOT_FIXTURE_REJECTED:UNEXPECTED\n');
     }
+});
+
+// Guard-only syscall simulation; this never creates or chmods a host EOS path.
+function rootGuardFixture(patch = {}) {
+    const calls = [], stop = new Error('reached management fixture');
+    let optMode = patch.optMode ?? 0o40777;
+    const stat = (directory, uid, mode, extra = {}) => ({ isDirectory: () => directory, isFile: () => !directory,
+        isSymbolicLink: () => false, uid, gid: 1001, mode, nlink: 1, dev: 1, ino: 20, ...extra });
+    const optStat = () => stat(true, patch.optUid ?? 0, optMode, patch.optLink ? { isSymbolicLink: () => true } : {});
+    const data = { ...good, appContentSha256: sha(JSON.stringify([])), ...(patch.preparation || {}) };
+    const fakeFs = {
+        constants: fs.constants, realpathSync: value => value,
+        lstatSync(file) {
+            calls.push(['stat', file]);
+            if (file === root) return stat(true, 1001, 0o40700);
+            if (file === '/opt') return optStat();
+            if (file === root + '/r9-native-prepared.json') return stat(false, 1001, 0o100600);
+            if (patch.existing && file === '/etc/nexowatt-eos') return stat(true, 0, 0o40755);
+            throw Object.assign(new Error('not found'), { code: 'ENOENT' });
+        },
+        readFileSync: () => JSON.stringify(data),
+        openSync(file, flags) { calls.push(['open', file, flags]); return 19; },
+        fstatSync: () => ({ ...optStat(), ...(patch.changed ? { ino: 21 } : {}) }),
+        fchmodSync(fd, mode) { calls.push(['chmod', fd, mode]); if (!patch.chmodFailed) optMode = mode; },
+        closeSync(fd) { calls.push(['close', fd]); },
+    };
+    const module = { exports: {} };
+    const requires = name => {
+        if (name === 'node:fs') return fakeFs;
+        if (name === './fixture.cjs') return { ...require('./fixture.cjs'), contentRows: () => [] };
+        if (name === '../integration-management/prepare-fixed-root.cjs') return { prepare() { throw stop; } };
+        return require(name);
+    };
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname, 'prepare-fixed-root.cjs'), 'utf8'), {
+        module, require: requires, process: { getuid: () => 0, versions: { node: '24.21.0' }, env: {
+            GITHUB_ACTIONS: 'true', EOS_DISPOSABLE_MANAGEMENT_LAB: '1', EOS_DISPOSABLE_R9_LAB: patch.noConsent ? undefined : '1',
+        } },
+    });
+    return { calls, stop, prepare: () => module.exports.prepare(root, '1001', '1001') };
+}
+
+test('disposable runner preparation tightens only root-owned /opt after candidate verification', () => {
+    for (const mode of [0o40777, 0o40775, 0o40755]) {
+        const f = rootGuardFixture({ optMode: mode });
+        assert.throws(f.prepare, error => error === f.stop);
+        const writes = f.calls.filter(call => call[0] === 'chmod');
+        assert.deepEqual(writes, mode & 0o022 ? [['chmod', 19, 0o755]] : []);
+        const open = f.calls.find(call => call[0] === 'open'); assert.equal(open[1], '/opt');
+        assert.ok(open[2] & fs.constants.O_NOFOLLOW); assert.ok(open[2] & fs.constants.O_DIRECTORY);
+        assert.deepEqual(f.calls.at(-1), ['close', 19]);
+    }
+});
+
+test('unsafe host, existing EOS, corrupt candidate and inode replacement never receive permission changes', () => {
+    for (const [patch, reason] of [[{ noConsent: true }, 'CI_CONTEXT'], [{ existing: true }, 'EXISTING_EOS_PATH'],
+        [{ optUid: 1001 }, 'OPT_OWNER'], [{ optLink: true }, 'OPT_OWNER'], [{ changed: true }, 'OPT_CHANGED'],
+        [{ preparation: { appContentSha256: 'f'.repeat(64) } }, 'PREPARATION_DIGEST']]) {
+        const f = rootGuardFixture(patch); assert.throws(f.prepare, error => error.reason === reason);
+        assert.equal(f.calls.some(call => call[0] === 'chmod'), false);
+    }
+    const failure = rootGuardFixture({ chmodFailed: true });
+    assert.throws(failure.prepare, error => error.reason === 'OPT_MODE');
+    assert.deepEqual(failure.calls.at(-1), ['close', 19]);
 });

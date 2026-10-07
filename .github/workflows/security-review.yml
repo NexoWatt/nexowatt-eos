@@ -236,6 +236,7 @@ jobs:
             components/admin/test/eos-license-service.test.cjs \
             components/admin/test/eos-license-client.test.cjs \
             components/admin/test/eos-license-http.test.cjs \
+            components/admin/test/eos-license-frontend.test.cjs \
             components/admin/test/eos-license-trust.test.cjs \
             components/admin/test/eos-license-build-parity.test.cjs \
             components/admin/test/eos-license-platform.test.cjs \
@@ -496,6 +497,7 @@ jobs:
       - name: Install only locked test and compiler dependencies
         run: |
           set -euo pipefail
+          node --test tests/integration/own-adapter-locks.test.cjs
           for component in ui eebus ocpp21 backitup; do
             npm --prefix "components/$component" ci --ignore-scripts --no-audit --no-fund
           done

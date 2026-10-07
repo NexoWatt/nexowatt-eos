@@ -1,0 +1,712 @@
+TAP version 13
+# Subtest: starts denied, permits signed-service decision and sends no license key
+ok 1 - starts denied, permits signed-service decision and sends no license key
+  ---
+  duration_ms: 6.237181
+  type: 'test'
+  ...
+# Subtest: a new request uses a new nonce and rejects replay from an older request
+ok 2 - a new request uses a new nonce and rejects replay from an older request
+  ---
+  duration_ms: 2.144025
+  type: 'test'
+  ...
+# Subtest: Home and Pro quantity limits and features are checked independently
+ok 3 - Home and Pro quantity limits and features are checked independently
+  ---
+  duration_ms: 13.783877
+  type: 'test'
+  ...
+# Subtest: malformed, stale, future, oversized and missing entitlements fail closed
+ok 4 - malformed, stale, future, oversized and missing entitlements fail closed
+  ---
+  duration_ms: 19.924869
+  type: 'test'
+  ...
+# Subtest: timeout invalidates an existing lease; late and duplicate callbacks cannot reopen it
+ok 5 - timeout invalidates an existing lease; late and duplicate callbacks cannot reopen it
+  ---
+  duration_ms: 32.719769
+  type: 'test'
+  ...
+# Subtest: throws and rejected transport promises settle denied without an unhandled rejection
+ok 6 - throws and rejected transport promises settle denied without an unhandled rejection
+  ---
+  duration_ms: 3.121956
+  type: 'test'
+  ...
+# Subtest: lease expires autonomously, onLost is once per denial episode, then recovery is possible
+ok 7 - lease expires autonomously, onLost is once per denial episode, then recovery is possible
+  ---
+  duration_ms: 37.248562
+  type: 'test'
+  ...
+# Subtest: wall clock rollback does not extend monotonic lease and a forward jump immediately denies
+ok 8 - wall clock rollback does not extend monotonic lease and a forward jump immediately denies
+  ---
+  duration_ms: 38.763246
+  type: 'test'
+  ...
+# Subtest: stop cancels in-flight request and prevents late callback activation
+ok 9 - stop cancels in-flight request and prevents late callback activation
+  ---
+  duration_ms: 5.848984
+  type: 'test'
+  ...
+# Subtest: concurrent callers coalesce safely and status mutation cannot change entitlement
+ok 10 - concurrent callers coalesce safely and status mutation cannot change entitlement
+  ---
+  duration_ms: 2.650566
+  type: 'test'
+  ...
+# Subtest: failed safe-state callback latches denial and sanitizes logs
+ok 11 - failed safe-state callback latches denial and sanitizes logs
+  ---
+  duration_ms: 4.555367
+  type: 'test'
+  ...
+# Subtest: asynchronous safe-state transition must finish before a fresh grant is accepted
+ok 12 - asynchronous safe-state transition must finish before a fresh grant is accepted
+  ---
+  duration_ms: 1.290817
+  type: 'test'
+  ...
+# Subtest: invalid configuration cannot create a permissive guard
+ok 13 - invalid configuration cannot create a permissive guard
+  ---
+  duration_ms: 6.286018
+  type: 'test'
+  ...
+# Subtest: one shared lease gates each Home/Pro feature without extra messages or rights after loss
+ok 14 - one shared lease gates each Home/Pro feature without extra messages or rights after loss
+  ---
+  duration_ms: 1.614871
+  type: 'test'
+  ...
+# Subtest: NWL3 derives immutable Home and Pro system rights without adapter or quota claims
+ok 15 - NWL3 derives immutable Home and Pro system rights without adapter or quota claims
+  ---
+  duration_ms: 14.525342
+  type: 'test'
+  ...
+# Subtest: NWL3 rejects even correctly signed custom grants, unknown scopes and nonperpetual variants
+ok 16 - NWL3 rejects even correctly signed custom grants, unknown scopes and nonperpetual variants
+  ---
+  duration_ms: 12.019468
+  type: 'test'
+  ...
+# Subtest: NWL3 signatures bind version, edition and device while retaining the existing trust key
+ok 17 - NWL3 signatures bind version, edition and device while retaining the existing trust key
+  ---
+  duration_ms: 7.578833
+  type: 'test'
+  ...
+# Subtest: NWL2 keeps narrower adapter and quantity restrictions after NWL3 support is added
+ok 18 - NWL2 keeps narrower adapter and quantity restrictions after NWL3 support is added
+  ---
+  duration_ms: 5.419245
+  type: 'test'
+  ...
+# Subtest: NWL3 persists encrypted across store reload without changing the device storage key
+ok 19 - NWL3 persists encrypted across store reload without changing the device storage key
+  ---
+  duration_ms: 112.579491
+  type: 'test'
+  ...
+# Subtest: UUID normalizes case/space while preserving canonical and direct vendor-prefix identity
+ok 20 - UUID normalizes case/space while preserving canonical and direct vendor-prefix identity
+  ---
+  duration_ms: 1.220554
+  type: 'test'
+  ...
+# Subtest: Home license authenticates UUID, explicit adapters, limits and immutable derived features
+ok 21 - Home license authenticates UUID, explicit adapters, limits and immutable derived features
+  ---
+  duration_ms: 1.090235
+  type: 'test'
+  ...
+# Subtest: Pro license enables Pro features only from signed edition and caps 10 batteries
+ok 22 - Pro license enables Pro features only from signed edition and caps 10 batteries
+  ---
+  duration_ms: 2.556459
+  type: 'test'
+  ...
+# Subtest: expiry and notBefore use exact millisecond boundaries without coercion or grace
+ok 23 - expiry and notBefore use exact millisecond boundaries without coercion or grace
+  ---
+  duration_ms: 2.534066
+  type: 'test'
+  ...
+# Subtest: forged or edited signature, foreign signing key, unknown kid and legacy format fail closed
+ok 24 - forged or edited signature, foreign signing key, unknown kid and legacy format fail closed
+  ---
+  duration_ms: 3.544303
+  type: 'test'
+  ...
+# Subtest: trust accepts only bounded explicit Ed25519 public SPKI keys
+ok 25 - trust accepts only bounded explicit Ed25519 public SPKI keys
+  ---
+  duration_ms: 57.084115
+  type: 'test'
+  ...
+# Subtest: schema rejects wildcard adapters, duplicate adapters, unsafe limits and unknown signed fields
+ok 26 - schema rejects wildcard adapters, duplicate adapters, unsafe limits and unknown signed fields
+  ---
+  duration_ms: 20.075998
+  type: 'test'
+  ...
+# Subtest: malformed/oversized tokens and noncanonical base64 cannot reach successful verification
+ok 27 - malformed/oversized tokens and noncanonical base64 cannot reach successful verification
+  ---
+  duration_ms: 1.188118
+  type: 'test'
+  ...
+# Subtest: encrypted storage roundtrips across restart with fresh nonce and no plaintext on disk
+ok 28 - encrypted storage roundtrips across restart with fresh nonce and no plaintext on disk
+  ---
+  duration_ms: 57.373333
+  type: 'test'
+  ...
+# Subtest: GCM binds UUID and fails after ciphertext/tag/nonce corruption
+ok 29 - GCM binds UUID and fails after ciphertext/tag/nonce corruption
+  ---
+  duration_ms: 59.64181
+  type: 'test'
+  ...
+# Subtest: missing/wrong/short storage key never silently regenerates existing encrypted license
+ok 30 - missing/wrong/short storage key never silently regenerates existing encrypted license
+  ---
+  duration_ms: 30.595694
+  type: 'test'
+  ...
+# Subtest: storage high water mark cannot decrease; serialized operations preserve monotonic value
+ok 31 - storage high water mark cannot decrease; serialized operations preserve monotonic value
+  ---
+  duration_ms: 62.700873
+  type: 'test'
+  ...
+# Subtest: clear removes only license, keeps device encryption key and permits fresh install
+ok 32 - clear removes only license, keeps device encryption key and permits fresh install
+  ---
+  duration_ms: 20.809121
+  type: 'test'
+  ...
+# Subtest: storage rejects symlink files, symlink directory/ancestor and hard linked secrets
+ok 33 - storage rejects symlink files, symlink directory/ancestor and hard linked secrets
+  ---
+  duration_ms: 20.609259
+  type: 'test'
+  ...
+# Subtest: storage rejects permissive POSIX modes and unsafe directory roots
+ok 34 - storage rejects permissive POSIX modes and unsafe directory roots
+  ---
+  duration_ms: 14.991784
+  type: 'test'
+  ...
+# Subtest: storage bounds files and rejects malformed data/envelopes without destructive overwrite
+ok 35 - storage bounds files and rejects malformed data/envelopes without destructive overwrite
+  ---
+  duration_ms: 40.404087
+  type: 'test'
+  ...
+# Subtest: activation keeps entered token until a successful server confirmation and prevents double submit
+ok 36 - activation keeps entered token until a successful server confirmation and prevents double submit
+  ---
+  duration_ms: 66.079815
+  type: 'test'
+  ...
+# Subtest: confirmed home remains visible after a fresh page load without displaying the saved key
+ok 37 - confirmed home remains visible after a fresh page load without displaying the saved key
+  ---
+  duration_ms: 3.251615
+  type: 'test'
+  ...
+# Subtest: confirmed pro remains visible after a fresh page load without displaying the saved key
+ok 38 - confirmed pro remains visible after a fresh page load without displaying the saved key
+  ---
+  duration_ms: 3.921015
+  type: 'test'
+  ...
+# Subtest: rejected activation LICENSE_KEY_UNKNOWN keeps input, shows a useful fixed error and can refresh the preserved previous license
+ok 39 - rejected activation LICENSE_KEY_UNKNOWN keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 13.670992
+  type: 'test'
+  ...
+# Subtest: rejected activation LICENSE_UUID_MISMATCH keeps input, shows a useful fixed error and can refresh the preserved previous license
+ok 40 - rejected activation LICENSE_UUID_MISMATCH keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 8.741053
+  type: 'test'
+  ...
+# Subtest: rejected activation LICENSE_SIGNATURE_INVALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+ok 41 - rejected activation LICENSE_SIGNATURE_INVALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 8.921547
+  type: 'test'
+  ...
+# Subtest: rejected activation LICENSE_NOT_YET_VALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+ok 42 - rejected activation LICENSE_NOT_YET_VALID keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 16.729615
+  type: 'test'
+  ...
+# Subtest: rejected activation LICENSE_ADMIN_REQUIRED keeps input, shows a useful fixed error and can refresh the preserved previous license
+ok 43 - rejected activation LICENSE_ADMIN_REQUIRED keeps input, shows a useful fixed error and can refresh the preserved previous license
+  ---
+  duration_ms: 3.308588
+  type: 'test'
+  ...
+# Subtest: empty input and false or malformed successful responses never produce an activation success
+ok 44 - empty input and false or malformed successful responses never produce an activation success
+  ---
+  duration_ms: 32.619793
+  type: 'test'
+  ...
+# Subtest: a timed-out write is explicitly unconfirmed, aborts at five seconds and retains input for diagnosis
+ok 45 - a timed-out write is explicitly unconfirmed, aborts at five seconds and retains input for diagnosis
+  ---
+  duration_ms: 3.803923
+  type: 'test'
+  ...
+# Subtest: HTML, oversized responses and arbitrary exception text never show a success or disclose response content
+ok 46 - HTML, oversized responses and arbitrary exception text never show a success or disclose response content
+  ---
+  duration_ms: 9.119636
+  type: 'test'
+  ...
+# Subtest: confirmed removal clears edition and reports removal separately from an unconfirmed request
+ok 47 - confirmed removal clears edition and reports removal separately from an unconfirmed request
+  ---
+  duration_ms: 12.906404
+  type: 'test'
+  ...
+# Subtest: license page explains NWL3 input, retained activation status and intentional post-success clearing
+ok 48 - license page explains NWL3 input, retained activation status and intentional post-success clearing
+  ---
+  duration_ms: 4.101838
+  type: 'test'
+  ...
+# Subtest: license endpoints authorize before body parser, service calls and static files
+ok 49 - license endpoints authorize before body parser, service calls and static files
+  ---
+  duration_ms: 10.003689
+  type: 'test'
+  ...
+# Subtest: secure admin activation invokes parser after authorization and returns no submitted token
+ok 50 - secure admin activation invokes parser after authorization and returns no submitted token
+  ---
+  duration_ms: 0.954475
+  type: 'test'
+  ...
+# Subtest: cross-origin, missing origin/header and cross-site writes fail before parser
+ok 51 - cross-origin, missing origin/header and cross-site writes fail before parser
+  ---
+  duration_ms: 5.517779
+  type: 'test'
+  ...
+# Subtest: forwarded host/proto headers do not establish origin or TLS trust
+ok 52 - forwarded host/proto headers do not establish origin or TLS trust
+  ---
+  duration_ms: 1.713416
+  type: 'test'
+  ...
+# Subtest: plaintext LAN is denied for every route; explicit socket loopback can perform setup
+ok 53 - plaintext LAN is denied for every route; explicit socket loopback can perform setup
+  ---
+  duration_ms: 3.523533
+  type: 'test'
+  ...
+# Subtest: malformed activation/removal bodies are rejected without reaching service
+ok 54 - malformed activation/removal bodies are rejected without reaching service
+  ---
+  duration_ms: 12.018736
+  type: 'test'
+  ...
+# Subtest: parser size/syntax errors are sanitized and cannot reach activation
+ok 55 - parser size/syntax errors are sanitized and cannot reach activation
+  ---
+  duration_ms: 0.53359
+  type: 'test'
+  ...
+# Subtest: authorization and asynchronous service failures return sanitized bounded errors
+ok 56 - authorization and asynchronous service failures return sanitized bounded errors
+  ---
+  duration_ms: 0.569002
+  type: 'test'
+  ...
+# Subtest: per-address write and read rate budgets deny excess operations
+ok 57 - per-address write and read rate budgets deny excess operations
+  ---
+  duration_ms: 7.99425
+  type: 'test'
+  ...
+# Subtest: license page has restrictive CSP and safe no-cache headers
+ok 58 - license page has restrictive CSP and safe no-cache headers
+  ---
+  duration_ms: 3.280528
+  type: 'test'
+  ...
+# Subtest: origin matching uses scheme, hostname and port exactly
+ok 59 - origin matching uses scheme, hostname and port exactly
+  ---
+  duration_ms: 0.533991
+  type: 'test'
+  ...
+# Subtest: NWL3 system grant uses edition policy and enabled sender checks without an adapter claim list
+ok 60 - NWL3 system grant uses edition policy and enabled sender checks without an adapter claim list
+  ---
+  duration_ms: 230.556099
+  type: 'test'
+  ...
+# Subtest: replacement by old NWL2 restores its narrower list and quotas after a system license
+ok 61 - replacement by old NWL2 restores its narrower list and quotas after a system license
+  ---
+  duration_ms: 65.658905
+  type: 'test'
+  ...
+# Subtest: NWL3 activation survives service restart and rejects forged upgrades without replacing stored rights
+ok 62 - NWL3 activation survives service restart and rejects forged upgrades without replacing stored rights
+  ---
+  duration_ms: 57.28338
+  type: 'test'
+  ...
+# Subtest: startup without provisioned trust denies and creates no license
+ok 63 - startup without provisioned trust denies and creates no license
+  ---
+  duration_ms: 7.874967
+  type: 'test'
+  ...
+# Subtest: startup with empty trust configuration denies
+ok 64 - startup with empty trust configuration denies
+  ---
+  duration_ms: 4.11709
+  type: 'test'
+  ...
+# Subtest: trusted service without stored license denies
+ok 65 - trusted service without stored license denies
+  ---
+  duration_ms: 12.757337
+  type: 'test'
+  ...
+# Subtest: Home allows licensed adapter and published Home limits with bounded lease
+ok 66 - Home allows licensed adapter and published Home limits with bounded lease
+  ---
+  duration_ms: 17.388188
+  type: 'test'
+  ...
+# Subtest: Home rejects Pro feature and over-limit resource counts
+ok 67 - Home rejects Pro feature and over-limit resource counts
+  ---
+  duration_ms: 50.968676
+  type: 'test'
+  ...
+# Subtest: Pro grants its feature set only to listed adapter and within signed limits
+ok 68 - Pro grants its feature set only to listed adapter and within signed limits
+  ---
+  duration_ms: 32.990195
+  type: 'test'
+  ...
+# Subtest: licensed second adapter receives grants only when enabled
+ok 69 - licensed second adapter receives grants only when enabled
+  ---
+  duration_ms: 34.934813
+  type: 'test'
+  ...
+# Subtest: missing, disabled, renamed or non-instance senders cannot obtain grants
+ok 70 - missing, disabled, renamed or non-instance senders cannot obtain grants
+  ---
+  duration_ms: 46.427631
+  type: 'test'
+  ...
+# Subtest: sender mismatch, unknown feature, extra keys and invalid quota types reject
+ok 71 - sender mismatch, unknown feature, extra keys and invalid quota types reject
+  ---
+  duration_ms: 20.534063
+  type: 'test'
+  ...
+# Subtest: malformed or untrusted import preserves existing encrypted license
+ok 72 - malformed or untrusted import preserves existing encrypted license
+  ---
+  duration_ms: 19.248234
+  type: 'test'
+  ...
+# Subtest: explicit license removal denies checks and remains removed after restart
+ok 73 - explicit license removal denies checks and remains removed after restart
+  ---
+  duration_ms: 16.84199
+  type: 'test'
+  ...
+# Subtest: external license deletion invalidates previously cached grant eligibility
+ok 74 - external license deletion invalidates previously cached grant eligibility
+  ---
+  duration_ms: 30.416221
+  type: 'test'
+  ...
+# Subtest: tampered authenticated ciphertext invalidates cached license
+ok 75 - tampered authenticated ciphertext invalidates cached license
+  ---
+  duration_ms: 37.597692
+  type: 'test'
+  ...
+# Subtest: encrypted license and edition persist over clean service restart
+ok 76 - encrypted license and edition persist over clean service restart
+  ---
+  duration_ms: 81.242278
+  type: 'test'
+  ...
+# Subtest: changed system UUID denies while running
+ok 77 - changed system UUID denies while running
+  ---
+  duration_ms: 23.009048
+  type: 'test'
+  ...
+# Subtest: lease is capped at expiry and license expires at exact boundary
+ok 78 - lease is capped at expiry and license expires at exact boundary
+  ---
+  duration_ms: 21.161347
+  type: 'test'
+  ...
+# Subtest: expiry is rechecked after delayed adapter object lookup
+ok 79 - expiry is rechecked after delayed adapter object lookup
+  ---
+  duration_ms: 52.153709
+  type: 'test'
+  ...
+# Subtest: wall clock rollback relative to monotonic time fails closed until restart
+ok 80 - wall clock rollback relative to monotonic time fails closed until restart
+  ---
+  duration_ms: 24.360835
+  type: 'test'
+  ...
+# Subtest: frequent sub-tolerance checks cannot keep a frozen wall clock licensed
+ok 81 - frequent sub-tolerance checks cannot keep a frozen wall clock licensed
+  ---
+  duration_ms: 31.572312
+  type: 'test'
+  ...
+# Subtest: small cumulative backward steps cannot reset the monotonic clock anchor
+ok 82 - small cumulative backward steps cannot reset the monotonic clock anchor
+  ---
+  duration_ms: 55.772972
+  type: 'test'
+  ...
+# Subtest: persisted high-water mark detects ordinary rollback across restart
+ok 83 - persisted high-water mark detects ordinary rollback across restart
+  ---
+  duration_ms: 91.023173
+  type: 'test'
+  ...
+# Subtest: sender rate cap denies excess requests and renews after window
+ok 84 - sender rate cap denies excess requests and renews after window
+  ---
+  duration_ms: 314.494766
+  type: 'test'
+  ...
+# Subtest: queue cap rejects excess work without preventing earlier jobs completing
+ok 85 - queue cap rejects excess work without preventing earlier jobs completing
+  ---
+  duration_ms: 6.862476
+  type: 'test'
+  ...
+# Subtest: new checks and mutations after stop are denied
+ok 86 - new checks and mutations after stop are denied
+  ---
+  duration_ms: 14.874172
+  type: 'test'
+  ...
+# Subtest: check queued before stop cannot grant or restore cached validity after stop
+ok 87 - check queued before stop cannot grant or restore cached validity after stop
+  ---
+  duration_ms: 52.611683
+  type: 'test'
+  ...
+# Subtest: check already in adapter lookup cannot grant after stop
+ok 88 - check already in adapter lookup cannot grant after stop
+  ---
+  duration_ms: 39.62976
+  type: 'test'
+  ...
+# Subtest: database timeout clears validity, bounds outstanding reads and ignores late results
+ok 89 - database timeout clears validity, bounds outstanding reads and ignores late results
+  ---
+  duration_ms: 66.122873
+  type: 'test'
+  ...
+# Subtest: timeout during adapter identity lookup clears a previously valid license view
+ok 90 - timeout during adapter identity lookup clears a previously valid license view
+  ---
+  duration_ms: 122.919994
+  type: 'test'
+  ...
+# Subtest: serialized deletion ahead of a check prevents an intervening grant
+ok 91 - serialized deletion ahead of a check prevents an intervening grant
+  ---
+  duration_ms: 30.918035
+  type: 'test'
+  ...
+# Subtest: status rechecks expiry after delayed UUID lookup
+ok 92 - status rechecks expiry after delayed UUID lookup
+  ---
+  duration_ms: 20.985829
+  type: 'test'
+  ...
+# Subtest: import expiring during UUID lookup preserves the previous valid license
+ok 93 - import expiring during UUID lookup preserves the previous valid license
+  ---
+  duration_ms: 41.530874
+  type: 'test'
+  ...
+# Subtest: production directory resolver works without an assumed adapter instance method
+ok 94 - production directory resolver works without an assumed adapter instance method
+  ---
+  duration_ms: 18.438404
+  type: 'test'
+  ...
+# Subtest: directory resolver failure is contained and keeps authority denied
+ok 95 - directory resolver failure is contained and keeps authority denied
+  ---
+  duration_ms: 2.281626
+  type: 'test'
+  ...
+# Subtest: authority never starts or accepts activation outside an admitted EOS installation
+ok 96 - authority never starts or accepts activation outside an admitted EOS installation
+  ---
+  duration_ms: 3.018484
+  type: 'test'
+  ...
+# Subtest: authority rechecks EOS admission and revokes an existing central license decision on platform loss
+ok 97 - authority rechecks EOS admission and revokes an existing central license decision on platform loss
+  ---
+  duration_ms: 44.339842
+  type: 'test'
+  ...
+# Subtest: trusted root-owned complete directory chain accepts bounded public keys
+ok 98 - trusted root-owned complete directory chain accepts bounded public keys
+  ---
+  duration_ms: 25.399545
+  type: 'test'
+  ...
+# Subtest: writable, foreign-owned or symbolic-link ancestor is denied before file open
+ok 99 - writable, foreign-owned or symbolic-link ancestor is denied before file open
+  ---
+  duration_ms: 39.953257
+  type: 'test'
+  ...
+# Subtest: unsafe trust file and inode swap fail closed
+ok 100 - unsafe trust file and inode swap fail closed
+  ---
+  duration_ms: 68.386358
+  type: 'test'
+  ...
+# Subtest: read remains bounded after growth and rejects malformed contents with close
+ok 101 - read remains bounded after growth and rejects malformed contents with close
+  ---
+  duration_ms: 32.927322
+  type: 'test'
+  ...
+# Subtest: Windows and noncanonical paths require explicit supported provisioning
+ok 102 - Windows and noncanonical paths require explicit supported provisioning
+  ---
+  duration_ms: 9.370703
+  type: 'test'
+  ...
+# Subtest: R9 preparation admits only exact unsigned current app identity and authenticated baseline
+ok 103 - R9 preparation admits only exact unsigned current app identity and authenticated baseline
+  ---
+  duration_ms: 3.222413
+  type: 'test'
+  ...
+# Subtest: fixed root fixture refuses outside explicitly authorized disposable GitHub hosts before touching paths
+ok 104 - fixed root fixture refuses outside explicitly authorized disposable GitHub hosts before touching paths
+  ---
+  duration_ms: 4.92327
+  type: 'test'
+  ...
+# Subtest: content hash equals a canonical signed-manifest projection and ignores only read-only mode tightening
+ok 105 - content hash equals a canonical signed-manifest projection and ignores only read-only mode tightening
+  ---
+  duration_ms: 11.245515
+  type: 'test'
+  ...
+# Subtest: R9 diagnostics preserve only explicit fixed codes
+ok 106 - R9 diagnostics preserve only explicit fixed codes
+  ---
+  duration_ms: 3.018775
+  type: 'test'
+  ...
+# Subtest: root fixture diagnostics expose only allowlisted guard reasons, never exception text or paths
+ok 107 - root fixture diagnostics expose only allowlisted guard reasons, never exception text or paths
+  ---
+  duration_ms: 1.52791
+  type: 'test'
+  ...
+# Subtest: disposable runner preparation tightens only root-owned /opt after candidate verification
+ok 108 - disposable runner preparation tightens only root-owned /opt after candidate verification
+  ---
+  duration_ms: 9.646677
+  type: 'test'
+  ...
+# Subtest: unsafe host, existing EOS, corrupt candidate and inode replacement never receive permission changes
+ok 109 - unsafe host, existing EOS, corrupt candidate and inode replacement never receive permission changes
+  ---
+  duration_ms: 22.205884
+  type: 'test'
+  ...
+# Subtest: native NWL3 system fixtures verify through the real core with policy Home 3/2 and Pro 50/10
+ok 110 - native NWL3 system fixtures verify through the real core with policy Home 3/2 and Pro 50/10
+  ---
+  duration_ms: 7.125881
+  type: 'test'
+  ...
+# Subtest: real NWL3 verifier rejects signed issuer entitlements, adapter scope and time-limited claims
+ok 111 - real NWL3 verifier rejects signed issuer entitlements, adapter scope and time-limited claims
+  ---
+  duration_ms: 5.807213
+  type: 'test'
+  ...
+# Subtest: legacy NWL2 narrow signed quotas remain a separate unit compatibility check
+ok 112 - legacy NWL2 narrow signed quotas remain a separate unit compatibility check
+  ---
+  duration_ms: 1.148289
+  type: 'test'
+  ...
+# Subtest: Admin summaries verify UUID and exact entitlements while omitting identity and secrets
+ok 113 - Admin summaries verify UUID and exact entitlements while omitting identity and secrets
+  ---
+  duration_ms: 0.7866
+  type: 'test'
+  ...
+# Subtest: malformed, mismatched and widened Admin grants fail with fixed diagnostic codes
+ok 114 - malformed, mismatched and widened Admin grants fail with fixed diagnostic codes
+  ---
+  duration_ms: 2.157235
+  type: 'test'
+  ...
+# Subtest: strict UI login requires the Admin role and a protected session cookie
+ok 115 - strict UI login requires the Admin role and a protected session cookie
+  ---
+  duration_ms: 1.904204
+  type: 'test'
+  ...
+# Subtest: UI summaries admit unlicensed read-only information and exact licensed capacities/features
+ok 116 - UI summaries admit unlicensed read-only information and exact licensed capacities/features
+  ---
+  duration_ms: 2.67413
+  type: 'test'
+  ...
+# Subtest: authentication, issuer and core exceptions cannot expose supplied secret values
+ok 117 - authentication, issuer and core exceptions cannot expose supplied secret values
+  ---
+  duration_ms: 5.044708
+  type: 'test'
+  ...
+1..117
+# tests 117
+# suites 0
+# pass 117
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2141.425564

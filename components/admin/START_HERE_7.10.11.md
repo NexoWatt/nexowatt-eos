@@ -5,11 +5,22 @@ Die Anmeldung ist im Sicherheitsprofil verpflichtend. Ein alter `auth=false`-Wer
 Sicherheits- und Lizenz-Integrationsstand vom 30.09.2026. Vollständiges Repository,
 kein Admin-8-Rebase und keine bescheinigte IEC-/CRA-Konformität.
 
-Der neue **separate Offline-Keygen 1.0.0** erzeugt signierte Home-/Pro-Lizenzen für
-die System-UUID, erlaubte Adapter und ausdrückliche Mengen. Der Admin speichert
-sie mit AES-256-GCM verschlüsselt und gibt kurze, geprüfte Berechtigungen an den
-gemeinsamen Adapter-Client weiter. Private Herstellerschlüssel gehören niemals
-in dieses Repository oder auf Kundengeräte.
+Aktueller Quellstand vom 07.10.2026: Der separate Hersteller-Keygen erzeugt
+**NWL3-Systemlizenzen für Home oder Pro und die System-UUID**, ohne zusätzliche
+Adapterauswahl. Die Mengen und Funktionen folgen der zentralen Produktpolicy.
+Alte NWL2-Lizenzen behalten ihre engeren signierten Bedingungen. Der Admin
+speichert den Code mit AES-256-GCM verschlüsselt und gibt kurze, geprüfte
+Berechtigungen an den gemeinsamen Adapter-Client weiter. Private
+Herstellerschlüssel gehören niemals in dieses Repository oder auf Kundengeräte.
+
+Die Lizenzseite zeigt nach bestätigter Aktivierung deutlich „EOS Home/Pro
+aktiviert“, Gültigkeit und letzten Prüfzeitpunkt. Das Codefeld wird **erst nach
+erfolgreicher Speicherung und Rückprüfung** geleert; es ist kein Statusfeld.
+Nach erneutem Öffnen wird die gespeicherte Lizenz wieder geprüft. Bei einem
+Fehler bleibt die Eingabe erhalten, bei Verbindungsverlust ist der Status
+ausdrücklich unbestätigt. Details und Fehlerhilfe:
+[Lizenzstatus und Import](docs/licensing/ISSUER_AND_STORAGE.md#aktivierungsstatus-und-fehlerhilfe-07102026).
+Dies beschreibt Quellcode, nicht automatisch den installierten Pi-Stand.
 
 **Vor einem Update den Wiederzugang sicherstellen:** Unverschlüsseltes HTTP wird
 auch bei alter LAN-Konfiguration nur noch an Loopback gebunden. Für Fernzugriff

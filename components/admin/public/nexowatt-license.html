@@ -20,17 +20,18 @@
 <body><main>
   <header><div><small>NEXOWATT EOS</small><h1>Lizenzverwaltung</h1></div><a href="/">Zurück zum Admin</a></header>
   <p>Home und Pro zentral für dieses EOS-System verwalten. Nur freigegebene Adapter mit eingebauter Lizenzprüfung erhalten eine Betriebsfreigabe.</p>
-  <section class="card" aria-labelledby="statusTitle"><h2 id="statusTitle">Aktueller Status</h2>
+  <section id="statusCard" class="card" aria-labelledby="statusTitle"><h2 id="statusTitle">Aktivierungsstatus dieses EOS</h2>
     <p id="status" class="status" aria-live="polite">Wird geprüft …</p>
-    <dl><dt>System-UUID</dt><dd id="uuid">–</dd><dt>Edition</dt><dd id="edition">–</dd><dt>Gültig bis</dt><dd id="expiry">–</dd><dt>Ladepunkte / Speicher</dt><dd id="limits">–</dd><dt>Funktionen</dt><dd id="features">–</dd></dl>
+    <dl><dt>System-UUID</dt><dd id="uuid">–</dd><dt>Edition</dt><dd id="edition">–</dd><dt>Gültig bis</dt><dd id="expiry">–</dd><dt>Ladepunkte / Speicher</dt><dd id="limits">–</dd><dt>Funktionen</dt><dd id="features">–</dd><dt>Zuletzt bestätigt</dt><dd id="checked">–</dd></dl>
+    <p>Diese Anzeige stammt aus der zentralen Lizenzprüfung auf dem Gerät. Auch nach erneutem Öffnen ist die gespeicherte Edition hier sichtbar. Vorhandene Test- und Gerätefreigaben bleiben unabhängig davon erforderlich.</p>
     <button id="refresh" class="secondary">Status aktualisieren</button>
   </section>
   <section class="card"><h2>Lizenz aktivieren</h2><p>Den für diese UUID ausgestellten Lizenzcode aus dem NexoWatt Key-Generator einfügen. Die Lizenz wird geprüft und verschlüsselt auf dem Gerät gespeichert.</p>
-    <p class="note">Dieser Teststand erwartet das signierte Format NWL2. Der bisherige Key-Generator muss dafür noch angebunden und gemeinsam geprüft werden. Alte NW1-Schlüssel werden nicht automatisch übernommen.</p>
-    <label for="token">Neuer Lizenzcode</label><textarea id="token" spellcheck="false" autocomplete="off" placeholder="NWL2.…" maxlength="16384"></textarea>
+    <p class="note">Der aktuelle Keygen erzeugt Home-/Pro-Systemlizenzen im Format NWL3. Den vollständigen Code einfügen, keine Zertifikats- oder Vertrauensdatei. Bestehende NWL2-Lizenzen bleiben unter ihren bisherigen Bedingungen prüfbar; alte NW1-Schlüssel werden nicht übernommen.</p>
+    <label for="token">Neuer Lizenzcode</label><textarea id="token" spellcheck="false" autocomplete="off" aria-describedby="tokenHelp" placeholder="NWL3.…" maxlength="16384"></textarea>
     <button id="activate">Prüfen und aktivieren</button><button id="remove" class="secondary">Lizenz entfernen</button>
     <p id="message" role="status" aria-live="polite"></p>
-    <small>Der gespeicherte Code wird nicht zurück angezeigt. Ein ungültiger Import ersetzt keine gültige Lizenz.</small>
+    <small id="tokenHelp">Das Eingabefeld wird erst nach einer bestätigten Aktivierung geleert. Die gespeicherte Lizenz wird nicht zurück angezeigt; maßgeblich ist der Aktivierungsstatus oben. Bei einem Fehler bleibt die Eingabe erhalten. Ein ungültiger Import ersetzt keine gültige Lizenz.</small>
   </section>
   <p>Ohne gültige Lizenz bleiben Lizenzverwaltung, Diagnose und Sicherheitswartung erreichbar. Die Betriebsfreigabe der angebundenen Adapter endet spätestens nach 15 Sekunden. Schutzfunktionen benötigen den im jeweiligen Adapter festgelegten sicheren Zustand.</p>
 </main></body></html>

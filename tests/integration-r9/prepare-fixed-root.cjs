@@ -6,11 +6,25 @@ const crypto = require('node:crypto');
 const { copyVerifiedTree } = require('../../runtime/postgresql/integration.cjs');
 const { NODE, STATE, MARKER, CURRENT, RELEASES, sha, contentRows, validatePreparation } = require('./fixture.cjs');
 const REASONS = new Set(['ARGUMENTS', 'ROOT_UID', 'CI_CONTEXT', 'NODE_VERSION', 'LAB_ARGUMENTS', 'LAB_OWNER', 'LAB_MODE',
-    'EXISTING_EOS_PATH', 'OPT_OWNER', 'OPT_MODE', 'PREPARATION_FILE', 'PREPARATION_DIGEST', 'APP_FILE', 'COPIED_APP_DIGEST']);
+    'EXISTING_EOS_PATH', 'OPT_OWNER', 'OPT_MODE', 'OPT_CHANGED', 'PREPARATION_FILE', 'PREPARATION_DIGEST', 'APP_FILE', 'COPIED_APP_DIGEST']);
 const fail = reason => { throw Object.assign(new Error('R9_NATIVE_ROOT_FIXTURE_REJECTED'), { reason }); };
 // Do not print arbitrary exception messages, paths, environment or prepared data.
 const failureLine = error => `R9_NATIVE_ROOT_FIXTURE_REJECTED:${REASONS.has(error?.reason) ? error.reason : 'UNEXPECTED'}\n`;
 function absent(file) { try { fs.lstatSync(file); fail('EXISTING_EOS_PATH'); } catch (error) { if (error.code !== 'ENOENT') throw error; } }
+function protectOpt(before) {
+    // Hosted runners make /opt group/other writable. Only this disposable
+    // fixture may tighten that single root-owned directory; never its children.
+    // All context, empty-EOS-path and candidate checks precede this call.
+    const fd = fs.openSync('/opt', fs.constants.O_RDONLY | fs.constants.O_DIRECTORY | fs.constants.O_NOFOLLOW);
+    try {
+        const current = fs.fstatSync(fd);
+        if (!current.isDirectory() || current.uid !== 0 || current.dev !== before.dev || current.ino !== before.ino) fail('OPT_CHANGED');
+        if (current.mode & 0o022) fs.fchmodSync(fd, (current.mode & 0o7777) & ~0o022);
+        const after = fs.lstatSync('/opt');
+        if (!after.isDirectory() || after.isSymbolicLink() || after.uid !== 0 || after.dev !== current.dev || after.ino !== current.ino) fail('OPT_CHANGED');
+        if (after.mode & 0o022) fail('OPT_MODE');
+    } finally { fs.closeSync(fd); }
+}
 function protectTree(directory) {
     for (const name of fs.readdirSync(directory)) {
         const file = path.join(directory, name), st = fs.lstatSync(file);
@@ -33,11 +47,11 @@ function prepare(root, uidText, gidText) {
     absent('/opt/nexowatt'); absent('/etc/nexowatt-eos'); absent('/var/lib/nexowatt-eos');
     const opt = fs.lstatSync('/opt');
     if (!opt.isDirectory() || opt.isSymbolicLink() || opt.uid !== 0) fail('OPT_OWNER');
-    if (opt.mode & 0o022) fail('OPT_MODE');
     const input = path.join(root, 'r9-native-prepared.json'), inputStat = fs.lstatSync(input);
     if (!inputStat.isFile() || inputStat.uid !== uid || inputStat.nlink !== 1 || (inputStat.mode & 0o777) !== 0o600) fail('PREPARATION_FILE');
     const prepared = validatePreparation(JSON.parse(fs.readFileSync(input)), root);
     if (sha(JSON.stringify(contentRows(prepared.app))) !== prepared.appContentSha256) fail('PREPARATION_DIGEST');
+    protectOpt(opt);
     // Only fixed fresh directories and ephemeral trust are provisioned by the existing helper.
     require('../integration-management/prepare-fixed-root.cjs').prepare(root, uidText, gidText);
     const previousUmask = process.umask(0o022);
