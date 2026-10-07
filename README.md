@@ -5,10 +5,42 @@ Die UI benötigt keinen eigenen Schlüssel mehr. Unveränderte NexoWatt-Adapter
 starten nur innerhalb des zugelassenen EOS-Systems; kleine Admin-Logos wurden
 auf die vorhandenen NexoWatt-Grafiken umgestellt.
 
-Der gemeinsame **R9-Teststand wird noch qualifiziert**. Ein neuer Pi-Updatebefehl
-folgt erst nach erfolgreicher nativer Prüfung, Signierung und öffentlichem
-Dateirücklesen. Der eingerichtete R8-Pi bleibt bis dahin auf seinem Stand.
-Die ältere Erststart-Wiederherstellung unten nicht erneut darauf ausführen.
+**R9 / test.3, Sequenz 12 ist jetzt als signierter Teststand veröffentlicht.**
+Er enthält die korrigierte Lizenzanzeige und den behobenen UI-Startblocker.
+Nach bestätigter Speicherung zeigt Admin dauerhaft Home/Pro und Gültigkeit;
+ein Fehler erhält die Eingabe und liefert einen festen Diagnosecode.
+
+Dieser Updateweg gilt ausschließlich für ein **vollständig eingerichtetes,
+betriebsbereites R8 mit Sequenz 11**. Vorher die Sicherung und den dokumentierten
+Rückfallweg prüfen. Den folgenden vollständigen Befehl einmal im SSH-Terminal
+dieses Test-Pi ausführen:
+
+```bash
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-update-r9-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29906 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/8dd76a9563a07e6daf973ca9370718933a6c170c/delivery/public-update-test3-r9/update.sh -o "$d/update.sh"; [[ -f "$d/update.sh" && ! -L "$d/update.sh" && $(/usr/bin/stat -c %h "$d/update.sh") == 1 && $(/usr/bin/stat -c %u "$d/update.sh") == 0 && $(/usr/bin/stat -c %s "$d/update.sh") == 29906 ]] || exit 1; printf '\''%s  %s\n'\'' '\''3eceb24333bc60f18d8b437a0dd1faf2807ecec2820ad270d360aa6df5f810a5'\'' "$d/update.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/update.sh"'
+```
+
+Der Befehl lädt den fest gepinnten Einstieg, prüft Größe und SHA-256 und lässt
+anschließend Signaturen und R8-Ausgangszustand prüfen. Der überwachte Paketwechsel
+erhält UUID, Lizenz, Passwörter, Zertifikate und Datenbank. Erfolg meldet
+`"phase":"TEST_REPAIR_ACTIVE"` und `"sequence":12`.
+Danach Admin und UI über HTTPS öffnen, anmelden, Lizenzstatus neu laden und den
+kontrollierten Geräteneustart prüfen. Bei einem Abbruch den festen Fehlercode
+auswerten; die untenstehende ältere Erststart-Wiederherstellung ist kein
+Wiederholungsbefehl für ein bereits eingerichtetes R8/R9.
+
+[Verifizierter R9-Updatebefehl als Textdatei](delivery/public-update-test3-r9/UPDATE_COMMAND.txt) ·
+[Voraussetzungen, Ablauf und Rückfall](docs/operations/TEST_R9_UPDATE_DE.md) ·
+[Lizenzkorrektur, Pi-Prüfung und offene Befunde](reports/integration/license-status-ci-20261007/README_DE.md) ·
+[Alle sieben Sicherheitsprüfgruppen bestanden](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37667636597) ·
+[Signierung, unabhängige Prüfung und öffentlicher Downloadvergleich](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37668413232).
+
+Die artefaktgebundene [Runtime-SBOM](reports/integration/installable-test3-r9-20261005/runtime.cdx.json)
+enthält 646 CycloneDX-Komponenten. Sie inventarisiert weder das Geräte-OS noch
+Firmware und ersetzt keinen aktuellen Schwachstellenscan. Alle sechs eigenen
+Adapter sind enthalten; aktivierbar für den Managementtest sind Admin und UI.
+Devices, EEBUS, OCPP und Backup benötigen ihre getrennte Anlagen-/Hostabnahme.
+Pi-/Browserabnahme und offene Abhängigkeitsbefunde bleiben offen; R9 ist keine
+Produktions- oder CRA-Freigabe.
 
 [Änderung, zentrale Aktivierung und Grenzen](docs/development/EOS_CENTRAL_LICENSE_2026-10-05_DE.md) ·
 [Gemeinsame lokale Prüfbelege](reports/integration/central-license-20261005/README.md) ·

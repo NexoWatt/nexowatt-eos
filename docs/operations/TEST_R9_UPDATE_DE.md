@@ -1,11 +1,22 @@
 # R9 TEST: gesundes R8 aktualisieren
 
-Stand: 05.10.2026. Ziel ist EOS `0.2.0-test.3`, Revision 9, signierte Sequenz 12,
+Stand: 07.10.2026. Ziel ist EOS `0.2.0-test.3`, Revision 9, signierte Sequenz 12,
 auf Node.js `24.21.0`. Der Einstieg akzeptiert ausschließlich die vollständig
 abgeschlossene, vor dem Update tatsächlich betriebsbereite R8-Installation mit
 Sequenz 11. Ein fehlgeschlagener Erststart oder ein gestoppter Reparaturzustand
 ist kein zulässiger Ausgangspunkt. R9 übernimmt keine Konten-, Lizenz-,
 Datenbank-, Zertifikats- oder systemd-Unit-Migration.
+
+**Veröffentlicht am 07.10.2026:** Der
+[R9-Updatebefehl](../../delivery/public-update-test3-r9/UPDATE_COMMAND.txt) ist
+an Einstieg `8dd76a9563a07e6daf973ca9370718933a6c170c` gebunden. Die
+[Auslieferung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37668413232)
+bestand einschließlich unabhängiger Rekonstruktion und öffentlichem Bytevergleich.
+Quelle ist `ab95661567533935f4e26e478a36c552cc5e0dc5`, native Sicherheitsprüfung
+`37667636597` vollständig bestanden. Das Update auf dem Pi selbst bleibt offen.
+Die [kurze Lizenz-/Browserabnahme](../../reports/integration/license-status-ci-20261007/README_DE.md#kurze-abnahme-auf-dem-eigenen-pi-nach-dem-passenden-test-update)
+beschreibt das erwartete sichtbare Verhalten. Die Runtime-SBOM und gebundenen
+Rohbelege liegen unter `reports/integration/installable-test3-r9-20261005/`.
 
 Es gibt erst dann einen verwendbaren Betreiberbefehl, wenn das signierte Archiv,
 der öffentliche Einstieg und der exakt an dessen Commit gebundene Befehl

@@ -227,3 +227,40 @@ Neue Befunde und nächste Schritte stehen mit den Kennungen
 `EOS-LICENSE-STATUS-20261007`, `EOS-PLATFORM-METADATA-20261007` und
 `EOS-OCPP-LOCK-AUDIT-20261007` im vorhandenen Befundregister; alte Befundzustände
 bleiben erhalten.
+
+## Tatsächlich veröffentlichte R9-Testlieferung
+
+Die anschließende, ausschließlich den Buildmarker ändernde Anforderung
+`ab95661567533935f4e26e478a36c552cc5e0dc5` bestand den eigenen vollständigen
+[Security-Lauf 37667636597](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37667636597).
+Der [Lieferlauf 37668413232](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37668413232)
+bestand alle vier Jobs: Anforderungsprüfung, Bau/Signierung/Readback, unabhängige
+Rekonstruktion/Veröffentlichung und öffentlicher Updatebefehl. Frühere Belege
+wurden nicht auf diesen neuen Quellcommit umgeschrieben.
+
+| Bindung | Veröffentlichter Wert |
+|---|---|
+| Version | `0.2.0-test.3`, Revision 9, Sequenz 12 |
+| Archiv-Commit | `a7fb2ac48bb375c63bc3cd7a5576cda271fc9736` |
+| Einstieg-Commit | `8dd76a9563a07e6daf973ca9370718933a6c170c` |
+| Befehls-Commit | `1b2708ad47d0d88b818e8eeb301bd25d7fbe51b6` |
+| Release-ID | `97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000` |
+| Archiv | 88.944.737 Byte; SHA-256 `8adad353b83de5f396cb9402442f430d65f70e9538390e8b02b6073bc21e7d31` |
+| Einstieg | 29.906 Byte; SHA-256 `3eceb24333bc60f18d8b437a0dd1faf2807ecec2820ad270d360aa6df5f810a5` |
+| Gebundener App-Inhalt | `cd2f9538116b68d1e4d62b6dc4b8c6160ffd30d5e0e0f26bcb650b6d021f39f3` |
+| Signierte Dateien / Runtime-SBOM | 22.316 Dateien / 646 CycloneDX-1.5-Komponenten |
+
+Die generierten Rohbelege und die maschinenlesbare SBOM stehen unter
+`reports/integration/installable-test3-r9-20261005/`. Die öffentliche
+Transportprüfung verglich Archiv, Schlüssel und Liefermetadaten bytegenau.
+Zusätzlich wurde der veröffentlichte Einstieg über seine fest gepinnte Raw-URL
+gelesen und lokal auf obige Größe und SHA-256 geprüft. `sha256sum -c bundle.sha256`
+bestand für das aus Git zurückgelesene Archiv und den öffentlichen Schlüssel.
+Der Betreiberbefehl bestand `bash -n`; die Hauptanleitung übernimmt ihn bytegenau
+aus der veröffentlichten Textdatei. Keine dieser Prüfungen führt ein Pi-Update aus.
+
+Dieser Stand übernimmt die authentifizierten R8-Drittanbieterbytes. Der
+SBOM-Beleg benennt deshalb `vulnerabilityScanPerformed=false` und
+`operatingSystemInventoryIncluded=false`. Die elf OCPP-CI-Auditknoten sind weiter
+offen und keine aktuelle vollständige Bewertung der ausgelieferten Runtime.
+Die Benutzer-, Geräte- und Produktionsfreigaben bleiben wie oben abgegrenzt.

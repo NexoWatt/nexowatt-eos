@@ -1,5 +1,23 @@
 # R9-Testableitung: zentrale Freigabe und eigene Adapterpakete
 
+**Veröffentlichungsnachtrag vom 07.10.2026:** Der Teststand wurde aus
+`ab95661567533935f4e26e478a36c552cc5e0dc5` gebaut, signiert und unabhängig
+rekonstruiert. Alle sieben Jobs des [gebundenen Security-Laufs](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37667636597)
+und der vollständige [Auslieferungslauf](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37668413232)
+bestanden. Die tatsächlichen Belege sind `build-verification.json`,
+`native-workflow.json`, `r9-native-evidence.json`, `signed-source-binding.json`,
+`runtime.cdx.json` und `runtime-derivative-sbom.json` in diesem Verzeichnis.
+22.316 Dateien sind signiert; die Runtime-SBOM enthält 646 Komponenten.
+Der [öffentliche Updatebefehl](../../../delivery/public-update-test3-r9/UPDATE_COMMAND.txt)
+ist veröffentlicht und an den unveränderlichen Einstieg gebunden. Der öffentliche
+Asset-Readback steht bei diesem Einstieg. Pi, Browser, physische Geräte und
+aktuelle vollständige Runtime-Schwachstellenbewertung bleiben offen; die
+[neuen OCPP-CI-Auditbefunde](../license-status-ci-20261007/README_DE.md) sind keine
+Entwarnung für die Lieferung. Keine Produktions-/CRA-Freigabe.
+
+Die folgenden lokalen Prüfungen und offenen Zustände sind der erhaltene
+historische Stand vom 05.10.2026; sie werden nicht als neuer Releasebeleg ausgegeben.
+
 Stand: 05.10.2026. Dieser Vermerk beschreibt Herstellerwerkzeuge und lokale
 Prüfungen im noch nicht veröffentlichten Arbeitsstand. Er bescheinigt keine
 Signierung, Veröffentlichung, Pi-Aktualisierung oder Anlagenfreigabe.
