@@ -61,6 +61,16 @@ Signatur-/Hashvergleich des Lieferbaums. Der aktuelle Installationsvertrag träg
 `profile: "test"`; andere Profile müssen vor Einführung ausdrücklich unterstützt
 und geprüft werden.
 
+Korrektur 07.10.2026: Die tatsächliche UI-`package.json` umfasst 73.193 Byte und
+überschritt das bisherige 64-KiB-Limit. Paketmetadaten von Adapter und Controller
+haben jetzt ein festes 128-KiB-Limit; Release-State bleibt auf 4 KiB und Profil auf
+32 KiB begrenzt. Auch Wachstum nach `stat` wird durch begrenztes Lesen erkannt.
+Alle sechs eigenen Adapter enthalten dieselbe korrigierte Clientdatei. Tests
+verwenden die echten sechs Paketbeschreibungen sowie Grenzwert-, Übergrößen- und
+Dateiwachstumsfälle. Rechte, Pfade, Version, Einstiegspunkt, Signaturen und
+Lizenzbedingungen werden nicht gelockert. Der native R9-Start ist der zusätzlich
+erforderliche Integrationsnachweis, nicht durch isolierte Tests ersetzt.
+
 Es gibt keinen Umgebungs-, Konfigurations- oder Guard-Schalter zum Überspringen
 der Plattformprüfung. Isolierte Tests ersetzen die Dateisystemschnittstelle oder
 die Plattformabhängigkeit ausdrücklich im Testlader. Solche Tests belegen keine

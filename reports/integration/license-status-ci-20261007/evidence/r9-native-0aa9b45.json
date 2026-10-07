@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-r9-native-management",
+  "sourceReleaseId": "eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7",
+  "sourceSequence": 11,
+  "targetSequence": 12,
+  "sourceCommit": "0aa9b458db4ee29020f710c6c1b48c7c49475ff3",
+  "fixtureReleaseId": "fa2380ca3f4547307b8a676e7749be92c8092adbf137594cf209685cc06f2f66",
+  "appContentSha256": "be25bd918a996661b2a814b486a00f8bacfd6e19eebad53a725e37fcd30a6b33",
+  "nodeVersion": "24.21.0",
+  "sequence": 12,
+  "licenseFormat": "NWL3",
+  "passed": false,
+  "signed": false,
+  "unsignedFixture": true,
+  "hardwareTested": false,
+  "checks": {
+    "postgresqlMtls": true
+  },
+  "candidateSigned": false,
+  "fixedRootOwnedEosPaths": true,
+  "nativePostgresql": "17.11",
+  "node": "v24.21.0",
+  "hostArch": "x64",
+  "signedPayloadPlatform": "linux-arm64",
+  "sourceAppBytesUnchanged": false,
+  "lifecycleScriptsExecuted": false,
+  "nativeModulesRebuilt": false,
+  "mockedRuntimeDependencies": false,
+  "physicalAdaptersStarted": false,
+  "actualSystemdMountPolicy": false,
+  "physicalPiAcceptance": false,
+  "productionReleaseApproved": false,
+  "productionReadinessPassed": false,
+  "restartPassed": false,
+  "boots": [
+    {
+      "stage": "https",
+      "productionProbe": {
+        "elapsedMs": 5005,
+        "admin": true,
+        "ui": false,
+        "adminFailure": null,
+        "uiFailure": {
+          "code": "ONBOARD_HTTPS_NOT_READY",
+          "stage": "https-probe",
+          "reason": "deadline",
+          "port": 8188
+        }
+      },
+      "coreReadyMs": 828,
+      "adaptersAliveMs": 6467,
+      "productionReadyMs": 11473,
+      "runtimeLog": {
+        "bytesRead": 7695,
+        "indicators": [
+          "LICENSE_MISSING",
+          "RUNTIME_ERROR_LOGGED"
+        ]
+      }
+    }
+  ],
+  "stages": [
+    {
+      "name": "fresh isolated native database uses separate least-privilege mTLS identities",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "ordinary setup loads actual PostgreSQL wrappers with read-only config",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production bootstrap and first-run enrollment retain strong accounts and no physical adapters",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production CLI uploads only the two admitted management packages",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production readiness reaches actual Admin HTTPS login redirect and strict unauthenticated UI status",
+      "passed": false,
+      "failureCode": "MANAGEMENT_PRODUCTION_READINESS_FAILED"
+    }
+  ],
+  "bootstrapSteps": [
+    {
+      "name": "fresh-instance-count",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-initialize",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "password-hash",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-enrollment",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-uuid-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-issuer-read",
+      "passed": true,
+      "failureCode": null
+    }
+  ],
+  "finalSteps": [],
+  "initialInstanceCount": 0,
+  "logReadFailure": "MANAGEMENT_RUNTIME_ERROR",
+  "runtimeIndicators": [
+    "PERMISSION_DENIED"
+  ],
+  "processIndicators": [
+    {
+      "scope": "cli-setup",
+      "indicators": [
+        "PERMISSION_DENIED"
+      ]
+    },
+    {
+      "scope": "cli-upload-admin",
+      "indicators": []
+    },
+    {
+      "scope": "cli-upload-ui",
+      "indicators": []
+    },
+    {
+      "scope": "controller",
+      "indicators": []
+    }
+  ]
+}

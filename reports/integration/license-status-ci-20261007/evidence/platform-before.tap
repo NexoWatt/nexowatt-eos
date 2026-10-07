@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: root-managed active EOS release admits only the declared process/package and closes descriptors
+ok 1 - root-managed active EOS release admits only the declared process/package and closes descriptors
+  ---
+  duration_ms: 13.506727
+  type: 'test'
+  ...
+# Subtest: absent platform, unsupported OS and malformed protected metadata deny with safe codes
+ok 2 - absent platform, unsupported OS and malformed protected metadata deny with safe codes
+  ---
+  duration_ms: 16.310569
+  type: 'test'
+  ...
+# Subtest: writable, non-root, symlinked and hard-linked paths or replaced descriptors fail closed
+ok 3 - writable, non-root, symlinked and hard-linked paths or replaced descriptors fail closed
+  ---
+  duration_ms: 20.813743
+  type: 'test'
+  ...
+# Subtest: client denies before contacting authority outside EOS and invalidates lease on platform loss
+ok 4 - client denies before contacting authority outside EOS and invalidates lease on platform loss
+  ---
+  duration_ms: 7.324292
+  type: 'test'
+  ...
+# Subtest: all exported package files in UI mirror match canonical client
+ok 5 - all exported package files in UI mirror match canonical client
+  ---
+  duration_ms: 3.762651
+  type: 'test'
+  ...
+# Subtest: admin actual package metadata fits the protected platform reader
+ok 6 - admin actual package metadata fits the protected platform reader
+  ---
+  duration_ms: 2.821693
+  type: 'test'
+  ...
+# Subtest: ui actual package metadata fits the protected platform reader
+not ok 7 - ui actual package metadata fits the protected platform reader
+  ---
+  duration_ms: 3.576999
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-platform.test.cjs:141:5'
+  failureType: 'testCodeFailure'
+  error: 'EOS_PLATFORM_FORMAT'
+  code: 'EOS_PLATFORM_FORMAT'
+  stack: |-
+    fail (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/packages/eos-license-client/eos-platform.js:12:44)
+    load (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/packages/eos-license-client/eos-platform.js:38:51)
+    Object.assertEosPlatform [as check] (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/packages/eos-license-client/eos-platform.js:89:26)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-platform.test.cjs:148:24)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: devices actual package metadata fits the protected platform reader
+ok 8 - devices actual package metadata fits the protected platform reader
+  ---
+  duration_ms: 5.54688
+  type: 'test'
+  ...
+# Subtest: eebus actual package metadata fits the protected platform reader
+ok 9 - eebus actual package metadata fits the protected platform reader
+  ---
+  duration_ms: 3.299492
+  type: 'test'
+  ...
+# Subtest: ocpp21 actual package metadata fits the protected platform reader
+ok 10 - ocpp21 actual package metadata fits the protected platform reader
+  ---
+  duration_ms: 3.349345
+  type: 'test'
+  ...
+# Subtest: backitup actual package metadata fits the protected platform reader
+ok 11 - backitup actual package metadata fits the protected platform reader
+  ---
+  duration_ms: 1.928735
+  type: 'test'
+  ...
+# Subtest: package metadata limit remains bounded, including growth after stat, without raising state/profile limits
+not ok 12 - package metadata limit remains bounded, including growth after stat, without raising state/profile limits
+  ---
+  duration_ms: 2.472341
+  type: 'test'
+  location: '/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-platform.test.cjs:153:1'
+  failureType: 'testCodeFailure'
+  error: 'EOS_PLATFORM_FORMAT'
+  code: 'EOS_PLATFORM_FORMAT'
+  stack: |-
+    fail (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/packages/eos-license-client/eos-platform.js:12:44)
+    load (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/packages/eos-license-client/eos-platform.js:38:51)
+    Object.assertEosPlatform [as check] (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/packages/eos-license-client/eos-platform.js:89:26)
+    TestContext.<anonymous> (/workspace/scratch/6383b3161c96/eos-license-fix-0zqITuBs/repo/components/admin/test/eos-license-platform.test.cjs:160:23)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 10
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 345.88367

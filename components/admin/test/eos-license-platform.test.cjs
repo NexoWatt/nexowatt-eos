@@ -136,3 +136,35 @@ test('all exported package files in UI mirror match canonical client', () => {
             fs.readFileSync(path.join(__dirname, '../../ui/packages/eos-license-client', name)), name);
     }
 });
+
+for (const component of ['admin', 'ui', 'devices', 'eebus', 'ocpp21', 'backitup']) {
+    test(component + ' actual package metadata fits the protected platform reader', () => {
+        const bytes = fs.readFileSync(path.join(__dirname, '../..', component, 'package.json'));
+        const pkg = JSON.parse(bytes), f = fixture();
+        const entry = `${modules}/${pkg.name}/${pkg.main}`;
+        f.profile.adapters = [{ package: pkg.name, version: pkg.version, main: pkg.main }];
+        f.put(profilePath, f.profile); f.put(entry, Buffer.from('entry'));
+        f.put(`${modules}/${pkg.name}/package.json`, bytes); f.load.main.filename = entry;
+        assert.equal(f.check(pkg.name.slice('iobroker.'.length)), true);
+        assert.equal(f.descriptors.size, 0);
+    });
+}
+
+test('package metadata limit remains bounded, including growth after stat, without raising state/profile limits', () => {
+    const file = `${modules}/iobroker.nexowatt-ui/package.json`;
+    const padded = size => {
+        const bytes = Buffer.from(JSON.stringify({ name: 'iobroker.nexowatt-ui', version: '1.0.0', main: 'main.js' }));
+        return Buffer.concat([bytes, Buffer.alloc(size - bytes.length, 32)]);
+    };
+    const edge = fixture(); edge.put(file, padded(128 * 1024));
+    assert.equal(edge.check('nexowatt-ui'), true);
+    for (const [target, bytes, staleSize] of [
+        [file, padded(128 * 1024 + 1), false], [file, padded(128 * 1024 + 1), true],
+        [statePath, Buffer.alloc(4097, 32), false], [profilePath, Buffer.alloc(32769, 32), false],
+    ]) {
+        const f = fixture(); f.put(target, bytes);
+        if (staleSize) f.stats.get(target).size = 100;
+        assert.throws(() => f.check('nexowatt-ui'), { code: 'EOS_PLATFORM_FORMAT' });
+        assert.equal(f.descriptors.size, 0);
+    }
+});

@@ -8,6 +8,9 @@ const { TextDecoder } = require('node:util');
 const STATE = '/etc/nexowatt-eos/release-state.json';
 const RELEASES = '/opt/nexowatt/eos/releases';
 const CURRENT = '/opt/nexowatt/eos/current';
+// The actual UI manifest is ~73 KiB (reviewed scripts/files metadata). Keep
+// a fixed 128 KiB cap for package manifests only; state/profile caps stay 4/32 KiB.
+const PACKAGE_JSON_MAX_BYTES = 128 * 1024;
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const exact = (value, keys) => record(value) && Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key));
@@ -85,9 +88,9 @@ function assertEosPlatform(adapterName) {
         // pass merely because a genuine EOS installation exists on the host.
         if (!require.main || require.main.filename !== main) fail('EOS_PLATFORM_ENTRY');
         rootOwned(main);
-        const manifest = load(path.join(directory, 'package.json'), 65536);
+        const manifest = load(path.join(directory, 'package.json'), PACKAGE_JSON_MAX_BYTES);
         if (manifest.name !== entry.package || manifest.version !== entry.version || manifest.main !== entry.main) fail('EOS_PLATFORM_PACKAGE');
-        const controller = load(path.join(modules, 'iobroker.js-controller/package.json'), 65536);
+        const controller = load(path.join(modules, 'iobroker.js-controller/package.json'), PACKAGE_JSON_MAX_BYTES);
         if (controller.name !== 'iobroker.js-controller' || controller.version !== profile.controllerVersion) fail('EOS_PLATFORM_CONTROLLER');
         return true;
     } catch (error) {

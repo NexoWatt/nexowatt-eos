@@ -50,7 +50,8 @@ Linux x64, Node 24.19.0, npm 11.9.0; CI verwendet weiterhin Node 24.21.0.
 | Browser | OFFEN: Playwright-Browser fehlt; Download lieferte kein gültiges Archiv. Kein Browser-Erfolg behauptet. |
 | Neue OCPP-Lockdatei, npm Audit | NICHT sauber: 11 Einträge (4 high, 6 moderate, 1 low; 0 critical), darunter Entwicklungs- und transitive Abhängigkeiten. Befunde müssen getrennt auf Betroffenheit und geeignete Korrekturen geprüft werden; bestandene Funktionstests sind keine Entwarnung. |
 
-Ausgewählte unveränderte Rohlogs und Eingabehashes stehen in `evidence/`.
+Ausgewählte Rohlogs und Eingabehashes stehen in `evidence/` (beim roten
+Frontend-Vorlauf wurden nur abschließende Leerzeichen normalisiert).
 Die GitHub-Gesamtprüfung des neuen Commits ist bei Erstellung dieses Berichts
 noch ausstehend. Frühere grüne Läufe gelten nicht automatisch für neuen Code.
 
@@ -73,3 +74,48 @@ und Lizenzstatus mit vorhandenem Herstellertresor abnehmen. Physische Adapter
 und Anlagenfreigaben bleiben getrennt. Keine Pauschalrechtekorrektur auf dem Pi.
 Bei einem Produktfehler nur den dokumentierten signierten Rückfallweg verwenden;
 Hersteller-Vertrauensanker, Lizenzdaten und Konten nicht zurücksetzen.
+
+## Zweiter CI-Befund und gezielte Nachkorrektur
+
+Quellstand `0aa9b458db4ee29020f710c6c1b48c7c49475ff3`,
+[Lauf 37661833151](https://github.com/NexoWatt/nexowatt-eos/actions/runs/37661833151):
+Die beiden ursprünglichen Vorbereitungsfehler sind behoben: alle Lock-Installationen
+und der echte root-eigene R9-Aufbau liefen erfolgreich. Fünf Prüfgruppen bestanden.
+Die nun tatsächlich ausgeführten nachfolgenden Prüfungen zeigten zwei weitere Fehler:
+
+- UI-Dateirechtestest erwartete Root-Eigentum an einer vom normalen Runner
+  erzeugten temporären Datei. Der Test wird fachlich getrennt: HTTPS-/Adaptertests
+  bleiben unprivilegiert und verlangen dort Ablehnung. Ein kleiner gesonderter
+  verpflichtender Dateitest erzeugt als Root ausschließlich eigene temporäre
+  Testdateien und prüft die echte unveränderte Schutzfunktion, einschließlich
+  Symlink, Hardlink, zu offenen Dateirechten und schreibbarem Verzeichnis.
+  Kein Skip, keine Eigentümersimulation und kein Root-Adapterbetrieb.
+- Der echte R9-Lauf erreichte PostgreSQL-mTLS, Setup, Enrollment und Admin-HTTPS,
+  aber nicht UI-HTTPS (`MANAGEMENT_PRODUCTION_READINESS_FAILED`, Deadline 8188).
+  Die Quellprüfung fand einen konkreten Blocker: Die echte UI-`package.json`
+  ist 73.193 Byte groß, während `assertEosPlatform` höchstens 65.536 erlaubte.
+  Der neue Test mit genau dieser Datei reproduzierte `EOS_PLATFORM_FORMAT`.
+  Alle sechs identischen Clientkopien erlauben jetzt fest höchstens 128 KiB für
+  Paketmetadaten. State-/Profillimits bleiben 4/32 KiB; Eigentümer, Links,
+  Deskriptoridentität, Paketversion und tatsächlicher Prozesspfad bleiben geprüft.
+  Übergrößen und Wachstum während des Lesens werden weiterhin abgewiesen.
+
+Lokal nach dieser Korrektur: 140/140 Lizenz-, Plattform-, Buildparitäts-,
+Adapterzulassungs-, Lock- und R9-Vertragstests; Admin-Stabilitätskette Exit 0;
+54/54 UI-/Auth-/Lizenz-/Root-Dateiprüfungen. UI-Dokumentation regeneriert und
+geprüft. Root-/Non-Root-Gesamtkombination sowie erneuter tatsächlicher nativer
+R9-Start werden durch den nächsten CI-Lauf bewertet. Ein gefundener und isoliert
+behobener Startblocker ist noch kein erfolgreicher vollständiger R9-Lauf.
+
+Das Backup-Paketmanifest bindet nach bestandenen Lizenz-/Recoverytests den neuen
+Hash und die neue Größe genau dieser einen Clientdatei. Die übrigen Einträge und
+die Publish-Prüfung bleiben unverändert. EEBUS/OCPP-Gesamttests und Devices-Lizenztests
+wurden nach Übernahme des identischen Clients erneut erfolgreich ausgeführt.
+
+Der erste native Fehlbeleg bleibt als `evidence/r9-native-0aa9b45.json` erhalten.
+Die `node-forge`-Advisory [GHSA-86w9-cpqp-85rv](https://github.com/advisories/GHSA-86w9-cpqp-85rv)
+führt zum Prüfzeitpunkt keine gepatchte Version; ein erzwungenes npm-Downgrade ist
+kein belastbarer Produktsicherheitsnachweis. Die übrigen Audit-Einträge umfassen
+auch Entwicklungswerkzeuge und abhängige Elternpakete, nicht elf unabhängig
+bestätigte Exploitpfade. Befundbewertung und geeignete Dependency-Upgrades bleiben
+ausdrücklich offen; kein Auditfilter wurde gesetzt und kein Befund unterdrückt.

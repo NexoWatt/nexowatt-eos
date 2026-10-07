@@ -1,5 +1,12 @@
 'use strict';
-/** Actual HTTPS/Express UI; ioBroker storage and central bus are local fixtures. */
+/**
+ * NexoWatt Quellcode-Erklärung (DE)
+ * Aufgabe: Echte HTTPS-/Express-Oberfläche, Authentifizierung und zentrale Lizenzgrenzen prüfen.
+ * Daten und Wirkung: Lokale Controller-/Bus-Fixtures; ephemere TLS-Dateien im Testverzeichnis.
+ * Bei Änderungen: Root-Dateirechte separat in verify-eos-tls-files.cjs ausführen;
+ * keine Produktionsprüfung für unprivilegierte Testdateien lockern.
+ * Verknüpfung: docs/security/EOS_UI_INTEGRATED_DE.md
+ */
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
@@ -41,18 +48,17 @@ test('UI-TLS: real shipped server TLS1.3, CA identity verification and Secure co
   } finally {await h.close();}
 });
 
-test('UI-TLS: fixed product paths and key-file protection', () => {
+test('UI-TLS: fixed product paths, listener policy and mismatched keys', () => {
   assert.equal(integrated.CERTIFICATE_PATH,'/etc/nexowatt-eos/web/ui.crt');
   assert.equal(integrated.PRIVATE_KEY_PATH,'/etc/nexowatt-eos/web/ui.key');
   assert.deepEqual(integrated.listenerConfiguration({bind:'::',port:8188}),{bind:'::',port:8188});
   for(const config of [{port:'8188'},{port:80},{ip:'hostname'},{eosLicenseAdminInstance:'evil.0'}]) assert.throws(()=>integrated.listenerConfiguration(config));
-  assert.deepEqual(integrated.readProtectedFile(tlsFixture.keyPath,true,tlsFixture.directory),tlsFixture.key);
-  fs.chmodSync(tlsFixture.keyPath,0o644);
-  try {assert.throws(()=>integrated.readProtectedFile(tlsFixture.keyPath,true,tlsFixture.directory),/EOS_TLS_FILE/);}finally{fs.chmodSync(tlsFixture.keyPath,0o600);}
-  const link=path.join(tlsFixture.directory,'link.key');fs.symlinkSync(tlsFixture.keyPath,link);
-  assert.throws(()=>integrated.readProtectedFile(link,true,tlsFixture.directory));fs.unlinkSync(link);
-  fs.chmodSync(tlsFixture.directory,0o777);
-  try {assert.throws(()=>integrated.readProtectedFile(tlsFixture.keyPath,true,tlsFixture.directory),/EOS_TLS_DIRECTORY/);}finally{fs.chmodSync(tlsFixture.directory,0o700);}
+  // A runner-owned temporary directory is not a valid root-owned product path.
+  // Positive file reads and every original mode/link case run in the separate
+  // root-only filesystem test; this suite itself stays unprivileged in CI.
+  if (process.getuid?.() !== 0) {
+    assert.throws(() => integrated.readProtectedFile(tlsFixture.keyPath, true, tlsFixture.directory), /EOS_TLS_DIRECTORY/);
+  }
   const {privateKey}=crypto.generateKeyPairSync('ec',{namedCurve:'prime256v1'});
   assert.throws(()=>integrated.validateTlsMaterial(tlsFixture.cert,privateKey.export({type:'pkcs8',format:'pem'})),/EOS_TLS_KEY_MISMATCH/);
 });

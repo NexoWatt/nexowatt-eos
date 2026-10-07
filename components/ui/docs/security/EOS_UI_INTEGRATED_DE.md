@@ -7,6 +7,13 @@ Produktiv-, IEC- oder CRA-Freigabe.
 
 ## Architektur und Vertrauensgrenzen
 
+Nachtrag 07.10.2026: Der gemeinsame EOS-Plattformleser akzeptiert begrenzte
+Paketmetadaten bis 128 KiB. Die eigene 73.193-Byte-`package.json` wurde zuvor schon
+am 64-KiB-Limit abgewiesen, noch vor Start des HTTPS-Listeners. Alle sechs
+Clientkopien wurden gemeinsam korrigiert; State-/Profillimits, Rootrechte und
+Prozessbindung bleiben unverändert. Regressionen prüfen reale Paketdateien,
+exakte Größenbegrenzung und Dateiwachstum während der Prüfung.
+
 | Verbindung | Durchsetzung und Grenze |
 |---|---|
 | Browser → UI:8188 | Ein HTTPS-Listener, ausschließlich TLS 1.3; Zertifikatsprüfung durch den Browser, kein HTTP-Fallback. |
@@ -98,6 +105,27 @@ Voraussetzung; die Test-UI ist kein Anlagenregler.
 | R: Unbelegte Freigabe | Versionierte Tests, Quelldifferenzen und Rohprotokolle | Keine Zertifizierungs- oder Vollständigkeitsbehauptung. |
 
 ## Tatsächlich ausgeführte Prüfungen
+
+### CI-Fixture-Korrektur 07.10.2026
+
+Lauf `37661833151`, Job `112931029254`, zeigte `EOS_TLS_DIRECTORY`: Die alte
+positive Dateileserprüfung erwartete fälschlich, dass ein unprivilegiert erzeugter
+temporärer TLS-Pfad die Root-Eigentümerprüfung besteht. Diese Produktprüfung
+bleibt unverändert. Der normale HTTPS-/Lizenztest prüft auf unprivilegierten
+Runnern jetzt ausdrücklich die Ablehnung dieses Pfads. Sämtliche bisherigen
+positiven und negativen Dateirechtefälle laufen separat mit UID 0 in
+`scripts/verify-eos-tls-files.cjs`, zusätzlich ein echter Hardlink-Negativfall.
+Der kleine Dateitest erzeugt nur eigenes temporäres TLS-Material und entfernt es
+beim Prozessende. Keine Eigentümersimulation, kein Test-Skip, kein Produktpfad,
+kein als Root gestarteter Adapter oder HTTP-Server. Die CI führt beide Gruppen
+verpflichtend aus. Echte native Managementtests bleiben getrennte Nachweise.
+
+```bash
+sudo -- "$(command -v node)" --test scripts/verify-eos-tls-files.cjs
+node --test scripts/verify-eos-integrated.cjs scripts/verify-eos-auth-security.cjs test/eos-license-entitlements.test.cjs
+```
+
+Die folgenden Zahlen beschreiben den historischen Integrationslauf vom 01.10.
 
 Umgebung: Linux x86_64, Node 24.19.0. Express und HTTPS sind echt, Controller,
 Benutzerobjekte und Messagebox in dieser Komponentenprüfung simuliert.

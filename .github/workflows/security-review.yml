@@ -503,6 +503,10 @@ jobs:
           done
       - name: Require identical clients and actual early management admission
         run: node --test tests/integration/own-adapter-admission.test.cjs
+      - name: Check actual root-owned UI TLS file protections in an isolated temporary fixture
+        # Only this tiny filesystem test needs UID 0; no adapter, listener,
+        # dependency installation or product-directory setup runs as root.
+        run: sudo -- "$(command -v node)" --test components/ui/scripts/verify-eos-tls-files.cjs
       - name: Check current UI licensing and authenticated management boundaries
         working-directory: components/ui
         run: |
