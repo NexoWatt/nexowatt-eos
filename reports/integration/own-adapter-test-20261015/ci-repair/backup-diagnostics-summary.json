@@ -1,23 +1,29 @@
 {
   "schemaVersion": 1,
-  "kind": "eos-backup-cli-diagnostics-regression",
-  "sourceBase": "625b86286fa8b863d04fac91a13ab1d7e29aa168",
+  "kind": "eos-backup-runtime-diagnostics-regression",
+  "sourceBase": "3d3aaf8e4c7f81e9465a202558716980b34c0615",
+  "executedAt": "2026-10-15T09:31:37.302836+00:00",
   "nodeVersion": "24.19.0",
   "platform": "linux",
   "arch": "x64",
-  "tests": 24,
-  "passed": 24,
+  "command": "node --test --test-reporter=tap tests/integration-own-adapters/*.test.cjs",
+  "tests": 31,
+  "passed": 31,
   "failed": 0,
   "skipped": 0,
   "sourceSha256": {
-    "tests/integration-own-adapters/backup-diagnostics.cjs": "383d7b7a3f9e4317dc190115f0f4f697626d8dc1f114a3ec70c3209d2e706efb",
-    "tests/integration-own-adapters/backup-diagnostics.test.cjs": "dae438692cff077038f41f68cdcddc3650c422ba9c8f6df4749f675858153661",
-    "tests/integration-own-adapters/management.integration.cjs": "db5513c807ea9c2f77d9c9b9f4ad69576d750e46be10ff4c4372480eae0ac0a6",
-    "tests/integration-management/runtime-log.cjs": "5eadd3d7132d023bea0127afd0589537cff505730906ac2f42b8bc7b265912c2"
+    "tests/integration-own-adapters/backup-diagnostics.cjs": "945eaa9d2380a4b6db115a03d6e994040eddfe08c63ba42de07763e43db666cd",
+    "tests/integration-own-adapters/backup-diagnostics.test.cjs": "42cfc2a965ced0528581ae98274d58cabcece4fd24a32475ddd7fdbf97f90456",
+    "tests/integration-own-adapters/management.integration.cjs": "316e701a676101c7af0bde47f7bef91ba40def795a9740f515dff99f96e94cc8",
+    "tests/integration-management/runtime-log.cjs": "723ebbfcb6c00875d60092f81971079fe12349b74452bf68e71f8222932f8ccf",
+    "tests/integration-own-adapters/runtime-diagnostics.cjs": "674fe3466c6dee3039cd41f1005286f01227fb9ca6dbe3be04951bd00494d3d1",
+    "tests/integration-own-adapters/runtime-diagnostics.test.cjs": "fef836f0359d356c3b183adefba81fc114306490362709cdab1522ef9a24a6a7",
+    "tests/integration-own-adapters/archive-inspection.cjs": "9e472c677756f9b29770c255aeedd98d6b4629ea9b60d84e689e133074a84a14",
+    "tests/integration-own-adapters/archive-inspection.test.cjs": "52204e3f7206320772632c1afafac870b04d47bbadf4cc1bc9e831fa555f8105"
   },
   "rawEvidence": {
     "file": "backup-diagnostics-regression.tap",
-    "sha256": "dc168ba541c94f5d71574d3868ca33cd7d85eb4fd83ebe637838f94b2d01e26d"
+    "sha256": "b6641189b4898730d3d33e30f6b420cd7e0cc0546d4de41362f990cf23c6ab20"
   },
   "nativeIntegrationExecuted": false,
   "hardwareTested": false,

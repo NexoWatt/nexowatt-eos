@@ -95,11 +95,50 @@ Kapazitätswerte, Exitcode, feste Fehlerklassen und getrennte Backup-Phasen.
 Konfiguration, Benutzer-/Sitzungsnamen, Datenbankinhalte und rohe CLI-Texte
 werden weiterhin nicht veröffentlicht. Die
 [Diagnose-/Harnessregression](ci-repair/backup-diagnostics-regression.tap)
-bestand lokal **24/24 Tests**; die
+bestand nach den ergänzten Archiv-/Laufzeitdiagnosen lokal **31/31 Tests**; die
 [Dateihashes](ci-repair/backup-diagnostics-summary.json) binden diesen Nachweis.
 Bekannte Exportfehler blockieren den nativen Prüfschritt ausdrücklich auch
 dann, wenn die vorgelagerte CLI trotzdem Exitcode 0 liefert. Die tatsächliche
 Laborkapazität wird vor dem Backup auf 128/3/0 zurückgelesen und geprüft.
+
+## Zweiter nativer Lauf: Backup ausgeführt, Archivprüfer inkompatibel
+
+Der [Lauf 38711864143](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38711864143)
+prüft Marker `3d3aaf8e4c7f81e9465a202558716980b34c0615`, Quellstand
+`65cc7c9949298747733eb95d7272f6ed5e6231c1`. Die Datenbank bestätigt die
+vorgesehenen Werte 128/3/0. Beide tatsächlichen Backup-CLIs beenden sich mit
+Exitcode 0, ohne feste Fehlerindikatoren; beide melden Objekt-/Stateexport,
+Validierung und Archivierung als abgeschlossen. Das bereinigte Artefakt ist
+`11961700712`.
+
+Der anschließende Inhaltsprüfer scheitert jedoch an seinem Aufruf
+`entry.setEncoding('utf8')`: Die tatsächlich gebündelte `tar`-/Minipass-Version
+erlaubt keine nachträgliche Encoding-Änderung. Das ist ein Fehler des neuen
+Prüfhelfers, kein ausreichender Inhaltsnachweis für die erstellten Archive.
+Die nächste Korrektur muss den Binärstream getrennt und über Chunkgrenzen
+hinweg dekodieren und mit der tatsächlich gebündelten Bibliothek geprüft
+werden. Rückfall, Endprüfung und Signierung bleiben bis zum vollständigen
+erfolgreichen Lauf offen.
+
+Die in diesem Lauf gemeldeten 16 Verbindungen stammen aus einer nach
+`backend_type` gefilterten `pg_stat_activity`-Abfrage. PostgreSQL verbirgt
+Fremdrollenfelder; diese Zahl ist daher **keine Gesamtzahl**. Die Diagnose
+wird auf den berechtigungsneutralen aggregierten Zähler für die aktuelle
+Datenbank umgestellt; zusätzliche Statistikrechte werden nicht vergeben.
+
+Die [Archivkorrektur](ci-repair/ARCHIVE_INSPECTION_DE.md) verwendet jetzt einen
+separaten strengen Streaming-UTF-8-Decoder. Elf Parserregressionen und drei
+Tests mit echten Archiven und den ausgelieferten Paketen `tar 7.5.22` /
+`minipass 7.1.3` bestanden lokal. Der vorherige Fehler wurde dabei mit dem
+unveränderten alten Prüfer reproduziert; Größen-, Pfad-, Duplikat- und
+Canaryprüfungen bleiben erhalten.
+
+Ein zusätzlicher Laufzeitfehlerindikator im abgebrochenen Lauf bleibt offen:
+Der letzte erfolgreiche Scan war nach der Pro-Aktivierung; danach lagen die
+zwei Backup-Aufrufe, der Archivprüferabbruch und das Aufräumen. Die vorhandenen
+bereinigten Belege erlauben keine sichere Ursachenzuordnung. Ergänzte feste
+Prüfphasen und Fehlerklassen sollen das im nächsten nativen Lauf eingrenzen.
+Der Indikator wird nicht ausgeblendet oder als erwarteter Lizenzfehler behandelt.
 
 ## Testgerät und Rückfall
 

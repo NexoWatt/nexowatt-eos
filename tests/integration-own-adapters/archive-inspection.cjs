@@ -3,6 +3,7 @@
 // treat tar readability or the CLI exit code alone as proof of a database export.
 const crypto = require('node:crypto');
 const path = require('node:path');
+const { TextDecoder } = require('node:util');
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 async function inspectArchive(tar, file, { requiredObjects, canaryId, canaryValue, configSha256 }) {
     const required = new Set(requiredObjects), found = new Set(), names = new Set(), entryTypes = new Map(), ancestors = new Set();
@@ -32,8 +33,12 @@ async function inspectArchive(tar, file, { requiredObjects, canaryId, canaryValu
             if (!['backup/objects.jsonl', 'backup/states.jsonl', 'backup/config.json'].includes(entry.path)) return;
             if (entry.type !== 'File' || !Number.isSafeInteger(entry.size) || entry.size < 0 || entry.size > 32 * 1024 * 1024) { invalid = true; return; }
             let pending = '', bytes = 0;
+            // tar 7 / minipass fixes encoding at construction. Keep the entry
+            // binary and decode independently, including split UTF-8 sequences.
+            const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
             const line = text => {
                 if (!text || invalid) return;
+                if (Buffer.byteLength(text) > 1048576) { invalid = true; return; }
                 let value; try { value = JSON.parse(text); } catch { invalid = true; return; }
                 if (entry.path === 'backup/objects.jsonl') {
                     if (++objectCount > 50000 || typeof value?._id !== 'string') { invalid = true; return; }
@@ -47,13 +52,10 @@ async function inspectArchive(tar, file, { requiredObjects, canaryId, canaryValu
                     if (value.id === canaryId) canaryState = value.state?.val === canaryValue && value.state?.ack === true;
                 }
             };
-            entry.setEncoding('utf8');
-            entry.on('data', text => {
-                bytes += Buffer.byteLength(text);
-                if (invalid || bytes > 32 * 1024 * 1024) { invalid = true; return; }
+            const consume = text => {
                 pending += text;
                 if (entry.path === 'backup/config.json') {
-                    if (Buffer.byteLength(pending) > 131072) invalid = true;
+                    if (bytes > 131072) invalid = true;
                     return;
                 }
                 let index;
@@ -61,8 +63,20 @@ async function inspectArchive(tar, file, { requiredObjects, canaryId, canaryValu
                     line(pending.slice(0, index)); pending = pending.slice(index + 1);
                 }
                 if (Buffer.byteLength(pending) > 1048576) { invalid = true; pending = ''; }
+            };
+            entry.on('data', chunk => {
+                if (invalid) return;
+                if (!Buffer.isBuffer(chunk)) { invalid = true; return; }
+                bytes += chunk.length;
+                if (bytes > 32 * 1024 * 1024) { invalid = true; return; }
+                // Stream event exceptions are not covered by the outer await.
+                try { consume(decoder.decode(chunk, { stream: true })); }
+                catch { invalid = true; pending = ''; }
             });
             entry.on('end', () => {
+                if (invalid) return;
+                try { consume(decoder.decode()); }
+                catch { invalid = true; pending = ''; }
                 if (invalid) return;
                 if (entry.path === 'backup/config.json') {
                     try { configMatches = sha(Buffer.from(JSON.stringify(JSON.parse(pending)))) === configSha256; }

@@ -12,6 +12,7 @@ function indicators(text) {
     text = text.replace(/\x1b\[[0-9;]*m/g, '');
     const result = new Set(Object.entries(SIGNALS).filter(([, needle]) => text.includes(needle)).map(([code]) => code));
     if (/\b(?:error|fatal):/i.test(text)) result.add('RUNTIME_ERROR_LOGGED');
+    if (/unhandled promise rejection[.:]/i.test(text)) result.add('UNHANDLED_REJECTION');
     return result;
 }
 function loggerConfiguration(directory) {
@@ -19,7 +20,7 @@ function loggerConfiguration(directory) {
         filename: path.join(directory, 'runtime'), maxSize: '1m', maxFiles: 4, zippedArchive: false, createSymlink: false } } };
 }
 class RuntimeLog {
-    constructor(directory) { this.directory = directory; this.positions = new Map(); this.total = 0; this.seen = new Set(); this.scan(true); }
+    constructor(directory, observe = () => {}) { this.directory = directory; this.observe = observe; this.positions = new Map(); this.total = 0; this.seen = new Set(); this.scan(true); }
     scan(baseline = false) {
         const names = fs.readdirSync(this.directory).filter(name => /^runtime\.\d{4}-\d{2}-\d{2}\.log(?:\.\d+)?$/.test(name));
         if (names.length > 8) throw new Error('MANAGEMENT_LOG_LIMIT');
@@ -41,6 +42,7 @@ class RuntimeLog {
                 while (read < length) { const n = fs.readSync(fd, bytes, read, length - read, previous.offset + read); if (!n) break; read += n; }
                 const text = previous.tail + bytes.subarray(0, read).toString('utf8');
                 for (const code of indicators(text)) this.seen.add(code);
+                this.observe(text);
                 this.total += read; this.positions.set(key, { offset: previous.offset + read, tail: text.slice(-1024) });
             } finally { fs.closeSync(fd); }
         }

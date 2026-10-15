@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: archive inspection requires real logical content including canary and all exact object IDs
+ok 1 - archive inspection requires real logical content including canary and all exact object IDs
+  ---
+  duration_ms: 5.588739
+  type: 'test'
+  ...
+# Subtest: readable archive with missing/empty exports cannot qualify
+ok 2 - readable archive with missing/empty exports cannot qualify
+  ---
+  duration_ms: 4.4875
+  type: 'test'
+  ...
+# Subtest: wrong canary/config or malformed exported JSON fails without exposing the value
+ok 3 - wrong canary/config or malformed exported JSON fails without exposing the value
+  ---
+  duration_ms: 3.440165
+  type: 'test'
+  ...
+# Subtest: recursive backups, traversal, duplicate required objects and links fail
+ok 4 - recursive backups, traversal, duplicate required objects and links fail
+  ---
+  duration_ms: 2.234824
+  type: 'test'
+  ...
+# Subtest: later empty or corrupt duplicate exports cannot replace previously verified content
+ok 5 - later empty or corrupt duplicate exports cannot replace previously verified content
+  ---
+  duration_ms: 3.101704
+  type: 'test'
+  ...
+# Subtest: equivalent archive aliases fail instead of bypassing duplicate detection
+ok 6 - equivalent archive aliases fail instead of bypassing duplicate detection
+  ---
+  duration_ms: 2.104137
+  type: 'test'
+  ...
+# Subtest: required exports must be files and cannot become directories or overwrite ancestor directories
+ok 7 - required exports must be files and cannot become directories or overwrite ancestor directories
+  ---
+  duration_ms: 3.098829
+  type: 'test'
+  ...
+# Subtest: ordinary canonical tar directory entries remain valid
+ok 8 - ordinary canonical tar directory entries remain valid
+  ---
+  duration_ms: 0.86112
+  type: 'test'
+  ...
+# Subtest: split multibyte UTF-8 is decoded across raw chunks without changing entry encoding
+ok 9 - split multibyte UTF-8 is decoded across raw chunks without changing entry encoding
+  ---
+  duration_ms: 4.13935
+  type: 'test'
+  ...
+# Subtest: malformed and truncated UTF-8 rejects with the fixed content code, including final decoder flush
+ok 10 - malformed and truncated UTF-8 rejects with the fixed content code, including final decoder flush
+  ---
+  duration_ms: 3.560577
+  type: 'test'
+  ...
+# Subtest: raw-byte file, config and per-record limits hold for terminated lines and multibyte content
+ok 11 - raw-byte file, config and per-record limits hold for terminated lines and multibyte content
+  ---
+  duration_ms: 10.342025
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 133.32524

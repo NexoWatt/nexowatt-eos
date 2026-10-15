@@ -108,11 +108,23 @@ Boolesche Werte für frisches Lebenszeichen, frische Controllerverbindung und
 lebenden Prozess auf. Eine begrenzte Logauswertung gibt nur feste Fehlerklassen
 und diese sechs Adapternamen aus, darunter die native Host-/Integritätsablehnung.
 PIDs, Pfade, freie Fehlermeldungen und Nutzdaten gelangen nicht in den Bericht.
+`boots[].runtimeScans` unterscheidet mit festen Phasennamen die Prüfungen nach
+Start, Lizenzwechseln und jedem Backup sowie vor/nach regulärem Stop und Cleanup.
+Jeder Eintrag bewahrt den kumulierten Stand dieses Boots vor einer möglichen
+Fehlerauslösung. `processDiagnostics` enthält nur feste Fehlerklassen und die
+sechs bekannten Adapternamen beziehungsweise `controller`/`unscoped`.
+Die Zuordnung dient der Diagnose; kein erkannter Laufzeitfehler wird dadurch
+ausgenommen. Die private Logdatei wird weiterhin nur begrenzt gelesen und bleibt
+außerhalb des veröffentlichten Artefakts.
 Backup-CLI-Nachweise enthalten zusätzlich begrenzten numerischen Exitcode,
 feste Fehlerklassen und getrennte Export-/Validierungs-/Archivierungsphasen.
 Vor dem Backup werden ausschließlich numerische PostgreSQL-Verbindungslimits
-und die Gesamtzahl der Clientverbindungen über eine bestehende Verbindung
-abgefragt; keine Sitzungsdaten, Benutzernamen oder SQL-Texte werden gespeichert.
+und `currentDatabaseConnections` über eine bestehende Verbindung abgefragt.
+Der Zähler stammt aus `pg_stat_database.numbackends` für `current_database()`
+und zählt Verbindungen zur aktuellen Datenbank über alle Rollen; er ist kein
+Cluster-Gesamtzähler. Rollenabhängig ausgeblendete `pg_stat_activity`-Spalten
+werden nicht verwendet und keine zusätzlichen Statistikrechte vergeben.
+Sitzungsdaten, Datenbank-/Benutzernamen und SQL-Texte werden nicht gespeichert.
 Für zwei vollständige Asset-Prüfrunden und zwei echte Datenbankarchive beträgt
 das Gesamtbudget 830 Sekunden; der Supervisor beendet den Test nach 840/850
 Sekunden. HTTPS-Abrufe behalten ihr eigenes unverändertes 5-Sekundenbudget.

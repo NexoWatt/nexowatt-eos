@@ -27,11 +27,20 @@ function cliSummary(text, exitCode, signal) {
     };
 }
 function databaseCapacity(row) {
-    const keys = ['maximum', 'superuserReserved', 'roleReserved', 'connections'];
+    const keys = ['maximum', 'superuserReserved', 'roleReserved', 'currentDatabaseConnections'];
     if (!row || keys.some(key => !Number.isSafeInteger(row[key]) || row[key] < 0 || row[key] > 100000) ||
         row.maximum <= row.superuserReserved + row.roleReserved) return { available: false };
     return { available: true, ...Object.fromEntries(keys.map(key => [key, row[key]])),
         ordinarySlots: row.maximum - row.superuserReserved - row.roleReserved };
+}
+async function readDatabaseCapacity(store) {
+    // numbackends includes the current database's other roles. Filtering
+    // pg_stat_activity.backend_type would hide their rows without extra grants.
+    const capacity = await store._query(`SELECT current_setting('max_connections')::int AS maximum,
+        current_setting('superuser_reserved_connections')::int AS "superuserReserved",
+        current_setting('reserved_connections')::int AS "roleReserved",
+        (SELECT numbackends FROM pg_stat_database WHERE datname = current_database()) AS "currentDatabaseConnections"`);
+    return databaseCapacity(capacity.rows[0]);
 }
 function assertSuccessfulBackup(summary) {
     // Upstream catches some export errors, logs them and can still exit zero.
@@ -40,4 +49,4 @@ function assertSuccessfulBackup(summary) {
         throw new Error('MANAGEMENT_CLI_FAILED');
     }
 }
-module.exports = { cliSummary, databaseCapacity, assertSuccessfulBackup };
+module.exports = { cliSummary, databaseCapacity, readDatabaseCapacity, assertSuccessfulBackup };

@@ -17,11 +17,15 @@ function records() {
         ['backup/config.json', JSON.stringify(config)],
     ];
 }
-function streams(rows) {
+function streams(rows, { chunkSize, declaredSize } = {}) {
     return { async t({ onentry }) {
         for (const [file, text, type = 'File'] of rows) {
-            const entry = Readable.from([Buffer.from(text)]);
-            Object.assign(entry, { path: file, size: Buffer.byteLength(text), type });
+            const raw = Buffer.isBuffer(text) ? text : Buffer.from(text), chunks = [];
+            for (let offset = 0; offset < raw.length; offset += chunkSize || raw.length) chunks.push(raw.subarray(offset, offset + (chunkSize || raw.length)));
+            const entry = Readable.from(chunks);
+            // Match the shipped minipass contract, which Node Readable lacks.
+            entry.setEncoding = () => { throw new Error('Encoding must be set at instantiation time'); };
+            Object.assign(entry, { path: file, size: declaredSize ?? raw.length, type });
             onentry(entry);
             await new Promise((resolve, reject) => { entry.once('end', resolve); entry.once('error', reject); entry.resume(); });
         }
@@ -79,4 +83,35 @@ test('ordinary canonical tar directory entries remain valid', async () => {
     const result = await inspectArchive(streams([['backup/', '', 'Directory'], ['backup/files/', '', 'Directory'], ...records()]),
         '/unused-stream-fixture', options);
     assert.equal(result.requiredObjectsPresent, true);
+});
+test('split multibyte UTF-8 is decoded across raw chunks without changing entry encoding', async () => {
+    const value = 'Prüfung 🔋 中文', cfg = { ...config, label: value };
+    const rows = records().map(([name, text]) => [name, name.endsWith('config.json') ? JSON.stringify(cfg) : text.replace(canaryValue, value)]);
+    for (const chunkSize of [1, 2, 3, 5]) {
+        const result = await inspectArchive(streams(rows, { chunkSize }), '/unused-stream-fixture', { ...options, canaryValue: value,
+            configSha256: crypto.createHash('sha256').update(JSON.stringify(cfg)).digest('hex') });
+        assert.equal(result.canaryObjectAndStatePresent, true);
+        assert.equal(result.exactRuntimeConfigPresent, true);
+    }
+});
+test('malformed and truncated UTF-8 rejects with the fixed content code, including final decoder flush', async () => {
+    for (const suffix of [Buffer.from([0xff]), Buffer.from([0xe2, 0x82]), Buffer.from([0xc0, 0xaf])]) {
+        const rows = records().map(([name, text]) => [name, name.endsWith('states.jsonl') ? Buffer.concat([Buffer.from(text), suffix]) : text]);
+        await assert.rejects(inspectArchive(streams(rows, { chunkSize: 1 }), '/unused-stream-fixture', options),
+            error => error.message === 'OWN_NATIVE_BACKUP_CONTENT');
+    }
+    const bom = records().map(([name, text]) => [name, name.endsWith('config.json') ? Buffer.concat([Buffer.from([0xef, 0xbb, 0xbf]), Buffer.from(text)]) : text]);
+    await assert.rejects(inspectArchive(streams(bom, { chunkSize: 1 }), '/unused-stream-fixture', options), /OWN_NATIVE_BACKUP_CONTENT/);
+});
+test('raw-byte file, config and per-record limits hold for terminated lines and multibyte content', async () => {
+    const bigConfig = JSON.stringify({ data: 'é'.repeat(65537) });
+    await assert.rejects(inspectArchive(streams(records().map(([name, text]) => [name, name.endsWith('config.json') ? bigConfig : text])),
+        '/unused-stream-fixture', { ...options, configSha256: crypto.createHash('sha256').update(bigConfig).digest('hex') }),
+    /OWN_NATIVE_BACKUP_CONTENT/);
+    for (const rows of [
+        records().map(([name, text]) => [name, name.endsWith('states.jsonl') ? JSON.stringify({ id: canaryId, state: { val: canaryValue, ack: true }, data: 'x'.repeat(1048576) }) + '\n' : text]),
+        records().map(([name, text]) => [name, name.endsWith('objects.jsonl') ? text + ' '.repeat(1048577) : text]),
+    ]) await assert.rejects(inspectArchive(streams(rows), '/unused-stream-fixture', options), /OWN_NATIVE_BACKUP_CONTENT/);
+    await assert.rejects(inspectArchive(streams(records(), { declaredSize: 32 * 1024 * 1024 + 1 }), '/unused-stream-fixture', options),
+        /OWN_NATIVE_BACKUP_CONTENT/);
 });

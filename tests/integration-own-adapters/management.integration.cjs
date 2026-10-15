@@ -81,19 +81,21 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         candidateAppBytesUnchanged: false, lifecycleScriptsExecuted: false, nativeModulesRebuilt: false, mockedRuntimeDependencies: false,
         ownDeviceAdapterProcessesStarted: false, physicalHardwareConnected: false, physicalCommandsSent: false, actualSystemdMountPolicy: false, physicalPiAcceptance: false, productionReleaseApproved: false,
         managementReadinessPassed: false, restartPassed: false, boots: [], stages: [], bootstrapSteps: [], finalSteps: [] };
-    let active, servicePassword, licenseUuid, activeLog, activeBoot, licenseSession, migrationPlan;
+    let active, servicePassword, licenseUuid, activeLog, activeBoot, runtimeDiagnostics, licenseSession, migrationPlan;
     let expectedEdition = null;
-    function checkRuntime() {
+    function checkRuntime(phase) {
         if (!activeLog || !activeBoot) return;
-        activeBoot.runtimeLog = activeLog.scan();
+        require('./runtime-diagnostics.cjs').recordScan(activeBoot, phase, activeLog.scan(), runtimeDiagnostics);
         const runtimeCodes = new Set([...active.seen, ...activeBoot.runtimeLog.indicators]);
         if (['TYPE_ERROR', 'REFERENCE_ERROR', 'PG_TRANSACTION', 'TLS_PROVISIONING', 'READ_ONLY_WRITE', 'PERMISSION_DENIED',
             'UNCAUGHT_EXCEPTION', 'UNHANDLED_REJECTION', 'RUNTIME_ERROR_LOGGED'].some(code => runtimeCodes.has(code))) fail('MANAGEMENT_RUNTIME_ERROR');
     }
     t.after(async () => {
         let logFailure;
+        try { checkRuntime('cleanup-before-stop'); }
+        catch (error) { logFailure = require('../integration-r9/diagnostics.cjs').stageFailure(error); evidence.logReadFailure = logFailure; }
         for (const child of children) await stop(child);
-        try { checkRuntime(); }
+        try { checkRuntime('cleanup-after-stop'); }
         catch (error) { logFailure = require('../integration-r9/diagnostics.cjs').stageFailure(error); evidence.logReadFailure = logFailure; }
         await Promise.allSettled(clients.map(client => client.destroy()));
         evidence.runtimeIndicators = [...new Set(children.flatMap(child => [...child.seen]))].sort();
@@ -257,7 +259,9 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
     async function boot() {
         const startedAt = Date.now(), row = { stage: 'controller', productionProbe: null };
         evidence.boots.push(row);
-        activeBoot = row; activeLog = new (require('../integration-management/runtime-log.cjs').RuntimeLog)(runtimeLogDirectory);
+        activeBoot = row;
+        runtimeDiagnostics = new (require('./runtime-diagnostics.cjs').RuntimeDiagnostics)();
+        activeLog = new (require('../integration-management/runtime-log.cjs').RuntimeLog)(runtimeLogDirectory, text => runtimeDiagnostics.observe(text));
         active = launch([path.join(controller, 'controller.js')], options); children.push(active);
         active.evidenceScope = 'controller';
         await bootstrap.waitController({ objects, states, config, controllerPid: active.pid, timeoutMs: 30000, pollMs: 100 });
@@ -297,7 +301,7 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         await ownEnrollment.verify({ objects, config, app });
         await delay(1500);
         assert.equal(active.exitCode, null);
-        row.stage = 'runtime-errors'; checkRuntime();
+        row.stage = 'runtime-errors'; checkRuntime('boot-ready');
         assert.ok(row.runtimeLog.bytesRead > 0);
         assert.ok(fs.readFileSync(configFile).equals(configBytes));
         row.stage = 'complete';
@@ -355,7 +359,7 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         evidence.leasePhases ||= [];
         evidence.leasePhases.push({ valid, edition, grantsObservedFor: leaseObserver.names,
             noPhysicalTargetsConfigured: true, ocppRuntimeState: expectedOcpp, backupRuntimeState: expectedBackup });
-        checkRuntime();
+        checkRuntime(!valid ? 'lease-unlicensed' : edition === 'home' ? 'lease-home' : 'lease-pro');
     }
     await stage('real EOS platform gate rejects the packaged client outside its admitted process', async () => {
         const source = `try { require(process.argv[1]).assertEosPlatform('nexowatt-ui'); process.exitCode = 9; } catch (error) { if (error.code === 'EOS_PLATFORM_ENTRY') process.stdout.write('EOS_PLATFORM_ENTRY'); else process.exitCode = 10; }`;
@@ -418,23 +422,21 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         // Reuse an existing least-privilege connection; diagnostics must not
         // consume another connection slot or reveal sessions/roles/SQL text.
         try {
-            const capacity = await objects.store._query(`SELECT current_setting('max_connections')::int AS maximum,
-                current_setting('superuser_reserved_connections')::int AS "superuserReserved",
-                current_setting('reserved_connections')::int AS "roleReserved",
-                (SELECT count(*)::int FROM pg_stat_activity WHERE backend_type = 'client backend') AS connections`);
-            evidence.backupDatabaseCapacity = require('./backup-diagnostics.cjs').databaseCapacity(capacity.rows[0]);
+            evidence.backupDatabaseCapacity = await require('./backup-diagnostics.cjs').readDatabaseCapacity(objects.store);
         } catch { evidence.backupDatabaseCapacity = { available: false }; }
         assert.equal(evidence.backupDatabaseCapacity.available, true);
         assert.equal(evidence.backupDatabaseCapacity.maximum, 128);
         assert.equal(evidence.backupDatabaseCapacity.superuserReserved, 3);
         assert.equal(evidence.backupDatabaseCapacity.roleReserved, 0);
         await cli(['backup'], 90000);
+        checkRuntime('backup-first');
         const first = fs.readdirSync(directory).filter(name => !beforeArchives.has(name));
         assert.equal(first.length, 1);
         // A second actual archive proves existing archives are excluded rather
         // than silently being recursively re-archived from the data tree.
         await delay(1100);
         await cli(['backup'], 90000);
+        checkRuntime('backup-second');
         const archives = fs.readdirSync(directory).filter(name => !beforeArchives.has(name));
         assert.equal(archives.length, 2);
         const tar = appRequire('tar'), inspections = [];
@@ -452,10 +454,10 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         evidence.checks.logicalBackupCreatedAndListed = true;
         evidence.logicalBackup = { archives: 2, privatePermissions: true, previousArchivesExcluded: true,
             nativeDatabaseExport: true, archiveContentsRead: true, inspections, restorePerformed: false, completeSystemBackup: false };
-        checkRuntime();
+        checkRuntime('backup-inspected');
     });
     await stage('actual six-adapter stop, exact migration rollback and reapplication retain restart readiness', async () => {
-        const previous = active.pid; await stop(active); checkRuntime(); assert.equal(active.exitCode, normalStop);
+        const previous = active.pid; checkRuntime('rollback-before-stop'); await stop(active); checkRuntime('rollback-after-stop'); assert.equal(active.exitCode, normalStop);
         const input = { objects, states, config, sourceApp: fixture.baselineApp, targetApp: app,
             sourceReleaseId: fixture.previousReleaseId, targetReleaseId: fixture.releaseId };
         await ownEnrollment.rollbackMigration({ ...input, plan: migrationPlan });
@@ -471,7 +473,7 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
     });
     await stage('final shutdown leaves exact admitted instance scope and unchanged six-own-adapter application bytes', async () => {
         await finalStep('controller-stop', async () => {
-            await stop(active); checkRuntime();
+            checkRuntime('final-before-stop'); await stop(active); checkRuntime('final-after-stop');
             evidence.finalShutdown = { exitCode: Number.isInteger(active.exitCode) && active.exitCode >= 0 && active.exitCode <= 255 ? active.exitCode : null,
                 signal: ['SIGTERM', 'SIGKILL'].includes(active.signalCode) ? active.signalCode : null };
             if (active.exitCode !== normalStop || active.signalCode !== null) fail('MANAGEMENT_CONTROLLER_STOP_FAILED');

@@ -1,7 +1,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { cliSummary, databaseCapacity, assertSuccessfulBackup } = require('./backup-diagnostics.cjs');
+const { cliSummary, databaseCapacity, readDatabaseCapacity, assertSuccessfulBackup } = require('./backup-diagnostics.cjs');
 test('failed backup diagnostics retain exit/phase and fixed connection classification without secrets', () => {
     const result = cliSummary('No connection to objects private-host:15432[postgresql]\nEOS_PG_OBJECTS_CONNECT_FAILED password=secret\nremaining connection slots are reserved', 22, null);
     assert.equal(result.exitCode, 22);
@@ -18,10 +18,25 @@ test('backup export, validation and archive creation phases remain separate', ()
     assert.equal(cliSummary('EOS_PRIVATE_SECRET', 'secret', null).exitCode, null);
 });
 test('database capacity exports only validated fixed numeric fields, rejecting malformed or private values', () => {
-    assert.deepEqual(databaseCapacity({ maximum: 40, superuserReserved: 3, roleReserved: 0, connections: 34, secret: 'private' }),
-        { available: true, maximum: 40, superuserReserved: 3, roleReserved: 0, connections: 34, ordinarySlots: 37 });
-    for (const row of [null, { maximum: 'secret' }, { maximum: 3, superuserReserved: 3, roleReserved: 0, connections: 0 },
-        { maximum: 40, superuserReserved: 3, roleReserved: 0, connections: Infinity }]) assert.deepEqual(databaseCapacity(row), { available: false });
+    assert.deepEqual(databaseCapacity({ maximum: 40, superuserReserved: 3, roleReserved: 0, currentDatabaseConnections: 34, secret: 'private' }),
+        { available: true, maximum: 40, superuserReserved: 3, roleReserved: 0, currentDatabaseConnections: 34, ordinarySlots: 37 });
+    for (const row of [null, { maximum: 'secret' }, { maximum: 3, superuserReserved: 3, roleReserved: 0, currentDatabaseConnections: 0 },
+        { maximum: 40, superuserReserved: 3, roleReserved: 0, currentDatabaseConnections: Infinity },
+        { maximum: 40, superuserReserved: 3, roleReserved: 0, connections: 16 }]) assert.deepEqual(databaseCapacity(row), { available: false });
+});
+test('capacity reads the current database aggregate once through the existing least-privilege store', async () => {
+    let queries = 0;
+    const result = await readDatabaseCapacity({ async _query(sql) {
+        queries++;
+        assert.match(sql, /SELECT numbackends FROM pg_stat_database WHERE datname = current_database\(\)/);
+        assert.doesNotMatch(sql, /pg_stat_activity|backend_type|\b(?:GRANT|CREATE|CONNECT)\b|;/i);
+        return { rows: [{ maximum: 128, superuserReserved: 3, roleReserved: 0, currentDatabaseConnections: 34,
+            database: 'private-database', roles: 'private-roles' }] };
+    } });
+    assert.equal(queries, 1);
+    assert.equal(result.currentDatabaseConnections, 34);
+    assert.equal(result.ordinarySlots, 125);
+    assert.doesNotMatch(JSON.stringify(result), /private|database|roles/);
 });
 test('runtime file diagnostics classify fixed PostgreSQL/backup failures without returning messages', () => {
     const { indicators } = require('../integration-management/runtime-log.cjs');
