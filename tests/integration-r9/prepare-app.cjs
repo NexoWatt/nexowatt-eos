@@ -6,6 +6,7 @@ const cp = require('node:child_process');
 const { checkedRoot } = require('../integration-controller/run-native.cjs');
 const builder = require('../../reports/integration/installable-test3-r9-20261005/build-revision.cjs');
 const { NODE, sha, contentRows, validatePreparation } = require('./fixture.cjs');
+const { preparationFailureLine } = require('./diagnostics.cjs');
 function prepare(input, baseDirectory) {
     const root = checkedRoot(input);
     if (!path.isAbsolute(baseDirectory || '') || process.versions.node !== NODE) throw new Error('R9_NATIVE_PREPARE_INPUT');
@@ -24,5 +25,5 @@ function prepare(input, baseDirectory) {
 module.exports = { prepare };
 if (require.main === module) {
     try { if (process.argv.length !== 4) throw new Error('R9_NATIVE_USAGE'); prepare(...process.argv.slice(2)); }
-    catch { process.stderr.write('R9_NATIVE_PREPARATION_FAILED\n'); process.exitCode = 1; }
+    catch (error) { process.stderr.write(preparationFailureLine(error)); process.exitCode = 1; }
 }

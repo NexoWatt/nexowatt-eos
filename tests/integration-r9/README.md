@@ -121,6 +121,45 @@ es gibt keinen allgemeinen Lösch-/Reparaturbefehl für Produktivhosts.
 
 ## Lokale Prüfungen und Grenzen
 
+Fehlerkorrektur 15.10.2026: Der R9-Vorbereitungslauf zu Commit
+`71155ef851c791cda380bbaa216ac5178335e466` brach mit der bisher pauschalen
+Diagnose `R9_NATIVE_PREPARATION_FAILED` ab. Die aktuelle Backup-Paketquelle
+enthält inzwischen ihre Repository-Herkunft; diese ausschließlich ergänzende
+Metadatenänderung war im R10-SBOM-Binder bereits beschrieben, im R9-Binder
+jedoch nicht. Der unveränderte R9-Binder verweigert die echte R8-Basis mit den
+aktuellen Überlagerungen deshalb mit `R9_SBOM_PACKAGE_CONTRACT`.
+
+Die Korrektur übernimmt genau die ergänzende Herkunft
+`git+https://github.com/NexoWatt/nexowatt-eos.git`, Typ `git`, Unterverzeichnis
+`components/backitup`, ausschließlich für `iobroker.nexowatt-backup` und nur
+bei vorher fehlendem Repository-Feld. Der SBOM-Beleg führt diese Ausnahme als
+`backup-public-repository-provenance-added`. Abweichende URLs, Verzeichnisse,
+Zusatzfelder, der Ersatz bestehender Herkunftsangaben und jede zusätzliche
+Vertragsänderung bleiben gesperrt. Abhängigkeiten, Einstiegspunkte, historische
+Archivpins, Zulassungen und die Signaturprüfung werden nicht gelockert.
+Der Vorbereitungseinstieg gibt zusätzlich nur feste, erlaubte Diagnosecodes
+aus; unbekannte Fehler bleiben `UNEXPECTED`, ohne Ausnahmeinhalt, Pfade oder
+Kindprozess-Ausgaben zu veröffentlichen.
+
+Lokale Vertragsprüfung am 15.10.2026 (Linux x64, Node 24.19.0): **29/29**
+bestanden, keine übersprungen. Der [Rohbeleg](evidence/preparation-contracts-20261015.tap)
+enthält positive SBOM-Bindung, unveränderte Abhängigkeiten und Drittanbieterbytes,
+negative Herkunfts-/Vertragsfälle, Diagnosebegrenzung sowie die vorhandenen
+NWL3-/Fixture-Regressionsprüfungen. Zusätzlich bestanden **49/49** Builder-,
+SBOM- und R9-Updateprüfungen, siehe
+[Rohbeleg](evidence/release-contracts-20261015.tap). Diese lokalen Prüfungen
+ersetzen keinen nativen Node-24.21.0-/PostgreSQL-Lauf und keine Pi-Abnahme.
+Die [Quellbindung](evidence/preparation-source-binding-20261015.json) enthält
+Basiscommit, tatsächlich verwendete Umgebung, Befehle und Dateihashes.
+Auch der vollständige Hersteller-Aufruf `prepareApp()` bestand anschließend
+auf der authentifizierten R8-Lieferung mit allen sechs aktuellen Paketquellen:
+2.068 Quelldateien gebunden, 864 App-Dateien geändert, installierte
+Abhängigkeiten sowie Drittanbieterbytes und Dateimodi unverändert. Der
+[Vorbereitungsbeleg](evidence/unsigned-preparation-20261015.json) bindet die
+konkreten Quellen und das App-Inventar. Dies war ein **unsignierter lokaler
+Buildschritt** mit Node 24.19.0 und geändertem Arbeitsbaum, kein Aufruf des
+Node-24.21.0-/Nicht-Root-Nativharness und kein Signier- oder Veröffentlichungsnachweis.
+
 Diagnosenachtrag 07.10.2026: Der Root-Vorbereiter meldet bei einer Ablehnung
 zusätzlich einen festen, erlaubten Grund wie `OPT_MODE`, `LAB_OWNER` oder
 `NODE_VERSION`. Alle bisherigen Ablehnungsbedingungen bleiben unverändert.

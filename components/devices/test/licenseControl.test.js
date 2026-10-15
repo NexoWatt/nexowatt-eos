@@ -152,7 +152,7 @@ test('main entry starts once after central activation and retains diagnostics wh
   class Adapter { constructor(options) { this.config = options.config; this.name = options.name; this.namespace = `${options.name}.0`; this.instance = 0; this.log = log; } on() {} subscribeStates() {} async subscribeForeignObjectsAsync() {} async setObjectNotExistsAsync() {} async setStateAsync() {} async getForeignObjectsAsync() { return {}; } }
   class Runtime { constructor(adapter, cfg) { this.adapter = adapter; this.cfg = cfg; this.baseId = `devices.${cfg.id}`; } async initObjects() {} async start() { starts++; this.started = true; } async stop() { stops++; } suspendLicensedControl() {} async handleStateChange() { controls++; } }
   const guard = { async start() { return allowed; }, isAllowed() { return allowed; }, assertAllowed() { assert.ok(allowed); }, async stop() {} };
-  const main = load('main.js', { '@iobroker/adapter-core': { Adapter }, './lib/deviceRuntime': { DeviceRuntime: Runtime }, './lib/eos-license-client': { assertEosPlatform() {} }, './lib/licenseInventory': { createInventoryLicenseGuard() { return guard; } } });
+  const main = load('main.js', { '@iobroker/adapter-core': { Adapter }, './lib/deviceRuntime': { DeviceRuntime: Runtime }, './lib/sungrowFastFeedbackPatch': { install() {} }, './lib/eos-license-client': { assertEosPlatform() {} }, './lib/licenseInventory': { createInventoryLicenseGuard() { return guard; } } });
   const adapter = main({ config: { devices: [device()] } });
   try {
     await adapter.onReady(); assert.equal(starts, 0);

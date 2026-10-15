@@ -103,6 +103,11 @@ ablegen. Niemals private Logs, Datenbank, Archive, Journal, UUID, Zertifikatschl
 Testpasswort oder den ephemeren Lizenzissuer hochladen. Der Supervisor entfernt
 den ephemeren Issuer auch nach Fehlschlag. Fehlerausgabe ist auf feste Codes
 beschränkt. Ein fehlgeschlagener Teiltest kann `passed:true` nicht erreichen.
+Die Startphase zeichnet zusätzlich je fest zugelassenem Adapter ausschließlich
+Boolesche Werte für frisches Lebenszeichen, frische Controllerverbindung und
+lebenden Prozess auf. Eine begrenzte Logauswertung gibt nur feste Fehlerklassen
+und diese sechs Adapternamen aus, darunter die native Host-/Integritätsablehnung.
+PIDs, Pfade, freie Fehlermeldungen und Nutzdaten gelangen nicht in den Bericht.
 Für zwei vollständige Asset-Prüfrunden und zwei echte Datenbankarchive beträgt
 das Gesamtbudget 830 Sekunden; der Supervisor beendet den Test nach 840/850
 Sekunden. HTTPS-Abrufe behalten ihr eigenes unverändertes 5-Sekundenbudget.

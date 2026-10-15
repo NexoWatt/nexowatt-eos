@@ -12,7 +12,44 @@ const CHECKS = Object.freeze(['postgresqlMtls', 'platformDeniesUnadmittedProcess
   'centralRevocation', 'proReactivation', 'proQuotas', 'restart', 'unchangedApp', 'sixOwnAdapterProcesses',
   'nativeEnrollmentAndPrestartRollback', 'nativePoststartEnrollmentRollback', 'backupPrivatePathAndHostSecret', 'logicalBackupCreatedAndListed',
   'allOwnAdapterConfigurationAssets', 'assetOnlyUploadPreservesEnrollment', 'backupAdapterReadiness']);
+// The native scenario deliberately starts without a license, activates Home,
+// revokes it, then activates Pro. Retain those observed lifecycle signals in
+// evidence; they are not runtime faults. Scope every observation so an expected
+// readonly setup denial cannot mask a permission failure in a running adapter.
+const LICENSE_SIGNALS = new Set(['LICENSE_MISSING', 'LICENSE_VALID']);
+const PROCESS_SCOPES = Object.freeze(['cli-setup', 'cli-upload', 'cli-upload', 'controller', 'cli-backup', 'cli-backup', 'controller']);
+const SETUP_STAGE = 'ordinary setup loads actual PostgreSQL wrappers with read-only config';
 const fail = () => { throw Object.assign(new Error('R10_NATIVE_EVIDENCE_REJECTED'), { code: 'R10_NATIVE_EVIDENCE_REJECTED' }); };
+function validateProcessIndicators(evidence) {
+  const records = evidence.processIndicators;
+  // These are the seven actual child invocations of the pinned native scenario,
+  // in launch order. Repeated upload/backup/controller scopes are deliberate;
+  // missing, extra, reordered or unknown process records are not accepted.
+  if (!Array.isArray(records) || records.length !== PROCESS_SCOPES.length ||
+      !Array.isArray(evidence.runtimeIndicators) || evidence.runtimeIndicators.length > 3) fail();
+  const setup = evidence.stages.filter(row => row.name === SETUP_STAGE);
+  if (setup.length !== 1 || setup[0].passed !== true || setup[0].failureCode !== null) fail();
+  const observed = new Set();
+  for (let index = 0; index < PROCESS_SCOPES.length; index++) {
+    const row = records[index];
+    if (!row || typeof row !== 'object' || Array.isArray(row) ||
+        !equal(Object.keys(row).sort(), ['indicators', 'scope']) || row.scope !== PROCESS_SCOPES[index] ||
+        !Array.isArray(row.indicators) || row.indicators.length > 2 ||
+        new Set(row.indicators).size !== row.indicators.length) fail();
+    for (const code of row.indicators) {
+      // setup exits zero only after its real PostgreSQL/configuration work. Its
+      // optional upstream root launcher encounters EACCES in the immutable app.
+      // Global unchanged-app/config and all subsequent runtime checks still gate
+      // success. No other setup failure or other process's EACCES is exempted.
+      if (!(row.scope === 'controller' && LICENSE_SIGNALS.has(code)) &&
+          !(row.scope === 'cli-setup' && code === 'PERMISSION_DENIED')) fail();
+      observed.add(code);
+    }
+  }
+  // Preserve the raw records. The aggregate may neither hide a process fault nor
+  // invent an unscoped exemption; duplicates, bad types and order drift fail.
+  if (!equal(evidence.runtimeIndicators, [...observed].sort())) fail();
+}
 function validate({ preparation, evidence, binding, tap, sourceCommit, appContentSha256, baselineContentSha256, coverage, overlays }) {
   if (!/^[a-f0-9]{40}$/.test(sourceCommit || '') || !/^[a-f0-9]{64}$/.test(appContentSha256 || '') ||
       !/^[a-f0-9]{64}$/.test(baselineContentSha256 || '') || !Array.isArray(coverage) || !coverage.length || !Array.isArray(overlays) || !overlays.length ||
@@ -36,7 +73,8 @@ function validate({ preparation, evidence, binding, tap, sourceCommit, appConten
       ['managementReadinessPassed', 'restartPassed', 'candidateAppBytesUnchanged', 'fixedRootOwnedEosPaths', 'ownDeviceAdapterProcessesStarted'].some(k => evidence[k] !== true) ||
       ['lifecycleScriptsExecuted', 'nativeModulesRebuilt', 'mockedRuntimeDependencies', 'physicalHardwareConnected', 'physicalCommandsSent', 'actualSystemdMountPolicy', 'physicalPiAcceptance'].some(k => evidence[k] !== false) ||
       !Array.isArray(evidence.stages) || !evidence.stages.length || evidence.stages.some(s => s.passed !== true || s.failureCode !== null) ||
-      !Array.isArray(evidence.runtimeIndicators) || evidence.runtimeIndicators.length || evidence.logReadFailure) fail();
+      evidence.logReadFailure) fail();
+  validateProcessIndicators(evidence);
   for (const name of ['bootstrapSteps', 'finalSteps']) if (!Array.isArray(evidence[name]) || !evidence[name].length ||
     evidence[name].some(s => s.passed !== true || s.failureCode !== null)) fail();
   if (evidence.logicalBackup?.archives !== 2 || evidence.logicalBackup.privatePermissions !== true || evidence.logicalBackup.previousArchivesExcluded !== true ||

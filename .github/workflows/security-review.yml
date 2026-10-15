@@ -293,6 +293,8 @@ jobs:
           node --test reports/integration/installable-test3-r9-20261005/build-revision.test.cjs tests/integration/r9-derivative-sbom.test.cjs tests/system/sbom-binding.test.cjs tests/system/update-test-to-r9.test.cjs
           node --test tests/bootstrap/public-r9-update-entry.test.cjs tests/bootstrap/public-r9-update-publication.test.cjs tests/bootstrap/r9-delivery-workflow.test.cjs tests/bootstrap/r9-native-evidence.test.cjs
           python3 -I -B tests/bootstrap/r9-candidate-publication.test.py
+          node --test tests/bootstrap/public-r10-update-entry.test.cjs tests/bootstrap/public-r10-update-publication.test.cjs tests/bootstrap/r10-delivery-workflow.test.cjs tests/bootstrap/r10-native-artifact.test.cjs
+          python3 -I -B tests/bootstrap/r10-candidate-publication.test.py
 
       - name: Run isolated ownership and sudo denial contracts
         # These reviewed fixtures write temporary /root trees. Host commands and
@@ -525,7 +527,7 @@ jobs:
           npm run docs:check
       - name: Check current Devices command queues and license lifecycle
         working-directory: components/devices
-        run: node --test test/licenseControl.test.js
+        run: node --test test/licenseControl.test.js test/nativeStartup.test.js test/globalConnection.test.js
       - name: Check current EEBUS build, licensing and protocol regressions
         working-directory: components/eebus
         run: npm test

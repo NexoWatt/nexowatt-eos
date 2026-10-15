@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-15T08:35:34.018Z",
+  "sourceBaseCommit": "71155ef851c791cda380bbaa216ac5178335e466",
+  "sourceTreeDirty": true,
+  "node": "v24.19.0",
+  "platform": "linux",
+  "architecture": "x64",
+  "osUid": 0,
+  "contractRuns": [
+    {
+      "command": "node --test --test-reporter=tap tests/integration/r9-derivative-sbom.test.cjs tests/integration-r9/fixture.test.cjs tests/integration-r9/license-session.test.cjs",
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "tests/integration-r9/evidence/preparation-contracts-20261015.tap"
+    },
+    {
+      "command": "node --test --test-reporter=tap reports/integration/installable-test3-r9-20261005/build-revision.test.cjs tests/integration/r9-derivative-sbom.test.cjs tests/system/sbom-binding.test.cjs tests/system/update-test-to-r9.test.cjs",
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "tests/integration-r9/evidence/release-contracts-20261015.tap"
+    }
+  ],
+  "nativeExecutionPerformed": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "files": [
+    {
+      "path": "tools/integration/bind-r9-derivative-sbom.cjs",
+      "sha256": "75a8a45c9dea63e0c4f1b05586902cc9c62e3aac7d9d1392e83d56ff0cf67ccf"
+    },
+    {
+      "path": "tests/integration/r9-derivative-sbom.test.cjs",
+      "sha256": "f823cee7550628e3e4ac302f6ffb2c976d88100144616dec33463a28cd94cc80"
+    },
+    {
+      "path": "tests/integration-r9/prepare-app.cjs",
+      "sha256": "4f04f945b98a80e778d637990bd2927a81d53c5406015be046f4bbbcd2007f79"
+    },
+    {
+      "path": "tests/integration-r9/diagnostics.cjs",
+      "sha256": "ec823e8e0f26ce1e7c863cb80842725558c9fc637c3ef6e1681c4affbe5f1165"
+    },
+    {
+      "path": "tests/integration-r9/fixture.test.cjs",
+      "sha256": "53d772dd875a4504eca08a317ac0bd6f117602d44d307ab163caaa881a3e0add"
+    },
+    {
+      "path": "tests/integration-r9/license-session.test.cjs",
+      "sha256": "220fc57f3922fb911b32baf8ec74675142a03329a731ad9cf2d6d10aafc7c7b4"
+    },
+    {
+      "path": "tests/integration-r9/evidence/preparation-contracts-20261015.tap",
+      "sha256": "1bda4d079f86ca03ef9a5faab2eab9cd365a398595ec4a08c4e712aa063b9c8c"
+    },
+    {
+      "path": "tests/integration-r9/evidence/release-contracts-20261015.tap",
+      "sha256": "ebdff125dcee022a0b47c3152e784fa825f95a23ab17497620190431b24822cb"
+    }
+  ]
+}

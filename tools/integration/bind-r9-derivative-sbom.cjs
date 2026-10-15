@@ -53,6 +53,14 @@ function checkPackage(before, after, spec, loadPrevious) {
         delete newContract.devDependencies.mocha;
         exceptions.push('source-devdependency-mocha-11.8.0-already-present-in-bound-r8-source-lock');
     }
+    // The current backup package declares this checkout as source provenance.
+    // Accept only this additive metadata change, as in the R10 binder; no
+    // repository replacement, dependency, entry point or archive pin changes.
+    const repository = { type: 'git', url: 'git+https://github.com/NexoWatt/nexowatt-eos.git', directory: 'components/backitup' };
+    if (spec.package === 'iobroker.nexowatt-backup' && !Object.hasOwn(before, 'repository') && equal(after.repository, repository)) {
+        delete newContract.repository;
+        exceptions.push('backup-public-repository-provenance-added');
+    }
     // Every other field, including prod/optional/peer deps, overrides, name,
     // version, entry points, exports and all other dev dependencies is fixed.
     if (!equal(oldContract, newContract)) fail('R9_SBOM_PACKAGE_CONTRACT');

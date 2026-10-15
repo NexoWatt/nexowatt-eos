@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-own-native-startup-source-regression",
+  "sourceBase": "71155ef851c791cda380bbaa216ac5178335e466",
+  "sourceTreeClean": false,
+  "nodeVersion": "24.19.0",
+  "platform": "linux",
+  "arch": "x64",
+  "sourceSha256": {
+    "components/devices/main.js": "b177ac02e8192aba18c8283ce089c68eeb3fecd097876b75dac5fd5569eac45d",
+    "components/devices/bootstrap.js": "3516fe3f09bda534ca94833e29c8b5b90218b7eb1cfec6541d8d81dddb44c84e",
+    "tests/integration-own-adapters/management.integration.cjs": "9861eedfc7bc203f64be37ff994763765983c03e089d9a8540b51c67ab392ae7",
+    "tests/integration-own-adapters/readiness-diagnostics.cjs": "f74b87764f2a613961502e1807692293e8882c868dfedb08116dc888d9c8bd95",
+    "tests/integration-own-adapters/readiness-diagnostics.test.cjs": "e7b93855e600dd11e8d543d9719206f5b7f5725c46728ce46b80b6ac80523ef1",
+    "components/devices/test/nativeStartup.test.js": "780b03d4e0a2c7ec06cf031d5121c1031bb6ce786245478a31f40cb42ac70856"
+  },
+  "tests": [
+    {
+      "file": "devices-startup-regression.tap",
+      "sha256": "095bf5b45aa73c2a098efe5f254d58f894126c609ef339cd203f6c14d82cc3bd",
+      "tests": 32,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "file": "own-readiness-diagnostics.tap",
+      "sha256": "dce37d938902ce8f8f8b2bb7c19389cdeac67021d674466a01f730bdc749fc82",
+      "tests": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "actualDependencyModuleCheck": {
+    "previousDevicesBootstrap": "NATIVE_HOST_CONTRACT",
+    "correctedDevicesBootstrap": "MODULE_LOAD_OK",
+    "directDeviceRuntimeAfterChange": "NATIVE_HOST_CONTRACT",
+    "nativeBindingsMocked": false,
+    "adapterProcessesStarted": false
+  },
+  "nativeSixAdapterIntegrationExecuted": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false
+}

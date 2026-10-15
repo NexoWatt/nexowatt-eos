@@ -59,6 +59,11 @@ Den bereinigten Fehlercode und die Fehlerphase melden; keine Passwörter,
 Lizenzschlüssel, privaten Zertifikate oder vollständigen privaten Journale posten.
 Nicht wiederholt installieren oder den Wartungslock eigenmächtig löschen.
 
+Auch nach bestätigtem Rückfall zu laufendem R9 bleibt der geschützte
+Migrationsplan erhalten. Ein erneuter Versuch kann deshalb mit
+`REPAIR_ENROLLMENT_PLAN` abbrechen. Den Plan nicht löschen; die erhaltenen
+Belege ermöglichen die gezielte Diagnose des vorherigen Versuchs.
+
 `restoredPreviousActive: true` bedeutet nur dann einen bestätigten Rückfall,
 wenn der Koordinator auch die Bereitschaft des authentifizierten R9 geprüft hat.
 Andernfalls bleibt die Installation absichtlich gestoppt/gesperrt und benötigt

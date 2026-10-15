@@ -46,6 +46,7 @@ function createAdapter(devices) {
       if (request === './lib/eos-license-client') return { assertEosPlatform() {} };
       if (request === './lib/licenseInventory') return { createInventoryLicenseGuard() { return { async start() { return true; }, assertAllowed() {}, isAllowed() { return true; }, async stop() {} }; } };
       if (request === './lib/deviceRuntime') return { DeviceRuntime };
+      if (request === './lib/sungrowFastFeedbackPatch') return { install() {} };
       return nativeRequire(request);
     },
   }, { filename });

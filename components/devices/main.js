@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const utils = require('@iobroker/adapter-core');
 
-const { DeviceRuntime } = require('./lib/deviceRuntime');
 const { createInventoryLicenseGuard } = require('./lib/licenseInventory');
 const { assertEosPlatform } = require('./lib/eos-license-client');
 
@@ -386,6 +385,12 @@ class NexowattDevicesAdapter extends utils.Adapter {
         if (!d.category) d.category = tpl.category;
         if (!d.manufacturer) d.manufacturer = tpl.manufacturer;
 
+        // Native drivers are required only for a configured, authorized device.
+        // Empty commissioning must keep the adapter and license client alive
+        // without loading architecture-specific serial bindings. The native
+        // host/integrity checks still run when the actual runtime is loaded.
+        require('./lib/sungrowFastFeedbackPatch').install();
+        const { DeviceRuntime } = require('./lib/deviceRuntime');
         const rt = new DeviceRuntime(this, d, tpl, globalConfig);
         await rt.initObjects();
         this._licenseGuard.assertAllowed();

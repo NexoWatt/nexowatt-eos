@@ -6,7 +6,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { inventory, sha256 } = require('../../runtime/release/bundle.cjs');
 const { verifySbomBinding, EMBEDDED } = require('../../runtime/release/sbom-binding.cjs');
-const { bindDerivative, OWNERS, R8_EEBUS_SOURCE_LOCK } = require('../../tools/integration/bind-r9-derivative-sbom.cjs');
+const { bindDerivative, checkPackage, OWNERS, R8_EEBUS_SOURCE_LOCK } = require('../../tools/integration/bind-r9-derivative-sbom.cjs');
 const clientPaths = Object.keys(EMBEDDED).filter(name => EMBEDDED[name] === '@nexowatt/eos-license-client');
 const props = object => Object.fromEntries((object.properties || []).map(row => [row.name, row.value]));
 function fixture(t) {
@@ -89,6 +89,35 @@ test('source files and scripts metadata can change without resolving installed d
     const f = fixture(t);
     f.update('node_modules/iobroker.nexowatt-ui/package.json', pkg => { pkg.files.push('packages/'); pkg.scripts.test = 'node check.cjs'; });
     assert.equal(bindDerivative(f.input).evidence.dependencyLockUnchanged, true);
+});
+test('backup repository provenance is the exact additive metadata exception and remains recorded', t => {
+    const f = fixture(t);
+    f.update('node_modules/iobroker.nexowatt-backup/package.json', pkg => {
+        pkg.repository = { type: 'git', url: 'git+https://github.com/NexoWatt/nexowatt-eos.git', directory: 'components/backitup' };
+    });
+    const result = bindDerivative(f.input);
+    assert.deepEqual(result.evidence.derivatives.find(row => row.package === 'iobroker.nexowatt-backup').metadataExceptions,
+        ['backup-public-repository-provenance-added']);
+    assert.equal(result.evidence.dependencyLockUnchanged, true);
+    assert.equal(result.evidence.thirdPartyInstalledBytesAndModesUnchanged, true);
+    assert.equal(f.check(result.bom).embeddedPackages, 6);
+});
+test('backup provenance never permits alternate repositories, replacement or unrelated package drift', () => {
+    const spec = OWNERS.find(row => row.package === 'iobroker.nexowatt-backup');
+    const before = { name: spec.package, version: spec.version, main: spec.main, dependencies: { external: '1.0.0' } };
+    const repository = { type: 'git', url: 'git+https://github.com/NexoWatt/nexowatt-eos.git', directory: 'components/backitup' };
+    for (const patch of [{ repository: { ...repository, url: 'git+https://example.invalid/other.git' } },
+        { repository: { ...repository, directory: 'components/ui' } }, { repository: { ...repository, type: 'svn' } },
+        { repository: { ...repository, extra: true } }, { repository, dependencies: { external: '2.0.0' } },
+        { repository, optionalDependencies: { injected: '1.0.0' } }, { repository, description: 'unreviewed' }]) {
+        assert.throws(() => checkPackage(before, { ...before, ...patch }, spec), { code: 'R9_SBOM_PACKAGE_CONTRACT' });
+    }
+    assert.throws(() => checkPackage({ ...before, repository: null }, { ...before, repository }, spec), { code: 'R9_SBOM_PACKAGE_CONTRACT' });
+    assert.throws(() => checkPackage({ ...before, repository: { ...repository, directory: 'old' } }, { ...before, repository }, spec),
+        { code: 'R9_SBOM_PACKAGE_CONTRACT' });
+    const other = OWNERS.find(row => row.package === 'iobroker.nexowatt-ui');
+    const otherBefore = { ...before, name: other.package, version: other.version, main: other.main };
+    assert.throws(() => checkPackage(otherBefore, { ...otherBefore, repository }, other), { code: 'R9_SBOM_PACKAGE_CONTRACT' });
 });
 test('identity, main, prod/optional/peer dependencies, overrides and unapproved metadata are immutable', t => {
     for (const [key, value] of [['name', 'other'], ['version', '99.0.0'], ['main', 'other.js'], ['dependencies', { external: '2' }],

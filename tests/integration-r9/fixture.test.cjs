@@ -37,6 +37,18 @@ test('R9 diagnostics preserve only explicit fixed codes', () => {
     assert.equal(stageFailure({ code: 'R9_LICENSE_UI_COOKIE', message: 'private' }), 'R9_LICENSE_UI_COOKIE');
     assert.equal(stageFailure({ code: 'R9_LICENSE_PRIVATE_SECRET', message: 'private' }), 'MANAGEMENT_STAGE_FAILED');
 });
+test('R9 preparation reports only fixed failure reasons without exception contents', () => {
+    const { preparationFailureLine } = require('./diagnostics.cjs');
+    for (const code of ['R9_SBOM_PACKAGE_CONTRACT', 'R9_BASE_PINS', 'R9_ADMIN_PREBUILT', 'PRODUCT_LOCK_SCOPE']) {
+        assert.equal(preparationFailureLine({ code, message: 'private-path-and-token', stderr: 'private-child-output' }),
+            `R9_NATIVE_PREPARATION_FAILED:${code}\n`);
+    }
+    assert.equal(preparationFailureLine(new Error('R9_NATIVE_PREPARE_INPUT')), 'R9_NATIVE_PREPARATION_FAILED:R9_NATIVE_PREPARE_INPUT\n');
+    for (const error of [null, new Error('private-path-and-token'), { code: 'R9_SBOM_PRIVATE_SECRET' },
+        { code: 'R9_SBOM_PACKAGE_CONTRACT\nprivate' }, { code: 'ENOENT', path: 'private-path' }]) {
+        assert.equal(preparationFailureLine(error), 'R9_NATIVE_PREPARATION_FAILED:UNEXPECTED\n');
+    }
+});
 test('root fixture diagnostics expose only allowlisted guard reasons, never exception text or paths', () => {
     const { failureLine } = require('./prepare-fixed-root.cjs');
     for (const reason of ['ROOT_UID', 'CI_CONTEXT', 'NODE_VERSION', 'LAB_OWNER', 'LAB_MODE', 'OPT_OWNER', 'OPT_MODE', 'PREPARATION_FILE']) {

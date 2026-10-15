@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: R10 update transport binds immutable commit, key, archive and exact test scope
+ok 1 - R10 update transport binds immutable commit, key, archive and exact test scope
+  ---
+  duration_ms: 2.812318
+  type: 'test'
+  ...
+# Subtest: malformed metadata, key substitution, old release and broad admission are rejected
+ok 2 - malformed metadata, key substitution, old release and broad admission are rejected
+  ---
+  duration_ms: 1.719788
+  type: 'test'
+  ...
+# Subtest: entry embeds exact reviewed extractors, authenticates assets, and supervises updater
+ok 3 - entry embeds exact reviewed extractors, authenticates assets, and supervises updater
+  ---
+  duration_ms: 20.41634
+  type: 'test'
+  ...
+# Subtest: outer one-line command checks protected root, complete size and digest before execution
+ok 4 - outer one-line command checks protected root, complete size and digest before execution
+  ---
+  duration_ms: 4.041785
+  type: 'test'
+  ...
+# Subtest: only a complete hash-matching download reaches the execution boundary
+ok 5 - only a complete hash-matching download reaches the execution boundary
+  ---
+  duration_ms: 18.319542
+  type: 'test'
+  ...
+# Subtest: download hash failure never reaches the execution boundary
+ok 6 - download hash failure never reaches the execution boundary
+  ---
+  duration_ms: 14.513943
+  type: 'test'
+  ...
+# Subtest: download size failure never reaches the execution boundary
+ok 7 - download size failure never reaches the execution boundary
+  ---
+  duration_ms: 17.738909
+  type: 'test'
+  ...
+# Subtest: download failure failure never reaches the execution boundary
+ok 8 - download failure failure never reaches the execution boundary
+  ---
+  duration_ms: 5.084169
+  type: 'test'
+  ...
+# Subtest: download symlink failure never reaches the execution boundary
+ok 9 - download symlink failure never reaches the execution boundary
+  ---
+  duration_ms: 6.619128
+  type: 'test'
+  ...
+# Subtest: download hardlink failure never reaches the execution boundary
+ok 10 - download hardlink failure never reaches the execution boundary
+  ---
+  duration_ms: 8.338285
+  type: 'test'
+  ...
+# Subtest: download refuses to overwrite existing data
+ok 11 - download refuses to overwrite existing data
+  ---
+  duration_ms: 3.58209
+  type: 'test'
+  ...
+# Subtest: embedded extractor works as packaged and rejects hash, traversal, links and existing output
+ok 12 - embedded extractor works as packaged and rejects hash, traversal, links and existing output
+  ---
+  duration_ms: 363.121431
+  type: 'test'
+  ...
+# Subtest: supervisor rejects absent/malformed invocation and clears inherited Node/Python options
+ok 13 - supervisor rejects absent/malformed invocation and clears inherited Node/Python options
+  ---
+  duration_ms: 76.812925
+  type: 'test'
+  ...
+# Subtest: historical R9 release and key pins are forbidden as R10 target
+ok 14 - historical R9 release and key pins are forbidden as R10 target
+  ---
+  duration_ms: 0.754319
+  type: 'test'
+  ...
+# Subtest: R10 script selects only the new updater/output and preserves bounded checked TLS downloads
+ok 15 - R10 script selects only the new updater/output and preserves bounded checked TLS downloads
+  ---
+  duration_ms: 0.64181
+  type: 'test'
+  ...
+# Subtest: public readback accepts only byte-identical regular files and independently checked pins
+ok 16 - public readback accepts only byte-identical regular files and independently checked pins
+  ---
+  duration_ms: 5.820402
+  type: 'test'
+  ...
+# Subtest: publication permits only all three new entry files at the exact source commit
+ok 17 - publication permits only all three new entry files at the exact source commit
+  ---
+  duration_ms: 44.474453
+  type: 'test'
+  ...
+# Subtest: publication rejects an unrelated untracked file
+ok 18 - publication rejects an unrelated untracked file
+  ---
+  duration_ms: 28.326738
+  type: 'test'
+  ...
+# Subtest: publication rejects a staged source change
+ok 19 - publication rejects a staged source change
+  ---
+  duration_ms: 29.840064
+  type: 'test'
+  ...
+# Subtest: publication rejects missing generated files and local modification after staging
+ok 20 - publication rejects missing generated files and local modification after staging
+  ---
+  duration_ms: 37.828059
+  type: 'test'
+  ...
+# Subtest: publication rejects symlink entries rather than following them
+ok 21 - publication rejects symlink entries rather than following them
+  ---
+  duration_ms: 39.978923
+  type: 'test'
+  ...
+# Subtest: command report binds the committed entry and only the two new command files publish
+ok 22 - command report binds the committed entry and only the two new command files publish
+  ---
+  duration_ms: 60.851611
+  type: 'test'
+  ...
+# Subtest: command report rejects a mutable or mismatched command without writing evidence
+ok 23 - command report rejects a mutable or mismatched command without writing evidence
+  ---
+  duration_ms: 40.463435
+  type: 'test'
+  ...
+# Subtest: R10 command requires full remote asset readback rather than a bare success flag
+ok 24 - R10 command requires full remote asset readback rather than a bare success flag
+  ---
+  duration_ms: 1.598875
+  type: 'test'
+  ...
+# Subtest: marker-only push requests but only its exact successful Security run permits signing
+ok 25 - marker-only push requests but only its exact successful Security run permits signing
+  ---
+  duration_ms: 62.830159
+  type: 'test'
+  ...
+# Subtest: ordinary source and generated delivery commits never request another R10
+ok 26 - ordinary source and generated delivery commits never request another R10
+  ---
+  duration_ms: 59.912878
+  type: 'test'
+  ...
+# Subtest: wrong source parent, duplicate marker keys, extra fields and wrong revision are refused
+ok 27 - wrong source parent, duplicate marker keys, extra fields and wrong revision are refused
+  ---
+  duration_ms: 175.23169
+  type: 'test'
+  ...
+# Subtest: foreign repo, wrong workflow, run type, branch, result or tested source cannot approve delivery
+ok 28 - foreign repo, wrong workflow, run type, branch, result or tested source cannot approve delivery
+  ---
+  duration_ms: 47.592539
+  type: 'test'
+  ...
+# Subtest: dispatch is limited to an already tracked immutable complete four-file R10 delivery
+ok 29 - dispatch is limited to an already tracked immutable complete four-file R10 delivery
+  ---
+  duration_ms: 56.000354
+  type: 'test'
+  ...
+# Subtest: workflow only downloads a pinned-run digest artifact and signs after mandatory native comparison
+ok 30 - workflow only downloads a pinned-run digest artifact and signs after mandatory native comparison
+  ---
+  duration_ms: 0.51668
+  type: 'test'
+  ...
+# Subtest: R10 pipeline preserves the four native files and uses only its own reviewed builder and updater
+ok 31 - R10 pipeline preserves the four native files and uses only its own reviewed builder and updater
+  ---
+  duration_ms: 0.539194
+  type: 'test'
+  ...
+# Subtest: native artifact metadata binds exact run/source/digest and bounds download size
+ok 32 - native artifact metadata binds exact run/source/digest and bounds download size
+  ---
+  duration_ms: 1.155385
+  type: 'test'
+  ...
+# Subtest: expired, duplicate, oversized or foreign native artifacts are rejected before download
+ok 33 - expired, duplicate, oversized or foreign native artifacts are rejected before download
+  ---
+  duration_ms: 0.67493
+  type: 'test'
+  ...
+# Subtest: native artifact HTTPS lookup aborts the live request at one five-second deadline and bounds response bytes
+ok 34 - native artifact HTTPS lookup aborts the live request at one five-second deadline and bounds response bytes
+  ---
+  duration_ms: 9.826613
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 652.944441

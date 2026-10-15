@@ -1,5 +1,11 @@
 # Technische Versionshinweise
 
+## EOS-Integration 2026-10-15 – Passiver Start ohne native Gerätetreiber
+
+- Geräte-Runtime einschließlich Sungrow-Patch erst für ein tatsächlich konfiguriertes, zentral autorisiertes Gerät laden. Die leere Erstinbetriebnahme startet Adapter und Lizenzclient ohne vorzeitiges Laden der ARM64-Serialport-Bindung.
+- Native Host-, Pfad- und Integritätsprüfung bleiben unverändert; ein nicht zugelassener Host kann weiterhin keine Geräte-Runtime starten. Sungrow-Patch wird vor jedem ersten Gerätestart idempotent installiert.
+- [Ursache, Regressionen und offene native/Hardwareprüfung](EOS_NATIVE_STARTUP_2026-10-15.md). Keine Änderung von Geräteprofilen, Datenpunkten oder Regelintervallen.
+
 ## EOS-Integration 2026-10-05 – Arbeitsstand auf 0.5.169
 
 - EOS-Plattformbindung und zentrale Home-/Pro-Lizenz von `eos-admin.0` vor Gerätestart und sämtlichen Gerätebefehlen erzwingen; Client vollständig lokal enthalten.

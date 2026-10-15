@@ -98,6 +98,8 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         await Promise.allSettled(clients.map(client => client.destroy()));
         evidence.runtimeIndicators = [...new Set(children.flatMap(child => [...child.seen]))].sort();
         evidence.processIndicators = children.map(child => ({ scope: child.evidenceScope || 'unknown', indicators: [...child.seen].sort() }));
+        evidence.adapterProcessDiagnostics = children.filter(child => child.evidenceScope === 'controller')
+            .map(child => require('./readiness-diagnostics.cjs').processSummary(child.output));
         if (logFailure) evidence.passed = false;
         fs.writeFileSync(path.join(root, 'own-adapters-native-evidence.json'), JSON.stringify(evidence, null, 2) + '\n', { mode: 0o600 });
         if (logFailure) fail(logFailure);
@@ -252,8 +254,10 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         row.coreReadyMs = Date.now() - startedAt;
         row.stage = 'adapters';
         await currentReadiness.waitAdapters(states, startedAt);
-        await until(async () => (await Promise.all(ownEnrollment.SPECS.map(spec => states.getState(`system.adapter.${spec.name}.0.alive`))))
-            .every(state => state?.ack === true && state.val === true && state.ts >= startedAt), 45000, 'OWN_NATIVE_ALL_ALIVE_DEADLINE');
+        await until(async () => {
+            row.adapterReadiness = await require('./readiness-diagnostics.cjs').adapterSnapshot(states, startedAt);
+            return row.adapterReadiness.every(adapter => adapter.aliveFresh);
+        }, 45000, 'OWN_NATIVE_ALL_ALIVE_DEADLINE');
         row.adaptersAliveMs = Date.now() - startedAt;
         row.stage = 'https';
         const production = await observation(currentReadiness.probeWeb, ca);

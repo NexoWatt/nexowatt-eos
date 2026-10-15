@@ -15,7 +15,10 @@ const bad = fn => assert.throws(fn, e => /^R10_/.test(e.code || ''));
 function sample() {
   const sourceCommit = 'a'.repeat(40), appContentSha256 = 'b'.repeat(64), baselineContentSha256 = 'c'.repeat(64);
   const coverage = [{ source: 'components/fixture.js', target: 'fixture.js', sha256: 'd'.repeat(64) }], overlays = [{ target: 'fixture.js' }];
-  const stages = [{ name: 'synthetic unit-test fixture only', passed: true, failureCode: null }];
+  // Synthetic contract data only; these records do not claim an executed process.
+  const stages = [{ name: 'ordinary setup loads actual PostgreSQL wrappers with read-only config', passed: true, failureCode: null }];
+  const processIndicators = ['cli-setup', 'cli-upload', 'cli-upload', 'controller', 'cli-backup', 'cli-backup', 'controller']
+    .map(scope => ({ scope, indicators: [] }));
   return { sourceCommit, appContentSha256, baselineContentSha256, coverage, overlays,
     preparation: { schemaVersion: 1, kind: 'unsigned-own-adapters-native-preparation', signed: false, unsignedFixture: true,
       sourceTreeClean: true, sequence: 13, nodeVersion: '24.21.0', sourceCommit, previousSignatureVerified: true,
@@ -31,7 +34,7 @@ function sample() {
       ownDeviceAdapterProcessesStarted: true, lifecycleScriptsExecuted: false, nativeModulesRebuilt: false, mockedRuntimeDependencies: false,
       physicalHardwareConnected: false, physicalCommandsSent: false, actualSystemdMountPolicy: false, physicalPiAcceptance: false,
       assetUpload: { adapters: 6, files: 1, bytes: 1, instancesAndMarkersUnchanged: true, unrelatedFilesPreserved: true },
-      stages, bootstrapSteps: stages, finalSteps: stages, runtimeIndicators: [], logicalBackup: { archives: 2, privatePermissions: true,
+      stages, bootstrapSteps: stages, finalSteps: stages, runtimeIndicators: [], processIndicators, logicalBackup: { archives: 2, privatePermissions: true,
         previousArchivesExcluded: true, nativeDatabaseExport: true, archiveContentsRead: true,
         restorePerformed: false, completeSystemBackup: false, inspections: [0, 1].map(() => ({
         canaryObjectAndStatePresent: true, exactRuntimeConfigPresent: true, requiredObjectsPresent: true })) } },
@@ -39,6 +42,81 @@ function sample() {
 }
 test('R10 evidence binds successful synthetic contract without claiming a native run', () => {
   const result = native.validate(sample()); assert.equal(result.ok, true); assert.equal(result.hardwareTested, false);
+});
+test('expected observed license lifecycle signals remain in evidence and do not masquerade as runtime faults', () => {
+  for (const signals of [['LICENSE_MISSING'], ['LICENSE_VALID'], ['LICENSE_MISSING', 'LICENSE_VALID']]) {
+    const x = sample(); x.evidence.runtimeIndicators = signals;
+    x.evidence.processIndicators[3].indicators = [...signals];
+    assert.equal(native.validate(x).ok, true);
+    assert.deepEqual(x.evidence.runtimeIndicators, signals);
+  }
+});
+test('only the successful readonly setup may retain its expected denial with an exact global signal union', () => {
+  const x = sample();
+  x.evidence.processIndicators[0].indicators = ['PERMISSION_DENIED'];
+  x.evidence.processIndicators[3].indicators = ['LICENSE_MISSING', 'LICENSE_VALID'];
+  x.evidence.processIndicators[6].indicators = ['LICENSE_VALID'];
+  x.evidence.runtimeIndicators = ['LICENSE_MISSING', 'LICENSE_VALID', 'PERMISSION_DENIED'];
+  const original = structuredClone(x.evidence);
+  assert.equal(native.validate(x).ok, true);
+  assert.deepEqual(x.evidence, original);
+});
+test('permission denial in any controller, upload or backup rejects even if setup also reports denial', () => {
+  for (let index = 1; index < 7; index++) {
+    const x = sample(); x.evidence.runtimeIndicators = ['PERMISSION_DENIED'];
+    x.evidence.processIndicators[0].indicators = ['PERMISSION_DENIED'];
+    x.evidence.processIndicators[index].indicators = ['PERMISSION_DENIED'];
+    bad(() => native.validate(x));
+  }
+});
+test('setup exemption requires one exact successful setup stage and never hides another fault', () => {
+  for (const alter of [x => { x.evidence.stages[0].name = 'unknown setup'; },
+    x => { x.evidence.stages.push({ ...x.evidence.stages[0] }); },
+    x => { x.evidence.stages[0].passed = false; },
+    x => { x.evidence.stages[0].failureCode = 'MANAGEMENT_CLI_FAILED'; },
+    x => { x.evidence.checks.unchangedApp = false; },
+    x => { x.evidence.candidateAppBytesUnchanged = false; },
+    x => { x.evidence.processIndicators[0].indicators.push('RUNTIME_ERROR_LOGGED'); x.evidence.runtimeIndicators.push('RUNTIME_ERROR_LOGGED'); }]) {
+    const x = sample(); x.evidence.runtimeIndicators = ['PERMISSION_DENIED'];
+    x.evidence.processIndicators[0].indicators = ['PERMISSION_DENIED']; alter(x);
+    bad(() => native.validate(x));
+  }
+});
+test('unknown malformed duplicate missing or reordered process records cannot authorize diagnostics', () => {
+  for (const alter of [rows => { rows[0].scope = 'unknown'; }, rows => { rows[0].scope = null; },
+    rows => { rows[0].extra = true; }, rows => { rows[0] = null; }, rows => { rows[0] = []; },
+    rows => { rows[0].indicators = 'PERMISSION_DENIED'; }, rows => { rows[0].indicators = null; },
+    rows => { rows[0].indicators = [null]; }, rows => { rows[0].indicators = ['']; },
+    rows => { rows[0].indicators = ['PERMISSION_DENIED', 'PERMISSION_DENIED']; },
+    rows => { rows[3].indicators = ['LICENSE_VALID', 'LICENSE_VALID']; },
+    rows => { rows[0].indicators = ['LICENSE_VALID']; }, rows => { rows[1].indicators = ['LICENSE_VALID']; },
+    rows => { rows.pop(); }, rows => { rows.push(structuredClone(rows[0])); },
+    rows => { rows[6] = structuredClone(rows[0]); }, rows => { [rows[0], rows[1]] = [rows[1], rows[0]]; }]) {
+    const x = sample(); alter(x.evidence.processIndicators); bad(() => native.validate(x));
+  }
+  for (const value of [undefined, null, {}, 'controller']) {
+    const x = sample(); x.evidence.processIndicators = value; bad(() => native.validate(x));
+  }
+});
+test('global diagnostic codes must equal the unique complete process union without filtering or additions', () => {
+  for (const aggregate of [[], ['LICENSE_VALID'], ['PERMISSION_DENIED'],
+    ['LICENSE_VALID', 'PERMISSION_DENIED', 'PERMISSION_DENIED'], ['PERMISSION_DENIED', 'LICENSE_VALID'],
+    ['LICENSE_MISSING', 'LICENSE_VALID', 'PERMISSION_DENIED'], null, 'LICENSE_VALID']) {
+    const x = sample(); x.evidence.processIndicators[0].indicators = ['PERMISSION_DENIED'];
+    x.evidence.processIndicators[3].indicators = ['LICENSE_VALID']; x.evidence.runtimeIndicators = aggregate;
+    bad(() => native.validate(x));
+  }
+});
+test('runtime faults, unknown, duplicate and malformed signals always reject native evidence', () => {
+  const faults = ['TYPE_ERROR', 'REFERENCE_ERROR', 'PG_TRANSACTION', 'TLS_PROVISIONING',
+    'READ_ONLY_WRITE', 'PERMISSION_DENIED', 'UNCAUGHT_EXCEPTION', 'UNHANDLED_REJECTION',
+    'RUNTIME_ERROR_LOGGED', 'NATIVE_HOST_CONTRACT', 'unknown'];
+  for (const signals of [...faults.map(code => ['LICENSE_VALID', code]),
+    ['LICENSE_VALID', 'LICENSE_VALID'], [null], [''], 'LICENSE_VALID', null]) {
+    const x = sample(); x.evidence.runtimeIndicators = signals;
+    x.evidence.processIndicators[3].indicators = signals;
+    bad(() => native.validate(x));
+  }
 });
 test('every missing or failed required native check rejects signing', () => {
   for (const key of native.CHECKS) for (const mode of ['missing', 'false']) {

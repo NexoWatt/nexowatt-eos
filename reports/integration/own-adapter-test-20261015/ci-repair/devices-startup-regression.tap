@@ -1,0 +1,202 @@
+TAP version 13
+# Subtest: configured but missing-template or failed-start devices never report connected
+ok 1 - configured but missing-template or failed-start devices never report connected
+  ---
+  duration_ms: 51.676729
+  type: 'test'
+  ...
+# Subtest: global indicator follows one online device, complete data loss and recovery
+ok 2 - global indicator follows one online device, complete data loss and recovery
+  ---
+  duration_ms: 45.688139
+  type: 'test'
+  ...
+# Subtest: disabled and stopped runtimes cannot make the aggregate online
+ok 3 - disabled and stopped runtimes cannot make the aggregate online
+  ---
+  duration_ms: 51.288412
+  type: 'test'
+  ...
+# Subtest: unload stops the timer and devices and leaves the global indicator offline
+ok 4 - unload stops the timer and devices and leaves the global indicator offline
+  ---
+  duration_ms: 44.387269
+  type: 'test'
+  ...
+# Subtest: unload waits for an in-flight online update before its final offline state
+ok 5 - unload waits for an in-flight online update before its final offline state
+  ---
+  duration_ms: 32.606928
+  type: 'test'
+  ...
+# Subtest: an empty configuration starts offline without creating a refresh timer
+ok 6 - an empty configuration starts offline without creating a refresh timer
+  ---
+  duration_ms: 29.294798
+  type: 'test'
+  ...
+# Subtest: actual runtime rejects uninitialized startup and writes without touching hardware
+ok 7 - actual runtime rejects uninitialized startup and writes without touching hardware
+  ---
+  duration_ms: 4.072484
+  type: 'test'
+  ...
+# Subtest: raw and alias controls require current authorization; loss retains telemetry and clears queued intent
+ok 8 - raw and alias controls require current authorization; loss retains telemetry and clears queued intent
+  ---
+  duration_ms: 1.911068
+  type: 'test'
+  ...
+# Subtest: an in-flight preparation cannot replay a prior epoch command after reauthorization
+ok 9 - an in-flight preparation cannot replay a prior epoch command after reauthorization
+  ---
+  duration_ms: 0.734921
+  type: 'test'
+  ...
+# Subtest: Modbus checks authorization after its IO lock, before every actual register write
+ok 10 - Modbus checks authorization after its IO lock, before every actual register write
+  ---
+  duration_ms: 1.389069
+  type: 'test'
+  ...
+# Subtest: MQTT cyclic publish is gated without disconnecting telemetry
+ok 11 - MQTT cyclic publish is gated without disconnecting telemetry
+  ---
+  duration_ms: 0.609621
+  type: 'test'
+  ...
+# Subtest: queued UDP control rechecks after asynchronous socket setup
+ok 12 - queued UDP control rechecks after asynchronous socket setup
+  ---
+  duration_ms: 0.963085
+  type: 'test'
+  ...
+# Subtest: TA CMI outgoing registers require a fresh command after loss, incoming telemetry remains usable
+ok 13 - TA CMI outgoing registers require a fresh command after loss, incoming telemetry remains usable
+  ---
+  duration_ms: 6.650951
+  type: 'test'
+  ...
+# Subtest: inventory aggregates immutable template classes across instances; unknowns and edits deny
+ok 14 - inventory aggregates immutable template classes across instances; unknowns and edits deny
+  ---
+  duration_ms: 0.892048
+  type: 'test'
+  ...
+# Subtest: central Home authorization recovers, revocation denies, aggregate quantities reach the real client
+ok 15 - central Home authorization recovers, revocation denies, aggregate quantities reach the real client
+  ---
+  duration_ms: 3.725971
+  type: 'test'
+  ...
+# Subtest: main entry starts once after central activation and retains diagnostics while unlicensed
+ok 16 - main entry starts once after central activation and retains diagnostics while unlicensed
+  ---
+  duration_ms: 68.586882
+  type: 'test'
+  ...
+# Subtest: timed-out inventory reads remain single-flight and cannot reopen a stopped guard
+ok 17 - timed-out inventory reads remain single-flight and cannot reopen a stopped guard
+  ---
+  duration_ms: 2003.0859
+  type: 'test'
+  ...
+# Subtest: a valid central lease expires at the actual write boundary
+ok 18 - a valid central lease expires at the actual write boundary
+  ---
+  duration_ms: 36.733568
+  type: 'test'
+  ...
+# Subtest: shared Modbus Rtu bus rechecks the originating instance after its queue
+ok 19 - shared Modbus Rtu bus rechecks the originating instance after its queue
+  ---
+  duration_ms: 1.569131
+  type: 'test'
+  ...
+# Subtest: shared Modbus Ascii bus rechecks the originating instance after its queue
+ok 20 - shared Modbus Ascii bus rechecks the originating instance after its queue
+  ---
+  duration_ms: 1.371833
+  type: 'test'
+  ...
+# Subtest: bootstrap module import never eagerly loads the device runtime or native patch
+ok 21 - bootstrap module import never eagerly loads the device runtime or native patch
+  ---
+  duration_ms: 2.974856
+  type: 'test'
+  ...
+# Subtest: empty commissioning stays offline and licensed client starts while native code remains unloaded
+ok 22 - empty commissioning stays offline and licensed client starts while native code remains unloaded
+  ---
+  duration_ms: 55.259188
+  type: 'test'
+  ...
+# Subtest: unlicensed or platform-rejected configuration never loads native drivers
+ok 23 - unlicensed or platform-rejected configuration never loads native drivers
+  ---
+  duration_ms: 46.156759
+  type: 'test'
+  ...
+# Subtest: authorized configured device installs Sungrow patch before creating and starting its runtime
+ok 24 - authorized configured device installs Sungrow patch before creating and starting its runtime
+  ---
+  duration_ms: 47.913558
+  type: 'test'
+  ...
+# Subtest: native host rejection still blocks configured runtime and never reports a connection
+ok 25 - native host rejection still blocks configured runtime and never reports a connection
+  ---
+  duration_ms: 42.517288
+  type: 'test'
+  ...
+# Subtest: detects only the Sungrow residential hybrid runtime
+ok 26 - detects only the Sungrow residential hybrid runtime
+  ---
+  duration_ms: 1.201536
+  type: 'test'
+  ...
+# Subtest: enforces Sungrow one-second polling and separates writes from full polls
+ok 27 - enforces Sungrow one-second polling and separates writes from full polls
+  ---
+  duration_ms: 0.358813
+  type: 'test'
+  ...
+# Subtest: priority feedback updates exact power without 500 W quantisation
+ok 28 - priority feedback updates exact power without 500 W quantisation
+  ---
+  duration_ms: 1.033121
+  type: 'test'
+  ...
+# Subtest: zero remains zero and is never replaced by a fallback
+ok 29 - zero remains zero and is never replaced by a fallback
+  ---
+  duration_ms: 0.340304
+  type: 'test'
+  ...
+# Subtest: negative charge feedback remains exact
+ok 30 - negative charge feedback remains exact
+  ---
+  duration_ms: 0.275045
+  type: 'test'
+  ...
+# Subtest: packaged Sungrow template keeps 0.5.133 direction mapping and one-second fast profile
+ok 31 - packaged Sungrow template keeps 0.5.133 direction mapping and one-second fast profile
+  ---
+  duration_ms: 123.800841
+  type: 'test'
+  ...
+# Subtest: Sungrow fast datapoints form four register groups for a one-second TCP snapshot
+ok 32 - Sungrow fast datapoints form four register groups for a one-second TCP snapshot
+  ---
+  duration_ms: 35.418747
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2302.132272
