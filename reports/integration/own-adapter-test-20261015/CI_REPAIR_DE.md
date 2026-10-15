@@ -140,6 +140,36 @@ bereinigten Belege erlauben keine sichere Ursachenzuordnung. Ergänzte feste
 Prüfphasen und Fehlerklassen sollen das im nächsten nativen Lauf eingrenzen.
 Der Indikator wird nicht ausgeblendet oder als erwarteter Lizenzfehler behandelt.
 
+## Dritter nativer Lauf: Backupinhalt und Stopp bestanden, Rückfall blockiert
+
+Der [Lauf 38713770220](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38713770220)
+prüft Marker `2a936d3ba16cf58045f6916605c75cc0b7cb7c54`, Quellstand
+`054159425fccb4cd18b5c21b9bbc2c825a5eee7f`. Sieben von acht Prüfgruppen
+bestanden; der Sechs-Adapter-Nachweis erreichte **17/21 Pflichtprüfungen**.
+Das bereinigte Artefakt ist `11962640393`.
+
+Beide Backup-CLIs enden erfolgreich. Die Archive sind jetzt auch inhaltlich
+geprüft: jeweils 305 Objekte und 268 States, einschließlich Pflichtobjekten,
+Canary, exakter Konfiguration, privater Dateimodi und Ausschluss älterer
+Backuparchive. Die Datenbank meldet 33 Verbindungen zur aktuellen Datenbank
+bei den vorgesehenen Limits 128/3/0. Alle zwölf Laufzeitscans bis einschließlich
+regulärem Stopp und Cleanup sind ohne Laufzeitfehler. Der zusätzliche
+Fehlerindikator aus dem vorherigen abgebrochenen Lauf wurde damit nicht
+reproduziert; es wurde keine Ausnahme für ihn eingeführt.
+
+Der anschließende Rückfall bricht vor dem Löschen von Instanzen mit
+`OWN_ENROLLMENT_BASELINE_CHANGED` ab. Eine gezielte Reproduktion mit der
+tatsächlichen kompilierten Admin-Methode zeigt: Der erstmals gestartete Admin
+ergänzt seine vorgesehenen lesbaren Objektzugriffsrechte und die dazugehörige
+Verwaltungsmarkierung. Der zuvor angelegte Migrationsplan enthält noch den
+Hash der nicht normalisierten Erstinstanz. Die
+[korrigierte Erstinitialisierung](ci-repair/ROLLBACK_BASELINE_DE.md) entspricht
+diesem bestehenden Admin-Sollzustand; 64 lokale Enrollment-/Rollback-Tests
+bestanden. Der vollständige
+Hashvergleich und das Abbrechen bei fremden Konfigurationsänderungen bleiben
+erhalten. Der nächste native Lauf muss Rückfall und erneuten Start nachweisen;
+Signierung und Veröffentlichung bleiben bis dahin blockiert.
+
 ## Testgerät und Rückfall
 
 Das neue Paket ist für ein vollständig eingerichtetes, gesundes R9 vorgesehen.

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-admin-startup-rollback-baseline-regression",
+  "sourceBase": "2a936d3ba16cf58045f6916605c75cc0b7cb7c54",
+  "nodeVersion": "24.19.0",
+  "platform": "linux",
+  "arch": "x64",
+  "executedAt": "2026-10-15T09:47:28.904361+00:00",
+  "suites": [
+    {
+      "command": "node --test --test-reporter=tap tests/integration/enrollment.test.cjs tests/integration/own-adapter-enrollment.test.cjs",
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "rollback-baseline-regression.tap"
+    },
+    {
+      "command": "node --test tests/onboarding/enrollment.test.cjs tests/system/update-own-adapters.test.cjs",
+      "passed": 44,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "rollback-update-followup.txt"
+    }
+  ],
+  "sourceSha256": {
+    "runtime/bootstrap/enrollment.cjs": "ed108586bc955e37c27cb7d177927cb4915329f9618f8b8f73851ea4ac686d6a",
+    "runtime/bootstrap/own-adapter-enrollment.cjs": "d587be22282bfad1c012b21eb42ec43c1f0e86e012b46fdec3b522ee44c1c4e6",
+    "tests/integration/own-adapter-enrollment.test.cjs": "4dc00fe617a6c15f690aed66fd32a6d5b67586256250524cc3d1054eb89c29dc",
+    "tests/integration/enrollment.test.cjs": "9962e4b90d3dea465130f2d2f55a646bb37a2f224b4724599437c033f4b51124",
+    "tests/onboarding/enrollment.test.cjs": "6d0e6ef6dbc13dd4dcae8e8bbea4e77c717e2ae745a20909889130cff8b71123",
+    "tests/system/update-own-adapters.test.cjs": "4760657a3a92b90ac794250f6d3781603421c1ad44af2531c81b95031f213675",
+    "components/admin/build/main.js": "245a500ddd0c2c5288040bac0a7531e9d5f43aac3b8fdaef4160fafb8ab68a7c"
+  },
+  "nativeIntegrationExecuted": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "evidenceSha256": {
+    "rollback-baseline-regression.tap": "48bb671f242a269029bf112fce53c7f2d1d927f0fb7761af69b739b98d9c628d",
+    "rollback-update-followup.txt": "fb2a2e73f6cfbb321b8ad64f2878e8464c43f43690c544ddc91dcb68073f99de"
+  }
+}

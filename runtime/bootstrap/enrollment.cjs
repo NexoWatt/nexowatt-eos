@@ -60,6 +60,9 @@ function instanceDocument({ spec, io }, hostname) {
         eosAutoAssignStandardAccounts: false, eosAutoAssignDefaultRoleUsers: false,
         eosPasswordlessFirstLogin: false, eosAllowPasswordlessFirstLogin: false,
         eosNexoWattAutoUpdate: false,
+        // Match Admin's existing startup ACL projection before any immutable
+        // migration baseline is recorded. Its first start must not rewrite it.
+        _nexowattEosRoleReadableAclManaged: true,
     });
     else Object.assign(native, {
         auth: { ...native.auth, enabled: true, protectWrites: true },
@@ -69,6 +72,7 @@ function instanceDocument({ spec, io }, hostname) {
         licenseKey: '',
     });
     return { _id: `system.adapter.${spec.name}.0`, type: 'instance', common, native,
+        ...(spec.name === 'eos-admin' ? { acl: { owner: 'system.user.admin', ownerGroup: 'system.group.administrator', object: 0x664 } } : {}),
         from: 'system.host.eos-enrollment', ts: Date.now() };
 }
 function assertInstance(doc, spec, hostname) {

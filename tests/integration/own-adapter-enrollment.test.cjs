@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const crypto = require('node:crypto');
+const vm = require('node:vm');
 const enrollment = require('../../runtime/bootstrap/enrollment.cjs');
 const own = require('../../runtime/bootstrap/own-adapter-enrollment.cjs');
 const accounts = require('../../runtime/bootstrap/accounts.cjs');
@@ -61,6 +62,16 @@ function fixture() {
 }
 async function planned() { const c = fixture(); c.plan = await own.planMigration(c); return c; }
 async function applied() { const c = await planned(); await own.applyMigration(c); return c; }
+function runtimeAdminAclProjection() {
+    // Execute the shipped Admin method and constants; importing the whole
+    // adapter would start a runtime process instead of this object-store test.
+    const code = fs.readFileSync(path.join(__dirname, '../../components/admin/build/main.js'), 'utf8');
+    const start = code.indexOf('async ensureEosRoleReadableAcl(id) {');
+    const end = code.indexOf('async ensureEosSystemObjectAccess()', start);
+    const constants = code.match(/^const (?:ADMIN_OWNER_USER|EOS_ROLE_READABLE_OBJECT_ACL) = .*;$/gm);
+    assert.ok(start > 0 && end > start); assert.equal(constants?.length, 2);
+    return vm.runInNewContext(`${constants.join('\n')}\n({ ${code.slice(start, end)} }).ensureEosRoleReadableAcl`);
+}
 test('exact six-entry profile and side-effect-free plan, no secrets or copied password hashes', async () => {
     const c = await planned();
     assert.equal(own.pinnedAdapters(targetApp).length, 6);
@@ -100,6 +111,41 @@ test('full and idempotent rollback remove only exact new instances and own marke
     const result = await own.rollbackMigration(c);
     assert.equal(result.originalManagementEnrollmentPreserved, true); assert.equal(c.deletes, 5);
     assert.equal((await enrollment.verify({ ...c, app: sourceApp })).status, 'INTEGRATED_UI_LAB_VERIFIED');
+});
+test('root initial Admin ACL matches actual startup projection without rewriting the rollback baseline', async () => {
+    const c = await applied(), before = new Map(structuredClone([...c.docs]));
+    const admin = c.docs.get('system.adapter.eos-admin.0');
+    assert.equal(admin.native._nexowattEosRoleReadableAclManaged, true);
+    assert.deepEqual(admin.acl, { owner: 'system.user.admin', ownerGroup: 'system.group.administrator', object: 0x664 });
+    assert.equal(c.docs.get('system.adapter.nexowatt-ui.0').acl, undefined);
+    assert.deepEqual(c.docs.get('system.user.admin').acl, accounts.PRIVATE_ACL);
+    for (const spec of own.EXTRA_SPECS) assert.deepEqual(c.docs.get(`system.adapter.${spec.name}.0`).acl, accounts.PRIVATE_ACL);
+    const project = runtimeAdminAclProjection();
+    const adapter = { getForeignObjectAsync: c.objects.getObjectAsync,
+        setForeignObjectAsync: async () => assert.fail('startup must not rewrite from/ts/user/ACL/native after planning') };
+    assert.equal(await project.call(adapter, admin._id), false);
+    assert.equal(await project.call(adapter, admin._id), false);
+    assert.deepEqual(c.docs, before);
+    await own.rollbackMigration(c);
+    assert.deepEqual(c.docs.get(admin._id), admin);
+    assert.equal((await enrollment.verify({ ...c, app: sourceApp })).adaptersEnabled, 2);
+});
+test('historical Admin normalized before migration retains its actual metadata through strict rollback', async () => {
+    const c = fixture(), id = 'system.adapter.eos-admin.0';
+    // Model the existing R9 instance before its first historical Admin startup.
+    const original = c.docs.get(id); delete original.acl; delete original.native._nexowattEosRoleReadableAclManaged;
+    const project = runtimeAdminAclProjection();
+    assert.equal(await project.call({ getForeignObjectAsync: c.objects.getObjectAsync,
+        setForeignObjectAsync: async (key, doc) => {
+            // The pinned controller's _setForeignObject preserves from/ts and
+            // adds user when absent; those actual bytes must remain bound.
+            doc.user ||= 'system.user.admin'; await c.objects.setObjectAsync(key, doc);
+        } }, id), true);
+    const normalized = structuredClone(c.docs.get(id));
+    assert.equal(normalized.from, original.from); assert.equal(normalized.ts, original.ts);
+    c.plan = await own.planMigration(c);
+    await own.applyMigration(c); await own.rollbackMigration(c);
+    assert.deepEqual(c.docs.get(id), normalized);
 });
 test('legacy management verifier rejects six profile without new enrollment marker', async () => {
     const c = fixture(); await assert.rejects(enrollment.verify(c), /ENROLLMENT_PROFILE_SCOPE/);
@@ -148,6 +194,8 @@ for (const [label, mutate, code] of [
     ['changed marker', c => { c.docs.get(own.MARKER).native.operationId = 'd'.repeat(32); }, 'OWN_ENROLLMENT_MARKER_CHANGED'],
     ['missing marker with owned-looking docs', c => { c.docs.delete(own.MARKER); }, 'OWN_ENROLLMENT_INSTANCE_CHANGED'],
     ['changed baseline', c => { c.docs.get(enrollment.MARKER).native.note = 'foreign'; }, 'OWN_ENROLLMENT_BASELINE_CHANGED'],
+    ['changed management configuration', c => { c.docs.get('system.adapter.eos-admin.0').native.note = 'foreign'; }, 'OWN_ENROLLMENT_BASELINE_CHANGED'],
+    ['changed management ACL', c => { c.docs.get('system.adapter.eos-admin.0').acl.object = 0x666; }, 'OWN_ENROLLMENT_BASELINE_CHANGED'],
 ]) test(`rollback refuses ${label} before deleting any document`, async () => {
     const c = await applied(); mutate(c); await assert.rejects(own.rollbackMigration(c), new RegExp(code)); assert.equal(c.deletes, 0);
 });

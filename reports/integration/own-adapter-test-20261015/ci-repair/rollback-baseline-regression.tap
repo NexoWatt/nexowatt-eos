@@ -1,0 +1,394 @@
+TAP version 13
+# Subtest: initial enrollment stores only hash and disabled fixed instances; verifies without writes
+ok 1 - initial enrollment stores only hash and disabled fixed instances; verifies without writes
+  ---
+  duration_ms: 3372.880273
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:0
+ok 2 - password rejects bounded invalid input string:0
+  ---
+  duration_ms: 0.437351
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:5
+ok 3 - password rejects bounded invalid input string:5
+  ---
+  duration_ms: 0.176527
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:129
+ok 4 - password rejects bounded invalid input string:129
+  ---
+  duration_ms: 0.174704
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:14
+ok 5 - password rejects bounded invalid input string:14
+  ---
+  duration_ms: 0.098709
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:21
+ok 6 - password rejects bounded invalid input string:21
+  ---
+  duration_ms: 0.107392
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 7 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.095064
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 8 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.103947
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:200
+ok 9 - password rejects bounded invalid input string:200
+  ---
+  duration_ms: 0.412303
+  type: 'test'
+  ...
+# Subtest: password allows long unicode passphrase without composition tricks
+ok 10 - password allows long unicode passphrase without composition tricks
+  ---
+  duration_ms: 0.151438
+  type: 'test'
+  ...
+# Subtest: rejects marker pending without repair
+ok 11 - rejects marker pending without repair
+  ---
+  duration_ms: 1.008584
+  type: 'test'
+  ...
+# Subtest: rejects config changed without repair
+ok 12 - rejects config changed without repair
+  ---
+  duration_ms: 0.646937
+  type: 'test'
+  ...
+# Subtest: rejects physical enabled without repair
+ok 13 - rejects physical enabled without repair
+  ---
+  duration_ms: 0.520657
+  type: 'test'
+  ...
+# Subtest: rejects core binding without repair
+ok 14 - rejects core binding without repair
+  ---
+  duration_ms: 0.564362
+  type: 'test'
+  ...
+# Subtest: rejects remote repo without repair
+ok 15 - rejects remote repo without repair
+  ---
+  duration_ms: 0.573757
+  type: 'test'
+  ...
+# Subtest: rejects automatic updates without repair
+ok 16 - rejects automatic updates without repair
+  ---
+  duration_ms: 1.664255
+  type: 'test'
+  ...
+# Subtest: rejects disabled admin without repair
+ok 17 - rejects disabled admin without repair
+  ---
+  duration_ms: 0.512304
+  type: 'test'
+  ...
+# Subtest: rejects world-readable service hash without repair
+ok 18 - rejects world-readable service hash without repair
+  ---
+  duration_ms: 0.520546
+  type: 'test'
+  ...
+# Subtest: rejects weak password without repair
+ok 19 - rejects weak password without repair
+  ---
+  duration_ms: 0.822122
+  type: 'test'
+  ...
+# Subtest: rejects extra executable without repair
+ok 20 - rejects extra executable without repair
+  ---
+  duration_ms: 0.686968
+  type: 'test'
+  ...
+# Subtest: rejects node arguments without repair
+ok 21 - rejects node arguments without repair
+  ---
+  duration_ms: 0.535769
+  type: 'test'
+  ...
+# Subtest: rejects remote host without repair
+ok 22 - rejects remote host without repair
+  ---
+  duration_ms: 0.503681
+  type: 'test'
+  ...
+# Subtest: rejects admin plaintext without repair
+ok 23 - rejects admin plaintext without repair
+  ---
+  duration_ms: 1.160293
+  type: 'test'
+  ...
+# Subtest: rejects UI no auth without repair
+ok 24 - rejects UI no auth without repair
+  ---
+  duration_ms: 0.899399
+  type: 'test'
+  ...
+# Subtest: rejects UI trusted header without repair
+ok 25 - rejects UI trusted header without repair
+  ---
+  duration_ms: 0.691795
+  type: 'test'
+  ...
+# Subtest: rejects UI path without repair
+ok 26 - rejects UI path without repair
+  ---
+  duration_ms: 1.280355
+  type: 'test'
+  ...
+# Subtest: controller alive blocks first mutation
+ok 27 - controller alive blocks first mutation
+  ---
+  duration_ms: 0.460976
+  type: 'test'
+  ...
+# Subtest: failed enrollment retains pending gate and never enables partially written instances
+ok 28 - failed enrollment retains pending gate and never enables partially written instances
+  ---
+  duration_ms: 1969.57513
+  type: 'test'
+  ...
+# Subtest: exact six-entry profile and side-effect-free plan, no secrets or copied password hashes
+ok 29 - exact six-entry profile and side-effect-free plan, no secrets or copied password hashes
+  ---
+  duration_ms: 16.731324
+  type: 'test'
+  ...
+# Subtest: initial target configurations require deliberate device/station/backup commissioning
+ok 30 - initial target configurations require deliberate device/station/backup commissioning
+  ---
+  duration_ms: 3.879042
+  type: 'test'
+  ...
+# Subtest: apply journals first, preserves original enrollment/accounts and enables six fixed instances
+ok 31 - apply journals first, preserves original enrollment/accounts and enables six fixed instances
+  ---
+  duration_ms: 12.874526
+  type: 'test'
+  ...
+# Subtest: full and idempotent rollback remove only exact new instances and own marker
+ok 32 - full and idempotent rollback remove only exact new instances and own marker
+  ---
+  duration_ms: 9.655952
+  type: 'test'
+  ...
+# Subtest: root initial Admin ACL matches actual startup projection without rewriting the rollback baseline
+ok 33 - root initial Admin ACL matches actual startup projection without rewriting the rollback baseline
+  ---
+  duration_ms: 10.040512
+  type: 'test'
+  ...
+# Subtest: historical Admin normalized before migration retains its actual metadata through strict rollback
+ok 34 - historical Admin normalized before migration retains its actual metadata through strict rollback
+  ---
+  duration_ms: 6.900197
+  type: 'test'
+  ...
+# Subtest: legacy management verifier rejects six profile without new enrollment marker
+ok 35 - legacy management verifier rejects six profile without new enrollment marker
+  ---
+  duration_ms: 0.892329
+  type: 'test'
+  ...
+# Subtest: apply rejects live controller before writes
+ok 36 - apply rejects live controller before writes
+  ---
+  duration_ms: 2.079092
+  type: 'test'
+  ...
+# Subtest: apply rejects unknown heartbeat before writes
+ok 37 - apply rejects unknown heartbeat before writes
+  ---
+  duration_ms: 2.534971
+  type: 'test'
+  ...
+# Subtest: apply rejects source marker changed before writes
+ok 38 - apply rejects source marker changed before writes
+  ---
+  duration_ms: 2.018941
+  type: 'test'
+  ...
+# Subtest: apply rejects management instance changed before writes
+ok 39 - apply rejects management instance changed before writes
+  ---
+  duration_ms: 2.062066
+  type: 'test'
+  ...
+# Subtest: apply rejects preexisting additional document before writes
+ok 40 - apply rejects preexisting additional document before writes
+  ---
+  duration_ms: 1.953763
+  type: 'test'
+  ...
+# Subtest: apply rejects unexpected instance before writes
+ok 41 - apply rejects unexpected instance before writes
+  ---
+  duration_ms: 1.723685
+  type: 'test'
+  ...
+# Subtest: apply rejects plan unsafe initial target before writes
+ok 42 - apply rejects plan unsafe initial target before writes
+  ---
+  duration_ms: 1.729484
+  type: 'test'
+  ...
+# Subtest: apply rejects plan forged marker before writes
+ok 43 - apply rejects plan forged marker before writes
+  ---
+  duration_ms: 2.016027
+  type: 'test'
+  ...
+# Subtest: apply rejects missing journal callback before writes
+ok 44 - apply rejects missing journal callback before writes
+  ---
+  duration_ms: 1.741992
+  type: 'test'
+  ...
+# Subtest: failed durable journal callback causes no database mutation
+ok 45 - failed durable journal callback causes no database mutation
+  ---
+  duration_ms: 2.24299
+  type: 'test'
+  ...
+# Subtest: partial apply after every possible write can be rolled back without changing baseline
+ok 46 - partial apply after every possible write can be rolled back without changing baseline
+  ---
+  duration_ms: 40.292259
+  type: 'test'
+  ...
+# Subtest: partial rollback after each deletion is safely resumable from the same protected plan
+ok 47 - partial rollback after each deletion is safely resumable from the same protected plan
+  ---
+  duration_ms: 29.404415
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed device configuration before deleting any document
+ok 48 - rollback refuses changed device configuration before deleting any document
+  ---
+  duration_ms: 5.145667
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed marker before deleting any document
+ok 49 - rollback refuses changed marker before deleting any document
+  ---
+  duration_ms: 4.009028
+  type: 'test'
+  ...
+# Subtest: rollback refuses missing marker with owned-looking docs before deleting any document
+ok 50 - rollback refuses missing marker with owned-looking docs before deleting any document
+  ---
+  duration_ms: 4.799293
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed baseline before deleting any document
+ok 51 - rollback refuses changed baseline before deleting any document
+  ---
+  duration_ms: 3.701313
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed management configuration before deleting any document
+ok 52 - rollback refuses changed management configuration before deleting any document
+  ---
+  duration_ms: 3.731409
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed management ACL before deleting any document
+ok 53 - rollback refuses changed management ACL before deleting any document
+  ---
+  duration_ms: 5.241601
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains pending marker refusal
+ok 54 - six-adapter verification retains pending marker refusal
+  ---
+  duration_ms: 3.695675
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains forged marker ACL refusal
+ok 55 - six-adapter verification retains forged marker ACL refusal
+  ---
+  duration_ms: 4.264204
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains extra JavaScript instance refusal
+ok 56 - six-adapter verification retains extra JavaScript instance refusal
+  ---
+  duration_ms: 3.31552
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains unsafe Admin TLS refusal
+ok 57 - six-adapter verification retains unsafe Admin TLS refusal
+  ---
+  duration_ms: 3.371395
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains UI trusted header refusal
+ok 58 - six-adapter verification retains UI trusted header refusal
+  ---
+  duration_ms: 4.217664
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains weak service password refusal
+ok 59 - six-adapter verification retains weak service password refusal
+  ---
+  duration_ms: 3.437564
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains dynamic npm refusal
+ok 60 - six-adapter verification retains dynamic npm refusal
+  ---
+  duration_ms: 3.454992
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains extra node args refusal
+ok 61 - six-adapter verification retains extra node args refusal
+  ---
+  duration_ms: 4.342692
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains malformed EEBUS commissioning flag refusal
+ok 62 - six-adapter verification retains malformed EEBUS commissioning flag refusal
+  ---
+  duration_ms: 4.383405
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains missing OCPP commissioning flag refusal
+ok 63 - six-adapter verification retains missing OCPP commissioning flag refusal
+  ---
+  duration_ms: 6.821148
+  type: 'test'
+  ...
+# Subtest: authorized device commissioning and password changes are not reverted by boot verifier
+ok 64 - authorized device commissioning and password changes are not reverted by boot verifier
+  ---
+  duration_ms: 3.947956
+  type: 'test'
+  ...
+1..64
+# tests 64
+# suites 0
+# pass 64
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5440.010985
