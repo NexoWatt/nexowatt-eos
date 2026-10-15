@@ -36,23 +36,40 @@ async function run(props) {
     return new Promise((resolve, reject) => {
         try {
             const fileName = (0, node_path_1.join)(ctx.backupDir, `iobroker_${(0, tools_1.getDate)()}${options.nameSuffix ? `_${options.nameSuffix}` : ''}_backupiobroker.tar.gz`);
-            ctx.fileNames.push(fileName);
+            // Never let a same-second retry overwrite an archive or count an old
+            // file as this run's result. lstat also detects dangling symlinks.
+            try {
+                (0, node_fs_1.lstatSync)(fileName);
+                ctx.errors.iobroker = 'EOS_BACKUP_TARGET_EXISTS';
+                resolve(1);
+                return;
+            }
+            catch (error) {
+                if (error.code !== 'ENOENT')
+                    throw error;
+            }
             const cmd = (0, node_child_process_1.fork)(ioPath, ['backup', fileName], { silent: true });
             cmd.stdout.on('data', data => ctx.log.debug(data.toString()));
             cmd.stderr.on('data', data => ctx.log.error(data.toString()));
             cmd.on('close', code => {
-                // Recorded as done regardless of the exit code; a missing file is what marks the
-                // failure below. Kept as found.
-                ctx.done.push('iobroker');
-                ctx.types.push('iobroker');
-                if ((0, node_fs_1.existsSync)(fileName)) {
-                    const stat = (0, node_fs_1.statSync)(fileName);
+                try {
+                    const stat = (0, node_fs_1.existsSync)(fileName) ? (0, node_fs_1.lstatSync)(fileName) : null;
+                    if (code !== 0 || !stat?.isFile() || stat.isSymbolicLink() || stat.size === 0) {
+                        ctx.errors.iobroker = 'EOS_BACKUP_ARCHIVE_NOT_CREATED';
+                        resolve(code || 1);
+                        return;
+                    }
+                    ctx.fileNames.push(fileName);
+                    ctx.done.push('iobroker');
+                    ctx.types.push('iobroker');
                     if (Math.round((stat.size / (1024 * 1024)) * 10) / 10 > SIZE_WARNING_MB) {
-                        ctx.log.warn(`Your backup ${fileName.split('/').pop()} has a file size of ${(0, tools_1.getSize)(stat.size)}. This can lead to problems. Please check your file system for large files.`);
+                        ctx.log.warn(`Backup archive exceeds ${(0, tools_1.getSize)(SIZE_WARNING_MB * 1024 * 1024)}.`);
                     }
                 }
-                else {
-                    ctx.errors.iobroker = 'ioBroker Backup not created';
+                catch {
+                    ctx.errors.iobroker = 'EOS_BACKUP_ARCHIVE_NOT_CREATED';
+                    resolve(1);
+                    return;
                 }
                 // `close` and `error` can both fire; the promise settles on whichever comes first,
                 // which is what the guarded callback used to achieve.

@@ -183,6 +183,7 @@
     "mode": "daemon",
     "compact": true,
     "icon": "nexowatt-backup.png",
+    "extIcon": "https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/main/components/backitup/admin/nexowatt-backup.png",
     "messagebox": true,
     "stopBeforeUpdate": true,
     "connectionType": "local",
@@ -213,7 +214,7 @@
     ],
     "globalDependencies": [
       {
-        "admin": ">=7.0.0"
+        "eos-admin": ">=7.0.0"
       }
     ],
     "adminUI": {
@@ -235,10 +236,10 @@
     ],
     "loglevel": "info",
     "type": "general",
-    "license": "SEE LICENSE IN LICENSE",
     "licenseInformation": {
-      "license": "NexoWatt Proprietary License",
-      "type": "limited"
+      "license": "SEE LICENSE IN LICENSE",
+      "type": "limited",
+      "link": "https://github.com/NexoWatt/nexowatt-eos/blob/main/components/backitup/LICENSE"
     }
   },
   "notifications": [
@@ -593,6 +594,19 @@
     "zigbee2mqttPassword"
   ],
   "instanceObjects": [
+    {
+      "_id": "info.runtimeState",
+      "type": "state",
+      "common": {
+        "name": "Backup runtime readiness",
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "states": { "waiting_license": "Waiting for license", "starting": "Starting", "ready": "Ready", "error": "Startup error", "stopped": "Stopped" }
+      },
+      "native": {}
+    },
     {
       "_id": "info",
       "type": "channel",

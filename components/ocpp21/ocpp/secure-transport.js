@@ -10,13 +10,18 @@ const PROFILE_DIRECTORY = '/etc/nexowatt-eos/ocpp21';
 function readProtectedFile(directory, name, secret = false) {
   const filename = path.resolve(directory, name);
   // No mutable ancestor or symlink may redirect a trusted transport profile.
+  const ancestors = [];
   let ancestor = path.dirname(filename);
   for (;;) {
-    const stat = fs.lstatSync(ancestor);
-    if (!stat.isDirectory() || stat.isSymbolicLink() || stat.uid !== 0 || (stat.mode & 0o022)) throw new Error('EOS_OCPP_PROFILE_DIRECTORY_UNSAFE');
+    ancestors.unshift(ancestor);
     const parent = path.dirname(ancestor);
     if (ancestor === parent) break;
     ancestor = parent;
+  }
+  // Check from the root down: a missing leaf must not hide an unsafe parent.
+  for (const ancestor of ancestors) {
+    const stat = fs.lstatSync(ancestor);
+    if (!stat.isDirectory() || stat.isSymbolicLink() || stat.uid !== 0 || (stat.mode & 0o022)) throw new Error('EOS_OCPP_PROFILE_DIRECTORY_UNSAFE');
   }
   const fd = fs.openSync(filename, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW);
   try {
@@ -50,13 +55,44 @@ function validateSettings(value) {
 }
 
 function loadTransportProfile(directory = PROFILE_DIRECTORY) {
-  const settings = validateSettings(JSON.parse(readProtectedFile(directory, 'transport.json')));
-  const cert = readProtectedFile(directory, 'server.crt');
-  const key = readProtectedFile(directory, 'server.key', true);
-  const ca = readProtectedFile(directory, 'client-ca.crt');
+  let raw;
+  try { raw = readProtectedFile(directory, 'transport.json'); } catch (error) {
+    // Only absence of the enrollment manifest (or a safe missing directory)
+    // means unconfigured. Missing credentials after enrollment remain an error.
+    if (error.code === 'ENOENT') throw new Error('EOS_OCPP_TRANSPORT_NOT_ENROLLED');
+    throw error;
+  }
+  let settings;
+  try { settings = validateSettings(JSON.parse(raw)); } catch (error) {
+    if (error instanceof SyntaxError) throw new Error('EOS_OCPP_PROFILE_INVALID');
+    throw error;
+  }
+  let cert, key, ca;
+  try {
+    cert = readProtectedFile(directory, 'server.crt');
+    key = readProtectedFile(directory, 'server.key', true);
+    ca = readProtectedFile(directory, 'client-ca.crt');
+  } catch (error) {
+    if (error.code === 'ENOENT') throw new Error('EOS_OCPP_PROFILE_INCOMPLETE');
+    throw error;
+  }
   if (cert.includes('PRIVATE KEY') || ca.includes('PRIVATE KEY')) throw new Error('EOS_OCPP_CERTIFICATE_INVALID');
   return Object.freeze({ ...settings, tls: Object.freeze({ cert, key, ca, minVersion: 'TLSv1.3',
     maxVersion: 'TLSv1.3', requestCert: true, rejectUnauthorized: true, handshakeTimeout: 5000 }) });
+}
+
+// A finite diagnostic vocabulary keeps OS errors, paths and TLS material out
+// of the database and logs. Never classify arbitrary ENOENT as unconfigured.
+function startupFailure(error) {
+  const codes = new Set(['EOS_OCPP_TRANSPORT_NOT_ENROLLED', 'EOS_OCPP_PROFILE_DIRECTORY_UNSAFE',
+    'EOS_OCPP_PROFILE_FILE_UNSAFE', 'EOS_OCPP_PROFILE_FILE_LIMIT', 'EOS_OCPP_PROFILE_INVALID',
+    'EOS_OCPP_PROFILE_INCOMPLETE', 'EOS_OCPP_IDENTITY_MAP_INVALID', 'EOS_OCPP_CERTIFICATE_INVALID',
+    'EOS_OCPP_PROTOCOLS_REQUIRED', 'EOS_OCPP_START_ABORTED']);
+  const reason = codes.has(error?.message) ? error.message
+    : error?.code === 'EACCES' ? 'EOS_OCPP_PROFILE_UNREADABLE'
+      : error?.code === 'EADDRINUSE' ? 'EOS_OCPP_LISTENER_IN_USE' : 'EOS_OCPP_START_FAILED';
+  return { state: reason === 'EOS_OCPP_TRANSPORT_NOT_ENROLLED'
+    ? 'awaiting_transport_enrollment' : 'configuration_rejected', reason };
 }
 
 function authenticateHandshake(profile, handshake) {
@@ -92,4 +128,4 @@ function createTransport(rpc, profile) {
   return server;
 }
 
-module.exports = { PROFILE_DIRECTORY, loadTransportProfile, validateSettings, authenticateHandshake, createTransport, readProtectedFile };
+module.exports = { PROFILE_DIRECTORY, loadTransportProfile, validateSettings, authenticateHandshake, createTransport, readProtectedFile, startupFailure };

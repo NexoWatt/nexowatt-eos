@@ -1,5 +1,45 @@
 # NexoWatt EOS Backup
 
+## EOS-Testintegration vom 15.10.2026
+
+Der aktuelle EOS-Quellstand verlangt `eos-admin >=7.0.0`, eine zentrale Home-/Pro-Lizenz
+und das vom Controller erzeugte individuelle `system.config.native.secret`. Fehlt
+dieses oder ist es beschädigt, bleibt Backup mit `EOS_BACKUP_SYSTEM_SECRET_INVALID`
+geschlossen; es gibt keinen gemeinsamen Ersatzschlüssel.
+
+Lokale Archive, Listen, Download-/Upload-Staging und Datenrestore verwenden einheitlich
+`<IOBROKER_DATA_DIR>/nexowatt-backup/backups` (0700). Das liegt innerhalb des schon
+erlaubten EOS-Datenverzeichnisses; App und Daten-Elternverzeichnis bleiben unveränderlich.
+Historische Archive werden nicht verschoben oder gelöscht. Vorhandene Restorejournale
+bleiben erhalten. Der Adapter erzeugt keine privilegierten Stop-/Restore-Shellskripte.
+
+**Noch keine komplette Systemsicherung/Freigabe:** Der historische Controller-Backupweg
+benötigt zusätzlich eine geprüfte Verlagerung seiner temporären Arbeitsverzeichnisse;
+er schreibt sonst in den unveränderlichen Controllerbaum. Ein nicht erfolgreiches
+CLI-Ergebnis, fehlendes oder leeres Archiv wird ausdrücklich nicht als Erfolg geführt.
+Ein vorhandenes Archivziel wird vor dem CLI-Start mit `EOS_BACKUP_TARGET_EXISTS`
+abgelehnt und bleibt unverändert. Alte Logs dürfen höchstens 8 MiB groß sein,
+müssen private reguläre Dateien des Dienstbenutzers mit genau einem Hardlink sein
+und werden ohne Symlink-Follow gelesen. `EOS_BACKUP_LOG_UNSAFE` enthält keine
+Dateiinhalte; verdächtige Dateien bleiben zur Prüfung erhalten. Diese Prüfungen
+sind keine Isolation zwischen Prozessen mit derselben Benutzerkennung.
+
+`nexowatt-backup.0.info.runtimeState` ist ein nichtgeheimer, schreibgeschützter
+Betriebsstatus: `waiting_license`, `starting`, `ready`, `error`, `stopped`.
+`ready` wird erst nach abgeschlossener Initialisierung veröffentlicht. Bei
+gültiger Lizenz muss die Startabnahme einen frischen, bestätigten `ready`-State
+sehen, ohne Lizenz `waiting_license`; `alive=true` allein reicht nicht.
+Der Unload wartet laufende Initialisierung/Statuswrites ab und veröffentlicht
+zuletzt `stopped`. Dieser Status bestätigt keinen vollständigen Systemrestore.
+Native Systemrestores verlangen weiterhin den getrennten Host-Recoveryweg
+(`EOS_OPERATOR_RECOVERY_REQUIRED`). Auch Sitzungsschutz der Dateioberfläche und
+vollständige PostgreSQL-/CA-Wiederherstellung sind nicht durch diese Startkorrektur
+nachgewiesen. Keine automatische Freigabe dieser Funktionen.
+
+Die folgenden historischen Installations-/Backupangaben gelten nicht als Anleitung
+zum Umgehen des signierten EOS-Installers. Für EOS ist ausschließlich die aktuelle
+[Hauptanleitung](https://github.com/NexoWatt/nexowatt-eos/blob/main/README.md) maßgeblich.
+
 NexoWatt EOS Backup is the backup and restore adapter for the **NexoWatt Energy Operation System (EOS)**. It is based on ioBroker.backitup 4.0.1 and retains its proven backup engines for ioBroker, InfluxDB, Redis, SQL databases and external storage targets.
 
 ## EOS additions

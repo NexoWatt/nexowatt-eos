@@ -1,5 +1,10 @@
 {
   "name": "iobroker.nexowatt-backup",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NexoWatt/nexowatt-eos.git",
+    "directory": "components/backitup"
+  },
   "version": "1.0.10",
   "engines": {
     "node": ">=22.0.0"
@@ -109,6 +114,9 @@
     "test/helpers/sd-card-permission-child.cjs",
     "packages/eos-license-client/",
     "test/license-guard.js",
+    "test/eos-startup.js",
+    "test/backup-archive-result.js",
+    "test/helpers/backup-result-child.cjs",
     "docs/de/lizenzbetrieb.md"
   ],
   "scripts": {
@@ -144,7 +152,7 @@
     "lint": "eslint -c eslint.config.mjs",
     "lint-frontend": "cd src-admin && eslint -c eslint.config.mjs && cd ../src-tab && eslint -c eslint.config.mjs",
     "test:eos-profile": "node --test test/eos-profile.js",
-    "test:offline": "node --test test/eos-profile.js test/sd-card.js test/influxdb-cli.js test/sd-card-access.js test/license-guard.js",
+    "test:offline": "node --test test/eos-profile.js test/sd-card.js test/influxdb-cli.js test/sd-card-access.js test/license-guard.js test/eos-startup.js test/backup-archive-result.js",
     "verify:publish": "npm run prepare:publish && npm run test:offline && node scripts/validate-publish.cjs",
     "build:source": "node tasks.js && npm run build:backend",
     "prepare:publish": "node scripts/prepare-publish.cjs",

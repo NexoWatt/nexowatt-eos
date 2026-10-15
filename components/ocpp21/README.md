@@ -145,7 +145,31 @@ Relevant states include:
 
 ## Charging-station endpoint
 
-Default port:
+New instances have `eosCommissioningEnabled: false`: the process stays running
+without an OCPP listener or control commands. `info.runtimeState` distinguishes
+`awaiting_license`, `awaiting_transport_enrollment`, `configuration_rejected`,
+`listening`, `license_blocked` and `stopped`; `info.runtimeReason` contains a fixed
+diagnostic code. Adapter-level `info.connection` means a real station socket,
+not an enabled instance or listening endpoint.
+
+An administrator must provision the protected root-owned
+`/etc/nexowatt-eos/ocpp21/transport.json`, `server.crt`, `server.key` and
+`client-ca.crt`, enrolling at least one actual station identity and its exact DNS
+SAN. Enable **Enable commissioned OCPP transport** in Admin afterwards. No
+placeholder station, automatic CA, plaintext fallback or TLS bypass is introduced.
+The station must support TLS 1.3 and present its enrolled client certificate.
+The protected profile, not the legacy native port setting, determines host/port.
+
+A missing manifest is an enrollment wait; malformed/unsafe settings or missing
+certificate files after enrollment are rejected. Failed enabled startup is
+retried at most every 30 seconds with transition-only fixed diagnostic logs.
+A restart retries immediately. Running listener credentials are not hot-reloaded;
+use a controlled restart for credential rotation. Legacy instances with an absent
+enable flag keep their existing profile-required behavior; explicit false blocks
+startup, true still requires a fully valid profile, other types are rejected.
+See the [change/test record](COMMISSIONING_20261015_DE.md).
+
+Example deliberately configured port:
 
 ```text
 9220
@@ -154,7 +178,7 @@ Default port:
 Example:
 
 ```text
-ws://<EOS-IP>:9220/<station-id>
+wss://<EOS-IP>:9220/ocpp/<station-id>
 ```
 
 Supported WebSocket subprotocols:

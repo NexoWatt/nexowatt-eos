@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getIobDir } from './tools';
+import { getBackupDir } from './tools';
 import type { BackItUpContext, BackItUpStorage } from './types';
 import type {
     BackItUpListCallback,
@@ -40,7 +40,7 @@ export default function listBackups(
     const context: BackItUpContext = {
         adapter: null,
         log,
-        backupDir: join(getIobDir(), 'backups').replace(/\\/g, '/'),
+        backupDir: getBackupDir(),
         timestamp: 0,
         fileNames: [],
         errors: {},
@@ -75,7 +75,7 @@ export default function listBackups(
         }
     }
 
-    const backupDir = join(getIobDir(), 'backups').replace(/\\/g, '/');
+    const backupDir = getBackupDir();
 
     if (existsSync(backupDir) && (!restoreSource || restoreSource === 'local')) {
         const local: NonNullable<BackItUpStorageFiles['local']> = {};

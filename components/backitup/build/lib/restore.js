@@ -286,10 +286,10 @@ function restore(adapter, options, storageType, fileName, currentTheme, currentP
     if (adapter) {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const tools = require('./tools');
-        const backupDir = (0, node_path_1.join)(tools.getIobDir(), 'backups').replace(/\\/g, '/');
+        const backupDir = tools.getBackupDir();
         if (storageType === 'local') {
             try {
-                (0, node_fs_1.chmodSync)(backupDir, '0775');
+                (0, node_fs_1.chmodSync)(backupDir, '0700');
                 log.debug(`set chmod for "${backupDir}" successfully`);
             }
             catch (err) {

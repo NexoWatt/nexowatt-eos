@@ -177,7 +177,47 @@ Interpretation:
 
 ## Verbindung der Ladestation
 
-Server-Port standardmäßig:
+Neue EOS-Instanzen starten mit `eosCommissioningEnabled: false` als laufender,
+noch nicht eingerichteter Prozess. Sie öffnen keinen OCPP-Listener und senden
+keine Steuerbefehle. `info.runtimeState` und `info.runtimeReason` zeigen den
+tatsächlichen Zustand; `info.connection` wird nur bei mindestens einer echten
+Stationsverbindung wahr, niemals allein durch den laufenden Prozess oder Listener.
+
+| `info.runtimeState` | Bedeutung |
+|---|---|
+| `awaiting_license` | Aktuelle zentrale EOS-Freigabe fehlt |
+| `awaiting_transport_enrollment` | Transport nicht freigegeben oder Manifest noch nicht bereitgestellt |
+| `configuration_rejected` | Vorhandenes Profil, Rechte, Inventar, Protokollauswahl oder Start fehlerhaft; Diagnosecode beachten |
+| `listening` | Geschützter Listener läuft; Stationsverbindung und Datenaktualität gesondert prüfen |
+| `license_blocked` | Listener/Sitzungen bleiben für Messdaten bestehen, neue Steuerung und Autorisierung gesperrt |
+| `stopped` | Prozess wird beendet; Verbindung zurückgesetzt |
+
+Für die Inbetriebnahme stellt die OS-Administration unter
+`/etc/nexowatt-eos/ocpp21/` das root-eigene `transport.json` sowie
+`server.crt`, `server.key` und `client-ca.crt` bereit. Mindestens eine echte
+Stationsidentität muss ihrem exakten Zertifikats-DNS-SAN zugeordnet sein.
+Es werden keine Stationsidentitäten, Zertifikate oder gemeinsamen Schlüssel
+automatisch erfunden. Danach im Admin **„Eingerichteten OCPP-Transport aktivieren“**
+einschalten und speichern. Die Station benötigt TLS 1.3 und ein von der
+eingetragenen Stations-CA bestätigtes Clientzertifikat; Klartext bleibt gesperrt.
+
+Fehlt nur das Manifest beziehungsweise sein sicherer noch nicht angelegter
+Ordner, wartet der Adapter. Ein ungültiges Manifest, unsichere Rechte oder
+fehlende Zertifikatsdateien nach angelegtem Manifest werden ausdrücklich als
+Fehler gemeldet. Ein freigegebener, wartender Transport wird höchstens alle
+30 Sekunden erneut geprüft; identische Fehler werden nicht laufend neu geloggt.
+Nach vollständiger Bereitstellung kann er automatisch starten. Ein Adapterneustart
+prüft sofort. Es erfolgt keine automatische Zertifikatsrotation eines laufenden
+Listeners; dafür kontrollierten Adapterneustart einplanen.
+
+**Bestandsmigration:** Explizites `false` sperrt die Inbetriebnahme, `true` erlaubt
+sie nur mit gültigem geschütztem Profil. Bei alten Instanzen ohne dieses Feld
+bleibt das bisherige profilpflichtige Verhalten erhalten. Andere Datentypen
+werden verweigert. Die Erstinstallation neuer Instanzen setzt `false`; bestehende
+Anlagen werden nicht allein durch dieses Softwareupdate stillgelegt.
+
+Host und Port stammen ausschließlich aus dem geschützten Profil. Das ältere
+native Portfeld hat keine Vorrangwirkung. Beispiel für einen bewusst gewählten Port:
 
 ```text
 9220
@@ -186,7 +226,7 @@ Server-Port standardmäßig:
 Beispiel-URL:
 
 ```text
-ws://<EOS-IP>:9220/<Stations-ID>
+wss://<EOS-IP>:9220/ocpp/<Stations-ID>
 ```
 
 Die Station muss eines der WebSocket-Subprotokolle anbieten:
@@ -196,6 +236,8 @@ ocpp1.6
 ocpp2.0.1
 ocpp2.1
 ```
+
+[Änderung, Prüfumfang und offene Hardwareabnahme](COMMISSIONING_20261015_DE.md).
 
 ## Wichtige Einstellungen
 

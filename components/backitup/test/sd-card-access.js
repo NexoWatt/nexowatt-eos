@@ -190,7 +190,7 @@ test('listing an empty card returns an empty list instead of logging a permissio
     vm.runInNewContext(fs.readFileSync(filename, 'utf8'), {
         exports, process, __dirname: path.dirname(filename), console,
         require: name => {
-            if (name === '../tools') return {getIobDir: () => '/opt/iobroker'};
+            if (name === '../tools') return {getBackupDir: () => '/var/lib/nexowatt-eos/iobroker-data/nexowatt-backup/backups'};
             if (name === '../sdCard') return {validateSdCardTarget: async (...args) => {
                 sdCalls.push(args);
                 throw Object.assign(new Error('missing folder'), {code: 'SD_BACKUP_DIR_MISSING'});

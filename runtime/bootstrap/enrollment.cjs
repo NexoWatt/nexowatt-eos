@@ -89,8 +89,9 @@ function assertInstance(doc, spec, hostname) {
         doc.native.eosTls?.certificatePath !== '/etc/nexowatt-eos/web/ui.crt' ||
         doc.native.eosTls.privateKeyPath !== '/etc/nexowatt-eos/web/ui.key' || doc.native.licenseKey) fail('ENROLLMENT_UI_DRIFT');
 }
-async function verify({ objects, config, app, allowPending = false }) {
-    pinnedAdapters(app);
+// Shared management invariants are also mandatory for the explicitly versioned
+// six-own-adapter test enrollment. This function grants no execution admission.
+async function verifyManagementPolicy({ objects, config, allowPending = false }) {
     const marker = await objects.getObjectAsync(MARKER);
     if (marker?.native?.profile !== PROFILE || marker.native.version !== 2 ||
         marker.native.runtimeConfigSha256 !== digest(config) || marker.native.physicalControlEnabled !== false ||
@@ -115,6 +116,13 @@ async function verify({ objects, config, app, allowPending = false }) {
     strongHash(admin.common.password);
     if (!isDeepStrictEqual(admin.acl, accountsPolicy.PRIVATE_ACL)) fail('ENROLLMENT_SERVICE_ACL');
     await accountsPolicy.verifyAccounts(objects, marker, strongHash);
+    return marker;
+}
+async function verify({ objects, config, app, allowPending = false }) {
+    const own = require('./own-adapter-enrollment.cjs');
+    if (await objects.getObjectAsync(own.MARKER)) return own.verify({ objects, config, app, allowPending });
+    pinnedAdapters(app);
+    await verifyManagementPolicy({ objects, config, allowPending });
     // Query executable objects, not every measurement and UI asset. ioBroker's
     // view client materializes the response; this count is a post-read limit.
     const result = await objects.getObjectViewAsync('system', 'instance', { startkey: 'system.adapter.', endkey: 'system.adapter.\u9999' });
@@ -250,4 +258,4 @@ async function enroll({ objects, states, config, app, password, accounts, verify
     await objects.setObjectAsync(MARKER, marker);
     return verify({ objects, config, app });
 }
-module.exports = { MARKER, PROFILE, FIRST_START_MARKER, SPECS, validatePassword, passwordHash, strongHash, pinnedAdapters, instanceDocument, assertInstance, verify, verifyFirstRun, enroll, enrollFirstRun };
+module.exports = { MARKER, PROFILE, FIRST_START_MARKER, SPECS, validatePassword, passwordHash, strongHash, pinnedAdapters, instanceDocument, assertInstance, verifyManagementPolicy, verify, verifyFirstRun, enroll, enrollFirstRun };

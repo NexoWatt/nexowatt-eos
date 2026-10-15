@@ -16,6 +16,7 @@ const settings = () => ({ schemaVersion: 1, profile: 'eos-ocpp-mtls-v1', host: '
 test('transport profile denies absent settings, plaintext flags, invalid and duplicate mappings', () => {
   assert.equal(validateSettings(settings()).identities.get('stationA'), 'station-a.ocpp.invalid');
   for (const value of [{}, { ...settings(), allowPlaintext: true }, { ...settings(), port: 0 },
+    { ...settings(), identities: [] },
     { ...settings(), identities: [{ identity: 'stationA', dnsName: '*.ocpp.invalid' }] },
     { ...settings(), identities: [settings().identities[0], settings().identities[0]] }]) {
     assert.throws(() => validateSettings(value), /EOS_OCPP_/);
@@ -45,6 +46,24 @@ test('actual TLS1.3 OCPP upgrades require trusted mTLS and the enrolled DNS SAN'
     if (rpc) await rpc.close({ force: true });
     if (server) { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
     fs.rmSync(directory, { recursive: true, force: true });
+  });
+  await t.test('absent manifest waits; malformed or incomplete enrollment is rejected', () => {
+    assert.throws(() => loadTransportProfile(directory), /EOS_OCPP_TRANSPORT_NOT_ENROLLED/);
+    assert.throws(() => loadTransportProfile(path.join(directory, 'not-provisioned')), /EOS_OCPP_TRANSPORT_NOT_ENROLLED/);
+    fs.writeFileSync(path.join(directory, 'transport.json'), '{private malformed content');
+    assert.throws(() => loadTransportProfile(directory), /^Error: EOS_OCPP_PROFILE_INVALID$/);
+    fs.writeFileSync(path.join(directory, 'transport.json'), JSON.stringify(settings()));
+    assert.throws(() => loadTransportProfile(directory), /EOS_OCPP_PROFILE_INCOMPLETE/);
+    fs.unlinkSync(path.join(directory, 'transport.json'));
+  });
+  await t.test('a missing descendant does not hide an unsafe parent or symlink', () => {
+    const unsafe = path.join(directory, 'unsafe');
+    fs.mkdirSync(unsafe);
+    fs.chmodSync(unsafe, 0o777);
+    assert.throws(() => loadTransportProfile(path.join(unsafe, 'missing')), /EOS_OCPP_PROFILE_DIRECTORY_UNSAFE/);
+    fs.chmodSync(unsafe, 0o700);
+    fs.symlinkSync(unsafe, path.join(directory, 'link'));
+    assert.throws(() => loadTransportProfile(path.join(directory, 'link', 'missing')), /EOS_OCPP_PROFILE_DIRECTORY_UNSAFE/);
   });
   for (const name of ['ca', 'rogue']) openssl(['req', '-new', '-x509', '-newkey', 'ec', '-pkeyopt', 'ec_paramgen_curve:P-256',
     '-nodes', '-subj', `/CN=${name}`, '-days', '1', '-sha256', '-addext', 'basicConstraints=critical,CA:TRUE',

@@ -1,0 +1,220 @@
+TAP version 13
+# Subtest: CLI requires explicit new trust, absolute paths and supervised invocation
+ok 1 - CLI requires explicit new trust, absolute paths and supervised invocation
+  ---
+  duration_ms: 9.723074
+  type: 'test'
+  ...
+# Subtest: only exact healthy R9 baseline state and exact historical R8 completion are accepted
+ok 2 - only exact healthy R9 baseline state and exact historical R8 completion are accepted
+  ---
+  duration_ms: 22.175877
+  type: 'test'
+  ...
+# Subtest: transition permits only fixed own-adapter admission, reviewed upload unit and source digest changes
+ok 3 - transition permits only fixed own-adapter admission, reviewed upload unit and source digest changes
+  ---
+  duration_ms: 2.927618
+  type: 'test'
+  ...
+# Subtest: successful own-adapter trial installs state before start and preserves historical R8 completion/configuration
+ok 4 - successful own-adapter trial installs state before start and preserves historical R8 completion/configuration
+  ---
+  duration_ms: 16.331446
+  type: 'test'
+  ...
+# Subtest: only the exact fixed upload start waits beyond its systemd oneshot bound
+ok 5 - only the exact fixed upload start waits beyond its systemd oneshot bound
+  ---
+  duration_ms: 7.716806
+  type: 'test'
+  ...
+# Subtest: baseline readiness failure never stages, locks or stops an unhealthy controller
+ok 6 - baseline readiness failure never stages, locks or stops an unhealthy controller
+  ---
+  duration_ms: 2.926346
+  type: 'test'
+  ...
+# Subtest: trust, signature, owner, linked state and installed-unit drift fail before mutation
+ok 7 - trust, signature, owner, linked state and installed-unit drift fail before mutation
+  ---
+  duration_ms: 14.974168
+  type: 'test'
+  ...
+# Subtest: pre-existing foreign coordinator lock and guard survive unmodified
+ok 8 - pre-existing foreign coordinator lock and guard survive unmodified
+  ---
+  duration_ms: 6.940785
+  type: 'test'
+  ...
+# Subtest: staging/native/report failure before stop leaves old controller running and removes only own gates
+ok 9 - staging/native/report failure before stop leaves old controller running and removes only own gates
+  ---
+  duration_ms: 12.740448
+  type: 'test'
+  ...
+# Subtest: trial failure restarts only authenticated healthy R9 and unlocks after readiness
+ok 10 - trial failure restarts only authenticated healthy R9 and unlocks after readiness
+  ---
+  duration_ms: 9.02439
+  type: 'test'
+  ...
+# Subtest: fallback readiness failure leaves exact R9 stopped and locked
+ok 11 - fallback readiness failure leaves exact R9 stopped and locked
+  ---
+  duration_ms: 7.491526
+  type: 'test'
+  ...
+# Subtest: foreign state, current, completion and coordinator bytes are never overwritten
+ok 12 - foreign state, current, completion and coordinator bytes are never overwritten
+  ---
+  duration_ms: 32.265493
+  type: 'test'
+  ...
+# Subtest: failed controller stop never claims restored state or unlocks
+ok 13 - failed controller stop never claims restored state or unlocks
+  ---
+  duration_ms: 3.928769
+  type: 'test'
+  ...
+# Subtest: state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+ok 14 - state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+  ---
+  duration_ms: 43.698183
+  type: 'test'
+  ...
+# Subtest: failure to record durable rollback leaves old release stopped and locked
+ok 15 - failure to record durable rollback leaves old release stopped and locked
+  ---
+  duration_ms: 7.503824
+  type: 'test'
+  ...
+# Subtest: ExecStopPost only quiesces same invocation seq13; malformed protected lock requires matching journal
+ok 16 - ExecStopPost only quiesces same invocation seq13; malformed protected lock requires matching journal
+  ---
+  duration_ms: 0.4641
+  type: 'test'
+  ...
+# Subtest: failure serializer exposes only fixed codes, stages and reasons
+ok 17 - failure serializer exposes only fixed codes, stages and reasons
+  ---
+  duration_ms: 0.175646
+  type: 'test'
+  ...
+# Subtest: real candidate signature and payload tampering are refused before any service effect
+ok 18 - real candidate signature and payload tampering are refused before any service effect
+  ---
+  duration_ms: 8.496773
+  type: 'test'
+  ...
+# Subtest: second guard durability failure reconstructs activation gate first and stops our trial
+ok 19 - second guard durability failure reconstructs activation gate first and stops our trial
+  ---
+  duration_ms: 5.607793
+  type: 'test'
+  ...
+# Subtest: protected configuration drift before stop aborts without overwriting or stopping healthy R9
+ok 20 - protected configuration drift before stop aborts without overwriting or stopping healthy R9
+  ---
+  duration_ms: 2.977023
+  type: 'test'
+  ...
+# Subtest: historical R8 completion requires matching successful protected R9 provenance
+ok 21 - historical R8 completion requires matching successful protected R9 provenance
+  ---
+  duration_ms: 20.653219
+  type: 'test'
+  ...
+# Subtest: exact six-adapter profile/upload bytes, versions and bounded review delta are required
+ok 22 - exact six-adapter profile/upload bytes, versions and bounded review delta are required
+  ---
+  duration_ms: 2.766395
+  type: 'test'
+  ...
+# Subtest: Admin/UI complete file prefixes including nested dependencies and modes remain byte-identical to R9
+ok 23 - Admin/UI complete file prefixes including nested dependencies and modes remain byte-identical to R9
+  ---
+  duration_ms: 2.999787
+  type: 'test'
+  ...
+# Subtest: upload unit and any existing plan block before staging instead of being overwritten
+ok 24 - upload unit and any existing plan block before staging instead of being overwritten
+  ---
+  duration_ms: 7.558347
+  type: 'test'
+  ...
+# Subtest: private complete enrollment plan is durable and exact before any DB mutation
+ok 25 - private complete enrollment plan is durable and exact before any DB mutation
+  ---
+  duration_ms: 6.59928
+  type: 'test'
+  ...
+# Subtest: failed private plan persistence performs no DB writes
+ok 26 - failed private plan persistence performs no DB writes
+  ---
+  duration_ms: 6.785981
+  type: 'test'
+  ...
+# Subtest: partial enrollment failure rolls back before restoring the source release
+ok 27 - partial enrollment failure rolls back before restoring the source release
+  ---
+  duration_ms: 6.877469
+  type: 'test'
+  ...
+# Subtest: changed enrollment or failed rollback retains current trial stopped and gated
+ok 28 - changed enrollment or failed rollback retains current trial stopped and gated
+  ---
+  duration_ms: 7.37858
+  type: 'test'
+  ...
+# Subtest: plan replacement, unsafe mode and symlink cannot authorize rollback or delete foreign bytes
+ok 29 - plan replacement, unsafe mode and symlink cannot authorize rollback or delete foreign bytes
+  ---
+  duration_ms: 19.968781
+  type: 'test'
+  ...
+# Subtest: asset-upload failure stops the upload service and restores exact old unit before R9 restart
+ok 30 - asset-upload failure stops the upload service and restores exact old unit before R9 restart
+  ---
+  duration_ms: 6.132655
+  type: 'test'
+  ...
+# Subtest: upload unit drift on trial is never overwritten by rollback
+ok 31 - upload unit drift on trial is never overwritten by rollback
+  ---
+  duration_ms: 5.971722
+  type: 'test'
+  ...
+# Subtest: unit write before/after rename and daemon-reload faults restore exact old unit before R9 restart
+ok 32 - unit write before/after rename and daemon-reload faults restore exact old unit before R9 restart
+  ---
+  duration_ms: 18.385867
+  type: 'test'
+  ...
+# Subtest: runtime processes outside the controller service prevent enrollment mutation
+ok 33 - runtime processes outside the controller service prevent enrollment mutation
+  ---
+  duration_ms: 5.014969
+  type: 'test'
+  ...
+# Subtest: actual stopped-runtime scanner rejects any runtime UID slot and unavailable/oversized status
+ok 34 - actual stopped-runtime scanner rejects any runtime UID slot and unavailable/oversized status
+  ---
+  duration_ms: 3.372144
+  type: 'test'
+  ...
+# Subtest: fresh passive adapter statuses must match both licensed or both unlicensed energy paths
+ok 35 - fresh passive adapter statuses must match both licensed or both unlicensed energy paths
+  ---
+  duration_ms: 0.527736
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 459.146844

@@ -1,0 +1,180 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.ocpp21@0.4.0 test
+> npm run test:core && npm run test:package && npm run test:unit && npm run test:integration
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.ocpp21@0.4.0 test:core
+> node --test test/core.test.js
+
+✔ station identities are deterministic and safe for ioBroker object IDs (1.351363ms)
+✔ heartbeat timeout applies a bounded safety factor (0.152861ms)
+✔ socket, OCPP activity and heartbeat health remain independent (0.745096ms)
+✔ OCPP command timeout uses seconds and remains bounded (0.114422ms)
+✔ TriggerMessage payloads are protocol-correct (0.286002ms)
+✔ compact measurement names replace protocol-direction names and vendor typos (0.455418ms)
+✔ zero and sub-minimum charging limits cannot accidentally interrupt charging (0.561999ms)
+✔ safe-zero rules only match states with no energy transfer (0.432904ms)
+✔ EOS freshness requires canonical active-import power or a safe zero (0.126251ms)
+✔ cached telemetry is republished per datapoint and never by unrelated freshness (0.554388ms)
+✔ republish and connector limits rotate fairly instead of starving later entries (0.52335ms)
+✔ Device Model values are parsed strictly (0.183297ms)
+✔ meter values stay fresh, aggregate phases across messages and mirror Wh to kWh (3.444524ms)
+✔ empty or malformed MeterValues do not falsely mark telemetry as fresh (0.129736ms)
+✔ current or reactive power cannot falsely mark EOS active-import power as fresh (0.281235ms)
+✔ OCPP SampledValue defaults are mapped to energyWh and energyKWh in all versions (0.402619ms)
+✔ explicit power and current measurands infer the correct unit when the station omits it (0.657663ms)
+✔ phase current is the limiting phase value while phase power is summed (0.077898ms)
+✔ connector detail folders can be disabled without losing station measurements (0.169787ms)
+✔ schema fallback responses fail closed instead of reporting unsupported work as accepted (10.597422ms)
+✔ all supported protocol versions register critical telemetry handlers and a catch-all (2.109408ms)
+✔ OCPP acknowledgements are returned before datapoint processing runs (0.937927ms)
+✔ OCPP 1.6 keeps concurrent transactions mapped to their original connector (1.079642ms)
+✔ status side effects run in order and are awaited inside the deferred task (7.812134ms)
+✔ NotifyEVChargingNeeds maps DC SoC into the compact vehicle and measurement tree (1.025519ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 108.962783
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.ocpp21@0.4.0 test:package
+> mocha test/package.js --exit
+
+
+
+  Validate the package files
+    Ensure they are readable
+      package.json
+        ✔ exists
+        ✔ contains valid JSON
+        ✔ is an object
+      io-package.json
+        ✔ exists
+        ✔ contains valid JSON
+        ✔ is an object
+    Check contents of package.json
+      ✔ The property "name" exists
+      ✔ The property "version" exists
+      ✔ The property "description" exists
+      ✔ The property "author" exists
+      ✔ The property "license" exists
+      ✔ The property "repository" exists
+      ✔ The property "repository.type" exists
+      ✔ The package name is correct
+      ✔ property main is defined for non onlyWWW adapters
+      ✔ The repository type is "git"
+      ✔ npm is not listed as a dependency
+      ✔ iobroker.js-controller is not listed as a dependency
+    Check contents of io-package.json
+      ✔ The property "common.name" exists
+      ✔ The property "common.titleLang" exists
+      ✔ The property "common.version" exists
+      ✔ The property "common.news" exists
+      ✔ The property "common.desc" exists
+      ✔ The property "common.icon" exists
+      ✔ The property "common.extIcon" exists
+      ✔ The property "common.type" exists
+      ✔ The property "common.authors" exists
+      ✔ The property "native" exists
+      ✔ The title does not contain "adapter" or "iobroker"
+      ✔ titleLang is an object to support multiple languages
+      ✔ titleLang does not contain "adapter" or "iobroker"
+      ✔ The description is an object to support multiple languages
+      ✔ common.authors is an array that is not empty
+      ✔ common.news is an object that contains maximum 20 entries
+      ✔ if common.licenseInformation exists, it is an object with required properties
+      ✔ common.license should not exist together with common.licenseInformation
+      ✔ common.tier must be 1, 2 or 3
+      ✔ The adapter uses a supported admin UI
+    Compare contents of package.json and io-package.json
+      ✔ The name matches
+      ✔ The version matches
+      ✔ The license matches
+    Validate JSON files
+      Base directory JSON files
+        ✔ package.json contains valid JSON
+        ✔ io-package.json contains valid JSON
+      admin/*.json files
+        ✔ admin/jsonConfig.json contains valid JSON
+
+  Check additional files
+    ✔ README.md exists
+    ✔ LICENSE exists or is present in the README.md
+
+
+  46 passing (17ms)
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.ocpp21@0.4.0 test:unit
+> node --test test/license.test.cjs test/commissioning.test.cjs
+
+✔ new instance and actual admin form expose the same disabled-by-default enrollment gate (2.462531ms)
+✔ new inactive commissioning starts healthy waiting process without listener, commands, or fake connection (9.546325ms)
+✔ missing manifest reports enrollment, retries at most every 30s, then resumes once (2.388328ms)
+✔ unsafe/incomplete enrollment is rejected, not mislabeled absent: EOS_OCPP_PROFILE_INVALID (1.508029ms)
+✔ unsafe/incomplete enrollment is rejected, not mislabeled absent: EOS_OCPP_PROFILE_DIRECTORY_UNSAFE (1.360295ms)
+✔ unsafe/incomplete enrollment is rejected, not mislabeled absent: EOS_OCPP_PROFILE_FILE_UNSAFE (1.276078ms)
+✔ unsafe/incomplete enrollment is rejected, not mislabeled absent: EOS_OCPP_PROFILE_INCOMPLETE (1.316069ms)
+✔ unsafe/incomplete enrollment is rejected, not mislabeled absent: EOS_OCPP_IDENTITY_MAP_INVALID (1.450752ms)
+✔ unknown startup exception never leaks paths, material or arbitrary error codes (1.937538ms)
+✔ existing absent flag preserves profile-required startup; malformed flags deny it (10.639486ms)
+✔ license activation, loss and renewal preserve sessions and stop new commands (1.479786ms)
+✔ invalid physical inventory and all disabled protocols fail closed (1.974774ms)
+✔ unload while waiting clears the scheduler and cannot restart afterwards (1.027923ms)
+✔ unload during listener startup closes it and never subscribes or starts watchdog (5.786944ms)
+✔ unload during initial-status-write waits for cancellation and cannot resurrect startup (1.568941ms)
+✔ unload during persisted-health-reset waits for cancellation and cannot resurrect startup (1.330881ms)
+✔ unload during license-start waits for cancellation and cannot resurrect startup (1.281937ms)
+✔ unload orders final false after dispatched connection write and discards queued stale writes (8.147881ms)
+✔ physical inventory is strict, complete in count, and never assumes one connector (1.503561ms)
+✔ startup fails closed without opening an OCPP listener (4.572249ms)
+✔ last outbound boundary denies missing/stale lease and unknown topology, preserving telemetry (2.204751ms)
+✔ ocpp1.6: lease loss blocks new authorization but heartbeat and telemetry acknowledgement remain (3.510845ms)
+✔ ocpp2.0.1: lease loss blocks new authorization but heartbeat and telemetry acknowledgement remain (3.433197ms)
+✔ ocpp2.1: lease loss blocks new authorization but heartbeat and telemetry acknowledgement remain (5.903851ms)
+✔ OCPP starts once after central activation and does not queue denied commands for reactivation (1.938949ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 134.316323
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.ocpp21@0.4.0 test:integration
+> node --test test/secure-transport.test.js
+
+✔ transport profile denies absent settings, plaintext flags, invalid and duplicate mappings (1.865309ms)
+▶ actual TLS1.3 OCPP upgrades require trusted mTLS and the enrolled DNS SAN
+  ✔ absent manifest waits; malformed or incomplete enrollment is rejected (1.516292ms)
+  ✔ a missing descendant does not hide an unsafe parent or symlink (0.468197ms)
+  ✔ mutable and symlink profile files are rejected (0.516981ms)
+  ✔ valid enrolled station exchanges an actual OCPP frame (23.378794ms)
+  ✔ missing client certificate (4.965393ms)
+  ✔ untrusted issuer (3.884069ms)
+  ✔ wrong SAN (5.565049ms)
+  ✔ CN-only certificate (4.481302ms)
+  ✔ other enrolled station identifier (4.137141ms)
+  ✔ unenrolled station (3.886873ms)
+  ✔ TLS1.2 downgrade (2.199264ms)
+  ✔ ambiguous URL/query (3.733962ms)
+  ✔ plaintext HTTP cannot reach the OCPP endpoint (2.020453ms)
+✔ actual TLS1.3 OCPP upgrades require trusted mTLS and the enrolled DNS SAN (161.434628ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 399.970307
+

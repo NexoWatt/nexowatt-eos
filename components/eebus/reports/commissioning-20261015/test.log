@@ -1,0 +1,174 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test
+> npm run build && npm run test:config && npm run test:cls-control && npm run test:nexowatt-bridge && npm run test:implementation-result-order && npm run test:package && npm run test:security && npm run test:license
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 build
+> tsc -p tsconfig.json
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test:config
+> node test/config.js
+
+Config migration tests passed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test:cls-control
+> node test/cls-control-parser.js
+
+CLS control parser tests passed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test:nexowatt-bridge
+> node test/nexowatt-bridge.js
+
+NexoWatt direct bridge tests passed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test:implementation-result-order
+> node test/implementation-result-order.js
+
+Final SPINE implementation result ordering tests passed.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test:package
+> mocha test/package.js --exit
+
+
+
+  Validate the package files
+    Ensure they are readable
+      package.json
+        ✔ exists
+        ✔ contains valid JSON
+        ✔ is an object
+      io-package.json
+        ✔ exists
+        ✔ contains valid JSON
+        ✔ is an object
+    Check contents of package.json
+      ✔ The property "name" exists
+      ✔ The property "version" exists
+      ✔ The property "description" exists
+      ✔ The property "author" exists
+      ✔ The property "license" exists
+      ✔ The property "repository" exists
+      ✔ The property "repository.type" exists
+      ✔ The package name is correct
+      ✔ property main is defined for non onlyWWW adapters
+      ✔ The repository type is "git"
+      ✔ npm is not listed as a dependency
+      ✔ iobroker.js-controller is not listed as a dependency
+    Check contents of io-package.json
+      ✔ The property "common.name" exists
+      ✔ The property "common.titleLang" exists
+      ✔ The property "common.version" exists
+      ✔ The property "common.news" exists
+      ✔ The property "common.desc" exists
+      ✔ The property "common.icon" exists
+      ✔ The property "common.extIcon" exists
+      ✔ The property "common.type" exists
+      ✔ The property "common.authors" exists
+      ✔ The property "native" exists
+      ✔ The title does not contain "adapter" or "iobroker"
+      ✔ titleLang is an object to support multiple languages
+      ✔ titleLang does not contain "adapter" or "iobroker"
+      ✔ The description is an object to support multiple languages
+      ✔ common.authors is an array that is not empty
+      ✔ common.news is an object that contains maximum 20 entries
+      ✔ if common.licenseInformation exists, it is an object with required properties
+      ✔ common.license should not exist together with common.licenseInformation
+      ✔ common.tier must be 1, 2 or 3
+      ✔ The adapter uses a supported admin UI
+    Compare contents of package.json and io-package.json
+      ✔ The name matches
+      ✔ The version matches
+      ✔ The license matches
+    Validate JSON files
+      Base directory JSON files
+        ✔ package.json contains valid JSON
+        ✔ io-package.json contains valid JSON
+      admin/*.json files
+        ✔ admin/jsonConfig.json contains valid JSON
+      admin/i18n/**/*.json files
+        ✔ admin/i18n/de/translations.json contains valid JSON
+        ✔ admin/i18n/de.json contains valid JSON
+        ✔ admin/i18n/en/translations.json contains valid JSON
+        ✔ admin/i18n/en.json contains valid JSON
+
+  Check additional files
+    ✔ README.md exists
+    ✔ LICENSE exists or is present in the README.md
+
+
+  50 passing (16ms)
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test:security
+> node --test test/ship-security.test.cjs test/ship-resource.integration.test.cjs
+
+✔ unpaired session has an enforced total pairing deadline that frees its slot (4.301236ms)
+✔ session limit rejects the 65th socket and stop force-closes every retained session (4.076577ms)
+✔ repeated discovery cannot create parallel outbound handshakes and stop resolves pending connect (2.263178ms)
+✔ late close from a dropped socket cannot delete a replacement session for the same peer (0.640978ms)
+✔ actual TLS/WebSocket malformed frame during deferred onNode is contained and never creates a late session (36.297718ms)
+✔ data before completed handshake never reaches message/CLS handlers (2.916345ms)
+✔ unsolicited PIN state and input cannot skip trusted hello and protocol selection (0.811997ms)
+✔ protocol selection is rejected before mutual hello (0.255706ms)
+✔ complete trusted hello and protocol selection permit data (0.600727ms)
+✔ trust revocation blocks the next data frame and outbound reuse (0.982334ms)
+✔ local revoke/disconnect immediately removes outbound permission (0.453475ms)
+✔ second peer session cannot replace the existing one (0.838947ms)
+✔ peer certificate is mandatory before an incoming session is registered (0.762041ms)
+✔ frame queue is bounded during asynchronous trust checks (5.876816ms)
+✔ TLS public key identity matches OpenSSL SKI and cannot be replaced by discovery values (15.393009ms)
+✔ untrusted control and bare JSON cannot tunnel a valid SPINE command into the CLS parser (1.579145ms)
+✔ trusted-but-unfinished control and JSON frames cannot tunnel a CLS command either (0.181394ms)
+✔ even a completed trusted session accepts SPINE only through the data channel (0.432093ms)
+✔ PIN requests cannot disclose configured PIN before trusted completed protocol selection (0.236928ms)
+✔ legitimate PIN request after trusted hello and protocol selection retains pairing flow (1.495749ms)
+✔ revoked session cannot request PIN after previously completed protocol selection (0.290198ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 131.669299
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.eebus@0.3.0 test:license
+> node --test test/license.test.cjs test/commissioning.test.cjs
+
+✔ defined flag false stays passive without changing config or identity (4.503492ms)
+✔ defined flag "false" stays passive without changing config or identity (0.988102ms)
+✔ defined flag "true" stays passive without changing config or identity (0.895232ms)
+✔ defined flag 0 stays passive without changing config or identity (0.77442ms)
+✔ defined flag 1 stays passive without changing config or identity (0.925618ms)
+✔ defined flag null stays passive without changing config or identity (1.686717ms)
+✔ defined flag {} stays passive without changing config or identity (0.707299ms)
+✔ legacy missing flag / explicit true starts exactly once: {} (1.777354ms)
+✔ legacy missing flag / explicit true starts exactly once: {"eosCommissioningEnabled":true} (1.171739ms)
+✔ unload during license startup cannot create a later timer or identity (1.334495ms)
+✔ unload during identity generation waits for work and never starts a runtime afterward (1.165911ms)
+✔ unload during migration read prevents late instance configuration rewrite (0.901762ms)
+✔ pending runtime start rejects messages and state writes until ready, then closes again before unload (1.177418ms)
+✔ EEBUS runtime denies startup, user writes and automatic connections without permission (1.891617ms)
+✔ EEBUS rechecks permission after async trust lookup, immediately before SPINE actuation (1.031137ms)
+✔ EEBUS bridge denies fresh and synthesized control at final send but retains handshake (1.184268ms)
+✔ EEBUS lease loss holds established limits without synthesized release or shutdown (0.461066ms)
+✔ EEBUS suspension discards old automatic transitions while retaining equipment state (0.240393ms)
+✔ EEBUS starts exactly once after later central activation, without adapter restart (2.856855ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 103.368385

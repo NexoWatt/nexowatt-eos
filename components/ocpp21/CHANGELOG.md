@@ -1,5 +1,14 @@
 # Changelog
 
+## EOS commissioning (2026-10-15)
+
+- Keep new unconfigured instances alive with explicit enrollment/license/error states, real station-only connection status and no listener or commands before commissioning.
+- Add a disabled-by-default Admin commissioning switch; preserve historical profile-required behavior for existing instances where the field is absent.
+- Distinguish missing enrollment from unsafe/incomplete profiles, validate ancestors from root down, bound retries to 30 seconds and log fixed codes only on transitions.
+- Preserve mandatory TLS 1.3, exact enrolled station certificate checks and central license-loss behavior; close a startup racing with shutdown.
+- Cancel all pending initialization stages on shutdown and serialize connection/status writes so delayed writes cannot revive startup or leave a stopped adapter marked connected; add four deterministic race regressions.
+- Correct obsolete plaintext endpoint instructions and add executable lifecycle and protected-file negative tests. Physical station/Pi acceptance remains open.
+
 ## EOS integration (2026-10-05)
 
 - Require an admitted EOS runtime and fresh Home/Pro energy entitlement from EOS Admin at startup and before new device control. Automatically start after central activation.

@@ -3,6 +3,8 @@ const utils = require('@iobroker/adapter-core');
 const { createLicenseGuard } = require('./packages/eos-license-client');
 const { parseChargePointInventory, assertStationScope, isTelemetryRequest } = require('./ocpp/license-scope');
 const { OcppRpcServer } = require('./ocpp/server');
+const { startupFailure } = require('./ocpp/secure-transport');
+const STARTUP_RECHECK_MS = 30000;
 const {
   sanitizeStationIdentity,
   deriveConnectionHealth,
@@ -42,6 +44,13 @@ class NexoWattOcppAdapter extends utils.Adapter {
     this.chargePointInventory = null;
     this._licenseStartupTimer = null;
     this._licenseStarting = false;
+    this._nextStartupAttempt = 0;
+    this._runtimeStartupPromise = null;
+    this._runtimeStatus = '';
+    this._runtimeStatusWriteFailed = false;
+    this._runtimeStateTail = Promise.resolve();
+    this._runtimeGeneration = 0;
+    this._readyPromise = null;
     this.runtimeIndex = new Map();
 
     // Runtime caches to avoid excessive object creation overhead
@@ -1646,14 +1655,23 @@ class NexoWattOcppAdapter extends utils.Adapter {
     }
   }
 
-  async onReady() {
+  onReady() {
+    if (this._shuttingDown) return Promise.resolve();
+    this._readyPromise = this._initializeRuntime();
+    return this._readyPromise;
+  }
+
+  async _initializeRuntime() {
+    await this._initRuntimeStatus();
+    if (this._shuttingDown) return;
     // Never leave persisted online/fresh flags true after an unclean restart.
     await this._resetPersistedHealth();
+    if (this._shuttingDown) return;
 
     try {
       this.chargePointInventory = parseChargePointInventory(this.config.chargePointInventory || []);
     } catch {
-      this.log.error('OCPP startup denied: invalid physical charge point inventory.');
+      await this._setRuntimeStatus('configuration_rejected', 'EOS_OCPP_INVENTORY_INVALID');
       return;
     }
     this.licenseGuard = createLicenseGuard(this, {
@@ -1666,25 +1684,110 @@ class NexoWattOcppAdapter extends utils.Adapter {
       },
     });
     await this.licenseGuard.start();
-    this._licenseStartupTimer = setInterval(() => { void this._startLicensedRuntime(); }, 1000);
+    if (this._shuttingDown) return;
+    this._licenseStartupTimer = setInterval(() => {
+      void this._startLicensedRuntime().catch(() => {
+        if (!this._runtimeStatusWriteFailed) this.log.error('EOS_OCPP_STATUS_UNAVAILABLE');
+        this._runtimeStatusWriteFailed = true;
+      });
+    }, 5000);
     this._licenseStartupTimer.unref?.();
     await this._startLicensedRuntime();
   }
 
-  async _startLicensedRuntime() {
-    if (this._shuttingDown || this.server || this._licenseStarting || !this.licenseGuard?.isAllowed()) return;
-    this._licenseStarting = true;
-    try {
-      await this._startOcppRuntime();
-      clearInterval(this._licenseStartupTimer);
-      this._licenseStartupTimer = null;
-    } catch {
-      if (this.server) await this.server.close().catch(() => undefined);
-      this.server = null;
-      this.log.error('OCPP startup unavailable; waiting for current EOS permission and valid runtime configuration.');
-    } finally {
-      this._licenseStarting = false;
+  async _initRuntimeStatus() {
+    await this.setObjectNotExistsAsync('info', { type: 'channel', common: { name: 'Adapter runtime' }, native: {} });
+    for (const [id, type, role, def] of [['connection', 'boolean', 'indicator.connected', false],
+      ['runtimeState', 'string', 'text', 'starting'], ['runtimeReason', 'string', 'text', '']]) {
+      await this.setObjectNotExistsAsync(`info.${id}`, { type: 'state', common: {
+        name: id, type, role, read: true, write: false, def,
+      }, native: {} });
     }
+    await this._queueRuntimeState(() => this.setStateAsync('info.connection', { val: false, ack: true }));
+    await this._setRuntimeStatus('starting', '');
+  }
+
+  _queueRuntimeState(action, allowStopped = false) {
+    const generation = this._runtimeGeneration;
+    const run = () => {
+      if (generation !== this._runtimeGeneration || this._shuttingDown && !allowStopped) return;
+      return action();
+    };
+    const pending = this._runtimeStateTail.then(run, run);
+    // Preserve ordering after failures without swallowing the caller's rejection.
+    this._runtimeStateTail = pending.catch(() => undefined);
+    return pending;
+  }
+
+  _setRuntimeStatus(state, reason) {
+    return this._queueRuntimeState(async () => {
+      const signature = `${state}:${reason}`;
+      if (signature === this._runtimeStatus) return;
+      await this.setStateAsync('info.runtimeReason', { val: reason, ack: true });
+      await this.setStateAsync('info.runtimeState', { val: state, ack: true });
+      this._runtimeStatus = signature;
+      this._runtimeStatusWriteFailed = false;
+      // Fixed codes only, and only on a transition (no repeating enrollment errors).
+      if (reason) this.log[state === 'configuration_rejected' ? 'error' : 'info'](`OCPP ${state}: ${reason}`);
+    }, state === 'stopped');
+  }
+
+  _updateAdapterConnection() {
+    return this._queueRuntimeState(async () => {
+      const connected = [...this.runtimeIndex.values()].some(entry => entry.socketConnected && entry.client);
+      await this.setStateChangedAsync('info.connection', { val: connected, ack: true });
+    });
+  }
+
+  async _startLicensedRuntime() {
+    if (this._shuttingDown || this._licenseStarting) return;
+    if (this.server) {
+      const allowed = this.licenseGuard?.isAllowed();
+      await this._setRuntimeStatus(allowed ? 'listening' : 'license_blocked', allowed ? '' : 'EOS_LICENSE_REQUIRED');
+      return;
+    }
+    if (!this.licenseGuard?.isAllowed()) {
+      await this._setRuntimeStatus('awaiting_license', 'EOS_LICENSE_REQUIRED');
+      return;
+    }
+    // New EOS installations set false explicitly. An absent flag preserves the
+    // historical behavior of already provisioned instances; TLS remains mandatory.
+    if (this.config.eosCommissioningEnabled === false) {
+      await this._setRuntimeStatus('awaiting_transport_enrollment', 'EOS_OCPP_COMMISSIONING_DISABLED');
+      return;
+    }
+    if (this.config.eosCommissioningEnabled !== undefined && this.config.eosCommissioningEnabled !== true) {
+      await this._setRuntimeStatus('configuration_rejected', 'EOS_OCPP_COMMISSIONING_INVALID');
+      return;
+    }
+    if (Date.now() < this._nextStartupAttempt) return;
+    this._licenseStarting = true;
+    // Unload waits for the complete attempt, including failure cleanup, so it
+    // cannot race a second close against a listener still being initialized.
+    const attempt = (async () => {
+      try {
+        await this._startOcppRuntime();
+        if (!this._shuttingDown) {
+          const allowed = this.licenseGuard.isAllowed();
+          await this._setRuntimeStatus(allowed ? 'listening' : 'license_blocked', allowed ? '' : 'EOS_LICENSE_REQUIRED');
+        }
+      } catch (error) {
+        clearInterval(this._watchdogTimer);
+        this._watchdogTimer = null;
+        if (this.server) await this.server.close().catch(() => undefined);
+        this.server = null;
+        this._nextStartupAttempt = Date.now() + STARTUP_RECHECK_MS;
+        if (!this._shuttingDown) {
+          await this._queueRuntimeState(() => this.setStateAsync('info.connection', { val: false, ack: true }));
+          const failure = startupFailure(error);
+          await this._setRuntimeStatus(failure.state, failure.reason);
+        }
+      } finally {
+        this._licenseStarting = false;
+      }
+    })();
+    this._runtimeStartupPromise = attempt;
+    try { await attempt; } finally { this._runtimeStartupPromise = null; }
   }
 
   async _startOcppRuntime() {
@@ -1710,6 +1813,7 @@ class NexoWattOcppAdapter extends utils.Adapter {
           const entry = this.runtimeIndex.get(id);
           const socketConnected = meta.socketConnected !== undefined ? !!meta.socketConnected : !!online;
           if (entry) entry.socketConnected = socketConnected;
+          await this._updateAdapterConnection();
           await this._setStateFreshAsync(`${id}.info.connection`, socketConnected, true, 'status');
           await this._setStateFreshAsync(`${id}.info.socketConnected`, socketConnected, true, 'status');
           await this._setStateFreshAsync(`${id}.health.online`, !!online && socketConnected, true, 'health');
@@ -1853,11 +1957,12 @@ class NexoWattOcppAdapter extends utils.Adapter {
       .concat(ctx.config.enable16 ? ['ocpp1.6'] : [])
       .concat(ctx.config.enable201 ? ['ocpp2.0.1'] : [])
       .concat(ctx.config.enable21 ? ['ocpp2.1'] : []);
-    if (protocols.length === 0) throw new Error('At least one OCPP protocol must be enabled');
+    if (protocols.length === 0) throw new Error('EOS_OCPP_PROTOCOLS_REQUIRED');
 
     this.licenseGuard.assertAllowed();
     this.server = new OcppRpcServer(ctx, { port: ctx.config.port, protocols, strictMode: false });
     await this.server.listen();
+    if (this._shuttingDown || !this.licenseGuard.isAllowed()) throw new Error('EOS_OCPP_START_ABORTED');
     this.subscribeStates('*');
 
     const healthCheckMs = Math.max(2, Number(this.config.healthCheckIntervalSec) || 5) * 1000;
@@ -1872,6 +1977,7 @@ class NexoWattOcppAdapter extends utils.Adapter {
       this.log.warn('OCPP command denied: EOS_LICENSE_REQUIRED');
       return;
     }
+    if (!this.server || this._licenseStarting) return;
     const rel = this._stripNs(id);
     const match = (patterns) => {
       for (const pattern of Array.isArray(patterns) ? patterns : [patterns]) {
@@ -2093,6 +2199,7 @@ class NexoWattOcppAdapter extends utils.Adapter {
 
   async onUnload(cb) {
     this._shuttingDown = true;
+    this._runtimeGeneration++;
     clearInterval(this._licenseStartupTimer);
     this._licenseStartupTimer = null;
     if (this._watchdogTimer) {
@@ -2101,6 +2208,10 @@ class NexoWattOcppAdapter extends utils.Adapter {
     }
     const identities = [...this.runtimeIndex.keys()];
     try {
+      // Initialization can still be awaiting object/state creation or a license
+      // response. It must finish/cancel before shutdown publishes final states.
+      await this._readyPromise?.catch(() => undefined);
+      await this._runtimeStartupPromise?.catch(() => undefined);
       await this.licenseGuard?.stop();
       if (this.server) await this.server.close();
       for (const identity of identities) {
@@ -2110,6 +2221,13 @@ class NexoWattOcppAdapter extends utils.Adapter {
       this.log.warn(`NexoWatt OCPP shutdown warning: ${e && e.message || e}`);
     } finally {
       this.server = null;
+      try {
+        // An already dispatched DB write cannot be cancelled by a Boolean
+        // guard. Serialize this final false behind it, while queued old-generation
+        // writes are discarded. The unload callback observes the final state.
+        await this._queueRuntimeState(() => this.setStateAsync('info.connection', { val: false, ack: true }), true);
+        await this._setRuntimeStatus('stopped', '');
+      } catch { /* Best effort when database is already unavailable. */ }
       cb();
     }
   }

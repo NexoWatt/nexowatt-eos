@@ -9,6 +9,21 @@ sind frische CLS-/Bedienbefehle erforderlich. [Prüfstand und Testanleitung](LIC
 
 Diese Anleitung beschreibt die Nutzung von `iobroker.eebus` ab Version `0.2.2` auf NexoWatt EOS.
 
+Neue EOS-Eigentestinstanzen werden mit `native.eosCommissioningEnabled:false`
+eingeschrieben. Sie laufen passiv und zeigen `info.commissioningState=waiting`:
+keine Konfigurationsmigration, private Identitätserzeugung oder Netzwerk-Runtime.
+Erst bei der späteren Anlagenanbindung im Adapter „EEBUS-Inbetriebnahme ausdrücklich
+aktivieren“ wählen und speichern; danach werden die separat konfigurierten
+Netzwerkfunktionen gestartet. Das schaltet keine Gerätesteuerung frei: Dry-Run,
+Trust, Lizenz und Geräteabnahme gelten weiter. `ready` bedeutet gestartete Runtime,
+nicht verbundenes/abgenommenes Gerät. Bestehende Instanzen ohne dieses Feld behalten
+ihr bisheriges Verhalten; definierte nicht-boolesche Werte bleiben passiv.
+
+Beim Stoppen wartet der Adapter auf laufende Startschritte und startet danach
+keine verspätete Runtime. Bereits laufende Identitätserzeugung darf abschließen,
+bevor der Unload-Callback bestätigt wird. Prüfbericht:
+[Commissioning 2026-10-15](COMMISSIONING_20261015_DE.md).
+
 > **Status:** Feldtest-Core. Discovery, lokale SHIP-Identität, Pairing-/Trust-Zustände und SPINE-Discovery sind implementiert. Das Lesen und insbesondere das Schreiben müssen mit jedem realen Gerät und dessen unterstützten EEBUS Use Cases geprüft werden, bevor die Funktion produktiv genutzt wird.
 
 ## 1. Lokale EEBUS-Identität von NexoWatt EOS

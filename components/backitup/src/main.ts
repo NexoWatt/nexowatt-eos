@@ -85,6 +85,10 @@ type DetectedFile = BackItUpStorageEngineResultFile & { date?: Date | string; st
 class NexoWattBackup extends Adapter {
     private licenseGuard: ReturnType<typeof createLicenseGuard>;
     private operationalReady = false;
+    private shuttingDown = false;
+    private readyTask?: Promise<void>;
+    private licensedWorkTask?: Promise<void>;
+    private runtimeStateWrites: Promise<void> = Promise.resolve();
     private filesystemInitialized = false;
     private eventPasswordsDecrypted = false;
     private initializingLicensedWork = false;
@@ -114,7 +118,10 @@ class NexoWattBackup extends Adapter {
         super({ ...options, name: 'nexowatt-backup' });
         this.licenseGuard = createLicenseGuard(this, {
             feature: 'energy',
-            onLost: () => this.stopLicensedWork(),
+            onLost: () => {
+                this.stopLicensedWork();
+                if (!this.shuttingDown) void this.publishRuntimeState('waiting_license').catch(() => this.log.warn('EOS_BACKUP_STATUS_WRITE_FAILED'));
+            },
         });
 
         this.on('stateChange', this.onStateChange.bind(this));
@@ -137,6 +144,17 @@ class NexoWattBackup extends Adapter {
         }
         this.dlServer = undefined;
         this.ulServer = undefined;
+    }
+
+    /** Ordered writes prevent a pending ready publication from overwriting stopped. */
+    private publishRuntimeState(value: 'waiting_license' | 'starting' | 'ready' | 'error' | 'stopped'): Promise<void> {
+        const pending = this.runtimeStateWrites.catch(() => undefined).then(async () => {
+            if (this.shuttingDown && value !== 'stopped') return;
+            if (value === 'ready' && (!this.operationalReady || !this.licenseGuard.isAllowed())) return;
+            await this.setStateAsync('info.runtimeState', { val: value, ack: true });
+        });
+        this.runtimeStateWrites = pending;
+        return pending;
     }
 
     /** Public only for the restore dispatcher; never grants offline adapter access. */
@@ -210,23 +228,51 @@ class NexoWattBackup extends Adapter {
         }
     }
 
-    private async synchronizeLicensedWork(): Promise<void> {
-        if (this.initializingLicensedWork || this.operationalReady || this.taskRunning || !this.licenseGuard.isAllowed()) return;
+    private synchronizeLicensedWork(): Promise<void> {
+        if (this.licensedWorkTask) return this.licensedWorkTask;
+        if (this.shuttingDown || this.initializingLicensedWork || this.operationalReady || this.taskRunning || !this.licenseGuard.isAllowed()) return Promise.resolve();
+        this.licensedWorkTask = this.initializeLicensedWork().finally(() => { this.licensedWorkTask = undefined; });
+        return this.licensedWorkTask;
+    }
+
+    private async initializeLicensedWork(): Promise<void> {
         this.initializingLicensedWork = true;
         try {
+            await this.publishRuntimeState('starting');
+            if (this.shuttingDown) return;
             await this.main();
-        } catch {
+            if (!this.shuttingDown) await this.publishRuntimeState('ready');
+        } catch (error) {
             this.stopLicensedWork();
-            this.log.error('EOS_BACKUP_START_DENIED');
+            if (this.shuttingDown) return;
+            await this.publishRuntimeState(this.licenseGuard.isAllowed() ? 'error' : 'waiting_license');
+            const code = error instanceof Error && error.message === 'EOS_BACKUP_SYSTEM_SECRET_INVALID'
+                ? 'EOS_BACKUP_SYSTEM_SECRET_INVALID' : 'EOS_BACKUP_START_DENIED';
+            this.log.error(code);
         } finally {
             this.initializingLicensedWork = false;
         }
     }
 
-    private async onReady(): Promise<void> {
-        this.licenseMonitor = setInterval(() => { void this.synchronizeLicensedWork(); }, 5000);
+    private onReady(): Promise<void> {
+        if (this.shuttingDown) return Promise.resolve();
+        this.readyTask = this.initializeReady();
+        return this.readyTask;
+    }
+
+    private async initializeReady(): Promise<void> {
+        await this.setObjectNotExistsAsync('info.runtimeState', {
+            type: 'state', common: { name: 'Backup runtime readiness', type: 'string', role: 'text', read: true, write: false,
+                states: { waiting_license: 'Waiting for license', starting: 'Starting', ready: 'Ready', error: 'Startup error', stopped: 'Stopped' } }, native: {},
+        });
+        if (this.shuttingDown) return;
+        await this.publishRuntimeState('waiting_license');
+        if (this.shuttingDown) return;
+        const allowed = await this.licenseGuard.start();
+        if (this.shuttingDown) return;
+        this.licenseMonitor = setInterval(() => { void this.synchronizeLicensedWork().catch(() => this.log.error('EOS_BACKUP_STATUS_WRITE_FAILED')); }, 5000);
         this.licenseMonitor.unref();
-        if (!(await this.licenseGuard.start())) {
+        if (!allowed) {
             this.log.warn('EOS_LICENSE_REQUIRED: waiting for Home or Pro activation in eos-admin');
             return;
         }
@@ -234,10 +280,15 @@ class NexoWattBackup extends Adapter {
     }
 
     // is called when adapter shuts down - callback has to be called under any circumstances!
-    private onUnload(callback: () => void): void {
+    private async onUnload(callback: () => void): Promise<void> {
+        this.shuttingDown = true;
+        this.operationalReady = false;
         clearInterval(this.licenseMonitor);
-        void this.licenseGuard.stop();
         try {
+            await this.readyTask?.catch(() => undefined);
+            await this.licensedWorkTask?.catch(() => undefined);
+            await this.licenseGuard.stop();
+            this.stopLicensedWork();
             this.dropBoxTokenRefresher?.destroy();
             this.log.info('cleaned everything up...');
             clearTimeout(this.timerOutput2);
@@ -273,8 +324,10 @@ class NexoWattBackup extends Adapter {
             }
         } catch (e) {
             console.log(`Cannot unload: ${e}`);
+        } finally {
+            try { await this.publishRuntimeState('stopped'); } catch { this.log.warn('EOS_BACKUP_STATUS_WRITE_FAILED'); }
+            callback();
         }
-        callback();
     }
 
     private async onMessage(obj: ioBroker.Message): Promise<void> {
@@ -427,7 +480,7 @@ class NexoWattBackup extends Adapter {
 
                         const fileName = obj.message.fileName.split('/').pop();
                         if (obj.message.type !== 'local') {
-                            const backupDir = join(tools.getIobDir(), 'backups');
+                            const backupDir = tools.getBackupDir();
                             const toSaveName = join(backupDir, fileName);
 
                             // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -537,7 +590,7 @@ class NexoWattBackup extends Adapter {
                                 {
                                     systemOS: systemInfo,
                                     dockerDB: dbInfo,
-                                    backupDir: join(tools.getIobDir(), 'backups'),
+                                    backupDir: tools.getBackupDir(),
                                 },
                                 obj.callback,
                             );
@@ -1637,10 +1690,10 @@ class NexoWattBackup extends Adapter {
 
     private readLogFile(): void {
         try {
-            const logName = join(tools.getIobDir(), 'backups', 'logs.txt').replace(/\\/g, '/');
-            if (existsSync(logName)) {
+            const logName = join(tools.getBackupDir(), 'logs.txt').replace(/\\/g, '/');
+            {
+                const text = tools.readPrivateLog(logName);
                 this.log.debug(`Printing logs of previous backup`);
-                const text = readFileSync(logName).toString();
                 const lines = text.split('\n');
                 lines.forEach((line, i) => (lines[i] = line.replace(/\r$|^\r/, '')));
                 lines.forEach(line => {
@@ -1659,118 +1712,23 @@ class NexoWattBackup extends Adapter {
                 unlinkSync(logName);
             }
         } catch (e) {
-            this.log.warn(`Cannot read log file: ${e}`);
+            if ((e as NodeJS.ErrnoException).code !== 'ENOENT') this.log.warn('EOS_BACKUP_LOG_UNSAFE');
         }
     }
 
-    private createBashScripts(): void {
-        const isWin = process.platform.startsWith('win');
-        if (!existsSync(bashDir)) {
-            mkdirSync(bashDir);
-            this.log.debug('NexoWatt EOS Backup data directory created');
-        }
+    /** Native EOS never emits privileged restore/stop launchers. */
+    private createRuntimeFiles(): void {
+        tools.ensureBackupDirectory();
         const logFile = join(bashDir, `${this.namespace}.log`);
-        if (!existsSync(logFile)) {
-            writeFileSync(logFile, '[]');
+        try {
+            writeFileSync(logFile, '[]', { flag: 'wx', mode: 0o600 });
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
         }
-        if (isWin) {
-            this.log.debug(`NexoWatt EOS Backup has recognized a ${process.platform} system`);
-
-            try {
-                writeFileSync(`${bashDir}/stopIOB.bat`, `start "" "${join(bashDir, 'external.bat')}"`);
-            } catch (e) {
-                this.log.error(`cannot create stopIOB.bat: ${e}Please run "iobroker fix"`);
-            }
-
-            try {
-                writeFileSync(
-                    `${bashDir}/external.bat`,
-                    `cd "${join(tools.getIobDir())}"\ncall iobroker stop\ntimeout /T 15\nif exist "${join(bashDir, '.redis.info')}" (\nredis-server --service-stop\n)\nif exist "${join(bashDir, '.redis.info')}" (\ncd "${join(__dirname, 'lib')}"\n) else (\ncd "${join(bashDir)}"\n)\nnode restore.js`,
-                );
-                chmodSync(`${bashDir}/external.bat`, 508);
-            } catch (e) {
-                this.log.error(`cannot create external.sh: ${e}Please run "iobroker fix"`);
-            }
-
-            try {
-                writeFileSync(
-                    `${bashDir}/startIOB.bat`,
-                    `if exist "${join(bashDir, '.redis.info')}" (\nredis-server --service-start\n)\ncd "${join(tools.getIobDir())}"\ncall iobroker host this\ncall iobroker start\nif exist "${join(bashDir, '.startAll')}" (\ncd "${join(tools.getIobDir(), 'node_modules/iobroker.js-controller')}"\nnode iobroker.js start all\n)`,
-                );
-            } catch (e) {
-                this.log.error(`cannot create startIOB.bat: ${e}Please run "iobroker fix"`);
-            }
-        } else if (existsSync('/opt/scripts/.docker_config/.thisisdocker')) {
-            // Docker Image Support >= 5.2.0
-            this.log.debug(`NexoWatt EOS Backup has recognized a Docker system`);
-
-            try {
-                writeFileSync(
-                    `${bashDir}/stopIOB.sh`,
-                    `#!/bin/bash\n# iobroker stop for restore\nbash ${bashDir}/external.sh`,
-                );
-                chmodSync(`${bashDir}/stopIOB.sh`, 508);
-            } catch (e) {
-                this.log.error(`cannot create stopIOB.sh: ${e}Please run "iobroker fix"`);
-            }
-
-            try {
-                writeFileSync(
-                    `${bashDir}/startIOB.sh`,
-                    `#!/bin/bash\n# iobroker start after restore\nif [ -f ${bashDir}/.startAll ]; then\ncd "${join(tools.getIobDir())}"\niobroker start all;\nfi\nsleep 6\nbash /opt/scripts/maintenance.sh off -y`,
-                );
-                chmodSync(`${bashDir}/startIOB.sh`, 508);
-            } catch (e) {
-                this.log.error(`cannot create startIOB.sh: ${e}Please run "iobroker fix"`);
-            }
-
-            try {
-                writeFileSync(
-                    `${bashDir}/external.sh`,
-                    `#!/bin/bash\n# restore\nbash /opt/scripts/maintenance.sh on -y -kbn\nsleep 3\nif [ -f ${bashDir}/.redis.info ]; then\ncd "${join(__dirname, 'lib')}"\nelse\ncd "${bashDir}"\nfi\nnode restore.js`,
-                );
-                chmodSync(`${bashDir}/external.sh`, 508);
-            } catch (e) {
-                this.log.error(`cannot create external.sh: ${e}Please run "iobroker fix"`);
-            }
-        } else {
-            this.log.debug(`NexoWatt EOS Backup has recognized a ${process.platform} system`);
-
-            try {
-                writeFileSync(
-                    `${bashDir}/stopIOB.sh`,
-                    `# iobroker stop for restore\nsudo systemd-run --uid=iobroker bash ${bashDir}/external.sh`,
-                );
-                chmodSync(`${bashDir}/stopIOB.sh`, 508);
-            } catch (e) {
-                this.log.error(`cannot create stopIOB.sh: ${e}Please run "iobroker fix"`);
-            }
-
-            try {
-                writeFileSync(
-                    `${bashDir}/startIOB.sh`,
-                    `# iobroker start after restore\nif [ -f ${bashDir}/.redis.info ]; then\nredis-cli shutdown nosave && echo "[DEBUG] [redis] Redis restart successfully"\nfi\nif [ -f ${bashDir}/.startAll ]; then\ncd "${join(tools.getIobDir())}"\nbash iobroker start all && echo "[EXIT] **** iobroker start upload all now... ****"\nfi\ncd "${join(tools.getIobDir())}"\nbash iobroker host this && echo "[DEBUG] [iobroker] Host this successfully"\nbash iobroker start && echo "[EXIT] **** iobroker restart now... ****"`,
-                );
-                chmodSync(`${bashDir}/startIOB.sh`, 508);
-            } catch (e) {
-                this.log.error(`cannot create startIOB.sh: ${e}Please run "iobroker fix"`);
-            }
-
-            try {
-                writeFileSync(
-                    `${bashDir}/external.sh`,
-                    `# restore\ncd "${join(tools.getIobDir())}"\nbash iobroker stop && echo "[DEBUG] [iobroker] iobroker stop successfully"\nif [ -f ${bashDir}/.redis.info ]; then\ncd "${join(__dirname, 'lib')}"\nelse\ncd "${bashDir}"\nfi\nnode restore.js`,
-                );
-                chmodSync(`${bashDir}/external.sh`, 508);
-            } catch (e) {
-                this.log.error(`cannot create external.sh: ${e}Please run "iobroker fix"`);
-            }
-        }
+        tools.readPrivateLog(logFile);
     }
-
-    // umount after restore
     private umount(): void {
-        const backupDir = join(tools.getIobDir(), 'backups');
+        const backupDir = tools.getBackupDir();
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const child_process = require('node:child_process') as typeof ChildProcessModule;
 
@@ -1828,9 +1786,9 @@ class NexoWattBackup extends Adapter {
 
     // Create Backupdir on first start
     private createBackupDir(): void {
-        if (!existsSync(join(tools.getIobDir(), 'backups'))) {
+        if (!existsSync(tools.getBackupDir())) {
             try {
-                mkdirSync(join(tools.getIobDir(), 'backups'));
+                mkdirSync(tools.getBackupDir());
                 this.log.debug('Created BackupDir');
             } catch (e) {
                 this.log.warn(
@@ -1849,9 +1807,9 @@ class NexoWattBackup extends Adapter {
 
     // delete temp dir after restore
     private delTmp(): void {
-        if (existsSync(join(tools.getIobDir(), 'backups/tmp'))) {
+        if (existsSync(join(tools.getBackupDir(), 'tmp'))) {
             try {
-                rmdirSync(join(tools.getIobDir(), 'backups/tmp'));
+                rmdirSync(join(tools.getBackupDir(), 'tmp'));
                 this.log.debug('delete tmp files');
             } catch (e) {
                 this.log.warn(
@@ -2300,7 +2258,7 @@ class NexoWattBackup extends Adapter {
             }
             next();
         });
-        downloadServer.use(express.static(join(tools.getIobDir(), 'backups')));
+        downloadServer.use(express.static(tools.getBackupDir()));
 
         let httpServer: HttpModule.Server | undefined;
         if (protocol === 'https:') {
@@ -2359,7 +2317,7 @@ class NexoWattBackup extends Adapter {
 
         const port = existsSync('/opt/scripts/.docker_config/.thisisdocker') ? 9082 : 0;
 
-        const backupDir = join(tools.getIobDir(), 'backups');
+        const backupDir = tools.getBackupDir();
 
         const uploadServer = express();
         uploadServer.use(cors());
@@ -2471,43 +2429,30 @@ class NexoWattBackup extends Adapter {
      *
      */
     private async main(): Promise<void> {
+        if (this.shuttingDown) return;
         this.licenseGuard.assertAllowed();
-        // Filesystem recovery cleanup runs once per process, never on a license renewal.
+        const obj = await this.getForeignObjectAsync('system.config');
+        if (this.shuttingDown) return;
+        this.licenseGuard.assertAllowed();
+        const systemSecret = tools.requireSystemSecret(obj?.native?.secret);
+        // Validate before filesystem work. Existing recovery journals are evidence,
+        // not instructions to execute mount/stop scripts from the runtime account.
         if (!this.filesystemInitialized) {
-            this.createBashScripts();
+            this.createRuntimeFiles();
             this.readLogFile();
-
-            if (!existsSync(join(tools.getIobDir(), 'backups'))) {
-                this.createBackupDir();
+            if (existsSync(`${bashDir}/.mount`) || existsSync(`${bashDir}/restore.json`)) {
+                this.log.warn('EOS_OPERATOR_RECOVERY_REQUIRED: retained recovery state was not executed or deleted.');
             }
-            if (existsSync(`${bashDir}/.redis.info`)) {
-                this.deleteHideFiles();
-            }
-            if (existsSync(join(tools.getIobDir(), 'backups/tmp'))) {
-                this.delTmp();
-            }
-            this.clearBashDir();
-
-            this.timerMain = setTimeout(() => {
-                if (existsSync(`${bashDir}/.mount`)) {
-                    this.umount();
-                }
-                if (this.config.startAllRestore && !existsSync(`${bashDir}/.startAll`)) {
-                    this.setStartAll();
-                }
-            }, 10000);
-
             this.filesystemInitialized = true;
         }
-
-        const obj = await this.getForeignObjectAsync('system.config');
-        this.licenseGuard.assertAllowed();
         if (obj?.common?.language) this.systemLang = obj.common.language;
-        await this.initConfig(obj?.native?.secret || 'Zgfr56gFe87jJOM');
+        await this.initConfig(systemSecret);
+        if (this.shuttingDown) return;
+        this.licenseGuard.assertAllowed();
+        await this.checkStates();
+        if (this.shuttingDown) return;
         this.licenseGuard.assertAllowed();
         this.operationalReady = true;
-        await this.checkStates();
-        this.assertLicensedOperation();
         if (this.config.hostType !== 'Slave') {
             this.createBackupSchedule();
             void this.nextBackup(true, null);

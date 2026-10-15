@@ -17,6 +17,18 @@
         "zh-cn": "Connection and protocols"
       },
       "items": {
+        "eosCommissioningEnabled": {
+          "type": "checkbox",
+          "label": {
+            "en": "Enable commissioned OCPP transport",
+            "de": "Eingerichteten OCPP-Transport aktivieren"
+          },
+          "default": false,
+          "help": {
+            "en": "Enable only after an administrator provisions the protected transport profile, server certificate, station CA and exact station identities. Until then the process remains running without a listener or control commands. TLS 1.3 and station certificates remain mandatory.",
+            "de": "Erst aktivieren, nachdem die Administration das geschützte Transportprofil, Serverzertifikat, Stations-CA und exakte Stationsidentitäten bereitgestellt hat. Bis dahin läuft der Prozess ohne Listener oder Steuerbefehle. TLS 1.3 und Stationszertifikate bleiben zwingend."
+          }
+        },
         "port": {
           "type": "number",
           "label": {
@@ -36,17 +48,17 @@
           "max": 65535,
           "default": 9220,
           "help": {
-            "en": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "de": "Ladestationen verbinden sich mit ws://EOS-IP:Port/Identity.",
-            "ru": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "pt": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "nl": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "fr": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "it": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "es": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "pl": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "uk": "Charging stations connect to ws://EOS-IP:port/identity.",
-            "zh-cn": "Charging stations connect to ws://EOS-IP:port/identity."
+            "en": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets the actual host and port; this legacy setting cannot override it.",
+            "de": "EOS nutzt wss://EOS-IP:Port/ocpp/Identity mit TLS 1.3 und Stationszertifikaten. Host und Port bestimmt das geschützte Transportprofil; dieses Altbestandsfeld überschreibt es nicht.",
+            "ru": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "pt": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "nl": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "fr": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "it": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "es": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "pl": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "uk": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port.",
+            "zh-cn": "EOS uses wss://EOS-IP:port/ocpp/identity with TLS 1.3 and station certificates. The protected transport profile sets host and port."
           }
         },
         "enable16": {

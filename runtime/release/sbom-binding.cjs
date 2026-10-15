@@ -125,13 +125,18 @@ function verifySbomBinding(payload, files, profile, release) {
             incoming.length !== 1 || incoming[0] !== parentEdges[0] || childEdges.length !== 1 || childEdges[0].dependsOn.length) reject('SBOM_EMBEDDED_PARENT');
     }
     const r9Assembly = 'authenticated-r8-tree-with-six-own-adapter-source-overlays';
+    const ownAssembly = 'authenticated-r9-tree-with-six-own-adapters-and-backup-state-transform';
+    const ownCandidate = release?.sequence === 13 || props['eos:sbom:assembly'] === ownAssembly;
     const newClientPresent = Object.entries(EMBEDDED).some(([relative, name]) => name === '@nexowatt/eos-license-client' &&
         !relative.startsWith('node_modules/iobroker.eos-admin/') && !relative.startsWith('node_modules/iobroker.nexowatt-ui/') && rows.has(`app/${relative}/package.json`));
     // The verified release sequence is authoritative. New actual client paths
     // are also a fail-closed trigger for standalone inventory checks; deleting
     // a self-declared SBOM marker cannot disable the R9 binding contract.
-    if (release?.sequence === 12 || newClientPresent || props['eos:sbom:assembly'] === r9Assembly) {
-        if (props['eos:sbom:assembly'] !== r9Assembly) reject('SBOM_DERIVATIVE_BINDING');
+    if (ownCandidate || release?.sequence === 12 || newClientPresent || props['eos:sbom:assembly'] === r9Assembly) {
+        if (props['eos:sbom:assembly'] !== (ownCandidate ? ownAssembly : r9Assembly) ||
+            ownCandidate && (release !== undefined && release.sequence !== 13 ||
+                props['eos:sbom:previous-release-id'] !== '97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000' ||
+                props['eos:sbom:execution-scope'] !== 'own-adapter-test')) reject('SBOM_DERIVATIVE_BINDING');
         const appRows = files.filter(row => row.path.startsWith('app/')).map(row => ({ path: row.path.slice(4), size: row.size, sha256: row.sha256, mode: row.mode }));
         const contentRows = rows => rows.map(({ path, size, sha256 }) => ({ path, size, sha256 }));
         const digest = rows => sha256(Buffer.from(JSON.stringify(rows)));

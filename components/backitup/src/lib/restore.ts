@@ -356,11 +356,11 @@ export function restore(
     if (adapter) {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const tools = require('./tools') as typeof ToolsModule;
-        const backupDir = join(tools.getIobDir(), 'backups').replace(/\\/g, '/');
+        const backupDir = tools.getBackupDir();
 
         if (storageType === 'local') {
             try {
-                chmodSync(backupDir, '0775');
+                chmodSync(backupDir, '0700');
                 log.debug(`set chmod for "${backupDir}" successfully`);
             } catch (err) {
                 log.debug(`cannot set chmod for "${backupDir}": ${err}`);

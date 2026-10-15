@@ -243,9 +243,17 @@ jobs:
             components/admin/test/eos-branding-assets.test.cjs \
             tests/system/admin-startup-branding.test.cjs \
             tests/system/controller-pid-state.test.cjs \
+            tests/system/backup-state.test.cjs \
+            tests/system/own-adapter-upload.test.cjs \
+            tests/system/own-adapter-assets.test.cjs \
+            tests/system/own-adapter-sbom.test.cjs \
+            tests/system/update-own-adapters.test.cjs \
+            reports/integration/own-adapter-test-20261015/release/release-contract.test.cjs \
             tests/system/first-start-diagnostic.test.cjs \
             tests/integration/admin-browser-cache.test.cjs \
             tests/integration/branding.test.cjs \
+            tests/integration/own-adapter-enrollment.test.cjs \
+            tests/postgresql/own-adapter-product.test.cjs \
             tests/postgresql/store.test.cjs \
             tests/postgresql/controller-config-contract.test.cjs \
             tests/postgresql/store-channel-hardening.test.cjs \
@@ -502,7 +510,7 @@ jobs:
             npm --prefix "components/$component" ci --ignore-scripts --no-audit --no-fund
           done
       - name: Require identical clients and actual early management admission
-        run: node --test tests/integration/own-adapter-admission.test.cjs
+        run: node --test tests/integration/own-adapter-admission.test.cjs tests/integration/own-adapter-dependencies.test.cjs
       - name: Check actual root-owned UI TLS file protections in an isolated temporary fixture
         # Only this tiny filesystem test needs UID 0; no adapter, listener,
         # dependency installation or product-directory setup runs as root.
@@ -612,4 +620,74 @@ jobs:
           This job tests the current unsigned R9 application, authenticating its R8 baseline and binding the six current source overlays by content digest.
           Actual Admin/UI use root-owned EOS paths and real PostgreSQL 17.11 mTLS with Node 24.21.0. No product admission or license verifier is mocked.
           The release signer requires this successful exact-source/application evidence. Pi, actual systemd mount policy and physical adapter commissioning remain open.
+          SCOPE
+
+  native-own-adapters:
+    name: Six own adapters real processes licenses backup and restart
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout exact reviewed sources and immutable R9 input
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Use qualified Node release
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Prepare fresh explicit own-adapter laboratory
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$EUID" -ne 0 ]]
+          [[ ! -e /etc/nexowatt-eos && ! -L /etc/nexowatt-eos ]]
+          [[ ! -e /var/lib/nexowatt-eos && ! -L /var/lib/nexowatt-eos ]]
+          [[ ! -e /opt/nexowatt && ! -L /opt/nexowatt ]]
+          lab_root=$(mktemp -d "$RUNNER_TEMP/eos-own-adapters.XXXXXXXX")
+          echo "EOS_OWN_ADAPTERS_LAB_ROOT=$lab_root" >> "$GITHUB_ENV"
+          node --test tests/integration-own-adapters/*.test.cjs
+      - name: Build pinned PostgreSQL and locked laboratory dependencies
+        run: bash tests/integration-controller/prepare-native.sh "$EOS_OWN_ADAPTERS_LAB_ROOT"
+      - name: Prepare exact current six-adapter candidate from authenticated R9
+        run: |
+          set -euo pipefail
+          npm --prefix components/ui ci --ignore-scripts --no-audit --no-fund
+          node tests/integration-own-adapters/prepare-app.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" "$GITHUB_WORKSPACE/delivery/test-pi-0.2.0-test.3-r9"
+      - name: Prepare root-owned immutable app and original migration baseline
+        env:
+          EOS_DISPOSABLE_MANAGEMENT_LAB: '1'
+          EOS_DISPOSABLE_OWN_ADAPTERS_LAB: '1'
+        run: |
+          sudo --preserve-env=GITHUB_ACTIONS,EOS_DISPOSABLE_MANAGEMENT_LAB,EOS_DISPOSABLE_OWN_ADAPTERS_LAB "$(command -v node)" \
+            tests/integration-own-adapters/prepare-fixed-root.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" "$(id -u)" "$(id -g)"
+      - name: Require actual six-process startup central leases backup rollback and restart
+        run: |
+          set -euo pipefail
+          umask 077
+          node tests/integration-own-adapters/run-native.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" | tee "$EOS_OWN_ADAPTERS_LAB_ROOT/own-adapters-native.tap"
+      - name: Preserve only source-bound sanitized own-adapter evidence
+        if: always() && env.EOS_OWN_ADAPTERS_LAB_ROOT != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-own-adapters-native-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ env.EOS_OWN_ADAPTERS_LAB_ROOT }}/own-adapters-native.tap
+            ${{ env.EOS_OWN_ADAPTERS_LAB_ROOT }}/own-adapters-native-evidence.json
+            ${{ env.EOS_OWN_ADAPTERS_LAB_ROOT }}/own-adapters-native-prepared.json
+            ${{ env.EOS_OWN_ADAPTERS_LAB_ROOT }}/own-adapters-source-binding.json
+      - name: State actual qualification scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          This job qualifies an unsigned candidate built from authenticated R9 and exact current six-own-adapter source overlays.
+          Native x64 PostgreSQL 17.11 mTLS, immutable root-owned App, six actual adapter processes, central Home/Pro license responses, logical backup export, exact enrollment rollback and restart are tested without runtime mocks.
+          No real device or station is configured. Unconfigured processes do not mean connected plant devices. No Pi/ARM64, systemd mount-policy, full-system restore, timing, production or CRA acceptance is asserted.
+          Private database/configuration, backup archives, journals, passwords, UUID, certificate keys and issuer material are deliberately excluded from artifacts. Only successful exact-source evidence can satisfy a later release gate.
           SCOPE

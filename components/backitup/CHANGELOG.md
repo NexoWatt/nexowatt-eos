@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased (2026-10-15)
+
+- Nichtgeheimer read-only `info.runtimeState` unterscheidet Lizenzwarten, Start, echte Bereitschaft, Startfehler und Stopp; Prozess-alive allein ist kein Bereitschaftsnachweis. Asynchrone Start-/Statewrites werden vor Unload-Bestätigung abgeschlossen, ohne spätes Ready.
+- EOS-Admin-Abhängigkeit auf tatsächlichen Instanznamen `eos-admin` berichtigt.
+- Kein geteilter Fallback für das Systemgeheimnis; fehlende/fehlerhafte Werte verhindern Start vor Dateizugriffen.
+- Einheitliches privates Archivverzeichnis unter den bereits erlaubten Adapterdaten für Backup, Liste und Datenrestore.
+- Keine erzeugten privilegierten Shell-Launcher oder automatische Ausführung/Löschung alter Recoveryartefakte beim Start.
+- Archivschritt meldet Erfolg nur bei CLI-Exit 0 und vorhandenem, nichtleerem regulärem Archiv.
+- Vorhandene Archivziele einschließlich defekter Symlinks werden vor dem Kindprozess abgelehnt; kein Überschreiben oder Scheinerfolg bei Wiederholungen in derselben Sekunde.
+- Start-/Altlogs werden nur über begrenzte, private reguläre Ein-Link-Dateideskriptoren ohne Symlink-Follow gelesen; unsichere Logs werden nicht ausgespielt.
+- Positive/negative Start-, Pfad- und CLI-Ergebnistests ergänzt. Echter Systembackup-/Hostrestore-Nachweis bleibt offen.
+
 ## Unreleased (2026-10-05)
 
 - Zentrale EOS-Home-/Pro-Freigabe für Start, Zeitpläne, Backup-/Restore- und Dateiverwaltung; automatische Wiederaufnahme nach Aktivierung.

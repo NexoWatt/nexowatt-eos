@@ -1,0 +1,457 @@
+TAP version 13
+# Subtest: CLI result valid: only exit zero plus nonempty archive reports success
+ok 1 - CLI result valid: only exit zero plus nonempty archive reports success
+  ---
+  duration_ms: 118.552947
+  type: 'test'
+  ...
+# Subtest: CLI result failed: only exit zero plus nonempty archive reports success
+ok 2 - CLI result failed: only exit zero plus nonempty archive reports success
+  ---
+  duration_ms: 62.027605
+  type: 'test'
+  ...
+# Subtest: CLI result missing: only exit zero plus nonempty archive reports success
+ok 3 - CLI result missing: only exit zero plus nonempty archive reports success
+  ---
+  duration_ms: 57.430103
+  type: 'test'
+  ...
+# Subtest: CLI result empty: only exit zero plus nonempty archive reports success
+ok 4 - CLI result empty: only exit zero plus nonempty archive reports success
+  ---
+  duration_ms: 58.074423
+  type: 'test'
+  ...
+# Subtest: EOS instance depends on actual eos-admin, not absent upstream admin
+ok 5 - EOS instance depends on actual eos-admin, not absent upstream admin
+  ---
+  duration_ms: 1.196628
+  type: 'test'
+  ...
+# Subtest: existing regular archive rejected before CLI starts
+ok 6 - existing regular archive rejected before CLI starts
+  ---
+  duration_ms: 2.370331
+  type: 'test'
+  ...
+# Subtest: existing dangling-symlink archive rejected before CLI starts
+ok 7 - existing dangling-symlink archive rejected before CLI starts
+  ---
+  duration_ms: 1.536581
+  type: 'test'
+  ...
+# Subtest: NexoWatt EOS profile backup
+    # Subtest: creates a protected profile archive with a verifiable manifest and no vendor secret by default
+    ok 1 - creates a protected profile archive with a verifiable manifest and no vendor secret by default
+      ---
+      duration_ms: 54.88566
+      type: 'test'
+      ...
+    # Subtest: keeps a valid profile archive when only status-state publication fails
+    ok 2 - keeps a valid profile archive when only status-state publication fails
+      ---
+      duration_ms: 15.301497
+      type: 'test'
+      ...
+    1..2
+ok 8 - NexoWatt EOS profile backup
+  ---
+  duration_ms: 71.920917
+  type: 'suite'
+  ...
+# Subtest: host-specific secret required: missing/malformed values never use fallback
+ok 9 - host-specific secret required: missing/malformed values never use fallback
+  ---
+  duration_ms: 4.193676
+  type: 'test'
+  ...
+# Subtest: private archive directory stays inside existing writable data tree
+ok 10 - private archive directory stays inside existing writable data tree
+  ---
+  duration_ms: 3.186273
+  type: 'test'
+  ...
+# Subtest: archive directory rejects symlink and public parent without widening rights
+ok 11 - archive directory rejects symlink and public parent without widening rights
+  ---
+  duration_ms: 2.28329
+  type: 'test'
+  ...
+# Subtest: archive setup does not follow a substituted data-directory symlink
+ok 12 - archive setup does not follow a substituted data-directory symlink
+  ---
+  duration_ms: 2.603934
+  type: 'test'
+  ...
+# Subtest: invalid secret blocks actual startup before any local files or schedules
+ok 13 - invalid secret blocks actual startup before any local files or schedules
+  ---
+  duration_ms: 16.738688
+  type: 'test'
+  ...
+# Subtest: licensed startup makes writable archive directory, no privileged launcher, retains recovery evidence
+ok 14 - licensed startup makes writable archive directory, no privileged launcher, retains recovery evidence
+  ---
+  duration_ms: 7.253689
+  type: 'test'
+  ...
+# Subtest: all archive producers/readers share new path and no legacy launcher is emitted
+ok 15 - all archive producers/readers share new path and no legacy launcher is emitted
+  ---
+  duration_ms: 1.146362
+  type: 'test'
+  ...
+# Subtest: private log reader rejects symlinks, hardlinks, public files and oversized files
+ok 16 - private log reader rejects symlinks, hardlinks, public files and oversized files
+  ---
+  duration_ms: 2.419014
+  type: 'test'
+  ...
+# Subtest: existing runtime log symlink blocks startup without reading or overwriting target
+ok 17 - existing runtime log symlink blocks startup without reading or overwriting target
+  ---
+  duration_ms: 5.296862
+  type: 'test'
+  ...
+# Subtest: previous log symlink is retained and never replayed into logs or states
+ok 18 - previous log symlink is retained and never replayed into logs or states
+  ---
+  duration_ms: 3.636735
+  type: 'test'
+  ...
+# Subtest: runtime readiness is read-only and ready follows complete state initialization
+ok 19 - runtime readiness is read-only and ready follows complete state initialization
+  ---
+  duration_ms: 4.962657
+  type: 'test'
+  ...
+# Subtest: licensed startup failure publishes error, never ready or secret content
+ok 20 - licensed startup failure publishes error, never ready or secret content
+  ---
+  duration_ms: 2.666478
+  type: 'test'
+  ...
+# Subtest: license wait, activation and revocation publish truthful nonsecret readiness
+ok 21 - license wait, activation and revocation publish truthful nonsecret readiness
+  ---
+  duration_ms: 4.860643
+  type: 'test'
+  ...
+# Subtest: unload during guard waits and cannot publish late ready or create late schedules
+ok 22 - unload during guard waits and cannot publish late ready or create late schedules
+  ---
+  duration_ms: 3.982277
+  type: 'test'
+  ...
+# Subtest: unload during read waits and cannot publish late ready or create late schedules
+ok 23 - unload during read waits and cannot publish late ready or create late schedules
+  ---
+  duration_ms: 3.261468
+  type: 'test'
+  ...
+# Subtest: unload during checkStates waits and cannot publish late ready or create late schedules
+ok 24 - unload during checkStates waits and cannot publish late ready or create late schedules
+  ---
+  duration_ms: 8.540072
+  type: 'test'
+  ...
+# Subtest: pending ready state write completes before final stopped, never after unload callback
+ok 25 - pending ready state write completes before final stopped, never after unload callback
+  ---
+  duration_ms: 5.316522
+  type: 'test'
+  ...
+# Subtest: ignores a bucket or directory name entered as CLI path and falls back to influx
+ok 26 - ignores a bucket or directory name entered as CLI path and falls back to influx
+  ---
+  duration_ms: 1.821111
+  type: 'test'
+  ...
+# Subtest: accepts an absolute CLI path
+ok 27 - accepts an absolute CLI path
+  ---
+  duration_ms: 0.338542
+  type: 'test'
+  ...
+# Subtest: builds a local InfluxDB 2 backup without putting the token on the command line
+ok 28 - builds a local InfluxDB 2 backup without putting the token on the command line
+  ---
+  duration_ms: 2.156909
+  type: 'test'
+  ...
+# Subtest: builds a remote HTTPS backup with host and TLS skip flag
+ok 29 - builds a remote HTTPS backup with host and TLS skip flag
+  ---
+  duration_ms: 0.460736
+  type: 'test'
+  ...
+# Subtest: requires a token for InfluxDB 2.x
+ok 30 - requires a token for InfluxDB 2.x
+  ---
+  duration_ms: 0.50977
+  type: 'test'
+  ...
+# Subtest: builds restore invocation without exposing the token
+ok 31 - builds restore invocation without exposing the token
+  ---
+  duration_ms: 0.591023
+  type: 'test'
+  ...
+# Subtest: formats a missing CLI error with a clear installation hint
+ok 32 - formats a missing CLI error with a clear installation hint
+  ---
+  duration_ms: 0.250919
+  type: 'test'
+  ...
+# Subtest: licensed recovery admits exactly one bound restore without online Admin
+ok 33 - licensed recovery admits exactly one bound restore without online Admin
+  ---
+  duration_ms: 34.676829
+  type: 'test'
+  ...
+# Subtest: recovery staging fails closed on initial denial or lease loss during archive hashing
+ok 34 - recovery staging fails closed on initial denial or lease loss during archive hashing
+  ---
+  duration_ms: 6.244414
+  type: 'test'
+  ...
+# Subtest: plain staged config or missing process capability cannot authorize restore
+ok 35 - plain staged config or missing process capability cannot authorize restore
+  ---
+  duration_ms: 3.812269
+  type: 'test'
+  ...
+# Subtest: wrong capability consumes the ticket but never executes recovery
+ok 36 - wrong capability consumes the ticket but never executes recovery
+  ---
+  duration_ms: 5.070951
+  type: 'test'
+  ...
+# Subtest: changed archive, edited scope, expired admission and public ticket are rejected
+    # Subtest: archive
+    ok 1 - archive
+      ---
+      duration_ms: 12.124828
+      type: 'test'
+      ...
+    # Subtest: scope
+    ok 2 - scope
+      ---
+      duration_ms: 13.194334
+      type: 'test'
+      ...
+    # Subtest: expired
+    ok 3 - expired
+      ---
+      duration_ms: 2.623854
+      type: 'test'
+      ...
+    # Subtest: permissions
+    ok 4 - permissions
+      ---
+      duration_ms: 5.384965
+      type: 'test'
+      ...
+    1..4
+ok 37 - changed archive, edited scope, expired admission and public ticket are rejected
+  ---
+  duration_ms: 34.794917
+  type: 'test'
+  ...
+# Subtest: restore dispatcher rejects direct null-adapter or unlicensed invocation
+ok 38 - restore dispatcher rejects direct null-adapter or unlicensed invocation
+  ---
+  duration_ms: 1.322919
+  type: 'test'
+  ...
+# Subtest: startup denied then activation resumes; revocation blocks and renewal resumes exactly once
+ok 39 - startup denied then activation resumes; revocation blocks and renewal resumes exactly once
+  ---
+  duration_ms: 8.24385
+  type: 'test'
+  ...
+# Subtest: destroyed token refresher cannot restart after an in-flight state read
+ok 40 - destroyed token refresher cannot restart after an in-flight state read
+  ---
+  duration_ms: 41.249078
+  type: 'test'
+  ...
+# Subtest: native EOS system restore directs operator recovery before download or staging
+ok 41 - native EOS system restore directs operator recovery before download or staging
+  ---
+  duration_ms: 0.271009
+  type: 'test'
+  ...
+# Subtest: generated launch script never sends recovery capability into systemd properties or argv
+ok 42 - generated launch script never sends recovery capability into systemd properties or argv
+  ---
+  duration_ms: 0.47682
+  type: 'test'
+  ...
+# Subtest: write validation uses the writable subdirectory, not the root-owned mount root
+ok 43 - write validation uses the writable subdirectory, not the root-owned mount root
+  ---
+  duration_ms: 7.968989
+  type: 'test'
+  ...
+# Subtest: read listing needs read/search rights only and never creates or probes
+ok 44 - read listing needs read/search rights only and never creates or probes
+  ---
+  duration_ms: 2.546878
+  type: 'test'
+  ...
+# Subtest: read mode can read a read-only mounted card without writing
+ok 45 - read mode can read a read-only mounted card without writing
+  ---
+  duration_ms: 2.876696
+  type: 'test'
+  ...
+# Subtest: backup refuses a read-only mounted card
+ok 46 - backup refuses a read-only mounted card
+  ---
+  duration_ms: 2.399855
+  type: 'test'
+  ...
+# Subtest: backup refuses a subdirectory without write access, naming the actual directory
+ok 47 - backup refuses a subdirectory without write access, naming the actual directory
+  ---
+  duration_ms: 3.931369
+  type: 'test'
+  ...
+# Subtest: read listing refuses a subdirectory without read access
+ok 48 - read listing refuses a subdirectory without read access
+  ---
+  duration_ms: 1.459775
+  type: 'test'
+  ...
+# Subtest: backup writes a probe only in the actual backup directory
+ok 49 - backup writes a probe only in the actual backup directory
+  ---
+  duration_ms: 2.753199
+  type: 'test'
+  ...
+# Subtest: failed actual write probe rejects backup and cleanup is attempted
+ok 50 - failed actual write probe rejects backup and cleanup is attempted
+  ---
+  duration_ms: 1.922715
+  type: 'test'
+  ...
+# Subtest: missing directory during listing is distinct from a missing card and never created
+ok 51 - missing directory during listing is distinct from a missing card and never created
+  ---
+  duration_ms: 2.731427
+  type: 'test'
+  ...
+# Subtest: new backup may create its directory if the parent permits it
+ok 52 - new backup may create its directory if the parent permits it
+  ---
+  duration_ms: 3.226875
+  type: 'test'
+  ...
+# Subtest: directory creation failure is explicit and does not attempt a probe
+ok 53 - directory creation failure is explicit and does not attempt a probe
+  ---
+  duration_ms: 1.935104
+  type: 'test'
+  ...
+# Subtest: missing SD mount never falls back to a directory on the system disk
+ok 54 - missing SD mount never falls back to a directory on the system disk
+  ---
+  duration_ms: 1.758176
+  type: 'test'
+  ...
+# Subtest: SD removal during the checks aborts before any probe is written
+ok 55 - SD removal during the checks aborts before any probe is written
+  ---
+  duration_ms: 0.914101
+  type: 'test'
+  ...
+# Subtest: system disk, symlink, non-directory and different filesystem remain excluded
+    # Subtest: system disk
+    ok 1 - system disk
+      ---
+      duration_ms: 1.721561
+      type: 'test'
+      ...
+    # Subtest: symlink
+    ok 2 - symlink
+      ---
+      duration_ms: 1.343059
+      type: 'test'
+      ...
+    # Subtest: plain file
+    ok 3 - plain file
+      ---
+      duration_ms: 3.064089
+      type: 'test'
+      ...
+    # Subtest: nested filesystem
+    ok 4 - nested filesystem
+      ---
+      duration_ms: 3.014284
+      type: 'test'
+      ...
+    1..4
+ok 56 - system disk, symlink, non-directory and different filesystem remain excluded
+  ---
+  duration_ms: 9.865644
+  type: 'test'
+  ...
+# Subtest: listing an empty card returns an empty list instead of logging a permissions error
+ok 57 - listing an empty card returns an empty list instead of logging a permissions error
+  ---
+  duration_ms: 1.513316
+  type: 'test'
+  ...
+# Subtest: excludes the system mmc device and offers a separately mounted SD card
+ok 58 - excludes the system mmc device and offers a separately mounted SD card
+  ---
+  duration_ms: 7.111615
+  type: 'test'
+  ...
+# Subtest: still excludes the system mmc device when root is reported as /dev/root
+ok 59 - still excludes the system mmc device when root is reported as /dev/root
+  ---
+  duration_ms: 3.927012
+  type: 'test'
+  ...
+# Subtest: offers a removable USB card reader but excludes a non-removable USB SSD
+ok 60 - offers a removable USB card reader but excludes a non-removable USB SSD
+  ---
+  duration_ms: 0.574337
+  type: 'test'
+  ...
+# Subtest: normalizes safe relative subdirectories and rejects traversal or absolute paths
+ok 61 - normalizes safe relative subdirectories and rejects traversal or absolute paths
+  ---
+  duration_ms: 0.83424
+  type: 'test'
+  ...
+# Subtest: keeps the newest three InfluxDB generations and marks older archives for deletion
+ok 62 - keeps the newest three InfluxDB generations and marks older archives for deletion
+  ---
+  duration_ms: 19.756257
+  type: 'test'
+  ...
+# Subtest: keeps three generations per configured InfluxDB suffix and ignores unrelated files
+ok 63 - keeps three generations per configured InfluxDB suffix and ignores unrelated files
+  ---
+  duration_ms: 0.323549
+  type: 'test'
+  ...
+# Subtest: uses only logger methods that exist in the backup execution context
+ok 64 - uses only logger methods that exist in the backup execution context
+  ---
+  duration_ms: 0.477181
+  type: 'test'
+  ...
+1..64
+# tests 73
+# suites 1
+# pass 73
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 508.333148

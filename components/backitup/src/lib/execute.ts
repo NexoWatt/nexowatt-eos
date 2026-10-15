@@ -1,7 +1,7 @@
-import { appendFileSync, chmodSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getIobDir, getTimeString } from './tools';
+import { ensureBackupDirectory, getTimeString } from './tools';
 import type {
     BackItUpContext,
     BackItUpExecuteCallback,
@@ -216,30 +216,13 @@ function executeScripts(
     code?: number | null,
 ): void {
     if (!scripts) {
+        try { config.backupDir = ensureBackupDirectory(); } catch {
+            callback('EOS_BACKUP_DATA_PATH_UNSAFE');
+            return;
+        }
         scripts = loadScripts(callback);
-        config.backupDir = join(getIobDir(), 'backups').replace(/\\/g, '/');
         config.timestamp = new Date().getTime();
         config.context = { fileNames: [], errors: {}, done: [], types: [] }; // common variables between scripts
-
-        if (!existsSync(config.backupDir)) {
-            try {
-                mkdirSync(config.backupDir);
-                chmodSync(config.backupDir, '0775');
-            } catch (e) {
-                callback(
-                    `Backup directory cannot created: ${e} Please reinstall NexoWatt EOS Backup and run "iobroker fix"!!`,
-                );
-            }
-        } else if (
-            !config.cifs.enabled ||
-            (config.cifs.enabled && (config.cifs.mountType === 'Copy' || config.cifs.mountType === 'SDCard'))
-        ) {
-            try {
-                chmodSync(config.backupDir, '0775');
-            } catch (e) {
-                callback(`chmod for Backup directory could not be completed: ${e} Please run "iobroker fix"!!`);
-            }
-        }
     }
 
     for (const name in scripts) {

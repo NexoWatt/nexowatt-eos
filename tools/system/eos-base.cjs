@@ -13,7 +13,14 @@ const { installPostgresqlHost } = require('./install-postgresql-host.cjs');
 const { activateRelease } = require('./activate-release.cjs');
 const { checkInstalled, rootOwned } = require('../../runtime/release/installed-check.cjs');
 const { readSetupInput } = require('./prepare-onboarding.cjs');
+const product = require('../../runtime/product/scope.cjs');
 function reject(code) { const error = new Error(code); error.code = code; throw error; }
+function assertGenericDeployment(manifest) {
+    // The six-adapter revision migrates a completed two-adapter enrollment.
+    // Its journaled migration/rollback may not be bypassed through install or
+    // generic additive activation. A separate fresh-install path is not proven.
+    if (product.releaseScope(manifest) === product.OWN_ADAPTER_TEST) reject('EOS_OWN_ADAPTER_UPDATE_ONLY');
+}
 function parseArgs(argv, required) {
     if (argv.length !== required.length * 2) reject('EOS_USAGE');
     const args = Object.create(null);
@@ -88,6 +95,7 @@ function installChecked({ bundleDirectory, keyFile, start, setupInput }) {
     const publicKey = publicKeyFrom(keyPath);
     const verified = verifyBundle({ bundleDirectory: bundle, publicKey, minimumSequence: 0,
         nodeVersion: process.versions.node, platform: `${process.platform}-${process.arch}` });
+    assertGenericDeployment(verified.manifest);
     const { catalog, databaseBackend } = validateVerified(verified);
     const fullProduct = verified.manifest.releaseVersion === '0.2.0-test.3';
     if (fullProduct && !setupInput || !fullProduct && setupInput) reject('EOS_SETUP_INPUT_REQUIRED');
@@ -126,7 +134,7 @@ function extendChecked({ bundleDirectory, keyFile }) {
         !Number.isSafeInteger(state.sequence) || state.sequence < 1 || state.nodeVersion !== process.versions.node) reject('EOS_EXISTING_RELEASE_STATE');
     const options = { bundleDirectory: bundle, publicKey, minimumSequence: state.sequence,
         nodeVersion: process.versions.node, platform: `${process.platform}-${process.arch}` };
-    const verified = verifyBundle(options); validateVerified(verified);
+    const verified = verifyBundle(options); assertGenericDeployment(verified.manifest); validateVerified(verified);
     rootOwned('/opt/nexowatt/eos/releases'); rootOwned('/opt/nexowatt/eos/verified');
     const releasePath = `/opt/nexowatt/eos/releases/${verified.releaseId}`;
     const evidencePath = `/opt/nexowatt/eos/verified/${verified.releaseId}`;
@@ -174,7 +182,7 @@ function main(argv) {
     }
     reject('EOS_USAGE');
 }
-module.exports = { parseArgs, trustedImport, validateVerified, publicKeyFrom, probeNativeForInstallation, withDeploymentUmask, keygen, install, extend, main };
+module.exports = { parseArgs, trustedImport, validateVerified, publicKeyFrom, probeNativeForInstallation, assertGenericDeployment, withDeploymentUmask, keygen, install, extend, main };
 if (require.main === module) {
     try { const result = main(process.argv.slice(2)); process.stdout.write(`${JSON.stringify(result)}\n`); if (result.ready === false) process.exitCode = 1; }
     catch (error) { process.stderr.write(`${JSON.stringify({ ok: false, code: /^[A-Z_]+$/.test(error.code || '') ? error.code : 'EOS_FAILED',

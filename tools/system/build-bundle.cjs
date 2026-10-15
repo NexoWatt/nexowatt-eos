@@ -77,8 +77,9 @@ function validatePayload(payload, manifest) {
     if (communication.size !== 1 || !['eos-redis-tls13-v1', 'eos-postgresql-mtls13-v1'].includes([...communication][0])) reject('BUILD_DATABASE_PROFILE');
     const databaseBackend = communication.has('eos-postgresql-mtls13-v1') ? 'postgresql' : 'redis';
     const fullProduct = manifest.releaseVersion === '0.2.0-test.3';
-    const productInventory = fullProduct ? product.inspectApp(path.join(payload, 'app')) : null;
-    if (fullProduct) product.assertCatalog(catalog);
+    const releaseScope = product.releaseScope(manifest);
+    const productInventory = fullProduct ? product.inspectApp(path.join(payload, 'app'), releaseScope) : null;
+    if (fullProduct) product.assertCatalog(catalog, releaseScope);
     if (databaseBackend === 'postgresql') {
         const controller = parseJson(path.join(payload, 'app/node_modules/iobroker.js-controller/package.json'));
         for (const name of ['@iobroker/db-objects-postgresql', '@iobroker/db-states-postgresql', '@nexowatt/eos-postgresql-store']) {
@@ -109,6 +110,10 @@ function validatePayload(payload, manifest) {
         installed: installed.filter(row => executable.some(entry => entry.id === row.id)), active: [] });
     if (plan.quarantine.length || !catalog.entries.some(e => e.id === 'js-controller' && e.kind === 'core' && e.required)) reject('BUILD_CORE_REQUIRED');
     const profile = verifyBuildProfile(path.join(payload, 'app'), executable.filter(e => e.kind === 'adapter').map(({ package: name, version }) => ({ package: name, version })));
+    if (releaseScope === product.OWN_ADAPTER_TEST) {
+        const backupState = require('../../runtime/controller-profile/backup-state.cjs').verifyBuild(path.join(payload, 'app'));
+        profile.files.push(...backupState.files.map(({ relativePath, sha256 }) => ({ relativePath, sha256 })));
+    }
     if (fullProduct) {
         // Backend dependencies change the upstream controller manifest too.
         // Bind that derivative in the same SBOM pedigree/table as code patches;
@@ -128,7 +133,8 @@ function validatePayload(payload, manifest) {
     }
     return { catalog, plan, sbom, databaseBackend, productInventory, architectureReports };
 }
-function preparePayload({ appDirectory, destination, catalogFile, sbomFile }) {
+function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST }) {
+    product.specsFor(releaseScope);
     const source = trustedDirectory(appDirectory);
     const target = path.resolve(destination);
     if (target === source || target.startsWith(source + path.sep)) reject('BUILD_OUTPUT_INSIDE_INPUT');
@@ -143,6 +149,10 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile }) {
         for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'prepare-onboarding.cjs', 'prepare-first-start-context.cjs', 'finalize-onboarding.cjs', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs', 'update-test-r4-to-r5.cjs', 'update-test-to-r6.cjs', 'diagnose-first-start.cjs', 'recover-r4-first-start-to-r7.cjs', 'recover-r4-restored-r7-to-r8.cjs', 'update-test-to-r9.cjs']) {
             fs.copyFileSync(path.join(REPO, 'tools/system', file), path.join(destination, 'tools/system', file), fs.constants.COPYFILE_EXCL);
         }
+        if (releaseScope === product.OWN_ADAPTER_TEST) {
+            fs.copyFileSync(path.join(REPO, 'tools/system/update-test-own-adapters.cjs'),
+                path.join(destination, 'tools/system/update-test-own-adapters.cjs'), fs.constants.COPYFILE_EXCL);
+        }
         fs.mkdirSync(path.join(destination, 'tools/integration'));
         fs.copyFileSync(path.join(REPO, 'tools/integration/check-runtime-architecture.cjs'), path.join(destination, 'tools/integration/check-runtime-architecture.cjs'), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'security'));
@@ -152,6 +162,15 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile }) {
         copyDirectory(path.join(REPO, 'system/test-base/os-updates'), path.join(destination, 'system/test-base/os-updates'));
         fs.mkdirSync(path.join(destination, 'system/postgresql-test'));
         copyDirectory(path.join(REPO, 'system/postgresql-test/systemd'), path.join(destination, 'system/postgresql-test/systemd'));
+        if (releaseScope === product.OWN_ADAPTER_TEST) {
+            fs.mkdirSync(path.join(destination, 'system/own-adapter-test'));
+            copyDirectory(path.join(REPO, 'system/own-adapter-test/systemd'),
+                path.join(destination, 'system/own-adapter-test/systemd'));
+            // Replace only this freshly copied candidate file. Historical source
+            // units and already signed deliveries are never edited in place.
+            fs.copyFileSync(path.join(REPO, 'system/own-adapter-test/systemd/nexowatt-eos-upload.service'),
+                path.join(destination, 'system/postgresql-test/systemd/nexowatt-eos-upload.service'));
+        }
         fs.copyFileSync(catalogFile, path.join(destination, 'catalog.json'), fs.constants.COPYFILE_EXCL);
         fs.copyFileSync(sbomFile, path.join(destination, 'sbom.cdx.json'), fs.constants.COPYFILE_EXCL);
         const sbom = parseJson(path.join(destination, 'sbom.cdx.json'));
@@ -175,10 +194,10 @@ function main(argv) {
     const parent = trustedDirectory(path.dirname(output));
     const scratch = fs.mkdtempSync(path.join(parent, '.eos-build-'));
     try {
+        const metadata = parseJson(opts['--metadata']);
         const payload = path.join(scratch, 'payload');
         const files = preparePayload({ appDirectory: opts['--app'], destination: payload,
-            catalogFile: opts['--catalog'], sbomFile: opts['--sbom'] });
-        const metadata = parseJson(opts['--metadata']);
+            catalogFile: opts['--catalog'], sbomFile: opts['--sbom'], releaseScope: product.releaseScope(metadata) });
         validatePayload(payload, { ...metadata, files });
         const key = readFileLimited(opts['--private-key'], 16384);
         if (key.mode & 0o077) reject('BUILD_PRIVATE_KEY_PERMISSIONS');

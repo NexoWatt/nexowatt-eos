@@ -1,5 +1,65 @@
-import { createReadStream, createWriteStream } from 'node:fs';
-import { join } from 'node:path';
+import { closeSync, constants, createReadStream, createWriteStream, fstatSync, lstatSync, mkdirSync, openSync, readSync } from 'node:fs';
+import { isAbsolute, join } from 'node:path';
+
+/** Only the per-host secret is accepted; never decrypt with a shared fallback. */
+export function requireSystemSecret(value: unknown): string {
+    if (typeof value !== 'string' || !/^(?:[0-9a-fA-F]{2}){16,64}$/.test(value)) {
+        throw new Error('EOS_BACKUP_SYSTEM_SECRET_INVALID');
+    }
+    return value;
+}
+
+/** Archives belong to the writable data tree, never its root-owned parent/app. */
+export function getBackupDir(): string {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const utils = require('@iobroker/adapter-core');
+    const dataDir = utils.getAbsoluteDefaultDataDir();
+    if (typeof dataDir !== 'string' || !isAbsolute(dataDir)) throw new Error('EOS_BACKUP_DATA_PATH_INVALID');
+    return join(dataDir, 'nexowatt-backup', 'backups');
+}
+
+/** Create only our two data subdirectories, retaining private archive access. */
+export function ensureBackupDirectory(): string {
+    const directory = getBackupDir();
+    const data = lstatSync(join(directory, '..', '..'));
+    if (!data.isDirectory() || data.isSymbolicLink()) throw new Error('EOS_BACKUP_DATA_PATH_UNSAFE');
+    for (const file of [join(directory, '..'), directory]) {
+        try { mkdirSync(file, { mode: 0o700 }); } catch (error) {
+            if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+        }
+        const stat = lstatSync(file);
+        if (!stat.isDirectory() || stat.isSymbolicLink() || (stat.mode & 0o077)
+            || (process.getuid && stat.uid !== process.getuid())) throw new Error('EOS_BACKUP_DATA_PATH_UNSAFE');
+    }
+    return directory;
+}
+
+/** Read only a private, single-link regular log via its validated descriptor. */
+export function readPrivateLog(file: string, maximumBytes = 8 * 1024 * 1024): string {
+    let descriptor: number | undefined;
+    try {
+        descriptor = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+        const stat = fstatSync(descriptor);
+        if (!stat.isFile() || stat.nlink !== 1 || (stat.mode & 0o077)
+            || (process.getuid && stat.uid !== process.getuid()) || stat.size > maximumBytes) {
+            throw new Error('EOS_BACKUP_LOG_UNSAFE');
+        }
+        const buffer = Buffer.alloc(maximumBytes + 1);
+        let length = 0;
+        while (length < buffer.length) {
+            const count = readSync(descriptor, buffer, length, buffer.length - length, null);
+            if (count === 0) break;
+            length += count;
+        }
+        if (length > maximumBytes) throw new Error('EOS_BACKUP_LOG_UNSAFE');
+        return buffer.subarray(0, length).toString('utf8');
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') throw error;
+        throw new Error('EOS_BACKUP_LOG_UNSAFE');
+    } finally {
+        if (descriptor !== undefined) closeSync(descriptor);
+    }
+}
 
 export function getDate(d?: Date): string {
     d = d || new Date();

@@ -78,7 +78,7 @@ test('EEBUS starts exactly once after later central activation, without adapter 
   let starts = 0;
   class Adapter {
     constructor() { this.config = {}; this.namespace = 'eebus.0'; this.log = { warn() {}, error() {}, info() {} }; }
-    on() {} async setStateAsync() {} setInterval() { return {}; } clearInterval() {} subscribeStates() {}
+    on() {} async setStateAsync() {} async setObjectNotExistsAsync() {} setInterval() { return {}; } clearInterval() {} subscribeStates() {}
   }
   const module = { exports: {} };
   vm.runInNewContext(fs.readFileSync(file, 'utf8'), { module, exports: module.exports,

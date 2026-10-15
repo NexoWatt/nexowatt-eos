@@ -1,4 +1,13 @@
-# Aktueller Entwicklungsstand: zentrale EOS-Lizenz und Admin-Logos
+# Aktueller Entwicklungsstand: gemeinsamer Adapter-Teststand in Prüfung
+
+**15. Oktober 2026:** Die gemeinsame Start-/Neustartprüfung für alle sechs
+eigenen Adapter wird ergänzt. Quellkorrekturen an Einrichtung, OCPP, EEBUS und
+Backup sind getrennt von einer veröffentlichten Lieferung zu bewerten.
+**R10 ist noch nicht freigegeben; der bisher veröffentlichte Stand bleibt R9.**
+Der R9-Befehl unten schaltet die vier zusätzlichen Adapter nicht frei.
+[Änderungen, Prüfstand, SBOM und offene Grenzen](reports/integration/own-adapter-test-20261015/README_DE.md).
+
+## Veröffentlichter Management-Teststand R9
 
 Die sechs eigenen Adapter beziehen ihre Freigabe aus der zentralen EOS-Lizenz (NWL3).
 Die UI benötigt keinen eigenen Schlüssel mehr. Unveränderte NexoWatt-Adapter

@@ -15,7 +15,7 @@ function listBackups(restoreSource, config, log, callback) {
     const context = {
         adapter: null,
         log,
-        backupDir: (0, node_path_1.join)((0, tools_1.getIobDir)(), 'backups').replace(/\\/g, '/'),
+        backupDir: (0, tools_1.getBackupDir)(),
         timestamp: 0,
         fileNames: [],
         errors: {},
@@ -49,7 +49,7 @@ function listBackups(restoreSource, config, log, callback) {
             }
         }
     }
-    const backupDir = (0, node_path_1.join)((0, tools_1.getIobDir)(), 'backups').replace(/\\/g, '/');
+    const backupDir = (0, tools_1.getBackupDir)();
     if ((0, node_fs_1.existsSync)(backupDir) && (!restoreSource || restoreSource === 'local')) {
         const local = {};
         (0, node_fs_1.readdirSync)(backupDir)

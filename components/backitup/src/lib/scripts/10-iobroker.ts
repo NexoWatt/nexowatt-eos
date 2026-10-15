@@ -1,5 +1,5 @@
 import { fork } from 'node:child_process';
-import { existsSync, statSync } from 'node:fs';
+import { existsSync, lstatSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { getDate, getSize } from '../tools';
@@ -51,7 +51,16 @@ export async function run(props: BackItUpProps<IobrokerOptions>): Promise<number
                 `iobroker_${getDate()}${options.nameSuffix ? `_${options.nameSuffix}` : ''}_backupiobroker.tar.gz`,
             );
 
-            ctx.fileNames.push(fileName);
+            // Never let a same-second retry overwrite an archive or count an old
+            // file as this run's result. lstat also detects dangling symlinks.
+            try {
+                lstatSync(fileName);
+                ctx.errors.iobroker = 'EOS_BACKUP_TARGET_EXISTS';
+                resolve(1);
+                return;
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+            }
 
             const cmd = fork(ioPath, ['backup', fileName], { silent: true });
             cmd.stdout!.on('data', data => ctx.log.debug(data.toString()));
@@ -59,21 +68,23 @@ export async function run(props: BackItUpProps<IobrokerOptions>): Promise<number
             cmd.stderr!.on('data', data => ctx.log.error(data.toString()));
 
             cmd.on('close', code => {
-                // Recorded as done regardless of the exit code; a missing file is what marks the
-                // failure below. Kept as found.
-                ctx.done.push('iobroker');
-                ctx.types.push('iobroker');
-
-                if (existsSync(fileName)) {
-                    const stat = statSync(fileName);
-
-                    if (Math.round((stat.size / (1024 * 1024)) * 10) / 10 > SIZE_WARNING_MB) {
-                        ctx.log.warn(
-                            `Your backup ${fileName.split('/').pop()} has a file size of ${getSize(stat.size)}. This can lead to problems. Please check your file system for large files.`,
-                        );
+                try {
+                    const stat = existsSync(fileName) ? lstatSync(fileName) : null;
+                    if (code !== 0 || !stat?.isFile() || stat.isSymbolicLink() || stat.size === 0) {
+                        ctx.errors.iobroker = 'EOS_BACKUP_ARCHIVE_NOT_CREATED';
+                        resolve(code || 1);
+                        return;
                     }
-                } else {
-                    ctx.errors.iobroker = 'ioBroker Backup not created';
+                    ctx.fileNames.push(fileName);
+                    ctx.done.push('iobroker');
+                    ctx.types.push('iobroker');
+                    if (Math.round((stat.size / (1024 * 1024)) * 10) / 10 > SIZE_WARNING_MB) {
+                        ctx.log.warn(`Backup archive exceeds ${getSize(SIZE_WARNING_MB * 1024 * 1024)}.`);
+                    }
+                } catch {
+                    ctx.errors.iobroker = 'EOS_BACKUP_ARCHIVE_NOT_CREATED';
+                    resolve(1);
+                    return;
                 }
                 // `close` and `error` can both fire; the promise settles on whichever comes first,
                 // which is what the guarded callback used to achieve.

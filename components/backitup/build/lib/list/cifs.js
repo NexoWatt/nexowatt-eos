@@ -8,7 +8,7 @@ const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
 const tools_1 = require("../tools");
 const sdCard_1 = require("../sdCard");
-const backupDir = (0, node_path_1.join)((0, tools_1.getIobDir)(), 'backups').replace(/\\/g, '/');
+const backupDir = (0, tools_1.getBackupDir)();
 /** Not the module name: the restore tab and lib/restore address a NAS source by this key. */
 exports.storageKey = 'nas / copy';
 /**

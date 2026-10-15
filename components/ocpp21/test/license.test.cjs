@@ -20,6 +20,9 @@ function adapterWithGuard(guard) {
   class Adapter {
     constructor(options) { this.name = options.name; this.namespace = `${this.name}.0`; this.config = {}; this.log = { warn() {}, error() {}, info() {} }; }
     on() {}
+    async setObjectNotExistsAsync() {}
+    async setStateAsync() {}
+    async setStateChangedAsync() {}
   }
   const context = { module, exports: module.exports, setTimeout, clearTimeout, setInterval, clearInterval,
     require(name) {

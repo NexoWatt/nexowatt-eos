@@ -175,28 +175,16 @@ function createBackupLog(config, adapter) {
  */
 function executeScripts(adapter, config, callback, scripts, code) {
     if (!scripts) {
+        try {
+            config.backupDir = (0, tools_1.ensureBackupDirectory)();
+        }
+        catch {
+            callback('EOS_BACKUP_DATA_PATH_UNSAFE');
+            return;
+        }
         scripts = loadScripts(callback);
-        config.backupDir = (0, node_path_1.join)((0, tools_1.getIobDir)(), 'backups').replace(/\\/g, '/');
         config.timestamp = new Date().getTime();
         config.context = { fileNames: [], errors: {}, done: [], types: [] }; // common variables between scripts
-        if (!(0, node_fs_1.existsSync)(config.backupDir)) {
-            try {
-                (0, node_fs_1.mkdirSync)(config.backupDir);
-                (0, node_fs_1.chmodSync)(config.backupDir, '0775');
-            }
-            catch (e) {
-                callback(`Backup directory cannot created: ${e} Please reinstall NexoWatt EOS Backup and run "iobroker fix"!!`);
-            }
-        }
-        else if (!config.cifs.enabled ||
-            (config.cifs.enabled && (config.cifs.mountType === 'Copy' || config.cifs.mountType === 'SDCard'))) {
-            try {
-                (0, node_fs_1.chmodSync)(config.backupDir, '0775');
-            }
-            catch (e) {
-                callback(`chmod for Backup directory could not be completed: ${e} Please run "iobroker fix"!!`);
-            }
-        }
     }
     for (const name in scripts) {
         if (Object.prototype.hasOwnProperty.call(scripts, name) &&

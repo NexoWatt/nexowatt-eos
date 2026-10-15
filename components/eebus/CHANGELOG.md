@@ -1,5 +1,12 @@
 # Changelog
 
+## EOS passive commissioning (2026-10-15)
+
+- Explicit `eosCommissioningEnabled:false` keeps new own-test instances alive but passive: no native migration, private identity generation, discovery or SHIP runtime until commissioning. Undefined preserves legacy behavior; malformed defined values fail passive.
+- Publish read-only commissioning status; reject premature messages explicitly. Track ready/start tasks through unload so pending reads or key generation cannot start a late runtime after shutdown.
+- Admit messages/state input only after full runtime startup, subscriptions and ready-status publication; close admission before unload/error handling.
+- Add thirteen commissioning/negative/race tests; retain all existing security and license tests. This is not a device-control or production approval.
+
 ## EOS integration (2026-10-05)
 
 - Require an admitted EOS runtime and fresh Home/Pro energy entitlement from EOS Admin at startup and before new device control. Automatically start after central activation.

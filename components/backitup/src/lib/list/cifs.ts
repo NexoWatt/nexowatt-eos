@@ -2,7 +2,7 @@ import { exec } from 'node:child_process';
 import { existsSync, readdirSync, statSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getIobDir } from '../tools';
+import { getBackupDir } from '../tools';
 import { validateSdCardTarget } from '../sdCard';
 import type { BackItUpConfigStorageCifs, BackItUpLogger, BackItUpStorage } from '../types';
 import type {
@@ -13,7 +13,7 @@ import type {
     BackItUpStorageEngineResultFile,
 } from './types';
 
-const backupDir = join(getIobDir(), 'backups').replace(/\\/g, '/');
+const backupDir = getBackupDir();
 
 /** `mount`/`umount` report the shell output of the successful attempt */
 type MountCallback = (error?: Error | string | null, stdout?: string) => void;

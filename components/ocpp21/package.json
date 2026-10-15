@@ -27,13 +27,14 @@
     "CHANGELOG.md",
     "NEXOWATT_REVIEW.md",
     "packages/eos-license-client",
-    "LICENSING_20261005_DE.md"
+    "LICENSING_20261005_DE.md",
+    "COMMISSIONING_20261015_DE.md"
   ],
   "scripts": {
     "start": "node main.js",
     "test": "npm run test:core && npm run test:package && npm run test:unit && npm run test:integration",
     "test:package": "mocha test/package.js --exit",
-    "test:unit": "node --test test/license.test.cjs",
+    "test:unit": "node --test test/license.test.cjs test/commissioning.test.cjs",
     "test:integration": "node --test test/secure-transport.test.js",
     "test:core": "node --test test/core.test.js",
     "test:security": "node --test test/secure-transport.test.js",

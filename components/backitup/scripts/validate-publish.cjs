@@ -129,11 +129,11 @@ if (packageJson && ioPackage) {
     const globalDependencies = Array.isArray(ioPackage.common?.globalDependencies)
         ? ioPackage.common.globalDependencies
         : [];
-    const adminDependency = globalDependencies.find(dependency => dependency && typeof dependency === 'object' && dependency.admin);
+    const adminDependency = globalDependencies.find(dependency => dependency && typeof dependency === 'object' && dependency['eos-admin']);
     if (!adminDependency) {
         fail('io-package.json enthält keine globale Admin-Abhängigkeit.');
-    } else if (adminDependency.admin !== '>=7.0.0') {
-        fail(`Die Admin-Kompatibilität muss >=7.0.0 sein; gefunden: ${adminDependency.admin}`);
+    } else if (adminDependency['eos-admin'] !== '>=7.0.0') {
+        fail(`Die EOS-Admin-Kompatibilität muss >=7.0.0 sein; gefunden: ${adminDependency['eos-admin']}`);
     }
     if (ioPackage.common?.adminUI?.config !== 'json') {
         fail('Die Konfiguration muss die native JSONConfig-Oberfläche verwenden.');
@@ -530,6 +530,12 @@ if (packageJson) {
         }
     }
     if (!packageJson.scripts?.['test:offline']?.includes('test/license-guard.js')) fail('Zentrale Lizenz-/Recoveryprüfungen fehlen im Offline-Gate.');
+    for (const test of ['test/eos-startup.js', 'test/backup-archive-result.js']) {
+        if (!files.includes(test) || !packageJson.scripts?.['test:offline']?.includes(test)) {
+            fail(`EOS-Start-/Archivprüfung fehlt im Offline-Gate: ${test}`);
+        }
+    }
+    if (!files.includes('test/helpers/backup-result-child.cjs')) fail('Synthetisches Archiv-Testfixture fehlt.');
     const prepublishOnly = packageJson.scripts?.prepublishOnly || '';
     const preparePublish = packageJson.scripts?.['prepare:publish'] || '';
     const verifyPublish = packageJson.scripts?.['verify:publish'] || '';

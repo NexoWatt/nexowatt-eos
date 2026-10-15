@@ -1,5 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.requireSystemSecret = requireSystemSecret;
+exports.getBackupDir = getBackupDir;
+exports.ensureBackupDirectory = ensureBackupDirectory;
+exports.readPrivateLog = readPrivateLog;
 exports.getDate = getDate;
 exports.copyFile = copyFile;
 exports.getIobDir = getIobDir;
@@ -11,6 +15,75 @@ exports.maskSecret = maskSecret;
 exports.getSize = getSize;
 const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
+/** Only the per-host secret is accepted; never decrypt with a shared fallback. */
+function requireSystemSecret(value) {
+    if (typeof value !== 'string' || !/^(?:[0-9a-fA-F]{2}){16,64}$/.test(value)) {
+        throw new Error('EOS_BACKUP_SYSTEM_SECRET_INVALID');
+    }
+    return value;
+}
+/** Archives belong to the writable data tree, never its root-owned parent/app. */
+function getBackupDir() {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const utils = require('@iobroker/adapter-core');
+    const dataDir = utils.getAbsoluteDefaultDataDir();
+    if (typeof dataDir !== 'string' || !(0, node_path_1.isAbsolute)(dataDir))
+        throw new Error('EOS_BACKUP_DATA_PATH_INVALID');
+    return (0, node_path_1.join)(dataDir, 'nexowatt-backup', 'backups');
+}
+/** Create only our two data subdirectories, retaining private archive access. */
+function ensureBackupDirectory() {
+    const directory = getBackupDir();
+    const data = (0, node_fs_1.lstatSync)((0, node_path_1.join)(directory, '..', '..'));
+    if (!data.isDirectory() || data.isSymbolicLink())
+        throw new Error('EOS_BACKUP_DATA_PATH_UNSAFE');
+    for (const file of [(0, node_path_1.join)(directory, '..'), directory]) {
+        try {
+            (0, node_fs_1.mkdirSync)(file, { mode: 0o700 });
+        }
+        catch (error) {
+            if (error.code !== 'EEXIST')
+                throw error;
+        }
+        const stat = (0, node_fs_1.lstatSync)(file);
+        if (!stat.isDirectory() || stat.isSymbolicLink() || (stat.mode & 0o077)
+            || (process.getuid && stat.uid !== process.getuid()))
+            throw new Error('EOS_BACKUP_DATA_PATH_UNSAFE');
+    }
+    return directory;
+}
+/** Read only a private, single-link regular log via its validated descriptor. */
+function readPrivateLog(file, maximumBytes = 8 * 1024 * 1024) {
+    let descriptor;
+    try {
+        descriptor = (0, node_fs_1.openSync)(file, node_fs_1.constants.O_RDONLY | node_fs_1.constants.O_NOFOLLOW | node_fs_1.constants.O_NONBLOCK);
+        const stat = (0, node_fs_1.fstatSync)(descriptor);
+        if (!stat.isFile() || stat.nlink !== 1 || (stat.mode & 0o077)
+            || (process.getuid && stat.uid !== process.getuid()) || stat.size > maximumBytes) {
+            throw new Error('EOS_BACKUP_LOG_UNSAFE');
+        }
+        const buffer = Buffer.alloc(maximumBytes + 1);
+        let length = 0;
+        while (length < buffer.length) {
+            const count = (0, node_fs_1.readSync)(descriptor, buffer, length, buffer.length - length, null);
+            if (count === 0)
+                break;
+            length += count;
+        }
+        if (length > maximumBytes)
+            throw new Error('EOS_BACKUP_LOG_UNSAFE');
+        return buffer.subarray(0, length).toString('utf8');
+    }
+    catch (error) {
+        if (error.code === 'ENOENT')
+            throw error;
+        throw new Error('EOS_BACKUP_LOG_UNSAFE');
+    }
+    finally {
+        if (descriptor !== undefined)
+            (0, node_fs_1.closeSync)(descriptor);
+    }
+}
 function getDate(d) {
     d = d || new Date();
     return `${d.getFullYear()}_${(d.getMonth() + 1).toString().padStart(2, '0')}_${d.getDate().toString().padStart(2, '0')}-${d.getHours().toString().padStart(2, '0')}_${d.getMinutes().toString().padStart(2, '0')}_${d.getSeconds().toString().padStart(2, '0')}`;

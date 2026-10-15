@@ -41,9 +41,11 @@ const identityManager_1 = require("./lib/identityManager");
 const objectFactory_1 = require("./lib/objectFactory");
 class EebusAdapter extends utils.Adapter {
     runtime;
+    runtimeReady = false;
     licenseGuard;
     startupTimer;
-    runtimeStarting = false;
+    startupTask;
+    readyTask;
     shuttingDown = false;
     isEosLicenseAllowed() {
         return this.licenseGuard?.isAllowed() === true;
@@ -58,8 +60,27 @@ class EebusAdapter extends utils.Adapter {
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
-    async onReady() {
+    onReady() {
+        if (this.shuttingDown)
+            return Promise.resolve();
+        this.readyTask = this.initializeReady();
+        return this.readyTask;
+    }
+    commissioningEnabled() {
+        const value = this.config?.eosCommissioningEnabled;
+        // Missing flags preserve existing commissioned installations. Explicit
+        // false or malformed flags fail passive; only true admits commissioning.
+        return value === undefined || value === true;
+    }
+    async initializeReady() {
         await this.setStateAsync('info.connection', { val: false, ack: true });
+        if (this.shuttingDown)
+            return;
+        await this.setObjectNotExistsAsync('info.commissioningState', {
+            type: 'state', common: { name: 'EEBUS commissioning state', type: 'string', role: 'text', read: true, write: false }, native: {},
+        });
+        if (this.shuttingDown)
+            return;
         this.licenseGuard = createLicenseGuard(this, {
             feature: 'energy',
             onLost: () => {
@@ -69,29 +90,54 @@ class EebusAdapter extends utils.Adapter {
             },
         });
         await this.licenseGuard.start();
+        if (this.shuttingDown)
+            return;
+        if (!this.commissioningEnabled()) {
+            await this.setStateAsync('info.commissioningState', { val: 'waiting', ack: true });
+            this.log.info('EEBUS is running passively; explicit commissioning is required before identity creation or network startup.');
+            return;
+        }
         this.startupTimer = this.setInterval(() => {
             void this.startLicensedRuntime().catch(() => this.log.warn('EEBUS licensed startup is not yet available.'));
         }, 1000);
         await this.startLicensedRuntime();
     }
-    async startLicensedRuntime() {
-        if (this.shuttingDown || this.runtime || this.runtimeStarting || !this.isEosLicenseAllowed())
-            return;
-        this.runtimeStarting = true;
+    startLicensedRuntime() {
+        if (this.startupTask)
+            return this.startupTask;
+        if (this.shuttingDown || this.runtime || !this.commissioningEnabled() || !this.isEosLicenseAllowed())
+            return Promise.resolve();
+        this.startupTask = this.initializeLicensedRuntime().finally(() => { this.startupTask = undefined; });
+        return this.startupTask;
+    }
+    async initializeLicensedRuntime() {
         try {
+            await this.setStateAsync('info.commissioningState', { val: 'starting', ack: true });
+            if (this.shuttingDown)
+                return;
             const nativeConfig = await this.migrateLegacyIdentityNames(this.config || {});
+            if (this.shuttingDown)
+                return;
             const config = (0, config_1.getConfig)(nativeConfig);
             const objectFactory = new objectFactory_1.ObjectFactory(this);
             await objectFactory.ensureBaseObjects();
+            if (this.shuttingDown)
+                return;
             if ((0, config_1.isPlaceholderIanaPen)(config.ianaPen)) {
                 this.log.warn(`EEBUS identity uses IANA PEN ${config.ianaPen}. This is a field-test placeholder. ` +
                     'Enter the officially assigned NexoWatt IANA PEN before production commissioning and before creating new production identities.');
             }
             const identity = await new identityManager_1.IdentityManager(this, config).ensureIdentity();
+            if (this.shuttingDown)
+                return;
             await objectFactory.publishIdentity(identity, config);
+            if (this.shuttingDown)
+                return;
             this.runtime = new eebusRuntime_1.EebusRuntime(this, config, identity, objectFactory);
             this.licenseGuard.assertAllowed();
             await this.runtime.start();
+            if (this.shuttingDown)
+                return;
             if (this.startupTimer)
                 this.clearInterval(this.startupTimer);
             this.startupTimer = undefined;
@@ -99,17 +145,23 @@ class EebusAdapter extends utils.Adapter {
             this.subscribeStates('devices.*.limits.*');
             this.subscribeStates('devices.*.pairing.*');
             this.subscribeStates('pairing.autoAcceptNewDevices');
+            await this.setStateAsync('info.commissioningState', { val: 'ready', ack: true });
+            if (this.shuttingDown)
+                return;
+            this.runtimeReady = true;
             this.log.info(`NexoWatt EOS EEBUS adapter started as ${config.deviceType} ` +
                 `(service="${config.serviceName}", brand=${config.brand}, model=${config.model}, category=${config.deviceCategories.join(',')}).`);
         }
         catch (error) {
+            this.runtimeReady = false;
             await this.runtime?.stop().catch(() => undefined);
             this.runtime = undefined;
+            if (this.shuttingDown)
+                return;
             this.log.error(`NexoWatt EOS EEBUS adapter could not start: ${String(error)}`);
             await this.setStateAsync('info.connection', { val: false, ack: true });
-        }
-        finally {
-            this.runtimeStarting = false;
+            if (!this.shuttingDown)
+                await this.setStateAsync('info.commissioningState', { val: 'error', ack: true });
         }
     }
     async migrateLegacyIdentityNames(native) {
@@ -121,6 +173,8 @@ class EebusAdapter extends utils.Adapter {
         const instanceObjectId = `system.adapter.${this.namespace}`;
         try {
             const obj = await this.getForeignObjectAsync(instanceObjectId);
+            if (this.shuttingDown)
+                return migration.native;
             if (!obj) {
                 this.log.warn(`Legacy EEBUS identity values were normalized for runtime but could not be persisted because ${instanceObjectId} was not found.`);
                 return migration.native;
@@ -140,6 +194,11 @@ class EebusAdapter extends utils.Adapter {
     }
     async onMessage(obj) {
         try {
+            if (!this.runtime || !this.runtimeReady || this.shuttingDown) {
+                if (obj?.callback)
+                    this.sendTo(obj.from, obj.command, { accepted: false, error: 'EOS_EEBUS_NOT_COMMISSIONED_OR_READY' }, obj.callback);
+                return;
+            }
             await this.runtime?.handleMessage(obj);
         }
         catch (error) {
@@ -149,7 +208,7 @@ class EebusAdapter extends utils.Adapter {
         }
     }
     async onStateChange(id, state) {
-        if (!state) {
+        if (!state || !this.runtimeReady || this.shuttingDown) {
             return;
         }
         try {
@@ -161,6 +220,7 @@ class EebusAdapter extends utils.Adapter {
     }
     async onUnload(callback) {
         this.shuttingDown = true;
+        this.runtimeReady = false;
         if (this.startupTimer)
             this.clearInterval(this.startupTimer);
         this.startupTimer = undefined;
@@ -169,6 +229,10 @@ class EebusAdapter extends utils.Adapter {
             this.unsubscribeStates('devices.*.limits.*');
             this.unsubscribeStates('devices.*.pairing.*');
             this.unsubscribeStates('pairing.autoAcceptNewDevices');
+            // Await pending reads/key generation/start before the unload callback;
+            // checkpoints prevent a late runtime start after shutdown was requested.
+            await this.readyTask?.catch(() => undefined);
+            await this.startupTask?.catch(() => undefined);
             await this.licenseGuard?.stop();
             await this.runtime?.stop();
             this.runtime = undefined;

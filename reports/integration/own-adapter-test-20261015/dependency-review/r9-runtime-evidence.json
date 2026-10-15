@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-r9-runtime-dependency-reachability-review",
+  "evaluatedAt": "2026-10-15T04:39:58.045Z",
+  "sourceReleaseId": "97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000",
+  "sequence": 12,
+  "reviewImplementation": {
+    "baseRepositoryCommit": "e4616fec2a56cd7c6c013df090bdda00a0c37f54",
+    "checkerSha256": "cde0a4a78073e67fa0fec00d1ff38b51143a9bd9e9ec5c7d340fc712ad59ea54",
+    "workerSha256": "cfd3d020c5f04b775afbeb19e88067d48b4f6e603146833c143d81b6cfeb66a2"
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "authentication": {
+    "manifestSha256Matched": true,
+    "inspectedFilesMatchedSignedInventory": true,
+    "note": "Independent archive/signature/full inventory verification is a prerequisite; this check does not repeat signature verification."
+  },
+  "inventory": {
+    "verifiedFileReadOperations": 14620,
+    "codeFiles": 13809,
+    "codeBytes": 159570689,
+    "packageManifests": 803,
+    "codeExtensions": [
+      "js",
+      "cjs",
+      "mjs",
+      "jsx",
+      "ts",
+      "tsx"
+    ],
+    "includeMinifiedCode": true,
+    "sourceMapsInspected": false
+  },
+  "packages": [
+    {
+      "path": "node_modules/ajv/package.json",
+      "name": "ajv",
+      "version": "8.20.0"
+    },
+    {
+      "path": "node_modules/har-validator/node_modules/ajv/package.json",
+      "name": "ajv",
+      "version": "6.15.0"
+    },
+    {
+      "path": "node_modules/node-forge/package.json",
+      "name": "node-forge",
+      "version": "1.4.0"
+    },
+    {
+      "path": "node_modules/ocpp-rpc/node_modules/ajv/package.json",
+      "name": "ajv",
+      "version": "8.14.0"
+    },
+    {
+      "path": "node_modules/ocpp-rpc/package.json",
+      "name": "ocpp-rpc",
+      "version": "2.2.1"
+    }
+  ],
+  "pins": [
+    {
+      "path": "node_modules/@iobroker/js-controller-common-db/build/cjs/lib/common/tools.js",
+      "sha256": "f7499955dc5a935e8eea9eff7afab20c9c8d4b86b5098a58121c44605a776ad3"
+    },
+    {
+      "path": "node_modules/@iobroker/js-controller-common-db/build/esm/lib/common/tools.js",
+      "sha256": "c32efa42a0bdd94dd035dbdb9c1b47b715f475d37beb28034c20aeb3bead4a86"
+    },
+    {
+      "path": "node_modules/ocpp-rpc/lib/validator.js",
+      "sha256": "70206398cc7cac726cbae1ec22f2a594a05f1fa05f7cea3f01767c9a9e20c293"
+    },
+    {
+      "path": "node_modules/ocpp-rpc/lib/standard-validators.js",
+      "sha256": "57d04ee9af23755ebfe0e8d45cc25e26ee952ac17f2d7f2ee2c9ae9184eebf9e"
+    },
+    {
+      "path": "node_modules/ocpp-rpc/lib/client.js",
+      "sha256": "2d4d9252e4db7daf495b05d58f073daf30719ca4b724b40d9911821109b13da1"
+    },
+    {
+      "path": "node_modules/node-forge/lib/rsa.js",
+      "sha256": "fd4740238145ec26470eb3f06a627c72039538ce1307dbdce40521f94dfd0a50"
+    }
+  ],
+  "forgeReferences": [
+    {
+      "path": "node_modules/@iobroker/js-controller-common-db/build/cjs/lib/common/tools.js",
+      "sha256": "f7499955dc5a935e8eea9eff7afab20c9c8d4b86b5098a58121c44605a776ad3"
+    },
+    {
+      "path": "node_modules/@iobroker/js-controller-common-db/build/esm/lib/common/tools.js",
+      "sha256": "c32efa42a0bdd94dd035dbdb9c1b47b715f475d37beb28034c20aeb3bead4a86"
+    }
+  ],
+  "forgeDependencyManifests": [
+    {
+      "path": "node_modules/@iobroker/js-controller-common-db/package.json",
+      "name": "@iobroker/js-controller-common-db",
+      "version": "7.2.2",
+      "kind": "dependencies",
+      "declared": "^1.3.2"
+    }
+  ],
+  "resolution": {
+    "forgeFromCommonDb": "node_modules/node-forge/lib/index.js",
+    "ajvFromOcpp": "node_modules/ocpp-rpc/node_modules/ajv/dist/ajv.js",
+    "ajvMetadataFromOcpp": "node_modules/ocpp-rpc/node_modules/ajv/package.json"
+  },
+  "boundedChecks": {
+    "ok": true,
+    "checks": [
+      "all_three_bundled_validators_load_without_data_option",
+      "valid_heartbeat_accepted_extra_property_rejected",
+      "bundled_schemas_have_no_data_references",
+      "dynamic_data_pattern_schema_rejected_by_actual_factory",
+      "blind_ajv_820_override_reproduces_legacy_urn_failure"
+    ],
+    "groupsPassed": 5,
+    "maximumProcessTimeMs": 5000,
+    "networkListenersStarted": false,
+    "adapterEntryPointsExecuted": false
+  },
+  "assessment": {
+    "forge": "Affected package present. Examined literal-name consumers parse/sign certificates, not RSA signature verification. No complete dynamic call-graph or exploitability conclusion.",
+    "ajv": "Affected package present. Exact ocpp-rpc validator does not enable $data; that advisory precondition is not active in the tested factory and bundled validators. Not a blanket statement about regex safety.",
+    "upgrade": "Blind AJV override breaks legacy URN schema loading; preserve this expected-failure regression until validator/schema migration is validated.",
+    "status": "open_scoped_reachability_review",
+    "productionApproval": false,
+    "hardwareTested": false,
+    "dependencyUpdatesApplied": false,
+    "vulnerabilityScanPerformed": false,
+    "completeSecurityAssessment": false,
+    "limitations": [
+      "Lexical literal-name search can miss bundled/renamed or dynamically constructed imports.",
+      "Read-only isolated artifact checks do not prove runtime OS/DB isolation or live configuration.",
+      "No adapter entry point, live system, certificate authority, or physical command was executed.",
+      "Existing findings and audit results are not suppressed or closed by this report."
+    ]
+  }
+}

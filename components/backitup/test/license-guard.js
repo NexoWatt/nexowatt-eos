@@ -97,6 +97,8 @@ function adapterHarness() {
     class Adapter {
         constructor() { this.name = 'nexowatt-backup'; this.namespace = 'nexowatt-backup.0'; this.config = {}; this.log = { error() {}, info() {}, warn() {}, debug() {} }; }
         on() {}
+        async setObjectNotExistsAsync() {}
+        async setStateAsync() {}
         sendTo(...args) { replies.push(args); }
     }
     const module = { exports: {} };
