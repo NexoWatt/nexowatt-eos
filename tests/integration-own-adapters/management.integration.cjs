@@ -175,7 +175,17 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         child.evidenceScope = args[0] === 'setup' ? 'cli-setup' : args[0] === 'backup' ? 'cli-backup' : 'cli-upload';
         const timer = setTimeout(() => signalGroup(child, 'SIGTERM'), budget);
         const hard = setTimeout(() => signalGroup(child, 'SIGKILL'), budget + 5000);
-        try { if (await child.completion !== 0) fail('MANAGEMENT_CLI_FAILED'); }
+        try {
+            const exitCode = await child.completion;
+            if (args[0] === 'backup') {
+                evidence.backupCli = evidence.backupCli || [];
+                const diagnostics = require('./backup-diagnostics.cjs');
+                const summary = diagnostics.cliSummary(child.output, exitCode, child.signalCode);
+                evidence.backupCli.push(summary);
+                diagnostics.assertSuccessfulBackup(summary);
+            }
+            if (exitCode !== 0) fail('MANAGEMENT_CLI_FAILED');
+        }
         finally { clearTimeout(timer); clearTimeout(hard); }
         assert.ok(fs.readFileSync(configFile).equals(configBytes));
     };
@@ -405,6 +415,19 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         await states.setState(canaryId, { val: canaryValue, ack: true, from: 'system.host.eos-management-lab' });
         const directory = path.join(data, 'nexowatt-backup/backups');
         const beforeArchives = new Set(fs.readdirSync(directory));
+        // Reuse an existing least-privilege connection; diagnostics must not
+        // consume another connection slot or reveal sessions/roles/SQL text.
+        try {
+            const capacity = await objects.store._query(`SELECT current_setting('max_connections')::int AS maximum,
+                current_setting('superuser_reserved_connections')::int AS "superuserReserved",
+                current_setting('reserved_connections')::int AS "roleReserved",
+                (SELECT count(*)::int FROM pg_stat_activity WHERE backend_type = 'client backend') AS connections`);
+            evidence.backupDatabaseCapacity = require('./backup-diagnostics.cjs').databaseCapacity(capacity.rows[0]);
+        } catch { evidence.backupDatabaseCapacity = { available: false }; }
+        assert.equal(evidence.backupDatabaseCapacity.available, true);
+        assert.equal(evidence.backupDatabaseCapacity.maximum, 128);
+        assert.equal(evidence.backupDatabaseCapacity.superuserReserved, 3);
+        assert.equal(evidence.backupDatabaseCapacity.roleReserved, 0);
         await cli(['backup'], 90000);
         const first = fs.readdirSync(directory).filter(name => !beforeArchives.has(name));
         assert.equal(first.length, 1);

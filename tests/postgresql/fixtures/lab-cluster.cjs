@@ -29,8 +29,10 @@ function run(command,args,options={}) {
 function resolveLabProfile(profile='laboratory') {
   // Two fixed fixture profiles, never arbitrary connection input. Management
   // invokes the unchanged product bootstrap, which requires port15432/db eos.
-  if(profile==='laboratory')return {port:null,database:'eos_lab'};
-  if(profile==='management')return {port:15432,database:'eos'};
+  if(profile==='laboratory')return {port:null,database:'eos_lab',maxConnections:40};
+  // Keep the full controller/adapter/backup fixture at the product's fixed
+  // capacity. Each PostgreSQL store owns a pool connection and a LISTEN client.
+  if(profile==='management')return {port:15432,database:'eos',maxConnections:128};
   throw Object.assign(new Error('EOS_PG_LAB_PROFILE'),{code:'EOS_PG_LAB_PROFILE'});
 }
 async function startLab({binDirectory=process.env.EOS_PG_BIN_DIRECTORY,schemaFile,profile='laboratory'}={}) {
@@ -87,7 +89,7 @@ async function startLab({binDirectory=process.env.EOS_PG_BIN_DIRECTORY,schemaFil
     run(bin('initdb'),['-D',dataDirectory,'--username=eos_lab_owner','--auth-local=peer','--auth-host=scram-sha-256','--encoding=UTF8','--no-locale','--data-checksums']);
     const port=selected.port??await unusedLoopbackPort();
     // Values originate exclusively in this private generated directory.
-    const conf=["listen_addresses='127.0.0.1'",`port=${port}`,`unix_socket_directories='${socketDirectory.replaceAll("'","''")}'`,'unix_socket_permissions=0700','max_connections=40',"shared_buffers='32MB'",'ssl=on',"ssl_min_protocol_version='TLSv1.3'",`ssl_cert_file='${cert('server.crt').replaceAll("'","''")}'`,`ssl_key_file='${cert('server.key').replaceAll("'","''")}'`,`ssl_ca_file='${cert('ca.crt').replaceAll("'","''")}'`,"password_encryption='scram-sha-256'","authentication_timeout='5s'","statement_timeout='5s'","idle_in_transaction_session_timeout='5s'","log_statement='none'","log_min_error_statement='panic'",'logging_collector=off'];
+    const conf=["listen_addresses='127.0.0.1'",`port=${port}`,`unix_socket_directories='${socketDirectory.replaceAll("'","''")}'`,'unix_socket_permissions=0700',`max_connections=${selected.maxConnections}`,'superuser_reserved_connections=3','reserved_connections=0',"shared_buffers='32MB'",'ssl=on',"ssl_min_protocol_version='TLSv1.3'",`ssl_cert_file='${cert('server.crt').replaceAll("'","''")}'`,`ssl_key_file='${cert('server.key').replaceAll("'","''")}'`,`ssl_ca_file='${cert('ca.crt').replaceAll("'","''")}'`,"password_encryption='scram-sha-256'","authentication_timeout='5s'","statement_timeout='5s'","idle_in_transaction_session_timeout='5s'","log_statement='none'","log_min_error_statement='panic'",'logging_collector=off'];
     await fsp.writeFile(path.join(dataDirectory,'postgresql.conf'),`${conf.join('\n')}\n`,{mode:0o600});
     await fsp.writeFile(path.join(dataDirectory,'pg_hba.conf'),`local all eos_lab_owner peer map=lab_owner\nlocal all all reject\nhostnossl all all 0.0.0.0/0 reject\nhostssl ${selected.database} eos_objects,eos_states 127.0.0.1/32 cert\nhostssl eos_tls_probe eos_tls_probe 127.0.0.1/32 cert\nhostssl all all 0.0.0.0/0 reject\nhost all all ::0/0 reject\n`,{mode:0o600});
     await fsp.writeFile(path.join(dataDirectory,'pg_ident.conf'),`lab_owner ${username} eos_lab_owner\n`,{mode:0o600});

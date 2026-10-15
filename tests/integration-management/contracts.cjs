@@ -52,14 +52,15 @@ test('HTTPS diagnostics expose only fixed stage/code/reason and the expected fix
 test('management fixture preserves the exact production PostgreSQL admission profile', () => {
     const { resolveLabProfile } = require('../postgresql/fixtures/lab-cluster.cjs');
     const { assertRuntimeConfig } = require('../../runtime/bootstrap/initialize.cjs');
-    assert.deepEqual(resolveLabProfile(), { port: null, database: 'eos_lab' });
-    assert.deepEqual(resolveLabProfile('management'), { port: 15432, database: 'eos' });
+    assert.deepEqual(resolveLabProfile(), { port: null, database: 'eos_lab', maxConnections: 40 });
+    assert.deepEqual(resolveLabProfile('management'), { port: 15432, database: 'eos', maxConnections: 128 });
     for (const input of [null, true, 15432, {}, 'eos', '127.0.0.1', 'management;DROP DATABASE eos']) {
         assert.throws(() => resolveLabProfile(input), { code: 'EOS_PG_LAB_PROFILE' });
     }
     const config = { system: { hostname: 'eos-management-lab', compact: false, allowShellCommands: false },
         multihostService: { enabled: false }, plugins: { sentry: { enabled: false } } };
-    for (const domain of ['objects', 'states']) config[domain] = { type: 'postgresql', host: '127.0.0.1', ...resolveLabProfile('management'),
+    const { port, database } = resolveLabProfile('management');
+    for (const domain of ['objects', 'states']) config[domain] = { type: 'postgresql', host: '127.0.0.1', port, database,
         user: 'eos_' + domain, options: { ssl: { ca: 'admission-only-ca', cert: domain + '-admission-cert', key: domain + '-admission-key' } } };
     assert.equal(assertRuntimeConfig(config), config);
     for (const [field, value] of [['port', 5432], ['database', 'eos_lab'], ['host', 'localhost']]) {

@@ -4,7 +4,10 @@ const path = require('node:path');
 const SIGNALS = Object.freeze({ LICENSE_VALID: '[EOS licensing] LICENSE_VALID', LICENSE_MISSING: '[EOS licensing] LICENSE_MISSING',
     TLS_PROVISIONING: 'EOS_TLS_PROVISIONING_REQUIRED', PG_TRANSACTION: 'EOS_PG_TRANSACTION_FAILED', READ_ONLY_WRITE: 'EROFS',
     PERMISSION_DENIED: 'EACCES', TYPE_ERROR: 'TypeError:', REFERENCE_ERROR: 'ReferenceError:', OAUTH_DEPENDENCY: 'EOS_OAUTH_DEPENDENCY',
-    UNCAUGHT_EXCEPTION: 'uncaught exception', UNHANDLED_REJECTION: 'UnhandledPromiseRejection' });
+    UNCAUGHT_EXCEPTION: 'uncaught exception', UNHANDLED_REJECTION: 'UnhandledPromiseRejection',
+    PG_OBJECTS_CONNECT_FAILED: 'EOS_PG_OBJECTS_CONNECT_FAILED', PG_STATES_CONNECT_FAILED: 'EOS_PG_STATES_CONNECT_FAILED',
+    PG_CONNECTION_FAILED: 'EOS_PG_CONNECTION_FAILED', PG_CONNECTION_CAPACITY: 'remaining connection slots are reserved',
+    BACKUP_PRIVATE_PATH: 'EOS_BACKUP_PRIVATE_PATH', BACKUP_SOURCE_PATH: 'EOS_BACKUP_SOURCE_PATH' });
 function indicators(text) {
     text = text.replace(/\x1b\[[0-9;]*m/g, '');
     const result = new Set(Object.entries(SIGNALS).filter(([, needle]) => text.includes(needle)).map(([code]) => code));

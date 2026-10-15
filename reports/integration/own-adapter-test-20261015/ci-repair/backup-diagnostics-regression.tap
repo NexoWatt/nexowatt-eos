@@ -1,0 +1,154 @@
+TAP version 13
+# Subtest: archive inspection requires real logical content including canary and all exact object IDs
+ok 1 - archive inspection requires real logical content including canary and all exact object IDs
+  ---
+  duration_ms: 5.324329
+  type: 'test'
+  ...
+# Subtest: readable archive with missing/empty exports cannot qualify
+ok 2 - readable archive with missing/empty exports cannot qualify
+  ---
+  duration_ms: 8.3712
+  type: 'test'
+  ...
+# Subtest: wrong canary/config or malformed exported JSON fails without exposing the value
+ok 3 - wrong canary/config or malformed exported JSON fails without exposing the value
+  ---
+  duration_ms: 2.949473
+  type: 'test'
+  ...
+# Subtest: recursive backups, traversal, duplicate required objects and links fail
+ok 4 - recursive backups, traversal, duplicate required objects and links fail
+  ---
+  duration_ms: 5.328586
+  type: 'test'
+  ...
+# Subtest: later empty or corrupt duplicate exports cannot replace previously verified content
+ok 5 - later empty or corrupt duplicate exports cannot replace previously verified content
+  ---
+  duration_ms: 7.604887
+  type: 'test'
+  ...
+# Subtest: equivalent archive aliases fail instead of bypassing duplicate detection
+ok 6 - equivalent archive aliases fail instead of bypassing duplicate detection
+  ---
+  duration_ms: 3.409808
+  type: 'test'
+  ...
+# Subtest: required exports must be files and cannot become directories or overwrite ancestor directories
+ok 7 - required exports must be files and cannot become directories or overwrite ancestor directories
+  ---
+  duration_ms: 5.639521
+  type: 'test'
+  ...
+# Subtest: ordinary canonical tar directory entries remain valid
+ok 8 - ordinary canonical tar directory entries remain valid
+  ---
+  duration_ms: 0.958567
+  type: 'test'
+  ...
+# Subtest: failed backup diagnostics retain exit/phase and fixed connection classification without secrets
+ok 9 - failed backup diagnostics retain exit/phase and fixed connection classification without secrets
+  ---
+  duration_ms: 1.88722
+  type: 'test'
+  ...
+# Subtest: backup export, validation and archive creation phases remain separate
+ok 10 - backup export, validation and archive creation phases remain separate
+  ---
+  duration_ms: 0.380395
+  type: 'test'
+  ...
+# Subtest: database capacity exports only validated fixed numeric fields, rejecting malformed or private values
+ok 11 - database capacity exports only validated fixed numeric fields, rejecting malformed or private values
+  ---
+  duration_ms: 0.27799
+  type: 'test'
+  ...
+# Subtest: runtime file diagnostics classify fixed PostgreSQL/backup failures without returning messages
+ok 12 - runtime file diagnostics classify fixed PostgreSQL/backup failures without returning messages
+  ---
+  duration_ms: 0.86096
+  type: 'test'
+  ...
+# Subtest: exit zero and success phases cannot accept a partially failed object or state export
+ok 13 - exit zero and success phases cannot accept a partially failed object or state export
+  ---
+  duration_ms: 0.617873
+  type: 'test'
+  ...
+# Subtest: unsigned own-adapter preparation requires authenticated R9, both exact inventories and candidate scope
+ok 14 - unsigned own-adapter preparation requires authenticated R9, both exact inventories and candidate scope
+  ---
+  duration_ms: 1.978066
+  type: 'test'
+  ...
+# Subtest: root path provision refuses ordinary/local context before any write
+ok 15 - root path provision refuses ordinary/local context before any write
+  ---
+  duration_ms: 1.150407
+  type: 'test'
+  ...
+# Subtest: content identity permits mode hardening only and detects actual content drift
+ok 16 - content identity permits mode hardening only and detects actual content drift
+  ---
+  duration_ms: 2.307194
+  type: 'test'
+  ...
+# Subtest: passive observer requires all five consumers, correct central response and fresh phase
+ok 17 - passive observer requires all five consumers, correct central response and fresh phase
+  ---
+  duration_ms: 1.438612
+  type: 'test'
+  ...
+# Subtest: observer rejects forged origin, wrong route, unacknowledged request, stale lease and missing consumer
+ok 18 - observer rejects forged origin, wrong route, unacknowledged request, stale lease and missing consumer
+  ---
+  duration_ms: 0.524903
+  type: 'test'
+  ...
+# Subtest: diagnostics never expose exception text or unknown data
+ok 19 - diagnostics never expose exception text or unknown data
+  ---
+  duration_ms: 1.555389
+  type: 'test'
+  ...
+# Subtest: historical R9 profile/harness remains separate and new evidence makes no release or hardware claim
+ok 20 - historical R9 profile/harness remains separate and new evidence makes no release or hardware claim
+  ---
+  duration_ms: 0.554948
+  type: 'test'
+  ...
+# Subtest: full management fixture uses the bounded production connection capacity
+ok 21 - full management fixture uses the bounded production connection capacity
+  ---
+  duration_ms: 1.844946
+  type: 'test'
+  ...
+# Subtest: startup diagnostics identify fixed adapter failures without exporting private log contents
+ok 22 - startup diagnostics identify fixed adapter failures without exporting private log contents
+  ---
+  duration_ms: 2.303968
+  type: 'test'
+  ...
+# Subtest: readiness evidence distinguishes fresh heartbeat, stale heartbeat and dead process using only Booleans
+ok 23 - readiness evidence distinguishes fresh heartbeat, stale heartbeat and dead process using only Booleans
+  ---
+  duration_ms: 0.619585
+  type: 'test'
+  ...
+# Subtest: malformed and unacknowledged state values cannot become positive readiness evidence
+ok 24 - malformed and unacknowledged state values cannot become positive readiness evidence
+  ---
+  duration_ms: 4.715761
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 132.143422

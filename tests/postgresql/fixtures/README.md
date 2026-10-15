@@ -12,6 +12,15 @@ Die Authentifizierung erfolgt mit Clientzertifikaten; TLS 1.3 ist die
 Mindestversion. Jeder Lauf erhält einen freien Port. Wenn PostgreSQL den Port
 nicht mehr binden kann, schlägt der Lauf fehl. Es gibt keinen Klartext-Fallback.
 
+Das kleine Profil `laboratory` bleibt auf 40 PostgreSQL-Verbindungen begrenzt.
+Das feste Profil `management` verwendet Port 15432, Datenbank `eos` und wie
+das Produkt maximal 128 Verbindungen. Damit kann die gemeinsame Prüfung von
+Controller, sechs Adaptern, Beobachtern und Backup-CLI zusätzliche Clients
+öffnen. Die Kapazität ist nicht frei konfigurierbar; Rollen, TLS, Poolgrößen
+und Zeitgrenzen werden dadurch nicht geändert. Beide Profile setzen die
+Standardreserven ausdrücklich auf drei Superuser-Slots und null weitere
+reservierte Slots; die Produktrollen erhalten keinen Zugriff auf diese Reserve.
+
 Beispiel für eine bereits vorbereitete, isolierte Test-VM (Pfade an deren
 Werkzeugablage anpassen):
 

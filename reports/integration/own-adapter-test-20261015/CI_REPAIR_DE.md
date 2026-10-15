@@ -52,6 +52,55 @@ unabhängige Paketprüfung und Veröffentlichung stehen beim Anlegen dieses
 Vermerks noch aus. Ihre tatsächlichen Commit-/Laufbindungen werden nach dem
 Abschluss ergänzt. Vorbereitete Prüfungen gelten nicht als bestanden.
 
+## Erster erneuter nativer CI-Lauf
+
+Der Quellstand `b34db8ab572f8ec4352c525227a39168c7eb155e` wurde mit
+byte- und mode-identischem Quellbaum `19e2220ede6f31405f0caa18d9e4ae106c8bf2a4`
+veröffentlicht. Der gesonderte Markercommit
+`625b86286fa8b863d04fac91a13ab1d7e29aa168` bindet diesen unmittelbaren Elternstand.
+
+Im [Lauf 38709402934](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38709402934)
+bestanden sieben von acht Prüfgruppen unter Node 24.21.0. Insbesondere bestand
+die vollständige R9-Qualifikation mit PostgreSQL 17.11/mTLS, HTTPS-Anmeldung,
+zentraler Lizenz und Neustart: **13/13 Tests, keine übersprungen**. Der
+R9-Vorbereitungsfehler ist damit im nativen CI nachgewiesen behoben.
+
+Der Sechs-Adapter-Lauf bestand nun die ersten elf fachlichen Schritte,
+einschließlich der tatsächlich laufenden sechs Adapter, ausgelieferten
+Admin-Konfigurationsdateien sowie Home-Aktivierung, Widerruf und Pro-Aktivierung.
+Der ursprüngliche Startfehler tritt dort nicht mehr auf. Beim ersten echten
+Controller-Backup scheiterte der Lauf jedoch mit `MANAGEMENT_CLI_FAILED`.
+Backup, anschließender Rückfall und abschließender Neustart sind deshalb durch
+diesen Lauf **nicht** nachgewiesen. Das bereinigte Nachweisartefakt ist
+`11960238038`, SHA-256
+`4c8fe107cc13612ee69cb21177034095916148985624c63d814f0cdf2910f973`.
+Die Signierung/Veröffentlichung wurde korrekt nicht ausgelöst.
+
+Die Untersuchung fand eine zu kleine Verbindungskapazität des bisherigen
+Managementlabors: `max_connections=40` gegenüber `128` in der vorhandenen
+Produktkonfiguration. Bereits sieben Laufzeitprozesse plus die drei
+Prüfclients und ein Backup-CLI benötigen rechnerisch bis zu 38 Verbindungen;
+bei drei reservierten PostgreSQL-Plätzen stehen im alten Labor nur 37 normale
+Plätze bereit. Die etwa elf Sekunden bis zum Fehler passen zum
+Verbindungszeitlimit des CLI. Der alte Beleg enthält jedoch keinen numerischen
+Exitcode; die genaue Fehlerursache bleibt bis zum erneuten nativen Lauf eine
+durch den Code gestützte Diagnose, kein protokollierter PostgreSQL-Gegenversuch.
+Die eng begrenzte [Laborkorrektur und ihre Prüfgrenzen](ci-repair/BACKUP_CAPACITY_DE.md)
+sind gesondert dokumentiert. Das feste Managementprofil übernimmt 128 Plätze;
+das kleine Datenbanklabor bleibt bei 40. Die Produktkonfiguration und
+Rollenrechte werden nicht verändert.
+
+Der nächste Lauf erfasst deshalb zusätzlich ausschließlich numerische
+Kapazitätswerte, Exitcode, feste Fehlerklassen und getrennte Backup-Phasen.
+Konfiguration, Benutzer-/Sitzungsnamen, Datenbankinhalte und rohe CLI-Texte
+werden weiterhin nicht veröffentlicht. Die
+[Diagnose-/Harnessregression](ci-repair/backup-diagnostics-regression.tap)
+bestand lokal **24/24 Tests**; die
+[Dateihashes](ci-repair/backup-diagnostics-summary.json) binden diesen Nachweis.
+Bekannte Exportfehler blockieren den nativen Prüfschritt ausdrücklich auch
+dann, wenn die vorgelagerte CLI trotzdem Exitcode 0 liefert. Die tatsächliche
+Laborkapazität wird vor dem Backup auf 128/3/0 zurückgelesen und geprüft.
+
 ## Testgerät und Rückfall
 
 Das neue Paket ist für ein vollständig eingerichtetes, gesundes R9 vorgesehen.

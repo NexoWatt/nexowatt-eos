@@ -108,6 +108,11 @@ Boolesche Werte für frisches Lebenszeichen, frische Controllerverbindung und
 lebenden Prozess auf. Eine begrenzte Logauswertung gibt nur feste Fehlerklassen
 und diese sechs Adapternamen aus, darunter die native Host-/Integritätsablehnung.
 PIDs, Pfade, freie Fehlermeldungen und Nutzdaten gelangen nicht in den Bericht.
+Backup-CLI-Nachweise enthalten zusätzlich begrenzten numerischen Exitcode,
+feste Fehlerklassen und getrennte Export-/Validierungs-/Archivierungsphasen.
+Vor dem Backup werden ausschließlich numerische PostgreSQL-Verbindungslimits
+und die Gesamtzahl der Clientverbindungen über eine bestehende Verbindung
+abgefragt; keine Sitzungsdaten, Benutzernamen oder SQL-Texte werden gespeichert.
 Für zwei vollständige Asset-Prüfrunden und zwei echte Datenbankarchive beträgt
 das Gesamtbudget 830 Sekunden; der Supervisor beendet den Test nach 840/850
 Sekunden. HTTPS-Abrufe behalten ihr eigenes unverändertes 5-Sekundenbudget.
