@@ -203,6 +203,71 @@ Reproduktion mit kontrollierter Uhr und Datenbank ersetzt keinen nativen
 Test. Signierung und öffentlicher Updatebefehl bleiben bis zum vollständigen
 erfolgreichen Gesamtlauf gesperrt.
 
+## Fünfter nativer Lauf und tatsächliche R10-Veröffentlichung
+
+Der [Lauf 38717983127](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38717983127)
+auf `ad5bea8de208d6ae2ad4d23b662c9f29701675a0` bestand **alle acht Prüfgruppen**.
+Dieser Marker bindet den unmittelbaren Quellstand
+`67497b243c4febf9ef74a9d1f44138abe5d15c19` mit Quellbaum
+`55e3be2b5b47bf4f592d6c1364d051cca2d997f1`.
+Der native Sechs-Adapter-Job `116365242813` bestand **15/15 TAP-Tests und
+21/21 Pflichtprüfungen** mit Node 24.21.0 und PostgreSQL 17.11.
+
+- Beide Starts weisen den Controller und alle sechs Adapter mit aktuellen
+  Prozess-/Alive-Belegen nach; HTTPS-Anmeldung und Lizenzwechsel bestehen.
+- Beide Backup-CLIs enden mit Exitcode 0. Jedes Archiv enthält 305 Objekte und
+  268 States; Pflichtobjekte, Canary, exakte Konfiguration, private Dateimodi
+  und Ausschluss älterer Backuparchive sind geprüft.
+- Alle 16 Laufzeitscans einschließlich beider Stopps und Cleanup sind ohne
+  Laufzeitfehler. Die erwarteten Lizenzzustände werden getrennt eingeordnet.
+- Enrollment-Rückfall nach dem tatsächlichen Start, erneuter Start und
+  unveränderter App-Dateibaum bestehen. Die strengen Hash- und
+  Laufzeitfehlerprüfungen bleiben aktiv.
+
+Das erfolgreiche native Artefakt `11964191244` hat SHA-256
+`f0436cd5dadb66ce498c95bd11647ccd212fd2b75b423fd0745592fbf008ace5`.
+Die [bereinigten nativen Belege](release/own-adapters-native-evidence.json),
+[TAP-Ausgabe](release/own-adapters-native.tap) und
+[Quellbindung](release/own-adapters-source-binding.json) sind archiviert.
+
+Auch [Workflowvalidierung 38717982894](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38717982894)
+und [CodeQL 38717982998](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38717982998)
+sind auf demselben Commit erfolgreich abgeschlossen. CodeQL lud die Ergebnisse
+hoch; 17 Parserdiagnosen betreffen den historischen, alleinstehenden
+Methodenausschnitt `docs/security/evidence/admin-first-run/fixtures/WizardDialog.onClose.ts`.
+Ein vollständiger Abruf der Code-Scanning-Alerts war über den verbundenen
+GitHub-Zugang nicht möglich. Ein Nachweis „null offene Alerts“ wird daher nicht
+behauptet. Bekannte Forge-/AJV-Befunde bleiben offen.
+
+Der [R10-Lieferlauf 38718750400](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38718750400)
+bestand Anforderung, Signierung, unabhängige Rekonstruktion/Veröffentlichung
+und öffentlichen Updatebefehl. Die Lieferung `test.3-r10`, Sequenz 13, hat:
+
+| Bindung | Wert |
+| --- | --- |
+| Release-ID | `9073b20a1c9f54eb4870b3b37a4a8ef59c6916feb379234aa6d14986a3fc26f0` |
+| Archiv-SHA-256 | `0744417d8a9ece466a097170bf8636b463cd94dde03203e3df96e8d38290bb55` |
+| Archivgröße | 88.999.180 Bytes |
+| Asset-Commit | `829f513549d8044e46cb17aebd781df087b8c54f` |
+| Einstiegs-Commit | `47a78ead5a48005f948f26f3dea21047d25468f7` |
+| Befehls-Commit | `f264bb9f7510a0e2d21637a39f8b9fc9464bdec9` |
+
+Die [Bau-/Signaturprüfung](release/build-verification.json) dokumentiert ihren
+Zustand vor dem Publikationsschritt; ihr `published:false` ist historisch korrekt.
+Die spätere [öffentliche HTTPS-Rücklesung](../../../delivery/public-update-test3-r10/remote-readback.json)
+belegt Archiv, öffentlichen Schlüssel und Liefermetadaten bytegenau. Eine
+[getrennte Rücklesung von Einstieg und Befehl](release/public-command-readback.json)
+über die öffentlichen Raw-URLs des GitHub-Connectors verglich zusätzlich
+Größe, SHA-256 und Inhalt mit den gepinnten Git-Dateien. Befehlsrekonstruktion
+und Shell-Syntaxprüfung bestanden; das Updateskript wurde nicht ausgeführt.
+Der begrenzte direkte lokale Curl-Versuch endete zuvor mit Timeout und wird
+nicht als erfolgreicher lokaler HTTPS-Test gewertet.
+
+[Abschließende Workflow-Zustände](release/final-workflow-status.json) und die
+[Updateanleitung](../../../docs/operations/TEST_OWN_ADAPTER_UPDATE_DE.md) ergänzen
+den Nachweis. Die Lieferung ist ein Teststand; Pi-/Geräteabnahme,
+vollständiger Restore und Produktions-/CRA-Freigabe bleiben offen.
+
 ## Testgerät und Rückfall
 
 Das neue Paket ist für ein vollständig eingerichtetes, gesundes R9 vorgesehen.

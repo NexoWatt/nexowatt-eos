@@ -1,8 +1,15 @@
 # Sechs eigene Adapter: begrenzter EOS-Testupdate
 
-Die aktuelle veröffentlichte Anleitung steht immer in der [README](../../README.md).
-Diese Seite beschreibt den neuen **Testkandidaten**, nicht allein durch ihre
-Existenz einen veröffentlichten oder auf dem Pi bestandenen Installationsweg.
+Stand: 15. Oktober 2026. **R10 (`0.2.0-test.3`, Sequenz 13) ist signiert,
+veröffentlicht und öffentlich zurückgelesen.** Der native Sechs-Adapter-Test
+einschließlich Backup-Inhalten, Migrationsrückfall und Neustart ist bestanden.
+Ein Update auf dem physischen Test-Pi wurde damit noch nicht durchgeführt.
+
+Der geprüfte vollständige Updatebefehl steht in
+[UPDATE_COMMAND.txt](../../delivery/public-update-test3-r10/UPDATE_COMMAND.txt)
+([fest veröffentlichter Stand](https://github.com/NexoWatt/nexowatt-eos/blob/f264bb9f7510a0e2d21637a39f8b9fc9464bdec9/delivery/public-update-test3-r10/UPDATE_COMMAND.txt)).
+Er gehört ausschließlich zur R10-Release-ID
+`9073b20a1c9f54eb4870b3b37a4a8ef59c6916feb379234aa6d14986a3fc26f0`.
 
 ## Voraussetzungen
 
@@ -12,14 +19,14 @@ Existenz einen veröffentlichten oder auf dem Pi bestandenen Installationsweg.
 - Admin/UI-Anmeldung und PostgreSQL müssen vor dem Update funktionieren.
 - Wartungsfenster mit sicherem Anlagenzustand und separater geeigneter
   Rückfallsicherung; das Update unterbricht den Controller vorübergehend.
-- Ausschließlich den tatsächlich veröffentlichten, hashgepinnten Befehl aus
-  der README verwenden. Keine Parameter erfinden, Signaturprüfung auslassen,
+- Ausschließlich den oben verlinkten veröffentlichten, hashgepinnten Befehl
+  verwenden. Keine Parameter erfinden, Signaturprüfung auslassen,
   Dateien in bestehenden signierten Releases austauschen oder Sperren entfernen.
 
 ## Was der Teststand einrichtet
 
-Admin, UI, Devices, EEBUS, OCPP und Backup sind als feste eigene Adapter zur
-Ausführung vorgesehen. Bestehende UUID, zentrale Home-/Pro-Lizenz, Konten,
+Admin, UI, Devices, EEBUS, OCPP und Backup werden als sechs feste eigene
+Adapterinstanzen aktiviert. Bestehende UUID, zentrale Home-/Pro-Lizenz, Konten,
 Passwörter und Gerätezertifikate werden nicht ersetzt.
 
 Die vier zusätzlichen Adapter starten mit einer **nicht konfigurierten**
@@ -49,9 +56,28 @@ melden. Ein laufender Prozess mit Initialisierungsfehler gilt nicht als bereit.
    nachgewiesenes vollständiges EOS-Systembackup; Restore erfordert den dafür
    vorgesehenen, gesondert geprüften Betreiberablauf.
 
-Erwartetes Erfolgssignal des neuen Koordinators:
+Erwartetes Erfolgssignal des R10-Koordinators:
 `phase: SIX_OWN_ADAPTER_TEST_ACTIVE`, `sequence: 13`, `adaptersEnabled: 6`.
 Dies ist kein Nachweis physischer Geräteabnahme oder allgemeiner Fehlerfreiheit.
+
+## Tatsächlicher Prüfstand und verbleibende Grenzen
+
+Der [Sicherheitslauf 38717983127](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38717983127)
+bestand mit 8/8 Jobs. Der native Own-Adapter-Job bestand mit 15/15 TAP-Tests,
+21/21 Freigabechecks und 16 fehlerfreien Laufzeit-Scans. Zwei echte logische
+Backup-Archive wurden inhaltlich geprüft; Migrationsrückfall, erneute Anwendung
+und Neustart bestanden ebenfalls. Der
+[Auslieferungslauf 38718750400](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38718750400)
+ist erfolgreich abgeschlossen. Auch der
+[CodeQL-Lauf 38717982998](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38717982998)
+ist erfolgreich abgeschlossen; die verbleibenden Analysegrenzen stehen im
+[Prüfbericht](../../reports/integration/own-adapter-test-20261015/README_DE.md).
+
+Offen bleiben die Installation und Abnahme auf dem Pi, echte Geräte-/Stations-
+und Hardwaretests sowie die vollständige Wiederherstellung. Bekannte
+[Forge-/AJV-Befunde](../../reports/integration/own-adapter-test-20261015/dependency-review/README_DE.md)
+bleiben dokumentiert und offen. R10 ist eine begrenzte Testlieferung ohne
+Produktions- oder CRA-Freigabe.
 
 ## Bei einem Fehler
 

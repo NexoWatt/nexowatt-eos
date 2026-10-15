@@ -1,13 +1,49 @@
-# Aktueller Entwicklungsstand: gemeinsamer Adapter-Teststand in Prüfung
+# Aktueller Teststand: R10 mit sechs eigenen Adaptern
 
-**15. Oktober 2026:** Die gemeinsame Start-/Neustartprüfung für alle sechs
-eigenen Adapter wird ergänzt. Quellkorrekturen an Einrichtung, OCPP, EEBUS und
-Backup sind getrennt von einer veröffentlichten Lieferung zu bewerten.
-**R10 ist noch nicht freigegeben; der bisher veröffentlichte Stand bleibt R9.**
-Der R9-Befehl unten schaltet die vier zusätzlichen Adapter nicht frei.
-[Änderungen, Prüfstand, SBOM und offene Grenzen](reports/integration/own-adapter-test-20261015/README_DE.md).
+**15. Oktober 2026: test.3 Revision 10, Sequenz 13 ist signiert, veröffentlicht
+und für den nächsten Test auf einem vollständig eingerichteten, betriebsbereiten
+R9 mit Sequenz 12 bereit.** Der Updateweg prüft Linux ARM64 und Node 24.21.0.
+Das Testgerät wurde durch diese Veröffentlichung nicht verändert.
 
-## Veröffentlichter Management-Teststand R9
+R10 behebt die gefundenen Start-, Backup- und Rückfallfehler sowie den mehrfachen
+Shutdown-Abschluss im gepinnten Adapterkern. Alle acht Sicherheitsprüfgruppen
+und alle 21 nativen Abnahmekriterien bestanden unter Linux x64 mit Node 24.21.0
+und PostgreSQL 17.11. Geprüft wurden unter anderem alle sechs Adapterprozesse,
+HTTPS-Anmeldung, zentrale Lizenz, zwei echte Backups mit Inhaltsprüfung,
+Enrollment-Rückfall nach dem Start, Stopp und erneuter Start. Workflowvalidierung
+und CodeQL sind ebenfalls erfolgreich abgeschlossen.
+
+Vor dem späteren Update die [Voraussetzungen, Sicherung und Fehlerbehandlung](docs/operations/TEST_OWN_ADAPTER_UPDATE_DE.md)
+prüfen. Den folgenden vollständigen Befehl ausschließlich auf dem dafür
+vorgesehenen gesunden R9-Testgerät im SSH-Terminal ausführen:
+
+```bash
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-update-r10-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29931 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/47a78ead5a48005f948f26f3dea21047d25468f7/delivery/public-update-test3-r10/update.sh -o "$d/update.sh"; [[ -f "$d/update.sh" && ! -L "$d/update.sh" && $(/usr/bin/stat -c %h "$d/update.sh") == 1 && $(/usr/bin/stat -c %u "$d/update.sh") == 0 && $(/usr/bin/stat -c %s "$d/update.sh") == 29931 ]] || exit 1; printf '\''%s  %s\n'\'' '\''bb493fda497b0690fd7716565c51b632a672e74cc35b7022bc2823828f94be6b'\'' "$d/update.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/update.sh"'
+```
+
+Der Befehl prüft den fest gebundenen Einstieg anhand Größe und SHA-256;
+anschließend werden Paketsignatur und Ausgangszustand geprüft. Der Updateweg
+bewahrt vorhandene Konten, UUID, Lizenz, Zertifikate und Datenbank. Erfolg meldet
+`"phase":"SIX_OWN_ADAPTER_TEST_ACTIVE"`, `"sequence":13` und `"adaptersEnabled":6`.
+Devices, EEBUS, OCPP und Backup werden als Instanzen eingerichtet; ohne die
+jeweilige Konfiguration entstehen dadurch keine Geräteverbindungen, Pairings,
+OCPP-Listener oder zusätzlichen Sicherungsziele. Nach einem Abbruch Sperren und
+Migrationspläne erhalten und den festen Fehlercode auswerten.
+
+[Verifizierter R10-Updatebefehl als Textdatei](delivery/public-update-test3-r10/UPDATE_COMMAND.txt) ·
+[Änderungen und Prüfnachweise](reports/integration/own-adapter-test-20261015/README_DE.md) ·
+[Alle acht Sicherheitsprüfgruppen bestanden](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38717983127) ·
+[Signierung und unabhängige Veröffentlichung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38718750400) ·
+[CodeQL abgeschlossen](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38717982998).
+
+**R10 ist eine Testversion, keine Produktions- oder CRA-Freigabe.** Pi-/ARM64-
+und Geräteabnahme, vollständige Wiederherstellung sowie die Reaktionszeitziele
+100 ms / 50 ms sind noch offen. Die [bekannten Abhängigkeitsbefunde](reports/integration/own-adapter-test-20261015/dependency-review/README_DE.md)
+werden weitergeführt; ein erfolgreicher CodeQL-Lauf belegt keine vollständige
+Schwachstellenfreiheit.
+
+## Bisheriger Management-Teststand R9 (Update von R8)
+
 
 Die sechs eigenen Adapter beziehen ihre Freigabe aus der zentralen EOS-Lizenz (NWL3).
 Die UI benötigt keinen eigenen Schlüssel mehr. Unveränderte NexoWatt-Adapter
