@@ -112,7 +112,8 @@ function validatePayload(payload, manifest) {
     const profile = verifyBuildProfile(path.join(payload, 'app'), executable.filter(e => e.kind === 'adapter').map(({ package: name, version }) => ({ package: name, version })));
     if (releaseScope === product.OWN_ADAPTER_TEST) {
         const backupState = require('../../runtime/controller-profile/backup-state.cjs').verifyBuild(path.join(payload, 'app'));
-        profile.files.push(...backupState.files.map(({ relativePath, sha256 }) => ({ relativePath, sha256 })));
+        const adapterShutdown = require('../../runtime/controller-profile/adapter-shutdown.cjs').verifyBuild(path.join(payload, 'app'));
+        profile.files.push(...[...backupState.files, ...adapterShutdown.files].map(({ relativePath, sha256 }) => ({ relativePath, sha256 })));
     }
     if (fullProduct) {
         // Backend dependencies change the upstream controller manifest too.

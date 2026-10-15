@@ -12,9 +12,10 @@ Kopie bleibt exakte R9-Basis für die Migration. Auf eine zweite Kopie werden
 die tatsächlichen aktuellen npm-Paketdateien der sechs eigenen Adapter gelegt;
 `npm pack --dry-run --ignore-scripts --offline` führt keine Lifecycle-Skripte aus.
 
-Nur zwei weitere Änderungen sind zulässig: das feste Controllerprofil mit sechs
-exakten Paketen und die separat hashgeprüfte CJS-/ESM-Transformation des
-Controller-Backup-Stagingpfads. Alle sonstigen Drittanbieterbytes und der
+Nur drei weitere Änderungen sind zulässig: das feste Controllerprofil mit sechs
+exakten Paketen, die separat hashgeprüfte CJS-/ESM-Transformation des
+Controller-Backup-Stagingpfads und der ebenso gebundene einmalige Abschluss
+im Adapterkern. Alle sonstigen Drittanbieterbytes und der
 Root-Lock bleiben identisch. `own-adapters-source-binding.json` enthält Quellhashes,
 Änderungsinventar und die zugelassenen Transformationen. Ein schmutziger
 Quellbaum wird ausdrücklich aufgezeichnet, niemals als sauberer Commit attestiert.

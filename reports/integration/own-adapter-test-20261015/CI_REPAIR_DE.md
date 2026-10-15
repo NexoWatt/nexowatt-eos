@@ -170,6 +170,39 @@ Hashvergleich und das Abbrechen bei fremden Konfigurationsänderungen bleiben
 erhalten. Der nächste native Lauf muss Rückfall und erneuten Start nachweisen;
 Signierung und Veröffentlichung bleiben bis dahin blockiert.
 
+## Vierter nativer Lauf: gleichzeitige Shutdown-Abschlüsse reproduziert
+
+Der [Lauf 38715663096](https://github.com/NexoWatt/nexowatt-eos/actions/runs/38715663096)
+prüft Marker `958ce89afc98384131b1e8ee737a765b8eac4ba6`, Quellstand
+`a3db9f1084452675bd61f84fbde031e916138a71`. Erneut bestehen sieben von acht
+Prüfgruppen, beide Backupinhalte und 17/21 Sechs-Adapter-Checks. Das Artefakt
+`11962887954` hat SHA-256
+`14c1f52421f641a150c24a6929447185c3b20f391961c811d9ee09c7df9653e1`.
+
+Die erweiterten Diagnosen ordnen den diesmal aufgetretenen Laufzeitfehler
+erstmals eindeutig zu: unmittelbar nach dem Stopp meldet ausschließlich
+`eos-admin` die Klasse `ALIVE_SHUTDOWN_WRITE_FAILED`. Vor dem Stopp sind alle
+Scans sauber; der eigentliche Enrollment-Rückfall wird noch nicht erreicht.
+Die vorherige Admin-Initialisierungskorrektur ist dadurch noch nicht nativ bis
+zum Rückfall qualifiziert. Die Datenbank meldet 34 Verbindungen bei 128/3/0;
+ein Kapazitätsfehler wurde diesmal nicht festgestellt.
+
+Mit den tatsächlichen unveränderten `_stop`-/`terminate`-Methoden des gepinnten
+Adapterkerns wurde der Ablauf deterministisch reproduziert: Der
+Unload-Callback startet den Abschluss, ein unbedingter 500-ms-Timer startet
+ihn erneut, und der erste Abschluss lässt inzwischen die
+Datenbankverbindungen schließen. Der zweite Schreibzugriff auf den
+`alive`-State scheitert dann. Die Datenbankschicht verweigert Zugriffe nach
+dem Schließen korrekt; ihre Lebenszyklus- und Transaktionsschutzprüfungen
+werden nicht gelockert.
+
+Der [eng hashgebundene Transform](ci-repair/ADAPTER_SHUTDOWN_DE.md) für beide
+gepinnten CJS-/ESM-Kernmodule führt den Abschluss über dasselbe Promise genau
+einmal aus. 19 gezielte Shutdown-Regressionen bestanden lokal. Die
+Reproduktion mit kontrollierter Uhr und Datenbank ersetzt keinen nativen
+Test. Signierung und öffentlicher Updatebefehl bleiben bis zum vollständigen
+erfolgreichen Gesamtlauf gesperrt.
+
 ## Testgerät und Rückfall
 
 Das neue Paket ist für ein vollständig eingerichtetes, gesundes R9 vorgesehen.

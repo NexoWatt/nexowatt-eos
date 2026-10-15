@@ -13,6 +13,7 @@ const archiveTool = require(path.join(ROOT, 'tools/integration/create-test-archi
 const product = require(path.join(ROOT, 'runtime/product/scope.cjs'));
 const own = require(path.join(ROOT, 'runtime/bootstrap/own-adapter-enrollment.cjs'));
 const backup = require(path.join(ROOT, 'runtime/controller-profile/backup-state.cjs'));
+const shutdown = require(path.join(ROOT, 'runtime/controller-profile/adapter-shutdown.cjs'));
 const { componentTreeDigest } = require(path.join(ROOT, 'runtime/policy/admission.cjs'));
 const derivative = require('./bind-derivative-sbom.cjs');
 const native = require('./native-evidence.cjs');
@@ -80,6 +81,7 @@ function prepareApp({ baseDirectory, work, sourceCommit, timestamp }) {
   const controllerProfile = path.join(app, derivative.PROFILE_FILE);
   fs.writeFileSync(controllerProfile, JSON.stringify(profile, null, 2) + '\n'); fs.chmodSync(controllerProfile, 0o644);
   const backupTransform = backup.applyToBuild(app);
+  const adapterShutdownTransform = shutdown.applyToBuild(app);
   own.pinnedAdapters(app); product.inspectApp(app, product.OWN_ADAPTER_TEST);
   const after = bundle.inventory(app), changes = derivative.assertDelta(before, after);
   const previousSbomBytes = bundle.readFileLimited(path.join(oldPayload, 'sbom.cdx.json'), 16 * 1024 * 1024).bytes;
@@ -90,10 +92,10 @@ function prepareApp({ baseDirectory, work, sourceCommit, timestamp }) {
   const catalog = candidateCatalog(oldCatalog), catalogFile = path.join(work, 'catalog.json'); save(catalogFile, catalog);
   save(path.join(work, 'unsigned-app-verification.json'), { schemaVersion: 1, kind: 'unsigned-r10-candidate-preparation',
     signed: false, sourceCommit, timestamp, previousReleaseId: BASE.releaseId, previousSignatureVerified: true,
-    appContentSha256: sbom.evidence.actualAppFileTableSha256, changes: changes.length, prebuilt, backupTransform,
+    appContentSha256: sbom.evidence.actualAppFileTableSha256, changes: changes.length, prebuilt, backupTransform, adapterShutdownTransform,
     executionScope: product.OWN_ADAPTER_TEST, nativeTargetExecutionPerformed: false, hardwareTested: false, productionReleaseApproved: false });
   return { ...base, work, app, previousApp, oldPayload, before, after, changes, coverage, overlays: overlay.bindings,
-    prebuilt, backupTransform, sbom, sbomFile, catalog, oldCatalog, catalogFile, sourceCommit, timestamp };
+    prebuilt, backupTransform, adapterShutdownTransform, sbom, sbomFile, catalog, oldCatalog, catalogFile, sourceCommit, timestamp };
 }
 function prepareCandidatePayload(prepared, payload) {
   const files = build.preparePayload({ appDirectory: prepared.app, destination: payload, catalogFile: prepared.catalogFile,
@@ -140,7 +142,8 @@ function sourceBinding(prepared, final) {
   });
   return { schemaVersion: 1, sourceCommit: prepared.sourceCommit, releaseId: final.releaseId, previousReleaseId: BASE.releaseId,
     hostFiles, sourceCoverage: prepared.coverage, ownOverlays: prepared.overlays, changes: prepared.changes,
-    backupTransform: prepared.backupTransform, allMatched: true, npmResolutionPerformed: false, sourceTranspilationPerformed: false };
+    backupTransform: prepared.backupTransform, adapterShutdownTransform: prepared.adapterShutdownTransform,
+    adapterShutdownSourceSha256: bundle.sha256(bundle.readFileLimited(path.join(ROOT, derivative.SHUTDOWN_SOURCE)).bytes), allMatched: true, npmResolutionPerformed: false, sourceTranspilationPerformed: false };
 }
 function deliveryMetadata({ previousDelivery, release, sourceCommit, installedComponents }) {
   return { ...previousDelivery, deliveryRevision: 10, releaseSequence: 13, releaseId: release.releaseId,

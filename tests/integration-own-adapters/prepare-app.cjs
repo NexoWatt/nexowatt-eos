@@ -11,6 +11,7 @@ const { copyDirectory } = require('../../tools/system/build-bundle.cjs');
 const builder = require('../../reports/integration/installable-test3-r9-20261005/build-revision.cjs');
 const product = require('../../runtime/product/scope.cjs');
 const own = require('../../runtime/bootstrap/own-adapter-enrollment.cjs');
+const shutdown = require('../../runtime/controller-profile/adapter-shutdown.cjs');
 const { NODE, BASE_RELEASE_ID, sha, contentRows, validatePreparation } = require('./fixture.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const BASE = Object.freeze({ archive: 'eos-0.2.0-test.3-linux-arm64.tar.gz', bytes: 88944737,
@@ -45,11 +46,13 @@ function prepare(input, baseDirectory) {
     const backupState = require('../../runtime/controller-profile/backup-state.cjs');
     backupState.applyToBuild(app);
     backupState.verifyBuild(app);
+    const adapterShutdownTransform = shutdown.applyToBuild(app);
+    shutdown.verifyBuild(app);
     own.pinnedAdapters(app); product.inspectApp(app, product.OWN_ADAPTER_TEST);
     const after = bundle.inventory(app), byPath = new Map(before.map(row => [row.path, row]));
     const transformed = new Set([controllerProfile,
         'node_modules/@iobroker/js-controller-cli/build/cjs/lib/setup/setupBackup.js',
-        'node_modules/@iobroker/js-controller-cli/build/esm/lib/setup/setupBackup.js']);
+        'node_modules/@iobroker/js-controller-cli/build/esm/lib/setup/setupBackup.js', ...shutdown.FILES.map(row => row.relativePath)]);
     for (const row of after) {
         const previous = byPath.get(row.path); byPath.delete(row.path);
         if (!builder.ownSourcePath(row.path) && !transformed.has(row.path) && JSON.stringify(previous) !== JSON.stringify(row)) throw new Error('OWN_NATIVE_DEPENDENCY_CHANGED');
@@ -57,7 +60,8 @@ function prepare(input, baseDirectory) {
     if ([...byPath.keys()].some(name => !builder.ownSourcePath(name))) throw new Error('OWN_NATIVE_DEPENDENCY_REMOVED');
     const sourceBinding = { schemaVersion: 1, sourceCommit, sourceTreeClean, signed: false, unsignedFixture: true,
         previousSignatureVerified: true, previousReleaseId: BASE_RELEASE_ID, ownSourceCoverage: coverage, ownOverlay: overlay.bindings,
-        allowedControllerTransforms: [...transformed], prebuilt, physicalHardwareTested: false, productionReleaseApproved: false };
+        allowedControllerTransforms: [...transformed], adapterShutdownTransform,
+        adapterShutdownSourceSha256: sha(fs.readFileSync(path.join(ROOT, 'runtime/controller-profile/adapter-shutdown.cjs'))), prebuilt, physicalHardwareTested: false, productionReleaseApproved: false };
     fs.writeFileSync(path.join(root, 'own-adapters-source-binding.json'), JSON.stringify(sourceBinding, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
     const record = validatePreparation({ schemaVersion: 1, kind: 'unsigned-own-adapters-native-preparation', signed: false, unsignedFixture: true,
         sequence: 13, nodeVersion: NODE, app, baselineApp, sourceCommit, sourceTreeClean, previousReleaseId: BASE_RELEASE_ID,

@@ -19,8 +19,9 @@ die Signierung.
   und sechs bytegleiche zentrale Lizenzclients.
 - Exakt sechs eigene Adapter im Controllerprofil; zusätzliche JavaScript- oder
   beliebige Fremdadapter werden dadurch nicht zugelassen.
-- Außer den eigenen Paketdateien sind ausschließlich die Controllerprofil-JSON
-  und die zwei quell-/ausgabehashgebundenen Backup-CLI-Dateien veränderbar.
+- Außer den eigenen Paketdateien sind ausschließlich die Controllerprofil-JSON,
+  die zwei quell-/ausgabehashgebundenen Backup-CLI-Dateien und die zwei ebenso
+  gebundenen Adapterkern-Dateien für den einmaligen Shutdown-Abschluss veränderbar.
 - Root-Lockfile, Abhängigkeitsversionen, native Module, übrige Fremdpaketdateien
   und PostgreSQL-Schema bleiben erhalten. Als einzige Systemd-Änderung wird die
   geprüfte `system/own-adapter-test/systemd/nexowatt-eos-upload.service` samt
@@ -31,7 +32,7 @@ die Signierung.
   Neue Scripts-/Files-Metadaten sowie die explizit geprüfte öffentliche
   Repositoryangabe des Backup-Pakets sind zulässig, keine beliebigen Ausnahmen.
 - Die SBOM wird mit tatsächlichen App-Datei-/Modustabellen, Derivat-Abstammung,
-  eingebetteten Lizenzclients, Backup-Transformation und Änderungen neu gebunden.
+  eingebetteten Lizenzclients, Backup-/Shutdown-Transformationen und Änderungen neu gebunden.
   Dies ist **kein neuer vollständiger Schwachstellenscan** und enthält weiterhin
   kein OS-/Firmwareinventar.
 
@@ -132,3 +133,16 @@ sind für diesen Arbeitsschritt **nicht ausgeführt/bestanden**.
 Ein separater unabhängiger Review des begrenzten Updaters einschließlich
 35/35 wiederholter Fehlerinjektionstests steht in
 [updater-independent-review.md](updater-independent-review.md).
+
+## Ergänzung: gepinnte Shutdown-Korrektur
+
+Nach dem reproduzierten Shutdown-Wettlauf im vierten nativen Lauf wurde die
+Ableitung um genau zwei gepinnte Adapterkern-Dateien erweitert. Die
+[lokale vollständige Rekonstruktion](shutdown-payload-verification.json)
+bestand erneut: 22.201 App-Dateien, 22.331 Payloaddateien, 51 App-Deltas,
+vollständige SBOM-, Quellen- und R9→R10-Übergangsprüfung. Die
+[60 Integrations-/SBOM-Vertragstests](shutdown-integration-contracts.tap)
+bestanden ebenfalls. Das ist ein unsignierter lokaler Nachweis unter Node
+24.19.0 mit uncommitteten Quellen; Signierung und native Qualifikation bleiben
+gesonderte Gates. Der [Shutdown-Bericht](../ci-repair/ADAPTER_SHUTDOWN_DE.md)
+beschreibt die tatsächliche Reproduktion, Korrektur und verbleibenden Grenzen.

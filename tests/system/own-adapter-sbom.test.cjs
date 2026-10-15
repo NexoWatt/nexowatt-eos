@@ -12,10 +12,12 @@ const { inventory, sha256 } = require('../../runtime/release/bundle.cjs');
 const { verifySbomBinding, EMBEDDED } = require('../../runtime/release/sbom-binding.cjs');
 const product = require('../../runtime/product/scope.cjs');
 const backupState = require('../../runtime/controller-profile/backup-state.cjs');
-const OWN_ASSEMBLY = 'authenticated-r9-tree-with-six-own-adapters-and-backup-state-transform';
+const shutdown = require('../../runtime/controller-profile/adapter-shutdown.cjs');
+const OWN_ASSEMBLY = 'authenticated-r9-tree-with-six-own-adapters-backup-state-and-adapter-shutdown-transforms';
 const R9_ASSEMBLY = 'authenticated-r8-tree-with-six-own-adapter-source-overlays';
 const PREVIOUS = '97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000';
 const CLI = '@iobroker/js-controller-cli';
+const SHUTDOWN_SOURCE = 'runtime/controller-profile/adapter-shutdown.cjs';
 const OWNERS = product.SPECS.filter(spec => spec.source);
 const properties = value => Object.entries(value).map(([name, value]) => ({ name, value }));
 const digest = rows => sha256(Buffer.from(JSON.stringify(rows)));
@@ -33,7 +35,7 @@ function fixture(t) {
         fs.mkdirSync(path.dirname(file), { recursive: true });
         fs.writeFileSync(file, typeof value === 'string' ? value : JSON.stringify(value));
     };
-    const packages = [...OWNERS.map(spec => ({ name: spec.package, version: spec.version })), { name: CLI, version: '7.2.2' }];
+    const packages = [...OWNERS.map(spec => ({ name: spec.package, version: spec.version })), { name: CLI, version: '7.2.2' }, { name: shutdown.PACKAGE, version: '7.2.2' }];
     const app = { name: 'own-sbom-fixture', version: '1.0.0', dependencies: Object.fromEntries(packages.map(pkg => [pkg.name, pkg.version])) };
     const lock = { lockfileVersion: 3, packages: { '': app } };
     for (const pkg of packages) {
@@ -46,21 +48,28 @@ function fixture(t) {
         write(`app/${relative}/package.json`, { name: '@nexowatt/eos-license-client', version: '1.0.2' });
         write(`app/${relative}/index.js`, 'synthetic identical client fixture\n');
     }
-    const paths = [`node_modules/${CLI}/build/cjs/lib/setup.js`, ...backupState.FILES.map(row => row.relativePath)];
+    const paths = [`node_modules/${CLI}/build/cjs/lib/setup.js`, ...[...backupState.FILES, ...shutdown.FILES].map(row => row.relativePath)];
     for (const relative of paths) write(`app/${relative}`, `synthetic transformed fixture ${relative}\n`);
+    write(SHUTDOWN_SOURCE, 'synthetic committed transform source\n');
     const files = inventory(root), appRows = files.filter(row => row.path.startsWith('app/')).map(row => ({ ...row, path: row.path.slice(4) }));
     const profile = { schemaVersion: 1, kind: 'eos-controller-profile-verification', controllerVersion: '7.2.2', productionApproved: false,
         files: paths.map(relativePath => ({ relativePath, sha256: appRows.find(row => row.path === relativePath).sha256 })) };
     const components = packages.map(pkg => ({ name: pkg.name, version: pkg.version, 'bom-ref': pkg.name,
         modified: true, pedigree: { ancestors: [{ name: pkg.name, version: pkg.version }] }, properties: [] }));
-    for (const spec of OWNERS) {
+    for (const spec of [...OWNERS, { package: shutdown.PACKAGE }]) {
         const relative = `node_modules/${spec.package}`, tree = appRows.filter(row => row.path.startsWith(relative + '/'));
         const component = components.find(row => row.name === spec.package);
         component.properties = properties({ 'eos:derivative:installed-path': relative,
             'eos:derivative:tree-sha256': digest(content(tree)), 'eos:derivative:mode-tree-sha256': digest(tree) });
+        if (spec.package === shutdown.PACKAGE) component.properties.push(...properties({
+            'eos:transform:source-path': SHUTDOWN_SOURCE,
+            'eos:transform:source-sha256': files.find(row => row.path === SHUTDOWN_SOURCE).sha256 }));
     }
     const cli = components.find(row => row.name === CLI);
-    cli.properties = properties({ 'eos:transform:file-table-sha256': digest([...profile.files].sort((a, b) => a.relativePath < b.relativePath ? -1 : 1)) });
+    for (const name of [CLI, shutdown.PACKAGE]) {
+        const table = profile.files.filter(row => row.relativePath.startsWith('node_modules/' + name + '/')).sort((a, b) => a.relativePath < b.relativePath ? -1 : 1);
+        components.find(row => row.name === name).properties.push(...properties({ 'eos:transform:file-table-sha256': digest(table) }));
+    }
     const dependencies = [{ ref: `${app.name}@${app.version}`, dependsOn: packages.map(pkg => pkg.name) },
         ...packages.map(pkg => ({ ref: pkg.name, dependsOn: [] }))];
     for (const relative of clientPaths) {
@@ -87,12 +96,12 @@ function fixture(t) {
         write('sbom.cdx.json', bom);
         return verifySbomBinding(root, inventory(root), selectedProfile, release);
     };
-    return { root, bom, profile, cli, write, check };
+    return { root, bom, profile, cli, adapter: components.find(row => row.name === shutdown.PACKAGE), write, check };
 }
 
-test('own assembly binds six actual owners, six identical clients and both CLI backup transforms', t => {
+test('own assembly binds six own adapters, six identical clients and exact CLI/core transforms', t => {
     const f = fixture(t);
-    assert.deepEqual(f.check({ sequence: 13 }, f.profile), { installedPackages: 7, uniqueNpmComponents: 7, embeddedPackages: 6,
+    assert.deepEqual(f.check({ sequence: 13 }, f.profile), { installedPackages: 8, uniqueNpmComponents: 8, embeddedPackages: 6,
         scope: 'npm-and-explicit-vendored-packages', fullOperatingSystemInventory: false });
     assert.equal(f.check(undefined, f.profile).embeddedPackages, 6, 'standalone own marker triggers same derivative checks');
     for (const row of backupState.FILES) assert.ok(f.profile.files.some(file => file.relativePath === row.relativePath));
@@ -177,6 +186,7 @@ function payloadGate(scope) {
             planAdmission: () => ({ quarantine: [], selected: [] }) },
         '../../runtime/controller-profile/transform.cjs': { verifyBuildProfile: () => structuredClone(profile) },
         '../../runtime/controller-profile/backup-state.cjs': { verifyBuild(app) { calls.push(['backup', app]); return { files: backupState.FILES }; } },
+        '../../runtime/controller-profile/adapter-shutdown.cjs': { verifyBuild(app) { calls.push(['shutdown', app]); return { files: shutdown.FILES }; } },
         '../../runtime/release/sbom-binding.cjs': { verifySbomBinding(...args) { calls.push(['sbom', args]); return {}; } },
         '../integration/check-runtime-architecture.cjs': { checkRuntimeArchitecture: () => ({ passed: true }) },
         '../../runtime/product/scope.cjs': { ...product, inspectApp: () => [] },
@@ -189,13 +199,26 @@ function payloadGate(scope) {
     return calls;
 }
 
-test('real payload coordinator appends both independently verified backup transforms before SBOM validation only in own scope', () => {
+test('real payload coordinator appends all independently verified backup and shutdown transforms before SBOM validation only in own scope', () => {
     const calls = payloadGate(product.OWN_ADAPTER_TEST);
-    assert.equal(calls[0][0], 'backup'); assert.equal(calls[0][1], '/synthetic/app'); assert.equal(calls[1][0], 'sbom');
-    const [, , profile, release] = calls[1][1];
+    assert.equal(calls[0][0], 'backup'); assert.equal(calls[0][1], '/synthetic/app');
+    assert.equal(calls[1][0], 'shutdown'); assert.equal(calls[1][1], '/synthetic/app'); assert.equal(calls[2][0], 'sbom');
+    const [, , profile, release] = calls[2][1];
     assert.equal(release.sequence, 13);
-    for (const row of backupState.FILES) assert.equal(profile.files.filter(file => file.relativePath === row.relativePath && file.sha256 === row.sha256).length, 1);
+    for (const row of [...backupState.FILES, ...shutdown.FILES]) assert.equal(profile.files.filter(file => file.relativePath === row.relativePath && file.sha256 === row.sha256).length, 1);
     const legacy = payloadGate(product.MANAGEMENT_TEST);
     assert.equal(legacy.length, 1); assert.equal(legacy[0][0], 'sbom');
-    assert.equal(legacy[0][1][2].files.some(file => backupState.FILES.some(row => row.relativePath === file.relativePath)), false);
+    assert.equal(legacy[0][1][2].files.some(file => [...backupState.FILES, ...shutdown.FILES].some(row => row.relativePath === file.relativePath)), false);
+});
+
+test('shutdown derivative source and exact two-file transform profile cannot be removed or widened', t => {
+    for (const mutate of [f => changeProperty(f.adapter, 'eos:transform:source-sha256', 'f'.repeat(64)),
+        f => changeProperty(f.adapter, 'eos:transform:source-path', 'runtime/arbitrary.cjs'),
+        f => changeProperty(f.adapter, 'eos:transform:file-table-sha256', 'f'.repeat(64)),
+        f => { f.adapter.hashes = [{ alg: 'SHA-256', content: 'f'.repeat(64) }]; },
+        f => { f.profile.files = f.profile.files.filter(row => row.relativePath !== shutdown.FILES[0].relativePath); },
+        f => { const relativePath = 'node_modules/' + shutdown.PACKAGE + '/build/cjs/lib/arbitrary.js';
+            f.write('app/' + relativePath, 'unreviewed'); f.profile.files.push({ relativePath, sha256: sha256(Buffer.from('unreviewed')) }); }]) {
+        const f = fixture(t); mutate(f); assert.throws(() => f.check({ sequence: 13 }, f.profile));
+    }
 });

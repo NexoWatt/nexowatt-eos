@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: cjs: authenticated whole input/output and unchanged error/deadline logic
+ok 1 - cjs: authenticated whole input/output and unchanged error/deadline logic
+  ---
+  duration_ms: 5.518687
+  type: 'test'
+  ...
+# Subtest: esm: authenticated whole input/output and unchanged error/deadline logic
+ok 2 - esm: authenticated whole input/output and unchanged error/deadline logic
+  ---
+  duration_ms: 8.685431
+  type: 'test'
+  ...
+# Subtest: unknown transform path is refused
+ok 3 - unknown transform path is refused
+  ---
+  duration_ms: 0.277349
+  type: 'test'
+  ...
+# Subtest: both entire transformed distribution files pass native Node syntax checks
+ok 4 - both entire transformed distribution files pass native Node syntax checks
+  ---
+  duration_ms: 141.480462
+  type: 'test'
+  ...
+# Subtest: whole-file idempotent verification, output drift and mixed-state rejection
+ok 5 - whole-file idempotent verification, output drift and mixed-state rejection
+  ---
+  duration_ms: 29.758376
+  type: 'test'
+  ...
+# Subtest: both inputs validated before mutation; partially applied candidates fail closed
+ok 6 - both inputs validated before mutation; partially applied candidates fail closed
+  ---
+  duration_ms: 21.020386
+  type: 'test'
+  ...
+# Subtest: package/version/entry drift and nested unpatched resolution rejected
+ok 7 - package/version/entry drift and nested unpatched resolution rejected
+  ---
+  duration_ms: 15.279938
+  type: 'test'
+  ...
+# Subtest: symlink/hardlink/special files, unsafe modes and oversized input refused before writes
+ok 8 - symlink/hardlink/special files, unsafe modes and oversized input refused before writes
+  ---
+  duration_ms: 48.702163
+  type: 'test'
+  ...
+# Subtest: symlink root and relative/noncanonical roots refused
+ok 9 - symlink root and relative/noncanonical roots refused
+  ---
+  duration_ms: 4.314448
+  type: 'test'
+  ...
+# Subtest: cjs: original actual methods reproduce duplicate alive write racing DB teardown
+ok 10 - cjs: original actual methods reproduce duplicate alive write racing DB teardown
+  ---
+  duration_ms: 3.940042
+  type: 'test'
+  ...
+# Subtest: cjs: patched callback and deadline perform one write and one DB teardown
+ok 11 - cjs: patched callback and deadline perform one write and one DB teardown
+  ---
+  duration_ms: 3.927554
+  type: 'test'
+  ...
+# Subtest: cjs: pending shared write blocks deadline termination and synchronous reentry
+ok 12 - cjs: pending shared write blocks deadline termination and synchronous reentry
+  ---
+  duration_ms: 3.395028
+  type: 'test'
+  ...
+# Subtest: cjs: actual write rejection remains logged once and permits bounded cleanup
+ok 13 - cjs: actual write rejection remains logged once and permits bounded cleanup
+  ---
+  duration_ms: 3.54165
+  type: 'test'
+  ...
+# Subtest: cjs: missing callback retains upstream fallback and late callback shares completion
+ok 14 - cjs: missing callback retains upstream fallback and late callback shares completion
+  ---
+  duration_ms: 3.663134
+  type: 'test'
+  ...
+# Subtest: esm: original actual methods reproduce duplicate alive write racing DB teardown
+ok 15 - esm: original actual methods reproduce duplicate alive write racing DB teardown
+  ---
+  duration_ms: 4.020454
+  type: 'test'
+  ...
+# Subtest: esm: patched callback and deadline perform one write and one DB teardown
+ok 16 - esm: patched callback and deadline perform one write and one DB teardown
+  ---
+  duration_ms: 4.758038
+  type: 'test'
+  ...
+# Subtest: esm: pending shared write blocks deadline termination and synchronous reentry
+ok 17 - esm: pending shared write blocks deadline termination and synchronous reentry
+  ---
+  duration_ms: 4.251293
+  type: 'test'
+  ...
+# Subtest: esm: actual write rejection remains logged once and permits bounded cleanup
+ok 18 - esm: actual write rejection remains logged once and permits bounded cleanup
+  ---
+  duration_ms: 4.716685
+  type: 'test'
+  ...
+# Subtest: esm: missing callback retains upstream fallback and late callback shares completion
+ok 19 - esm: missing callback retains upstream fallback and late callback shares completion
+  ---
+  duration_ms: 5.579589
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 413.540678

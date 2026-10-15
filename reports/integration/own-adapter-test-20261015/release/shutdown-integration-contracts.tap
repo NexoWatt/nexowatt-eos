@@ -1,0 +1,370 @@
+TAP version 13
+# Subtest: R10 evidence binds successful synthetic contract without claiming a native run
+ok 1 - R10 evidence binds successful synthetic contract without claiming a native run
+  ---
+  duration_ms: 4.35598
+  type: 'test'
+  ...
+# Subtest: expected observed license lifecycle signals remain in evidence and do not masquerade as runtime faults
+ok 2 - expected observed license lifecycle signals remain in evidence and do not masquerade as runtime faults
+  ---
+  duration_ms: 15.971259
+  type: 'test'
+  ...
+# Subtest: only the successful readonly setup may retain its expected denial with an exact global signal union
+ok 3 - only the successful readonly setup may retain its expected denial with an exact global signal union
+  ---
+  duration_ms: 1.146642
+  type: 'test'
+  ...
+# Subtest: permission denial in any controller, upload or backup rejects even if setup also reports denial
+ok 4 - permission denial in any controller, upload or backup rejects even if setup also reports denial
+  ---
+  duration_ms: 2.450712
+  type: 'test'
+  ...
+# Subtest: setup exemption requires one exact successful setup stage and never hides another fault
+ok 5 - setup exemption requires one exact successful setup stage and never hides another fault
+  ---
+  duration_ms: 2.056777
+  type: 'test'
+  ...
+# Subtest: unknown malformed duplicate missing or reordered process records cannot authorize diagnostics
+ok 6 - unknown malformed duplicate missing or reordered process records cannot authorize diagnostics
+  ---
+  duration_ms: 4.124972
+  type: 'test'
+  ...
+# Subtest: global diagnostic codes must equal the unique complete process union without filtering or additions
+ok 7 - global diagnostic codes must equal the unique complete process union without filtering or additions
+  ---
+  duration_ms: 2.662943
+  type: 'test'
+  ...
+# Subtest: runtime faults, unknown, duplicate and malformed signals always reject native evidence
+ok 8 - runtime faults, unknown, duplicate and malformed signals always reject native evidence
+  ---
+  duration_ms: 3.520478
+  type: 'test'
+  ...
+# Subtest: every missing or failed required native check rejects signing
+ok 9 - every missing or failed required native check rejects signing
+  ---
+  duration_ms: 8.938253
+  type: 'test'
+  ...
+# Subtest: source, artifact, baseline, version, scope and dirty-worktree drift reject evidence
+ok 10 - source, artifact, baseline, version, scope and dirty-worktree drift reject evidence
+  ---
+  duration_ms: 1.662462
+  type: 'test'
+  ...
+# Subtest: different source coverage, missing rollback/config assets and incomplete archive proof reject
+ok 11 - different source coverage, missing rollback/config assets and incomplete archive proof reject
+  ---
+  duration_ms: 4.822175
+  type: 'test'
+  ...
+# Subtest: failed, skipped, cancelled or malformed TAP cannot turn evidence green
+ok 12 - failed, skipped, cancelled or malformed TAP cannot turn evidence green
+  ---
+  duration_ms: 1.150048
+  type: 'test'
+  ...
+# Subtest: only explicit controller profile and exact backup-state and shutdown changes pass delta gate
+ok 13 - only explicit controller profile and exact backup-state and shutdown changes pass delta gate
+  ---
+  duration_ms: 0.635671
+  type: 'test'
+  ...
+# Subtest: nested dependency changes, root lock drift, removed transform and transformed-byte drift reject
+ok 14 - nested dependency changes, root lock drift, removed transform and transformed-byte drift reject
+  ---
+  duration_ms: 0.354806
+  type: 'test'
+  ...
+# Subtest: package metadata allows source packaging/scripts but never dependency or entrypoint changes
+ok 15 - package metadata allows source packaging/scripts but never dependency or entrypoint changes
+  ---
+  duration_ms: 0.494007
+  type: 'test'
+  ...
+# Subtest: candidate catalogue changes only explicit own-adapter execution scope
+ok 16 - candidate catalogue changes only explicit own-adapter execution scope
+  ---
+  duration_ms: 0.431842
+  type: 'test'
+  ...
+# Subtest: no force, bypass, relative path or evidence-free CLI
+ok 17 - no force, bypass, relative path or evidence-free CLI
+  ---
+  duration_ms: 0.243708
+  type: 'test'
+  ...
+# Subtest: host delta permits only the exact upload mapping and byte-identical source template
+ok 18 - host delta permits only the exact upload mapping and byte-identical source template
+  ---
+  duration_ms: 1.005269
+  type: 'test'
+  ...
+# Subtest: host source binding records the explicit upload source mapping
+ok 19 - host source binding records the explicit upload source mapping
+  ---
+  duration_ms: 0.453174
+  type: 'test'
+  ...
+# Subtest: trusted verifier requires pinned source and explicit native evidence without force options
+ok 20 - trusted verifier requires pinned source and explicit native evidence without force options
+  ---
+  duration_ms: 0.257088
+  type: 'test'
+  ...
+# Subtest: trusted report gate rejects optimistic, omitted or altered release claims
+ok 21 - trusted report gate rejects optimistic, omitted or altered release claims
+  ---
+  duration_ms: 0.502709
+  type: 'test'
+  ...
+# Subtest: shutdown core delta requires both exact original/output hash pairs and unchanged modes
+ok 22 - shutdown core delta requires both exact original/output hash pairs and unchanged modes
+  ---
+  duration_ms: 0.413565
+  type: 'test'
+  ...
+# Subtest: unsigned own-adapter preparation requires authenticated R9, both exact inventories and candidate scope
+ok 23 - unsigned own-adapter preparation requires authenticated R9, both exact inventories and candidate scope
+  ---
+  duration_ms: 1.507467
+  type: 'test'
+  ...
+# Subtest: root path provision refuses ordinary/local context before any write
+ok 24 - root path provision refuses ordinary/local context before any write
+  ---
+  duration_ms: 1.003185
+  type: 'test'
+  ...
+# Subtest: content identity permits mode hardening only and detects actual content drift
+ok 25 - content identity permits mode hardening only and detects actual content drift
+  ---
+  duration_ms: 2.349289
+  type: 'test'
+  ...
+# Subtest: passive observer requires all five consumers, correct central response and fresh phase
+ok 26 - passive observer requires all five consumers, correct central response and fresh phase
+  ---
+  duration_ms: 0.926309
+  type: 'test'
+  ...
+# Subtest: observer rejects forged origin, wrong route, unacknowledged request, stale lease and missing consumer
+ok 27 - observer rejects forged origin, wrong route, unacknowledged request, stale lease and missing consumer
+  ---
+  duration_ms: 0.366174
+  type: 'test'
+  ...
+# Subtest: diagnostics never expose exception text or unknown data
+ok 28 - diagnostics never expose exception text or unknown data
+  ---
+  duration_ms: 1.083998
+  type: 'test'
+  ...
+# Subtest: historical R9 profile/harness remains separate and new evidence makes no release or hardware claim
+ok 29 - historical R9 profile/harness remains separate and new evidence makes no release or hardware claim
+  ---
+  duration_ms: 2.745959
+  type: 'test'
+  ...
+# Subtest: all six owned derivatives and six distinct embedded instances bind the real tree and modes
+ok 30 - all six owned derivatives and six distinct embedded instances bind the real tree and modes
+  ---
+  duration_ms: 43.127823
+  type: 'test'
+  ...
+# Subtest: source files and scripts metadata can change without resolving installed dependencies
+ok 31 - source files and scripts metadata can change without resolving installed dependencies
+  ---
+  duration_ms: 17.433367
+  type: 'test'
+  ...
+# Subtest: backup repository provenance is the exact additive metadata exception and remains recorded
+ok 32 - backup repository provenance is the exact additive metadata exception and remains recorded
+  ---
+  duration_ms: 22.409895
+  type: 'test'
+  ...
+# Subtest: backup provenance never permits alternate repositories, replacement or unrelated package drift
+ok 33 - backup provenance never permits alternate repositories, replacement or unrelated package drift
+  ---
+  duration_ms: 1.458133
+  type: 'test'
+  ...
+# Subtest: identity, main, prod/optional/peer dependencies, overrides and unapproved metadata are immutable
+ok 34 - identity, main, prod/optional/peer dependencies, overrides and unapproved metadata are immutable
+  ---
+  duration_ms: 95.873978
+  type: 'test'
+  ...
+# Subtest: only exact reviewed protocol engine narrowing and pre-existing source-lock mocha declaration are allowed
+ok 35 - only exact reviewed protocol engine narrowing and pre-existing source-lock mocha declaration are allowed
+  ---
+  duration_ms: 32.069843
+  type: 'test'
+  ...
+# Subtest: root lock, unrelated package bytes/modes and nested npm boundaries cannot be changed
+ok 36 - root lock, unrelated package bytes/modes and nested npm boundaries cannot be changed
+  ---
+  duration_ms: 53.696029
+  type: 'test'
+  ...
+# Subtest: an unshipped EEBUS source lock requires the exact separately pinned source evidence
+ok 37 - an unshipped EEBUS source lock requires the exact separately pinned source evidence
+  ---
+  duration_ms: 22.438303
+  type: 'test'
+  ...
+# Subtest: embedded third-party files, old metadata tampering and source-lock contract drift are refused
+ok 38 - embedded third-party files, old metadata tampering and source-lock contract drift are refused
+  ---
+  duration_ms: 50.155691
+  type: 'test'
+  ...
+# Subtest: all six client copies require 1.0.2, identical bytes and no unbound dependencies
+ok 39 - all six client copies require 1.0.2, identical bytes and no unbound dependencies
+  ---
+  duration_ms: 39.747477
+  type: 'test'
+  ...
+# Subtest: offline gate rejects stale derivative hashes, false scan claims and missing embedded parent relations
+ok 40 - offline gate rejects stale derivative hashes, false scan claims and missing embedded parent relations
+  ---
+  duration_ms: 75.505832
+  type: 'test'
+  ...
+# Subtest: authenticated predecessor, sequence and source identities are mandatory
+ok 41 - authenticated predecessor, sequence and source identities are mandatory
+  ---
+  duration_ms: 11.679715
+  type: 'test'
+  ...
+# Subtest: removing the self-declared R9 marker cannot bypass actual-file or verified-sequence checks
+ok 42 - removing the self-declared R9 marker cannot bypass actual-file or verified-sequence checks
+  ---
+  duration_ms: 20.60235
+  type: 'test'
+  ...
+# Subtest: own assembly binds six own adapters, six identical clients and exact CLI/core transforms
+ok 43 - own assembly binds six own adapters, six identical clients and exact CLI/core transforms
+  ---
+  duration_ms: 38.085235
+  type: 'test'
+  ...
+# Subtest: verified sequence 13 requires own assembly even if its marker is removed or replaced with R9
+ok 44 - verified sequence 13 requires own assembly even if its marker is removed or replaced with R9
+  ---
+  duration_ms: 30.889015
+  type: 'test'
+  ...
+# Subtest: own assembly cannot be relabeled as sequence12 or other signed release context
+ok 45 - own assembly cannot be relabeled as sequence12 or other signed release context
+  ---
+  duration_ms: 35.553676
+  type: 'test'
+  ...
+# Subtest: new standalone marker requires exact predecessor, test scope and truthful scan/resolution claims
+ok 46 - new standalone marker requires exact predecessor, test scope and truthful scan/resolution claims
+  ---
+  duration_ms: 65.990332
+  type: 'test'
+  ...
+# Subtest: own derivative rejects stale content/mode digests, duplicate claims and misleading package archive hashes
+ok 47 - own derivative rejects stale content/mode digests, duplicate claims and misleading package archive hashes
+  ---
+  duration_ms: 46.098357
+  type: 'test'
+  ...
+# Subtest: new CLI transform files require updated exact pedigree table, not old hash or upstream archive identity
+ok 48 - new CLI transform files require updated exact pedigree table, not old hash or upstream archive identity
+  ---
+  duration_ms: 34.949894
+  type: 'test'
+  ...
+# Subtest: real payload coordinator appends all independently verified backup and shutdown transforms before SBOM validation only in own scope
+ok 49 - real payload coordinator appends all independently verified backup and shutdown transforms before SBOM validation only in own scope
+  ---
+  duration_ms: 4.942686
+  type: 'test'
+  ...
+# Subtest: shutdown derivative source and exact two-file transform profile cannot be removed or widened
+ok 50 - shutdown derivative source and exact two-file transform profile cannot be removed or widened
+  ---
+  duration_ms: 70.279137
+  type: 'test'
+  ...
+# Subtest: actual aliased installed tree and omitted optional package bind
+ok 51 - actual aliased installed tree and omitted optional package bind
+  ---
+  duration_ms: 6.379697
+  type: 'test'
+  ...
+# Subtest: stale or conflicting root digest is refused
+ok 52 - stale or conflicting root digest is refused
+  ---
+  duration_ms: 5.074741
+  type: 'test'
+  ...
+# Subtest: changed installed identity and unlisted package are refused
+ok 53 - changed installed identity and unlisted package are refused
+  ---
+  duration_ms: 3.187976
+  type: 'test'
+  ...
+# Subtest: npm boundaries inside package subdirectories cannot hide manifestless dependencies
+ok 54 - npm boundaries inside package subdirectories cannot hide manifestless dependencies
+  ---
+  duration_ms: 6.924181
+  type: 'test'
+  ...
+# Subtest: missing required package, phantom component and dangling dependency are refused
+ok 55 - missing required package, phantom component and dangling dependency are refused
+  ---
+  duration_ms: 6.609966
+  type: 'test'
+  ...
+# Subtest: manifestless packages and manifestless known vendored code cannot evade inventory
+ok 56 - manifestless packages and manifestless known vendored code cannot evade inventory
+  ---
+  duration_ms: 5.952883
+  type: 'test'
+  ...
+# Subtest: known vendored files must be present and bound by exact tree hash
+ok 57 - known vendored files must be present and bound by exact tree hash
+  ---
+  duration_ms: 5.04349
+  type: 'test'
+  ...
+# Subtest: modified component binds sorted exact transform rows and ancestor identity
+ok 58 - modified component binds sorted exact transform rows and ancestor identity
+  ---
+  duration_ms: 3.505286
+  type: 'test'
+  ...
+# Subtest: pre-transform identity, stale table, misleading archive hashes and wrong ancestor fail
+ok 59 - pre-transform identity, stale table, misleading archive hashes and wrong ancestor fail
+  ---
+  duration_ms: 13.401155
+  type: 'test'
+  ...
+# Subtest: changed actual transform rows and duplicated or unrecognized profile records fail
+ok 60 - changed actual transform rows and duplicated or unrecognized profile records fail
+  ---
+  duration_ms: 7.48684
+  type: 'test'
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 60
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 602.614928

@@ -9,10 +9,13 @@ const product = require(path.join(ROOT, 'runtime/product/scope.cjs'));
 const { EMBEDDED } = require(path.join(ROOT, 'runtime/release/sbom-binding.cjs'));
 const { verifyBuildProfile } = require(path.join(ROOT, 'runtime/controller-profile/transform.cjs'));
 const backup = require(path.join(ROOT, 'runtime/controller-profile/backup-state.cjs'));
+const shutdown = require(path.join(ROOT, 'runtime/controller-profile/adapter-shutdown.cjs'));
+const TRANSFORMS = Object.freeze([...backup.FILES, ...shutdown.FILES]);
 const { BASE_RELEASE } = require('./native-evidence.cjs');
-const ASSEMBLY = 'authenticated-r9-tree-with-six-own-adapters-and-backup-state-transform';
+const ASSEMBLY = 'authenticated-r9-tree-with-six-own-adapters-backup-state-and-adapter-shutdown-transforms';
 const OWN = product.SPECS.filter(s => s.source);
 const PROFILE_FILE = 'node_modules/iobroker.js-controller/eos-test-profile.json';
+const SHUTDOWN_SOURCE = 'runtime/controller-profile/adapter-shutdown.cjs';
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const sorted = rows => [...rows].sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
 const contentRows = rows => rows.map(({ path, size, sha256 }) => ({ path, size, sha256 }));
@@ -42,12 +45,12 @@ function assertDelta(before, after) {
     } else if (row.path === PROFILE_FILE) {
       if (!row.before || !row.after) fail('R10_SBOM_PROFILE_REMOVED');
     } else {
-      const spec = backup.FILES.find(f => f.relativePath === row.path);
+      const spec = TRANSFORMS.find(f => f.relativePath === row.path);
       if (!spec || row.before?.sha256 !== spec.originalSha256 || row.after?.sha256 !== spec.sha256 ||
           row.before.mode !== row.after.mode) fail('R10_SBOM_UNDECLARED_APP_CHANGE');
     }
   }
-  if (!changes.some(r => r.path === PROFILE_FILE) || backup.FILES.some(f => !changes.some(r => r.path === f.relativePath))) fail('R10_SBOM_REQUIRED_TRANSFORM');
+  if (!changes.some(r => r.path === PROFILE_FILE) || TRANSFORMS.some(f => !changes.some(r => r.path === f.relativePath))) fail('R10_SBOM_REQUIRED_TRANSFORM');
   return changes;
 }
 function packageContract(before, after, spec) {
@@ -84,7 +87,7 @@ function bindDerivative({ app, previousApp, previousManifest, previousSbom, sour
     'eos:sbom:source-commit': sourceCommit, 'eos:sbom:assembly': ASSEMBLY, 'eos:sbom:execution-scope': product.OWN_ADAPTER_TEST,
     'eos:sbom:actual-app-file-table-sha256': digest(contentRows(after)), 'eos:sbom:actual-app-mode-table-sha256': digest(after),
     'eos:sbom:application-unchanged': 'false', 'eos:sbom:fresh-npm-resolution': 'false', 'eos:sbom:fresh-vulnerability-scan': 'false' });
-  const owners = [...OWN, { package: 'iobroker.js-controller', version: '7.2.2' }, { package: '@iobroker/js-controller-cli', version: '7.2.2' }];
+  const owners = [...OWN, { package: 'iobroker.js-controller', version: '7.2.2' }, { package: '@iobroker/js-controller-cli', version: '7.2.2' }, { package: shutdown.PACKAGE, version: '7.2.2' }];
   for (const spec of owners) {
     const relative = 'node_modules/' + spec.package, prefix = relative + '/';
     const manifest = load(app, newRows, prefix + 'package.json');
@@ -92,6 +95,8 @@ function bindDerivative({ app, previousApp, previousManifest, previousSbom, sour
     const matches = bom.components.filter(c => c.name === spec.package && c.version === spec.version && !props(c)['eos:scope']);
     if (matches.length !== 1 || manifest.name !== spec.package || manifest.version !== spec.version) fail('R10_SBOM_COMPONENT');
     const component = matches[0], previous = ancestor(component), tree = after.filter(r => r.path.startsWith(prefix));
+    if (spec.package === shutdown.PACKAGE) setProps(component, { 'eos:transform:source-path': SHUTDOWN_SOURCE,
+      'eos:transform:source-sha256': bundle.sha256(bundle.readFileLimited(path.join(ROOT, SHUTDOWN_SOURCE)).bytes) });
     delete component.hashes; component.modified = true;
     component.pedigree = { ancestors: [previous], notes: 'R10 TEST derivative of authenticated R9. Current signed inventory and derivative digests bind installed bytes, not ancestor archive hashes.' };
     const treeSha256 = digest(contentRows(tree)), modeTreeSha256 = digest(tree), ownerChanges = changes.filter(r => r.path.startsWith(prefix));
@@ -116,9 +121,9 @@ function bindDerivative({ app, previousApp, previousManifest, previousSbom, sour
   }
   const profile = verifyBuildProfile(app, product.admittedAdapters(product.OWN_ADAPTER_TEST));
   profile.files.push({ relativePath: 'node_modules/iobroker.js-controller/package.json', sha256: newRows.get('node_modules/iobroker.js-controller/package.json').sha256 });
-  const backupEvidence = backup.verifyBuild(app);
-  profile.files.push(...backupEvidence.files.map(({ relativePath, sha256 }) => ({ relativePath, sha256 })));
-  for (const name of ['iobroker.js-controller', '@iobroker/js-controller-cli', '@iobroker/ws-server']) {
+  const backupEvidence = backup.verifyBuild(app), shutdownEvidence = shutdown.verifyBuild(app);
+  profile.files.push(...[...backupEvidence.files, ...shutdownEvidence.files].map(({ relativePath, sha256 }) => ({ relativePath, sha256 })));
+  for (const name of ['iobroker.js-controller', '@iobroker/js-controller-cli', '@iobroker/ws-server', shutdown.PACKAGE]) {
     const table = profile.files.filter(r => r.relativePath.startsWith('node_modules/' + name + '/')).sort((a, b) => a.relativePath < b.relativePath ? -1 : 1);
     if (!table.length) continue;
     const component = bom.components.find(c => c.name === name && !props(c)['eos:scope']);
@@ -127,8 +132,9 @@ function bindDerivative({ app, previousApp, previousManifest, previousSbom, sour
   }
   return { bom, evidence: { schemaVersion: 1, kind: 'eos-r10-authenticated-own-adapter-derivative-sbom', previousReleaseId: BASE_RELEASE,
     sourceCommit, timestamp, actualAppFileTableSha256: digest(contentRows(after)), actualAppModeTableSha256: digest(after),
-    previousSbomExactBytesSha256: bundle.sha256(sbomBytes), changes, derivatives, backupTransform: backupEvidence,
-    dependencyLockUnchanged: true, thirdPartyChangesLimitedToExactBackupCliTransform: true, npmResolutionPerformed: false,
+    previousSbomExactBytesSha256: bundle.sha256(sbomBytes), changes, derivatives, backupTransform: backupEvidence, adapterShutdownTransform: shutdownEvidence,
+    adapterShutdownSource: { path: SHUTDOWN_SOURCE, sha256: bundle.sha256(bundle.readFileLimited(path.join(ROOT, SHUTDOWN_SOURCE)).bytes) },
+    dependencyLockUnchanged: true, thirdPartyChangesLimitedToExactBackupAndShutdownTransforms: true, npmResolutionPerformed: false,
     vulnerabilityScanPerformed: false, operatingSystemInventoryIncluded: false, hardwareTested: false, productionReleaseApproved: false } };
 }
-module.exports = { ASSEMBLY, PROFILE_FILE, OWN, assertDelta, packageContract, bindDerivative, digest, contentRows };
+module.exports = { ASSEMBLY, PROFILE_FILE, SHUTDOWN_SOURCE, OWN, TRANSFORMS, assertDelta, packageContract, bindDerivative, digest, contentRows };

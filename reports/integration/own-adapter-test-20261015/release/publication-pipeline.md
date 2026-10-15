@@ -16,8 +16,10 @@ Einstiege, signierten Archive, Schlüssel und Prüfsummen bleiben unverändert.
 
 Die Pipeline verwendet die bestehenden R9-Veröffentlichungsgrenzen mit dem
 expliziten R10-Vertrag: Sequenz 13, authentifizierte R9-Basis, sechs eigene
-Adapter, vier quellgebundene native Nachweisdateien und die zwei genau
-hashgebundenen Backup-CLI-Transformationen. Der Publisher verlangt die tatsächlichen
+Adapter, vier quellgebundene native Nachweisdateien, die zwei genau
+hashgebundenen Backup-CLI-Transformationen sowie die zwei ebenso gebundenen
+Adapterkern-Dateien für den einmaligen Shutdown. Auch der Quellhash des
+Shutdown-Transforms wird gebunden. Der Publisher verlangt die tatsächlichen
 R10-Berichtsfelder (`ownOverlays`, Dateiquellliste, nativer Prüfbeleg und
 Übergangsprüfung); R9-Berichtsfelder werden nicht als Ersatz akzeptiert.
 

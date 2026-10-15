@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const { isDeepStrictEqual: equal } = require('node:util');
 const ROOT = path.resolve(__dirname, '../../../..');
 const bundle = require(path.join(ROOT, 'runtime/release/bundle.cjs'));
+const shutdown = require(path.join(ROOT, 'runtime/controller-profile/adapter-shutdown.cjs'));
 const { appHash, passedTap } = require(path.join(ROOT, 'tools/bootstrap/verify-r9-native-evidence.cjs'));
 const BASE_RELEASE = '97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000';
 const CHECKS = Object.freeze(['postgresqlMtls', 'platformDeniesUnadmittedProcess', 'initiallyUnlicensed',
@@ -62,7 +63,11 @@ function validate({ preparation, evidence, binding, tap, sourceCommit, appConten
       binding.signed !== false || binding.unsignedFixture !== true || binding.previousSignatureVerified !== true ||
       binding.previousReleaseId !== BASE_RELEASE || !equal(binding.ownSourceCoverage, coverage) || !equal(binding.ownOverlay, overlays) ||
       !equal(binding.allowedControllerTransforms, ['node_modules/iobroker.js-controller/eos-test-profile.json',
-        'node_modules/@iobroker/js-controller-cli/build/cjs/lib/setup/setupBackup.js', 'node_modules/@iobroker/js-controller-cli/build/esm/lib/setup/setupBackup.js']) ||
+        'node_modules/@iobroker/js-controller-cli/build/cjs/lib/setup/setupBackup.js', 'node_modules/@iobroker/js-controller-cli/build/esm/lib/setup/setupBackup.js', ...shutdown.FILES.map(row => row.relativePath)]) ||
+      !equal(binding.adapterShutdownTransform, { schemaVersion: 1, kind: 'eos-controller-adapter-shutdown-transform',
+        component: shutdown.PACKAGE, version: '7.2.2', files: shutdown.FILES.map(({ flavor, ...row }) => row),
+        productionApproved: false, changed: true }) ||
+      binding.adapterShutdownSourceSha256 !== bundle.sha256(bundle.readFileLimited(path.join(ROOT, 'runtime/controller-profile/adapter-shutdown.cjs')).bytes) ||
       evidence?.schemaVersion !== 1 || evidence.kind !== 'eos-own-adapters-native-management' || evidence.passed !== true ||
       evidence.sourceReleaseId !== BASE_RELEASE || evidence.sourceSequence !== 12 || evidence.targetSequence !== 13 || evidence.sequence !== 13 ||
       evidence.sourceCommit !== sourceCommit || evidence.appContentSha256 !== appContentSha256 || evidence.nodeVersion !== '24.21.0' ||

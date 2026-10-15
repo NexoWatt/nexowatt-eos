@@ -125,8 +125,9 @@ function verifySbomBinding(payload, files, profile, release) {
             incoming.length !== 1 || incoming[0] !== parentEdges[0] || childEdges.length !== 1 || childEdges[0].dependsOn.length) reject('SBOM_EMBEDDED_PARENT');
     }
     const r9Assembly = 'authenticated-r8-tree-with-six-own-adapter-source-overlays';
-    const ownAssembly = 'authenticated-r9-tree-with-six-own-adapters-and-backup-state-transform';
+    const ownAssembly = 'authenticated-r9-tree-with-six-own-adapters-backup-state-and-adapter-shutdown-transforms';
     const ownCandidate = release?.sequence === 13 || props['eos:sbom:assembly'] === ownAssembly;
+    const shutdown = ownCandidate ? require('../controller-profile/adapter-shutdown.cjs') : null;
     const newClientPresent = Object.entries(EMBEDDED).some(([relative, name]) => name === '@nexowatt/eos-license-client' &&
         !relative.startsWith('node_modules/iobroker.eos-admin/') && !relative.startsWith('node_modules/iobroker.nexowatt-ui/') && rows.has(`app/${relative}/package.json`));
     // The verified release sequence is authoritative. New actual client paths
@@ -144,7 +145,9 @@ function verifySbomBinding(payload, files, profile, release) {
             props['eos:sbom:actual-app-mode-table-sha256'] !== digest(appRows) ||
             props['eos:sbom:application-unchanged'] !== 'false' ||
             props['eos:sbom:fresh-npm-resolution'] !== 'false' || props['eos:sbom:fresh-vulnerability-scan'] !== 'false') reject('SBOM_DERIVATIVE_BINDING');
-        for (const spec of require('../product/scope.cjs').SPECS.filter(spec => spec.source)) {
+        const derivativeOwners = require('../product/scope.cjs').SPECS.filter(spec => spec.source);
+        if (ownCandidate) derivativeOwners.push({ package: shutdown.PACKAGE, version: '7.2.2' });
+        for (const spec of derivativeOwners) {
             const relative = `node_modules/${spec.package}`;
             const components = bom.components.filter(component => component.name === spec.package && component.version === spec.version);
             if (components.length !== 1) reject('SBOM_DERIVATIVE_BINDING');
@@ -153,6 +156,11 @@ function verifySbomBinding(payload, files, profile, release) {
             if (component.modified !== true || Object.hasOwn(component, 'hashes') || !component.pedigree?.ancestors?.length ||
                 cp['eos:derivative:installed-path'] !== relative || cp['eos:derivative:tree-sha256'] !== digest(contentRows(tree)) ||
                 cp['eos:derivative:mode-tree-sha256'] !== digest(tree)) reject('SBOM_DERIVATIVE_BINDING');
+            if (ownCandidate && spec.package === shutdown.PACKAGE &&
+                (cp['eos:transform:source-path'] !== 'runtime/controller-profile/adapter-shutdown.cjs' ||
+                 !rows.has('runtime/controller-profile/adapter-shutdown.cjs') ||
+                 cp['eos:transform:source-sha256'] !== rows.get('runtime/controller-profile/adapter-shutdown.cjs').sha256))
+                reject('SBOM_TRANSFORM_BINDING');
         }
         const clients = [...embedded.values()].filter(row => row.component.name === '@nexowatt/eos-license-client');
         if (clients.length !== 6 || clients.some(row => row.component.version !== '1.0.2') ||
@@ -167,14 +175,17 @@ function verifySbomBinding(payload, files, profile, release) {
             !Array.isArray(profile.files) || !profile.files.length || profile.files.length > 100) reject('SBOM_TRANSFORM_PROFILE');
         const transformed = new Map(), seen = new Set();
         for (const row of profile.files) {
-            const owner = ['iobroker.js-controller', '@iobroker/js-controller-cli', '@iobroker/ws-server']
+            const owner = ['iobroker.js-controller', '@iobroker/js-controller-cli', '@iobroker/ws-server', ...(ownCandidate ? [shutdown.PACKAGE] : [])]
                 .find(name => typeof row?.relativePath === 'string' && row.relativePath.startsWith(`node_modules/${name}/`));
             if (!owner || seen.has(row.relativePath) || !/^[a-f0-9]{64}$/.test(row.sha256 || '') ||
                 rows.get(`app/${row.relativePath}`)?.sha256 !== row.sha256) reject('SBOM_TRANSFORM_PROFILE');
+            if (ownCandidate && owner === shutdown.PACKAGE && !shutdown.FILES.some(file =>
+                file.relativePath === row.relativePath)) reject('SBOM_TRANSFORM_PROFILE');
             seen.add(row.relativePath);
             if (!transformed.has(owner)) transformed.set(owner, []);
             transformed.get(owner).push({ relativePath: row.relativePath, sha256: row.sha256 });
         }
+        if (ownCandidate && shutdown.FILES.some(file => !seen.has(file.relativePath))) reject('SBOM_TRANSFORM_PROFILE');
         for (const [name, records] of transformed) {
             const manifest = load(`app/node_modules/${name}/package.json`);
             const components = bom.components.filter(row => row.name === name && row.version === manifest.version);

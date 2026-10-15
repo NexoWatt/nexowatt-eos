@@ -10,6 +10,7 @@ const sbom = require('./bind-derivative-sbom.cjs');
 const builder = require('./build-revision.cjs');
 const verifier = require('./verify-candidate.cjs');
 const backup = require(path.join(ROOT, 'runtime/controller-profile/backup-state.cjs'));
+const shutdown = require(path.join(ROOT, 'runtime/controller-profile/adapter-shutdown.cjs'));
 const product = require(path.join(ROOT, 'runtime/product/scope.cjs'));
 const bad = fn => assert.throws(fn, e => /^R10_/.test(e.code || ''));
 function sample() {
@@ -25,7 +26,11 @@ function sample() {
       previousReleaseId: native.BASE_RELEASE, appContentSha256, baselineContentSha256 },
     binding: { schemaVersion: 1, sourceCommit, sourceTreeClean: true, signed: false, unsignedFixture: true,
       previousSignatureVerified: true, previousReleaseId: native.BASE_RELEASE, ownSourceCoverage: coverage, ownOverlay: overlays,
-      allowedControllerTransforms: [sbom.PROFILE_FILE, ...backup.FILES.map(r => r.relativePath)] },
+      allowedControllerTransforms: [sbom.PROFILE_FILE, ...sbom.TRANSFORMS.map(r => r.relativePath)],
+      adapterShutdownTransform: { schemaVersion: 1, kind: 'eos-controller-adapter-shutdown-transform',
+        component: shutdown.PACKAGE, version: '7.2.2', files: shutdown.FILES.map(({ flavor, ...row }) => row),
+        productionApproved: false, changed: true },
+      adapterShutdownSourceSha256: crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, sbom.SHUTDOWN_SOURCE))).digest('hex') },
     evidence: { schemaVersion: 1, kind: 'eos-own-adapters-native-management', passed: true, sourceReleaseId: native.BASE_RELEASE,
       sourceSequence: 12, targetSequence: 13, sequence: 13, sourceCommit, appContentSha256, nodeVersion: '24.21.0', licenseFormat: 'NWL3',
       signed: false, unsignedFixture: true, candidateSigned: false, hardwareTested: false, productionReleaseApproved: false,
@@ -134,7 +139,12 @@ test('source, artifact, baseline, version, scope and dirty-worktree drift reject
   ]) { const x = sample(); x[section][key] = value; bad(() => native.validate(x)); }
 });
 test('different source coverage, missing rollback/config assets and incomplete archive proof reject', () => {
-  const mutations = [x => { x.binding.ownSourceCoverage = []; }, x => { x.binding.ownOverlay = []; },
+  const mutations = [x => { delete x.binding.adapterShutdownTransform; },
+    x => { x.binding.adapterShutdownTransform.changed = false; },
+    x => { x.binding.adapterShutdownTransform.files[0].originalSha256 = 'f'.repeat(64); },
+    x => { x.binding.adapterShutdownTransform.files[0].sha256 = 'f'.repeat(64); },
+    x => { x.binding.adapterShutdownSourceSha256 = 'f'.repeat(64); },
+    x => { x.binding.ownSourceCoverage = []; }, x => { x.binding.ownOverlay = []; },
     x => { x.binding.allowedControllerTransforms = []; }, x => { x.evidence.logicalBackup.inspections.pop(); },
     x => { x.evidence.logicalBackup.inspections[0].exactRuntimeConfigPresent = false; },
     x => { x.evidence.logicalBackup.privatePermissions = false; },
@@ -154,11 +164,11 @@ test('failed, skipped, cancelled or malformed TAP cannot turn evidence green', (
 });
 const row = (name, hash) => ({ path: name, size: 1, sha256: hash, mode: 0o644 });
 function deltaFixture() {
-  return { before: [row(sbom.PROFILE_FILE, 'a'.repeat(64)), ...backup.FILES.map(f => row(f.relativePath, f.originalSha256))],
-    after: [row(sbom.PROFILE_FILE, 'b'.repeat(64)), ...backup.FILES.map(f => row(f.relativePath, f.sha256))] };
+  return { before: [row(sbom.PROFILE_FILE, 'a'.repeat(64)), ...sbom.TRANSFORMS.map(f => row(f.relativePath, f.originalSha256))],
+    after: [row(sbom.PROFILE_FILE, 'b'.repeat(64)), ...sbom.TRANSFORMS.map(f => row(f.relativePath, f.sha256))] };
 }
-test('only explicit controller profile and exact backup-state changes pass delta gate', () => {
-  const x = deltaFixture(); assert.equal(sbom.assertDelta(x.before, x.after).length, 3);
+test('only explicit controller profile and exact backup-state and shutdown changes pass delta gate', () => {
+  const x = deltaFixture(); assert.equal(sbom.assertDelta(x.before, x.after).length, 5);
   x.after.push(row('node_modules/foreign/index.js', 'e'.repeat(64))); bad(() => sbom.assertDelta(x.before, x.after));
 });
 test('nested dependency changes, root lock drift, removed transform and transformed-byte drift reject', () => {
@@ -209,9 +219,11 @@ test('host delta permits only the exact upload mapping and byte-identical source
 test('host source binding records the explicit upload source mapping', () => {
   const bytes = fs.readFileSync(path.join(ROOT, builder.UPLOAD_TEMPLATE));
   const sha256 = crypto.createHash('sha256').update(bytes).digest('hex');
-  const result = builder.sourceBinding({ sourceCommit: 'a'.repeat(40), coverage: [], overlays: [], changes: [], backupTransform: {} },
+  const result = builder.sourceBinding({ sourceCommit: 'a'.repeat(40), coverage: [], overlays: [], changes: [], backupTransform: {}, adapterShutdownTransform: { verified: true } },
     { releaseId: 'b'.repeat(64), manifest: { files: [{ path: builder.UPLOAD_TARGET, size: bytes.length, sha256 }] } });
   assert.deepEqual(result.hostFiles, [{ source: builder.UPLOAD_TEMPLATE, target: builder.UPLOAD_TARGET, bytes: bytes.length, sha256 }]);
+  assert.deepEqual(result.adapterShutdownTransform, { verified: true });
+  assert.equal(result.adapterShutdownSourceSha256, crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, sbom.SHUTDOWN_SOURCE))).digest('hex'));
 });
 test('trusted verifier requires pinned source and explicit native evidence without force options', () => {
   const commit = 'a'.repeat(40);
@@ -237,4 +249,17 @@ test('trusted report gate rejects optimistic, omitted or altered release claims'
     bad(() => verifier.assertReports(missing));
   }
   bad(() => verifier.assertReports({ ...input, checksumText: input.checksumText + '\n' }));
+});
+
+test('shutdown core delta requires both exact original/output hash pairs and unchanged modes', () => {
+  for (const file of shutdown.FILES) {
+    for (const mutate of [x => { x.before.find(r => r.path === file.relativePath).sha256 = 'f'.repeat(64); },
+      x => { x.after.find(r => r.path === file.relativePath).sha256 = 'f'.repeat(64); },
+      x => { x.after.find(r => r.path === file.relativePath).mode = 0o755; },
+      x => { x.after = x.after.filter(r => r.path !== file.relativePath); }]) {
+      const x = deltaFixture(); mutate(x); bad(() => sbom.assertDelta(x.before, x.after));
+    }
+  }
+  const x = deltaFixture(); x.after.push(row('node_modules/' + shutdown.PACKAGE + '/build/cjs/lib/other.js', 'f'.repeat(64)));
+  bad(() => sbom.assertDelta(x.before, x.after));
 });
