@@ -30,16 +30,38 @@ test('direct R4 and R5 update pins exactly match authenticated historical delive
             publicKeySha256: base.keySha256, sequence, nodeVersion: '24.21.0', profile: 'test' });
     }
 });
-test('complete Admin source seal, runtime, metadata and Backup branding are mapped', () => {
-    const entries = sourceEntries(), names = new Set(entries.map(row => row.source));
-    const seal = JSON.parse(fs.readFileSync(path.join(ROOT, 'components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json')));
-    for (const file of Object.keys(seal.files)) assert.ok(names.has('components/admin/' + file), file);
+test('retained R6 source coverage maps its complete Admin, runtime, metadata and Backup inputs', () => {
+    // R6's source scope is historical. Its immutable binding is the fixture;
+    // later Admin documents must not silently widen the old builder allowlist.
+    const bytes = tracked('reports/integration/installable-test3-r6-20261004/signed-source-binding.json');
+    assert.equal(sha256(bytes), 'bbbb583883aacc97e7206655d61614a72ec20c19033afa68a0ec655ae11049b0');
+    const binding = JSON.parse(bytes), delivery = JSON.parse(tracked(NEXT + '/delivery.json'));
+    assert.equal(binding.releaseId, delivery.releaseId);
+    assert.equal(binding.archiveSha256, delivery.sha256);
+    assert.equal(binding.signingPublicKeySha256, delivery.signingPublicKeySha256);
+    const entries = binding.sourceCoverage, names = new Set(entries.map(row => row.source));
+    assert.equal(entries.length, 1522); assert.equal(names.size, entries.length);
+    assert.equal(new Set(entries.map(row => row.target)).size, entries.length);
+    for (const entry of entries) assert.equal('app/' + sourceTarget(entry.source), entry.target, entry.source);
     for (const file of ['components/admin/src-admin/index.html', 'components/backitup/admin/tab_m.html', 'components/backitup/admin/eos-product-loader.css', 'components/backitup/release-manifest.json', 'components/backitup/io-package.json']) assert.ok(names.has(file), file);
     assert.equal(sourceTarget('components/admin/src/lib/eosSessionSecurity.js'), 'node_modules/iobroker.eos-admin/src/lib/eosSessionSecurity.js');
     assert.equal(sourceTarget('components/devices/main.js'), null);
     assert.equal(sourceTarget('components/backitup/admin/custom/old.js'), null);
     assert.equal(sourceTarget('components/backitup/admin/assets/old.js.map'), null);
     for (const file of ['/etc/passwd', 'components/admin/../secret', 'components\\admin\\foo', 'components/admin//foo']) assert.throws(() => sourceTarget(file), { code: 'R6_SOURCE_PATH' });
+});
+test('valid current Admin seal cannot widen the historical R6 source scope', () => {
+    const seal = JSON.parse(fs.readFileSync(path.join(ROOT, 'components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json')));
+    assert.equal(seal.algorithm, 'sha256'); assert.equal(seal.package, 'iobroker.eos-admin');
+    assert.equal(seal.version, '7.10.11'); assert.equal(Object.keys(seal.files).length, seal.fileCount);
+    const outsideHistoricalScope = [];
+    for (const [relative, expected] of Object.entries(seal.files)) {
+        const source = 'components/admin/' + relative;
+        assert.equal(sha256(fs.readFileSync(path.join(ROOT, source))), expected, source);
+        if (sourceTarget(source) === null) outsideHistoricalScope.push(source);
+    }
+    assert.deepEqual(outsideHistoricalScope, ['components/admin/docs/EOS_NETWORK_DE.md']);
+    assert.throws(() => sourceEntries(), { code: 'R6_ADMIN_SOURCE_SEAL' });
 });
 test('plain CommonJS security modules match reviewed source and executable bytes', () => {
     assert.equal(COMMONJS.length, 4);

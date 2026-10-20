@@ -1,0 +1,30 @@
+{
+  "baseCommit": "7b979d9b00f94edeb4b899fa49e50fd5024a30f8",
+  "testFileSha256": "69610331e031fe6222e09c7c34e825977c3d25357d722243bcc703960b67573f",
+  "scope": "Local corrected R6 test context; unchanged historical builder, pins and delivery.",
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "reports/integration/installable-test3-r6-20261004/build-revision.test.cjs",
+        "tests/integration/r6-derivative-sbom.test.cjs"
+      ],
+      "exitCode": 0,
+      "log": "r6-node.log",
+      "sha256": "901cdd381016999d3f5afae36e309267e4c5de73a0ddcf30f9bf4aedb1950589"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "reports/integration/installable-test3-r6-20261004/publish-candidate.test.py"
+      ],
+      "exitCode": 0,
+      "log": "r6-python.log",
+      "sha256": "dc38ec330fd491582ed41e10b62759fbe3cb18ec0e0ba65df4c7570215e0a420"
+    }
+  ]
+}

@@ -462,7 +462,13 @@ def isolated_suite(directory):
                        {"destination": "192.168.50.0/24", "interface": "wan0"},
                        {"destination": "default", "interface": "wan0"}]}
         # Earlier unrelated accepts must not bypass the EOS guard's later drops.
-        execute(["nft", "-f", "-"], input_text="table inet eos_test_unrelated { chain forward { type filter hook forward priority -20; policy accept; ct state established,related accept; } }\n")
+        execute(["nft", "-f", "-"], input_text="""table inet eos_test_unrelated {
+    chain forward {
+        type filter hook forward priority -20; policy accept;
+        ct state established,related accept
+    }
+}
+""")
         apply_policy(config, inventory)
         expect_probe(tech.pid, PUBLIC, 18080, False, "internet_closed_initially")
         expect_dns(tech.pid, False, "dns_closed_initially")

@@ -92,6 +92,19 @@ Ergebnis: **8/8 bestanden**. Das beweist keine echte IPv6-Reparatur; der erneute
 native CI-Lauf sowie Pi-/systemd-/USB-Abnahmen bleiben bis zu ihrem tatsächlichen
 Ergebnis offen. Produktcode und Firewallpolicy wurden hierfür nicht verändert.
 
+Der folgende echte CI-Job `118514685362` am Stand `7b979d9`
+([Rohbeleg](ci-second-native-failure.json)) bestand alle vier
+Positivvortests; IPv6 benötigte drei Versuche und 2,107 Sekunden. Der Lauf
+scheiterte danach an einem eindeutig gemeldeten Syntaxfehler der zusätzlichen
+unabhängigen **Testtabelle** `eos_test_unrelated`: Zwischen den schließenden
+Chain-/Tabellenklammern fehlte ein Zeilenabschluss oder Trennzeichen. Die
+Fixture verwendet jetzt einen mehrzeiligen nftables-Block mit getrennten
+Abschlüssen. Dies war das einzige eingebettete nft-Regelliteral im Harness;
+die EOS-Policy und sämtliche 23 Pflichtprüfungen bleiben unverändert. Die
+erfolgreichen Vortests belegen nun die tatsächliche IPv6-Erreichbarkeit in
+diesem isolierten Lauf; die vollständige Paket-/DHCP-Prüfung bleibt bis zum
+erneuten nativen CI-Lauf offen.
+
 ## Unabhängige Prüfung und Korrekturen
 
 Während der Prüfung behoben wurden unter anderem veraltete Sitzungsfreigaben
@@ -152,3 +165,33 @@ neuen sauberen Commit gebaut und erneut nativ qualifiziert werden. Lokale
 Nachprüfungen: `ci-followup-local.json`, `ci-followup-workflows.log`. Rohe
 Namespace-Diagnosen werden in einem separaten CI-Artefakt erhalten; sie können
 das erfolgreiche, quellgebundene Signierungsartefakt nicht ersetzen.
+
+## CI-Nachprüfung des zweiten veröffentlichten Stands: R6-Testkontext
+
+Im Anforderungscommit `7b979d9b00f94edeb4b899fa49e50fd5024a30f8`
+bestand der zuvor fehlgeschlagene Sequenztest; auch der Adapter-/Backup-Job
+bestand. Der Security-Lauf `39388691376`, Job `118514685598`, erreichte danach
+die R6-Prüfungen und scheiterte mit `R6_ADMIN_SOURCE_SEAL`: Die gültige aktuelle
+Admin-Versiegelung enthält nun `docs/EOS_NETWORK_DE.md`, das außerhalb des
+historischen R6-Quellumfangs liegt. Dieser Befund ist keine ungültige aktuelle
+Dateiversiegelung und berechtigt nicht zur Erweiterung des alten Builders.
+
+Die Korrektur betrifft nur den Testkontext. Die 1.522 Einträge des erhaltenen
+R6-Quellbindungsbelegs werden mit festem SHA-256
+`bbbb583883aacc97e7206655d61614a72ec20c19033afa68a0ec655ae11049b0`
+gegen die unveränderte R6-Pfadzuordnung geprüft. Ein eigener Test prüft alle
+aktuellen Admin-Dateihashes und verlangt weiterhin die Ablehnung des neu
+hinzugekommenen Dokuments durch den historischen Builder. R6-Builder,
+Freigabepins, Auslieferungsdateien und die aktuelle Versiegelung bleiben
+unverändert.
+
+Die vollständige lokale R6-CI-Stufe bestand anschließend: 15 Node-Tests für
+Builder/derivativen SBOM sowie 9 Python-Publikationstests, jeweils ohne
+Überspringen. Die separate lokale Folgeprüfung der R7-/R8-/R9-Verträge und
+öffentlichen R8-/R9-/R10-Auslieferungswege bestand mit 282 Node-Tests und
+ohne Überspringen; [Zusammenfassung und Einzelprotokolle](retained-contracts-followup/summary.json)
+binden diese Nachprüfung an ihren Quellstand und die lokale Node-Version.
+Das sind Quell- und Publikationsvertragsprüfungen;
+ein neuer vollständiger CI-Lauf des endgültigen Quellcommits sowie echte
+systemd-/Pi-Abnahme bleiben erforderlich. Die zweite CI-Anforderung ist
+dadurch nicht nachträglich erfolgreich oder für eine Signierung verwendbar.
