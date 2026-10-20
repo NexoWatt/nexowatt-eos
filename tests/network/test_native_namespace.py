@@ -1,10 +1,13 @@
 """Harness control tests only; no namespace, network or host mutation."""
 import errno
 import importlib.util
+import os
 from pathlib import Path
+import struct
 import subprocess
+from types import SimpleNamespace
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import MagicMock, Mock, patch
 
 spec = importlib.util.spec_from_file_location("native_namespace", Path(__file__).with_name("native_namespace.py"))
 native = importlib.util.module_from_spec(spec)
@@ -23,6 +26,93 @@ class Clock:
 
 
 class NativeHarnessTests(unittest.TestCase):
+    @staticmethod
+    def dhcp_reply(request, kind):
+        bootp = bytearray(request[42:282])
+        bootp[0] = 2
+        bootp[16:20] = bytes([192, 168, 77, 20])
+        gateway = bytes([192, 168, 77, 1])
+        options = bytes([53, 1, kind, 54, 4]) + gateway + bytes([3, 4]) + gateway
+        payload = bootp + options + bytes([6, 4, 1, 1, 1, 1, 255])
+        udp = struct.pack("!HHHH", 67, 68, len(payload) + 8, 0) + payload
+        ip = bytearray(request[14:34])
+        ip[2:4] = struct.pack("!H", len(udp) + 20)
+        return request[:14] + ip + udp
+
+    def test_dhcp_waits_for_normal_conflict_probe_and_sends_valid_packets(self):
+        clock, sock = Clock(), MagicMock()
+        sock.__enter__.return_value = sock
+
+        def receive(_size):
+            request = sock.send.call_args.args[0]
+            clock.sleep(3.1 if sock.send.call_count == 1 else 0.1)
+            return self.dhcp_reply(request, 2 if sock.send.call_count == 1 else 5)
+
+        sock.recv.side_effect = receive
+        with patch.object(native, "isolation_guard"), patch.object(native.socket, "socket", return_value=sock), \
+                patch.object(native.time, "monotonic", side_effect=clock.now):
+            result = native.dhcp_exchange("dev0", native.TECH_MAC, True, "initial")
+        self.assertTrue(result["offer"])
+        self.assertEqual(result["offerElapsedSeconds"], 3.1)
+        self.assertEqual(result["ip"], "192.168.77.20")
+        self.assertTrue(all(call.args[0] >= 5 for call in sock.settimeout.call_args_list))
+        for call, kind in zip(sock.send.call_args_list, (1, 3)):
+            frame = call.args[0]
+            self.assertEqual(frame[:6], b"\xff" * 6)
+            self.assertEqual(frame[26:34], b"\0" * 4 + b"\xff" * 4)
+            self.assertEqual(struct.unpack("!H", frame[16:18])[0], len(frame) - 14)
+            self.assertEqual(struct.unpack("!HHHH", frame[34:42]), (68, 67, len(frame) - 34, 0))
+            checksum = sum(struct.unpack("!10H", frame[14:34]))
+            while checksum >> 16:
+                checksum = (checksum & 65535) + (checksum >> 16)
+            self.assertEqual(checksum, 65535)
+            self.assertEqual(frame[52:54], b"\x80\0")
+            self.assertEqual(native.packet_options(frame[42:])[53], bytes([kind]))
+
+    def test_delayed_management_offer_is_a_failure(self):
+        clock, sock = Clock(), MagicMock()
+        sock.__enter__.return_value = sock
+
+        def receive(_size):
+            clock.sleep(3.1)
+            return self.dhcp_reply(sock.send.call_args.args[0], 2)
+
+        sock.recv.side_effect = receive
+        with patch.object(native, "isolation_guard"), patch.object(native.socket, "socket", return_value=sock), \
+                patch.object(native.time, "monotonic", side_effect=clock.now):
+            with self.assertRaisesRegex(RuntimeError, "UNEXPECTED_MANAGEMENT_DHCP_OFFER"):
+                native.dhcp_exchange("up0", native.TECH_MAC, False, "management")
+        self.assertGreaterEqual(sock.settimeout.call_args.args[0], 5)
+
+    def test_management_absence_requires_full_observation_window(self):
+        clock, sock = Clock(), MagicMock()
+        sock.__enter__.return_value = sock
+
+        def receive(_size):
+            clock.sleep(sock.settimeout.call_args.args[0])
+            raise TimeoutError()
+
+        sock.recv.side_effect = receive
+        with patch.object(native, "isolation_guard"), patch.object(native.socket, "socket", return_value=sock), \
+                patch.object(native.time, "monotonic", side_effect=clock.now):
+            result = native.dhcp_exchange("up0", native.TECH_MAC, False, "management")
+        self.assertFalse(result["offer"])
+        self.assertEqual(result["offerElapsedSeconds"], 6.0)
+
+    def test_process_diagnostics_are_bounded_and_never_wait_for_pipe_eof(self):
+        reader, writer = os.pipe()
+        self.addCleanup(os.close, writer)
+        stderr = os.fdopen(reader, "rb", buffering=0)
+        self.addCleanup(stderr.close)
+        os.write(writer, b"x" * 4096)
+        child = SimpleNamespace(args=["dnsmasq"], stderr=stderr, poll=lambda: None)
+        with patch.object(native, "isolation_guard"):
+            result = native.process_diagnostics([child])
+            empty = native.process_diagnostics([child])
+        self.assertEqual(len(result[0]["stderr"]), 4096)
+        self.assertTrue(result[0]["stderrLimited"])
+        self.assertEqual(empty[0]["stderr"], "")
+
     def test_readiness_requires_actual_positive_reply_after_transient_failure(self):
         clock, budgets = Clock(), []
 

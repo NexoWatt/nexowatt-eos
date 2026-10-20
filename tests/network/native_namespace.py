@@ -41,6 +41,9 @@ PUBLIC6 = "2001:4860:4860::8844"
 TIMEOUT = 0.7
 FIXTURE_READY_SECONDS = 5.0
 FIXTURE_READY_ATTEMPTS = 12
+# dnsmasq's normal address-conflict probe can take 2-3 seconds before OFFER.
+# Keep that safety check enabled and observe management for the same interval.
+DHCP_REPLY_SECONDS = 6.0
 
 
 class FixtureReadinessError(RuntimeError):
@@ -140,6 +143,7 @@ def dhcp_exchange(interface, mac, expect_offer, client_suffix):
                         b"\0" * 4, b"\0" * 4, b"\0" * 4, b"\0" * 4,
                         hardware.ljust(16, b"\0"), b"\0" * 64, b"\0" * 128)
     client = b"\x01" + hardware + client_suffix.encode("ascii")
+    observed = {"receivedFrames": 0, "dhcpReplies": 0, "matchingReplies": 0}
 
     def send(sock, kind, extra=b""):
         options = bytes([53, 1, kind, 61, len(client)]) + client + b"\x37\x03\x01\x03\x06" + extra + b"\xff"
@@ -153,7 +157,7 @@ def dhcp_exchange(interface, mac, expect_offer, client_suffix):
         header = header[:10] + struct.pack("!H", (~checksum) & 0xffff) + header[12:]
         sock.send(b"\xff" * 6 + hardware + b"\x08\x00" + header + udp)
 
-    def receive(sock, expected_kind, seconds=2.0):
+    def receive(sock, expected_kind, seconds=DHCP_REPLY_SECONDS):
         deadline = time.monotonic() + seconds
         while time.monotonic() < deadline:
             sock.settimeout(max(0.01, deadline - time.monotonic()))
@@ -161,6 +165,7 @@ def dhcp_exchange(interface, mac, expect_offer, client_suffix):
                 frame = sock.recv(4096)
             except TimeoutError:
                 return None
+            observed["receivedFrames"] += 1
             if len(frame) < 42 or frame[12:14] != b"\x08\x00" or frame[23] != 17:
                 continue
             ip_size = (frame[14] & 0x0f) * 4
@@ -170,8 +175,10 @@ def dhcp_exchange(interface, mac, expect_offer, client_suffix):
             source_port, target_port = struct.unpack("!HH", frame[udp_start:udp_start + 4])
             if source_port != 67 or target_port != 68:
                 continue
+            observed["dhcpReplies"] += 1
             data = frame[udp_start + 8:]
             if len(data) >= 240 and data[0] == 2 and struct.unpack("!I", data[4:8])[0] == xid:
+                observed["matchingReplies"] += 1
                 opts = packet_options(data)
                 if opts.get(53) == bytes([expected_kind]):
                     return data, opts
@@ -180,14 +187,16 @@ def dhcp_exchange(interface, mac, expect_offer, client_suffix):
     # AF_PACKET avoids requiring a route/address before DHCP has assigned one.
     with socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.htons(0x0800)) as sock:
         sock.bind((interface, 0))
+        started = time.monotonic()
         send(sock, 1)
         offered = receive(sock, 2)
+        observed["offerElapsedSeconds"] = round(time.monotonic() - started, 3)
         if not expect_offer:
             if offered is not None:
                 raise RuntimeError("UNEXPECTED_MANAGEMENT_DHCP_OFFER")
-            return {"offer": False}
+            return {"offer": False, **observed}
         if offered is None:
-            raise RuntimeError("TECHNICAL_DHCP_OFFER_MISSING")
+            raise RuntimeError("TECHNICAL_DHCP_OFFER_MISSING " + json.dumps(observed, sort_keys=True))
         data, opts = offered
         address, server = data[16:20], opts.get(54)
         if not server or len(server) != 4:
@@ -195,10 +204,29 @@ def dhcp_exchange(interface, mac, expect_offer, client_suffix):
         send(sock, 3, b"\x32\x04" + address + b"\x36\x04" + server)
         ack = receive(sock, 5)
         if ack is None or ack[0][16:20] != address:
-            raise RuntimeError("DHCP_ACK_MISSING")
+            raise RuntimeError("DHCP_ACK_MISSING " + json.dumps(observed, sort_keys=True))
         return {"offer": True, "ip": socket.inet_ntoa(address),
                 "router": socket.inet_ntoa(ack[1][3]),
-                "dns": socket.inet_ntoa(ack[1][6][:4])}
+                "dns": socket.inet_ntoa(ack[1][6][:4]), **observed}
+
+
+def process_diagnostics(processes):
+    """Read bounded already-buffered child stderr without waiting for EOF."""
+    isolation_guard()
+    results = []
+    for child in processes[-16:]:
+        row = {"program": Path(child.args[0]).name, "returncode": child.poll()}
+        try:
+            os.set_blocking(child.stderr.fileno(), False)
+            data = os.read(child.stderr.fileno(), 4096)
+            row["stderr"] = data.decode("utf-8", errors="replace")
+            row["stderrLimited"] = len(data) == 4096
+        except BlockingIOError:
+            row["stderr"] = ""
+        except (OSError, ValueError):
+            row["stderrError"] = "PROCESS_LOG_UNAVAILABLE"
+        results.append(row)
+    return results
 
 
 def dns_server():
@@ -388,6 +416,7 @@ def isolated_suite(directory):
         execute(["dnsmasq", "--test", "--conf-file=" + str(path)])
         child = spawn(["dnsmasq", "--keep-in-foreground", "--user=root", "--group=root",
                        "--pid-file=" + str(directory / "dnsmasq.pid"), "--log-facility=-",
+                       "--log-dhcp",
                        "--conf-file=" + str(path)])
         # Readiness is a real DHCP exchange below; this bounded delay only lets
         # the process bind its socket before sending the first broadcast.
@@ -486,8 +515,8 @@ def isolated_suite(directory):
         if lease["router"] != config["address"] or lease["dns"] != "1.1.1.1":
             raise RuntimeError("DHCP_OPTIONS_WRONG")
         record("technical_dhcp_dora_and_explicit_options", lease)
-        helper(up.pid, "--dhcp", "up0", "02:00:00:00:50:01", "no", "management")
-        record("management_receives_no_dhcp_offer")
+        management_dhcp = helper(up.pid, "--dhcp", "up0", "02:00:00:00:50:01", "no", "management")
+        record("management_receives_no_dhcp_offer", management_dhcp)
         dhcp.terminate()
         dhcp.wait(timeout=3)
         config["reservations"] = [{"mac": TECH_MAC, "ip": lease["ip"]}]
@@ -532,6 +561,7 @@ def isolated_suite(directory):
             failure["failedProbe"] = error.details
         try:
             failure["diagnostics"] = failure_diagnostics(namespaces)
+            failure["processDiagnostics"] = process_diagnostics(processes)
         except Exception as diagnostic_error:
             failure["diagnosticError"] = type(diagnostic_error).__name__
         return failure

@@ -105,6 +105,33 @@ erfolgreichen Vortests belegen nun die tatsächliche IPv6-Erreichbarkeit in
 diesem isolierten Lauf; die vollständige Paket-/DHCP-Prüfung bleibt bis zum
 erneuten nativen CI-Lauf offen.
 
+Der dritte tatsächliche Job `118517365967` am Commit
+`cd0195d4bc3ed5dda1eb71632187a19d7d668646`
+([Rohbeleg](ci-third-native-failure.json)) bestand die ersten elf Prüfungen,
+einschließlich geladener EOS-Firewall, Managementzugang, freigegebenem
+Geräteport und vom EOS-Host begonnener Verbindung. Er scheiterte danach mit
+`TECHNICAL_DHCP_OFFER_MISSING`. Der Test beobachtete Angebote nur zwei Sekunden;
+die [offizielle dnsmasq-FAQ](https://thekelleys.org.uk/dnsmasq/docs/FAQ)
+dokumentiert bereits zwei bis drei Sekunden Wartezeit für die reguläre
+Adresskonfliktprüfung vor einer dynamischen Vergabe. Dieser konkrete
+Zeitbudgetfehler wird auf sechs Sekunden korrigiert. Dass er den gemeldeten
+Ausfall vollständig erklärt, muss der nächste tatsächliche Lauf zeigen.
+
+Dasselbe volle Fenster gilt für den Negativtest auf dem Managementnetz;
+ein nach drei Sekunden eintreffendes Angebot darf niemals als Sperre gelten.
+Die ICMP-Konfliktprüfung bleibt aktiv. Der Harness erfasst Angebotswartezeit,
+empfangene DHCP-Paketzähler und bei Fehlern begrenzte, nicht blockierende
+stderr-Auszüge seiner Kindprozesse; ausführlichere DHCP-Protokollierung gilt
+nur für die Testinstanz. Vier zusätzliche kontrollierte Tests prüfen gültige
+ausgehende Paketbytes, eine verzögerte DORA-Antwort, das volle Managementfenster
+einschließlich später unerlaubter Angebote und die begrenzte Logausgabe.
+Ergebnis: **12/12 Harness-Tests, 98/98 gesamte Python-Netzwerktests bestanden**.
+Der [Prüflog](ci-dhcp-followup-network.log) und die
+[Befehls-/Hashbindung](ci-dhcp-followup-network.json) halten diesen lokalen
+Nachprüfungsstand fest.
+Produktcode, DHCP-Konfiguration und Firewallregeln bleiben unverändert;
+die vollständige native Qualifikation bleibt offen.
+
 ## Unabhängige Prüfung und Korrekturen
 
 Während der Prüfung behoben wurden unter anderem veraltete Sitzungsfreigaben
