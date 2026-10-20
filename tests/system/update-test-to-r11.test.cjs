@@ -403,19 +403,23 @@ test('R10 completion journal must be successful and retain six-adapter scope', a
     }
 });
 
-test('only three authorized Backitup Influx runtime files and their existing CLI test may change', () => {
+test('only three authorized Backitup runtime files, existing CLI test and exact publish manifest may change', () => {
     const packageName = require('../../runtime/product/scope.cjs').SPECS.find(spec=>spec.source==='backitup').package;
     assert(repair.BACKUP_FILES.every(name=>name.startsWith('app/node_modules/'+packageName+'/')));
-    assert.equal(repair.BACKUP_FILES.length,4);
+    assert.equal(repair.BACKUP_FILES.length,5);
+    assert(repair.BACKUP_FILES.includes('app/node_modules/'+packageName+'/release-manifest.json'));
     const row = name => ({path:name,size:1,mode:0o644,sha256:'e'.repeat(64)});
     const d=descriptors(); d.old.manifest.files.push(...repair.BACKUP_FILES.map(name=>({...row(name),sha256:'d'.repeat(64)})));
     d.next.manifest.files.push(...repair.BACKUP_FILES.map(row));
     assert.equal(repair.validateTransition(d.old,d.next,{expectedReleaseId:ID}),true);
-    const missing=structuredClone(d);missing.next.manifest.files=missing.next.manifest.files.filter(r=>r.path!==repair.BACKUP_FILES[0]);
-    assert.throws(()=>repair.validateTransition(missing.old,missing.next,{expectedReleaseId:ID}));
-    const mode=structuredClone(d);mode.next.manifest.files.find(r=>r.path===repair.BACKUP_FILES[0]).mode=0o755;
-    assert.throws(()=>repair.validateTransition(mode.old,mode.next,{expectedReleaseId:ID}));
+    for (const name of repair.BACKUP_FILES) {
+        const missing=structuredClone(d);missing.next.manifest.files=missing.next.manifest.files.filter(r=>r.path!==name);
+        assert.throws(()=>repair.validateTransition(missing.old,missing.next,{expectedReleaseId:ID}));
+        const mode=structuredClone(d);mode.next.manifest.files.find(r=>r.path===name).mode=0o755;
+        assert.throws(()=>repair.validateTransition(mode.old,mode.next,{expectedReleaseId:ID}));
+    }
     for(const name of ['app/node_modules/iobroker.nexowatt-backup/build/main.js','app/node_modules/iobroker.nexowatt-backup/package.json',
+        'app/node_modules/iobroker.nexowatt-backup/io-package.json','app/node_modules/iobroker.nexowatt-backup/arbitrary-manifest.json',
         'app/node_modules/iobroker.nexowatt-backup/node_modules/axios/index.js','app/node_modules/iobroker.nexowatt-backup/test/unknown.js',
         'app/node_modules/iobroker.eos-admin/node_modules/express/index.js']){
         const x=descriptors();x.next.manifest.files.push(row(name));assert.throws(()=>repair.validateTransition(x.old,x.next,{expectedReleaseId:ID}));

@@ -1,0 +1,71 @@
+GitHub Actions decoded job log excerpt (read back through GitHub connector).
+Source: https://github.com/NexoWatt/nexowatt-eos/actions/runs/39387039999/job/118509485163
+Excerpt preserves source timestamps and test summaries.
+2026-10-20T07:31:57.3611753Z ##[endgroup]
+2026-10-20T07:31:57.3612962Z ##[group]Fetching the repository
+2026-10-20T07:31:57.3618799Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +e8edca868d3cec4a22fb267f15b417654985603b:refs/remotes/origin/main
+2026-10-20T07:32:14.4775600Z From https://github.com/NexoWatt/nexowatt-eos
+2026-10-20T07:32:14.4777977Z  * [new ref]         e8edca868d3cec4a22fb267f15b417654985603b -> origin/main
+2026-10-20T07:32:14.4785363Z [command]/usr/bin/git branch --list --remote origin/main
+2026-10-20T07:32:14.4821038Z   origin/main
+2026-10-20T07:32:14.4831169Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-10-20T07:32:14.4857169Z e8edca868d3cec4a22fb267f15b417654985603b
+2026-10-20T07:32:14.4862180Z ##[endgroup]
+2026-10-20T07:32:14.4863955Z ##[group]Determining the checkout info
+2026-10-20T07:32:14.4866038Z ##[endgroup]
+2026-10-20T07:32:14.4867428Z [command]/usr/bin/git sparse-checkout disable
+2026-10-20T07:32:14.4923643Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-20T07:32:14.4961594Z ##[group]Checking out the ref
+2026-10-20T07:32:14.4963191Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-10-20T07:32:16.1187131Z Updating files:  69% (5266/7571)
+2026-10-20T07:32:16.5911436Z Updating files:  70% (5300/7571)
+2026-10-20T07:32:17.5895496Z ##[endgroup]
+2026-10-20T07:32:17.5950900Z [command]/usr/bin/git log -1 --format=%H
+2026-10-20T07:32:17.5988714Z e8edca868d3cec4a22fb267f15b417654985603b
+2026-10-20T07:32:17.6009596Z ##[group]Removing auth
+2026-10-20T07:32:17.6010104Z Removing SSH command configuration
+2026-10-20T07:32:17.6010809Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-20T07:32:17.6047537Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-20T07:32:17.6301632Z Removing HTTP extra header
+2026-10-20T07:32:17.6306682Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-20T07:32:17.6341726Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-20T07:32:17.6573144Z Removing includeIf entries pointing to credentials config files
+2026-10-20T07:32:17.6576017Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-20T07:32:56.6938309Z ✔ keeps three generations per configured InfluxDB suffix and ignores unrelated files (0.288048ms)
+2026-10-20T07:32:56.6940072Z ✔ uses only logger methods that exist in the backup execution context (0.553724ms)
+2026-10-20T07:32:56.6941134Z ℹ tests 74
+2026-10-20T07:32:56.6941716Z ℹ suites 1
+2026-10-20T07:32:56.6942437Z ℹ pass 74
+2026-10-20T07:32:56.6943002Z ℹ fail 0
+2026-10-20T07:32:56.6943713Z ℹ cancelled 0
+2026-10-20T07:32:56.6944308Z ℹ skipped 0
+2026-10-20T07:32:56.6944898Z ℹ todo 0
+2026-10-20T07:32:56.6945698Z ℹ duration_ms 398.406409
+2026-10-20T07:32:56.8142587Z ✔ Backup local pins loopback despite inherited remote host and CLI profile (1.912581ms)
+2026-10-20T07:32:56.8144768Z ✔ Backup local explicitly defeats inherited disabled TLS verification (0.550848ms)
+2026-10-20T07:32:56.8754712Z ✔ multi restore ambiguous manifest cannot guess a target (1.28542ms)
+2026-10-20T07:32:56.8756502Z ✔ multi restore unconfigured manifest cannot guess a target (1.268147ms)
+2026-10-20T07:32:56.8874362Z ℹ tests 34
+2026-10-20T07:32:56.8875121Z ℹ suites 0
+2026-10-20T07:32:56.8875573Z ℹ pass 34
+2026-10-20T07:32:56.8875866Z ℹ fail 0
+2026-10-20T07:32:56.8876249Z ℹ cancelled 0
+2026-10-20T07:32:56.8876614Z ℹ skipped 0
+2026-10-20T07:32:56.8877287Z ℹ todo 0
+2026-10-20T07:32:56.8877678Z ℹ duration_ms 150.732648
+2026-10-20T07:32:56.9915211Z
+2026-10-20T07:32:56.9916236Z [NexoWatt EOS Backup] Veröffentlichung abgebrochen:
+2026-10-20T07:32:56.9917156Z
+2026-10-20T07:32:56.9921090Z   - Dateigröße weicht ab: build/lib/influxDbCli.js (6139 statt 5585)
+2026-10-20T07:32:56.9922151Z   - Dateigröße weicht ab: build/lib/restore/influxDB.js (8477 statt 9471)
+2026-10-20T07:32:56.9922889Z   - Dateigröße weicht ab: build/lib/scripts/12-influxDB.js (5430 statt 7453)
+2026-10-20T07:32:56.9923620Z   - Dateigröße weicht ab: test/influxdb-cli.js (3375 statt 3193)
+2026-10-20T07:32:56.9923973Z
+2026-10-20T07:32:56.9924799Z Kopiere die vollständige aktuelle Publish-ZIP über den Projektordner. Die Publish-Vorbereitung entfernt bekannte Altdateien automatisch.
+2026-10-20T07:32:56.9925699Z
+2026-10-20T07:32:56.9984376Z ##[error]Process completed with exit code 1.
+2026-10-20T07:32:57.0040676Z ##[group]Run cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+2026-10-20T07:32:57.0041101Z [36;1mcat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'[0m
+2026-10-20T07:32:57.0041850Z [36;1mCurrent source and shipped-code tests cover all six own central-license clients, platform admission, lease expiry, later activation and guarded command queues.[0m
+2026-10-20T07:32:57.0042997Z [36;1mProtocol peers and device buses remain laboratory fixtures. Real EOS management startup is a separate native job; Pi and physical commissioning remain open.[0m
+2026-10-20T07:32:57.0043672Z [36;1mSCOPE[0m

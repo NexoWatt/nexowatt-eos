@@ -14,6 +14,7 @@ This is a kernel/DHCP integration test, not Pi/systemd/product acceptance.
 from __future__ import annotations
 
 import argparse
+import errno
 import importlib.util
 import json
 import os
@@ -38,6 +39,45 @@ UPLINK_MAC = "02:00:00:00:50:02"
 PUBLIC = "93.184.216.34"
 PUBLIC6 = "2001:4860:4860::8844"
 TIMEOUT = 0.7
+FIXTURE_READY_SECONDS = 5.0
+FIXTURE_READY_ATTEMPTS = 12
+
+
+class FixtureReadinessError(RuntimeError):
+    def __init__(self, name, details):
+        super().__init__(name + "_FAILED")
+        self.details = details
+
+
+def wait_for_fixture(probe, key, name, *, clock=time.monotonic, sleep=time.sleep):
+    """Retry only pre-policy positive controls, with a real successful reply.
+
+    A listener's READY line proves bind/listen, not that IPv6 neighbour discovery
+    and source/route selection can already carry a connection through all peers.
+    The caller bounds each subprocess by the remaining shared deadline.
+    """
+    started = clock()
+    deadline = started + FIXTURE_READY_SECONDS
+    attempts, result = 0, {}
+    while attempts < FIXTURE_READY_ATTEMPTS:
+        remaining = deadline - clock()
+        if remaining <= 0:
+            break
+        attempts += 1
+        try:
+            result = probe(remaining)
+        except subprocess.TimeoutExpired:
+            result = {key: False, "errorCode": "PROBE_PROCESS_TIMEOUT"}
+        elapsed = clock() - started
+        details = {"attempts": attempts, "elapsedSeconds": round(elapsed, 3), "lastProbe": result}
+        if result.get(key) is True and elapsed <= FIXTURE_READY_SECONDS:
+            return details
+        remaining = deadline - clock()
+        if remaining > 0:
+            sleep(min(0.1, remaining))
+    raise FixtureReadinessError(name, {"attempts": attempts,
+                                      "elapsedSeconds": round(clock() - started, 3),
+                                      "lastProbe": result})
 
 
 def namespace_inode():
@@ -188,20 +228,66 @@ def dns_probe():
             return False
 
 
-def connect(address, port):
+def connection_probe(address, port):
     family = socket.AF_INET6 if ":" in address else socket.AF_INET
     sock = socket.socket(family, socket.SOCK_STREAM)
     sock.settimeout(TIMEOUT)
+    result = {"connected": False, "family": "IPv6" if family == socket.AF_INET6 else "IPv4",
+              "destination": address, "port": port, "phase": "connect"}
     try:
         sock.connect((address, port))
+        result["phase"] = "send"
         sock.sendall(b"EOS-network-probe")
+        result["phase"] = "echo"
         if sock.recv(128) != b"EOS-network-probe":
+            # A malformed echo proves transport reachability. Never count it
+            # as a blocked connection in a later negative assertion.
             raise RuntimeError("ECHO_MISMATCH")
-        return True
-    except (OSError, TimeoutError):
-        return False
+        result["connected"] = True
+    except (OSError, TimeoutError) as error:
+        result["errno"] = error.errno
+        result["errorCode"] = ("SOCKET_TIMEOUT" if isinstance(error, TimeoutError)
+                               else errno.errorcode.get(error.errno, "SOCKET_ERROR"))
     finally:
+        try:
+            result["source"] = list(sock.getsockname())
+        except OSError:
+            pass
         sock.close()
+    return result
+
+
+def connect(address, port):
+    return connection_probe(address, port)["connected"]
+
+
+def failure_diagnostics(namespaces):
+    """Read only synthetic namespace state; cap time and every output field."""
+    isolation_guard()
+    result = {}
+    deadline = time.monotonic() + 6.0
+    route_queries = {
+        "router": ["ip", "-j", "-6", "route", "get", PUBLIC6, "from", "fd77::20", "iif", "tech0"],
+        "technical": ["ip", "-j", "-6", "route", "get", PUBLIC6],
+        "uplink": ["ip", "-j", "-6", "route", "get", "fd77::20", "from", PUBLIC6],
+    }
+    commands = [("addresses", ["ip", "-j", "address", "show"]),
+                ("ipv6Routes", ["ip", "-j", "-6", "route", "show", "table", "all"]),
+                ("ipv6Neighbours", ["ip", "-j", "-6", "neigh", "show"])]
+    for name, pid in namespaces.items():
+        fields = result[name] = {}
+        for field, command in [*commands, ("ipv6RouteSelection", route_queries[name])]:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                fields["incomplete"] = "DIAGNOSTIC_DEADLINE"
+                return result
+            try:
+                output = execute(in_namespace(pid, command), timeout=min(0.75, remaining), check=False)
+                fields[field] = {"returncode": output.returncode,
+                                 "stdout": output.stdout[:3000], "stderr": output.stderr[:500]}
+            except subprocess.TimeoutExpired:
+                fields[field] = {"errorCode": "DIAGNOSTIC_COMMAND_TIMEOUT"}
+    return result
 
 
 def echo_server(address, port):
@@ -258,6 +344,7 @@ def isolated_suite(directory):
     spec.loader.exec_module(policy)
     policy.LEASE_FILE = str(directory / "dhcp.leases")
     processes, tests = [], []
+    namespaces = {"router": os.getpid()}
 
     def record(name, details=None):
         tests.append({"name": name, "status": "PASS", **({"details": details} if details else {})})
@@ -274,8 +361,8 @@ def isolated_suite(directory):
     def ns_command(pid, *args):
         return execute(in_namespace(pid, list(args)))
 
-    def helper(pid, *args):
-        result = execute(in_namespace(pid, [sys.executable, SELF, *args]), timeout=20)
+    def helper(pid, *args, timeout=20):
+        result = execute(in_namespace(pid, [sys.executable, SELF, *args]), timeout=timeout)
         return json.loads(result.stdout)
 
     def expect_probe(pid, address, port, allowed, name):
@@ -313,6 +400,7 @@ def isolated_suite(directory):
         execute(["ip", "link", "set", "lo", "up"])
         tech = spawn(["unshare", "--net", "--", sys.executable, SELF, "--hold"], ready=True)
         up = spawn(["unshare", "--net", "--", sys.executable, SELF, "--hold"], ready=True)
+        namespaces.update(technical=tech.pid, uplink=up.pid)
         for router_name, peer_name, child, router_mac, peer_mac in (
                 ("tech0", "dev0", tech, ROUTER_MAC, TECH_MAC),
                 ("wan0", "up0", up, UPLINK_MAC, "02:00:00:00:50:01")):
@@ -348,10 +436,17 @@ def isolated_suite(directory):
         spawn([sys.executable, SELF, "--echo", "0.0.0.0", "8188"], ready=True)
         spawn([sys.executable, SELF, "--echo", "0.0.0.0", "1883"], ready=True)
         spawn(in_namespace(up.pid, [sys.executable, SELF, "--dns-server"]), ready=True)
-        expect_probe(tech.pid, PUBLIC, 18080, True, "fixture_ipv4_route_positive")
-        expect_probe(tech.pid, PUBLIC6, 18080, True, "fixture_ipv6_route_positive")
-        expect_probe(tech.pid, "192.168.50.100", 18080, True, "fixture_customer_route_positive")
-        expect_dns(tech.pid, True, "fixture_dns_route_positive")
+        # These real positive controls must succeed before loading any policy.
+        # Negative assertions and the grant expiry check below remain one-shot.
+        for address, name in ((PUBLIC, "fixture_ipv4_route_positive"),
+                              (PUBLIC6, "fixture_ipv6_route_positive"),
+                              ("192.168.50.100", "fixture_customer_route_positive")):
+            record(name, wait_for_fixture(
+                lambda remaining: helper(tech.pid, "--probe", address, "18080", timeout=remaining),
+                "connected", name))
+        record("fixture_dns_route_positive", wait_for_fixture(
+            lambda remaining: helper(tech.pid, "--dns-probe", timeout=remaining),
+            "answered", "fixture_dns_route_positive"))
 
         ifindices = {row["ifname"]: row["ifindex"] for row in json.loads(execute(["ip", "-j", "link", "show"]).stdout)}
         config = {"interface": "tech0", "mac": ROUTER_MAC, "address": "192.168.77.1", "prefixLength": 24,
@@ -426,7 +521,14 @@ def isolated_suite(directory):
         detail = str(error)
         if isinstance(error, subprocess.CalledProcessError):
             detail = (error.stderr or error.stdout or str(error))[:2000]
-        return {"status": "FAIL", "tests": tests, "error": detail, "hostNamespaceUntouched": True}
+        failure = {"status": "FAIL", "tests": tests, "error": detail, "hostNamespaceUntouched": True}
+        if isinstance(error, FixtureReadinessError):
+            failure["failedProbe"] = error.details
+        try:
+            failure["diagnostics"] = failure_diagnostics(namespaces)
+        except Exception as diagnostic_error:
+            failure["diagnosticError"] = type(diagnostic_error).__name__
+        return failure
     finally:
         for child in reversed(processes):
             if child.poll() is None:
@@ -459,7 +561,7 @@ def main():
         elif args.echo:
             echo_server(args.echo[0], int(args.echo[1]))
         elif args.probe:
-            emit({"connected": connect(args.probe[0], int(args.probe[1]))})
+            emit(connection_probe(args.probe[0], int(args.probe[1])))
         elif args.stream:
             emit(stream_expiry(args.stream[0], int(args.stream[1]), int(args.stream[2])))
         elif args.dhcp:

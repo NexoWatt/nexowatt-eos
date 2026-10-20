@@ -16,6 +16,10 @@ in genau drei Backitup-Laufzeitdateien (`build/lib/influxDbCli.js`,
 `build/lib/scripts/12-influxDB.js`, `build/lib/restore/influxDB.js`): TLS-Prüfung
 und Fehlerweitergabe. Die mitgelieferte bestehende Testdatei
 `test/influxdb-cli.js` erhält ausschließlich die dazugehörigen TLS-Erwartungen.
+Die fünfte erlaubte Datei ist ausschließlich `release-manifest.json`; ihre
+vorhandenen Dateieinträge erhalten nach Compile-/Testprüfung die aktuellen
+Hashes und werden durch den vorhandenen Publish-Gate geprüft. Die exakten
+Manifestbytes gehören zusätzlich zur Quellenbindung und zum App-Inventar.
 Andere Backitup-Dateien, Abhängigkeiten und Paketmetadaten
 dürfen sich nicht ändern. Die Backitup-Prüfberichte führen die fachlichen
 Prüfungen gesondert; der vollständige aktuelle App-Baum bleibt an den nativen
@@ -123,6 +127,10 @@ R10→R11-Übergang bestanden. Der lokale Diagnoseprozess verwendete Node 24.19.
 und einen noch nicht committeten Arbeitsbaum; er erzeugte kein signiertes
 Archiv und ersetzt keinen CI-Nachweis. Beleg: `../unsigned-assembly-rehearsal.json`;
 verwendeter Fortsetzungsbefehl: `../unsigned-assembly-rehearsal-command.txt`.
+Dieser Diagnosebeleg gehört zum dort angegebenen Quellstand vor der späteren
+CI-Korrektur des Backup-Release-Manifests. Dessen neue Bytes und die angepasste
+native IPv6-Prüfung benötigen die vollständigen Prüfungen des nächsten exakten
+Quellcommits, bevor ein R11-Archiv signiert werden darf.
 
 ## Ausführung und offene Zielabnahme
 

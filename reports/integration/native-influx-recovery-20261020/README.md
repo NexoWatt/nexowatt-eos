@@ -106,8 +106,8 @@ Geänderte Laufzeitdateien: `build/lib/influxDbCli.js`,
 passender TypeScript-Quelle. Dazu die angepassten Erwartungen in der bestehenden
 ausgelieferten `test/influxdb-cli.js`. Die zusätzliche
 `test/influx-safety.test.cjs` ist eine Quellcode-/CI-Prüfung; sie wird in der
-Sicherheits-CI ausdrücklich aufgerufen. Keine Versions-/Paketmetadaten wurden
-durch diese Komponentenkorrektur geändert. Die Integrationsfreigabe der nativen
+Sicherheits-CI ausdrücklich aufgerufen. Die Paketversion blieb unverändert; die
+anschließende Manifestkorrektur ist unten dokumentiert. Die Integrationsfreigabe der nativen
 Lieferdateien erfolgt separat im übergeordneten R11-Bericht.
 
 **OFFEN:** echter InfluxDB-Server mit Datenbestand und Restore-Rundlauf,
@@ -115,5 +115,40 @@ Produktionszertifikate, ioBroker-Lebenszyklus auf dem Zielgerät, Pi/Hardware,
 Last/Parallelität externer Datenbank-Schreiber und echte SD-Berechtigungsprüfung.
 Die Zustandstests ersetzen keine exklusive Schreibsperre. Kein Produktions- oder
 Anlagenfreigabenachweis, kein Docker-Nachweis.
+
+## CI-Nachprüfung und Release-Manifest
+
+Der Security-CI-Lauf [39387039999, Job 118509485163](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39387039999/job/118509485163)
+bestand für den Quellmarker `e8edca868d3cec4a22fb267f15b417654985603b` sämtliche **74 Offline-Tests** und die
+zusätzlichen **34 Influx-Sicherheitsregressionen**, jeweils ohne Fehlschlag oder
+Überspringen. Damit wurden auch die beiden oben dokumentierten lokalen
+Umgebungsgrenzen in der Linux-CI erfolgreich geprüft. Die 7 bestehenden
+CLI-Tests gehören zu den 74 Offline-Tests; 7 + 34 entsprechen den 41 lokalen
+fokussierten Tests und sind keine zusätzlichen Tests.
+Der erneut über GitHub gelesene Logauszug liegt in
+`ci-39387039999-backup-excerpt.log` mit den ursprünglichen Zeitstempeln.
+
+Anschließend verweigerte der unveränderte Publish-Validator die Freigabe: Die
+Größen/Hashes der drei geänderten JavaScript-Dateien und der bestehenden
+`test/influxdb-cli.js` waren in `release-manifest.json` noch auf dem Ausgangsstand.
+Dieser Fehler wurde durch Aktualisierung **nur dieser vier vorhandenen Einträge**
+behoben. Dateiliste (141 Einträge), Paketname, Version `1.0.10` und alle anderen
+Einträge bleiben unverändert. Der Validator wurde nicht geändert oder umgangen.
+
+Vor dem Aktualisieren wurde die TypeScript-Kompilation erneut in ein separates
+temporäres Verzeichnis ausgeführt und die Übereinstimmung aller drei ausgelieferten
+JavaScript-Dateien geprüft. Danach meldete `prepare:publish` einen bereits sauberen
+Stand; `node components/backitup/scripts/validate-publish.cjs` bestand einschließlich
+**141 SHA-256-Prüfungen**. Belege: `publish-typescript.log`,
+`publish-manifest-update.json`, `publish-prepare.log`, `publish-validate.log`.
+Der etablierte `prepare:publish`-Schritt räumt Dateien anhand des Manifests auf;
+er erzeugt keine neuen Hashes. Die vier Werte wurden deshalb deterministisch aus
+den zuvor geprüften Dateien erneuert.
+
+Zusätzlicher, ausschließlich metadatenbezogener Lieferpfad:
+`app/node_modules/iobroker.nexowatt-backup/release-manifest.json`.
+Eine vollständige Freigabe des neuen Quellmarkers durch die CI steht bei Erstellung
+dieses Nachtrags noch aus. Der erfolgreiche lokale Manifestvalidator allein ist
+keine solche Freigabe.
 
 Die Textlogs wurden nur um Leerzeichen am Zeilenende bereinigt; Inhalte und Ergebnisse bleiben unverändert.

@@ -94,6 +94,15 @@ jobs:
           path: ${{ runner.temp }}/network-native-evidence.json
           retention-days: 14
           if-no-files-found: error
+      - name: Preserve separate native fixture diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          # Diagnostic raw output is never selected by the signing gate.
+          name: eos-network-diagnostics-${{ github.sha }}
+          path: ${{ runner.temp }}/network-native-raw.json
+          retention-days: 14
+          if-no-files-found: warn
 
   admin-browser:
     name: Actual Admin network panel browser interaction

@@ -45,17 +45,21 @@ test('unknown scope is not a force or production switch', () => {
     }
 });
 
-test('only the exact new signed release context selects six-adapter execution', () => {
+test('only exact signed sequence13 and sequence14 test contexts select six-adapter execution', () => {
     const release = { product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: 13,
         profile: 'test', nodeVersion: '24.21.0', platforms: ['linux-arm64'] };
-    assert.equal(product.releaseScope(release), product.OWN_ADAPTER_TEST);
-    for (const sequence of [1, 11, 12, 14]) {
+    for (const sequence of [13, 14]) {
+        assert.equal(product.releaseScope({ ...release, sequence }), product.OWN_ADAPTER_TEST);
+    }
+    for (const sequence of [1, 11, 12, 15]) {
         assert.equal(product.releaseScope({ ...release, sequence }), product.MANAGEMENT_TEST);
     }
     for (const mutation of [{ product: 'other' }, { releaseVersion: '0.2.0-test.4' },
         { profile: 'production' }, { nodeVersion: '24.19.0' }, { platforms: ['linux-x64'] },
         { platforms: ['linux-arm64', 'linux-x64'] }, { platforms: undefined }]) {
-        assert.throws(() => product.releaseScope({ ...release, ...mutation }), /PRODUCT_RELEASE_SCOPE/);
+        for (const sequence of [13, 14]) {
+            assert.throws(() => product.releaseScope({ ...release, sequence, ...mutation }), /PRODUCT_RELEASE_SCOPE/);
+        }
     }
 });
 
@@ -63,6 +67,8 @@ test('generic fresh install and additive activation cannot bypass journaled own-
     const { assertGenericDeployment } = require('../../tools/system/eos-base.cjs');
     const release = { product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: 13,
         profile: 'test', nodeVersion: '24.21.0', platforms: ['linux-arm64'] };
-    assert.throws(() => assertGenericDeployment(release), { code: 'EOS_OWN_ADAPTER_UPDATE_ONLY' });
+    for (const sequence of [13, 14]) {
+        assert.throws(() => assertGenericDeployment({ ...release, sequence }), { code: 'EOS_OWN_ADAPTER_UPDATE_ONLY' });
+    }
     assert.doesNotThrow(() => assertGenericDeployment({ ...release, sequence: 12 }));
 });

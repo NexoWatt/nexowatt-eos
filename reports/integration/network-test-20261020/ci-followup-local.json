@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "e8edca868d3cec4a22fb267f15b417654985603b",
+  "sourceState": "corrected working tree; exact hashes below",
+  "nodeVersion": "v24.19.0",
+  "checks": [
+    {
+      "file": "ci-followup-network.log",
+      "argv": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/network",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "sha256": "f1ce9dd6c87e20bb47e2e270742905201e47f4b12675f2473a6e39239e9c68f4"
+    },
+    {
+      "file": "ci-followup-contracts.tap",
+      "argv": [
+        "node",
+        "--test",
+        "tests/postgresql/own-adapter-product.test.cjs",
+        "tests/system/update-test-to-r11.test.cjs",
+        "tests/bootstrap/r11-native-artifact.test.cjs"
+      ],
+      "exitCode": 0,
+      "sha256": "72beb7f11dc655d4b23b0d77fe232e01a24f9d94b333ff5b517b3bf5dabe0afd"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/eos-network.yml",
+      "sha256": "a84e951ef1260d56f16207df4e1e893fac7a8e98456f9b6f80ed86123908a771"
+    },
+    {
+      "path": "components/backitup/release-manifest.json",
+      "sha256": "b55547f448e2a15d547f251f06aec4fe78e9422ef3c82267ccaa2a54faba259a"
+    },
+    {
+      "path": "tests/network/native_namespace.py",
+      "sha256": "fff27e52642de10610928da99f5f961dd853b7df14a7df63172e25c135b7b2ff"
+    },
+    {
+      "path": "tests/network/test_native_namespace.py",
+      "sha256": "f71358beafe666ceb1fe2d3d161ee112098b87d2cfb5bff58a21d905250d08c7"
+    },
+    {
+      "path": "tests/postgresql/own-adapter-product.test.cjs",
+      "sha256": "57fb9ceefdca796072b4de35c84719ce5434268d34db83a4c519902f015f7d13"
+    },
+    {
+      "path": "tests/system/update-test-to-r11.test.cjs",
+      "sha256": "14cf8fd07172424f97cbacb66317b9057c0b38e2efce5c37cdda84fca85ef17f"
+    },
+    {
+      "path": "tools/system/update-test-to-r11.cjs",
+      "sha256": "446c872e53c2426711d94134a842db1747993645001987ae3445a50d8ed3400b"
+    }
+  ],
+  "nativePacketRerunRequired": true,
+  "signedReleaseProduced": false
+}

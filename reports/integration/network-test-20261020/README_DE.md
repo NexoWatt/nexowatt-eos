@@ -27,7 +27,8 @@ Die beauftragten Influx-Korrekturen wurden aus dem aktuellen Quellstand neu
 umgesetzt, da der frühere lokale Commit in diesem Checkout nicht verfügbar war.
 Ihr [eigener Bericht](../native-influx-recovery-20261020/README.md) trennt
 aktuelle Belege von früheren Angaben. R11 erlaubt dafür genau drei geänderte
-Backup-Laufzeitdateien und deren bestehende mitgelieferte CLI-Testdatei.
+Backup-Laufzeitdateien, deren bestehende mitgelieferte CLI-Testdatei und
+das dazugehörige geprüfte `release-manifest.json`.
 
 ## Tatsächlich lokal ausgeführte Prüfungen
 
@@ -61,6 +62,35 @@ Netzwerk-Namespace-Erzeugung und Distributionswerkzeugen nicht laufen. Sie wird
 alle 23 benannten Paket-/DHCP-Prüfungen in einem isolierten Linux-Runner und
 bindet den Beleg an den exakten sauberen Commit. R11 darf erst nach erfolgreicher
 Netzwerk- und bestehender nativer Adapterqualifikation signiert werden.
+
+### Nachprüfung des ersten nativen CI-Laufs
+
+Der tatsächliche Ubuntu-24.04-Lauf
+[39387040029, Job 118509241005](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39387040029/job/118509241005)
+am Commit `e8edca868d3cec4a22fb267f15b417654985603b` ist **fehlgeschlagen**:
+Der IPv4-Positivvortest bestand; der folgende
+`fixture_ipv6_route_positive` scheiterte vor dem Laden der EOS-Firewallregeln.
+Dieser Lauf enthält keinen Socketfehlercode oder IPv6-Routingzustand. Eine
+vorübergehend noch nicht fertige Nachbarerkennung ist deshalb nur eine
+Vermutung; eine konkrete Kernelursache ist bisher nicht nachgewiesen.
+
+Die vier Positivvortests verlangen nun innerhalb eines gemeinsamen Budgets
+von jeweils höchstens fünf Sekunden eine tatsächliche Echo-/DNS-Antwort.
+Begrenzte Wiederholungen gelten ausschließlich vor dem Laden der Policy.
+Alle 23 verpflichtenden Prüfnamen, einmaligen Negativproben mit 0,7 Sekunden
+Socketlimit und die bestehende Ablaufprüfung bleiben erhalten. Fehlversuche
+protokollieren Phase, Fehlercode, ausgewählte Quelladresse sowie begrenzte
+Adress-, Routen- und Nachbartabellenauszüge aus den drei Prüf-Namespaces.
+Die Isolationsprüfung bleibt vor jedem ausgeführten Befehl aktiv.
+
+Acht neue lokale Harness-Tests prüfen Wiederholungen, gemeinsames Zeitbudget,
+fehlende Route, hängenden Unterprozess, verspätete Antwort, Fehlerdiagnostik
+und Isolationsabbruch mit kontrollierten Doubles. Eine falsche Echoantwort
+bricht die Prüfung weiterhin ab und zählt niemals als Verbindungssperre. Befehl:
+`PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest discover -s tests/network -p 'test_native_namespace.py' -v`.
+Ergebnis: **8/8 bestanden**. Das beweist keine echte IPv6-Reparatur; der erneute
+native CI-Lauf sowie Pi-/systemd-/USB-Abnahmen bleiben bis zu ihrem tatsächlichen
+Ergebnis offen. Produktcode und Firewallpolicy wurden hierfür nicht verändert.
 
 ## Unabhängige Prüfung und Korrekturen
 
@@ -99,3 +129,26 @@ nicht als R11 umgedeutet werden.
 [Architektur und Vertrauensgrenzen](../../../docs/architecture/TECHNICAL_NETWORK_DE.md) ·
 [R11-Auslieferungsweg](release/README.md) ·
 [Maschinenlesbarer Prüfstand](verification.json).
+
+## CI-Nachprüfung des ersten veröffentlichten Stands
+
+Quellcommit `f3e3e0233e947e2019bda0a649f238840fa925a3`, Anforderungscommit
+`e8edca868d3cec4a22fb267f15b417654985603b`: Die vier nativen
+PostgreSQL-/Management-/Adapterläufe, der Admin-Browserlauf und die
+Netzwerkvertragsprüfungen bestanden. Die Gesamtqualifikation blieb wegen
+des IPv6-Positivvortests und zweier veralteter Test-/Manifestbindungen rot.
+Es wurde daher kein R11-Paket signiert. Einzelstatus: `ci-first-run.json`.
+
+Die Erwartung für die ausdrücklich zugelassene Sequenz 14 wurde korrigiert;
+Sequenzen außerhalb 13/14 erhalten weiterhin keinen erweiterten Adapterumfang.
+Nach erneuter Compiler-Parität wurden ausschließlich die vier vorhandenen
+Größen-/Hashwerte im Backup-Publishmanifest erneuert; dessen unveränderter
+Prüfer bestätigt alle 141 Einträge. Der R11-Übergang erlaubt genau dieses
+zusätzliche Metadaten-Dokument, keine beliebigen Backup-Paketänderungen.
+
+Der erste unsignierte Paketbeleg bleibt ein historischer Diagnosebeleg des
+ursprünglichen Quellstands. Der korrigierte Kandidat muss vollständig aus dem
+neuen sauberen Commit gebaut und erneut nativ qualifiziert werden. Lokale
+Nachprüfungen: `ci-followup-local.json`, `ci-followup-workflows.log`. Rohe
+Namespace-Diagnosen werden in einem separaten CI-Artefakt erhalten; sie können
+das erfolgreiche, quellgebundene Signierungsartefakt nicht ersetzen.

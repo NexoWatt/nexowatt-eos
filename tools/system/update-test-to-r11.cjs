@@ -26,12 +26,14 @@ const NETWORK_FILES = Object.freeze([
     'system/network/nexowatt-eos-network.service', 'system/network/nexowatt-eos-network-guard.service',
     'system/network/nexowatt-eos-controller-network.conf', 'system/network/nexowatt-eos-network-dhcp.service', 'system/network/nexowatt-eos-network-guard.timer', NETWORK_INSTALLER, 'tools/system/update-test-to-r11.cjs',
 ]);
-// Explicitly authorized Influx TLS/failure propagation repair; no wider Backup delta.
+// Explicitly authorized Influx TLS/failure propagation repair, existing CLI test
+// and its publish-gate-verified file manifest; no wider Backup metadata delta.
 const BACKUP_FILES = Object.freeze([
     'app/node_modules/iobroker.nexowatt-backup/build/lib/influxDbCli.js',
     'app/node_modules/iobroker.nexowatt-backup/build/lib/scripts/12-influxDB.js',
     'app/node_modules/iobroker.nexowatt-backup/build/lib/restore/influxDB.js',
     'app/node_modules/iobroker.nexowatt-backup/test/influxdb-cli.js',
+    'app/node_modules/iobroker.nexowatt-backup/release-manifest.json',
 ]);
 const BASES = Object.freeze([
     Object.freeze({ releaseId: '9073b20a1c9f54eb4870b3b37a4a8ef59c6916feb379234aa6d14986a3fc26f0',
