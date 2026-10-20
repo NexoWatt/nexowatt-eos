@@ -78,6 +78,18 @@ function validatePayload(payload, manifest) {
     const databaseBackend = communication.has('eos-postgresql-mtls13-v1') ? 'postgresql' : 'redis';
     const fullProduct = manifest.releaseVersion === '0.2.0-test.3';
     const releaseScope = product.releaseScope(manifest);
+    if (manifest.sequence === 14) {
+        const required = ['runtime/network/policy.py', 'runtime/network/host.py', 'runtime/network/server.py',
+            'tools/system/install-network-host.py', 'tools/system/update-test-to-r11.cjs',
+            'system/network/nexowatt-eos-network.service', 'system/network/nexowatt-eos-network-guard.service',
+            'system/network/nexowatt-eos-network-guard.timer', 'system/network/nexowatt-eos-network-dhcp.service',
+            'system/network/nexowatt-eos-controller-network.conf'];
+        for (const name of required) {
+            const row = manifest.files.find(file => file.path === name);
+            if (!row || !row.size || row.mode !== 0o644 || row.sha256 !== sha256(readFileLimited(path.join(payload, name)).bytes))
+                reject('BUILD_NETWORK_PROFILE_REQUIRED');
+        }
+    }
     const productInventory = fullProduct ? product.inspectApp(path.join(payload, 'app'), releaseScope) : null;
     if (fullProduct) product.assertCatalog(catalog, releaseScope);
     if (databaseBackend === 'postgresql') {
@@ -134,8 +146,9 @@ function validatePayload(payload, manifest) {
     }
     return { catalog, plan, sbom, databaseBackend, productInventory, architectureReports };
 }
-function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST }) {
+function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST, networkProfile = false }) {
     product.specsFor(releaseScope);
+    if (typeof networkProfile !== 'boolean' || networkProfile && releaseScope !== product.OWN_ADAPTER_TEST) reject('BUILD_NETWORK_PROFILE_REQUIRED');
     const source = trustedDirectory(appDirectory);
     const target = path.resolve(destination);
     if (target === source || target.startsWith(source + path.sep)) reject('BUILD_OUTPUT_INSIDE_INPUT');
@@ -154,11 +167,17 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
             fs.copyFileSync(path.join(REPO, 'tools/system/update-test-own-adapters.cjs'),
                 path.join(destination, 'tools/system/update-test-own-adapters.cjs'), fs.constants.COPYFILE_EXCL);
         }
+        if (networkProfile) {
+            for (const name of ['install-network-host.py', 'update-test-to-r11.cjs']) {
+                fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
+            }
+        }
         fs.mkdirSync(path.join(destination, 'tools/integration'));
         fs.copyFileSync(path.join(REPO, 'tools/integration/check-runtime-architecture.cjs'), path.join(destination, 'tools/integration/check-runtime-architecture.cjs'), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'security'));
         fs.copyFileSync(path.join(REPO, 'security/verify-runtime-tls.cjs'), path.join(destination, 'security/verify-runtime-tls.cjs'), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'system')); fs.mkdirSync(path.join(destination, 'system/test-base'));
+        if (networkProfile) copyDirectory(path.join(REPO, 'system/network'), path.join(destination, 'system/network'));
         copyDirectory(path.join(REPO, 'system/test-base/systemd'), path.join(destination, 'system/test-base/systemd'));
         copyDirectory(path.join(REPO, 'system/test-base/os-updates'), path.join(destination, 'system/test-base/os-updates'));
         fs.mkdirSync(path.join(destination, 'system/postgresql-test'));
@@ -198,7 +217,8 @@ function main(argv) {
         const metadata = parseJson(opts['--metadata']);
         const payload = path.join(scratch, 'payload');
         const files = preparePayload({ appDirectory: opts['--app'], destination: payload,
-            catalogFile: opts['--catalog'], sbomFile: opts['--sbom'], releaseScope: product.releaseScope(metadata) });
+            catalogFile: opts['--catalog'], sbomFile: opts['--sbom'], releaseScope: product.releaseScope(metadata),
+            networkProfile: metadata.sequence === 14 });
         validatePayload(payload, { ...metadata, files });
         const key = readFileLimited(opts['--private-key'], 16384);
         if (key.mode & 0o077) reject('BUILD_PRIVATE_KEY_PERMISSIONS');

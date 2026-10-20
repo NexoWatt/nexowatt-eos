@@ -1,0 +1,52 @@
+[Unit]
+Description=NexoWatt EOS technical network control (optional host addon)
+After=network-online.target NetworkManager.service systemd-networkd.service
+Wants=network-online.target nexowatt-eos-network-guard.timer
+Before=nexowatt-eos-controller.service
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=notify
+NotifyAccess=main
+User=root
+Group=root
+ExecStart=/usr/bin/python3 -I /usr/lib/nexowatt-eos-network/server.py
+Restart=on-failure
+RestartSec=3
+RuntimeDirectory=nexowatt-eos-network
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+StateDirectory=nexowatt-eos-network
+StateDirectoryMode=0700
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_CHOWN CAP_DAC_OVERRIDE
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+RestrictAddressFamilies=AF_UNIX AF_NETLINK AF_INET AF_INET6
+ReadWritePaths=/run/nexowatt-eos-network /var/lib/nexowatt-eos-network
+ReadWritePaths=/proc/sys/net/ipv4/conf /proc/sys/net/ipv6/conf
+ReadOnlyPaths=-/var/lib/nexowatt-eos-dhcp
+MemoryMax=96M
+TasksMax=16
+LimitNOFILE=64
+LimitCORE=0
+TimeoutStopSec=10
+TimeoutStartSec=45
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

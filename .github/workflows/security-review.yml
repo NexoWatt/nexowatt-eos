@@ -297,6 +297,12 @@ jobs:
           node --test tests/bootstrap/public-r10-update-entry.test.cjs tests/bootstrap/public-r10-update-publication.test.cjs tests/bootstrap/r10-delivery-workflow.test.cjs tests/bootstrap/r10-native-artifact.test.cjs
           python3 -I -B tests/bootstrap/r10-candidate-publication.test.py
 
+      - name: Check R11 network update and exact evidence publication contracts
+        run: |
+          node --test tests/system/update-test-to-r11.test.cjs reports/integration/network-test-20261020/release/release-contract.test.cjs
+          node --test tests/bootstrap/public-r11-update-entry.test.cjs tests/bootstrap/public-r11-update-publication.test.cjs tests/bootstrap/r11-delivery-workflow.test.cjs tests/bootstrap/r11-native-artifact.test.cjs
+          python3 -I -B tests/bootstrap/r11-candidate-publication.test.py
+
       - name: Run isolated ownership and sudo denial contracts
         # These reviewed fixtures write temporary /root trees. Host commands and
         # service operations are stubbed; this is a disposable GitHub-hosted runner.
@@ -549,6 +555,7 @@ jobs:
         run: |
           ./node_modules/.bin/tsc -p tsconfig.build.json --noEmit
           npm run test:offline
+          node --test test/influx-safety.test.cjs
           node scripts/validate-publish.cjs
       - name: State source test scope
         if: always()

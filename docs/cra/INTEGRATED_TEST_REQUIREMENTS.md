@@ -392,3 +392,21 @@ tatsächliche Controller-Modulauflösung werden getrennt ausgewiesen; keiner
 dieser Nachweise ersetzt einen laufenden PostgreSQL-Server oder einen
 unabhängigen Penetrationstest. Support und Hauptversionswechsel müssen
 PostgreSQLs Wartungsende sowie den EOS-Supportzeitraum berücksichtigen.
+
+
+## Fortschreibung 20.10.2026: native Gerätenetzverwaltung
+
+`EOS-REQ-NETWORK-20261020` führt die Anforderungen NET-01 bis NET-09 für
+Adminrollen, dediziertes DHCP-Netz, nftables-Isolation, befristete Freigaben,
+Wiederherstellung und gebundene R11-Testauslieferung. Architektur und
+Vertrauensgrenzen stehen in `docs/architecture/TECHNICAL_NETWORK_DE.md`;
+ausgeführte Prüfungen und offene Zieltests sind in
+`reports/integration/network-test-20261020/verification.json` getrennt erfasst.
+
+Die gemeinsame OS-Identität `eos-runtime` bleibt eine offene Vertrauensgrenze
+(`EOS-NET-20261020-01`). Selbst ein erfolgreicher Linux-Namespace-Test beweist
+keine reale systemd-Installation, Pi-/USB-Abnahme, Gerätekompatibilität oder
+Echtzeitfähigkeit. Diese Grenzen sowie die anfängliche Beschränkung auf ein
+unverwaltetes IPv4-Ethernetinterface stehen im Befundregister. Neue Hostpakete
+benötigen zusätzlich ein tatsächliches OS-/Firmwareinventar am Ziel. Der
+Teststand ist keine Produktionsfreigabe oder CRA-Konformitätserklärung.

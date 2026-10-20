@@ -1,0 +1,11 @@
+[Unit]
+Description=NexoWatt EOS rollback deadline supervision
+
+[Timer]
+OnBootSec=10s
+OnUnitActiveSec=10s
+AccuracySec=1s
+Unit=nexowatt-eos-network-guard.service
+
+[Install]
+WantedBy=timers.target

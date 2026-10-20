@@ -30,6 +30,7 @@ import { ROLE_GROUPS, applyProfile, createApplianceHttpsServer, blockUnsignedUpl
 import { readGroupRows, securityProjection } from './eosSessionSecurity';
 import { createUploadMiddleware, getUploadDirectory, retainUpload, storeRestoreUpload } from './eosUploadGuard';
 import { createAccountInvitations } from './eosAccountInvitations';
+import { registerNetworkRoutes } from './eosNetworkHttp';
 
 let AdapterStore;
 /** Content of a socket-io file */
@@ -728,6 +729,21 @@ export default class Web {
         role: EosAccessRole;
     }> {
         return this.getEosAccessForUserId(await this.readEosCurrentUser(req));
+    }
+
+    private async getEosNetworkAccess(req: Request): Promise<{ userId: string; role: EosAccessRole } | null> {
+        if (this.settings.auth !== true) return null;
+        // Re-read the revocable access capability on EACH authorization. Upstream
+        // req.user may have been resolved before body parsing and is not fresh
+        // session authority. Network control never accepts credentials in URLs.
+        const fresh = { headers: req.headers, query: {} } as Request;
+        const access = await this.getEosRequestAccess(fresh);
+        if (!access.userId || !['admin', 'installer'].includes(access.role)
+            || (await this.getEosFirstLoginPasswordState(access.userId, access.role)).required) return null;
+        // Credential, role or password changes during the account/group reads
+        // must invalidate the stored session proof before the host operation.
+        if (await this.readEosCurrentUser(fresh) !== access.userId) return null;
+        return { userId: access.userId, role: access.role };
     }
 
     private getEosRoleCapabilities(role: 'admin' | 'installer' | 'enduser'): Record<string, boolean> {
@@ -1905,7 +1921,7 @@ export default class Web {
                 // before their small dedicated JSON parser consumes any body.
                 const genericUrlencoded = bodyParser.urlencoded({ extended: true });
                 const genericJson = bodyParser.json();
-                const isLicensePath = (req: Request): boolean => /^\/nexowatt\/license(?:\/|$)/i.test(req.path);
+                const isLicensePath = (req: Request): boolean => /^\/nexowatt\/(?:license|network)(?:\/|$)/i.test(req.path);
                 this.server.app.use((req: Request, res: Response, next: NextFunction): void => {
                     if (isLicensePath(req)) { next(); return; }
                     genericUrlencoded(req, res, next);
@@ -2127,6 +2143,12 @@ export default class Web {
                 jsonParser: bodyParser.json({ limit: '20kb', strict: true }),
                 pagePath: join(__dirname, '../../public/nexowatt-license.html'),
                 scriptPath: join(__dirname, '../../public/nexowatt-license.js'),
+            });
+
+            registerNetworkRoutes(this.server.app, {
+                secure: this.settings.secure === true,
+                authorize: (req: Request) => this.getEosNetworkAccess(req),
+                jsonParser: bodyParser.json({ limit: '16kb', strict: true }),
             });
 
             const sendSecuritySession = (req: Request, res: Response): void => {

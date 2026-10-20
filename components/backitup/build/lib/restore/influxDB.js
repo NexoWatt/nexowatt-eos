@@ -8,204 +8,173 @@ const node_path_1 = require("node:path");
 const fs_extra_1 = require("fs-extra");
 const influxDbCli_1 = require("../influxDbCli");
 const targz_1 = require("../targz");
-const tools_1 = require("../tools");
-/**
- * Runs the influx restore command against the unpacked dump.
- *
- * Always resolves: the command's exit status was ignored by the caller before as well.
- *
- * @param ctx run context, for the logger
- * @param options connection settings; in multi mode these are re-pointed at the matching target
- * @param tmpDir directory the backup was unpacked into
- */
-async function replayInfluxDB(ctx, options, tmpDir) {
-    let dbName = options.dbName;
-    if (options.influxDBMulti === true && (0, node_fs_1.existsSync)(tmpDir)) {
-        const files = (0, node_fs_1.readdirSync)(tmpDir);
+/** Presence/size preflight only; this cannot guarantee that database replay will succeed. */
+function requireDropArchiveFiles(manifest, directory) {
+    for (const entry of [manifest.meta, ...manifest.files]) {
+        if (!entry || typeof entry !== 'object' || Array.isArray(entry))
+            throw new Error('INFLUX_DROP_ARCHIVE_INCOMPLETE');
+        const file = entry;
+        if (typeof file.fileName !== 'string' || !/^[A-Za-z0-9._-]+$/.test(file.fileName) ||
+            file.fileName === '.' || file.fileName === '..' || !Number.isSafeInteger(file.size) || Number(file.size) <= 0) {
+            throw new Error('INFLUX_DROP_ARCHIVE_INCOMPLETE');
+        }
+        let info;
         try {
-            files.forEach(function (file) {
-                const currentFiletype = file.split('.').pop();
-                if (currentFiletype === 'manifest') {
-                    const manifest = (0, node_fs_1.readFileSync)((0, node_path_1.join)(tmpDir, file).replace(/\\/g, '/'));
-                    const json = JSON.parse(manifest.toString());
-                    options.dbversion = json.files ? '1.x' : json.buckets ? '2.x' : options.dbversion;
-                    dbName =
-                        options.dbversion === '1.x'
-                            ? json.files[0].database
-                            : options.dbversion === '2.x'
-                                ? json.buckets[0].bucketName
-                                : options.dbName;
-                }
-            });
+            info = (0, node_fs_1.lstatSync)((0, node_path_1.join)(directory, file.fileName));
         }
-        catch (err) {
-            ctx.log.error(`manifest is broken: ${err}`);
+        catch {
+            throw new Error('INFLUX_DROP_ARCHIVE_INCOMPLETE');
         }
-        try {
-            for (let i = 0; i < options.influxDBEvents.length; i++) {
-                if (options.influxDBEvents[i].dbName === dbName) {
-                    options.port = options.influxDBEvents[i].port ? options.influxDBEvents[i].port : '';
-                    options.host = options.influxDBEvents[i].host ? options.influxDBEvents[i].host : '';
-                    options.dbName = options.influxDBEvents[i].dbName ? options.influxDBEvents[i].dbName : '';
-                    options.nameSuffix = options.influxDBEvents[i].nameSuffix
-                        ? options.influxDBEvents[i].nameSuffix
-                        : '';
-                    options.token = options.influxDBEvents[i].token ? options.influxDBEvents[i].token : '';
-                    options.dbversion = options.influxDBEvents[i].dbversion
-                        ? options.influxDBEvents[i].dbversion
-                        : '';
-                    options.protocol = options.influxDBEvents[i].protocol
-                        ? options.influxDBEvents[i].protocol
-                        : '';
-                }
-            }
-        }
-        catch (err) {
-            ctx.log.error(`InfluxDB config not found: ${err}`);
-        }
-    }
-    let invocation;
-    try {
-        invocation = (0, influxDbCli_1.buildInfluxRestoreInvocation)({ ...options, dbName }, tmpDir);
-    }
-    catch (error) {
-        const message = (0, tools_1.maskSecret)(error instanceof Error ? error.message : String(error), options.token);
-        ctx.log.error(message);
-        return;
-    }
-    if (invocation.warning) {
-        ctx.log.warn(invocation.warning);
-    }
-    /** Runs the restore command; the exit status is logged, never reported to preserve the old API. */
-    const runRestore = async () => new Promise(resolve => {
-        (0, node_child_process_1.execFile)(invocation.executable, invocation.args, { maxBuffer: 10 * 1024 * 1024, env: invocation.env }, (error, stdout, stderr) => {
-            if (stdout?.trim()) {
-                ctx.log.debug((0, tools_1.maskSecret)(stdout.trim(), options.token));
-            }
-            if (error) {
-                const message = (0, tools_1.maskSecret)((0, influxDbCli_1.formatInfluxCliError)(Object.assign(error, { stdout, stderr }), invocation.executable, options.dbversion), options.token);
-                ctx.log.error(message);
-            }
-            else if (stderr?.trim()) {
-                ctx.log.debug((0, tools_1.maskSecret)(stderr.trim(), options.token));
-            }
-            resolve();
-        });
-    });
-    try {
-        if (options.deleteDatabase && options.dbType === 'local' && options.dbversion === '1.x') {
-            const escapedDbName = dbName.replace(/"/g, '\\"');
-            await new Promise(resolve => {
-                (0, node_child_process_1.execFile)('influx', [`-execute=DROP DATABASE "${escapedDbName}"`], (error, stdout, stderr) => {
-                    if (stdout?.trim()) {
-                        ctx.log.debug(stdout.trim());
-                    }
-                    if (error) {
-                        ctx.log.warn(`Die bestehende InfluxDB-1.x-Datenbank konnte nicht automatisch gelöscht werden: ${stderr || error.message}`);
-                    }
-                    resolve();
-                });
-            });
-        }
-        await runRestore();
-    }
-    catch (error) {
-        ctx.log.error((0, tools_1.maskSecret)(error instanceof Error ? error.message : String(error), options.token));
+        if (!info.isFile() || info.size !== file.size)
+            throw new Error('INFLUX_DROP_ARCHIVE_INCOMPLETE');
     }
 }
+/** Validate one archive target before any destructive command and select its configuration. */
+function restoreTarget(options, directory) {
+    const names = new Set();
+    const versions = new Set();
+    for (const file of (0, node_fs_1.readdirSync)(directory)) {
+        if (!file.endsWith('.manifest'))
+            continue;
+        const path = (0, node_path_1.join)(directory, file);
+        const info = (0, node_fs_1.lstatSync)(path);
+        if (!info.isFile() || info.size > 1024 * 1024)
+            throw new Error('INFLUX_MANIFEST_INVALID');
+        let manifest;
+        try {
+            manifest = JSON.parse((0, node_fs_1.readFileSync)(path, 'utf8'));
+        }
+        catch {
+            throw new Error('INFLUX_MANIFEST_INVALID');
+        }
+        if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest))
+            throw new Error('INFLUX_MANIFEST_INVALID');
+        if (Boolean(manifest.files) === Boolean(manifest.buckets))
+            throw new Error('INFLUX_MANIFEST_INVALID');
+        const rows = manifest.files || manifest.buckets;
+        const key = manifest.files ? 'database' : 'bucketName';
+        versions.add(manifest.files ? '1.x' : '2.x');
+        if (!Array.isArray(rows) || !rows.length || rows.length > 10000)
+            throw new Error('INFLUX_MANIFEST_INVALID');
+        if (manifest.files && options.deleteDatabase && options.dbType === 'local')
+            requireDropArchiveFiles(manifest, directory);
+        for (const row of rows) {
+            if (!row || typeof row[key] !== 'string' || !row[key].trim())
+                throw new Error('INFLUX_MANIFEST_INVALID');
+            names.add(row[key]);
+        }
+    }
+    if (names.size !== 1)
+        throw new Error('INFLUX_MANIFEST_TARGET_AMBIGUOUS');
+    const dbName = [...names][0];
+    if (!options.influxDBMulti) {
+        if (dbName !== String(options.dbName || '').trim())
+            throw new Error('INFLUX_MANIFEST_TARGET_MISMATCH');
+        if (versions.size !== 1 || !versions.has(options.dbversion))
+            throw new Error('INFLUX_MANIFEST_VERSION_MISMATCH');
+        return { ...options };
+    }
+    if (!Array.isArray(options.influxDBEvents))
+        throw new Error('INFLUX_CONFIG_TARGET_AMBIGUOUS');
+    const targets = options.influxDBEvents.filter(item => item.dbName === dbName);
+    if (targets.length !== 1)
+        throw new Error('INFLUX_CONFIG_TARGET_AMBIGUOUS');
+    if (versions.size !== 1 || !versions.has(targets[0].dbversion))
+        throw new Error('INFLUX_MANIFEST_VERSION_MISMATCH');
+    return { ...options, ...targets[0], dbName };
+}
+async function replayInfluxDB(ctx, options, directory) {
+    const target = restoreTarget(options, directory);
+    const invocation = (0, influxDbCli_1.buildInfluxRestoreInvocation)(target, directory);
+    const scrub = (value) => (0, influxDbCli_1.maskInfluxToken)((0, influxDbCli_1.maskInfluxToken)(value, target.token), options.token);
+    if (invocation.warning)
+        ctx.log.warn(scrub(invocation.warning));
+    const execute = (executable, args) => new Promise((resolve, reject) => {
+        (0, node_child_process_1.execFile)(executable, args, { maxBuffer: 10 * 1024 * 1024, env: invocation.env }, (error, stdout, stderr) => {
+            if (stdout?.trim())
+                ctx.log.debug(scrub(stdout.trim()));
+            if (stderr?.trim())
+                ctx.log.debug(scrub(stderr.trim()));
+            if (error)
+                reject(new Error(scrub((0, influxDbCli_1.formatInfluxCliError)(Object.assign(error, { stdout, stderr }), executable, target.dbversion))));
+            else
+                resolve();
+        });
+    });
+    if (target.deleteDatabase && target.dbType === 'local' && target.dbversion === '1.x') {
+        if (/[\r\n\0]/.test(target.dbName))
+            throw new Error('INFLUX_DATABASE_NAME_INVALID');
+        const escaped = target.dbName.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        await execute('influx', [`-execute=DROP DATABASE "${escaped}"`]);
+    }
+    await execute(invocation.executable, invocation.args);
+}
 /**
- * Unpacks an InfluxDB backup and hands it to the influx restore command.
- *
- * @param props the run context, the influxDB slice of the config and the archive
+ * Restore never claims to stop an adapter by writing its informational .alive
+ * state. The operator must disable existing Influx adapters first; an active or
+ * auto-restarting writer is refused before extraction or a destructive command.
  */
+async function requireStoppedWriters(ctx) {
+    const adapter = ctx.adapter;
+    if (!adapter)
+        throw new Error('INFLUX_RESTORE_ADAPTER_REQUIRED');
+    const result = await adapter.getObjectViewAsync('system', 'instance', {
+        startkey: 'system.adapter.influxdb.', endkey: 'system.adapter.influxdb.香',
+    });
+    if (!result || !Array.isArray(result.rows))
+        throw new Error('INFLUX_RESTORE_INSTANCE_QUERY_FAILED');
+    for (const row of result.rows) {
+        const id = row.value?._id;
+        if (typeof id !== 'string' || !/^system\.adapter\.influxdb\.\d+$/.test(id)) {
+            throw new Error('INFLUX_RESTORE_INSTANCE_INVALID');
+        }
+        const object = await adapter.getForeignObjectAsync(id);
+        const state = await adapter.getForeignStateAsync(`${id}.alive`);
+        if (!object || object.common?.enabled !== false || state?.val !== false || state.ack !== true) {
+            throw new Error('INFLUX_RESTORE_STOP_WRITERS_REQUIRED');
+        }
+    }
+}
 async function restore(props) {
     const { context: ctx, options, fileName } = props;
-    const adapter = ctx.adapter;
-    const tmpDir = (0, node_path_1.join)(options.backupDir, 'influxDBtmp').replace(/\\/g, '/');
-    // stop influxdb-Adapter before Restore
-    let startAfterRestore = false;
-    const enabledInstances = [];
-    // Not awaited, so the instances may still be stopping when the replay starts. Kept as found.
-    void adapter.getObjectView('system', 'instance', { startkey: 'system.adapter.influxdb.', endkey: 'system.adapter.influxdb.香' }, (err, instances) => {
-        const resultInstances = [];
-        if (!err && instances && instances.rows) {
-            instances.rows.forEach(row => resultInstances.push({
-                id: row.id.replace('system.adapter.', ''),
-                config: row.value.native.type,
-            }));
-            for (let i = 0; i < resultInstances.length; i++) {
-                const _id = resultInstances[i].id;
-                // Stop influxdb Instances
-                void adapter.getForeignObject(`system.adapter.${_id}`, (err, obj) => {
-                    if (obj?.common?.enabled) {
-                        void adapter.setForeignState(`system.adapter.${_id}.alive`, false);
-                        ctx.log.debug(`${_id} is stopped`);
-                        enabledInstances.push(_id);
-                        startAfterRestore = true;
-                    }
-                });
-            }
-        }
-        else {
-            ctx.log.debug('Could not retrieve influxdb instances!');
-        }
-    });
-    // A string, so fs-extra reads no mode from it and falls back to the default. Kept as found.
-    const desiredMode = '0o2775';
-    if (!(0, node_fs_1.existsSync)(tmpDir)) {
-        (0, fs_extra_1.ensureDirSync)(tmpDir, desiredMode);
-        ctx.log.debug('Created tmp directory');
-    }
-    else {
-        try {
-            ctx.log.debug('Try deleting the old InfluxDB tmp directory');
-            (0, fs_extra_1.removeSync)(tmpDir);
-            if (!(0, node_fs_1.existsSync)(tmpDir)) {
-                ctx.log.debug('InfluxDB old tmp directory was successfully deleted');
-            }
-            (0, fs_extra_1.ensureDirSync)(tmpDir, desiredMode);
-            ctx.log.debug('Created tmp directory');
-        }
-        catch (e) {
-            ctx.log.debug(`InfluxDB old tmp directory could not be deleted: ${e}`);
-        }
-    }
-    ctx.log.debug('Start influxDB Restore ...');
+    let directory;
     try {
-        await (0, targz_1.decompressAsync)({ src: fileName, dest: tmpDir });
+        await requireStoppedWriters(ctx);
+        directory = (0, node_fs_1.mkdtempSync)((0, node_path_1.join)(options.backupDir, '.influxDB-restore-'));
+        (0, node_fs_1.chmodSync)(directory, 0o700);
+        await (0, targz_1.decompressAsync)({ src: fileName, dest: directory, tar: {
+                map: header => {
+                    header.mode = header.type === 'directory' ? 0o700 : 0o600;
+                    return header;
+                },
+            } });
+        // Extraction can be lengthy. Recheck immediately before manifest
+        // validation and CLI replay, including an optional local V1 DROP.
+        await requireStoppedWriters(ctx);
+        await replayInfluxDB(ctx, options, directory);
+        ctx.log.debug('influxDB Restore completed successfully');
+        return 'influxDB restore done';
     }
-    catch (err) {
-        ctx.log.error(err);
+    catch (error) {
+        let message = (0, influxDbCli_1.maskInfluxToken)(error instanceof Error ? error.message : error, options.token);
+        for (const event of options.influxDBEvents || [])
+            message = (0, influxDbCli_1.maskInfluxToken)(message, event.token);
+        const failure = new Error(message);
+        ctx.errors.influxDB = failure.toString();
+        ctx.log.error(message);
         ctx.log.error('influxDB Restore not completed');
-        throw err;
+        throw failure;
     }
-    // The replay error is deliberately ignored - the step always reports success.
-    await replayInfluxDB(ctx, options, tmpDir);
-    // Start influxDB Instances
-    if (startAfterRestore) {
-        enabledInstances.forEach(enabledInstance => {
-            void adapter.getForeignObject(`system.adapter.${enabledInstance}`, (err, obj) => {
-                if (obj && !obj.common?.enabled) {
-                    void adapter.setForeignState(`system.adapter.${enabledInstance}.alive`, true);
-                    ctx.log.debug(`${enabledInstance} started`);
-                }
-            });
-        });
-    }
-    // delete influxDB tmpDir
-    if ((0, node_fs_1.existsSync)(tmpDir)) {
-        try {
-            ctx.log.debug('Try deleting the InfluxDB tmp directory');
-            (0, fs_extra_1.removeSync)(tmpDir);
-            if (!(0, node_fs_1.existsSync)(tmpDir)) {
-                ctx.log.debug('InfluxDB tmp directory was successfully deleted');
+    finally {
+        if (directory) {
+            try {
+                (0, fs_extra_1.removeSync)(directory);
+            }
+            catch {
+                ctx.log.warn('INFLUX_RESTORE_PRIVATE_TEMP_CLEANUP_FAILED');
             }
         }
-        catch (e) {
-            ctx.log.debug(`InfluxDB tmp directory could not be deleted: ${e}`);
-        }
     }
-    ctx.log.debug('influxDB Restore completed successfully');
-    return 'influxDB restore done';
 }
 exports.isStop = false;
+//# sourceMappingURL=influxDB.js.map

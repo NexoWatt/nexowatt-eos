@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-10-07",
+  "date": "2026-10-20",
   "kind": "component-integration-open-findings",
   "previousFindingsPreserved": true,
   "entries": [
@@ -653,6 +653,74 @@
       "ownerRole": "EOS manufacturer development",
       "dueGate": "before product release; immediately evaluate intended-operation exploitability",
       "nextStep": "Mit der tatsächlichen Liefer-SBOM abgleichen, erreichbare Aufrufpfade bewerten und kompatible Dependency-Korrekturen prüfen; keine automatische Risikoakzeptanz."
+    },
+    {
+      "id": "EOS-NET-20261020-01",
+      "title": "Gemeinsame eos-runtime-Identität kann endliche Gerätenetz-Operationen direkt aufrufen",
+      "state": "open",
+      "sourceObservationStatus": "source-reviewed-target-evidence-open",
+      "priorityAsReviewed": "high",
+      "observationDocument": "docs/architecture/TECHNICAL_NETWORK_DE.md",
+      "requirementIds": [
+        "EOS-REQ-NETWORK-20261020"
+      ],
+      "remediationVerified": false,
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before production release",
+      "evidence": "reports/integration/network-test-20261020/verification.json",
+      "nextStep": "OS-/Prozessisolation und getrennte Caller-Identitäten vor Produktfreigabe nachweisen; Webrollen sind kein Peer-Identitätsbeweis.",
+      "classificationNote": "Isoliertes Entwicklungstestprofil; keine erfundene Risikoakzeptanz oder CRA-Freigabe."
+    },
+    {
+      "id": "EOS-NET-20261020-02",
+      "title": "Systemd-, Pi-/USB-, Ausfall- und Anlagenabnahme des Gerätenetzes offen",
+      "state": "open",
+      "sourceObservationStatus": "source-reviewed-target-evidence-open",
+      "priorityAsReviewed": "high",
+      "observationDocument": "docs/architecture/TECHNICAL_NETWORK_DE.md",
+      "requirementIds": [
+        "EOS-REQ-NETWORK-20261020"
+      ],
+      "remediationVerified": false,
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before production release",
+      "evidence": "reports/integration/network-test-20261020/verification.json",
+      "nextStep": "Signierten R11-Test auf isoliertem Zielsystem gemäß Zieltestmatrix prüfen; Namespace- und Fixturetests ersetzen den Zielhost nicht.",
+      "classificationNote": "Isoliertes Entwicklungstestprofil; keine erfundene Risikoakzeptanz oder CRA-Freigabe."
+    },
+    {
+      "id": "EOS-NET-20261020-03",
+      "title": "Dedizierter zweiter Port darf nicht von NetworkManager/networkd verwaltet sein",
+      "state": "open",
+      "sourceObservationStatus": "source-reviewed-target-evidence-open",
+      "priorityAsReviewed": "medium",
+      "observationDocument": "docs/architecture/TECHNICAL_NETWORK_DE.md",
+      "requirementIds": [
+        "EOS-REQ-NETWORK-20261020"
+      ],
+      "remediationVerified": false,
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before production release",
+      "evidence": "reports/integration/network-test-20261020/verification.json",
+      "nextStep": "Tatsächliches Pi-Inventar prüfen und nur den zweiten Anschluss gezielt dedizieren; keine automatische Übernahme behaupten.",
+      "classificationNote": "Isoliertes Entwicklungstestprofil; keine erfundene Risikoakzeptanz oder CRA-Freigabe."
+    },
+    {
+      "id": "EOS-NET-20261020-04",
+      "title": "IPv6-abhängige Gerätefunktionen im ersten Gerätenetzprofil nicht qualifiziert",
+      "state": "open",
+      "sourceObservationStatus": "source-reviewed-target-evidence-open",
+      "priorityAsReviewed": "medium",
+      "observationDocument": "docs/architecture/TECHNICAL_NETWORK_DE.md",
+      "requirementIds": [
+        "EOS-REQ-NETWORK-20261020"
+      ],
+      "remediationVerified": false,
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before production release",
+      "evidence": "reports/integration/network-test-20261020/verification.json",
+      "nextStep": "EEBUS/Matter/Discovery je Gerät prüfen; IPv6 bleibt gesperrt, bis ein separates geprüftes Profil vorliegt.",
+      "classificationNote": "Isoliertes Entwicklungstestprofil; keine erfundene Risikoakzeptanz oder CRA-Freigabe."
     }
   ],
   "controllerScope": "system/integration/controller-observations.json",

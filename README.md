@@ -1,3 +1,21 @@
+# Neuer Entwicklungsstand: Gerätenetzverwaltung für R11
+
+**20. Oktober 2026:** Der neue native Linux-/systemd-Quellstand ergänzt im
+EOS-Admin einen dedizierten zweiten Ethernetanschluss, DHCP-Geräteliste, feste
+MAC/IP-Zuordnungen und befristeten Internetzugang je Gerät. USB-Ethernet ist
+als Ziel vorgesehen; die konkrete Pi-/USB-Abnahme ist offen. Docker bleibt
+zurückgestellt. Die wiederhergestellten Influx-Sicherheitskorrekturen sind
+als neue Änderungen mit eigenen Prüfnachweisen enthalten.
+
+Der unten dokumentierte **veröffentlichte Lieferstand bleibt R10**, bis der
+separate R11-Auslieferungslauf mit den aktuellen Quellbindungen, nativen
+Prüfbelegen und öffentlichem Readback erfolgreich abgeschlossen ist.
+Quellcode-Veröffentlichung verändert keinen installierten Pi.
+
+[Funktionsumfang und Grenzen](docs/requirements/EOS-REQ-NETWORK-20261020.md) ·
+[Prüfbericht](reports/integration/network-test-20261020/README_DE.md) ·
+[Vorbereitung und Pi-Testmatrix](docs/operations/TECHNICAL_NETWORK_TEST_DE.md).
+
 # Aktueller Teststand: R10 mit sechs eigenen Adaptern
 
 **15. Oktober 2026: test.3 Revision 10, Sequenz 13 ist signiert, veröffentlicht

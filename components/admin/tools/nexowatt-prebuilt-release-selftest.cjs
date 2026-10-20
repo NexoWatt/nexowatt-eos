@@ -28,6 +28,8 @@ const trackedFiles = [
     'package-lock.json',
     'io-package.json',
     'tasks.mts',
+    'src-admin/index.html',
+    'docs/EOS_NETWORK_DE.md',
     'tsconfig.json',
     'tsconfig.build.json',
 ];

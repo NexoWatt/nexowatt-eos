@@ -1,0 +1,130 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> iobroker.nexowatt-backup@1.0.10 test:offline
+> node --test test/eos-profile.js test/sd-card.js test/influxdb-cli.js test/sd-card-access.js test/license-guard.js test/eos-startup.js test/backup-archive-result.js
+
+✔ CLI result valid: only exit zero plus nonempty archive reports success (89.76767ms)
+✔ CLI result failed: only exit zero plus nonempty archive reports success (58.458986ms)
+✔ CLI result missing: only exit zero plus nonempty archive reports success (51.469236ms)
+✔ CLI result empty: only exit zero plus nonempty archive reports success (50.823632ms)
+✔ EOS instance depends on actual eos-admin, not absent upstream admin (1.258609ms)
+✔ existing regular archive rejected before CLI starts (2.589739ms)
+✔ existing dangling-symlink archive rejected before CLI starts (1.565513ms)
+▶ NexoWatt EOS profile backup
+  ✖ creates a protected profile archive with a verifiable manifest and no vendor secret by default (22.946346ms)
+  ✔ keeps a valid profile archive when only status-state publication fails (8.706262ms)
+✖ NexoWatt EOS profile backup (33.226023ms)
+✔ host-specific secret required: missing/malformed values never use fallback (3.35839ms)
+✔ private archive directory stays inside existing writable data tree (2.64328ms)
+✔ archive directory rejects symlink and public parent without widening rights (1.524361ms)
+✔ archive setup does not follow a substituted data-directory symlink (1.803292ms)
+✔ invalid secret blocks actual startup before any local files or schedules (5.450827ms)
+✔ licensed startup makes writable archive directory, no privileged launcher, retains recovery evidence (6.68782ms)
+✔ all archive producers/readers share new path and no legacy launcher is emitted (1.281715ms)
+✔ private log reader rejects symlinks, hardlinks, public files and oversized files (2.362075ms)
+✔ existing runtime log symlink blocks startup without reading or overwriting target (5.305439ms)
+✔ previous log symlink is retained and never replayed into logs or states (3.466693ms)
+✔ runtime readiness is read-only and ready follows complete state initialization (5.543177ms)
+✔ licensed startup failure publishes error, never ready or secret content (2.580274ms)
+✔ license wait, activation and revocation publish truthful nonsecret readiness (3.647756ms)
+✔ unload during guard waits and cannot publish late ready or create late schedules (2.845335ms)
+✔ unload during read waits and cannot publish late ready or create late schedules (2.222425ms)
+✔ unload during checkStates waits and cannot publish late ready or create late schedules (2.323457ms)
+✔ pending ready state write completes before final stopped, never after unload callback (2.714087ms)
+✔ ignores a bucket or directory name entered as CLI path and falls back to influx (1.469328ms)
+✔ accepts an absolute CLI path (0.19235ms)
+✔ builds a local InfluxDB 2 backup without putting the token on the command line (1.646135ms)
+✔ builds a remote HTTPS backup with mandatory certificate verification (0.541898ms)
+✔ requires a token for InfluxDB 2.x (0.55673ms)
+✔ builds restore invocation without exposing the token (0.496459ms)
+✔ formats a missing CLI error with a clear installation hint (0.220614ms)
+✔ licensed recovery admits exactly one bound restore without online Admin (12.038012ms)
+✔ recovery staging fails closed on initial denial or lease loss during archive hashing (8.18861ms)
+✔ plain staged config or missing process capability cannot authorize restore (1.832316ms)
+✔ wrong capability consumes the ticket but never executes recovery (3.888089ms)
+▶ changed archive, edited scope, expired admission and public ticket are rejected
+  ✔ archive (6.69777ms)
+  ✔ scope (3.792935ms)
+  ✔ expired (3.362145ms)
+  ✔ permissions (1.758394ms)
+✔ changed archive, edited scope, expired admission and public ticket are rejected (16.89322ms)
+✔ restore dispatcher rejects direct null-adapter or unlicensed invocation (1.53728ms)
+✔ startup denied then activation resumes; revocation blocks and renewal resumes exactly once (6.131525ms)
+✔ destroyed token refresher cannot restart after an in-flight state read (38.210828ms)
+✔ native EOS system restore directs operator recovery before download or staging (0.37158ms)
+✔ generated launch script never sends recovery capability into systemd properties or argv (0.283047ms)
+✔ write validation uses the writable subdirectory, not the root-owned mount root (5.811482ms)
+✔ read listing needs read/search rights only and never creates or probes (1.782751ms)
+✔ read mode can read a read-only mounted card without writing (1.658563ms)
+✔ backup refuses a read-only mounted card (1.754548ms)
+✔ backup refuses a subdirectory without write access, naming the actual directory (2.633044ms)
+✔ read listing refuses a subdirectory without read access (2.50418ms)
+✔ backup writes a probe only in the actual backup directory (2.581496ms)
+✔ failed actual write probe rejects backup and cleanup is attempted (1.678463ms)
+✔ missing directory during listing is distinct from a missing card and never created (1.208864ms)
+✔ new backup may create its directory if the parent permits it (1.751344ms)
+✔ directory creation failure is explicit and does not attempt a probe (1.847879ms)
+✔ missing SD mount never falls back to a directory on the system disk (1.037616ms)
+✔ SD removal during the checks aborts before any probe is written (1.279862ms)
+▶ system disk, symlink, non-directory and different filesystem remain excluded
+  ✔ system disk (1.091708ms)
+  ✔ symlink (0.983064ms)
+  ✔ plain file (3.872014ms)
+  ✔ nested filesystem (0.955723ms)
+✔ system disk, symlink, non-directory and different filesystem remain excluded (7.564348ms)
+✔ listing an empty card returns an empty list instead of logging a permissions error (1.138168ms)
+✖ Linux permissions: non-root process succeeds with non-writable mount root and writable child (0.653336ms)
+✔ excludes the system mmc device and offers a separately mounted SD card (2.070906ms)
+✔ still excludes the system mmc device when root is reported as /dev/root (0.444441ms)
+✔ offers a removable USB card reader but excludes a non-removable USB SSD (0.286242ms)
+✔ normalizes safe relative subdirectories and rejects traversal or absolute paths (0.65542ms)
+✔ keeps the newest three InfluxDB generations and marks older archives for deletion (7.490456ms)
+✔ keeps three generations per configured InfluxDB suffix and ignores unrelated files (0.399082ms)
+✔ uses only logger methods that exist in the backup execution context (0.867199ms)
+ℹ tests 74
+ℹ suites 1
+ℹ pass 72
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 355.067559
+
+✖ failing tests:
+
+test at test/eos-profile.js:90:5
+✖ creates a protected profile archive with a verifiable manifest and no vendor secret by default (22.946346ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /^nexowattEOS_2026_08_17-18_17_04_test_backupconfig\.tar\.gz$/. Input:
+
+  'nexowattEOS_2026_08_17-11_17_04_test_backupconfig.tar.gz'
+
+      at TestContext.<anonymous> (/workspace/scratch/f5ced8c90b3e/nexowatt-eos/components/backitup/test/eos-profile.js:99:20)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1869:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'nexowattEOS_2026_08_17-11_17_04_test_backupconfig.tar.gz',
+    expected: /^nexowattEOS_2026_08_17-18_17_04_test_backupconfig\.tar\.gz$/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at test/sd-card-access.js:211:1
+✖ Linux permissions: non-root process succeeds with non-writable mount root and writable child (0.653336ms)
+  Error: EINVAL: invalid argument, chown '/tmp/nexowatt-sd-permission-7MuC4g/card/nexowatt-eos-backups'
+      at Object.chownSync (node:fs:2217:11)
+      at TestContext.<anonymous> (/workspace/scratch/f5ced8c90b3e/nexowatt-eos/components/backitup/test/sd-card-access.js:222:32)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -22,
+    code: 'EINVAL',
+    syscall: 'chown',
+    path: '/tmp/nexowatt-sd-permission-7MuC4g/card/nexowatt-eos-backups'
+  }

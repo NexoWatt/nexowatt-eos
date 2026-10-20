@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.defaultInfluxExecutable = defaultInfluxExecutable;
 exports.resolveInfluxExecutable = resolveInfluxExecutable;
 exports.validateInfluxCliOptions = validateInfluxCliOptions;
+exports.maskInfluxToken = maskInfluxToken;
 exports.buildInfluxBackupInvocation = buildInfluxBackupInvocation;
 exports.buildInfluxRestoreInvocation = buildInfluxRestoreInvocation;
 exports.formatInfluxCliError = formatInfluxCliError;
@@ -60,19 +61,27 @@ function validateInfluxCliOptions(options) {
 function remoteHost(options) {
     return `${options.protocol}://${options.host}:${options.port}`;
 }
+/** Scrub both configured and normalized token forms before errors leave this module. */
+function maskInfluxToken(value, token) {
+    let message = String(value);
+    for (const secret of new Set([token || '', (token || '').trim()])) {
+        if (secret) {
+            message = message.replaceAll(secret, '****').replaceAll(encodeURIComponent(secret), '****');
+        }
+    }
+    return message;
+}
 function buildInfluxBackupInvocation(options, targetDirectory) {
     validateInfluxCliOptions(options);
     const resolved = resolveInfluxExecutable(options.exe, options.dbversion);
     const args = [];
     const env = { ...process.env };
     if (options.dbversion === '2.x') {
-        args.push('backup', '--bucket', String(options.dbName).trim());
-        if (options.dbType === 'remote') {
-            args.push('--host', remoteHost(options));
-            if (options.protocol === 'https') {
-                args.push('--skip-verify');
-            }
-        }
+        args.push('backup', '--skip-verify=false', '--bucket', String(options.dbName).trim());
+        env.INFLUX_SKIP_VERIFY = 'false';
+        // A local target must not inherit a remote host from the service
+        // environment or the CLI's active profile and disclose its token there.
+        args.push('--host', options.dbType === 'remote' ? remoteHost(options) : 'http://127.0.0.1:8086');
         args.push(targetDirectory);
         env.INFLUX_TOKEN = String(options.token).trim();
     }
@@ -91,13 +100,9 @@ function buildInfluxRestoreInvocation(options, sourceDirectory) {
     const args = [];
     const env = { ...process.env };
     if (options.dbversion === '2.x') {
-        args.push('restore', '--bucket', String(options.dbName).trim());
-        if (options.dbType === 'remote') {
-            args.push('--host', remoteHost(options));
-            if (options.protocol === 'https') {
-                args.push('--skip-verify');
-            }
-        }
+        args.push('restore', '--skip-verify=false', '--bucket', String(options.dbName).trim());
+        env.INFLUX_SKIP_VERIFY = 'false';
+        args.push('--host', options.dbType === 'remote' ? remoteHost(options) : 'http://127.0.0.1:8086');
         args.push(sourceDirectory);
         env.INFLUX_TOKEN = String(options.token).trim();
     }
@@ -121,3 +126,4 @@ function formatInfluxCliError(error, executable, version) {
     const message = stderr || failure?.message || String(error);
     return `InfluxDB-CLI „${executable}“ meldet einen Fehler: ${message}`;
 }
+//# sourceMappingURL=influxDbCli.js.map

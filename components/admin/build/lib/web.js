@@ -26,6 +26,7 @@ const eosApplianceProfile_1 = require("./eosApplianceProfile");
 const eosSessionSecurity_1 = require("./eosSessionSecurity");
 const eosUploadGuard_1 = require("./eosUploadGuard");
 const eosAccountInvitations_1 = require("./eosAccountInvitations");
+const eosNetworkHttp_1 = require("./eosNetworkHttp");
 let AdapterStore;
 /** Content of a socket-io file */
 let socketIoFile;
@@ -592,6 +593,21 @@ class Web {
     async getEosRequestAccess(req) {
         return this.getEosAccessForUserId(await this.readEosCurrentUser(req));
     }
+    async getEosNetworkAccess(req) {
+        if (this.settings.auth !== true) return null;
+        // Re-read the revocable access capability on EACH authorization. Upstream
+        // req.user may have been resolved before body parsing and is not fresh
+        // session authority. Network control never accepts credentials in URLs.
+        const fresh = { headers: req.headers, query: {} };
+        const access = await this.getEosRequestAccess(fresh);
+        if (!access.userId || !['admin', 'installer'].includes(access.role)
+            || (await this.getEosFirstLoginPasswordState(access.userId, access.role)).required) return null;
+        // Credential, role or password changes during the account/group reads
+        // must invalidate the stored session proof before the host operation.
+        if (await this.readEosCurrentUser(fresh) !== access.userId) return null;
+        return { userId: access.userId, role: access.role };
+    }
+
     getEosRoleCapabilities(role) {
         const technical = role === 'admin' || role === 'installer';
         return {
@@ -1694,7 +1710,7 @@ class Web {
                 // before their small dedicated JSON parser consumes any body.
                 const genericUrlencoded = bodyParser.urlencoded({ extended: true });
                 const genericJson = bodyParser.json();
-                const isLicensePath = (req) => /^\/nexowatt\/license(?:\/|$)/i.test(req.path);
+                const isLicensePath = (req) => /^\/nexowatt\/(?:license|network)(?:\/|$)/i.test(req.path);
                 this.server.app.use((req, res, next) => {
                     if (isLicensePath(req)) {
                         next();
@@ -1914,6 +1930,12 @@ class Web {
                 pagePath: (0, node_path_1.join)(__dirname, '../../public/nexowatt-license.html'),
                 scriptPath: (0, node_path_1.join)(__dirname, '../../public/nexowatt-license.js'),
             });
+            (0, eosNetworkHttp_1.registerNetworkRoutes)(this.server.app, {
+                secure: this.settings.secure === true,
+                authorize: (req) => this.getEosNetworkAccess(req),
+                jsonParser: bodyParser.json({ limit: '16kb', strict: true }),
+            });
+
             const sendSecuritySession = (req, res) => {
                 void this.sendEosSecuritySession(req, res).catch(e => {
                     this.adapter.log.warn(`Cannot read EOS security session: ${e instanceof Error ? e.message : e}`);

@@ -1,0 +1,33 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),assert=require('node:assert/strict');
+const root=process.cwd(),req=name=>require(path.join(root,name));
+const builder=req('reports/integration/network-test-20261020/release/build-revision.cjs'),build=req('tools/system/build-bundle.cjs');
+const r9=req('reports/integration/installable-test3-r9-20261005/build-revision.cjs'),bundle=req('runtime/release/bundle.cjs'),archive=req('tools/integration/create-test-archive.cjs');
+const work=path.join(root,'.work/r11-unsigned-rehearsal-1792476604678'),payload=path.join(work,'payload');
+// This directory is an unsigned diagnostic candidate from the completed,
+// frozen-source R9/R10 app reconstruction, whose final seq14 SBOM gate rejected.
+const oldBom=JSON.parse(fs.readFileSync(path.join(work,'runtime.cdx.json'))),bom=builder.networkSbom(oldBom);
+fs.writeFileSync(path.join(payload,'sbom.cdx.json'),JSON.stringify(bom,null,2)+'\n');
+for(const name of ['runtime/release/sbom-binding.cjs','tools/system/update-test-to-r11.cjs'])fs.copyFileSync(path.join(root,name),path.join(payload,name));
+const files=bundle.inventory(payload),checked=build.validatePayload(payload,{...builder.METADATA,files});
+const canonical=archive.canonicalInventory(files,builder.METADATA,checked.architectureReports);assert.deepEqual(canonical.files,files);
+const manifest=bundle.validateManifest({...builder.METADATA,files});
+const releaseId=bundle.sha256(Buffer.from(JSON.stringify(manifest)+'\n')),catalog=JSON.parse(fs.readFileSync(path.join(payload,'catalog.json')));
+const final={manifest,releaseId,catalog};
+const baseline=builder.verifyBase(path.resolve(builder.BASE.directory));
+const previous={...baseline.checked,catalog:JSON.parse(fs.readFileSync(path.join(work,'r10/bundle/payload/catalog.json')))};
+const transition=builder.transitionEvidence(previous,final);
+const coverage=r9.sourceEntries(),rows=new Map(files.map(row=>[row.path,row]));
+for(const source of coverage){const row=rows.get('app/'+source.target);assert(row);assert.equal(row.sha256,source.sha256);assert.equal(row.size,source.bytes);assert.equal(row.mode,source.mode);}
+const binding=builder.sourceBinding({sourceCommit:cp.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),coverage,overlays:[],changes:[]},final);
+const props=Object.fromEntries(bom.metadata.properties.map(row=>[row.name,row.value]));
+const report={schemaVersion:1,timestamp:new Date().toISOString(),sourceCommit:binding.sourceCommit,workingTreeClean:false,nodeVersion:process.versions.node,
+ unsignedRehearsal:true,continuationAfterSequenceGateCorrection:true,notSigned:true,files:files.length,transition,
+ currentPackageSourceFilesVerified:coverage.length,currentHostSourceFilesVerified:binding.hostFiles.length,canonicalPayloadModesVerified:true,
+ completePayloadValidationPassed:true,previousR10SignatureVerified:true,appContentSha256:props['eos:sbom:actual-app-file-table-sha256'],
+ appModeSha256:props['eos:sbom:actual-app-mode-table-sha256'],sbomSha256:bundle.sha256(fs.readFileSync(path.join(payload,'sbom.cdx.json'))),
+ appAssemblyBaseReleaseId:binding.assemblyBaseReleaseId,installedUpdateBaselineReleaseId:binding.previousReleaseId,
+ nativeEvidenceVerified:false,actualSystemdInstallTested:false,piTested:false,productionReleaseApproved:false,
+ continuationScriptSha256:bundle.sha256(fs.readFileSync(__filename))};
+fs.writeFileSync(path.join(root,'reports/integration/network-test-20261020/unsigned-assembly-rehearsal.json'),JSON.stringify(report,null,2)+'\n');
+console.log(JSON.stringify(report));

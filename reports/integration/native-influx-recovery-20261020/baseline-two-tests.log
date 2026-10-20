@@ -1,0 +1,54 @@
+BASELINE git archive HEAD 817b44658229fa45b79266ed38d36bc3b52e3649
+TZ=America/Los_Angeles
+COMMAND: node --test --test-name-pattern creates a protected profile|Linux permissions test/eos-profile.js test/sd-card-access.js
+▶ NexoWatt EOS profile backup
+  ✖ creates a protected profile archive with a verifiable manifest and no vendor secret by default (17.176937ms)
+✖ NexoWatt EOS profile backup (19.063314ms)
+✖ Linux permissions: non-root process succeeds with non-writable mount root and writable child (2.205609ms)
+ℹ tests 2
+ℹ suites 1
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 91.49325
+
+✖ failing tests:
+
+test at test/eos-profile.js:90:5
+✖ creates a protected profile archive with a verifiable manifest and no vendor secret by default (17.176937ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /^nexowattEOS_2026_08_17-18_17_04_test_backupconfig\.tar\.gz$/. Input:
+
+  'nexowattEOS_2026_08_17-11_17_04_test_backupconfig.tar.gz'
+
+      at TestContext.<anonymous> (/tmp/eos-backitup-baseline-a_wp96t8/components/backitup/test/eos-profile.js:99:20)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1869:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'nexowattEOS_2026_08_17-11_17_04_test_backupconfig.tar.gz',
+    expected: /^nexowattEOS_2026_08_17-18_17_04_test_backupconfig\.tar\.gz$/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at test/sd-card-access.js:211:1
+✖ Linux permissions: non-root process succeeds with non-writable mount root and writable child (2.205609ms)
+  Error: EINVAL: invalid argument, chown '/tmp/nexowatt-sd-permission-FVyyh2/card/nexowatt-eos-backups'
+      at Object.chownSync (node:fs:2217:11)
+      at TestContext.<anonymous> (/tmp/eos-backitup-baseline-a_wp96t8/components/backitup/test/sd-card-access.js:222:32)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -22,
+    code: 'EINVAL',
+    syscall: 'chown',
+    path: '/tmp/nexowatt-sd-permission-FVyyh2/card/nexowatt-eos-backups'
+  }
+
+EXIT=1

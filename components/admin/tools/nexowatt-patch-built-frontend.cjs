@@ -106,6 +106,20 @@ for (const marker of ['NEXOWATT_EOS_ACCOUNT_MANAGEMENT', 'X-NexoWatt-EOS-Account
 }
 if (accountManagement.includes('new MutationObserver')) fail('account-management runtime adds a second broad DOM observer');
 
+// Keep the commissioning page in both the rebuild and the shipped frontend.
+for (const file of ['js/eos-network.js', 'css/eos-network.css']) {
+    if (read(path.join(adminWww, file)) !== read(path.join(root, 'src-admin/public', file))) {
+        fail(`network commissioning source/runtime drift: ${file}`);
+    }
+}
+const networkHtml = read(path.join(adminWww, 'index.html'));
+for (const asset of ['eos-network.js?eos=20261020', 'eos-network.css?eos=20261020']) {
+    if (!networkHtml.includes(asset)) fail(`network commissioning entry missing: ${asset}`);
+}
+if (read(path.join(adminWww, 'js/eos-network.js')).includes('new MutationObserver')) {
+    fail('network commissioning adds a second broad DOM observer');
+}
+
 const eosAssistPath = path.join(adminWww, 'js', 'eos-assistant.js');
 const eosAssist = read(eosAssistPath);
 if (eosAssist !== read(path.join(root, 'src-admin/public/js/eos-assistant.js'))) {

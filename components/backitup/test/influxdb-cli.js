@@ -41,8 +41,11 @@ test('builds a local InfluxDB 2 backup without putting the token on the command 
     assert.equal(invocation.executable, 'influx');
     assert.deepEqual(invocation.args, [
         'backup',
+        '--skip-verify=false',
         '--bucket',
         'NexoWatt',
+        '--host',
+        'http://127.0.0.1:8086',
         '/opt/iobroker/backups/influx-tmp',
     ]);
     assert.equal(invocation.env.INFLUX_TOKEN, 'super-secret-token');
@@ -51,18 +54,18 @@ test('builds a local InfluxDB 2 backup without putting the token on the command 
     assert.equal(invocation.args.includes('--token'), false);
 });
 
-test('builds a remote HTTPS backup with host and TLS skip flag', () => {
+test('builds a remote HTTPS backup with mandatory certificate verification', () => {
     const invocation = buildInfluxBackupInvocation(
         localV2({ dbType: 'remote', host: 'influx.local', protocol: 'https', port: 8086 }),
         '/tmp/influx-backup',
     );
     assert.deepEqual(invocation.args, [
         'backup',
+        '--skip-verify=false',
         '--bucket',
         'NexoWatt',
         '--host',
         'https://influx.local:8086',
-        '--skip-verify',
         '/tmp/influx-backup',
     ]);
 });
@@ -78,8 +81,11 @@ test('builds restore invocation without exposing the token', () => {
     const invocation = buildInfluxRestoreInvocation(localV2(), '/tmp/influx-restore');
     assert.deepEqual(invocation.args, [
         'restore',
+        '--skip-verify=false',
         '--bucket',
         'NexoWatt',
+        '--host',
+        'http://127.0.0.1:8086',
         '/tmp/influx-restore',
     ]);
     assert.equal(invocation.env.INFLUX_TOKEN, 'super-secret-token');

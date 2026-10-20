@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-technical-network-local-verification",
+  "date": "2026-10-20",
+  "baseCommit": "817b44658229fa45b79266ed38d36bc3b52e3649",
+  "sourceState": "reviewed working tree, exact file hashes below; not a clean-commit CI result",
+  "requirement": "EOS-REQ-NETWORK-20261020",
+  "nodeVersion": "v24.19.0",
+  "pythonVersion": "Python 3.12.14",
+  "platform": "linux-x64",
+  "testGroupsOverlap": true,
+  "tests": [
+    {
+      "group": "policy-host-installer-ipc",
+      "passed": 86,
+      "failed": 0,
+      "scope": "host commands injected; actual UNIX socketpairs"
+    },
+    {
+      "group": "http-update-release-publication-sbom",
+      "passed": 138,
+      "failed": 0,
+      "scope": "contract tests, fixtures and temporary files"
+    },
+    {
+      "group": "python-publication",
+      "passed": 19,
+      "failed": 0,
+      "scope": "temporary publication fixtures"
+    },
+    {
+      "group": "admin-http-session-resources",
+      "passed": 67,
+      "failed": 0
+    },
+    {
+      "group": "admin-security-boundaries",
+      "passed": 41,
+      "failed": 0
+    },
+    {
+      "group": "chromium-panel",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "actual browser with mocked HTTP responses"
+    }
+  ],
+  "additionalChecks": {
+    "adminTypescriptNoEmit": true,
+    "adminPrebuiltManifest": true,
+    "adminSealedFiles": 1491,
+    "adminBackendRuntimeFiles": 28,
+    "adminFullReactRebuild": false,
+    "workflowActionlintVersion": "1.7.12",
+    "workflowValidationPassed": true,
+    "gitDiffWhitespacePassed": true
+  },
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/eos-network.yml",
+      "bytes": 4807,
+      "sha256": "9cc4c490180c6340170df09452b272d042e4c99a40c224624dcb0fcad52c0378"
+    },
+    {
+      "path": ".github/workflows/eos-r11-test-delivery.yml",
+      "bytes": 19882,
+      "sha256": "0e226de9e81bf6a9627ddd0409441df0749f4076526770972440c5212c37809a"
+    },
+    {
+      "path": ".github/workflows/security-review.yml",
+      "bytes": 35900,
+      "sha256": "56909dfaea3a33cf230894c08f87e43f8f98a069074b51fe65996809c5c9d912"
+    },
+    {
+      "path": "components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json",
+      "bytes": 173516,
+      "sha256": "9a971f61c20191337f24f80d357c487f5a629001a01d92659b77f5bc266f3e1b"
+    },
+    {
+      "path": "runtime/network/host.py",
+      "bytes": 37110,
+      "sha256": "160054fff300dcfcdbb1905750b256b9eed0c3aa916b5464e056ccfdf9552be5"
+    },
+    {
+      "path": "runtime/network/policy.py",
+      "bytes": 20215,
+      "sha256": "bd74316af7012e6718fb1e6ada1c26a04cb429600a9468ec5bc693d6be25f6c6"
+    },
+    {
+      "path": "runtime/network/server.py",
+      "bytes": 6160,
+      "sha256": "d7c6687d62b22e266d687de4e77df03a1c395ab1dd0a945db5522a0b20108245"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "bytes": 5463,
+      "sha256": "598338272cc0c0cee340b7762fef5148a12d48239acd3b32dfcca212ef0859b0"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "bytes": 17600,
+      "sha256": "e4776619a266d78288835574a82f1aa3f4bfc7f35d234e720f3cd45fcc261baa"
+    },
+    {
+      "path": "system/network/nexowatt-eos-controller-network.conf",
+      "bytes": 159,
+      "sha256": "438e6a3ed9dd373792a0ee7a76354d169ca8d579ae1b4784a62a688e5c5f81eb"
+    },
+    {
+      "path": "system/network/nexowatt-eos-network-dhcp.service",
+      "bytes": 1299,
+      "sha256": "11508ad9d5f64206603b97d277dddf9faa9a73f43df1a70571df31fab7ab68c9"
+    },
+    {
+      "path": "system/network/nexowatt-eos-network-guard.service",
+      "bytes": 823,
+      "sha256": "f333915aa7368d7f135b9f8961300faafbe7d292d9f2b7dab58d078146d1cd46"
+    },
+    {
+      "path": "system/network/nexowatt-eos-network-guard.timer",
+      "bytes": 194,
+      "sha256": "e22c68bee72a7e67fbb2dde79e4a23d63d9ff2e9c1ce00533b8fe88f0e38c542"
+    },
+    {
+      "path": "system/network/nexowatt-eos-network.service",
+      "bytes": 1390,
+      "sha256": "676caaf54601c04a3a346559d4cdd5dd7faf8d03ac7c677f666cc2c168f182de"
+    },
+    {
+      "path": "tests/network/browser/package-lock.json",
+      "bytes": 1777,
+      "sha256": "48d1949d4279221cfcefc0745d862367341ddd6cb331f6e5ff426818ceb30dcc"
+    },
+    {
+      "path": "tests/network/browser/package.json",
+      "bytes": 260,
+      "sha256": "34260e16c894688270b145befe218b032aab62669bb4ee71acc40e0ad10fea6c"
+    },
+    {
+      "path": "tests/network/native_namespace.py",
+      "bytes": 24970,
+      "sha256": "f3fc999a631997cd79b43e7231b49ce8944b6ff5b057864e23b86575a85e8b70"
+    },
+    {
+      "path": "tests/network/test_host.py",
+      "bytes": 19462,
+      "sha256": "f1ba4c529359bf6b0f445fd21616ca974144432bf1f9f378ec4a629b38b39d81"
+    },
+    {
+      "path": "tests/network/test_install.py",
+      "bytes": 7210,
+      "sha256": "3d7c22dbb235ac1aab01a1ebb65b9257b277814d1c831c3dccb0c5b172c603ff"
+    },
+    {
+      "path": "tests/network/test_policy.py",
+      "bytes": 19278,
+      "sha256": "88a0fe392a8b6d5560b333f9739086923de52b9466347edf24f29622bee2d8d9"
+    },
+    {
+      "path": "tests/network/test_server.py",
+      "bytes": 4490,
+      "sha256": "0109f503b1c03d08c381b543827d16d29338d190646a88509b856ca687355789"
+    },
+    {
+      "path": "tests/system/own-adapter-sbom.test.cjs",
+      "bytes": 20007,
+      "sha256": "1468ae63f37ea00ff18a690661e5eb75bce0cfa7c37132e4885b92b292f4ff5b"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "bytes": 17659,
+      "sha256": "a968f63fc3d2ec7ed39357d2540d6b10b651a20df4f2dcc7c014324d8a2327b6"
+    },
+    {
+      "path": "tools/system/install-network-host.py",
+      "bytes": 13274,
+      "sha256": "cab59f0428ca0cc31b05641d95a41e005bdee8a1faf3a6a1cb5007882d222921"
+    },
+    {
+      "path": "tools/system/update-test-to-r11.cjs",
+      "bytes": 42094,
+      "sha256": "1faa2e79e70963c9b5069b2ef344b04f5a1d0ef84107c5208dd77d6403b04488"
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "file": "admin-boundaries.log",
+      "bytes": 3372,
+      "sha256": "2766e889198937a172de1629d4b4ef58be18c6cd3afa5eaa1c340b616a5e9242"
+    },
+    {
+      "file": "admin-browser-tests.log",
+      "bytes": 599,
+      "sha256": "575b779a0c572d4789379da13037f1c0dc296442c4d597e9995e7b67e9faefff"
+    },
+    {
+      "file": "admin-network-mobile-devices.png",
+      "bytes": 60328,
+      "sha256": "d97ae031025f01d282ff02611596ab7f662d6f3fd219976db5aec74ecce9742a"
+    },
+    {
+      "file": "admin-network-mobile.png",
+      "bytes": 70003,
+      "sha256": "5074a8e275eb1d343135fd7e8935d811266baf6d447ed587c7de471e99a04cbe"
+    },
+    {
+      "file": "admin-node-tests.log",
+      "bytes": 7024,
+      "sha256": "a38115ddc225da55059a1e1fa06423885f8441f9658b7f0e4ca8b043101cf0d3"
+    },
+    {
+      "file": "admin-typescript.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "delivery-contracts.json",
+      "bytes": 3443,
+      "sha256": "84530dbeaced450984e29398d17a09cc749ad75024f15e6bc665cb517cf435b6"
+    },
+    {
+      "file": "delivery-contracts.tap",
+      "bytes": 17047,
+      "sha256": "c1e963ad60e79134ea70fa9a98bb5e6bc0928956f38c994ca867a7010b38a396"
+    },
+    {
+      "file": "local-check-exits.json",
+      "bytes": 1173,
+      "sha256": "7334b4eb329c7fc79eadb1435f4561472e7b0df6e215833226b7b1af08cfdad3"
+    },
+    {
+      "file": "native-local.json",
+      "bytes": 125,
+      "sha256": "4f116c5829e4635c193e8f98686845688656dc0647663c3b14eae8de7d26756e"
+    },
+    {
+      "file": "network-release-contracts.tap",
+      "bytes": 14039,
+      "sha256": "bdb5f48d8b2ff52c03a6a26eec3f7bc9ed95523ef3426cdd00bb2186a6d41919"
+    },
+    {
+      "file": "network-unit.log",
+      "bytes": 11662,
+      "sha256": "7186f5b049eb6c264f5d889a747c2a99c23ef7305c485756597071b8ffc398a2"
+    },
+    {
+      "file": "publication-python.log",
+      "bytes": 270,
+      "sha256": "1536de126bd2af5bc3f9c00ed7d83b7679150958aa7ed6dd497abcdd1e8173e9"
+    },
+    {
+      "file": "unsigned-assembly-rehearsal-command.txt",
+      "bytes": 3594,
+      "sha256": "852e5816e5785ec8e5a3a4555e270b1ab4f747d420312a99f907553a7d51485c"
+    },
+    {
+      "file": "unsigned-assembly-rehearsal.json",
+      "bytes": 2100,
+      "sha256": "0499084e60dd4ca66ba4083290d3daeb0f4940b829a5d2f79e12728c680401e1"
+    },
+    {
+      "file": "workflow-validation.log",
+      "bytes": 95,
+      "sha256": "9d34cdaec053c6005199c08f2bac628bd8c087303faa26fd8ab58c3e22216ff5"
+    }
+  ],
+  "nativeNetworkLocal": {
+    "hardwareAcceptance": "OPEN",
+    "missingTools": [
+      "nft",
+      "dnsmasq"
+    ],
+    "reason": "MISSING_TOOLS",
+    "status": "SKIP",
+    "tests": []
+  },
+  "nativeNetworkCiRequiredBeforeSigning": true,
+  "actualSystemdInstallTested": false,
+  "piTested": false,
+  "signedReleaseProducedByThisReport": false,
+  "productionReleaseApproved": false,
+  "openFindingIds": [
+    "EOS-NET-20261020-01",
+    "EOS-NET-20261020-02",
+    "EOS-NET-20261020-03",
+    "EOS-NET-20261020-04"
+  ],
+  "influxVerification": "reports/integration/native-influx-recovery-20261020/README.md",
+  "unsignedAssembly": {
+    "passed": true,
+    "payloadFiles": 22346,
+    "currentPackageSourceFilesVerified": 2073,
+    "currentHostSourceFilesVerified": 134,
+    "evidence": "unsigned-assembly-rehearsal.json",
+    "cleanCommittedBuild": false,
+    "signed": false
+  }
+}

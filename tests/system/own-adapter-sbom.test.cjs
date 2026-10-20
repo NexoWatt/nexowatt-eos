@@ -14,8 +14,10 @@ const product = require('../../runtime/product/scope.cjs');
 const backupState = require('../../runtime/controller-profile/backup-state.cjs');
 const shutdown = require('../../runtime/controller-profile/adapter-shutdown.cjs');
 const OWN_ASSEMBLY = 'authenticated-r9-tree-with-six-own-adapters-backup-state-and-adapter-shutdown-transforms';
+const NETWORK_ASSEMBLY = 'authenticated-r9-app-reconstruction-with-r10-network-transition';
 const R9_ASSEMBLY = 'authenticated-r8-tree-with-six-own-adapter-source-overlays';
 const PREVIOUS = '97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000';
+const R10_RELEASE = '9073b20a1c9f54eb4870b3b37a4a8ef59c6916feb379234aa6d14986a3fc26f0';
 const CLI = '@iobroker/js-controller-cli';
 const SHUTDOWN_SOURCE = 'runtime/controller-profile/adapter-shutdown.cjs';
 const OWNERS = product.SPECS.filter(spec => spec.source);
@@ -99,6 +101,14 @@ function fixture(t) {
     return { root, bom, profile, cli, adapter: components.find(row => row.name === shutdown.PACKAGE), write, check };
 }
 
+function networkFixture(t) {
+    const f = fixture(t);
+    for (const [name, value] of Object.entries({ 'eos:sbom:assembly': NETWORK_ASSEMBLY,
+        'eos:sbom:base-release-id': PREVIOUS, 'eos:sbom:previous-release-id': R10_RELEASE,
+        'eos:sbom:target-sequence': '14' })) changeProperty(f.bom.metadata, name, value);
+    return f;
+}
+
 test('own assembly binds six own adapters, six identical clients and exact CLI/core transforms', t => {
     const f = fixture(t);
     assert.deepEqual(f.check({ sequence: 13 }, f.profile), { installedPackages: 8, uniqueNpmComponents: 8, embeddedPackages: 6,
@@ -118,6 +128,56 @@ test('own assembly cannot be relabeled as sequence12 or other signed release con
     for (const sequence of [1, 11, 12, 14]) {
         const f = fixture(t);
         assert.throws(() => f.check({ sequence }, f.profile), { code: 'SBOM_DERIVATIVE_BINDING' });
+    }
+});
+
+test('network assembly binds sequence14 to distinct R9 reconstruction and R10 transition pins', t => {
+    const f = networkFixture(t);
+    assert.deepEqual(f.check({ sequence: 14 }, f.profile), { installedPackages: 8, uniqueNpmComponents: 8, embeddedPackages: 6,
+        scope: 'npm-and-explicit-vendored-packages', fullOperatingSystemInventory: false });
+});
+
+test('sequence14 requires the new network marker and rejects missing, old or invented markers', t => {
+    for (const assembly of [undefined, OWN_ASSEMBLY, R9_ASSEMBLY, 'invented']) {
+        const f = networkFixture(t); changeProperty(f.bom.metadata, 'eos:sbom:assembly', assembly);
+        assert.throws(() => f.check({ sequence: 14 }, f.profile), { code: 'SBOM_DERIVATIVE_BINDING' });
+    }
+});
+
+test('network marker rejects missing signed context, downgrade and later sequence reuse', t => {
+    for (const release of [undefined, { sequence: 1 }, { sequence: 12 }, { sequence: 13 }, { sequence: 15 }]) {
+        const f = networkFixture(t);
+        assert.throws(() => f.check(release, f.profile), { code: 'SBOM_DERIVATIVE_BINDING' });
+    }
+});
+
+test('network profile requires exact reconstruction, predecessor, target and execution scope', t => {
+    for (const [name, invalid] of [['eos:sbom:base-release-id', R10_RELEASE],
+        ['eos:sbom:previous-release-id', PREVIOUS], ['eos:sbom:target-sequence', '13'],
+        ['eos:sbom:execution-scope', 'production']]) {
+        for (const value of [undefined, invalid]) {
+            const f = networkFixture(t); changeProperty(f.bom.metadata, name, value);
+            assert.throws(() => f.check({ sequence: 14 }, f.profile), { code: 'SBOM_DERIVATIVE_BINDING' }, name);
+        }
+    }
+});
+
+test('network profile retains app, owner, mode, scan and exact transform binding gates', t => {
+    for (const mutate of [
+        f => changeProperty(f.bom.metadata, 'eos:sbom:actual-app-file-table-sha256', '0'.repeat(64)),
+        f => changeProperty(f.bom.metadata, 'eos:sbom:actual-app-mode-table-sha256', '0'.repeat(64)),
+        f => changeProperty(f.bom.metadata, 'eos:sbom:application-unchanged', 'true'),
+        f => changeProperty(f.bom.metadata, 'eos:sbom:fresh-npm-resolution', 'true'),
+        f => changeProperty(f.bom.metadata, 'eos:sbom:fresh-vulnerability-scan', 'true'),
+        f => changeProperty(f.bom.components[0], 'eos:derivative:tree-sha256', '0'.repeat(64)),
+        f => changeProperty(f.bom.components[0], 'eos:derivative:mode-tree-sha256', '0'.repeat(64)),
+        f => { f.bom.components[0].hashes = []; },
+        f => changeProperty(f.adapter, 'eos:transform:source-sha256', '0'.repeat(64)),
+        f => changeProperty(f.adapter, 'eos:transform:file-table-sha256', '0'.repeat(64)),
+        f => { f.profile.files = f.profile.files.filter(row => row.relativePath !== shutdown.FILES[0].relativePath); },
+    ]) {
+        const f = networkFixture(t); mutate(f);
+        assert.throws(() => f.check({ sequence: 14 }, f.profile));
     }
 });
 

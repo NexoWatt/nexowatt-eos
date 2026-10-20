@@ -1,0 +1,119 @@
+name: EOS technical network qualification
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - runtime/network/**
+      - system/network/**
+      - tools/system/install-network-host.py
+      - tools/system/update-test-to-r11.cjs
+      - components/admin/src/lib/eosNetwork*.js
+      - components/admin/src/lib/web.ts
+      - components/admin/build/lib/eosNetwork*.js
+      - components/admin/build/lib/web.js
+      - components/admin/adminWww/js/eos-network.js
+      - components/admin/adminWww/css/eos-network.css
+      - components/admin/adminWww/index.html
+      - components/admin/test/eos-network-*.cjs
+      - tests/network/**
+      - tests/system/update-test-to-r11.test.cjs
+      - .github/workflows/eos-network.yml
+      - .github/eos-r11-build-request.json
+  pull_request:
+    paths:
+      - runtime/network/**
+      - system/network/**
+      - tools/system/install-network-host.py
+      - tools/system/update-test-to-r11.cjs
+      - components/admin/**
+      - tests/network/**
+      - tests/system/update-test-to-r11.test.cjs
+      - .github/workflows/eos-network.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eos-network-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  network-boundaries:
+    name: Network policy host transactions and Admin authorization
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Check finite host capabilities and rollback with isolated fixtures
+        run: |
+          set -euo pipefail
+          # Ownership fixtures need UID0; all commands are injected and no host
+          # network/systemd operation is executed by these unit tests.
+          sudo -- /usr/bin/python3 -B -m unittest discover -s tests/network -p 'test_*.py' -v
+          node --test components/admin/test/eos-network-http.test.cjs tests/system/update-test-to-r11.test.cjs
+          node components/admin/tools/nexowatt-security-boundaries-selftest.cjs
+
+  native-network:
+    name: Actual isolated DHCP nftables IPv4 IPv6 and timeout behavior
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Install distribution test tools in this disposable runner
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y nftables dnsmasq-base iproute2 util-linux
+      - name: Require actual kernel and DHCP checks in separate namespaces
+        run: |
+          set -euo pipefail
+          sudo -- env EOS_NETWORK_NAMESPACE_TEST=disposable /usr/bin/python3 -B \
+            tests/network/native_namespace.py --require | tee "$RUNNER_TEMP/network-native-raw.json"
+          node reports/integration/network-test-20261020/release/native-evidence.cjs \
+            --bind-packets "$RUNNER_TEMP/network-native-raw.json" "$RUNNER_TEMP/network-native-evidence.json"
+      - name: Preserve exact-source native network evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-network-native-${{ github.sha }}
+          path: ${{ runner.temp }}/network-native-evidence.json
+          retention-days: 14
+          if-no-files-found: error
+
+  admin-browser:
+    name: Actual Admin network panel browser interaction
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Install separate locked browser test dependencies
+        run: |
+          npm --prefix tests/network/browser ci --ignore-scripts --no-audit --no-fund
+          tests/network/browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Run shipped network panel in Chromium
+        run: |
+          set -euo pipefail
+          # The test uses mocked HTTP responses; this is browser behavior,
+          # not native host or end-to-end session acceptance.
+          NODE_PATH="$GITHUB_WORKSPACE/tests/network/browser/node_modules" node --test components/admin/test/eos-network-browser.test.cjs
