@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-r11-published-test-qualification",
+  "sourceCommit": "cdf897240272b2adeeeec3e0511fcd1593984687",
+  "publicationCommit": "c51f6324b6acf6d9e81cb0a550d0bc8975df143d",
+  "entryCommit": "69ba537984299bcfaf7ddfd2ab2156b1c27721e8",
+  "commandCommit": "90d5b171ae13d2d8fa844f9bc9472190cd083b3d",
+  "deliveryRevision": 11,
+  "releaseSequence": 14,
+  "releaseId": "d7b7105ce6e3ac85a828c3e441271c4597b58886456afb0075893472fe788582",
+  "published": true,
+  "workflows": [
+    {
+      "name": "EOS security regression",
+      "runId": 39390449098,
+      "attempt": 1,
+      "headSha": "cdf897240272b2adeeeec3e0511fcd1593984687",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39390449098"
+    },
+    {
+      "name": "EOS technical network qualification",
+      "runId": 39390449320,
+      "attempt": 1,
+      "headSha": "cdf897240272b2adeeeec3e0511fcd1593984687",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39390449320"
+    },
+    {
+      "name": "CodeQL",
+      "runId": 39390449132,
+      "attempt": 1,
+      "headSha": "cdf897240272b2adeeeec3e0511fcd1593984687",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39390449132"
+    },
+    {
+      "name": "EOS R11 signed healthy R10 update and public command",
+      "runId": 39391220133,
+      "attempt": 1,
+      "headSha": "cdf897240272b2adeeeec3e0511fcd1593984687",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39391220133"
+    }
+  ],
+  "network": {
+    "status": "PASS",
+    "checksPassed": 23,
+    "scope": "isolated Linux network namespaces; no systemd or Pi acceptance",
+    "hostNamespaceUntouched": true,
+    "versions": {
+      "dnsmasq": "Dnsmasq version 2.91  Copyright (c) 2000-2025 Simon Kelley",
+      "nft": "nftables v1.0.9 (Old Doc Yak #3)"
+    },
+    "evidence": "reports/integration/network-test-20261020/release/network-native-evidence.json"
+  },
+  "archive": {
+    "bytes": 89047948,
+    "sha256": "b7a261d587ce79cf6d01b2e683cb41652e5660456e2560d651c97743a57a4793",
+    "signingPublicKeySha256": "af0716ad95ff5e7babda29b9efb2cafef40c77f8642e23492c59fa07ff7500f9",
+    "archiveReadbackVerified": true,
+    "delivery": "delivery/test-pi-0.2.0-test.3-r11/delivery.json"
+  },
+  "publicReadback": {
+    "checkedAt": "2026-10-20T08:15:57.882Z",
+    "allExactBytesEqual": true,
+    "publicHttpsDownloadExecuted": true,
+    "evidence": "delivery/public-update-test3-r11/remote-readback.json"
+  },
+  "publicCommand": {
+    "command": "delivery/public-update-test3-r11/UPDATE_COMMAND.txt",
+    "verification": "delivery/public-update-test3-r11/command-verification.json",
+    "commandMatchesPinnedEntry": true,
+    "bytes": 997,
+    "sha256": "43a8cd0162211ae23fc0370380287416001fd53f33304c9a4851e58f215ebc85"
+  },
+  "targetUpdateExecuted": false,
+  "systemdInstallationTested": false,
+  "piHardwareAccepted": false,
+  "productionReleaseApproved": false,
+  "remainingAcceptance": "docs/operations/TECHNICAL_NETWORK_TEST_DE.md",
+  "sharedRuntimeIdentityFinding": "EOS-NET-20261020-01",
+  "historicalEvidenceNote": "Earlier failed runs and local verification reports remain unchanged. This record summarizes the later exact-source successful CI and published test delivery; it does not claim target-system acceptance."
+}

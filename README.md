@@ -1,22 +1,54 @@
-# Neuer Entwicklungsstand: Gerätenetzverwaltung für R11
+# Aktueller Teststand: R11 mit Gerätenetzverwaltung
 
-**20. Oktober 2026:** Der neue native Linux-/systemd-Quellstand ergänzt im
-EOS-Admin einen dedizierten zweiten Ethernetanschluss, DHCP-Geräteliste, feste
-MAC/IP-Zuordnungen und befristeten Internetzugang je Gerät. USB-Ethernet ist
-als Ziel vorgesehen; die konkrete Pi-/USB-Abnahme ist offen. Docker bleibt
-zurückgestellt. Die wiederhergestellten Influx-Sicherheitskorrekturen sind
-als neue Änderungen mit eigenen Prüfnachweisen enthalten.
+**20. Oktober 2026: test.3 Revision 11, Sequenz 14 ist signiert, veröffentlicht
+und über den geprüften öffentlichen Updatebefehl verfügbar.** Dieser Updateweg
+gilt ausschließlich für einen vollständig eingerichteten, betriebsbereiten
+R10-Teststand (Sequenz 13) unter Linux ARM64 mit Node 24.21.0. Die
+Veröffentlichung allein verändert keinen installierten Pi.
 
-Der unten dokumentierte **veröffentlichte Lieferstand bleibt R10**, bis der
-separate R11-Auslieferungslauf mit den aktuellen Quellbindungen, nativen
-Prüfbelegen und öffentlichem Readback erfolgreich abgeschlossen ist.
-Quellcode-Veröffentlichung verändert keinen installierten Pi.
+R11 ergänzt im EOS-Admin die Verwaltung eines dedizierten zweiten
+Ethernetanschlusses, eine DHCP-Geräteliste, feste MAC/IP-Zuordnungen und befristeten Internetzugang je
+Gerät. Der getrennte Hostdienst wird gemeinsam mit dem Admin installiert und
+startet zunächst ohne eingerichtetes Gerätenetz. Die beauftragten
+Influx-Sicherheitskorrekturen sind mit eigenen Prüfnachweisen enthalten.
+USB-Ethernet gehört zum Zielprofil; die konkrete Pi-/USB-Abnahme ist offen.
+Docker bleibt zurückgestellt.
 
+Am gebundenen Quellstand bestanden alle acht Sicherheitsprüfgruppen, alle
+23 nativen Linux-Namespace-Netzwerkprüfungen und CodeQL. Der anschließende
+Auslieferungslauf bestand alle vier Jobs. Archiv, Schlüssel und Liefermetadaten
+wurden öffentlich über HTTPS bytegenau zurückgelesen; der Updatebefehl bindet
+den Einstieg an einen unveränderlichen Commit, seine Größe und seinen SHA-256.
+
+Vor dem Update die [Voraussetzungen, Sicherung und Pi-Testmatrix](docs/operations/TECHNICAL_NETWORK_TEST_DE.md)
+prüfen. Den folgenden vollständigen Befehl ausschließlich auf dem dafür
+vorgesehenen gesunden R10-Testgerät im SSH-Terminal ausführen:
+
+```bash
+/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C /bin/bash -c 'set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-update-r11-entry-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize 29932 https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/69ba537984299bcfaf7ddfd2ab2156b1c27721e8/delivery/public-update-test3-r11/update.sh -o "$d/update.sh"; [[ -f "$d/update.sh" && ! -L "$d/update.sh" && $(/usr/bin/stat -c %h "$d/update.sh") == 1 && $(/usr/bin/stat -c %u "$d/update.sh") == 0 && $(/usr/bin/stat -c %s "$d/update.sh") == 29932 ]] || exit 1; printf '\''%s  %s\n'\'' '\''0e15f9788c93fbe0fb6b7997a40244c33f12dc7ba8e17d8ab644f352afb85ade'\'' "$d/update.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/update.sh"'
+```
+
+Der Updater prüft Ausgangsrelease, Paketsignatur und vorhandenen Zustand.
+Er bewahrt Konten, UUID, Lizenz, Zertifikate und Datenbank. Erfolg meldet
+`"phase":"NETWORK_TEST_ACTIVE"` und `"sequence":14`. Anschließend richtet der
+Installateur oder Service das getrennte Gerätenetz bewusst ein; die
+Installation allein erteilt keine Internetfreigaben für Geräte.
+
+[Verifizierter R11-Updatebefehl als Textdatei](delivery/public-update-test3-r11/UPDATE_COMMAND.txt) ·
+[Lieferidentität](delivery/test-pi-0.2.0-test.3-r11/delivery.json) ·
+[Abgeschlossene Qualifikation und Veröffentlichung](reports/integration/network-test-20261020/qualification.json) ·
+[Auslieferungslauf](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39391220133) ·
 [Funktionsumfang und Grenzen](docs/requirements/EOS-REQ-NETWORK-20261020.md) ·
-[Prüfbericht](reports/integration/network-test-20261020/README_DE.md) ·
-[Vorbereitung und Pi-Testmatrix](docs/operations/TECHNICAL_NETWORK_TEST_DE.md).
+[Prüfbericht](reports/integration/network-test-20261020/README_DE.md).
 
-# Aktueller Teststand: R10 mit sechs eigenen Adaptern
+**R11 ist eine Testversion, keine Produktions- oder CRA-Freigabe.** Der
+konkrete Pi-/ARM64-/USB-Test, reale systemd-Installation und Unterbrechung,
+Stromausfall, vollständige Wiederherstellung, Geräteverträglichkeit und
+50-/100-ms-Reaktionszeitziele bleiben offen. Die bestandene Namespace-Prüfung
+ersetzt diese Zielgeräte- und Anlagenabnahme nicht. Bekannte
+Abhängigkeitsbefunde bleiben weitergeführt.
+
+## Bisheriger Teststand R10 mit sechs eigenen Adaptern (Update von R9)
 
 **15. Oktober 2026: test.3 Revision 10, Sequenz 13 ist signiert, veröffentlicht
 und für den nächsten Test auf einem vollständig eingerichteten, betriebsbereiten

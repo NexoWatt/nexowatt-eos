@@ -1,18 +1,28 @@
 # Gerätenetz im EOS-Admin — Vorbereitung und Pi-Abnahme
 
-**Entwicklungs-/Testprofil; Anlagen- und Produktionsfreigabe offen.** Der neue
-Quellstand allein ändert keinen installierten Pi. Ein R10-Paket enthält den
-Netzbereich nicht. Nur der gesonderte, signierte R11-Testweg darf den neuen Admin
-und Hostdienst gemeinsam installieren; historische Downloads und Pins bleiben
-unverändert. Ein Downloadbefehl darf erst nach erfolgreichem Build, Signatur,
-SBOM-Bindung und öffentlichem Readback verwendet werden.
+**R11 ist seit dem 20.10.2026 als signierter Teststand veröffentlicht;
+Pi-, Anlagen- und Produktionsfreigabe bleiben offen.** Revision 11, Sequenz 14
+installiert den neuen Admin und den zunächst unkonfigurierten Hostdienst
+gemeinsam auf einem gesunden R10-Teststand. Ein R10-Paket enthält den
+Netzbereich nicht. Die Veröffentlichung allein ändert keinen installierten Pi;
+historische Downloads und Pins bleiben unverändert.
+
+Build, Signatur, SBOM-Bindung und öffentlicher bytegenauer Downloadvergleich
+sind abgeschlossen. Ausschließlich den
+[verifizierten R11-Updatebefehl](../../delivery/public-update-test3-r11/UPDATE_COMMAND.txt)
+beziehungsweise dessen identische Fassung in der [aktuellen README](../../README.md)
+verwenden. [Lieferidentität](../../delivery/test-pi-0.2.0-test.3-r11/delivery.json),
+[öffentlicher Readback](../../delivery/public-update-test3-r11/remote-readback.json)
+und [Qualifikationsstand](../../reports/integration/network-test-20261020/qualification.json)
+trennen die verfügbare Testlieferung von der noch offenen Zielabnahme.
 
 ## Voraussetzungen
 
 - Vollständige Sicherung und bekannter Rückfall auf den bisherigen Teststand;
   lokale Konsole/SSH über den vorhandenen Kundenanschluss verfügbar halten.
-- Ein gesunder, vollständig eingerichteter R10-Stand (Sequenz 13) für den neuen
-  Updateweg; genaue Release-/Schlüsselidentität prüft dessen Koordinator.
+- Ein gesunder, vollständig eingerichteter R10-Stand (Sequenz 13) unter Linux
+  ARM64 mit Node 24.21.0; genaue Release-/Schlüsselidentität und Ausgangszustand
+  prüft der Updatekoordinator.
 - Debian-Zielprofil mit systemd und den Distributionspaketen Python 3,
   iproute2, nftables sowie dnsmasq-base. Der Hostinstaller lädt keine Pakete
   nach. Fehlende Werkzeuge führen zum Abbruch vor Installation.
@@ -33,8 +43,10 @@ beliebige individuelle Firewallregeln gehören nicht zu diesem Profil.
 
 ## Bedienung
 
-1. Über HTTPS am EOS-Admin als Installateur oder Service anmelden. Endkunden
-   erhalten keine Netzkonfiguration. Im Systembereich **Netzwerk** öffnen.
+1. Über HTTPS am EOS-Admin als Installateur oder Service anmelden. Service
+   öffnet **Systemeinstellungen → Netzwerk · Gerätenetz und DHCP**; Installateure
+   öffnen denselben Dialog über ihre **Basis-Einstellungen**. Endkunden erhalten
+   keine Netzkonfiguration.
 2. Den dedizierten Anschluss anhand Name/MAC wählen; EOS-IP, DHCP-Bereich und
    DNS-Resolver eintragen. Das Startprofil ist IPv4-/24. Benötigte
    Geräte-Dienstprofile gezielt auswählen; standardmäßig ist keines geöffnet.

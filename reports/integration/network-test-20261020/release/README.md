@@ -1,5 +1,9 @@
 # R11: eigenständige signierte Netzwerktest-Auslieferung
 
+**Aktueller Veröffentlichungsstand:** Der [Nachtrag zur abgeschlossenen Veröffentlichung](#abgeschlossene-r11-veröffentlichung-am-20102026)
+bestätigt das signierte R11-Artefakt und den öffentlichen Updatebefehl. Die
+ursprünglichen Vorbereitungs- und lokalen Prüfvermerke bleiben darunter erhalten.
+
 Stand: 20.10.2026. Dies sind Builder, Prüfer und Ablauf für eine **neue**
 Testrevision R11 (Sequenz 14). Dieser Vermerk behauptet weder ein bereits
 signiertes R11-Artefakt noch einen ausgeführten Pi-Updatevorgang.
@@ -156,3 +160,41 @@ Update aus den verifizierten Debian-Paketquellen bereitzustellen. Die konkrete
 Netzwerkeinrichtung und der funktionale Pi-Test erfolgen erst nach der
 Installation anhand der Betriebsanleitung. R11 ist eine technische
 Testauslieferung; eine Produktionsfreigabe wird nicht behauptet.
+
+## Abgeschlossene R11-Veröffentlichung am 20.10.2026
+
+Der [Auslieferungslauf 39391220133](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39391220133)
+bestand alle vier Jobs. Für denselben Quellcommit
+`cdf897240272b2adeeeec3e0511fcd1593984687` sind Security-, Netzwerk- und
+CodeQL-Qualifikation erfolgreich abgeschlossen.
+Die exakten Laufbindungen stehen in [native-workflow.json](native-workflow.json)
+und [network-workflow.json](network-workflow.json), der abgeschlossene
+Gesamtstatus in [qualification.json](../qualification.json).
+
+Das signierte Archiv der Revision 11, Sequenz 14 trägt Release-ID
+`d7b7105ce6e3ac85a828c3e441271c4597b58886456afb0075893472fe788582`.
+[Lieferidentität](../../../../delivery/test-pi-0.2.0-test.3-r11/delivery.json)
+und [Buildprüfung](build-verification.json) binden das Archiv, 22.346 signierte
+Dateien und die geprüfte App-/SBOM-/Quellenidentität. Der ursprüngliche
+Buildbeleg bleibt unverändert und beschreibt mit `published: false` die Phase
+vor der anschließenden Publikation.
+
+Archiv, öffentlicher Schlüssel und Liefermetadaten sind am Asset-Commit
+`c51f6324b6acf6d9e81cb0a550d0bc8975df143d` veröffentlicht und
+[öffentlich bytegenau zurückgelesen](../../../../delivery/public-update-test3-r11/remote-readback.json).
+Der [fertige R11-Updatebefehl](../../../../delivery/public-update-test3-r11/UPDATE_COMMAND.txt)
+ist am Einstieg-Commit `69ba537984299bcfaf7ddfd2ab2156b1c27721e8` gebunden;
+[Befehlsprüfung](../../../../delivery/public-update-test3-r11/command-verification.json)
+und Command-Commit `90d5b171ae13d2d8fa844f9bc9472190cd083b3d` ergänzen den
+Veröffentlichungsnachweis. Der Befehl gilt ausschließlich für den gesunden,
+abgeschlossenen R10-Teststand mit Node 24.21.0 unter Linux ARM64. Die
+[Betriebsanleitung](../../../../docs/operations/TECHNICAL_NETWORK_TEST_DE.md)
+beschreibt Voraussetzungen und bewusste Einrichtung des zunächst unkonfigurierten
+Gerätenetzes.
+
+Die native Linux-Namespace-Prüfung bestand 23/23 Fälle. Reale systemd-
+Installation und Unterbrechung, Pi-/USB-/Geräteverträglichkeit, Stromausfall,
+vollständige Wiederherstellung und Anlagenabnahme bleiben offen. Die
+Veröffentlichung hat keinen Zielhost aktualisiert und erteilt keine
+Produktions- oder CRA-Freigabe. Historische Prüfbelege und signierte
+Auslieferungsdateien wurden für diesen Nachtrag nicht verändert.

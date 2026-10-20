@@ -1,5 +1,10 @@
 # Native EOS-Gerätenetzverwaltung — Entwicklungsprüfung 20.10.2026
 
+**Aktueller Veröffentlichungsstand:** R11 ist signiert und öffentlich verfügbar.
+Der [abgeschlossene CI-/Liefernachweis](#abgeschlossene-qualifikation-und-veröffentlichung-am-20102026)
+steht am Ende dieses Berichts; die folgenden Entwicklungs- und Fehlversuchsbelege
+bleiben als historische Prüfschritte erhalten.
+
 Anforderung: [EOS-REQ-NETWORK-20261020](../../../docs/requirements/EOS-REQ-NETWORK-20261020.md).
 Dieser Stand implementiert das native Linux-/systemd-Testprofil und bereitet
 R11 (test.3, Sequenz 14) vor. Eine Quellcode-Veröffentlichung ist keine
@@ -222,3 +227,44 @@ Das sind Quell- und Publikationsvertragsprüfungen;
 ein neuer vollständiger CI-Lauf des endgültigen Quellcommits sowie echte
 systemd-/Pi-Abnahme bleiben erforderlich. Die zweite CI-Anforderung ist
 dadurch nicht nachträglich erfolgreich oder für eine Signierung verwendbar.
+
+## Abgeschlossene Qualifikation und Veröffentlichung am 20.10.2026
+
+Der endgültige Quellcommit `cdf897240272b2adeeeec3e0511fcd1593984687`
+bestand die vollständige Qualifikation:
+
+| Prüfung | Ergebnis | Exakter Lauf / Beleg |
+|---|---|---|
+| EOS Security | 8/8 Jobs erfolgreich | [39390449098](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39390449098), [Quellbindung](release/native-workflow.json) |
+| Native Netzwerkqualifikation | 23/23 Paket-/DHCP-Prüfungen bestanden | [39390449320](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39390449320), [Rohbeleg](release/network-native-evidence.json) |
+| CodeQL | erfolgreich | [39390449132](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39390449132) |
+| Signierung und Veröffentlichung | 4/4 Jobs erfolgreich | [39391220133](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39391220133) |
+
+R11 (`0.2.0-test.3`, Sequenz 14) ist damit als signierte Testauslieferung
+veröffentlicht. Release-ID:
+`d7b7105ce6e3ac85a828c3e441271c4597b58886456afb0075893472fe788582`.
+Der [Lieferbeleg](../../../delivery/test-pi-0.2.0-test.3-r11/delivery.json)
+bindet 22.346 signierte Dateien und das Archiv mit 89.047.948 Bytes,
+SHA-256 `b7a261d587ce79cf6d01b2e683cb41652e5660456e2560d651c97743a57a4793`.
+Der [Buildnachweis](release/build-verification.json) hält die zum Buildzeitpunkt
+geprüfte Signatur, SBOM-/Quellenbindung und unveränderten historischen Lieferdateien
+fest. Sein `published: false` bleibt die korrekte historische Buildphase.
+
+Der [öffentliche Readback](../../../delivery/public-update-test3-r11/remote-readback.json)
+belegt den bytegenauen HTTPS-Download von Archiv, Schlüssel und Liefermetadaten
+am Asset-Commit `c51f6324b6acf6d9e81cb0a550d0bc8975df143d`.
+Der [verifizierte Updatebefehl](../../../delivery/public-update-test3-r11/UPDATE_COMMAND.txt)
+bindet den Einstieg an Commit `69ba537984299bcfaf7ddfd2ab2156b1c27721e8`;
+der [Befehlsnachweis](../../../delivery/public-update-test3-r11/command-verification.json)
+und der veröffentlichte Command-Commit `90d5b171ae13d2d8fa844f9bc9472190cd083b3d`
+halten diese Veröffentlichung fest. Der aktuelle maschinenlesbare Gesamtstand
+ist [qualification.json](qualification.json). Die anfängliche
+[verification.json](verification.json) und frühere fehlgeschlagene CI-Belege
+werden nicht rückwirkend umgedeutet.
+
+Die 23 Netzwerkprüfungen liefen mit echten Paketen in isolierten Linux-
+Namespaces. Sie belegen keine Installation oder Unterbrechung unter systemd
+auf dem konkreten Pi. Pi-/ARM64-/USB-Verhalten, Stromausfall, vollständige
+Wiederherstellung, Geräte- und Anlagenabnahme sowie die 50-/100-ms-Ziele bleiben
+offen. Der Updatebefehl wurde veröffentlicht, aber durch diese Veröffentlichung
+nicht auf einem Zielgerät ausgeführt. R11 ist keine Produktions- oder CRA-Freigabe.
