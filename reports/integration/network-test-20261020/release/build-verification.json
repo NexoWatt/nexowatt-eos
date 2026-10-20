@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "cdf897240272b2adeeeec3e0511fcd1593984687",
+  "timestamp": "2026-10-20T10:01:22+02:00",
+  "sourceReleaseId": "9073b20a1c9f54eb4870b3b37a4a8ef59c6916feb379234aa6d14986a3fc26f0",
+  "deliveryRevision": 11,
+  "releaseSequence": 14,
+  "releaseId": "d7b7105ce6e3ac85a828c3e441271c4597b58886456afb0075893472fe788582",
+  "archiveSha256": "b7a261d587ce79cf6d01b2e683cb41652e5660456e2560d651c97743a57a4793",
+  "archiveBytes": 89047948,
+  "signingPublicKeySha256": "af0716ad95ff5e7babda29b9efb2cafef40c77f8642e23492c59fa07ff7500f9",
+  "previousSignatureVerified": true,
+  "finalSignatureVerified": true,
+  "signedArchiveReadbackPassed": true,
+  "sourceBindingPassed": true,
+  "historicalDeliveryFilesUnchanged": 154,
+  "nativeEvidence": {
+    "ok": true,
+    "sourceCommit": "cdf897240272b2adeeeec3e0511fcd1593984687",
+    "component": {
+      "ok": true,
+      "sourceCommit": "cdf897240272b2adeeeec3e0511fcd1593984687",
+      "appContentSha256": "9c240974901a176c46e03612e071558b8c0847433282ed5f11b0510557ffa042",
+      "baselineContentSha256": "cd2f9538116b68d1e4d62b6dc4b8c6160ffd30d5e0e0f26bcb650b6d021f39f3",
+      "nativeTestsPassed": 15,
+      "scope": "six-own-adapters-native-x64-management-license-backup-and-rollback",
+      "checks": [
+        "postgresqlMtls",
+        "platformDeniesUnadmittedProcess",
+        "initiallyUnlicensed",
+        "adminHttpsLogin",
+        "uiHttpsLogin",
+        "homeActivation",
+        "homeQuotas",
+        "rootOwnedEosAdmission",
+        "centralRevocation",
+        "proReactivation",
+        "proQuotas",
+        "restart",
+        "unchangedApp",
+        "sixOwnAdapterProcesses",
+        "nativeEnrollmentAndPrestartRollback",
+        "nativePoststartEnrollmentRollback",
+        "backupPrivatePathAndHostSecret",
+        "logicalBackupCreatedAndListed",
+        "allOwnAdapterConfigurationAssets",
+        "assetOnlyUploadPreservesEnrollment",
+        "backupAdapterReadiness"
+      ],
+      "hardwareTested": false,
+      "productionReleaseApproved": false,
+      "evidenceFiles": [
+        {
+          "file": "own-adapters-native-prepared.json",
+          "bytes": 756,
+          "sha256": "d3dd3380faef37ff2c8cfe7fd66f2cf40e9859cdfc19ecd8b44f925561999e02"
+        },
+        {
+          "file": "own-adapters-native-evidence.json",
+          "bytes": 22830,
+          "sha256": "2359ee6daa5a7bfaa84ac936818a1d01b91ae3cd6d7bc264ab7232e5c327decf"
+        },
+        {
+          "file": "own-adapters-source-binding.json",
+          "bytes": 664629,
+          "sha256": "e9f6365f4c0a978b10eaf994a2fdb8bdb26e661e52e3e19bfc4599b4af4ba66c"
+        },
+        {
+          "file": "own-adapters-native.tap",
+          "bytes": 4348,
+          "sha256": "bca6a3852bd270cd81204e4efc47362d337b70fcdae74350ec86745646b06954"
+        }
+      ]
+    },
+    "network": {
+      "ok": true,
+      "sourceCommit": "cdf897240272b2adeeeec3e0511fcd1593984687",
+      "sourceBinding": {
+        "files": 2144,
+        "sha256": "43a93d16a897509e3f8498610dfcca93362c0731984e927c74ff2c55ed0b3712"
+      },
+      "checks": [
+        "fixture_ipv4_route_positive",
+        "fixture_ipv6_route_positive",
+        "fixture_customer_route_positive",
+        "fixture_dns_route_positive",
+        "internet_closed_initially",
+        "dns_closed_initially",
+        "ipv6_forwarding_blocked",
+        "technical_admin_blocked",
+        "management_admin_preserved",
+        "explicit_device_listener_allowed",
+        "eos_initiated_device_connection_preserved",
+        "technical_dhcp_dora_and_explicit_options",
+        "management_receives_no_dhcp_offer",
+        "reservation_survives_daemon_restart_and_changed_client_id",
+        "customer_lan_blocked_during_grant",
+        "ipv6_blocked_during_ipv4_grant",
+        "dns_forwarded_during_grant",
+        "established_tcp_stream_expires_in_kernel",
+        "new_connections_blocked_after_expiry",
+        "dns_blocked_after_expiry",
+        "wrong_mac_cannot_use_ip_grant",
+        "reload_without_grants_is_closed",
+        "unrelated_firewall_table_preserved"
+      ],
+      "scope": "native Linux namespace packet and DHCP proof; systemd and Pi remain open"
+    },
+    "evidenceFiles": [
+      {
+        "file": "own-adapters-native-prepared.json",
+        "bytes": 756,
+        "sha256": "d3dd3380faef37ff2c8cfe7fd66f2cf40e9859cdfc19ecd8b44f925561999e02"
+      },
+      {
+        "file": "own-adapters-native-evidence.json",
+        "bytes": 22830,
+        "sha256": "2359ee6daa5a7bfaa84ac936818a1d01b91ae3cd6d7bc264ab7232e5c327decf"
+      },
+      {
+        "file": "own-adapters-source-binding.json",
+        "bytes": 664629,
+        "sha256": "e9f6365f4c0a978b10eaf994a2fdb8bdb26e661e52e3e19bfc4599b4af4ba66c"
+      },
+      {
+        "file": "own-adapters-native.tap",
+        "bytes": 4348,
+        "sha256": "bca6a3852bd270cd81204e4efc47362d337b70fcdae74350ec86745646b06954"
+      },
+      {
+        "file": "network-native-evidence.json",
+        "bytes": 4735,
+        "sha256": "d91683dbf41b31e3f84fe501bc905329fcfb49db803df47ce72165728be7d745"
+      }
+    ],
+    "actualSystemdInstallTested": false,
+    "hardwareTested": false,
+    "productionReleaseApproved": false
+  },
+  "transition": {
+    "passed": true,
+    "previousReleaseId": "9073b20a1c9f54eb4870b3b37a4a8ef59c6916feb379234aa6d14986a3fc26f0",
+    "previousSequence": 13,
+    "targetReleaseId": "d7b7105ce6e3ac85a828c3e441271c4597b58886456afb0075893472fe788582",
+    "targetSequence": 14,
+    "networkUnits": {
+      "newNetworkUnits": [
+        "system/network/nexowatt-eos-network.service",
+        "system/network/nexowatt-eos-network-guard.service",
+        "system/network/nexowatt-eos-controller-network.conf",
+        "system/network/nexowatt-eos-network-dhcp.service",
+        "system/network/nexowatt-eos-network-guard.timer"
+      ],
+      "otherHostSystemFilesUnchanged": true,
+      "technicalNetworkInitiallyConfigured": false
+    },
+    "admissionScope": "own-adapter-test",
+    "targetExecutionPerformed": false,
+    "hardwareTested": false,
+    "productionReleaseApproved": false
+  },
+  "prebuilt": {
+    "adminManifestVerified": true,
+    "uiRuntimeSourceParityVerified": true,
+    "sixCentralClientsIdentical": true,
+    "sourceTranspilationPerformed": false
+  },
+  "published": false,
+  "piUpdatePerformed": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false
+}

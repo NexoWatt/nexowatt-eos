@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-r11-native-packet-evidence",
+  "sourceCommit": "cdf897240272b2adeeeec3e0511fcd1593984687",
+  "sourceBinding": {
+    "files": 2144,
+    "sha256": "43a93d16a897509e3f8498610dfcca93362c0731984e927c74ff2c55ed0b3712"
+  },
+  "packetProof": {
+    "hostNamespaceUntouched": true,
+    "scope": "isolated Linux network namespaces; no systemd or Pi acceptance",
+    "status": "PASS",
+    "tests": [
+      {
+        "details": {
+          "attempts": 1,
+          "elapsedSeconds": 0.04,
+          "lastProbe": {
+            "connected": true,
+            "destination": "93.184.216.34",
+            "family": "IPv4",
+            "phase": "echo",
+            "port": 18080,
+            "source": [
+              "192.168.77.20",
+              40974
+            ]
+          }
+        },
+        "name": "fixture_ipv4_route_positive",
+        "status": "PASS"
+      },
+      {
+        "details": {
+          "attempts": 2,
+          "elapsedSeconds": 1.053,
+          "lastProbe": {
+            "connected": true,
+            "destination": "2001:4860:4860::8844",
+            "family": "IPv6",
+            "phase": "echo",
+            "port": 18080,
+            "source": [
+              "fd77::20",
+              49306,
+              0,
+              0
+            ]
+          }
+        },
+        "name": "fixture_ipv6_route_positive",
+        "status": "PASS"
+      },
+      {
+        "details": {
+          "attempts": 1,
+          "elapsedSeconds": 0.04,
+          "lastProbe": {
+            "connected": true,
+            "destination": "192.168.50.100",
+            "family": "IPv4",
+            "phase": "echo",
+            "port": 18080,
+            "source": [
+              "192.168.77.20",
+              40078
+            ]
+          }
+        },
+        "name": "fixture_customer_route_positive",
+        "status": "PASS"
+      },
+      {
+        "details": {
+          "attempts": 1,
+          "elapsedSeconds": 0.039,
+          "lastProbe": {
+            "answered": true
+          }
+        },
+        "name": "fixture_dns_route_positive",
+        "status": "PASS"
+      },
+      {
+        "name": "internet_closed_initially",
+        "status": "PASS"
+      },
+      {
+        "name": "dns_closed_initially",
+        "status": "PASS"
+      },
+      {
+        "name": "ipv6_forwarding_blocked",
+        "status": "PASS"
+      },
+      {
+        "name": "technical_admin_blocked",
+        "status": "PASS"
+      },
+      {
+        "name": "management_admin_preserved",
+        "status": "PASS"
+      },
+      {
+        "name": "explicit_device_listener_allowed",
+        "status": "PASS"
+      },
+      {
+        "name": "eos_initiated_device_connection_preserved",
+        "status": "PASS"
+      },
+      {
+        "details": {
+          "dhcpReplies": 2,
+          "dns": "1.1.1.1",
+          "ip": "192.168.77.190",
+          "matchingReplies": 2,
+          "offer": true,
+          "offerElapsedSeconds": 3.004,
+          "receivedFrames": 2,
+          "router": "192.168.77.1"
+        },
+        "name": "technical_dhcp_dora_and_explicit_options",
+        "status": "PASS"
+      },
+      {
+        "details": {
+          "dhcpReplies": 0,
+          "matchingReplies": 0,
+          "offer": false,
+          "offerElapsedSeconds": 6.006,
+          "receivedFrames": 0
+        },
+        "name": "management_receives_no_dhcp_offer",
+        "status": "PASS"
+      },
+      {
+        "name": "reservation_survives_daemon_restart_and_changed_client_id",
+        "status": "PASS"
+      },
+      {
+        "name": "customer_lan_blocked_during_grant",
+        "status": "PASS"
+      },
+      {
+        "name": "ipv6_blocked_during_ipv4_grant",
+        "status": "PASS"
+      },
+      {
+        "name": "dns_forwarded_during_grant",
+        "status": "PASS"
+      },
+      {
+        "details": {
+          "elapsedSeconds": 9.232,
+          "receivedBeforeExpiry": 85
+        },
+        "name": "established_tcp_stream_expires_in_kernel",
+        "status": "PASS"
+      },
+      {
+        "name": "new_connections_blocked_after_expiry",
+        "status": "PASS"
+      },
+      {
+        "name": "dns_blocked_after_expiry",
+        "status": "PASS"
+      },
+      {
+        "name": "wrong_mac_cannot_use_ip_grant",
+        "status": "PASS"
+      },
+      {
+        "name": "reload_without_grants_is_closed",
+        "status": "PASS"
+      },
+      {
+        "name": "unrelated_firewall_table_preserved",
+        "status": "PASS"
+      }
+    ],
+    "versions": {
+      "dnsmasq": "Dnsmasq version 2.91  Copyright (c) 2000-2025 Simon Kelley",
+      "nft": "nftables v1.0.9 (Old Doc Yak #3)"
+    }
+  },
+  "actualSystemdInstallTested": false,
+  "piTested": false,
+  "productionReleaseApproved": false
+}
