@@ -1,5 +1,7 @@
 # EOS: Änderungen, Migration und Freigabesperren
 
+**Nachtrag vom 21.10.2026:** Der [aktuelle Upstream-Vergleich](../../reports/integration/upstream-review-20261021/README_DE.md) unterscheidet Quelllock, dokumentierte Laufzeitbasis und offizielle Stable-/Latest-Versionen. Neue Integrations- und Dependency-Aufgaben sind unter EOS-UPSTREAM-20261021-01 bis -03 im Befundregister offen. Dieser Nachtrag ändert weder Laufzeitcode noch signierte Lieferdateien und erteilt keine Installations-/Produktionsfreigabe.
+
 **Nachtrag vom 07.10.2026:** Lizenzanzeige, tatsächlicher UI-Start und CI-Fixtures
 wurden nachgeprüft und korrigiert. Der quellgebundene
 [Prüfbericht](../../reports/integration/license-status-ci-20261007/README_DE.md)

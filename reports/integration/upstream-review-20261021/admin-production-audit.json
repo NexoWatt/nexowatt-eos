@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-10-21",
+  "scope": "components/admin/package-lock.json; omit dev; not the whole released runtime",
+  "exitCode": 1,
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 2,
+      "critical": 1,
+      "total": 3
+    },
+    "dependencies": {
+      "prod": 229,
+      "dev": 496,
+      "optional": 45,
+      "peer": 243,
+      "peerOptional": 0,
+      "total": 725
+    }
+  },
+  "packageFindings": [
+    {
+      "name": "compression",
+      "severity": "high",
+      "affectedRange": "<1.8.2",
+      "fixAvailable": true,
+      "advisories": [
+        {
+          "url": "https://github.com/advisories/GHSA-vc2v-76pw-4v95",
+          "severity": "high",
+          "range": "<1.8.2"
+        }
+      ]
+    },
+    {
+      "name": "follow-redirects",
+      "severity": "high",
+      "affectedRange": "1.16.0",
+      "fixAvailable": true,
+      "advisories": [
+        {
+          "url": "https://github.com/advisories/GHSA-q3jh-wrc6-jgq8",
+          "severity": "high",
+          "range": ">=1.16.0 <1.16.1"
+        },
+        {
+          "url": "https://github.com/advisories/GHSA-8r9p-f939-6h3c",
+          "severity": "high",
+          "range": ">=1.16.0 <1.16.1"
+        }
+      ]
+    },
+    {
+      "name": "proxy-addr",
+      "severity": "critical",
+      "affectedRange": "1.1.0 - 2.0.7",
+      "fixAvailable": true,
+      "advisories": [
+        {
+          "url": "https://github.com/advisories/GHSA-jqcg-44mw-7w3h",
+          "severity": "critical",
+          "range": ">=1.1.0 <2.0.8"
+        }
+      ]
+    }
+  ]
+}

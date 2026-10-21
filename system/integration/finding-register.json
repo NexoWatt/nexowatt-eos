@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "date": "2026-10-20",
+  "date": "2026-10-21",
   "kind": "component-integration-open-findings",
   "previousFindingsPreserved": true,
   "entries": [
@@ -721,6 +721,69 @@
       "evidence": "reports/integration/network-test-20261020/verification.json",
       "nextStep": "EEBUS/Matter/Discovery je Gerät prüfen; IPv6 bleibt gesperrt, bis ein separates geprüftes Profil vorliegt.",
       "classificationNote": "Isoliertes Entwicklungstestprofil; keine erfundene Risikoakzeptanz oder CRA-Freigabe."
+    },
+    {
+      "id": "EOS-UPSTREAM-20261021-01",
+      "title": "Neuere Controller-/Socket-/Webserver-Korrekturen benötigen gemeinsame EOS-Integration",
+      "state": "open",
+      "sourceObservationStatus": "source-lock-sbom-and-public-upstream-review",
+      "sourceCommit": "a675d6986890d4f3491e421626223c91cd0d1af6",
+      "observationDocument": "reports/integration/upstream-review-20261021/README_DE.md",
+      "priorityAsReviewed": "high",
+      "requirementIds": [
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-020",
+        "EOS-INT-REQ-021"
+      ],
+      "remediationVerified": false,
+      "evidence": "reports/integration/upstream-review-20261021/verification.json",
+      "verificationScope": "Quellstand, dokumentierte Laufzeit-SBOM, offizielle Release-/Paketmetadaten und begrenzter aktueller npm-Audit; keine Live- oder Exploitprüfung.",
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before next qualified fresh-install baseline; evaluate intended-operation impact promptly",
+      "nextStep": "js-controller 7.2.5, aktuelle Socket-Klassen und Webserveränderungen mit PostgreSQL, Sitzungen, Rollen und eigenen Adaptern qualifizieren.",
+      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe."
+    },
+    {
+      "id": "EOS-UPSTREAM-20261021-02",
+      "title": "Admin-Quelllock und dokumentierte Lieferbasis enthalten unterschiedliche Abhängigkeitsstände",
+      "state": "open",
+      "sourceObservationStatus": "source-lock-sbom-and-public-upstream-review",
+      "sourceCommit": "a675d6986890d4f3491e421626223c91cd0d1af6",
+      "observationDocument": "reports/integration/upstream-review-20261021/README_DE.md",
+      "priorityAsReviewed": "high",
+      "requirementIds": [
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-020",
+        "EOS-INT-REQ-021"
+      ],
+      "remediationVerified": false,
+      "evidence": "reports/integration/upstream-review-20261021/verification.json",
+      "verificationScope": "Quellstand, dokumentierte Laufzeit-SBOM, offizielle Release-/Paketmetadaten und begrenzter aktueller npm-Audit; keine Live- oder Exploitprüfung.",
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before next qualified fresh-install baseline; evaluate intended-operation impact promptly",
+      "nextStep": "Quelllock und neue Lieferbasis nachvollziehbar angleichen; bereits enthaltene Lieferfixes nicht als fehlend oder als im Quelllock vorhanden ausweisen.",
+      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe."
+    },
+    {
+      "id": "EOS-UPSTREAM-20261021-03",
+      "title": "Aktueller Admin-Produktionsabhängigkeitsscan enthält zu bearbeitende Advisories",
+      "state": "open",
+      "sourceObservationStatus": "source-lock-sbom-and-public-upstream-review",
+      "sourceCommit": "a675d6986890d4f3491e421626223c91cd0d1af6",
+      "observationDocument": "reports/integration/upstream-review-20261021/README_DE.md",
+      "priorityAsReviewed": "high",
+      "requirementIds": [
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-020",
+        "EOS-INT-REQ-021"
+      ],
+      "remediationVerified": false,
+      "evidence": "reports/integration/upstream-review-20261021/verification.json",
+      "verificationScope": "Quellstand, dokumentierte Laufzeit-SBOM, offizielle Release-/Paketmetadaten und begrenzter aktueller npm-Audit; keine Live- oder Exploitprüfung.",
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before next qualified fresh-install baseline; evaluate intended-operation impact promptly",
+      "nextStep": "Verfügbare Dependency-Fixes in neuer Basis integrieren, konkrete Betroffenheit bewerten, SBOM und Audit erneuern; bestehende Forge-/OCPP-Befunde erhalten.",
+      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe."
     }
   ],
   "controllerScope": "system/integration/controller-observations.json",
