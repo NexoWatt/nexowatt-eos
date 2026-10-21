@@ -4,6 +4,32 @@ Stand 21.10.2026. Ubuntu unter WSL 2 ist beim Betreiber bestätigt.
 Dies bereitet die dauerhafte Schlüsselablage vor. Eine vollständige
 Ausführung des EOS-Signierlaufs unter WSL ist damit noch nicht nachgewiesen.
 
+## Bestätigter öffentlicher Schlüssel
+
+Der Betreiber hat die erfolgreiche lokale Schlüsselerzeugung gemeldet und
+anschließend ausschließlich den öffentlichen Prüfschlüssel übermittelt.
+Die [öffentliche Datei](../security/release-trust/manufacturer-20261021.pem)
+ist ein kanonisches Ed25519-SPKI-PEM mit 113 Byte einschließlich abschließendem
+Zeilenumbruch. Ihr SHA-256 stimmt exakt mit der zuvor gemeldeten Ausgabe
+von `sha256sum release-public.pem` überein:
+
+```text
+95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248
+```
+
+Der private Schlüssel und die Passphrase wurden nicht übermittelt.
+Diese Prüfung bestätigt Format und Übereinstimmung des öffentlichen Schlüssels;
+ein Signier-/Verifikationstest mit dem tatsächlichen privaten Schlüssel und
+eine wiederlesbare getrennte Sicherung sind noch nicht nachgewiesen.
+[Prüfvermerk](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json).
+
+Den bestehenden Schlüssel weiterverwenden. **Den folgenden Erzeugungsblock
+nicht erneut ausführen**, wenn die Schlüssel bereits vorhanden sind.
+Der öffentliche Schlüssel wird erst mit der signierten Frischlieferung auf
+dem Pi verankert; seine Ablage in der Dokumentation installiert keine Autorität.
+
+## Einmalige Erzeugung auf einem neuen Signierrechner
+
 In PowerShell oder der Windows-Eingabeaufforderung Ubuntu öffnen:
 
 ```powershell
@@ -80,7 +106,9 @@ Ein späterer Dokumentationscommit ersetzt diesen Herkunftsnachweis nicht.
 Die neu erzeugte Update-Autorität ersetzt auch nicht die getrennten,
 authentifizierten öffentlichen Prüfschlüssel der vorhandenen NWL3-Lizenzen.
 
-Nachweise: [Formatprüfung](../../reports/integration/security-refresh-20261021/install/windows-key-custody.json).
+Nachweise: [ursprüngliche Formatprüfung](../../reports/integration/security-refresh-20261021/install/windows-key-custody.json)
+(an den Dokumentationsstand `20efcdc99b3dfbe5e34ad614b45cae70f9e22bc7` gebunden)
+und [Prüfung des übermittelten öffentlichen Herstellerschlüssels](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json).
 Offizielle Referenzen:
 [WSL](https://learn.microsoft.com/en-us/windows/wsl/install),
 [genpkey](https://docs.openssl.org/3.0/man1/openssl-genpkey/),

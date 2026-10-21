@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "kind": "manufacturer-public-release-key-validation",
+  "date": "2026-10-21",
+  "sourceBaseCommit": "20efcdc99b3dfbe5e34ad614b45cae70f9e22bc7",
+  "qualifiedRuntimeCommit": "a2733fa5561f7327ff3689b7464f8727760fb670",
+  "key": {
+    "path": "docs/security/release-trust/manufacturer-20261021.pem",
+    "purpose": "New sequence-15 fresh release and subsequent managed updates; separate from NWL3 license trust",
+    "type": "ed25519",
+    "format": "canonical SPKI PEM, LF, final newline",
+    "bytes": 113,
+    "sha256": "95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248"
+  },
+  "provenance": {
+    "publicKey": "User supplied public PEM in this conversation after local WSL/OpenSSL generation",
+    "expectedSha256": "User supplied sha256sum release-public.pem output in preceding message; same conversation channel",
+    "encryptedPrivateKeyGeneration": "Reported successful by user; private file not accessed here",
+    "independentOutOfBandAuthentication": false
+  },
+  "testEnvironment": {
+    "os": "Linux container",
+    "node": "v24.19.0",
+    "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+    "windowsExecution": false,
+    "wslExecution": false
+  },
+  "checks": {
+    "pemIsPublicOnly": true,
+    "nodeEd25519Parse": true,
+    "nodeCanonicalSpkiEquality": true,
+    "opensslCanonicalSpkiEquality": true,
+    "sha256MatchesPreviouslySuppliedHash": true,
+    "deliveryDirectoryNotPrecreated": true,
+    "changedContentContainsNoPrivatePem": true
+  },
+  "privateKeyReceived": false,
+  "privateKeyUsedHere": false,
+  "actualManufacturerSignatureVerified": false,
+  "protectedBackupConfirmed": false,
+  "fullWslSigningQualified": false,
+  "signedReleaseCreated": false,
+  "piTrustInstalled": false,
+  "productionReleaseApproved": false,
+  "inputBindings": [
+    {
+      "path": "docs/security/release-trust/manufacturer-20261021.pem",
+      "sha256": "95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248"
+    },
+    {
+      "path": "docs/operations/WINDOWS_SIGNIERRECHNER_DE.md",
+      "sha256": "52c0bc1116c37251dd30327dc5e60d2310a5094fbf0dde821797a247de697d81"
+    },
+    {
+      "path": "docs/operations/MANAGED_TEST_UPDATES_DE.md",
+      "sha256": "1e93c440f45de4fa1ddeb6609fb7080293d4798e3109bc66d21d79978ab4f7c7"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/README_DE.md",
+      "sha256": "152944dd30bc55ba8a95feb1c8a8c650f38508b129eba42d76a86d5b433b313d"
+    }
+  ],
+  "limits": [
+    "Validation confirms the supplied public key format and equality to the preceding user-supplied fingerprint; it does not establish independent channel authentication or custody of the private key.",
+    "No private key or passphrase was received, generated or used in this check.",
+    "The original format fixture report windows-key-custody.json remains bound to its historical documented bytes.",
+    "Signing requires protected local temporary decryption and a clean checkout of the qualified a2733fa source, with exact runtime and native evidence.",
+    "Historical releases and their keys are unchanged; this documentation is not an installed trust anchor.",
+    "Authentic NWL3 public trust, signed delivery/feed, public readback and target Pi acceptance remain open."
+  ]
+}

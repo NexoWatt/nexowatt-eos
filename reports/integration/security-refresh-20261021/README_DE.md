@@ -92,10 +92,15 @@ Abhilfe und Laufzeitnachweise erforderlich. Keine erfundene Risikoakzeptanz.
 
 ## Nächste Lieferbedingungen
 
-Ein dauerhaft geschützter Hersteller-Signierschlüssel sowie die fertige signierte
-ARM64-Lieferung und der daraus erzeugte öffentliche Installationsbefehl mit
-Rücklesetest fehlen noch. Es wird kein neuer privater Einmalschlüssel
-als dauerhafte Updateautorität ausgegeben. Private Schlüssel, Zugangsdaten,
+Die Erzeugung des verschlüsselten Hersteller-Signierschlüssels unter WSL 2
+ist vom Betreiber gemeldet. Der übermittelte öffentliche Ed25519-Schlüssel
+stimmt exakt mit seinem zuvor mitgeteilten SHA-256 überein;
+[Prüfvermerk und Grenzen](install/manufacturer-public-key-20261021.json).
+Der private Schlüssel wurde hier nicht empfangen oder verwendet. Getrennte
+Sicherung und vollständiger Signierlauf bleiben offen, ebenso die fertige
+signierte ARM64-Lieferung und der daraus erzeugte öffentliche Installationsbefehl
+mit Rücklesetest. Es wird kein privater Einmalschlüssel als dauerhafte
+Updateautorität ausgegeben. Private Schlüssel, Zugangsdaten,
 reale Lizenzen, Kundendaten und private Laborzustände gehören nicht in die
 öffentliche Veröffentlichung.
 

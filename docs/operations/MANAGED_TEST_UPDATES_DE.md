@@ -67,7 +67,14 @@ sind dafür nicht verfügbar. Private Schlüssel nicht in den Chat kopieren.
 Für den Windows-Rechner ist die
 [verschlüsselte Schlüsselablage unter WSL 2](WINDOWS_SIGNIERRECHNER_DE.md)
 beschrieben. Die dauerhafte Schlüsseldatei wird ausschließlich beim
-Hersteller erzeugt; ihre Bereitstellung ist noch nicht als erfolgt bestätigt.
+Hersteller erzeugt. Die erfolgreiche Erzeugung ist inzwischen vom Betreiber
+gemeldet. Der [öffentliche Prüfschlüssel](../security/release-trust/manufacturer-20261021.pem)
+wurde als kanonisches Ed25519-SPKI-PEM geprüft und stimmt mit dem vorher vom
+Betreiber mitgeteilten SHA-256 überein:
+`95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248`.
+Private Schlüsseldatei und Passphrase bleiben auf dem Herstellerrechner.
+Getrennte Sicherung, tatsächlicher Signierlauf und Installation dieses
+Vertrauensankers auf einem Pi sind noch nicht nachgewiesen.
 
 Die Sicherheitsaktualisierung benötigt eine **vollständig neue Laufzeitbasis**.
 Ein Quellen-Overlay auf R9 kann die geänderten Controller-/Dependency-Versionen
@@ -105,7 +112,8 @@ Für den abschließenden Herstellerlauf werden konkret benötigt:
 - eine dauerhaft gesicherte Ed25519-Schlüsseldatei auf dem Signierrechner,
   außerhalb des Repositorys, nur für den Eigentümer lesbar;
 - der unabhängig bestätigte SHA-256-Fingerabdruck des kanonischen öffentlichen
-  SPKI-PEM-Prüfschlüssels;
+  SPKI-PEM-Prüfschlüssels; die vom Betreiber getrennt übermittelten PEM-/Hashdaten
+  stimmen überein, der oben genannte Hash ist für diesen Herstellerlauf zu verwenden;
 - die authentifizierte öffentliche Vertrauensdatei des tatsächlichen zentralen
   Lizenzservers samt SHA-256-Fingerabdruck;
 - die endgültige HTTPS-Veröffentlichungsadresse für die Installationsdateien.
@@ -134,11 +142,20 @@ Der vollständige neue Laufzeitbaum am Quellstand
 sechs Adaptern, zentralen Lizenzen, Backup und Neustart. Das daraus erzeugte
 CI-Archiv ist ausdrücklich **unsignierter Transport für den Hersteller**.
 Es enthält weder eine Installationsfreigabe noch eine dauerhafte Updateautorität.
-Signaturmaterial, signierte Lieferung, endgültige öffentliche Pins und
-Pi-Abnahme fehlen weiterhin; die vorhandenen R11-Befehle ersetzen diesen
+Der öffentliche Herstellerschlüssel ist geprüft; die geschützte lokale
+Verwendung seines privaten Gegenstücks, signierte Lieferung, endgültige
+öffentliche Lieferpins und Pi-Abnahme fehlen weiterhin. Die vorhandenen R11-Befehle ersetzen diesen
 Schritt nicht. Der Hersteller muss die exakt geprüften Quell- und Paketbytes
 verwenden; ein späterer Dokumentationscommit qualifiziert keine neu gebaute
 Laufzeit automatisch mit.
+
+Die öffentliche Schlüsseldokumentation legt ausdrücklich kein Verzeichnis
+`delivery/managed-test-15` an. Der Signierer benötigt dieses Ziel frisch und
+schreibt den aus dem privaten Schlüssel abgeleiteten, gegen den bestätigten
+Hash geprüften öffentlichen Schlüssel selbst in die neue Lieferung. Historische
+Lieferungen und deren Schlüssel bleiben unverändert. Der Downloadgenerator
+erhält denselben Hash als `--release-public-key-sha256`; Feed und spätere
+Folgepakete müssen zur auf dem frisch installierten Pi verankerten Autorität passen.
 
 V1 beschränkt Folgeupdates auf eigene Adapterdateien bei gleichbleibenden
 Versionen und Host-/Abhängigkeitsverträgen. Weitere Migrationsarten sind offen.
