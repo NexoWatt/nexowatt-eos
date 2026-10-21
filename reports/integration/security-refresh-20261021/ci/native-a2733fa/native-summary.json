@@ -1,0 +1,375 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-security-refresh-native-management",
+  "sourceCommit": "a2733fa5561f7327ff3689b7464f8727760fb670",
+  "appContentSha256": "d631177d1f2fdfaa004ab0453d458cdda793671dca06a43348b759c47bbd964b",
+  "nodeVersion": "24.21.0",
+  "sequence": 15,
+  "runtimeBuildSha256": "cf579ef4e6a97e9ac93641bb183e978579403a8ed396ac3ec335a4f320c01d81",
+  "passed": true,
+  "signed": false,
+  "unsignedFixture": true,
+  "candidateSigned": false,
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "hostArch": "x64",
+  "signedPayloadPlatform": "linux-arm64",
+  "nativePostgresql": "17.11",
+  "checks": {
+    "postgresqlMtls": true,
+    "freshEnrollmentPrewriteFailureIsAtomic": true,
+    "assetOnlyUploadPreservesEnrollment": true,
+    "allOwnAdapterConfigurationAssets": true,
+    "platformDeniesUnadmittedProcess": true,
+    "backupAdapterReadiness": true,
+    "initiallyUnlicensed": true,
+    "adminHttpsLogin": true,
+    "uiHttpsLogin": true,
+    "backupPrivatePathAndHostSecret": true,
+    "homeActivation": true,
+    "homeQuotas": true,
+    "rootOwnedEosAdmission": true,
+    "centralRevocation": true,
+    "proReactivation": true,
+    "proQuotas": true,
+    "logicalBackupCreatedAndListed": true,
+    "freshEnrollmentRetainedAfterRestart": true,
+    "restart": true,
+    "unchangedApp": true,
+    "sixOwnAdapterProcesses": true
+  },
+  "managementReadinessPassed": true,
+  "restartPassed": true,
+  "candidateAppBytesUnchanged": true,
+  "fixedRootOwnedEosPaths": true,
+  "ownDeviceAdapterProcessesStarted": true,
+  "lifecycleScriptsExecuted": false,
+  "nativeModulesRebuilt": false,
+  "mockedRuntimeDependencies": false,
+  "physicalHardwareConnected": false,
+  "physicalCommandsSent": false,
+  "actualSystemdMountPolicy": false,
+  "physicalPiAcceptance": false,
+  "stages": [
+    {
+      "name": "fresh isolated native database uses separate least-privilege mTLS identities",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "ordinary setup loads actual PostgreSQL wrappers with read-only config",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production first-run bootstrap creates fresh management enrollment",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "fresh enrollment admits six own adapters and asset-only upload preserves enrollment",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production readiness reaches actual Admin HTTPS login redirect and strict unauthenticated UI status",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "authenticated Admin serves exact current configuration assets for all four additional adapters",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "real EOS platform gate rejects the packaged client outside its admitted process",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "unlicensed native startup retains authenticated central activation and denies UI operation",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "central HTTPS NWL3 Home activation propagates policy three/two quota lease without restart",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "central removal revokes the actual UI lease and quota states without restarting services",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "central HTTPS NWL3 Pro reactivation propagates policy fifty/ten quotas and Pro features",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "actual controller CLI creates private logical archives without changing immutable app or recursively including archives",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "actual six-adapter stop retains fresh enrollment and restart readiness",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "final shutdown leaves exact admitted instance scope and unchanged six-own-adapter application bytes",
+      "passed": true,
+      "failureCode": null
+    }
+  ],
+  "bootstrapSteps": [
+    {
+      "name": "fresh-instance-count",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-initialize",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "password-hash",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "production-enrollment",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-uuid-read",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "license-issuer-read",
+      "passed": true,
+      "failureCode": null
+    }
+  ],
+  "finalSteps": [
+    {
+      "name": "controller-stop",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "enrollment-after-stop",
+      "passed": true,
+      "failureCode": null
+    },
+    {
+      "name": "prepared-app-content-inventory",
+      "passed": true,
+      "failureCode": null
+    }
+  ],
+  "assetUpload": {
+    "adapters": 6,
+    "files": 267,
+    "bytes": 60959236,
+    "instancesAndMarkersUnchanged": true,
+    "unrelatedFilesPreserved": true
+  },
+  "logicalBackup": {
+    "archives": 2,
+    "privatePermissions": true,
+    "previousArchivesExcluded": true,
+    "nativeDatabaseExport": true,
+    "archiveContentsRead": true,
+    "inspections": [
+      {
+        "objectCount": 305,
+        "stateCount": 268,
+        "requiredObjectsPresent": true,
+        "canaryObjectAndStatePresent": true,
+        "exactRuntimeConfigPresent": true,
+        "priorArchivesExcluded": true
+      },
+      {
+        "objectCount": 305,
+        "stateCount": 268,
+        "requiredObjectsPresent": true,
+        "canaryObjectAndStatePresent": true,
+        "exactRuntimeConfigPresent": true,
+        "priorArchivesExcluded": true
+      }
+    ],
+    "restorePerformed": false,
+    "completeSystemBackup": false
+  },
+  "runtimeIndicators": [
+    "PERMISSION_DENIED"
+  ],
+  "processIndicators": [
+    {
+      "scope": "cli-setup",
+      "indicators": [
+        "PERMISSION_DENIED"
+      ]
+    },
+    {
+      "scope": "cli-upload",
+      "indicators": []
+    },
+    {
+      "scope": "cli-upload",
+      "indicators": []
+    },
+    {
+      "scope": "controller",
+      "indicators": []
+    },
+    {
+      "scope": "cli-backup",
+      "indicators": []
+    },
+    {
+      "scope": "cli-backup",
+      "indicators": []
+    },
+    {
+      "scope": "controller",
+      "indicators": []
+    }
+  ],
+  "finalInventory": {
+    "matches": true,
+    "added": 0,
+    "removed": 0,
+    "changed": 0,
+    "samples": []
+  },
+  "sanitizedProjection": true,
+  "ciNodeVersion": "24.21.0",
+  "ciNpmVersion": "11.19.0",
+  "controllerVersion": "7.2.5",
+  "nativeTestsPassed": 15,
+  "admittedAdapters": [
+    {
+      "package": "iobroker.eos-admin",
+      "version": "7.10.11",
+      "main": "build/main.js"
+    },
+    {
+      "package": "iobroker.nexowatt-ui",
+      "version": "1.0.21",
+      "main": "main.js"
+    },
+    {
+      "package": "iobroker.nexowatt-devices",
+      "version": "0.5.169",
+      "main": "bootstrap.js"
+    },
+    {
+      "package": "iobroker.eebus",
+      "version": "0.3.0",
+      "main": "build/main.js"
+    },
+    {
+      "package": "iobroker.ocpp21",
+      "version": "0.4.0",
+      "main": "main.js"
+    },
+    {
+      "package": "iobroker.nexowatt-backup",
+      "version": "1.0.10",
+      "main": "build/main.js"
+    }
+  ],
+  "bootReadiness": [
+    {
+      "stage": "complete",
+      "adapterReadiness": [
+        {
+          "name": "eos-admin",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "nexowatt-ui",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "nexowatt-devices",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "eebus",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "ocpp21",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "nexowatt-backup",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        }
+      ],
+      "controllerAndAdaptersAlive": true,
+      "processCount": 7
+    },
+    {
+      "stage": "complete",
+      "adapterReadiness": [
+        {
+          "name": "eos-admin",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "nexowatt-ui",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "nexowatt-devices",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "eebus",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "ocpp21",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        },
+        {
+          "name": "nexowatt-backup",
+          "aliveFresh": true,
+          "connectedFresh": true,
+          "processAlive": true
+        }
+      ],
+      "controllerAndAdaptersAlive": true,
+      "processCount": 7
+    }
+  ]
+}

@@ -5,6 +5,15 @@ Stand: 21.10.2026. Basis des Arbeitsstands:
 Auftrag: verfügbare Sicherheitskorrekturen übernehmen, danach den neuen
 Test-Pi vorbereiten; ausdrücklich **js-controller 7 beibehalten**.
 
+**Aktueller CI-Nachweis:** Der Quellstand
+`a2733fa5561f7327ff3689b7464f8727760fb670` bestand den vollständigen neuen
+Build unter Node 24.21.0/npm 11.19 sowie die native Integration mit sechs
+Adaptern, zentralen Lizenzen, Backup und Neustart. Auch die Managed-Installer-
+und Browserprüfungen bestanden. Ein unsigniertes Laufzeitarchiv wurde erzeugt.
+Die früheren Teilberichte bleiben an ihre jeweils geprüften Bytes gebunden;
+sie werden nicht nachträglich auf diesen Quellstand umgedeutet.
+[Zusammengeführter CI-Nachweis und Liefergrenzen](ci/QUALIFIZIERUNG_DE.md).
+
 ## Änderungen
 
 | Bereich | Neuer Quell-/Zielstand | Zweck |
@@ -52,6 +61,17 @@ diesen neu aufgebauten Baum.
 
 ## Weiter offene Sicherheitsbefunde
 
+- Der Audit des tatsächlich gebauten Laufzeitbaums meldet 26 betroffene
+  Paketknoten: 20 hoch, 6 mittel, keine kritisch eingestuften. Das sind nicht
+  26 voneinander unabhängige Schwachstellen. Die native Funktionsprüfung
+  bedeutet keine Freigabe dieser Befunde.
+- `braces` 3.0.3 ist zusätzlich von
+  [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)
+  betroffen; die Advisory nennt keine gepatchte Version. Der Controller-CLI
+  nutzt `chokidar` 3.6.0 mit Glob-Mustern. Ein erzwungener Wechsel auf
+  Chokidar 4 entfernt diese Funktion und ist kein kompatibles Patchupdate.
+  Eine geprüfte Anpassung oder ein Backport bleibt offen; keine pauschale
+  Behauptung der Nichtbetroffenheit.
 - Für `node-forge` ist im geprüften Stand kein passender Patch verfügbar.
   Abhängige Audit-Knoten sind nicht jeweils eine neue eigenständige Lücke.
 - `ocpp-rpc` bindet weiterhin AJV 8.14.0. Ein blindes Override bricht die

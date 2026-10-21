@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "kind": "downloaded-unsigned-runtime-and-native-cross-verification",
+  "sourceCommit": "a2733fa5561f7327ff3689b7464f8727760fb670",
+  "sequence": 15,
+  "preparedArchiveFiles": 22436,
+  "appFiles": 22429,
+  "sourceAndNativeEvidenceBound": true,
+  "identicalNativeAndUnsignedMembers": [
+    "runtime-build.json",
+    "runtime.cdx.json",
+    "app/package-lock.json"
+  ],
+  "verifierNode": "v24.19.0",
+  "executedRuntime": false,
+  "architectureAndSbomAndCatalogPassed": true,
+  "ok": true,
+  "appContentSha256": "d631177d1f2fdfaa004ab0453d458cdda793671dca06a43348b759c47bbd964b",
+  "baselineContentSha256": "d631177d1f2fdfaa004ab0453d458cdda793671dca06a43348b759c47bbd964b",
+  "runtimeBuildSha256": "cf579ef4e6a97e9ac93641bb183e978579403a8ed396ac3ec335a4f320c01d81",
+  "nativeTestsPassed": 15,
+  "scope": "fresh-controller7.2.5-native-x64-management-license-backup-and-restart",
+  "checks": [
+    "postgresqlMtls",
+    "platformDeniesUnadmittedProcess",
+    "initiallyUnlicensed",
+    "adminHttpsLogin",
+    "uiHttpsLogin",
+    "homeActivation",
+    "homeQuotas",
+    "rootOwnedEosAdmission",
+    "centralRevocation",
+    "proReactivation",
+    "proQuotas",
+    "restart",
+    "unchangedApp",
+    "sixOwnAdapterProcesses",
+    "freshEnrollmentPrewriteFailureIsAtomic",
+    "freshEnrollmentRetainedAfterRestart",
+    "backupPrivatePathAndHostSecret",
+    "logicalBackupCreatedAndListed",
+    "allOwnAdapterConfigurationAssets",
+    "assetOnlyUploadPreservesEnrollment",
+    "backupAdapterReadiness"
+  ],
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "evidenceFiles": [
+    {
+      "file": "own-adapters-native-prepared.json",
+      "bytes": 1025,
+      "sha256": "622d2137e6f477681636d425273c631fba24e0aad1241156b0015416705ea84e"
+    },
+    {
+      "file": "own-adapters-native-evidence.json",
+      "bytes": 22874,
+      "sha256": "ad4e5ebbcc20dedf79fae42fc80d0c04701e86ac2ebf61872df41abe04bd2c5f"
+    },
+    {
+      "file": "own-adapters-source-binding.json",
+      "bytes": 16583,
+      "sha256": "00d0bbe6a843b550645732143c5bfa4c59bcbde30e0a3c77a67be70799cbbafd"
+    },
+    {
+      "file": "own-adapters-native.tap",
+      "bytes": 4235,
+      "sha256": "46c570fc0710a7ee8f43cea54559114802ca50517976544668008a6de4cb5ecf"
+    }
+  ],
+  "checkedAt": "2026-10-21",
+  "sourceTree": "c5de19c2a2002c50d334128333b7803cd8dbda20",
+  "ciNodeVersion": "24.21.0",
+  "ciNpmVersion": "11.19.0",
+  "controllerVersion": "7.2.5",
+  "resolutionLockSha256": "7425a79b1b867bab6d2fe54f5dcbdd397384bf50790916ed853117932c71def2",
+  "packageLockSha256": "06724b9ee228dc01a312d396886073f474f77f550fdc82fffbff7994554a8eee",
+  "runtimeSbomSha256": "dc07f4990fba0c7b1f8b0483d851fce1952686f131627549749dc6671ded8fcb",
+  "appModeSha256": "236f61f45316eab089bc0a20c7847cd4f905167e7297d32c33ef77452c7aa5bb",
+  "sourceFilesMatchTestedCommit": true,
+  "verifiers": [
+    {
+      "path": "tools/integration/verify-security-refresh-native.cjs",
+      "sha256": "46ccd9ac757cafb193630e7f5fa322f846a58e566ec9bcc99351ab8c274d598c"
+    },
+    {
+      "path": "tools/integration/prepare-security-refresh.cjs",
+      "sha256": "eb07cb10d17f22bbccc111260972a2483487183c74dc2f5ee5e3e033b9ec34bd"
+    },
+    {
+      "path": "tools/integration/prepared-runtime-archive.py",
+      "sha256": "ad8c28a1a257a33da858d05901c849d93c0fe3987c9bb5b8099d6e54c5e2b8b1"
+    },
+    {
+      "path": "tools/integration/test-archive.py",
+      "sha256": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "f67ddc0d0af8941221c69cb05ef7379a148112f241ae0de174423dbac4026489"
+    },
+    {
+      "path": "tools/integration/bare-refresh-policy.json",
+      "sha256": "86fd838b95158e547314cec8c7dbbc2af9564f60be8bdf82762391430a1ec0d9"
+    },
+    {
+      "path": "runtime/release/fresh-sbom-binding.cjs",
+      "sha256": "472d508a6d2a6e732359f8dc43f73d0331e3ef4614b7decaf7db71bc665863cc"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "17d40235494113861815a9caf71976d41af4c94228b877df2421a43e060dfcc8"
+    },
+    {
+      "path": "runtime/release/bundle.cjs",
+      "sha256": "9c3c8f38672d84d7adbb6b05eb4b13e3c35483ced63a427697370aeb7c5c2e3b"
+    },
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "7db723cb95dcc8168631ee2c463f2cb19d66b06a494db210b32797321ead8fbc"
+    }
+  ],
+  "artifactManifest": "artifact-manifest.json",
+  "audit": "runtime-audit.json",
+  "nativeProjection": "native-summary.json",
+  "auditDetailLimitation": {
+    "ciRawAdvisoriesRetained": false,
+    "ciSanitizedAuditAvailable": true,
+    "localExactLockAuditRepeated": true,
+    "localAttemptResult": "TOTAL_TIMEOUT_NO_RAW_RESULT",
+    "localTotalTimeoutSeconds": 15,
+    "requestTimeoutMilliseconds": 5000,
+    "fetchRetries": 0,
+    "advisoryViaAndFixAvailableFields": "not available; not reconstructed or invented"
+  },
+  "publicProjectionExclusions": [
+    "fixture configuration",
+    "keys and credentials",
+    "database contents",
+    "backup archives",
+    "raw logs",
+    "absolute runner paths",
+    "temporary artifact download URLs"
+  ],
+  "qualificationLimits": [
+    "Native execution was on Linux x64, not on a physical Pi or ARM64 host.",
+    "Local re-verification used Node24.19.0 only for read-only integrity checks; CI used Node24.21.0/npm11.19.0.",
+    "Device adapters ran without connected physical devices or emitted device commands.",
+    "Fresh enrollment and restart were tested; no historical R9 rollback or full restore acceptance was performed.",
+    "Two logical database backups were inspected; restore and complete system backup were not performed.",
+    "Dependency findings remain open; no vulnerability-free or production/CRA approval is claimed.",
+    "Unsigned runtime transport requires protected signing and qualified Pi acceptance before release."
+  ]
+}

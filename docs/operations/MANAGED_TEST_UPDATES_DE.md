@@ -1,6 +1,7 @@
 # Test-Pi frisch installieren, danach Updates im Admin
 
-Die neue Testbasis ist im Quellcode vorbereitet, aber noch nicht ausgeliefert.
+Die neue Testbasis ist gebaut und im Linux-x64-Labor nativ geprüft, aber noch
+nicht signiert oder als Pi-Installationspaket ausgeliefert.
 Sie bleibt ausdrücklich auf js-controller **7.2.5**. Controller 8 wird weder
 automatisch bezogen noch durch den neuen Paket-/Katalogvertrag zugelassen.
 **Bestehenden Test-Pi noch nicht löschen.** Der R11-Befehl in der README ist
@@ -87,6 +88,29 @@ Rücklesetest. Ein Offline-Paket muss nach Veröffentlichung vollständig
 zurückgelesen und gegen Hash, Signatur, Größe und Quelle geprüft werden,
 bevor ein signiertes Angebot in den Feed aufgenommen wird.
 
+Auch für den ersten funktionsfähigen Updateabruf muss der Hersteller einen
+gültigen signierten Feed unter `delivery/update-channel/test.json`
+veröffentlichen. Ein anfangs leeres Angebot ist erlaubt; Kanal
+`eos-managed-test-v1`, Ablaufdatum und der auf dem Pi verankerte
+Herstellerschlüssel werden trotzdem geprüft. Der Feed fehlt im aktuellen
+Quellstand noch. Spätere Pakete verwenden eine Sequenz ab 16 und müssen die
+zulässige Ausgangslieferung ausdrücklich benennen.
+
+Für den abschließenden Herstellerlauf werden konkret benötigt:
+
+- eine dauerhaft gesicherte Ed25519-Schlüsseldatei auf dem Signierrechner,
+  außerhalb des Repositorys, nur für den Eigentümer lesbar;
+- der unabhängig bestätigte SHA-256-Fingerabdruck des kanonischen öffentlichen
+  SPKI-PEM-Prüfschlüssels;
+- die authentifizierte öffentliche Vertrauensdatei des tatsächlichen zentralen
+  Lizenzservers samt SHA-256-Fingerabdruck;
+- die endgültige HTTPS-Veröffentlichungsadresse für die Installationsdateien.
+
+Der private Schlüssel bleibt auf diesem Rechner. Er wird weder in den Chat
+noch auf den Pi oder in die öffentliche Lieferung kopiert. Hersteller- und
+Lizenzprüfschlüssel sind öffentliche Daten; ihre richtige Herkunft muss
+trotzdem vor dem Einbau bestätigt sein.
+
 `tools/system/install-managed-from-checkout.cjs` ist der vorbereitete
 Installationskern für einen authentifizierten, root-kontrollierten Checkout.
 Er installiert selbst keine Betriebssystempakete. Der neue feste Einstieg
@@ -101,8 +125,16 @@ und separat authentifizierten öffentlichen Release-/Lizenzprüfschlüsseln.
 Es übernimmt ausschließlich versionierte Quelldateien und entfernt interne
 Buildaufzeichnungen aus der öffentlichen Ausgabe. Ein generierter Befehl ist
 erst nach Veröffentlichung und vollständigem öffentlichem Rücklesen verwendbar.
-Signaturmaterial, fertige Lieferung, endgültige öffentliche Pins und Pi-Abnahme
-fehlen weiterhin; die vorhandenen R11-Befehle ersetzen diesen Schritt nicht.
+Der vollständige neue Laufzeitbaum am Quellstand
+`a2733fa5561f7327ff3689b7464f8727760fb670` bestand die native Prüfung mit
+sechs Adaptern, zentralen Lizenzen, Backup und Neustart. Das daraus erzeugte
+CI-Archiv ist ausdrücklich **unsignierter Transport für den Hersteller**.
+Es enthält weder eine Installationsfreigabe noch eine dauerhafte Updateautorität.
+Signaturmaterial, signierte Lieferung, endgültige öffentliche Pins und
+Pi-Abnahme fehlen weiterhin; die vorhandenen R11-Befehle ersetzen diesen
+Schritt nicht. Der Hersteller muss die exakt geprüften Quell- und Paketbytes
+verwenden; ein späterer Dokumentationscommit qualifiziert keine neu gebaute
+Laufzeit automatisch mit.
 
 V1 beschränkt Folgeupdates auf eigene Adapterdateien bei gleichbleibenden
 Versionen und Host-/Abhängigkeitsverträgen. Weitere Migrationsarten sind offen.

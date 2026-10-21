@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "kind": "read-only-braces-chokidar-compatibility-triage",
+  "analyzedAt": "2026-10-21T20:42:17.780Z",
+  "sourceCommit": "a2733fa5561f7327ff3689b7464f8727760fb670",
+  "status": "OPEN_NO_COMPATIBLE_RELEASE_PATCH_VERIFIED",
+  "ciEvidence": {
+    "lock": {
+      "artifactPath": "native/package-lock.json",
+      "bytes": 315977,
+      "sha256": "06724b9ee228dc01a312d396886073f474f77f550fdc82fffbff7994554a8eee"
+    },
+    "auditSummary": {
+      "artifactPath": "native/eos-refresh-audit.json",
+      "bytes": 1260,
+      "sha256": "0bb5722d9c7cda683c47a15a96f6d9f2838f64cd67ea5b70b37c71c8cf22cf9c"
+    },
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 6,
+      "high": 20,
+      "critical": 0,
+      "total": 26
+    },
+    "rawViaAvailable": false,
+    "rawFixAvailableAvailable": false,
+    "limitation": "CI retained only sanitized counts and names. Independent exact-lock audit produced no JSON before its 15-second total deadline. No fixAvailable value is inferred."
+  },
+  "packages": [
+    {
+      "name": "iobroker.js-controller",
+      "version": "7.2.5",
+      "resolved": "https://registry.npmjs.org/iobroker.js-controller/-/iobroker.js-controller-7.2.5.tgz",
+      "integrity": "sha512-kDYWTzE6VyIp4BRCw2TR0+c0mkDeppSEEJd6ZDhgp2MPDsitr4uvXUAGRQHF2bbtAvXLdKFLQ39QeP5IR2bH2Q==",
+      "dependencies": {
+        "@alcalzone/esbuild-register": "^2.5.1-1",
+        "@iobroker/db-objects-file": "7.2.5",
+        "@iobroker/db-objects-jsonl": "7.2.5",
+        "@iobroker/db-objects-redis": "7.2.5",
+        "@iobroker/db-states-file": "7.2.5",
+        "@iobroker/db-states-jsonl": "7.2.5",
+        "@iobroker/db-states-redis": "7.2.5",
+        "@iobroker/js-controller-adapter": "7.2.5",
+        "@iobroker/js-controller-cli": "7.2.5",
+        "@iobroker/js-controller-common": "7.2.5",
+        "@iobroker/js-controller-common-db": "7.2.5",
+        "@iobroker/plugin-base": "~3.0.3",
+        "@iobroker/plugin-sentry": "~3.1.2",
+        "axios": "^1.18.0",
+        "cron-parser": "^4.9.0",
+        "debug": "^4.4.3",
+        "decache": "^4.6.1",
+        "deep-clone": "^3.0.3",
+        "fs-extra": "^11.3.2",
+        "jsonwebtoken": "^9.0.3",
+        "loadavg-windows": "^1.1.1",
+        "node-schedule": "^2.1.1",
+        "pidusage": "^4.0.1",
+        "promisify-child-process": "^4.1.1",
+        "prompt": "^1.2.2",
+        "readline-sync": "^1.4.10",
+        "semver": "^7.5.2",
+        "@nexowatt/eos-postgresql-store": "0.1.0-dev.2",
+        "@iobroker/db-objects-postgresql": "0.1.0-dev.2",
+        "@iobroker/db-states-postgresql": "0.1.0-dev.2"
+      }
+    },
+    {
+      "name": "@iobroker/js-controller-cli",
+      "version": "7.2.5",
+      "resolved": "https://registry.npmjs.org/@iobroker/js-controller-cli/-/js-controller-cli-7.2.5.tgz",
+      "integrity": "sha512-lJqZ6yT1KRkjGvgC/IW+VLYb+3RH4TISvIT1ri5AMF/r4K88DhvwlI1lJUTeSiWiQeGJBFSYsXbdcsQTwVTyLg==",
+      "dependencies": {
+        "@iobroker/js-controller-common": "7.2.5",
+        "@iobroker/js-controller-common-db": "7.2.5",
+        "@iobroker/plugin-base": "~3.0.3",
+        "axios": "^1.13.6",
+        "chokidar": "^3.5.3",
+        "debug": "^4.4.3",
+        "deep-clone": "^3.0.3",
+        "event-stream": "^4.0.1",
+        "fs-extra": "^11.3.2",
+        "mime-types": "^2.1.35",
+        "promisify-child-process": "^4.1.1",
+        "readline-sync": "^1.4.10",
+        "semver": "^7.5.2",
+        "tar": "^7.5.11",
+        "yargs": "^17.7.3"
+      }
+    },
+    {
+      "name": "chokidar",
+      "version": "3.6.0",
+      "resolved": "https://registry.npmjs.org/chokidar/-/chokidar-3.6.0.tgz",
+      "integrity": "sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==",
+      "dependencies": {
+        "anymatch": "~3.1.2",
+        "braces": "~3.0.2",
+        "glob-parent": "~5.1.2",
+        "is-binary-path": "~2.1.0",
+        "is-glob": "~4.0.1",
+        "normalize-path": "~3.0.0",
+        "readdirp": "~3.6.0"
+      }
+    },
+    {
+      "name": "braces",
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/braces/-/braces-3.0.3.tgz",
+      "integrity": "sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==",
+      "dependencies": {
+        "fill-range": "^7.1.1"
+      }
+    }
+  ],
+  "sourceEvidence": [
+    {
+      "artifactPath": "prepared/app/node_modules/@iobroker/js-controller-cli/build/cjs/lib/cli/cliLogs.js",
+      "bytes": 5947,
+      "sha256": "44769e50a480e2e4bcf7af3d7f8363e227e3e332e673a77e748f8c7eb33a1582"
+    },
+    {
+      "artifactPath": "prepared/app/node_modules/@iobroker/js-controller-cli/build/esm/lib/cli/cliLogs.js",
+      "bytes": 4673,
+      "sha256": "30d7ee7eb4e1e1b36252c4d0b797b8042dcc9ad020a744a1688623626946e741"
+    },
+    {
+      "artifactPath": "prepared/app/node_modules/chokidar/index.js",
+      "bytes": 28379,
+      "sha256": "18ce2effe87d6379aa1d3756e5694c57c72cf97804056d688499a2bffcec66fd"
+    },
+    {
+      "artifactPath": "prepared/app/node_modules/chokidar/package.json",
+      "bytes": 1648,
+      "sha256": "24c7edf8c0127eb1bd257da726983a9aed172a0a1cd5454607a040021675f50e"
+    },
+    {
+      "artifactPath": "prepared/app/node_modules/braces/package.json",
+      "bytes": 1647,
+      "sha256": "56f08b888a4f30dc7cf8a7dbb36ffe92b737912ba36abe9d069d32167c957ac7"
+    }
+  ],
+  "advisory": {
+    "id": "GHSA-vfj7-8cjw-p6xm",
+    "cve": "CVE-2026-93687",
+    "affected": "<=3.0.3",
+    "patchedVersion": null,
+    "severity": "high",
+    "published": "2026-09-18",
+    "updated": "2026-10-02",
+    "mapping": "subsequent official-advisory comparison to actual installed version, not recovered original CI via data"
+  },
+  "findings": [
+    "The old braces <3.0.3 issue is already excluded by installed braces 3.0.3.",
+    "controller 7.2.5 -> controller-cli 7.2.5 requests chokidar ^3.5.3 -> installed chokidar 3.6.0 requests braces ~3.0.2 -> installed braces 3.0.3.",
+    "Actual CLI logs --watch passes the configured log directory plus /iobroker* to chokidar.watch. Chokidar 4 removes glob support and is outside the declared major range.",
+    "Chokidar getDirParts invokes braces.expand for glob paths containing an opening brace. This narrows the route; it does not establish whole-product reachability or non-reachability.",
+    "A blind major override is not a compatible security patch. Keeping controller 7.2.5 while changing its CLI watcher would require a deliberate reviewed backport/adaptation and regression tests. No such implementation was performed."
+  ],
+  "sources": [
+    {
+      "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+      "role": "official reviewed advisory and patched-version field"
+    },
+    {
+      "url": "https://github.com/micromatch/braces/issues/73",
+      "role": "upstream unresolved release discussion; includes dispute and unofficial fork proposals, neither treated as a supported fix"
+    },
+    {
+      "url": "https://github.com/paulmillr/chokidar/releases",
+      "role": "upstream 4.0.0 release explicitly removes glob support"
+    },
+    {
+      "url": "https://github.com/paulmillr/chokidar",
+      "role": "upstream major-version compatibility summary"
+    }
+  ],
+  "notExecuted": [
+    "dependency installation or replacement",
+    "new runtime build",
+    "new product/native/Pi tests",
+    "PoC or exploitation attempt",
+    "code or lockfile change"
+  ],
+  "recommendation": "Retain controller 7.2.5 and track as open. Do not use audit fix --force or an unreviewed fork. A focused controller-7 CLI watcher adaptation/backport can be evaluated separately with real filesystem create/append/rotate/rename, glob/filter, symlink and close/error regression tests plus regenerated lock/SBOM/audit/native evidence."
+}
