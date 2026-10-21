@@ -80,13 +80,58 @@ test('managed generator retains independent public pins and rejects secret, URL 
 test('new generator binds every signed runtime and installer helper byte before kit creation', () => {
     const signed = { files: [{ path: 'runtime/controller-profile/v7.2.5/guard.cjs', size: 5, sha256: 'a'.repeat(64) },
         { path: 'tools/system/install-managed-from-checkout.cjs', size: 6, sha256: 'b'.repeat(64) },
-        { path: 'tools/integration/test-archive.py', size: 7, sha256: 'e'.repeat(64) }] };
+        { path: 'tools/integration/test-archive.py', size: 7, sha256: 'e'.repeat(64) },
+        { path: 'tools/integration/check-runtime-architecture.cjs', size: 8, sha256: 'f'.repeat(64) },
+        { path: 'tools/integration/bare-refresh-policy.json', size: 9, sha256: '1'.repeat(64) }] };
     const rows = signed.files.map(row => ({ name: row.path, bytes: row.size, sha256: row.sha256 }));
-    assert.equal(builder.sourceBinding(signed, rows), 3);
+    assert.equal(builder.sourceBinding(signed, rows), 5);
     for (const altered of [rows.slice(1), rows.slice(0, 2), [{ ...rows[0], sha256: 'c'.repeat(64) }, ...rows.slice(1)],
         [...rows.slice(0, 2), { ...rows[2], sha256: 'f'.repeat(64) }],
         [...rows, { name: 'runtime/unbound.cjs', bytes: 1, sha256: 'd'.repeat(64) }]])
         assert.throws(() => builder.sourceBinding(signed, altered), /DOWNLOAD_SOURCE_BINDING/);
+    for (const name of ['tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json']) {
+        assert.throws(() => builder.sourceBinding({ files: signed.files.filter(row => row.path !== name) }, rows),
+            /DOWNLOAD_SOURCE_BINDING/, 'an unsigned dependency cannot be supplied only by the installer kit');
+        assert.throws(() => builder.sourceBinding(signed, rows.filter(row => row.name !== name)), /DOWNLOAD_SOURCE_BINDING/);
+        assert.throws(() => builder.sourceBinding(signed, rows.map(row => row.name === name ? { ...row, sha256: '0'.repeat(64) } : row)),
+            /DOWNLOAD_SOURCE_BINDING/);
+    }
+});
+test('actual payload copy and fixture-signed bundle authenticate the adjacent architecture policy', t => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-policy-payload-'));
+    t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+    const app = path.join(directory, 'app'), payload = path.join(directory, 'payload'), target = path.join(directory, 'bundle');
+    fs.mkdirSync(app); fs.mkdirSync(path.join(app, 'node_modules'));
+    fs.writeFileSync(path.join(app, 'package.json'), '{}\n');
+    fs.writeFileSync(path.join(app, 'package-lock.json'), '{}\n');
+    const catalogFile = path.join(directory, 'catalog.json'), sbomFile = path.join(directory, 'sbom.cdx.json');
+    fs.writeFileSync(catalogFile, '{}\n');
+    fs.writeFileSync(sbomFile, JSON.stringify({ bomFormat: 'CycloneDX', components: [] }));
+    // Exercise the production copy/inventory boundary with a deliberately tiny
+    // app. This is not validatePayload, a product build or a native/Pi test.
+    const { preparePayload } = require('../../tools/system/build-bundle.cjs');
+    const { SECURITY_REFRESH_TEST } = require('../../runtime/product/scope.cjs');
+    const files = preparePayload({ appDirectory: app, destination: payload, catalogFile, sbomFile,
+        releaseScope: SECURITY_REFRESH_TEST, networkProfile: true, managedProfile: true });
+    const policy = 'tools/integration/bare-refresh-policy.json';
+    const bytes = fs.readFileSync(path.join(ROOT, policy));
+    assert.deepEqual(fs.readFileSync(path.join(payload, policy)), bytes);
+    assert.ok(files.some(row => row.path === policy && row.size === bytes.length && row.sha256 === bundle.sha256(bytes)));
+    assert.equal(typeof require(path.join(payload, 'tools/system/build-bundle.cjs')).validatePayload, 'function');
+    // Only an ephemeral in-memory fixture key signs these synthetic files.
+    const pair = crypto.generateKeyPairSync('ed25519');
+    const metadata = { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: 15,
+        profile: 'test', nodeVersion: process.versions.node, platforms: [`${process.platform}-${process.arch}`] };
+    const signed = bundle.createBundle({ sourceDirectory: payload, bundleDirectory: target, metadata,
+        privateKey: pair.privateKey.export({ type: 'pkcs8', format: 'pem' }) });
+    const verify = () => bundle.verifyBundle({ bundleDirectory: target,
+        publicKey: pair.publicKey.export({ type: 'spki', format: 'pem' }) });
+    const verified = verify();
+    assert.equal(verified.releaseId, signed.releaseId);
+    assert.ok(verified.manifest.files.some(row => row.path === policy && row.sha256 === bundle.sha256(bytes)));
+    assert.ok(builder.sourceBinding(verified.manifest, builder.collectKitSources()) > 2);
+    fs.appendFileSync(path.join(target, 'payload', policy), ' ');
+    assert.throws(verify, error => error instanceof bundle.BundleError && error.code === 'BUNDLE_CONTENT');
 });
 test('actual public kit excludes untracked private inputs and loads its fixed managed entry with complete dependencies', t => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-managed-kit-'));
@@ -108,6 +153,7 @@ test('actual public kit excludes untracked private inputs and loads its fixed ma
     assert.equal(rows.some(row => row.name.endsWith('local-private.txt')), false);
     assert.ok(rows.some(row => row.name === 'tools/system/install-managed-from-checkout.cjs'));
     assert.ok(rows.some(row => row.name === 'tools/bootstrap/first-start-managed.cjs'));
+    assert.ok(rows.some(row => row.name === 'tools/integration/bare-refresh-policy.json'));
     const before = fs.readdirSync(os.tmpdir()).filter(name => name.startsWith('eos-managed-download-build-')).sort();
     const packed = builder.buildKit(rows, output, Buffer.from('{}\n'), { schemaVersion: 1,
         releasePublicKeySha256: 'a'.repeat(64), licenseTrustSha256: 'b'.repeat(64) });
@@ -118,6 +164,8 @@ test('actual public kit excludes untracked private inputs and loads its fixed ma
         'import pathlib,sys,zipfile\nwith zipfile.ZipFile(sys.argv[1]) as z:\n assert all(not n.startswith("/") and ".." not in pathlib.PurePosixPath(n).parts for n in z.namelist())\n assert not any(b"PRIVATE_FIXTURE_MUST_NOT_SHIP" in z.read(n) or sys.argv[3].encode() in z.read(n) for n in z.namelist())\n z.extractall(sys.argv[2])',
         path.join(output, 'installer-kit.zip'), extracted, source], { encoding: 'utf8', timeout: 10000 });
     assert.equal(unpack.status, 0, unpack.stderr);
+    assert.deepEqual(fs.readFileSync(path.join(extracted, 'tools/integration/bare-refresh-policy.json')),
+        fs.readFileSync(path.join(ROOT, 'tools/integration/bare-refresh-policy.json')));
     // Real module loading from the extracted ZIP: the invalid CLI argument must
     // reach the fixed entry parser, before any root/TTY/APT/install operation.
     const loaded = spawnSync(process.execPath, [path.join(extracted, 'tools/bootstrap/first-start-managed.cjs'), '--invalid'],

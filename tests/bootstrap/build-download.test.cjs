@@ -34,12 +34,21 @@ test('manufacturer must supply real-shaped Ed25519 public trust with separate ex
 
 test('kit cannot ship changed or omitted signed helpers or extra runtime code', () => {
     const manifest = { files: [{ path: 'runtime/a.cjs', size: 3, sha256: 'a'.repeat(64) },
-        { path: 'tools/system/postgresql-host-preflight.cjs', size: 4, sha256: 'b'.repeat(64) }] };
+        { path: 'tools/system/postgresql-host-preflight.cjs', size: 4, sha256: 'b'.repeat(64) },
+        { path: 'tools/integration/check-runtime-architecture.cjs', size: 5, sha256: 'e'.repeat(64) },
+        { path: 'tools/integration/bare-refresh-policy.json', size: 6, sha256: 'f'.repeat(64) }] };
     const rows = manifest.files.map(row => ({ name: row.path, bytes: row.size, sha256: row.sha256 }));
-    assert.equal(builder.sourceBinding(manifest, rows), 2);
+    assert.equal(builder.sourceBinding(manifest, rows), 4);
     assert.throws(() => builder.sourceBinding(manifest, rows.slice(1)), /DOWNLOAD_SOURCE_BINDING/);
     assert.throws(() => builder.sourceBinding(manifest, [{ ...rows[0], sha256: 'c'.repeat(64) }, rows[1]]), /DOWNLOAD_SOURCE_BINDING/);
     assert.throws(() => builder.sourceBinding(manifest, [...rows, { name: 'runtime/extra.cjs', bytes: 1, sha256: 'd'.repeat(64) }]), /DOWNLOAD_SOURCE_BINDING/);
+    for (const name of ['tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json']) {
+        assert.throws(() => builder.sourceBinding({ files: manifest.files.filter(row => row.path !== name) }, rows),
+            /DOWNLOAD_SOURCE_BINDING/);
+        assert.throws(() => builder.sourceBinding(manifest, rows.filter(row => row.name !== name)), /DOWNLOAD_SOURCE_BINDING/);
+        assert.throws(() => builder.sourceBinding(manifest, rows.map(row => row.name === name ? { ...row, sha256: '0'.repeat(64) } : row)),
+            /DOWNLOAD_SOURCE_BINDING/);
+    }
 });
 
 test('one command checks a separately delivered script pin before execution; script data survive exact embedding', () => {

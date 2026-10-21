@@ -188,7 +188,8 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
             fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'tools/integration'));
         if (managedProfile) fs.copyFileSync(path.join(REPO, 'tools/integration/test-archive.py'), path.join(destination, 'tools/integration/test-archive.py'), fs.constants.COPYFILE_EXCL);
-        fs.copyFileSync(path.join(REPO, 'tools/integration/check-runtime-architecture.cjs'), path.join(destination, 'tools/integration/check-runtime-architecture.cjs'), fs.constants.COPYFILE_EXCL);
+        for (const name of ['check-runtime-architecture.cjs', 'bare-refresh-policy.json'])
+            fs.copyFileSync(path.join(REPO, 'tools/integration', name), path.join(destination, 'tools/integration', name), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'security'));
         fs.copyFileSync(path.join(REPO, 'security/verify-runtime-tls.cjs'), path.join(destination, 'security/verify-runtime-tls.cjs'), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'system')); fs.mkdirSync(path.join(destination, 'system/test-base'));

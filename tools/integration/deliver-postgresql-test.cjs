@@ -95,7 +95,8 @@ function deliver(directory) {
     const actualTools = checked.manifest.files.filter(row => row.path.startsWith('tools/system/')).map(row => row.path).sort();
     if (JSON.stringify(expectedTools) !== JSON.stringify(actualTools)) throw new Error('SOURCE_TOOLSET_MISMATCH');
     for (const name of expectedTools) bind(name, name);
-    for (const name of ['tools/integration/check-runtime-architecture.cjs', 'security/verify-runtime-tls.cjs']) bind(name, name);
+    for (const name of ['tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json',
+        'security/verify-runtime-tls.cjs']) bind(name, name);
     for (const prefix of ['', 'app/']) {
         bind('LICENSE', prefix + 'LICENSE');
         for (const row of inventory(path.join(ROOT, 'licenses'))) bind('licenses/' + row.path, prefix + 'licenses/' + row.path);

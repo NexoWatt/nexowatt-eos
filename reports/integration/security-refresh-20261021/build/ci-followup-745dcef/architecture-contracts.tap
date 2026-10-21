@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: architecture-independent tree has no executed target code or included Node claim
+ok 1 - architecture-independent tree has no executed target code or included Node claim
+  ---
+  duration_ms: 13.751851
+  type: 'test'
+  ...
+# Subtest: separate matching ARM64 and x64 esbuild trees pass static header checks
+ok 2 - separate matching ARM64 and x64 esbuild trees pass static header checks
+  ---
+  duration_ms: 9.811035
+  type: 'test'
+  ...
+# Subtest: x64 optional package cannot be relabeled as an ARM64 delivery
+ok 3 - x64 optional package cannot be relabeled as an ARM64 delivery
+  ---
+  duration_ms: 2.924659
+  type: 'test'
+  ...
+# Subtest: ARM64 package with a mislabeled x64 binary fails
+ok 4 - ARM64 package with a mislabeled x64 binary fails
+  ---
+  duration_ms: 2.725909
+  type: 'test'
+  ...
+# Subtest: native allow rules require exact package paths and explicit esbuild platform metadata
+ok 5 - native allow rules require exact package paths and explicit esbuild platform metadata
+  ---
+  duration_ms: 6.181098
+  type: 'test'
+  ...
+# Subtest: wrong ELF width or big-endian content fails even with matching manifest
+ok 6 - wrong ELF width or big-endian content fails even with matching manifest
+  ---
+  duration_ms: 3.959739
+  type: 'test'
+  ...
+# Subtest: missing or version-mismatched optional target esbuild cannot silently pass
+ok 7 - missing or version-mismatched optional target esbuild cannot silently pass
+  ---
+  duration_ms: 2.955395
+  type: 'test'
+  ...
+# Subtest: dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+ok 8 - dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+  ---
+  duration_ms: 3.161005
+  type: 'test'
+  ...
+# Subtest: unknown native executable and Node ABI add-on fail closed
+ok 9 - unknown native executable and Node ABI add-on fail closed
+  ---
+  duration_ms: 1.259088
+  type: 'test'
+  ...
+# Subtest: native suffix with unrecognized or truncated bytes fails
+ok 10 - native suffix with unrecognized or truncated bytes fails
+  ---
+  duration_ms: 1.208182
+  type: 'test'
+  ...
+# Subtest: reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+ok 11 - reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+  ---
+  duration_ms: 1.229183
+  type: 'test'
+  ...
+# Subtest: Bare path/header mismatch or unreviewed version is rejected
+ok 12 - Bare path/header mismatch or unreviewed version is rejected
+  ---
+  duration_ms: 2.763587
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh exact package metadata cannot approve changed same-header native content
+ok 13 - bare-fs fresh exact package metadata cannot approve changed same-header native content
+  ---
+  duration_ms: 10.360759
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects registry drift before native approval
+ok 14 - bare-fs fresh package rejects registry drift before native approval
+  ---
+  duration_ms: 7.019552
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects integrity drift before native approval
+ok 15 - bare-fs fresh package rejects integrity drift before native approval
+  ---
+  duration_ms: 7.287806
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects manifest drift before native approval
+ok 16 - bare-fs fresh package rejects manifest drift before native approval
+  ---
+  duration_ms: 6.876406
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects loader drift before native approval
+ok 17 - bare-fs fresh package rejects loader drift before native approval
+  ---
+  duration_ms: 9.150359
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects missing-native drift before native approval
+ok 18 - bare-fs fresh package rejects missing-native drift before native approval
+  ---
+  duration_ms: 7.517913
+  type: 'test'
+  ...
+# Subtest: bare-url fresh exact package metadata cannot approve changed same-header native content
+ok 19 - bare-url fresh exact package metadata cannot approve changed same-header native content
+  ---
+  duration_ms: 10.173947
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects registry drift before native approval
+ok 20 - bare-url fresh package rejects registry drift before native approval
+  ---
+  duration_ms: 17.494804
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects integrity drift before native approval
+ok 21 - bare-url fresh package rejects integrity drift before native approval
+  ---
+  duration_ms: 9.566511
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects manifest drift before native approval
+ok 22 - bare-url fresh package rejects manifest drift before native approval
+  ---
+  duration_ms: 11.68777
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects loader drift before native approval
+ok 23 - bare-url fresh package rejects loader drift before native approval
+  ---
+  duration_ms: 10.762984
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects missing-native drift before native approval
+ok 24 - bare-url fresh package rejects missing-native drift before native approval
+  ---
+  duration_ms: 8.17211
+  type: 'test'
+  ...
+# Subtest: ELF program-header and interpreter offsets are bounded before reads
+ok 25 - ELF program-header and interpreter offsets are bounded before reads
+  ---
+  duration_ms: 0.55724
+  type: 'test'
+  ...
+# Subtest: known PE and Mach-O headers are classified but not accepted as Linux esbuild
+ok 26 - known PE and Mach-O headers are classified but not accepted as Linux esbuild
+  ---
+  duration_ms: 1.873454
+  type: 'test'
+  ...
+# Subtest: npm platform constraints honor deny lists, any, libc and malformed metadata
+ok 27 - npm platform constraints honor deny lists, any, libc and malformed metadata
+  ---
+  duration_ms: 1.079237
+  type: 'test'
+  ...
+# Subtest: unreviewed gyp build dependency and changed diskusage loader are blocked
+ok 28 - unreviewed gyp build dependency and changed diskusage loader are blocked
+  ---
+  duration_ms: 1.88338
+  type: 'test'
+  ...
+# Subtest: lock drift is rejected for an actual installed package
+ok 29 - lock drift is rejected for an actual installed package
+  ---
+  duration_ms: 0.901218
+  type: 'test'
+  ...
+# Subtest: internal npm file links are accepted; external, cyclic and directory links fail
+ok 30 - internal npm file links are accepted; external, cyclic and directory links fail
+  ---
+  duration_ms: 2.352686
+  type: 'test'
+  ...
+# Subtest: target, metadata, file-size and depth limits fail before execution
+ok 31 - target, metadata, file-size and depth limits fail before execution
+  ---
+  duration_ms: 4.670661
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 308.090586

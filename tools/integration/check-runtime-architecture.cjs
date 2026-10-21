@@ -9,6 +9,7 @@ const serialport = require('../../runtime/native/serialport-contract.cjs');
 const LIMITS = Object.freeze({ files: 50000, directories: 15000, depth: 40, bytes: 512 * 1024 ** 2,
     manifestBytes: 1024 ** 2, lockBytes: 8 * 1024 ** 2, nativeBytes: 32 * 1024 ** 2, prefixBytes: 65536, issues: 256 });
 const BARE = Object.freeze({ 'bare-fs': '4.8.2', 'bare-url': '2.5.4', 'bare-path': '3.1.2' });
+const BARE_REFRESH = require('./bare-refresh-policy.json');
 const BARE_VARIANTS = new Set(['android-x64', 'win32-arm64', 'darwin-arm64', 'ios-arm64', 'darwin-x64',
     'linux-arm64', 'android-arm', 'linux-x64', 'ios-arm64-simulator', 'ios-x64-simulator', 'win32-x64', 'android-arm64', 'android-ia32']);
 const DISKUSAGE_LOADER_SHA256 = 'c87aa357fc676205fa60a6c0215738b0a261f7f7b1fb1f836231de38ef2d2abf';
@@ -115,7 +116,7 @@ function checkRuntimeArchitecture(options) {
     if (options.nodeVersion !== undefined && !/^24\.\d{1,3}\.\d{1,3}$/.test(options.nodeVersion)) reject('ARCH_NODE_CONTRACT');
     const root = path.resolve(options.app);
     if (!fs.lstatSync(root).isDirectory() || fs.realpathSync(root) !== root) reject('ARCH_APP_DIRECTORY');
-    const cpu = options.platform.slice(6), files = new Map(), links = [], packages = new Map(), reviewedSerialport = new Map();
+    const cpu = options.platform.slice(6), files = new Map(), links = [], packages = new Map(), reviewedSerialport = new Map(), reviewedBare = new Map();
     const report = { schemaVersion: 1, kind: 'eos-runtime-architecture-static-check', platform: options.platform,
         target: { os: 'linux', cpu, bits: 64, endianness: 'little', nodeVersion: options.nodeVersion || null, nodeRuntimeIncluded: false, libc: 'glibc' },
         checkedAt: new Date().toISOString(), executedTargetCode: false, hardwareQualified: false,
@@ -161,6 +162,16 @@ function checkRuntimeArchitecture(options) {
         if (!plain(lock.packages[packagePath]) || lock.packages[packagePath].link || lock.packages[packagePath].version !== manifest.version) issue('ARCH_PACKAGE_LOCK_MISMATCH', relative);
         if (typeof manifest.name !== 'string' || manifest.name.length > 214 || typeof manifest.version !== 'string' || manifest.version.length > 80) reject('ARCH_MANIFEST_IDENTITY');
         packages.set(packagePath, manifest);
+        const barePin = BARE_REFRESH.packages.find(pin => pin.name === manifest.name && pin.version === manifest.version);
+        if (barePin) {
+            const entry = lock.packages[packagePath], binding = `${packagePath}/binding.js`;
+            if (!packagePathMatches(packagePath, manifest.name) || !entry || entry.link || entry.version !== barePin.version ||
+                entry.resolved !== barePin.resolved || entry.integrity !== barePin.integrity ||
+                sha(readRegular(path.join(root, relative), LIMITS.manifestBytes)) !== barePin.manifestSha256 ||
+                !files.has(binding) || sha(readRegular(path.join(root, binding), LIMITS.manifestBytes)) !== barePin.bindingSha256 ||
+                barePin.nativeFiles.some(row => files.get(`${packagePath}/${row.path}`) !== row.bytes)) issue('ARCH_BARE_PACKAGE_POLICY', relative);
+            else reviewedBare.set(packagePath, barePin);
+        }
         if (manifest.name === '@serialport/bindings-cpp') {
             const pin = serialport.policy.packages.find(row => row.packagePath === packagePath && row.version === manifest.version);
             try {
@@ -225,9 +236,11 @@ function checkRuntimeArchitecture(options) {
             if (!packagePathMatches(packagePath, manifest.name) || JSON.stringify(manifest.cpu) !== JSON.stringify([cpu]) || JSON.stringify(manifest.os) !== '["linux"]') issue('ARCH_ESBUILD_PACKAGE_CONTRACT', relative);
             else if (!headerMatches(header, cpu, 'linux') || header.dynamic || header.interpreter) issue('ARCH_ESBUILD_ABI_MISMATCH', relative);
             else item.disposition = 'target-static-native-executable';
-        } else if (manifest && BARE[manifest.name] === manifest.version) {
+        } else if (manifest && (BARE[manifest.name] === manifest.version || reviewedBare.has(packagePath))) {
             const match = local.match(/^prebuilds\/(linux|android|win32|darwin|ios)-(x64|arm64|arm|ia32)(?:-simulator)?\/([^/]+)\.bare$/);
             if (!packagePathMatches(packagePath, manifest.name) || !match || !BARE_VARIANTS.has(local.split('/')[1]) || match[3] !== manifest.name || !headerMatches(header, match[2], match[1])) issue('ARCH_BARE_PREBUILD_MISMATCH', relative);
+            else if (reviewedBare.has(packagePath) && !reviewedBare.get(packagePath).nativeFiles.some(row =>
+                row.path === local && row.bytes === item.bytes && row.sha256 === item.sha256)) issue('ARCH_BARE_NATIVE_CONTENT', relative);
             else item.disposition = 'bundled-bare-runtime-variant-not-node-addon';
         } else issue('ARCH_UNREVIEWED_NATIVE', relative);
         report.nativeFiles.push(item);

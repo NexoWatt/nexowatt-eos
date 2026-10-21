@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: download endpoint excludes shell, auth, query, redirect and path injection syntax
+ok 1 - download endpoint excludes shell, auth, query, redirect and path injection syntax
+  ---
+  duration_ms: 1.821463
+  type: 'test'
+  ...
+# Subtest: manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+ok 2 - manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+  ---
+  duration_ms: 39.022196
+  type: 'test'
+  ...
+# Subtest: kit cannot ship changed or omitted signed helpers or extra runtime code
+ok 3 - kit cannot ship changed or omitted signed helpers or extra runtime code
+  ---
+  duration_ms: 1.040397
+  type: 'test'
+  ...
+# Subtest: one command checks a separately delivered script pin before execution; script data survive exact embedding
+ok 4 - one command checks a separately delivered script pin before execution; script data survive exact embedding
+  ---
+  duration_ms: 2.063047
+  type: 'test'
+  ...
+# Subtest: canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+ok 5 - canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+  ---
+  duration_ms: 201.629214
+  type: 'test'
+  ...
+# Subtest: build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+ok 6 - build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+  ---
+  duration_ms: 0.534235
+  type: 'test'
+  ...
+# Subtest: managed first-start selects only the fixed sequence-15 checkout and retains normal installer flags
+ok 7 - managed first-start selects only the fixed sequence-15 checkout and retains normal installer flags
+  ---
+  duration_ms: 12.336481
+  type: 'test'
+  ...
+# Subtest: managed entry cannot be directed to a historical or arbitrary checkout adapter
+ok 8 - managed entry cannot be directed to a historical or arbitrary checkout adapter
+  ---
+  duration_ms: 5.953237
+  type: 'test'
+  ...
+# Subtest: new trust changes stop before an installer or secret-disclosure call
+ok 9 - new trust changes stop before an installer or secret-disclosure call
+  ---
+  duration_ms: 1.807783
+  type: 'test'
+  ...
+# Subtest: managed install diagnostics permit only the two additional fixed phases
+ok 10 - managed install diagnostics permit only the two additional fixed phases
+  ---
+  duration_ms: 0.422526
+  type: 'test'
+  ...
+# Subtest: managed generator retains independent public pins and rejects secret, URL and selector inputs
+ok 11 - managed generator retains independent public pins and rejects secret, URL and selector inputs
+  ---
+  duration_ms: 1.22168
+  type: 'test'
+  ...
+# Subtest: new generator binds every signed runtime and installer helper byte before kit creation
+ok 12 - new generator binds every signed runtime and installer helper byte before kit creation
+  ---
+  duration_ms: 0.796901
+  type: 'test'
+  ...
+# Subtest: actual payload copy and fixture-signed bundle authenticate the adjacent architecture policy
+ok 13 - actual payload copy and fixture-signed bundle authenticate the adjacent architecture policy
+  ---
+  duration_ms: 145.266718
+  type: 'test'
+  ...
+# Subtest: actual public kit excludes untracked private inputs and loads its fixed managed entry with complete dependencies
+ok 14 - actual public kit excludes untracked private inputs and loads its fixed managed entry with complete dependencies
+  ---
+  duration_ms: 377.264699
+  type: 'test'
+  ...
+# Subtest: complete embedded managed preparer and command parse and verify exact bytes before execution
+ok 15 - complete embedded managed preparer and command parse and verify exact bytes before execution
+  ---
+  duration_ms: 13.44408
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 687.628942

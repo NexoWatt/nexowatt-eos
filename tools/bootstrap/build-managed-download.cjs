@@ -14,7 +14,7 @@ const NODE_ARCHIVE = 'node-v24.21.0-linux-arm64.tar.xz';
 const NODE_SHA256 = '6ad1325edbdb5649c379b75a237147a666c95d4f9ae8d340fef2d1575d289ad2';
 const FLAGS = ['--base-url', '--license-trust', '--license-trust-sha256', '--release-public-key-sha256', '--output'];
 const FIXED_KIT_SOURCES = Object.freeze(['tools/bootstrap/first-start.cjs', 'tools/bootstrap/first-start-managed.cjs',
-    'tools/integration/test-archive.py', 'tools/integration/check-runtime-architecture.cjs',
+    'tools/integration/test-archive.py', 'tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json',
     'security/verify-runtime-tls.cjs', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/history/UPSTREAM_README.md']);
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 function baseUrl(value) {
@@ -48,9 +48,13 @@ function licenseTrust(bytes, expectedHash) {
 }
 function sourceBinding(manifest, rows) {
     const signed = new Map(manifest.files.map(row => [row.path, row]));
+    // The shipped checker requires this exact adjacent policy. Both must be
+    // authenticated release members, not extra unsigned kit dependencies.
+    for (const name of ['tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json'])
+        if (!signed.has(name)) fail('DOWNLOAD_SOURCE_BINDING');
     const expected = manifest.files.filter(row => row.path.startsWith('runtime/') || row.path.startsWith('tools/system/') ||
         row.path === 'tools/integration/test-archive.py' || row.path === 'tools/integration/check-runtime-architecture.cjs' ||
-        row.path === 'security/verify-runtime-tls.cjs');
+        row.path === 'tools/integration/bare-refresh-policy.json' || row.path === 'security/verify-runtime-tls.cjs');
     const kit = new Map(rows.map(row => [row.name, row]));
     for (const row of expected) {
         const source = kit.get(row.path);

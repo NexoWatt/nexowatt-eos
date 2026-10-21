@@ -40,6 +40,28 @@ function esbuild(f, cpu = 'arm64', { version = '0.28.2', parentVersion = version
 }
 function issues(result) { return result.issues.map(issue => issue.code); }
 
+function refreshedBare(f, name) {
+    const pin = require('../../tools/integration/bare-refresh-policy.json').packages.find(row => row.name === name);
+    const dir = `node_modules/${name}`;
+    f.write(`${dir}/package.json`, fs.readFileSync(path.join(__dirname, 'fixtures', `${name}-${pin.version}.package.json`)));
+    f.write(`${dir}/binding.js`, 'module.exports = require.addon()\n');
+    f.packages[dir] = { version: pin.version, resolved: pin.resolved, integrity: pin.integrity }; f.lock();
+    // Same-size valid headers deliberately differ from the reviewed native
+    // payload. These must fail content binding even if every header is valid.
+    for (const row of pin.nativeFiles) {
+        const [osName, cpu] = row.path.split('/')[1].split('-');
+        let header;
+        if (osName === 'win32') {
+            header = Buffer.alloc(256); header.write('MZ'); header.writeUInt32LE(128, 60); header.writeUInt32LE(0x4550, 128);
+            header.writeUInt16LE(cpu === 'arm64' ? 0xaa64 : 0x8664, 132); header.writeUInt16LE(0x20b, 152);
+        } else if (['darwin', 'ios'].includes(osName)) {
+            header = Buffer.alloc(32); header.writeUInt32LE(0xfeedfacf, 0); header.writeUInt32LE(cpu === 'arm64' ? 0x0100000c : 0x01000007, 4);
+        } else header = elf(cpu, { bits: ['arm', 'ia32'].includes(cpu) ? 32 : 64 });
+        const bytes = Buffer.alloc(row.bytes); header.copy(bytes); f.write(`${dir}/${row.path}`, bytes);
+    }
+    return { pin, dir };
+}
+
 test('architecture-independent tree has no executed target code or included Node claim', t => {
     const f = fixture(t), r = f.check();
     assert.equal(r.passed, true); assert.equal(r.executedTargetCode, false); assert.equal(r.hardwareQualified, false);
@@ -95,6 +117,28 @@ test('Bare path/header mismatch or unreviewed version is rejected', t => {
     const g = fixture(t); g.pkg('bare-fs', '99.0.0'); g.write('node_modules/bare-fs/prebuilds/linux-arm64/bare-fs.bare', elf());
     assert.ok(issues(g.check()).includes('ARCH_UNREVIEWED_NATIVE'));
 });
+for (const name of ['bare-fs', 'bare-url']) {
+    test(`${name} fresh exact package metadata cannot approve changed same-header native content`, t => {
+        const f = fixture(t); refreshedBare(f, name); const result = f.check();
+        assert.equal(issues(result).includes('ARCH_BARE_PACKAGE_POLICY'), false);
+        assert.equal(issues(result).includes('ARCH_BARE_PREBUILD_MISMATCH'), false);
+        assert.equal(issues(result).filter(code => code === 'ARCH_BARE_NATIVE_CONTENT').length, 13);
+        assert.equal(result.passed, false);
+    });
+    for (const mutation of ['registry', 'integrity', 'manifest', 'loader', 'missing-native']) {
+        test(`${name} fresh package rejects ${mutation} drift before native approval`, t => {
+            const f = fixture(t), { dir, pin } = refreshedBare(f, name);
+            if (mutation === 'registry') f.packages[dir].resolved = 'https://example.com/unreviewed.tgz';
+            if (mutation === 'integrity') f.packages[dir].integrity = 'sha512-' + 'A'.repeat(86) + '==';
+            if (mutation === 'manifest') fs.appendFileSync(path.join(f.app, dir, 'package.json'), '\n');
+            if (mutation === 'loader') f.write(`${dir}/binding.js`, 'module.exports = require("./unreviewed.node")\n');
+            if (mutation === 'missing-native') fs.unlinkSync(path.join(f.app, dir, pin.nativeFiles[0].path));
+            f.lock(); const result = f.check(); assert.equal(result.passed, false);
+            assert.ok(issues(result).includes('ARCH_BARE_PACKAGE_POLICY'));
+            assert.equal(result.nativeFiles.some(row => row.disposition === 'bundled-bare-runtime-variant-not-node-addon'), false);
+        });
+    }
+}
 test('ELF program-header and interpreter offsets are bounded before reads', () => {
     const b = elf(); b.writeBigUInt64LE(2n ** 63n, 32); assert.throws(() => binaryHeader(b), /ARCH_ELF_TABLE/);
     const c = elf(); c.writeUInt16LE(65535, 56); assert.throws(() => binaryHeader(c), /ARCH_ELF_TABLE/);

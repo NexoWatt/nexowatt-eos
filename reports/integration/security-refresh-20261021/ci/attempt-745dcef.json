@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "security-refresh-ci-attempt",
+  "sourceCommit": "745dcefef3f24aa768fec7feb5d48789494738df",
+  "sourceTree": "9e77bd5caf476b4888868c2f340151779af1d5c1",
+  "runId": 39668069277,
+  "runUrl": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277",
+  "jobs": [
+    {
+      "id": 119458285152,
+      "name": "Native PostgreSQL 17.11 mTLS controller startup and restart",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285152"
+    },
+    {
+      "id": 119458285632,
+      "name": "Fresh controller 7.2.5 six adapters licenses backup and restart",
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285632"
+    },
+    {
+      "id": 119458285693,
+      "name": "Node 24 bootstrap, onboarding and transport contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285693"
+    },
+    {
+      "id": 119458285719,
+      "name": "Controller 7.2.5 sessions and actual Admin security dependencies",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285719"
+    },
+    {
+      "id": 119458285748,
+      "name": "Current own-adapter EOS admission and central licensing",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285748"
+    },
+    {
+      "id": 119458285779,
+      "name": "Architecture contracts and partial source SBOM",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285779"
+    },
+    {
+      "id": 119458285894,
+      "name": "Build, syntax and isolated security regression",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285894"
+    },
+    {
+      "id": 119458285926,
+      "name": "Native PostgreSQL mTLS Admin and UI startup and restart",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458285926"
+    },
+    {
+      "id": 119458287882,
+      "name": "Historical R9 source native qualification (manual)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39668069277/job/119458287882"
+    }
+  ],
+  "managedInstaller": {
+    "runId": 39668069202,
+    "contracts": "success",
+    "browser": "success"
+  },
+  "freshRuntime": {
+    "dependencyResolution": "passed",
+    "architecture": "failed",
+    "failureCode": "FRESH_BUILD_ARCHITECTURE",
+    "newNativeRunReached": false,
+    "unsignedDeliveryProduced": false
+  },
+  "diagnosis": {
+    "scope": "Read-only actual locally resolved ARM64 dependency tree; normalization handled separately",
+    "unreviewedBareVersions": {
+      "bare-fs": "4.8.4",
+      "bare-url": "2.5.5"
+    },
+    "priorReviewedVersions": {
+      "bare-fs": "4.8.2",
+      "bare-url": "2.5.4"
+    }
+  },
+  "limitations": [
+    "The newer exact Bare variants require authenticated package and loader/header review; architecture gate is not bypassed.",
+    "Historical native successes do not qualify the new 7.2.5 runtime.",
+    "No Pi installation, signing or production approval."
+  ]
+}

@@ -44,8 +44,11 @@ function licenseTrust(bytes, expectedHash) {
 }
 function sourceBinding(manifest, rows) {
     const signed = new Map(manifest.files.map(row => [row.path, row]));
+    for (const name of ['tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json'])
+        if (!signed.has(name)) fail('DOWNLOAD_SOURCE_BINDING');
     const expected = manifest.files.filter(row => row.path.startsWith('runtime/') || row.path.startsWith('tools/system/') ||
-        row.path === 'tools/integration/check-runtime-architecture.cjs' || row.path === 'security/verify-runtime-tls.cjs');
+        row.path === 'tools/integration/check-runtime-architecture.cjs' || row.path === 'tools/integration/bare-refresh-policy.json' ||
+        row.path === 'security/verify-runtime-tls.cjs');
     const kit = new Map(rows.map(row => [row.name, row]));
     for (const row of expected) {
         const source = kit.get(row.path);
@@ -109,7 +112,8 @@ function build(args) {
     for (const dir of ['runtime', 'tools/system', 'licenses'])
         for (const row of inventory(path.join(ROOT, dir))) add(dir + '/' + row.path, path.join(ROOT, dir, row.path));
     for (const name of ['tools/bootstrap/first-start.cjs', 'tools/integration/test-archive.py',
-        'tools/integration/check-runtime-architecture.cjs', 'security/verify-runtime-tls.cjs', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
+        'tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json',
+        'security/verify-runtime-tls.cjs', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
         'docs/history/UPSTREAM_README.md']) add(name, path.join(ROOT, name));
     for (const name of ['delivery.json', 'release-public.pem']) add(DELIVERY_DIRECTORY + '/' + name, path.join(deliveryDir, name));
     const sourceFilesBound = sourceBinding(checked.manifest, rows);

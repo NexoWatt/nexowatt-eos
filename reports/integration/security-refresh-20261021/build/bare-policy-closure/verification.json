@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "kind": "bare-policy-distribution-closure",
+  "baseCommit": "745dcefef3f24aa768fec7feb5d48789494738df",
+  "startedAt": "2026-10-21T20:26:54.312Z",
+  "completedAt": "2026-10-21T20:26:55.351Z",
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "24.19.0",
+    "python": "Python 3.12.3"
+  },
+  "sourceFiles": [
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "bytes": 19535,
+      "sha256": "50fcded21391f79f5976f8954636a467edc79c21f4d879bc250b022058cfe629"
+    },
+    {
+      "path": "tools/integration/deliver-postgresql-test.cjs",
+      "bytes": 13302,
+      "sha256": "30f497d71ea692a18dc373250332022be3742f42c4afb1df148cf5e45de9e786"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-download.cjs",
+      "bytes": 13544,
+      "sha256": "c660feef62b1b420e671e228fb7a693ad11a99d007a79c8b4f5b0bf5ae9b214c"
+    },
+    {
+      "path": "tools/bootstrap/build-download.cjs",
+      "bytes": 11316,
+      "sha256": "4e906ae507574768a45eedf7c18cae6786f3baacac76bbaa47144aab10c50b34"
+    },
+    {
+      "path": "tests/bootstrap/managed-bootstrap.test.cjs",
+      "bytes": 15333,
+      "sha256": "3f89823a047da3a2a1462a6d1ad68397965ad9f327827c1a71eec6bef6b646c6"
+    },
+    {
+      "path": "tests/bootstrap/build-download.test.cjs",
+      "bytes": 6873,
+      "sha256": "fa6f1bc939177dc2e65d09d7fab2cf098dae7635092c5555b610310afe5814f4"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "bytes": 21890,
+      "sha256": "f67ddc0d0af8941221c69cb05ef7379a148112f241ae0de174423dbac4026489"
+    },
+    {
+      "path": "tools/integration/bare-refresh-policy.json",
+      "bytes": 6353,
+      "sha256": "86fd838b95158e547314cec8c7dbbc2af9564f60be8bdf82762391430a1ec0d9"
+    }
+  ],
+  "tests": {
+    "command": "node --test --test-reporter=tap tests/bootstrap/managed-bootstrap.test.cjs tests/bootstrap/build-download.test.cjs",
+    "exitCode": 0,
+    "passed": 15,
+    "failed": 0,
+    "raw": "contracts.tap"
+  },
+  "syntaxChecks": [
+    {
+      "command": "node --check tools/system/build-bundle.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check tools/integration/deliver-postgresql-test.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check tools/bootstrap/build-managed-download.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node --check tools/bootstrap/build-download.cjs",
+      "exitCode": 0
+    }
+  ],
+  "diffCheck": {
+    "command": "git diff --check",
+    "exitCode": 0
+  },
+  "observed": [
+    "production preparePayload copies policy bytes and inventories their hash",
+    "copied build-bundle module loads with the adjacent policy",
+    "fixture Ed25519 bundle authenticates policy and rejects one-byte append",
+    "actual signed fixture manifest binds to actual collected managed-kit sources",
+    "managed ZIP contains byte-identical policy and loads fixed first-start CLI",
+    "missing signed checker/policy, missing kit checker/policy, and altered hashes fail closed"
+  ],
+  "limits": [
+    "synthetic empty app: no validatePayload product acceptance",
+    "fixture-only ephemeral in-memory signer, no manufacturer release signature",
+    "no APT, target installation, ARM execution, Pi, reboot, browser or plant test",
+    "legacy R3 publication verifier and readback fixture remain historical baseline evidence, not a current managed release gate",
+    "current build-download source closure does not reproduce or alter historical signed R3 archives or pins"
+  ],
+  "historicalFilesUnchanged": [
+    "tools/integration/verify-github-ready.py",
+    "tests/bootstrap/github-publication.test.cjs"
+  ]
+}

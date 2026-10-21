@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "kind": "fresh-runtime-bare-architecture-followup",
+  "date": "2026-10-21",
+  "sourceBaseCommit": "745dcefef3f24aa768fec7feb5d48789494738df",
+  "workingTreeChangesIncluded": true,
+  "failedCi": {
+    "runId": 39668069277,
+    "jobId": 119458285632,
+    "code": "FRESH_BUILD_ARCHITECTURE",
+    "actualLockEvidence": "actual-ci-lock.json"
+  },
+  "newExactVersions": {
+    "bare-fs": "4.8.4",
+    "bare-url": "2.5.5"
+  },
+  "historicalVersionRulesUnchanged": true,
+  "newVersionBindings": [
+    "exact npm resolved URL",
+    "exact SHA512 integrity",
+    "manifest SHA256",
+    "binding.js SHA256",
+    "all13 native asset paths/sizes/SHA256 per package",
+    "unchanged platform variant and binary header checks"
+  ],
+  "checks": {
+    "architectureContracts": {
+      "passed": 31,
+      "failed": 0,
+      "output": "architecture-contracts.tap"
+    },
+    "publishedPackageInputs": {
+      "packages": 2,
+      "matchedInstalledFiles": 54,
+      "output": "published-bare-inputs.json"
+    },
+    "actualNormalizedDiagnosticTree": {
+      "passed": true,
+      "nativeFiles": 42,
+      "bareAssets": 39,
+      "output": "architecture-positive.json"
+    },
+    "actualSameHeaderPayloadTampering": {
+      "passed": 2,
+      "failed": 0,
+      "output": "architecture-negative.json"
+    },
+    "nodeParentResolution": {
+      "parents": 2,
+      "output": "node-parent-resolution.json"
+    }
+  },
+  "independentReview": {
+    "packageArchiveReview": "Separate agent confirmed original cache SHA512, all27files/package,13validvariants/package and Bare loader semantics.",
+    "policyReview": "Separate integration reviewer confirmed exact new bindings preserve original architecture checks; package closure handled by separate follow-up."
+  },
+  "inputs": [
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "f67ddc0d0af8941221c69cb05ef7379a148112f241ae0de174423dbac4026489"
+    },
+    {
+      "path": "tools/integration/bare-refresh-policy.json",
+      "sha256": "86fd838b95158e547314cec8c7dbbc2af9564f60be8bdf82762391430a1ec0d9"
+    },
+    {
+      "path": "tests/integration/runtime-architecture.test.cjs",
+      "sha256": "29aeb17cb668e083e297d87bcdb2a3e84cb5a36a8482787412fd97fd26d7f477"
+    },
+    {
+      "path": "tests/integration/fixtures/bare-fs-4.8.4.package.json",
+      "sha256": "1df1cabb243a3355acb519c9fb15889240c678fcb76da8736981ce9be033f1cf"
+    },
+    {
+      "path": "tests/integration/fixtures/bare-url-2.5.5.package.json",
+      "sha256": "b3a5331a87e75c0f7b0d751ce227561abca3cabc386aeb4b37bb81b7364f8921"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-745dcef/README_DE.md",
+      "sha256": "89325b0ad2948ca037a38688c725d64b16e0525c308c7429129754da88d91f1b"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-745dcef/actual-ci-lock.json",
+      "sha256": "05327b4bf4f085dee02cd8be2d1974df8dd043309cd7b71642aa8bb08e4241c5"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-745dcef/architecture-contracts.tap",
+      "sha256": "ebe73c3371f2e6d91200a3f69d47644040effa37fecdbe70e6f5fdf48c2ddbe6"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-745dcef/architecture-negative.json",
+      "sha256": "94edea141dd8f00e64b1db49fdc9ec199efa7a95092aa500ab9ba3f1b8e6f3ae"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-745dcef/architecture-positive.json",
+      "sha256": "80bf6c4b38f19b95a8cadf2f92274a8625e982b2f45f9db5d301121316918fb0"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-745dcef/node-parent-resolution.json",
+      "sha256": "28d572ebf75e2b8694d72516124eadb3dcb25fa81ede67245c7aa77cd62ac17e"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-745dcef/published-bare-inputs.json",
+      "sha256": "29431db6cde0350d21ecd125cd1799e5128f86b9cb8ff377a451baba8fe221d7"
+    }
+  ],
+  "environment": {
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "host": "linux-x64",
+    "targetStaticArchitecture": "linux-arm64",
+    "targetNodeContract": "24.21.0"
+  },
+  "targetCodeExecuted": false,
+  "qualifiedNewRuntimeProduced": false,
+  "physicalPiTested": false,
+  "productionReleaseApproved": false,
+  "remaining": [
+    "Exact new-commit Node24.21/npm11.19 full build and native integration.",
+    "Permanent signature, public installer readback and Pi acceptance."
+  ]
+}
