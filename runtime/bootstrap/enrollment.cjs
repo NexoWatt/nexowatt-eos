@@ -34,6 +34,14 @@ async function passwordHash(value) {
 function strongHash(value) {
     if (typeof value !== 'string' || !/^pbkdf2\$(600000|[6-9][0-9]{5}|1[0-9]{6}|2000000)\$[a-f0-9]{512}\$[a-f0-9]{32,128}$/.test(value)) fail('ENROLLMENT_ADMIN_PASSWORD');
 }
+function managedApp(app) {
+    const file = path.join(app, '../system/managed-test/profile.json');
+    if (!fs.existsSync(file)) return false;
+    const value = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (!isDeepStrictEqual(value, { schemaVersion: 1, profile: 'eos-managed-test-v1', minimumSequence: 15,
+        nodeVersion: '24.21.0', platform: 'linux-arm64' })) fail('ENROLLMENT_MANAGED_PROFILE');
+    return true;
+}
 function pinnedAdapters(app) {
     const profile = validateProfile(JSON.parse(fs.readFileSync(path.join(app, 'node_modules/iobroker.js-controller/eos-test-profile.json'))));
     for (const spec of SPECS) {
@@ -41,7 +49,8 @@ function pinnedAdapters(app) {
         if (!row || row.version !== spec.version || row.main !== spec.main) fail('ENROLLMENT_ADAPTER_NOT_ADMITTED');
     }
     // This development profile has precisely two executable adapters.
-    if (profile.adapters.length !== SPECS.length) fail('ENROLLMENT_PROFILE_SCOPE');
+    if (managedApp(app)) require('./own-adapter-enrollment.cjs').pinnedAdapters(app);
+    else if (profile.adapters.length !== SPECS.length) fail('ENROLLMENT_PROFILE_SCOPE');
     return SPECS.map(spec => {
         const root = path.join(app, 'node_modules', `iobroker.${spec.name}`);
         const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json')));
@@ -262,4 +271,4 @@ async function enroll({ objects, states, config, app, password, accounts, verify
     await objects.setObjectAsync(MARKER, marker);
     return verify({ objects, config, app });
 }
-module.exports = { MARKER, PROFILE, FIRST_START_MARKER, SPECS, validatePassword, passwordHash, strongHash, pinnedAdapters, instanceDocument, assertInstance, verifyManagementPolicy, verify, verifyFirstRun, enroll, enrollFirstRun };
+module.exports = { managedApp, MARKER, PROFILE, FIRST_START_MARKER, SPECS, validatePassword, passwordHash, strongHash, pinnedAdapters, instanceDocument, assertInstance, verifyManagementPolicy, verify, verifyFirstRun, enroll, enrollFirstRun };

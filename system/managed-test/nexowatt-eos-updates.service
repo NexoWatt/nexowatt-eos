@@ -1,0 +1,56 @@
+[Unit]
+Description=NexoWatt EOS signed test release updates
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/nexowatt-eos/first-start-complete.json
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=root
+Group=root
+# The fresh installer substitutes only a verified 64-hex release ID. The daemon
+# stays on this immutable baseline while the controller's current pointer moves.
+ExecStart=/usr/bin/node /opt/nexowatt/eos/releases/@RELEASE_ID@/runtime/updates/service.cjs
+ExecStopPost=/usr/bin/node /opt/nexowatt/eos/releases/@RELEASE_ID@/tools/system/update-managed-release.cjs --quiesce-incomplete
+UnsetEnvironment=NODE_OPTIONS NODE_PATH NODE_EXTRA_CA_CERTS NODE_TLS_REJECT_UNAUTHORIZED SSLKEYLOGFILE OPENSSL_CONF OPENSSL_MODULES LD_PRELOAD LD_LIBRARY_PATH
+Environment=PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
+Restart=on-failure
+RestartSec=10
+RuntimeDirectory=nexowatt-eos-updates
+RuntimeDirectoryMode=0755
+StateDirectory=nexowatt-eos-updates
+StateDirectoryMode=0700
+UMask=0022
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_DAC_OVERRIDE CAP_CHOWN CAP_FOWNER
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/opt/nexowatt/eos /etc/nexowatt-eos /var/lib/nexowatt-eos-updates /run/nexowatt-eos-updates
+MemoryHigh=384M
+MemoryMax=768M
+CPUWeight=10
+IOWeight=10
+TasksMax=32
+LimitNOFILE=128
+LimitCORE=0
+TimeoutStopSec=120
+KillMode=control-group
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

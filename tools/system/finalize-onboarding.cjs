@@ -185,6 +185,11 @@ async function finalize() {
                 await enrollment.enrollFirstRun({ objects, states, config, app,
                     passwordHash: handoff.passwordHash, settings: handoff.settings,
                     verifyFresh: () => initialize({ objects, states, config, ...pinned, verifyOnly: true }) });
+                if (enrollment.managedApp(app)) {
+                    await require('../../runtime/bootstrap/own-adapter-enrollment.cjs').enrollFresh({ objects, states, config, app,
+                        releaseId: installed.releaseId,
+                        checkpoint: plan => require('./install-host.cjs').privateWrite(DIRECTORY + '/fresh-own-enrollment.json', JSON.stringify(plan) + '\n', 0o600) });
+                }
             },
             verify: () => enrollment.verify({ objects, config, app }),
             configureLicense: async () => {
@@ -211,6 +216,7 @@ async function finalize() {
                 command(['start', 'nexowatt-eos-controller.service']); command(['is-active', '--quiet', 'nexowatt-eos-controller.service']);
             },
             probe: async () => {
+                if (enrollment.managedApp(app)) await require('./update-test-own-adapters.cjs').ownReadiness(releasePath, startedAt);
                 await waitAdapters(states, startedAt);
                 const ca = readFileLimited(DIRECTORY + '/web/ca.crt', 16384).bytes;
                 await Promise.all([8081, 8188].map(port => probeWeb(port, ca)));
@@ -218,7 +224,10 @@ async function finalize() {
             persist: () => persistComplete(COMPLETE, { schemaVersion: 1, releaseId: installed.releaseId,
                 setupId: handoff.setupId, completedAt: new Date().toISOString(),
                 licenseConfigured: handoff.license.mode === 'activate', physicalControlEnabled: false }),
-            enableBoot: () => command(['enable', 'nexowatt-eos.target']),
+            enableBoot: () => {
+                command(['enable', 'nexowatt-eos.target']);
+                if (enrollment.managedApp(app)) command(['enable', '--now', 'nexowatt-eos-updates.service']);
+            },
             disableSetup: () => {
                 // Stopping the setup target would also stop PostgreSQL through
                 // PartOf. Only stop the setup endpoints and their path trigger.

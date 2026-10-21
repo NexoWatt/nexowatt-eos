@@ -1,6 +1,6 @@
 'use strict';
 // Fresh, signed TEST installation only. No migration, network download, shell,
-// package installation or runtime-accessible privileged endpoint.
+// package installation. Managed profiles install the separate bounded updater.
 const fs = require('node:fs');
 const path = require('node:path');
 const { command } = require('./host-preflight.cjs');
@@ -20,7 +20,9 @@ function installPostgresqlHost(options, dependencies = {}) {
         !Number.isSafeInteger(options.sequence) || options.sequence < 1) fail('PG_PINNED_TEST_RELEASE_REQUIRED');
     // An initialized PostgreSQL schema is mandatory, including for a test host.
     if (options.start !== true) fail('PG_EXPLICIT_START_REQUIRED');
+    const managed = options.sequence >= 15;
     const fullProduct = options.releaseVersion === '0.2.0-test.3';
+    if (managed && !fullProduct) fail('PG_PINNED_TEST_RELEASE_REQUIRED');
     const hostUnits = UNITS.filter(name => fullProduct || !name.startsWith('nexowatt-eos-setup'));
     const hostAccounts = ACCOUNTS.filter(name => fullProduct || name !== 'eos-setup');
     if (fullProduct) {
@@ -35,7 +37,12 @@ function installPostgresqlHost(options, dependencies = {}) {
     const report = (dependencies.preflight || inspectPostgresqlHost)({ root, exec, uid,
         expectedNodeVersion: options.expectedNodeVersion, platform: options.platform });
     if (!report.ready) fail('PG_HOST_PREFLIGHT_REJECTED');
-    const productInventory = fullProduct ? (dependencies.inspectProduct || product.inspectApp)(file('app')) : null;
+    if (managed) {
+        const trust = dependencies.toolTrust || require('./host-preflight.cjs').toolTrust;
+        for (const binary of ['/usr/sbin/ip', '/usr/sbin/nft', '/usr/sbin/dnsmasq'])
+            if (!trust(binary, root).trusted) fail('PG_MANAGED_HOST_TOOLS_REQUIRED');
+    }
+    const productInventory = fullProduct ? (dependencies.inspectProduct || product.inspectApp)(file('app'), managed ? product.OWN_ADAPTER_TEST : product.MANAGEMENT_TEST) : null;
     if (!dependencies.skipOwnershipFixture) {
         for (const name of [release, '/etc/nexowatt-eos', '/var/lib/nexowatt-eos', '/var/log/nexowatt-eos',
             '/etc/nexowatt-eos-os-updates', '/var/lib/nexowatt-eos-os-updates', '/etc/systemd/system']) assertNoSymlinkAncestors(at(name));
@@ -126,6 +133,14 @@ function installPostgresqlHost(options, dependencies = {}) {
         // Set before the first unit write so partial unit creation is cleaned up.
         unitsInstalled = true;
         for (const unit of hostUnits) privateWrite(at(`/etc/systemd/system/${unit}`), fs.readFileSync(file(`system/postgresql-test/systemd/${unit}`)), 0o644);
+        if (managed) {
+            phase = 'managed-update-service';
+            (dependencies.installManagedUpdates || require('./install-managed-updates.cjs').installManagedUpdates)({
+                releaseId: options.releaseId, publicKeySha256: options.publicKeySha256 }, { root });
+            phase = 'technical-network-service';
+            run('/usr/bin/python3', ['-I', file('tools/system/install-network-host.py'), '--check', options.releaseId], { timeout: 90000 });
+            run('/usr/bin/python3', ['-I', file('tools/system/install-network-host.py'), '--install', options.releaseId], { timeout: 90000 });
+        }
         fs.symlinkSync(release, at('/opt/nexowatt/eos/current'));
         run('/usr/bin/systemctl', ['daemon-reload']);
         run('/usr/bin/systemctl', ['start', 'nexowatt-eos-postgresql.service'], { timeout: 45000 });
@@ -166,9 +181,10 @@ function installPostgresqlHost(options, dependencies = {}) {
     } catch (error) {
         if (unitsInstalled) {
             // Never kill an APT/dpkg transaction. Disable its future scheduling.
-            const disabled = exec('/usr/bin/systemctl', ['disable', 'nexowatt-eos.target', ...(fullProduct ? ['nexowatt-eos-setup.target'] : []), 'nexowatt-eos-pg-certificates.timer', 'nexowatt-eos-os-updates.timer']);
+            const disabled = exec('/usr/bin/systemctl', ['disable', 'nexowatt-eos.target', ...(fullProduct ? ['nexowatt-eos-setup.target'] : []), 'nexowatt-eos-pg-certificates.timer', 'nexowatt-eos-os-updates.timer',
+                ...(managed ? ['nexowatt-eos-updates.service', 'nexowatt-eos-network.service', 'nexowatt-eos-network-guard.timer'] : [])]);
             const stopped = exec('/usr/bin/systemctl', ['stop', 'nexowatt-eos.target', ...(fullProduct ? ['nexowatt-eos-setup.target'] : []),
-                ...SERVICES.filter(name => fullProduct || !name.startsWith('nexowatt-eos-setup'))], { timeout: 90000 });
+                ...(managed ? ['nexowatt-eos-updates.service', 'nexowatt-eos-network.service', 'nexowatt-eos-network-guard.timer'] : []), ...SERVICES.filter(name => fullProduct || !name.startsWith('nexowatt-eos-setup'))], { timeout: 90000 });
             if (disabled.status !== 0 || disabled.error || stopped.status !== 0 || stopped.error) {
                 error.code = 'PG_CLEANUP_INCOMPLETE'; error.message = error.code;
             }

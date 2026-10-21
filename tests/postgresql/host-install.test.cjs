@@ -233,3 +233,45 @@ test('existing distribution database cluster is never adopted or deleted', t => 
     const f=host(t); const report=f.inspect((p,a)=>p.endsWith('/pg_lsclusters')?{status:0,stdout:'17 main 5432 online postgres /var/lib/postgresql/17/main /log\n'}:goodExec(p,a));
     assert.equal(report.ready,false);assert.equal(report.checks.find(r=>r.id==='no-distribution-clusters').status,'fail');
 });
+
+function managedFixture(t) {
+    const f = installFixture(t);
+    f.options.sequence = 15; f.options.releaseVersion = '0.2.0-test.3';
+    f.options.setup = { schemaVersion: 1, hosts: ['eos.test'], origin: 'https://eos.test:8443',
+        licenseTrustFile: '/root/public-trust.json', licenseTrustSha256: 'c'.repeat(64), trust: {}, trustSha256: 'c'.repeat(64) };
+    for (const name of ['runtime/onboarding/main.cjs', 'runtime/onboarding/state.cjs', 'runtime/onboarding/server.cjs',
+        'runtime/onboarding/policy.cjs', 'runtime/bootstrap/first-start-configuration.cjs',
+        'tools/system/finalize-onboarding.cjs', 'tools/system/prepare-first-start-context.cjs']) f.write(`${f.options.releasePath}/${name}`, '{}');
+    f.deps.toolTrust = () => ({ trusted: true });
+    f.deps.inspectProduct = (_app, scope) => { assert.equal(scope, 'own-adapter-test'); return []; };
+    f.deps.provisionWeb = ({ directory }) => { fs.mkdirSync(directory, { recursive: true }); for (const name of ['admin.key', 'ui.key', 'setup.key']) fs.writeFileSync(path.join(directory, name), 'fixture'); };
+    f.deps.provisionSetupWeb = () => {};
+    f.deps.prepareOnboarding = () => ({ code: 'fixture-only', expiresAt: '2026-10-22T00:00:00.000Z', setupId: 'd'.repeat(32) });
+    f.deps.installManagedUpdates = () => { f.commands.push(['fixture-updater-install', []]); };
+    const exec = f.deps.exec;
+    f.deps.exec = (p, a) => {
+        if (p.endsWith('/node') && a[0].endsWith('/prepare-first-start-context.cjs')) f.write('/etc/nexowatt-eos/onboarding.json', '{}');
+        return exec(p, a);
+    };
+    return f;
+}
+test('fresh managed host installs independent updater and unconfigured network before HTTPS first start', t => {
+    const f = managedFixture(t), result = installPostgresqlHost(f.options, f.deps);
+    assert.equal(result.phase, 'HTTPS_FIRST_START_READY');
+    const update = f.commands.findIndex(([p]) => p === 'fixture-updater-install');
+    const network = f.commands.findIndex(([, a]) => a.includes('--install'));
+    const setup = f.commands.findIndex(([, a]) => a.includes('nexowatt-eos-setup.target'));
+    assert.ok(update >= 0 && network > update && setup > network);
+    assert.equal(f.commands.some(([, a]) => a.includes('nexowatt-eos-updates.service')), false, 'updater starts only after finalization');
+});
+test('missing network tools abort fresh managed host before changes; later failure disables addon boot scheduling', t => {
+    const a = managedFixture(t); a.deps.toolTrust = () => ({ trusted: false });
+    assert.throws(() => installPostgresqlHost(a.options, a.deps), /PG_MANAGED_HOST_TOOLS_REQUIRED/); assert.equal(a.commands.length, 0);
+    const f = managedFixture(t), exec = f.deps.exec;
+    f.deps.exec = (p, args) => { const r = exec(p, args); return args.includes('--install') ? { status: 1, stdout: '' } : r; };
+    assert.throws(() => installPostgresqlHost(f.options, f.deps), /PG_HOST_COMMAND_FAILED/);
+    for (const action of ['disable', 'stop']) {
+        const args = f.commands.find(([p, a]) => p.endsWith('/systemctl') && a[0] === action)[1];
+        for (const unit of ['nexowatt-eos-updates.service', 'nexowatt-eos-network.service', 'nexowatt-eos-network-guard.timer']) assert.ok(args.includes(unit));
+    }
+});

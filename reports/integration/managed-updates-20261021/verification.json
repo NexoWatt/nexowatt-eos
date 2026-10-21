@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed-updates-local-source-verification",
+  "checkedAt": "2026-10-21",
+  "baseCommit": "5be3a225daa56ad80d824a7a605cb417b897c0cd",
+  "sourceBinding": "source-files.sha256.json",
+  "environment": {
+    "os": "Ubuntu 24.04.3 LTS",
+    "platform": "linux-x64",
+    "node": "24.19.0",
+    "systemd": false,
+    "pi": false
+  },
+  "tests": [
+    {
+      "file": "managed-contracts.tap",
+      "passed": 53,
+      "failed": 0,
+      "scope": "actual local cryptography/files; injected system and network boundaries"
+    },
+    {
+      "file": "regression.tap",
+      "passed": 165,
+      "failed": 0,
+      "scope": "legacy contracts and fixtures; overlapping tests"
+    },
+    {
+      "file": "managed-host-fixtures.tap",
+      "passed": 20,
+      "failed": 0,
+      "scope": "host installer command doubles including managed installation and cleanup"
+    },
+    {
+      "file": "admin-seal.txt",
+      "passed": true,
+      "scope": "postbuild and source/runtime parity; no full React rebuild"
+    },
+    {
+      "file": "socket-local-blocked.tap",
+      "status": "BLOCKED",
+      "reason": "listen EPERM in local environment; not a passing socket test"
+    }
+  ],
+  "browserLocal": "BLOCKED_CHROMIUM_DOWNLOAD",
+  "remoteReadback": "OPEN_CONNECTION_TIMEOUT_5000MS",
+  "ci": "PENDING_REMOTE_SOURCE_QUALIFICATION",
+  "releaseCandidateBuilt": false,
+  "persistentSigningAuthorityConfigured": false,
+  "freshPiInstallationTested": false,
+  "actualPiUpdateTested": false,
+  "productionReleaseApproved": false,
+  "limitations": [
+    "same-version own-adapter patches only",
+    "full adapter isolation acceptance remains open",
+    "no full host/package migration",
+    "no Admin8 React19 migration",
+    "no automatic backup",
+    "no hardware or timing acceptance"
+  ],
+  "publicReportSanitized": true
+}

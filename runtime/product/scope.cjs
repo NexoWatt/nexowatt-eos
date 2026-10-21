@@ -20,7 +20,7 @@ const OWN_ADAPTER_TEST = 'own-adapter-test';
 function releaseScope(manifest) {
     // Execution expansion belongs only to the new, separately signed test
     // revision. An old bundle never inherits it merely by being rebuilt.
-    if (![13, 14].includes(manifest?.sequence)) return MANAGEMENT_TEST;
+    if (![13, 14].includes(manifest?.sequence) && !(Number.isSafeInteger(manifest?.sequence) && manifest.sequence >= 15)) return MANAGEMENT_TEST;
     if (manifest.product !== 'nexowatt-eos' || manifest.releaseVersion !== '0.2.0-test.3' ||
         manifest.profile !== 'test' || manifest.nodeVersion !== '24.21.0' ||
         !Array.isArray(manifest.platforms) || manifest.platforms.length !== 1 || manifest.platforms[0] !== 'linux-arm64') fail('PRODUCT_RELEASE_SCOPE');

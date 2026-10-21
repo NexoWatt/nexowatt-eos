@@ -1,0 +1,1000 @@
+TAP version 13
+# Subtest: initial enrollment stores only hash and disabled fixed instances; verifies without writes
+ok 1 - initial enrollment stores only hash and disabled fixed instances; verifies without writes
+  ---
+  duration_ms: 3785.305578
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:0
+ok 2 - password rejects bounded invalid input string:0
+  ---
+  duration_ms: 0.59126
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:5
+ok 3 - password rejects bounded invalid input string:5
+  ---
+  duration_ms: 0.100641
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:129
+ok 4 - password rejects bounded invalid input string:129
+  ---
+  duration_ms: 0.117908
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:14
+ok 5 - password rejects bounded invalid input string:14
+  ---
+  duration_ms: 0.113891
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:21
+ok 6 - password rejects bounded invalid input string:21
+  ---
+  duration_ms: 0.089095
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 7 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.101983
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input object:0
+ok 8 - password rejects bounded invalid input object:0
+  ---
+  duration_ms: 0.147983
+  type: 'test'
+  ...
+# Subtest: password rejects bounded invalid input string:200
+ok 9 - password rejects bounded invalid input string:200
+  ---
+  duration_ms: 0.350678
+  type: 'test'
+  ...
+# Subtest: password allows long unicode passphrase without composition tricks
+ok 10 - password allows long unicode passphrase without composition tricks
+  ---
+  duration_ms: 0.302115
+  type: 'test'
+  ...
+# Subtest: rejects marker pending without repair
+ok 11 - rejects marker pending without repair
+  ---
+  duration_ms: 0.961879
+  type: 'test'
+  ...
+# Subtest: rejects config changed without repair
+ok 12 - rejects config changed without repair
+  ---
+  duration_ms: 0.612783
+  type: 'test'
+  ...
+# Subtest: rejects physical enabled without repair
+ok 13 - rejects physical enabled without repair
+  ---
+  duration_ms: 0.777471
+  type: 'test'
+  ...
+# Subtest: rejects core binding without repair
+ok 14 - rejects core binding without repair
+  ---
+  duration_ms: 0.902078
+  type: 'test'
+  ...
+# Subtest: rejects remote repo without repair
+ok 15 - rejects remote repo without repair
+  ---
+  duration_ms: 0.592512
+  type: 'test'
+  ...
+# Subtest: rejects automatic updates without repair
+ok 16 - rejects automatic updates without repair
+  ---
+  duration_ms: 1.518446
+  type: 'test'
+  ...
+# Subtest: rejects disabled admin without repair
+ok 17 - rejects disabled admin without repair
+  ---
+  duration_ms: 0.483238
+  type: 'test'
+  ...
+# Subtest: rejects world-readable service hash without repair
+ok 18 - rejects world-readable service hash without repair
+  ---
+  duration_ms: 0.729729
+  type: 'test'
+  ...
+# Subtest: rejects weak password without repair
+ok 19 - rejects weak password without repair
+  ---
+  duration_ms: 0.642116
+  type: 'test'
+  ...
+# Subtest: rejects extra executable without repair
+ok 20 - rejects extra executable without repair
+  ---
+  duration_ms: 0.613504
+  type: 'test'
+  ...
+# Subtest: rejects node arguments without repair
+ok 21 - rejects node arguments without repair
+  ---
+  duration_ms: 0.646343
+  type: 'test'
+  ...
+# Subtest: rejects remote host without repair
+ok 22 - rejects remote host without repair
+  ---
+  duration_ms: 1.30152
+  type: 'test'
+  ...
+# Subtest: rejects admin plaintext without repair
+ok 23 - rejects admin plaintext without repair
+  ---
+  duration_ms: 0.913646
+  type: 'test'
+  ...
+# Subtest: rejects UI no auth without repair
+ok 24 - rejects UI no auth without repair
+  ---
+  duration_ms: 0.948127
+  type: 'test'
+  ...
+# Subtest: rejects UI trusted header without repair
+ok 25 - rejects UI trusted header without repair
+  ---
+  duration_ms: 0.61752
+  type: 'test'
+  ...
+# Subtest: rejects UI path without repair
+ok 26 - rejects UI path without repair
+  ---
+  duration_ms: 0.782438
+  type: 'test'
+  ...
+# Subtest: controller alive blocks first mutation
+ok 27 - controller alive blocks first mutation
+  ---
+  duration_ms: 0.284879
+  type: 'test'
+  ...
+# Subtest: failed enrollment retains pending gate and never enables partially written instances
+ok 28 - failed enrollment retains pending gate and never enables partially written instances
+  ---
+  duration_ms: 2202.555953
+  type: 'test'
+  ...
+# Subtest: exact six-entry profile and side-effect-free plan, no secrets or copied password hashes
+ok 29 - exact six-entry profile and side-effect-free plan, no secrets or copied password hashes
+  ---
+  duration_ms: 31.005623
+  type: 'test'
+  ...
+# Subtest: initial target configurations require deliberate device/station/backup commissioning
+ok 30 - initial target configurations require deliberate device/station/backup commissioning
+  ---
+  duration_ms: 5.309795
+  type: 'test'
+  ...
+# Subtest: apply journals first, preserves original enrollment/accounts and enables six fixed instances
+ok 31 - apply journals first, preserves original enrollment/accounts and enables six fixed instances
+  ---
+  duration_ms: 21.527523
+  type: 'test'
+  ...
+# Subtest: full and idempotent rollback remove only exact new instances and own marker
+ok 32 - full and idempotent rollback remove only exact new instances and own marker
+  ---
+  duration_ms: 16.896079
+  type: 'test'
+  ...
+# Subtest: root initial Admin ACL matches actual startup projection without rewriting the rollback baseline
+ok 33 - root initial Admin ACL matches actual startup projection without rewriting the rollback baseline
+  ---
+  duration_ms: 20.329058
+  type: 'test'
+  ...
+# Subtest: historical Admin normalized before migration retains its actual metadata through strict rollback
+ok 34 - historical Admin normalized before migration retains its actual metadata through strict rollback
+  ---
+  duration_ms: 11.41656
+  type: 'test'
+  ...
+# Subtest: legacy management verifier rejects six profile without new enrollment marker
+ok 35 - legacy management verifier rejects six profile without new enrollment marker
+  ---
+  duration_ms: 1.93929
+  type: 'test'
+  ...
+# Subtest: apply rejects live controller before writes
+ok 36 - apply rejects live controller before writes
+  ---
+  duration_ms: 9.09967
+  type: 'test'
+  ...
+# Subtest: apply rejects unknown heartbeat before writes
+ok 37 - apply rejects unknown heartbeat before writes
+  ---
+  duration_ms: 8.77069
+  type: 'test'
+  ...
+# Subtest: apply rejects source marker changed before writes
+ok 38 - apply rejects source marker changed before writes
+  ---
+  duration_ms: 6.620859
+  type: 'test'
+  ...
+# Subtest: apply rejects management instance changed before writes
+ok 39 - apply rejects management instance changed before writes
+  ---
+  duration_ms: 2.773487
+  type: 'test'
+  ...
+# Subtest: apply rejects preexisting additional document before writes
+ok 40 - apply rejects preexisting additional document before writes
+  ---
+  duration_ms: 2.330368
+  type: 'test'
+  ...
+# Subtest: apply rejects unexpected instance before writes
+ok 41 - apply rejects unexpected instance before writes
+  ---
+  duration_ms: 2.717532
+  type: 'test'
+  ...
+# Subtest: apply rejects plan unsafe initial target before writes
+ok 42 - apply rejects plan unsafe initial target before writes
+  ---
+  duration_ms: 2.426734
+  type: 'test'
+  ...
+# Subtest: apply rejects plan forged marker before writes
+ok 43 - apply rejects plan forged marker before writes
+  ---
+  duration_ms: 2.831243
+  type: 'test'
+  ...
+# Subtest: apply rejects missing journal callback before writes
+ok 44 - apply rejects missing journal callback before writes
+  ---
+  duration_ms: 2.902961
+  type: 'test'
+  ...
+# Subtest: failed durable journal callback causes no database mutation
+ok 45 - failed durable journal callback causes no database mutation
+  ---
+  duration_ms: 3.406419
+  type: 'test'
+  ...
+# Subtest: partial apply after every possible write can be rolled back without changing baseline
+ok 46 - partial apply after every possible write can be rolled back without changing baseline
+  ---
+  duration_ms: 51.664729
+  type: 'test'
+  ...
+# Subtest: partial rollback after each deletion is safely resumable from the same protected plan
+ok 47 - partial rollback after each deletion is safely resumable from the same protected plan
+  ---
+  duration_ms: 36.237682
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed device configuration before deleting any document
+ok 48 - rollback refuses changed device configuration before deleting any document
+  ---
+  duration_ms: 10.705328
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed marker before deleting any document
+ok 49 - rollback refuses changed marker before deleting any document
+  ---
+  duration_ms: 4.828501
+  type: 'test'
+  ...
+# Subtest: rollback refuses missing marker with owned-looking docs before deleting any document
+ok 50 - rollback refuses missing marker with owned-looking docs before deleting any document
+  ---
+  duration_ms: 5.121542
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed baseline before deleting any document
+ok 51 - rollback refuses changed baseline before deleting any document
+  ---
+  duration_ms: 4.656041
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed management configuration before deleting any document
+ok 52 - rollback refuses changed management configuration before deleting any document
+  ---
+  duration_ms: 9.39062
+  type: 'test'
+  ...
+# Subtest: rollback refuses changed management ACL before deleting any document
+ok 53 - rollback refuses changed management ACL before deleting any document
+  ---
+  duration_ms: 6.538459
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains pending marker refusal
+ok 54 - six-adapter verification retains pending marker refusal
+  ---
+  duration_ms: 3.825029
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains forged marker ACL refusal
+ok 55 - six-adapter verification retains forged marker ACL refusal
+  ---
+  duration_ms: 6.418684
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains extra JavaScript instance refusal
+ok 56 - six-adapter verification retains extra JavaScript instance refusal
+  ---
+  duration_ms: 3.948626
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains unsafe Admin TLS refusal
+ok 57 - six-adapter verification retains unsafe Admin TLS refusal
+  ---
+  duration_ms: 4.719356
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains UI trusted header refusal
+ok 58 - six-adapter verification retains UI trusted header refusal
+  ---
+  duration_ms: 5.24052
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains weak service password refusal
+ok 59 - six-adapter verification retains weak service password refusal
+  ---
+  duration_ms: 4.7884
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains dynamic npm refusal
+ok 60 - six-adapter verification retains dynamic npm refusal
+  ---
+  duration_ms: 5.009032
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains extra node args refusal
+ok 61 - six-adapter verification retains extra node args refusal
+  ---
+  duration_ms: 4.912015
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains malformed EEBUS commissioning flag refusal
+ok 62 - six-adapter verification retains malformed EEBUS commissioning flag refusal
+  ---
+  duration_ms: 5.826103
+  type: 'test'
+  ...
+# Subtest: six-adapter verification retains missing OCPP commissioning flag refusal
+ok 63 - six-adapter verification retains missing OCPP commissioning flag refusal
+  ---
+  duration_ms: 9.153812
+  type: 'test'
+  ...
+# Subtest: authorized device commissioning and password changes are not reverted by boot verifier
+ok 64 - authorized device commissioning and password changes are not reverted by boot verifier
+  ---
+  duration_ms: 5.183224
+  type: 'test'
+  ...
+# Subtest: first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+ok 65 - first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+  ---
+  duration_ms: 32.345682
+  type: 'test'
+  ...
+# Subtest: configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+ok 66 - configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+  ---
+  duration_ms: 6.388108
+  type: 'test'
+  ...
+# Subtest: every partial object-store write keeps the start gate closed and refuses unsafe replay
+ok 67 - every partial object-store write keeps the start gate closed and refuses unsafe replay
+  ---
+  duration_ms: 22.104933
+  type: 'test'
+  ...
+# Subtest: configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+ok 68 - configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+  ---
+  duration_ms: 4.494397
+  type: 'test'
+  ...
+# Subtest: first-run marker and safety policy drift block subsequent enrollment verification
+ok 69 - first-run marker and safety policy drift block subsequent enrollment verification
+  ---
+  duration_ms: 15.9669
+  type: 'test'
+  ...
+# Subtest: minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+ok 70 - minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+  ---
+  duration_ms: 2.84236
+  type: 'test'
+  ...
+# Subtest: EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes
+ok 71 - EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes
+  ---
+  duration_ms: 8.36162
+  type: 'test'
+  ...
+# Subtest: historical wizard state remains verifiable and never creates a new boot gate or implicit repair
+ok 72 - historical wizard state remains verifiable and never creates a new boot gate or implicit repair
+  ---
+  duration_ms: 9.328826
+  type: 'test'
+  ...
+# Subtest: first start never replaces telemetry settings with implicit consent
+ok 73 - first start never replaces telemetry settings with implicit consent
+  ---
+  duration_ms: 0.845383
+  type: 'test'
+  ...
+# Subtest: PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+ok 74 - PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+  ---
+  duration_ms: 19.643176
+  type: 'test'
+  ...
+# Subtest: fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+ok 75 - fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+  ---
+  duration_ms: 7.959044
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+ok 76 - unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+  ---
+  duration_ms: 54.465476
+  type: 'test'
+  ...
+# Subtest: unit namespace accepts full names, instances, escaped names and known C-locale table columns
+ok 77 - unit namespace accepts full names, instances, escaped names and known C-locale table columns
+  ---
+  duration_ms: 5.83771
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects empty, malformed, incomplete or failed unit listings
+ok 78 - unit namespace rejects empty, malformed, incomplete or failed unit listings
+  ---
+  duration_ms: 23.631621
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 17.10 rejected
+ok 79 - unsupported PostgreSQL 17.10 rejected
+  ---
+  duration_ms: 6.251693
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 16.11 rejected
+ok 80 - unsupported PostgreSQL 16.11 rejected
+  ---
+  duration_ms: 6.68127
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 18.1 rejected
+ok 81 - unsupported PostgreSQL 18.1 rejected
+  ---
+  duration_ms: 6.659506
+  type: 'test'
+  ...
+# Subtest: every protected existing path, including old standalone EOS, rejects without mutations
+ok 82 - every protected existing path, including old standalone EOS, rejects without mutations
+  ---
+  duration_ms: 59.06383
+  type: 'test'
+  ...
+# Subtest: malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+ok 83 - malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+  ---
+  duration_ms: 10.65297
+  type: 'test'
+  ...
+# Subtest: real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions
+ok 84 - real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions
+  ---
+  duration_ms: 197.030861
+  type: 'test'
+  ...
+# Subtest: backend rejects mixtures, injected loader names and TLS downgrade
+ok 85 - backend rejects mixtures, injected loader names and TLS downgrade
+  ---
+  duration_ms: 0.51796
+  type: 'test'
+  ...
+# Subtest: database and runtime service boundaries retain network discovery without root privileges
+ok 86 - database and runtime service boundaries retain network discovery without root privileges
+  ---
+  duration_ms: 1.21586
+  type: 'test'
+  ...
+# Subtest: installer command-double starts schema and live gate before controller; never invokes Redis/npm
+ok 87 - installer command-double starts schema and live gate before controller; never invokes Redis/npm
+  ---
+  duration_ms: 39.984889
+  type: 'test'
+  ...
+# Subtest: failed live gate preserves data and stops owned services without killing apt
+ok 88 - failed live gate preserves data and stops owned services without killing apt
+  ---
+  duration_ms: 21.242794
+  type: 'test'
+  ...
+# Subtest: failed admission or implicit start performs no command or persistent write
+ok 89 - failed admission or implicit start performs no command or persistent write
+  ---
+  duration_ms: 4.600476
+  type: 'test'
+  ...
+# Subtest: failed structured target checks are retained before fail-closed cleanup
+ok 90 - failed structured target checks are retained before fail-closed cleanup
+  ---
+  duration_ms: 22.833886
+  type: 'test'
+  ...
+# Subtest: existing distribution database cluster is never adopted or deleted
+ok 91 - existing distribution database cluster is never adopted or deleted
+  ---
+  duration_ms: 5.090154
+  type: 'test'
+  ...
+# Subtest: legacy default admits precisely management; explicit new scope is fixed to six own adapters
+ok 92 - legacy default admits precisely management; explicit new scope is fixed to six own adapters
+  ---
+  duration_ms: 2.945996
+  type: 'test'
+  ...
+# Subtest: all-adapter catalog is rejected by management scope; new scope rejects missing or extra entries
+ok 93 - all-adapter catalog is rejected by management scope; new scope rejects missing or extra entries
+  ---
+  duration_ms: 0.759243
+  type: 'test'
+  ...
+# Subtest: source inventory reports candidate admission, never installation, activity or physical control
+ok 94 - source inventory reports candidate admission, never installation, activity or physical control
+  ---
+  duration_ms: 8.360728
+  type: 'test'
+  ...
+# Subtest: unknown scope is not a force or production switch
+ok 95 - unknown scope is not a force or production switch
+  ---
+  duration_ms: 0.428515
+  type: 'test'
+  ...
+# Subtest: historical and managed signed test contexts select six-adapter execution
+ok 96 - historical and managed signed test contexts select six-adapter execution
+  ---
+  duration_ms: 0.931653
+  type: 'test'
+  ...
+# Subtest: generic fresh install and additive activation cannot bypass journaled own-adapter migration
+ok 97 - generic fresh install and additive activation cannot bypass journaled own-adapter migration
+  ---
+  duration_ms: 18.607106
+  type: 'test'
+  ...
+# Subtest: signed offline bundle verifies and stages exactly the authenticated files
+ok 98 - signed offline bundle verifies and stages exactly the authenticated files
+  ---
+  duration_ms: 24.419087
+  type: 'test'
+  ...
+# Subtest: wrong signer and modified signed manifest are rejected
+ok 99 - wrong signer and modified signed manifest are rejected
+  ---
+  duration_ms: 8.742484
+  type: 'test'
+  ...
+# Subtest: private signing key cannot be supplied as the public installation trust anchor
+ok 100 - private signing key cannot be supplied as the public installation trust anchor
+  ---
+  duration_ms: 3.218927
+  type: 'test'
+  ...
+# Subtest: tampered payload cannot be staged
+ok 101 - tampered payload cannot be staged
+  ---
+  duration_ms: 6.113655
+  type: 'test'
+  ...
+# Subtest: unlisted payload, missing file, and unexpected bundle file are rejected
+ok 102 - unlisted payload, missing file, and unexpected bundle file are rejected
+  ---
+  duration_ms: 5.570397
+  type: 'test'
+  ...
+# Subtest: downgrade/replay, wrong platform and untested node are rejected
+ok 103 - downgrade/replay, wrong platform and untested node are rejected
+  ---
+  duration_ms: 6.002368
+  type: 'test'
+  ...
+# Subtest: source and payload symlinks and hardlinks cannot introduce outside bytes
+ok 104 - source and payload symlinks and hardlinks cannot introduce outside bytes
+  ---
+  duration_ms: 8.652007
+  type: 'test'
+  ...
+# Subtest: symlinked parent and setuid files are rejected
+ok 105 - symlinked parent and setuid files are rejected
+  ---
+  duration_ms: 2.402617
+  type: 'test'
+  ...
+# Subtest: path traversal, absolute/control/ambiguous paths are rejected
+ok 106 - path traversal, absolute/control/ambiguous paths are rejected
+  ---
+  duration_ms: 0.459902
+  type: 'test'
+  ...
+# Subtest: manifest validates strict types, duplicate paths and finite bounds
+ok 107 - manifest validates strict types, duplicate paths and finite bounds
+  ---
+  duration_ms: 7.203436
+  type: 'test'
+  ...
+# Subtest: staging refuses a group/world writable release destination
+ok 108 - staging refuses a group/world writable release destination
+  ---
+  duration_ms: 4.74868
+  type: 'test'
+  ...
+# Subtest: signing never overwrites an earlier release or allows output inside source
+ok 109 - signing never overwrites an earlier release or allows output inside source
+  ---
+  duration_ms: 3.430746
+  type: 'test'
+  ...
+# Subtest: RSA signing keys are not silently accepted as Ed25519
+ok 110 - RSA signing keys are not silently accepted as Ed25519
+  ---
+  duration_ms: 37.76427
+  type: 'test'
+  ...
+# Subtest: a crashed or timed-out first-start trial revokes its permit and stops its controller
+ok 111 - a crashed or timed-out first-start trial revokes its permit and stops its controller
+  ---
+  duration_ms: 1.686038
+  type: 'test'
+  ...
+# Subtest: successful lock removal leaves the completed controller running
+ok 112 - successful lock removal leaves the completed controller running
+  ---
+  duration_ms: 0.284248
+  type: 'test'
+  ...
+# Subtest: known independent maintenance does not lose its trial permit
+ok 113 - known independent maintenance does not lose its trial permit
+  ---
+  duration_ms: 0.257968
+  type: 'test'
+  ...
+# Subtest: another first-start invocation or legacy coordinator keeps its already-owned lock
+ok 114 - another first-start invocation or legacy coordinator keeps its already-owned lock
+  ---
+  duration_ms: 0.255574
+  type: 'test'
+  ...
+# Subtest: missing or invalid systemd invocation cannot run either privileged coordinator context
+ok 115 - missing or invalid systemd invocation cannot run either privileged coordinator context
+  ---
+  duration_ms: 0.949549
+  type: 'test'
+  ...
+# Subtest: permit removal error still attempts a stop and reports only a generic code
+ok 116 - permit removal error still attempts a stop and reports only a generic code
+  ---
+  duration_ms: 0.1724
+  type: 'test'
+  ...
+# Subtest: unreadable or unknown maintenance state attempts fail-closed quiescence
+ok 117 - unreadable or unknown maintenance state attempts fail-closed quiescence
+  ---
+  duration_ms: 0.354584
+  type: 'test'
+  ...
+# Subtest: a stop failure remains a failing service result
+ok 118 - a stop failure remains a failing service result
+  ---
+  duration_ms: 1.065344
+  type: 'test'
+  ...
+# Subtest: only the fixed stop-post selector is accepted; caller paths and commands are rejected
+ok 119 - only the fixed stop-post selector is accepted; caller paths and commands are rejected
+  ---
+  duration_ms: 0.340423
+  type: 'test'
+  ...
+# Subtest: real systemd unit installs independent stop-post and budgets beyond coordinator deadline
+ok 120 - real systemd unit installs independent stop-post and budgets beyond coordinator deadline
+  ---
+  duration_ms: 0.916049
+  type: 'test'
+  ...
+# Subtest: finalizer verifies before starting; persists only after authenticated TLS probes
+ok 121 - finalizer verifies before starting; persists only after authenticated TLS probes
+  ---
+  duration_ms: 2.287464
+  type: 'test'
+  ...
+# Subtest: parallel attempt failing exclusive lock never stops the owning finalizer
+ok 122 - parallel attempt failing exclusive lock never stops the owning finalizer
+  ---
+  duration_ms: 0.635276
+  type: 'test'
+  ...
+# Subtest: interruption at stop always blocks restart and stops controller
+ok 123 - interruption at stop always blocks restart and stops controller
+  ---
+  duration_ms: 0.21892
+  type: 'test'
+  ...
+# Subtest: interruption at enroll always blocks restart and stops controller
+ok 124 - interruption at enroll always blocks restart and stops controller
+  ---
+  duration_ms: 0.291689
+  type: 'test'
+  ...
+# Subtest: interruption at verify always blocks restart and stops controller
+ok 125 - interruption at verify always blocks restart and stops controller
+  ---
+  duration_ms: 0.374494
+  type: 'test'
+  ...
+# Subtest: interruption at configureLicense always blocks restart and stops controller
+ok 126 - interruption at configureLicense always blocks restart and stops controller
+  ---
+  duration_ms: 1.901773
+  type: 'test'
+  ...
+# Subtest: interruption at upload always blocks restart and stops controller
+ok 127 - interruption at upload always blocks restart and stops controller
+  ---
+  duration_ms: 0.263707
+  type: 'test'
+  ...
+# Subtest: interruption at enableWebInstances always blocks restart and stops controller
+ok 128 - interruption at enableWebInstances always blocks restart and stops controller
+  ---
+  duration_ms: 0.204929
+  type: 'test'
+  ...
+# Subtest: interruption at authorize always blocks restart and stops controller
+ok 129 - interruption at authorize always blocks restart and stops controller
+  ---
+  duration_ms: 0.311078
+  type: 'test'
+  ...
+# Subtest: interruption at start always blocks restart and stops controller
+ok 130 - interruption at start always blocks restart and stops controller
+  ---
+  duration_ms: 0.31176
+  type: 'test'
+  ...
+# Subtest: interruption at probe always blocks restart and stops controller
+ok 131 - interruption at probe always blocks restart and stops controller
+  ---
+  duration_ms: 0.400313
+  type: 'test'
+  ...
+# Subtest: interruption at persist always blocks restart and stops controller
+ok 132 - interruption at persist always blocks restart and stops controller
+  ---
+  duration_ms: 0.1924
+  type: 'test'
+  ...
+# Subtest: interruption at enableBoot always blocks restart and stops controller
+ok 133 - interruption at enableBoot always blocks restart and stops controller
+  ---
+  duration_ms: 0.142465
+  type: 'test'
+  ...
+# Subtest: interruption at disableSetup always blocks restart and stops controller
+ok 134 - interruption at disableSetup always blocks restart and stops controller
+  ---
+  duration_ms: 0.11946
+  type: 'test'
+  ...
+# Subtest: interruption at release always blocks restart and stops controller
+ok 135 - interruption at release always blocks restart and stops controller
+  ---
+  duration_ms: 0.114522
+  type: 'test'
+  ...
+# Subtest: shipped setup unit arguments execute the real setup main parser
+ok 136 - shipped setup unit arguments execute the real setup main parser
+  ---
+  duration_ms: 8.271905
+  type: 'test'
+  ...
+# Subtest: setup has its own unprivileged identity and no writable runtime or database access
+ok 137 - setup has its own unprivileged identity and no writable runtime or database access
+  ---
+  duration_ms: 0.603469
+  type: 'test'
+  ...
+# Subtest: boot transition uses installable target and finalizer is an argument-free fixed root entry
+ok 138 - boot transition uses installable target and finalizer is an argument-free fixed root entry
+  ---
+  duration_ms: 0.683659
+  type: 'test'
+  ...
+# Subtest: CLI requires explicit new trust, absolute paths and supervised invocation
+ok 139 - CLI requires explicit new trust, absolute paths and supervised invocation
+  ---
+  duration_ms: 13.129638
+  type: 'test'
+  ...
+# Subtest: only exact healthy R10 baseline state and exact historical R8 completion are accepted
+ok 140 - only exact healthy R10 baseline state and exact historical R8 completion are accepted
+  ---
+  duration_ms: 47.144048
+  type: 'test'
+  ...
+# Subtest: transition allows Admin source digests and finite network files but refuses sequence, system/schema and admission changes
+ok 141 - transition allows Admin source digests and finite network files but refuses sequence, system/schema and admission changes
+  ---
+  duration_ms: 2.810032
+  type: 'test'
+  ...
+# Subtest: successful R11 installs state before trial start and preserves exact R8 completion/configuration
+ok 142 - successful R11 installs state before trial start and preserves exact R8 completion/configuration
+  ---
+  duration_ms: 24.106375
+  type: 'test'
+  ...
+# Subtest: baseline readiness failure never stages, locks or stops an unhealthy controller
+ok 143 - baseline readiness failure never stages, locks or stops an unhealthy controller
+  ---
+  duration_ms: 4.953649
+  type: 'test'
+  ...
+# Subtest: trust, signature, owner, linked state and installed-unit drift fail before mutation
+ok 144 - trust, signature, owner, linked state and installed-unit drift fail before mutation
+  ---
+  duration_ms: 30.166566
+  type: 'test'
+  ...
+# Subtest: pre-existing foreign coordinator lock and guard survive unmodified
+ok 145 - pre-existing foreign coordinator lock and guard survive unmodified
+  ---
+  duration_ms: 10.896291
+  type: 'test'
+  ...
+# Subtest: staging/native/report failure before stop leaves old controller running and removes only own gates
+ok 146 - staging/native/report failure before stop leaves old controller running and removes only own gates
+  ---
+  duration_ms: 73.941736
+  type: 'test'
+  ...
+# Subtest: trial failure restarts only authenticated healthy R10 and unlocks after readiness
+ok 147 - trial failure restarts only authenticated healthy R10 and unlocks after readiness
+  ---
+  duration_ms: 30.908879
+  type: 'test'
+  ...
+# Subtest: fallback readiness failure leaves exact R10 stopped and locked
+ok 148 - fallback readiness failure leaves exact R10 stopped and locked
+  ---
+  duration_ms: 25.699395
+  type: 'test'
+  ...
+# Subtest: foreign state, current, completion and coordinator bytes are never overwritten
+ok 149 - foreign state, current, completion and coordinator bytes are never overwritten
+  ---
+  duration_ms: 122.181173
+  type: 'test'
+  ...
+# Subtest: failed controller stop never claims restored state or unlocks
+ok 150 - failed controller stop never claims restored state or unlocks
+  ---
+  duration_ms: 16.266416
+  type: 'test'
+  ...
+# Subtest: state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+ok 151 - state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+  ---
+  duration_ms: 145.546073
+  type: 'test'
+  ...
+# Subtest: failure to record durable rollback leaves old release stopped and locked
+ok 152 - failure to record durable rollback leaves old release stopped and locked
+  ---
+  duration_ms: 28.523487
+  type: 'test'
+  ...
+# Subtest: ExecStopPost only quiesces same invocation seq14; malformed protected lock requires matching journal
+ok 153 - ExecStopPost only quiesces same invocation seq14; malformed protected lock requires matching journal
+  ---
+  duration_ms: 0.652643
+  type: 'test'
+  ...
+# Subtest: failure serializer exposes only fixed codes, stages and reasons
+ok 154 - failure serializer exposes only fixed codes, stages and reasons
+  ---
+  duration_ms: 0.546543
+  type: 'test'
+  ...
+# Subtest: real candidate signature and payload tampering are refused before any service effect
+ok 155 - real candidate signature and payload tampering are refused before any service effect
+  ---
+  duration_ms: 13.799027
+  type: 'test'
+  ...
+# Subtest: second guard durability failure reconstructs activation gate first and stops our trial
+ok 156 - second guard durability failure reconstructs activation gate first and stops our trial
+  ---
+  duration_ms: 31.04614
+  type: 'test'
+  ...
+# Subtest: protected configuration drift before stop aborts without overwriting or stopping healthy R10
+ok 157 - protected configuration drift before stop aborts without overwriting or stopping healthy R10
+  ---
+  duration_ms: 15.601691
+  type: 'test'
+  ...
+# Subtest: network preflight fails before controller interruption and preserves baseline
+ok 158 - network preflight fails before controller interruption and preserves baseline
+  ---
+  duration_ms: 13.3426
+  type: 'test'
+  ...
+# Subtest: partial network installation is rolled back before R10 is restarted
+ok 159 - partial network installation is rolled back before R10 is restarted
+  ---
+  duration_ms: 18.796231
+  type: 'test'
+  ...
+# Subtest: failed addon rollback keeps controller stopped and maintenance lock retained
+ok 160 - failed addon rollback keeps controller stopped and maintenance lock retained
+  ---
+  duration_ms: 16.400573
+  type: 'test'
+  ...
+# Subtest: failed new assets are followed by old signed asset readback before rollback restart
+ok 161 - failed new assets are followed by old signed asset readback before rollback restart
+  ---
+  duration_ms: 18.852686
+  type: 'test'
+  ...
+# Subtest: old asset restoration failure prevents a claimed working rollback
+ok 162 - old asset restoration failure prevents a claimed working rollback
+  ---
+  duration_ms: 24.586128
+  type: 'test'
+  ...
+# Subtest: network installer uses bounded fixed argv and rejects successful-looking wrong identity
+ok 163 - network installer uses bounded fixed argv and rejects successful-looking wrong identity
+  ---
+  duration_ms: 0.542136
+  type: 'test'
+  ...
+# Subtest: R10 completion journal must be successful and retain six-adapter scope
+ok 164 - R10 completion journal must be successful and retain six-adapter scope
+  ---
+  duration_ms: 15.172184
+  type: 'test'
+  ...
+# Subtest: only three authorized Backitup runtime files, existing CLI test and exact publish manifest may change
+ok 165 - only three authorized Backitup runtime files, existing CLI test and exact publish manifest may change
+  ---
+  duration_ms: 2.111749
+  type: 'test'
+  ...
+1..165
+# tests 165
+# suites 0
+# pass 165
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6177.96987

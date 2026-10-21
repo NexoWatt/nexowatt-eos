@@ -1,0 +1,50 @@
+name: EOS managed fresh installation and update contracts
+on:
+  push:
+    branches: [main]
+    paths: ['runtime/**', 'tools/system/**', 'tools/bootstrap/**', 'tools/integration/**', 'system/**', 'components/admin/**', 'tests/**', '.github/workflows/eos-managed-updates.yml']
+  pull_request:
+    branches: [main]
+    paths: ['runtime/**', 'tools/system/**', 'tools/bootstrap/**', 'tools/integration/**', 'system/**', 'components/admin/**', 'tests/**', '.github/workflows/eos-managed-updates.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: eos-managed-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Verify actual cryptography, transaction faults, fresh enrollment and authorization
+        run: |
+          node --test tests/system/managed-channel.test.cjs tests/system/managed-trust.test.cjs tests/system/update-managed-release.test.cjs tests/integration/managed-fresh-enrollment.test.cjs components/admin/test/eos-update-http.test.cjs
+          node --test tests/onboarding/enrollment.test.cjs tests/system/first-start-finalizer.test.cjs tests/postgresql/own-adapter-product.test.cjs tests/system/own-adapter-sbom.test.cjs
+          node components/admin/tools/nexowatt-prebuilt-release-selftest.cjs
+      - name: Check root-owned temporary fixtures and actual local socket
+        run: sudo -- "$(command -v node)" --test tests/system/managed-trust.test.cjs tests/system/managed-socket.test.cjs tests/postgresql/host-install.test.cjs
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Install locked browser test tooling
+        run: |
+          npm --prefix tests/network/browser ci --ignore-scripts --no-audit --no-fund
+          tests/network/browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Exercise shipped UI with explicit HTTP fixtures
+        run: NODE_PATH="$GITHUB_WORKSPACE/tests/network/browser/node_modules" node --test components/admin/test/eos-update-browser.test.cjs

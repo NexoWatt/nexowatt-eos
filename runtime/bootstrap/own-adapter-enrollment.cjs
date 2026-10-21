@@ -101,10 +101,10 @@ function assertMarker(marker, config, allowPending = false) {
         !isDeepStrictEqual(marker.acl, PRIVATE_ACL) ||
         !exact(marker.native, ['schemaVersion', 'profile', 'state', 'operationId', 'sourceReleaseId', 'targetReleaseId',
             'sourceEnrollmentSha256', 'runtimeConfigSha256', 'controllerProfileSha256', 'initialConfiguration', 'productionReleaseApproved']) ||
-        marker.native.schemaVersion !== 1 || marker.native.profile !== PROFILE ||
+        ![1, 2].includes(marker.native.schemaVersion) || marker.native.profile !== PROFILE ||
         !['complete', ...(allowPending ? ['pending'] : [])].includes(marker.native.state) ||
         !/^[a-f0-9]{32}$/.test(marker.native.operationId || '') || !hex(marker.native.sourceReleaseId) || !hex(marker.native.targetReleaseId) ||
-        marker.native.sourceReleaseId === marker.native.targetReleaseId || !hex(marker.native.sourceEnrollmentSha256) ||
+        (marker.native.schemaVersion === 1 ? marker.native.sourceReleaseId === marker.native.targetReleaseId : marker.native.sourceReleaseId !== marker.native.targetReleaseId) || !hex(marker.native.sourceEnrollmentSha256) ||
         marker.native.runtimeConfigSha256 !== digest(config) || marker.native.controllerProfileSha256 !== digest(profileValue()) ||
         marker.native.initialConfiguration !== 'unconfigured-no-physical-targets' || marker.native.productionReleaseApproved !== false ||
         marker.from !== 'system.host.eos-own-adapter-enrollment' || !Number.isSafeInteger(marker.ts) || marker.ts < 1 ||
@@ -253,5 +253,31 @@ async function rollbackMigration({ objects, states, config, sourceApp, targetApp
     await management().verify({ objects, config, app: sourceApp });
     return { status: 'OWN_ADAPTER_ENROLLMENT_ROLLED_BACK', originalManagementEnrollmentPreserved: true };
 }
-module.exports = { MARKER, PROFILE, SPECS, EXTRA_SPECS, profileValue, pinnedAdapters, instanceDocument,
+// Fresh setup has no historical R4/R10 enrollment and records that explicitly.
+// All four additional adapters start without physical targets or listeners.
+async function enrollFresh({ objects, states, config, app, releaseId, checkpoint }) {
+    if (!hex(releaseId) || typeof checkpoint !== 'function' || !management().managedApp(app)) fail('OWN_ENROLLMENT_FRESH_SCOPE');
+    const packages = pinnedAdapters(app);
+    await stopped(states, config);
+    await management().verify({ objects, config, app });
+    if (await objects.getObjectAsync(MARKER)) fail('OWN_ENROLLMENT_EXISTING_INSTANCE');
+    const documents = packages.filter(row => EXTRA_SPECS.some(spec => spec.name === row.spec.name))
+        .map(row => instanceDocument(row, config.system.hostname, Date.now()));
+    for (const doc of documents) if (await objects.getObjectAsync(doc._id)) fail('OWN_ENROLLMENT_EXISTING_INSTANCE');
+    const marker = { _id: MARKER, type: 'meta', common: { name: 'EOS six-own-adapter test enrollment', type: 'meta.user' },
+        native: { schemaVersion: 2, profile: PROFILE, state: 'pending', operationId: crypto.randomBytes(16).toString('hex'),
+            sourceReleaseId: releaseId, targetReleaseId: releaseId,
+            sourceEnrollmentSha256: digest(await objects.getObjectAsync(management().MARKER)), runtimeConfigSha256: digest(config),
+            controllerProfileSha256: digest(profileValue()), initialConfiguration: 'unconfigured-no-physical-targets', productionReleaseApproved: false },
+        acl: { ...PRIVATE_ACL }, from: 'system.host.eos-own-adapter-enrollment', ts: Date.now() };
+    assertMarker(marker, config, true);
+    await checkpoint({ kind: 'eos-fresh-own-enrollment', releaseId, operationId: marker.native.operationId,
+        instanceIds: documents.map(doc => doc._id), physicalControlEnabled: false });
+    await writeExact(objects, marker);
+    for (const doc of documents) await writeExact(objects, doc);
+    for (const doc of documents) { doc.common.enabled = true; await writeExact(objects, doc); }
+    marker.native.state = 'complete'; await writeExact(objects, marker);
+    return verify({ objects, config, app });
+}
+module.exports = { enrollFresh, MARKER, PROFILE, SPECS, EXTRA_SPECS, profileValue, pinnedAdapters, instanceDocument,
     assertInstance, verify, planMigration, validatePlan, applyMigration, rollbackMigration };

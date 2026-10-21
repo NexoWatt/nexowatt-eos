@@ -1,0 +1,348 @@
+TAP version 13
+# Subtest: all update routes require current installer/service authority before parsing
+ok 1 - all update routes require current installer/service authority before parsing
+  ---
+  duration_ms: 3.423815
+  type: 'test'
+  ...
+# Subtest: same-origin custom header and HTTPS cannot be bypassed with forwarding headers
+ok 2 - same-origin custom header and HTTPS cannot be bypassed with forwarding headers
+  ---
+  duration_ms: 0.88337
+  type: 'test'
+  ...
+# Subtest: revoked session between authorization and JSON parsing cannot start update
+ok 3 - revoked session between authorization and JSON parsing cannot start update
+  ---
+  duration_ms: 0.530649
+  type: 'test'
+  ...
+# Subtest: only fixed operations, release identity and maintenance confirmation reach host
+ok 4 - only fixed operations, release identity and maintenance confirmation reach host
+  ---
+  duration_ms: 1.172616
+  type: 'test'
+  ...
+# Subtest: source/build route and client stay identical; current web binds protected update prefix
+ok 5 - source/build route and client stay identical; current web binds protected update prefix
+  ---
+  duration_ms: 1.863686
+  type: 'test'
+  ...
+# Subtest: fresh six-adapter enrollment needs no historical release, preserves accounts and creates unconfigured adapters
+ok 6 - fresh six-adapter enrollment needs no historical release, preserves accounts and creates unconfigured adapters
+  ---
+  duration_ms: 34.334049
+  type: 'test'
+  ...
+# Subtest: fresh enrollment rejects live controller and changed signed profile before writes
+ok 7 - fresh enrollment rejects live controller and changed signed profile before writes
+  ---
+  duration_ms: 6.324363
+  type: 'test'
+  ...
+# Subtest: interrupted fresh enrollment remains pending and cannot be replayed over partial objects
+ok 8 - interrupted fresh enrollment remains pending and cannot be replayed over partial objects
+  ---
+  duration_ms: 9.416299
+  type: 'test'
+  ...
+# Subtest: actual Ed25519 envelope authenticates an eligible update; unrelated and old releases are not offered
+ok 9 - actual Ed25519 envelope authenticates an eligible update; unrelated and old releases are not offered
+  ---
+  duration_ms: 5.039619
+  type: 'test'
+  ...
+# Subtest: altered payload, different key, expired/future envelope, unpinned URL, oversized archive and duplicate release fail closed
+ok 10 - altered payload, different key, expired/future envelope, unpinned URL, oversized archive and duplicate release fail closed
+  ---
+  duration_ms: 6.842704
+  type: 'test'
+  ...
+# Subtest: check is asynchronous; install uses displayed ID and explicit maintenance confirmation; duplicate clicks cannot start two jobs
+ok 11 - check is asynchronous; install uses displayed ID and explicit maintenance confirmation; duplicate clicks cannot start two jobs
+  ---
+  duration_ms: 9.739445
+  type: 'test'
+  ...
+# Subtest: restart with unfinished job retains recovery state and discards cached candidate
+ok 12 - restart with unfinished job retains recovery state and discards cached candidate
+  ---
+  duration_ms: 5.270817
+  type: 'test'
+  ...
+# Subtest: range transport accepts only exact 206 Content-Range and length, rejects redirect, whole-file fallback and overflow
+ok 13 - range transport accepts only exact 206 Content-Range and length, rejects redirect, whole-file fallback and overflow
+  ---
+  duration_ms: 1.170593
+  type: 'test'
+  ...
+# Subtest: archive is atomically exclusive and accepted only with exact downloaded SHA-256; failed data is removed
+ok 14 - archive is atomically exclusive and accepted only with exact downloaded SHA-256; failed data is removed
+  ---
+  duration_ms: 2.51731
+  type: 'test'
+  ...
+# Subtest: actual UDS is root-owned, group-restricted, finite and framed before dispatch
+not ok 15 - actual UDS is root-owned, group-restricted, finite and framed before dispatch
+  ---
+  duration_ms: 5.176805
+  type: 'test'
+  location: '<checkout>/tests/system/managed-socket.test.cjs:19:1'
+  failureType: 'testCodeFailure'
+  error: 'listen EPERM: operation not permitted <isolated-fixture>/control.sock'
+  code: 'EPERM'
+  stack: |-
+    Server.setupListenHandle [as _listen2] (node:net:2145:21)
+    listenInCluster (node:net:2224:12)
+    Server.listen (node:net:2361:5)
+    serve (<checkout>/runtime/updates/service.cjs:124:12)
+    TestContext.<anonymous> (<checkout>/tests/system/managed-socket.test.cjs:23:18)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: fresh checkout installer accepts only its new ARM64 baseline and independent trust pin
+ok 16 - fresh checkout installer accepts only its new ARM64 baseline and independent trust pin
+  ---
+  duration_ms: 19.275915
+  type: 'test'
+  ...
+# Subtest: publisher signs a valid receiver envelope without claiming publication or exposing the key
+ok 17 - publisher signs a valid receiver envelope without claiming publication or exposing the key
+  ---
+  duration_ms: 7.971133
+  type: 'test'
+  ...
+# Subtest: publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output
+ok 18 - publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output
+  ---
+  duration_ms: 2.993397
+  type: 'test'
+  ...
+# Subtest: fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail
+ok 19 - fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail
+  ---
+  duration_ms: 22.419714
+  type: 'test'
+  ...
+# Subtest: managed assembly binds independent fresh/follow-up sequence, reconstructed base and current bytes
+ok 20 - managed assembly binds independent fresh/follow-up sequence, reconstructed base and current bytes
+  ---
+  duration_ms: 95.000822
+  type: 'test'
+  ...
+# Subtest: own assembly binds six own adapters, six identical clients and exact CLI/core transforms
+ok 21 - own assembly binds six own adapters, six identical clients and exact CLI/core transforms
+  ---
+  duration_ms: 16.176301
+  type: 'test'
+  ...
+# Subtest: verified sequence 13 requires own assembly even if its marker is removed or replaced with R9
+ok 22 - verified sequence 13 requires own assembly even if its marker is removed or replaced with R9
+  ---
+  duration_ms: 28.086688
+  type: 'test'
+  ...
+# Subtest: own assembly cannot be relabeled as sequence12 or other signed release context
+ok 23 - own assembly cannot be relabeled as sequence12 or other signed release context
+  ---
+  duration_ms: 52.018053
+  type: 'test'
+  ...
+# Subtest: network assembly binds sequence14 to distinct R9 reconstruction and R10 transition pins
+ok 24 - network assembly binds sequence14 to distinct R9 reconstruction and R10 transition pins
+  ---
+  duration_ms: 10.24967
+  type: 'test'
+  ...
+# Subtest: sequence14 requires the new network marker and rejects missing, old or invented markers
+ok 25 - sequence14 requires the new network marker and rejects missing, old or invented markers
+  ---
+  duration_ms: 41.791578
+  type: 'test'
+  ...
+# Subtest: network marker rejects missing signed context, downgrade and later sequence reuse
+ok 26 - network marker rejects missing signed context, downgrade and later sequence reuse
+  ---
+  duration_ms: 59.383883
+  type: 'test'
+  ...
+# Subtest: network profile requires exact reconstruction, predecessor, target and execution scope
+ok 27 - network profile requires exact reconstruction, predecessor, target and execution scope
+  ---
+  duration_ms: 96.236299
+  type: 'test'
+  ...
+# Subtest: network profile retains app, owner, mode, scan and exact transform binding gates
+ok 28 - network profile retains app, owner, mode, scan and exact transform binding gates
+  ---
+  duration_ms: 130.667758
+  type: 'test'
+  ...
+# Subtest: new standalone marker requires exact predecessor, test scope and truthful scan/resolution claims
+ok 29 - new standalone marker requires exact predecessor, test scope and truthful scan/resolution claims
+  ---
+  duration_ms: 66.157087
+  type: 'test'
+  ...
+# Subtest: own derivative rejects stale content/mode digests, duplicate claims and misleading package archive hashes
+ok 30 - own derivative rejects stale content/mode digests, duplicate claims and misleading package archive hashes
+  ---
+  duration_ms: 33.593278
+  type: 'test'
+  ...
+# Subtest: new CLI transform files require updated exact pedigree table, not old hash or upstream archive identity
+ok 31 - new CLI transform files require updated exact pedigree table, not old hash or upstream archive identity
+  ---
+  duration_ms: 40.403015
+  type: 'test'
+  ...
+# Subtest: real payload coordinator appends all independently verified backup and shutdown transforms before SBOM validation only in own scope
+ok 32 - real payload coordinator appends all independently verified backup and shutdown transforms before SBOM validation only in own scope
+  ---
+  duration_ms: 5.474301
+  type: 'test'
+  ...
+# Subtest: shutdown derivative source and exact two-file transform profile cannot be removed or widened
+ok 33 - shutdown derivative source and exact two-file transform profile cannot be removed or widened
+  ---
+  duration_ms: 52.972273
+  type: 'test'
+  ...
+# Subtest: CLI requires explicit new trust, absolute paths and supervised invocation
+ok 34 - CLI requires explicit new trust, absolute paths and supervised invocation
+  ---
+  duration_ms: 13.102338
+  type: 'test'
+  ...
+# Subtest: only exact healthy managed state and fresh completion are accepted
+ok 35 - only exact healthy managed state and fresh completion are accepted
+  ---
+  duration_ms: 47.581368
+  type: 'test'
+  ...
+# Subtest: transition allows Admin own-package digests but refuses sequence, system/schema and admission changes
+ok 36 - transition allows Admin own-package digests but refuses sequence, system/schema and admission changes
+  ---
+  duration_ms: 4.010678
+  type: 'test'
+  ...
+# Subtest: successful managed update installs state before trial start and preserves fresh completion/configuration
+ok 37 - successful managed update installs state before trial start and preserves fresh completion/configuration
+  ---
+  duration_ms: 22.647071
+  type: 'test'
+  ...
+# Subtest: baseline readiness failure never stages, locks or stops an unhealthy controller
+ok 38 - baseline readiness failure never stages, locks or stops an unhealthy controller
+  ---
+  duration_ms: 4.217511
+  type: 'test'
+  ...
+# Subtest: trust, signature, owner, linked state and installed-unit drift fail before mutation
+ok 39 - trust, signature, owner, linked state and installed-unit drift fail before mutation
+  ---
+  duration_ms: 22.461631
+  type: 'test'
+  ...
+# Subtest: pre-existing foreign coordinator lock and guard survive unmodified
+ok 40 - pre-existing foreign coordinator lock and guard survive unmodified
+  ---
+  duration_ms: 7.821871
+  type: 'test'
+  ...
+# Subtest: staging/native/report failure before stop leaves old controller running and removes only own gates
+ok 41 - staging/native/report failure before stop leaves old controller running and removes only own gates
+  ---
+  duration_ms: 40.355013
+  type: 'test'
+  ...
+# Subtest: trial failure restarts only authenticated healthy managed baseline and unlocks after readiness
+ok 42 - trial failure restarts only authenticated healthy managed baseline and unlocks after readiness
+  ---
+  duration_ms: 29.017447
+  type: 'test'
+  ...
+# Subtest: fallback readiness failure leaves exact managed baseline stopped and locked
+ok 43 - fallback readiness failure leaves exact managed baseline stopped and locked
+  ---
+  duration_ms: 18.802745
+  type: 'test'
+  ...
+# Subtest: foreign state, current, completion and coordinator bytes are never overwritten
+ok 44 - foreign state, current, completion and coordinator bytes are never overwritten
+  ---
+  duration_ms: 91.869435
+  type: 'test'
+  ...
+# Subtest: failed controller stop never claims restored state or unlocks
+ok 45 - failed controller stop never claims restored state or unlocks
+  ---
+  duration_ms: 22.248811
+  type: 'test'
+  ...
+# Subtest: state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+ok 46 - state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+  ---
+  duration_ms: 131.181769
+  type: 'test'
+  ...
+# Subtest: failure to record durable rollback leaves old release stopped and locked
+ok 47 - failure to record durable rollback leaves old release stopped and locked
+  ---
+  duration_ms: 15.990572
+  type: 'test'
+  ...
+# Subtest: ExecStopPost only quiesces same invocation seq16; malformed protected lock requires matching journal
+ok 48 - ExecStopPost only quiesces same invocation seq16; malformed protected lock requires matching journal
+  ---
+  duration_ms: 0.54549
+  type: 'test'
+  ...
+# Subtest: failure serializer exposes only fixed codes, stages and reasons
+ok 49 - failure serializer exposes only fixed codes, stages and reasons
+  ---
+  duration_ms: 0.244328
+  type: 'test'
+  ...
+# Subtest: real candidate signature and payload tampering are refused before any service effect
+ok 50 - real candidate signature and payload tampering are refused before any service effect
+  ---
+  duration_ms: 12.209932
+  type: 'test'
+  ...
+# Subtest: second guard durability failure reconstructs activation gate first and stops our trial
+ok 51 - second guard durability failure reconstructs activation gate first and stops our trial
+  ---
+  duration_ms: 27.622615
+  type: 'test'
+  ...
+# Subtest: protected configuration drift before stop aborts without overwriting or stopping healthy managed baseline
+ok 52 - protected configuration drift before stop aborts without overwriting or stopping healthy managed baseline
+  ---
+  duration_ms: 20.213636
+  type: 'test'
+  ...
+# Subtest: failed new assets are followed by old signed asset readback before rollback restart
+ok 53 - failed new assets are followed by old signed asset readback before rollback restart
+  ---
+  duration_ms: 20.673798
+  type: 'test'
+  ...
+# Subtest: old asset restoration failure prevents a claimed working rollback
+ok 54 - old asset restoration failure prevents a claimed working rollback
+  ---
+  duration_ms: 18.318162
+  type: 'test'
+  ...
+1..54
+# tests 54
+# suites 0
+# pass 53
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 857.339616

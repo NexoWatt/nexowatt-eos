@@ -127,8 +127,10 @@ function verifySbomBinding(payload, files, profile, release) {
     const r9Assembly = 'authenticated-r8-tree-with-six-own-adapter-source-overlays';
     const ownAssembly = 'authenticated-r9-tree-with-six-own-adapters-backup-state-and-adapter-shutdown-transforms';
     const networkAssembly = 'authenticated-r9-app-reconstruction-with-r10-network-transition';
+    const managedAssembly = 'authenticated-r9-app-reconstruction-with-managed-updates';
+    const managedCandidate = release?.sequence >= 15 || props['eos:sbom:assembly'] === managedAssembly;
     const networkCandidate = release?.sequence === 14 || props['eos:sbom:assembly'] === networkAssembly;
-    const ownCandidate = networkCandidate || release?.sequence === 13 || props['eos:sbom:assembly'] === ownAssembly;
+    const ownCandidate = managedCandidate || networkCandidate || release?.sequence === 13 || props['eos:sbom:assembly'] === ownAssembly;
     const shutdown = ownCandidate ? require('../controller-profile/adapter-shutdown.cjs') : null;
     const newClientPresent = Object.entries(EMBEDDED).some(([relative, name]) => name === '@nexowatt/eos-license-client' &&
         !relative.startsWith('node_modules/iobroker.eos-admin/') && !relative.startsWith('node_modules/iobroker.nexowatt-ui/') && rows.has(`app/${relative}/package.json`));
@@ -139,7 +141,11 @@ function verifySbomBinding(payload, files, profile, release) {
         // R11 reconstructs the app from R9, but only updates an authenticated
         // R10 installation. Its marker is a separate profile requiring signed
         // sequence context; it cannot relax or relabel the existing R10 profile.
-        if (networkCandidate) {
+        if (managedCandidate) {
+            if (!Number.isSafeInteger(release?.sequence) || release.sequence < 15 || props['eos:sbom:assembly'] !== managedAssembly ||
+                props['eos:sbom:base-release-id'] !== '97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000' ||
+                props['eos:sbom:target-sequence'] !== String(release.sequence) || props['eos:sbom:execution-scope'] !== 'own-adapter-test') reject('SBOM_DERIVATIVE_BINDING');
+        } else if (networkCandidate) {
             if (release?.sequence !== 14 || props['eos:sbom:assembly'] !== networkAssembly ||
                 props['eos:sbom:base-release-id'] !== '97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000' ||
                 props['eos:sbom:previous-release-id'] !== '9073b20a1c9f54eb4870b3b37a4a8ef59c6916feb379234aa6d14986a3fc26f0' ||

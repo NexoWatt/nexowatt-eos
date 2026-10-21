@@ -78,7 +78,7 @@ function validatePayload(payload, manifest) {
     const databaseBackend = communication.has('eos-postgresql-mtls13-v1') ? 'postgresql' : 'redis';
     const fullProduct = manifest.releaseVersion === '0.2.0-test.3';
     const releaseScope = product.releaseScope(manifest);
-    if (manifest.sequence === 14) {
+    if (manifest.sequence >= 14) {
         const required = ['runtime/network/policy.py', 'runtime/network/host.py', 'runtime/network/server.py',
             'tools/system/install-network-host.py', 'tools/system/update-test-to-r11.cjs',
             'system/network/nexowatt-eos-network.service', 'system/network/nexowatt-eos-network-guard.service',
@@ -89,6 +89,17 @@ function validatePayload(payload, manifest) {
             if (!row || !row.size || row.mode !== 0o644 || row.sha256 !== sha256(readFileLimited(path.join(payload, name)).bytes))
                 reject('BUILD_NETWORK_PROFILE_REQUIRED');
         }
+    }
+    if (manifest.sequence >= 15) {
+        for (const name of ['system/managed-test/profile.json', 'system/managed-test/nexowatt-eos-updates.service',
+            'tools/system/install-managed-updates.cjs', 'tools/system/update-managed-release.cjs', 'tools/system/extract-test-bundle.py',
+            'tools/integration/test-archive.py', ...['channel', 'transport', 'service', 'worker'].map(n => `runtime/updates/${n}.cjs`)]) {
+            const row = manifest.files.find(file => file.path === name);
+            if (!row || !row.size || row.mode !== 0o644 || row.sha256 !== sha256(readFileLimited(path.join(payload, name)).bytes)) reject('BUILD_MANAGED_PROFILE_REQUIRED');
+        }
+        const managed = parseJson(path.join(payload, 'system/managed-test/profile.json'));
+        if (JSON.stringify(managed) !== JSON.stringify({ schemaVersion: 1, profile: 'eos-managed-test-v1', minimumSequence: 15,
+            nodeVersion: '24.21.0', platform: 'linux-arm64' })) reject('BUILD_MANAGED_PROFILE_REQUIRED');
     }
     const productInventory = fullProduct ? product.inspectApp(path.join(payload, 'app'), releaseScope) : null;
     if (fullProduct) product.assertCatalog(catalog, releaseScope);
@@ -146,9 +157,10 @@ function validatePayload(payload, manifest) {
     }
     return { catalog, plan, sbom, databaseBackend, productInventory, architectureReports };
 }
-function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST, networkProfile = false }) {
+function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST, networkProfile = false, managedProfile = false }) {
     product.specsFor(releaseScope);
     if (typeof networkProfile !== 'boolean' || networkProfile && releaseScope !== product.OWN_ADAPTER_TEST) reject('BUILD_NETWORK_PROFILE_REQUIRED');
+    if (typeof managedProfile !== 'boolean' || managedProfile && (!networkProfile || releaseScope !== product.OWN_ADAPTER_TEST)) reject('BUILD_MANAGED_PROFILE_REQUIRED');
     const source = trustedDirectory(appDirectory);
     const target = path.resolve(destination);
     if (target === source || target.startsWith(source + path.sep)) reject('BUILD_OUTPUT_INSIDE_INPUT');
@@ -172,11 +184,15 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
                 fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
             }
         }
+        if (managedProfile) for (const name of ['install-managed-updates.cjs', 'update-managed-release.cjs', 'extract-test-bundle.py'])
+            fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'tools/integration'));
+        if (managedProfile) fs.copyFileSync(path.join(REPO, 'tools/integration/test-archive.py'), path.join(destination, 'tools/integration/test-archive.py'), fs.constants.COPYFILE_EXCL);
         fs.copyFileSync(path.join(REPO, 'tools/integration/check-runtime-architecture.cjs'), path.join(destination, 'tools/integration/check-runtime-architecture.cjs'), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'security'));
         fs.copyFileSync(path.join(REPO, 'security/verify-runtime-tls.cjs'), path.join(destination, 'security/verify-runtime-tls.cjs'), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'system')); fs.mkdirSync(path.join(destination, 'system/test-base'));
+        if (managedProfile) copyDirectory(path.join(REPO, 'system/managed-test'), path.join(destination, 'system/managed-test'));
         if (networkProfile) copyDirectory(path.join(REPO, 'system/network'), path.join(destination, 'system/network'));
         copyDirectory(path.join(REPO, 'system/test-base/systemd'), path.join(destination, 'system/test-base/systemd'));
         copyDirectory(path.join(REPO, 'system/test-base/os-updates'), path.join(destination, 'system/test-base/os-updates'));
@@ -218,7 +234,7 @@ function main(argv) {
         const payload = path.join(scratch, 'payload');
         const files = preparePayload({ appDirectory: opts['--app'], destination: payload,
             catalogFile: opts['--catalog'], sbomFile: opts['--sbom'], releaseScope: product.releaseScope(metadata),
-            networkProfile: metadata.sequence === 14 });
+            networkProfile: metadata.sequence >= 14, managedProfile: metadata.sequence >= 15 });
         validatePayload(payload, { ...metadata, files });
         const key = readFileLimited(opts['--private-key'], 16384);
         if (key.mode & 0o077) reject('BUILD_PRIVATE_KEY_PERMISSIONS');

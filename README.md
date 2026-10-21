@@ -1,5 +1,13 @@
 # Aktueller Teststand: R11 mit Gerätenetzverwaltung
 
+**21. Oktober: Neue Frischbasis mit EOS-Updateknopf in Umsetzung.** Der neue
+Quellpfad soll eine einmalige Neuinstallation ohne R10-Voraussetzung und danach
+signierte Anpassungen über den Admin ermöglichen. Paketbau, dauerhafte
+Signierautorität und Pi-Abnahme sind noch offen. **Den Pi dafür noch nicht
+löschen; es gibt noch keinen freigegebenen neuen Neuinstallationsbefehl.**
+[Ablauf und Grenzen](docs/operations/MANAGED_TEST_UPDATES_DE.md) ·
+[Prüfbericht](reports/integration/managed-updates-20261021/README_DE.md).
+
 **20. Oktober 2026: test.3 Revision 11, Sequenz 14 ist signiert, veröffentlicht
 und über den geprüften öffentlichen Updatebefehl verfügbar.** Dieser Updateweg
 gilt ausschließlich für einen vollständig eingerichteten, betriebsbereiten

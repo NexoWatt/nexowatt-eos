@@ -1,5 +1,23 @@
 # NexoWatt EOS review profile — parameters
 
+## Managed test baseline and update candidates (2026-10-21)
+
+These source tools do not constitute a published installation release.
+`tools/system/install-managed-from-checkout.cjs preflight` only inspects the
+prepared host. Its `install` operation requires the five explicit values
+`--release-public-key-sha256`, `--origin`, `--hosts-file`, `--license-trust`,
+and `--license-trust-sha256`. It accepts only the separately authenticated
+sequence-15 ARM64 test baseline. It neither downloads OS packages nor accepts
+user passwords on the command line.
+
+Manufacturer tooling `tools/bootstrap/build-managed-test.cjs` requires, in
+order, `--native-evidence`, `--private-key`, `--public-key-sha256`, and
+`--sequence` (15 or higher). `tools/bootstrap/sign-managed-channel.cjs` requires,
+in order, `--input`, `--private-key`, `--public-key-sha256`, and `--output`.
+Private-key arguments are paths to protected external files, never key values.
+The tools create local candidates only; neither publishes automatically.
+See [scope and outstanding acceptance](docs/operations/MANAGED_TEST_UPDATES_DE.md).
+
 ## Failed first-start diagnosis (2026-10-04)
 
 `tools/system/diagnose-first-start.cjs` is a standalone files-only diagnostic.

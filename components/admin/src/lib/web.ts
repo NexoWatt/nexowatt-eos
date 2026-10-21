@@ -31,6 +31,7 @@ import { readGroupRows, securityProjection } from './eosSessionSecurity';
 import { createUploadMiddleware, getUploadDirectory, retainUpload, storeRestoreUpload } from './eosUploadGuard';
 import { createAccountInvitations } from './eosAccountInvitations';
 import { registerNetworkRoutes } from './eosNetworkHttp';
+import { registerUpdateRoutes } from './eosUpdateHttp';
 
 let AdapterStore;
 /** Content of a socket-io file */
@@ -1921,7 +1922,7 @@ export default class Web {
                 // before their small dedicated JSON parser consumes any body.
                 const genericUrlencoded = bodyParser.urlencoded({ extended: true });
                 const genericJson = bodyParser.json();
-                const isLicensePath = (req: Request): boolean => /^\/nexowatt\/(?:license|network)(?:\/|$)/i.test(req.path);
+                const isLicensePath = (req: Request): boolean => /^\/nexowatt\/(?:license|network|updates|managed-updates)(?:\/|$)/i.test(req.path);
                 this.server.app.use((req: Request, res: Response, next: NextFunction): void => {
                     if (isLicensePath(req)) { next(); return; }
                     genericUrlencoded(req, res, next);
@@ -2145,6 +2146,11 @@ export default class Web {
                 scriptPath: join(__dirname, '../../public/nexowatt-license.js'),
             });
 
+            registerUpdateRoutes(this.server.app, {
+                secure: this.settings.secure === true,
+                authorize: (req: Request) => this.getEosNetworkAccess(req),
+                jsonParser: bodyParser.json({ limit: '1kb', strict: true }),
+            });
             registerNetworkRoutes(this.server.app, {
                 secure: this.settings.secure === true,
                 authorize: (req: Request) => this.getEosNetworkAccess(req),

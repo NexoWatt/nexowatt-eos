@@ -45,13 +45,13 @@ test('unknown scope is not a force or production switch', () => {
     }
 });
 
-test('only exact signed sequence13 and sequence14 test contexts select six-adapter execution', () => {
+test('historical and managed signed test contexts select six-adapter execution', () => {
     const release = { product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: 13,
         profile: 'test', nodeVersion: '24.21.0', platforms: ['linux-arm64'] };
-    for (const sequence of [13, 14]) {
+    for (const sequence of [13, 14, 15, 16]) {
         assert.equal(product.releaseScope({ ...release, sequence }), product.OWN_ADAPTER_TEST);
     }
-    for (const sequence of [1, 11, 12, 15]) {
+    for (const sequence of [1, 11, 12]) {
         assert.equal(product.releaseScope({ ...release, sequence }), product.MANAGEMENT_TEST);
     }
     for (const mutation of [{ product: 'other' }, { releaseVersion: '0.2.0-test.4' },
@@ -71,4 +71,5 @@ test('generic fresh install and additive activation cannot bypass journaled own-
         assert.throws(() => assertGenericDeployment({ ...release, sequence }), { code: 'EOS_OWN_ADAPTER_UPDATE_ONLY' });
     }
     assert.doesNotThrow(() => assertGenericDeployment({ ...release, sequence: 12 }));
+    assert.doesNotThrow(() => assertGenericDeployment({ ...release, sequence: 15 })); // separate managed payload validation is mandatory
 });

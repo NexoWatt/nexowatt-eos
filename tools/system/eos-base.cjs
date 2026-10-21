@@ -19,7 +19,7 @@ function assertGenericDeployment(manifest) {
     // The six-adapter revision migrates a completed two-adapter enrollment.
     // Its journaled migration/rollback may not be bypassed through install or
     // generic additive activation. A separate fresh-install path is not proven.
-    if (product.releaseScope(manifest) === product.OWN_ADAPTER_TEST) reject('EOS_OWN_ADAPTER_UPDATE_ONLY');
+    if (product.releaseScope(manifest) === product.OWN_ADAPTER_TEST && manifest.sequence < 15) reject('EOS_OWN_ADAPTER_UPDATE_ONLY');
 }
 function parseArgs(argv, required) {
     if (argv.length !== required.length * 2) reject('EOS_USAGE');

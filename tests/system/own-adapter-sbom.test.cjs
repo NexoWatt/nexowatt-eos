@@ -109,6 +109,18 @@ function networkFixture(t) {
     return f;
 }
 
+test('managed assembly binds independent fresh/follow-up sequence, reconstructed base and current bytes', t => {
+    for (const sequence of [15, 16, 23]) {
+        const f = networkFixture(t);
+        changeProperty(f.bom.metadata, 'eos:sbom:assembly', 'authenticated-r9-app-reconstruction-with-managed-updates');
+        changeProperty(f.bom.metadata, 'eos:sbom:target-sequence', String(sequence));
+        assert.equal(f.check({ sequence }, f.profile).embeddedPackages, 6);
+        assert.throws(() => f.check({ sequence: sequence + 1 }, f.profile), { code: 'SBOM_DERIVATIVE_BINDING' });
+        changeProperty(f.bom.metadata, 'eos:sbom:base-release-id', '0'.repeat(64));
+        assert.throws(() => f.check({ sequence }, f.profile), { code: 'SBOM_DERIVATIVE_BINDING' });
+    }
+});
+
 test('own assembly binds six own adapters, six identical clients and exact CLI/core transforms', t => {
     const f = fixture(t);
     assert.deepEqual(f.check({ sequence: 13 }, f.profile), { installedPackages: 8, uniqueNpmComponents: 8, embeddedPackages: 6,
