@@ -288,7 +288,7 @@ function rebindMarker(marker, oldConfig, newConfig) {
     if (!isDeepStrictEqual(permitted, newConfig)) fail('MARKER_CONFIG_CHANGE_REJECTED');
     const native = marker?.native;
     if (!plain(marker) || marker._id !== 'system.meta.eosTestBase' || marker.type !== 'meta' || !plain(native) ||
-        native.profile !== 'eos-core-only-bootstrap-v1' || native.coreControllerVersion !== '7.2.2' || native.bootstrapPolicyVersion !== 1 ||
+        native.profile !== 'eos-core-only-bootstrap-v1' || !['7.2.2', '7.2.5'].includes(native.coreControllerVersion) || native.bootstrapPolicyVersion !== 1 ||
         native.state !== 'complete' || !/^[a-f0-9]{64}$/.test(native.creationAppLockSha256 || '') ||
         ![hash(JSON.stringify(oldConfig)), hash(JSON.stringify(newConfig))].includes(native.runtimeConfigSha256)) fail('BOOTSTRAP_MARKER_REBIND_REJECTED');
     const result = structuredClone(marker);

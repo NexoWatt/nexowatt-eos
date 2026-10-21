@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-security-refresh-build-contract-verification",
+  "date": "2026-10-21",
+  "sourceBaseCommit": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "workingTreeChanges": true,
+  "sourceIdentity": "exact file hashes below; not a clean committed candidate",
+  "environment": {
+    "platform": "linux",
+    "node": "24.19.0",
+    "python": "3.12.14"
+  },
+  "commands": [
+    {
+      "command": "node --test --test-reporter=tap tests/integration/security-refresh-build.test.cjs tests/integration-own-adapters/fixture.test.cjs tests/integration/runtime-dependency-policy.test.cjs tests/system/controller725-dependency-policy.test.cjs",
+      "exitCode": 0,
+      "tests": 34,
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "python3 -I -B tests/integration/prepared-runtime-archive.test.py",
+      "exitCode": 0,
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "command": "node --check on changed JavaScript helpers/fixtures; Python AST parse on new helpers/tests",
+      "exitCode": 0
+    }
+  ],
+  "inputs": [
+    {
+      "file": "runtime/release/fresh-sbom-binding.cjs",
+      "sha256": "472d508a6d2a6e732359f8dc43f73d0331e3ef4614b7decaf7db71bc665863cc",
+      "bytes": 7618
+    },
+    {
+      "file": "runtime/release/sbom-binding.cjs",
+      "sha256": "17d40235494113861815a9caf71976d41af4c94228b877df2421a43e060dfcc8",
+      "bytes": 18850
+    },
+    {
+      "file": "tools/integration/build-runtime.cjs",
+      "sha256": "3f38a0bc84ac67d75c259133c2cc5beeee50d07ced4b0c88580175089029ad05",
+      "bytes": 17255
+    },
+    {
+      "file": "tools/integration/runtime-dependency-policy.cjs",
+      "sha256": "28626f42fa4502245ff45ee5814dee270027c1ca1ad7de9ba2a13bde16ecacdb",
+      "bytes": 7422
+    },
+    {
+      "file": "tools/integration/prepare-security-refresh.cjs",
+      "sha256": "e4ed2ac28d4eb41c3b627a2017292aa3c7d16179b9479655942580def99b8b62",
+      "bytes": 10790
+    },
+    {
+      "file": "tools/integration/stage-security-refresh-cache.cjs",
+      "sha256": "e645a7e0a6339cbd7190a3ba8dfc7910cf3b3319d9671a0e67854c90216522e5",
+      "bytes": 1779
+    },
+    {
+      "file": "tools/integration/verify-security-refresh-native.cjs",
+      "sha256": "46ccd9ac757cafb193630e7f5fa322f846a58e566ec9bcc99351ab8c274d598c",
+      "bytes": 10219
+    },
+    {
+      "file": "tools/integration/pack-prepared-runtime.cjs",
+      "sha256": "d5317709aa3683128a8cd64127e578682441a8670e71d12147e5462fcc394cb9",
+      "bytes": 1735
+    },
+    {
+      "file": "tools/integration/prepared-runtime-archive.py",
+      "sha256": "ad8c28a1a257a33da858d05901c849d93c0fe3987c9bb5b8099d6e54c5e2b8b1",
+      "bytes": 6170
+    },
+    {
+      "file": "tools/integration/README.md",
+      "sha256": "e2a7fb36636a0f527e8c1a950a9279f6cdea568a10bf5b63cec44869e895fc32",
+      "bytes": 10443
+    },
+    {
+      "file": "tools/bootstrap/build-managed-test.cjs",
+      "sha256": "fa1729c5cf961f1081bbe13822db4140c0bcec9dac2748c7ba97839dc8645c7d",
+      "bytes": 5679
+    },
+    {
+      "file": "tests/integration-own-adapters/fixture.cjs",
+      "sha256": "bd5bd362ec15496d0bc68f69e1e77d6dc90a70fffa366463b910f0c5670d04d8",
+      "bytes": 4726
+    },
+    {
+      "file": "tests/integration-own-adapters/prepare-fixed-root.cjs",
+      "sha256": "5373952e30e799550e170631531a74b2317a64209548bbdf364db6edddf91083",
+      "bytes": 6744
+    },
+    {
+      "file": "tests/integration-own-adapters/prepare-security-refresh.cjs",
+      "sha256": "eaef49df7ea82a9359757d50bf8280aa8f78e8ff62749ab0831a9e06f7d3f5bd",
+      "bytes": 2937
+    },
+    {
+      "file": "tests/integration-own-adapters/management.integration.cjs",
+      "sha256": "c183891b094cc96c3c5ebc11fd2abd3273f82c034542d23eeda8892947547dcf",
+      "bytes": 39446
+    },
+    {
+      "file": "tests/integration/security-refresh-build.test.cjs",
+      "sha256": "edd7ff26d726f866b568653c6ad03d41c08248b80a50cf0a35de85880e2c224c",
+      "bytes": 12075
+    },
+    {
+      "file": "tests/integration/prepared-runtime-archive.test.py",
+      "sha256": "564abcf3b470cb7be3338b46eb8c2af2dc6c0b6c9a234d0f1665915f1054f289",
+      "bytes": 3583
+    },
+    {
+      "file": "tests/system/controller725-dependency-policy.test.cjs",
+      "sha256": "e605828b1b72a36776883272c26abccbff9bbf378d377f7854d3f18e56fdbf90",
+      "bytes": 3031
+    }
+  ],
+  "evidence": [
+    {
+      "file": "reports/integration/security-refresh-20261021/build/contracts.tap",
+      "sha256": "41c9553fa5a3782c419cd58de229acacb2617d244aa8772fee9e3aa637a63706",
+      "bytes": 8450
+    },
+    {
+      "file": "reports/integration/security-refresh-20261021/build/archive-tests.txt",
+      "sha256": "fa97c80fc3eb7334a7712f41052656d9ec705f0053004a58704211e91a7526ad",
+      "bytes": 101
+    }
+  ],
+  "notExecuted": [
+    "complete fresh resolution/install with exact Node24.21.0/npm11.19.0",
+    "native PostgreSQL17.11/controller7.2.5 CI scenario",
+    "full fresh-runtime dependency audit",
+    "persistent manufacturer signing",
+    "Pi installation",
+    "physical device tests"
+  ],
+  "signedPackageCreated": false,
+  "signingKeyGenerated": false,
+  "published": false,
+  "physicalHardwareTested": false,
+  "productionReleaseApproved": false
+}

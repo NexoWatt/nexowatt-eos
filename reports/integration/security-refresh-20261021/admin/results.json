@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-21T19:38:38.195Z",
+  "sourceBaseCommit": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "status": "SOURCE_CHECKS_PASS_TARGET_RELEASE_GATES_OPEN",
+  "execution": {
+    "platform": "linux",
+    "architecture": "x64",
+    "node": "24.19.0",
+    "releaseNodeTarget": "24.21.0",
+    "browserPackage": "@sparticuz/chromium@143.0.4",
+    "browserVersion": "143.0.7499.0",
+    "browserApi": "fixture network/update APIs; no target Pi"
+  },
+  "package": {
+    "name": "iobroker.eos-admin",
+    "version": "7.10.11",
+    "fullFrontendRebuild": false,
+    "frontendAssetsChanged": 0,
+    "backendBuild": true,
+    "embeddedLicenseClientChanged": false
+  },
+  "dependencies": [
+    {
+      "name": "@iobroker/adapter-core",
+      "version": "3.4.3",
+      "resolved": "https://registry.npmjs.org/@iobroker/adapter-core/-/adapter-core-3.4.3.tgz",
+      "integrity": "sha512-6pFFcWsiZY966xmdeORTkhs1MMtuNSfdab6XxmKRWOO3RXWN8vWIh1vvgnFhttrF7+56ykE4iDr4rgjdEWCtog=="
+    },
+    {
+      "name": "@iobroker/socket-classes",
+      "version": "2.10.0",
+      "resolved": "https://registry.npmjs.org/@iobroker/socket-classes/-/socket-classes-2.10.0.tgz",
+      "integrity": "sha512-5Sh78DQvKdScTT/fWdIg6/1WIHp1U4rYFgl2NUTkvmQ34mki93BDf1o2KPgtsVSwU+wNCQnU0yAs2LVLjVHZcQ=="
+    },
+    {
+      "name": "@iobroker/webserver",
+      "version": "3.3.1",
+      "resolved": "https://registry.npmjs.org/@iobroker/webserver/-/webserver-3.3.1.tgz",
+      "integrity": "sha512-Q/3VV5FemIrRDA/Y4IOLe0m51pjUHmDoQ15wLyBHUgB9TwKKz2yFqiMTFEFGZSaT1+HyJagcSpPOYdF0h1TZ/w=="
+    },
+    {
+      "name": "@iobroker/ws-server",
+      "version": "4.5.2",
+      "resolved": "https://registry.npmjs.org/@iobroker/ws-server/-/ws-server-4.5.2.tgz",
+      "integrity": "sha512-T7Ysx+HpQ5OINpZttI2MjewmdrXAN1mlJ8WoFhUMFpIzeCTEtMddlvYF29OEXYsPl7Io1Gcc/YsVTqVUHoSb9Q=="
+    },
+    {
+      "name": "compression",
+      "version": "1.8.2",
+      "resolved": "https://registry.npmjs.org/compression/-/compression-1.8.2.tgz",
+      "integrity": "sha512-o8vI5RE5A6EVVOd9o41jKp41aJom+QTEO/Bx8MYNjexMo/Bv2WOjUfZr+aL0WnYSgymUy6zeguqLTsIhV0gMvQ=="
+    },
+    {
+      "name": "proxy-addr",
+      "version": "2.0.8",
+      "resolved": "https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.8.tgz",
+      "integrity": "sha512-5nnx0yGyVUcY6t9RnWcARWtwT9F1D8O9rt08htPvnd49W1IgZtmLkhu9WfMzQj1cFxjHIO6connUNVW5k7AVyQ=="
+    },
+    {
+      "name": "follow-redirects",
+      "version": "1.16.1",
+      "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.16.1.tgz",
+      "integrity": "sha512-FNvFGzoMLWmE6Yj9spb/zjd7yiNCHiAW9/Tg9CXrQ8wuu32HtlJOwWO11OJafl5FfY3DxTdQ0vj42zU1kvv5jg=="
+    }
+  ],
+  "lockRepair": {
+    "entries": 502,
+    "uniqueExactPackageVersions": 475,
+    "verified": 475,
+    "unresolved": 0,
+    "incidentalVersionChangesFromMetadataRepair": 0,
+    "cleanInstall": {
+      "command": "npm ci --ignore-scripts --no-audit --no-fund --fetch-timeout=5000 --fetch-retries=0",
+      "packagesAdded": 757,
+      "exitCode": 0
+    }
+  },
+  "checks": [
+    {
+      "name": "backend-build",
+      "command": [
+        "npm",
+        "run",
+        "build:backend"
+      ],
+      "environment": {},
+      "exitCode": 0
+    },
+    {
+      "name": "source-security",
+      "command": [
+        "node",
+        "--test",
+        "test/eos-session-security.test.cjs",
+        "test/eos-web-resources.test.cjs",
+        "test/eos-appliance-profile.test.cjs",
+        "test/eos-appliance-socket.integration.cjs",
+        "test/eos-upstream-socket-security.integration.cjs",
+        "test/eos-appliance-oauth.integration.cjs"
+      ],
+      "environment": {
+        "EOS_ADMIN_DEPENDENCIES": "$PWD/node_modules"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "built-security",
+      "command": [
+        "node",
+        "--test",
+        "test/eos-session-security.test.cjs",
+        "test/eos-web-resources.test.cjs",
+        "test/eos-appliance-profile.test.cjs",
+        "test/eos-appliance-socket.integration.cjs",
+        "test/eos-upstream-socket-security.integration.cjs",
+        "test/eos-appliance-oauth.integration.cjs"
+      ],
+      "environment": {
+        "EOS_ADMIN_DEPENDENCIES": "$PWD/node_modules",
+        "EOS_TEST_RUNTIME": "build"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "built-licensing",
+      "command": [
+        "npm",
+        "run",
+        "test:eos-licensing"
+      ],
+      "environment": {
+        "EOS_TEST_RUNTIME": "build"
+      },
+      "exitCode": 0
+    },
+    {
+      "name": "lock-provenance",
+      "command": [
+        "node",
+        "tools/nexowatt-lock-provenance-check.cjs"
+      ],
+      "environment": {},
+      "exitCode": 0
+    },
+    {
+      "name": "backend-closure",
+      "command": [
+        "node",
+        "tools/nexowatt-backend-runtime-selftest.cjs"
+      ],
+      "environment": {},
+      "exitCode": 0
+    },
+    {
+      "name": "seal",
+      "command": [
+        "node",
+        "tools/nexowatt-prebuilt-release-selftest.cjs",
+        "--write"
+      ],
+      "environment": {},
+      "exitCode": 0
+    },
+    {
+      "name": "prebuilt-check",
+      "command": [
+        "node",
+        "tools/nexowatt-prebuilt-release-selftest.cjs"
+      ],
+      "environment": {},
+      "exitCode": 0
+    }
+  ],
+  "additionalChecks": [
+    {
+      "name": "socket-bounds",
+      "command": "node --test tests/system/websocket-bound.test.cjs",
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "name": "security-boundaries",
+      "command": "node tools/nexowatt-security-boundaries-selftest.cjs",
+      "passed": 41,
+      "failed": 0
+    },
+    {
+      "name": "provenance-negative-cases",
+      "command": "node tools/nexowatt-lock-provenance-selftest.cjs",
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "name": "network-browser",
+      "command": "EOS_NETWORK_BROWSER_EXECUTABLE=<ephemeral-browser> node --test test/eos-network-browser.test.cjs",
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "name": "update-browser",
+      "command": "EOS_UPDATE_BROWSER_EXECUTABLE=<ephemeral-browser> node --test test/eos-update-browser.test.cjs",
+      "passed": 2,
+      "failed": 0
+    }
+  ],
+  "testCounts": {
+    "sourceSecurity": 77,
+    "builtSecurity": 77,
+    "builtLicensing": 116,
+    "knownUpstreamLimitCharacterizationsPerSecurityRun": 2
+  },
+  "seal": {
+    "files": 1495,
+    "backendRuntimeFiles": 30,
+    "sha256": "112412a2144d26e07d36e23a800bbef3d2f32c9313a65c1844a92d19a6f9100d"
+  },
+  "inputs": {
+    "components/admin/package.json": "82acc0e46415bda4c93e297139880422ffd99ff40e0f8a67fbc104edfeac78b2",
+    "components/admin/package-lock.json": "eda41b53ad16331d4d9ac3b9aa29a892706009372e012315bd9cad49748be08e",
+    "components/admin/src-admin/package.json": "5a97a48d8b62d452dc9f2ea5ac9ab1f2c30d563d9e061c7267db4514df9b9225",
+    "components/admin/src-admin/package-lock.json": "f1ad441aaefc214092d018d2cf00421cb9cf2bba389c7515238264ddfaacc887",
+    "components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json": "112412a2144d26e07d36e23a800bbef3d2f32c9313a65c1844a92d19a6f9100d",
+    "components/admin/src/main.ts": "6d09904c170e25eee3a3863cb52c54fd0703b0cd3c4eaf607c67c1add57780ad",
+    "components/admin/build/main.js": "007d870fb46dacb7c865701304260b77a54549b676e84b6b5b099ef02b209e45",
+    "components/admin/src/lib/web.ts": "212c24033c5f1bb2807dc1c40b96589a3148546b49919d279ed32be14f3cf401",
+    "components/admin/build/lib/web.js": "3689e9812eb92bf7a15da15d3f422cfb5b516a15efbc75eb349fd8cd8855cb80",
+    "components/admin/src/lib/eosApplianceProfile.js": "32e830fe215aa4ac442f49d550405c3c7f592b8a270b3170e5e1db88ca810478",
+    "components/admin/src/lib/eosLicenseService.js": "3c7683d91d1eae9346de16d6cb72fd48baf424b56a39b3300f6a6e0e6108dd0d",
+    "components/admin/tsconfig.build.json": "106cfee0940f82e700fdbb091c336dca2555af297bfba8331553533f77794838",
+    "components/admin/tasks.mts": "44fa1efdf0ae06605687f855e4f3d7f6110ed8065e39a9c10197cd9886008d2d",
+    "components/admin/test/eos-appliance-socket.integration.cjs": "7d95fb9c253c7910dd3cb086589872f240bfa4afe02ba0be9bc0463f011a426a",
+    "components/admin/test/eos-upstream-socket-security.integration.cjs": "74f39bcc8d973fadb0f25a4f423679f09c93da679666ba1f147908994bcc3b65",
+    "components/admin/test/eos-appliance-oauth.integration.cjs": "c2d9b9f99b781930fb69e0b5af90a918352b40a796521f7267f3f7ae039f8704",
+    "components/admin/test/eos-session-security.test.cjs": "8a236db79760c49e52a6c9a26183783cdef4443e092d8a67ced9855643817ba7"
+  },
+  "websocketProfile": {
+    "original": "a05a65423feb8c0293756c42fd7ba2d884a9fddc7a347690b2d26756aea6912b",
+    "output": "48ab2d14d86060be753ee084e0020316ec40736b388f0a83b810e74ef8eed6b2"
+  },
+  "limits": [
+    "No installed Pi, systemd, production acceptance, external publication or signed delivery tested.",
+    "Node24.19 local checks do not replace Node24.21 release/native CI gates.",
+    "No full frontend rebuild; retained sealed source/shipped frontend assets unchanged.",
+    "Two named upstream compatibility constraints remain; EOS denial/scoped role controls remain necessary.",
+    "npm bulk-advisory endpoint returned403; no clean full vulnerability-audit claim.",
+    "Playwright standard browser download unusable; separate pinned npm Chromium used only for fixture browser checks."
+  ]
+}

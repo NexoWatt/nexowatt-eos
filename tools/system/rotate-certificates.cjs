@@ -12,7 +12,7 @@ const { readFileLimited } = require('../../runtime/release/bundle.cjs');
 const { parseBoundedJson } = require('../../runtime/policy/admission.cjs');
 const lifecycle = require('../../runtime/transport/certificate-lifecycle.cjs');
 const { probeConfig } = require('../../runtime/transport/redis-tls.cjs');
-const { validateProfile } = require('../../runtime/controller-profile/guard.cjs');
+const { validateProfile } = require('../../runtime/controller-profile/profile-validation.cjs');
 const { strongHash, PROFILE: ENROLLMENT_PROFILE } = require('../../runtime/bootstrap/enrollment.cjs');
 const accountsPolicy = require('../../runtime/bootstrap/accounts.cjs');
 const { authorizeStart, blockStart } = require('../../runtime/release/maintenance.cjs');
@@ -52,7 +52,7 @@ function verifyHost(root = '/', overrides = {}) {
     if (!result.ok || result.sequence !== state.sequence || result.releaseId !== state.releaseId) fail('CERTIFICATE_RELEASE_BINDING_REJECTED');
     if (hash(readFileLimited(path.join(evidence, 'release-public.pem'), 16384).bytes) !== state.publicKeySha256) fail('CERTIFICATE_RELEASE_KEY_REJECTED');
     const profile = load(path.join(release, 'app/node_modules/iobroker.js-controller/eos-test-profile.json'));
-    if (profile.schemaVersion !== 1 || profile.kind !== 'eos-controller-test-profile' || profile.controllerVersion !== '7.2.2' ||
+    if (profile.schemaVersion !== 1 || profile.kind !== 'eos-controller-test-profile' || profile.controllerVersion !== (state.sequence >= 15 ? '7.2.5' : '7.2.2') ||
         !Array.isArray(profile.adapters)) fail('CERTIFICATE_CONTROLLER_PROFILE_REJECTED');
     validateProfile(profile);
     return { release, state, profile };

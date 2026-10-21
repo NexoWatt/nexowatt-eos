@@ -1939,6 +1939,10 @@ export default class Web {
                 // Bind upstream OAuth issuance and reads to the revocable EOS credential snapshot.
                 this.oauth2Model = createOAuth2Server(this.adapter, {
                     app: this.server.app,
+                    // EOS uses local password sessions only. Keep optional v3
+                    // browser grants/registration off even if upstream defaults change.
+                    authorizationCode: false,
+                    dynamicClientRegistration: false,
                     secure: this.settings.secure,
                     accessLifetime: this.settings.ttl,
                     refreshLifetime: 60 * 60 * 24 * 7, // 1 week, same as upstream admin

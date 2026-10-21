@@ -1473,7 +1473,12 @@ class Admin extends Adapter {
 
     private installEosSocketCommandGuard(socketAdmin: SocketAdmin): void {
         const commands = (socketAdmin as unknown as { commands?: { _checkPermissions?: (...args: any[]) => boolean } }).commands;
-        if (!commands?._checkPermissions || (commands as any)._nexowattEosGuardInstalled) {
+        // Private upstream hooks are part of the reviewed adapter boundary. An
+        // incompatible dependency must never start a listener without the guards.
+        if (typeof commands?._checkPermissions !== 'function') {
+            throw new Error('EOS_SOCKET_PROFILE');
+        }
+        if ((commands as any)._nexowattEosGuardInstalled) {
             return;
         }
         const original = commands._checkPermissions.bind(commands);

@@ -1,7 +1,8 @@
 # Nativer PostgreSQL-States-Client für EOS
 
 Experimenteller Quellstand `0.1.0-dev.2`, API-Vergleich mit
-`@iobroker/db-states-redis@7.2.2`. Der js-controller lädt den Export `Client`
+`@iobroker/db-states-redis@7.2.2`, mit ausdrücklich gebundenem Sitzungsvertrag
+für js-controller 7.2.2 und 7.2.5. Der js-controller lädt den Export `Client`
 über seinen vorhandenen Datenbank-Loader bei `states.type=postgresql`.
 `Server` ist `null`: Dieses Paket startet keinen Datenbankserver und öffnet keine
 Redis-Verbindung. Es verwendet ausschließlich den gemeinsamen
@@ -30,7 +31,14 @@ erfolgen. Keine rohen SQL-Anweisungen liegen in diesem Client.
 
 Der tatsächlich ausgelieferte Redis-Client 7.2.2 ruft einen erfolgreichen
 `getSession`-Callback mit **einem** Argument auf (`session`), obwohl seine
-Typdeklaration zwei Argumente nennt. Dieses beobachtete Verhalten bleibt erhalten.
+Typdeklaration zwei Argumente nennt. Dieses Verhalten bleibt für 7.2.2 erhalten.
+Der Adapterkern 7.2.5 erwartet vom Datenbankclient hingegen `(error, session)`
+und übersetzt das Ergebnis selbst in den öffentlichen Callback `(session)`.
+Der PostgreSQL-Client wählt den Vertrag anhand der tatsächlich von seinem
+Paket aufgelösten `@iobroker/js-controller-adapter/package.json`. Ausschließlich
+die geprüften Versionen 7.2.2 und 7.2.5 werden akzeptiert; fehlende oder andere
+Paketidentitäten verhindern den Start vor der Datenbankverbindung.
+JSON-Konfiguration und Callback-Argumentanzahl können den Vertrag nicht wählen.
 Andere CRUD-Callbacks verwenden `(error, result)` und laufen asynchron.
 JSON-Buffer bleiben beim Lesen in der JSON-Form; Ereignisse wandeln validierte
 `{type:"Buffer",data:[...]}`-Werte in Buffer um, wie der verglichene Client.
@@ -85,5 +93,13 @@ Namensraumtrennung, Ereignisüberlast und Wiederverbindung. Der Fake-Store ist
 kein Beleg für SQL-Transaktionen, PostgreSQL-Berechtigungen, TLS oder tatsächliche
 Controller-/Adapterkompatibilität. Reale PostgreSQL-Integration, Zielhardware,
 Stromausfall/Wiederanlauf, Migration und langfristige Lastprüfung bleiben offen.
+
+`node --test tests/postgresql/session-controller-contract.test.cjs` führt außerdem
+die unveränderten, über ganze Dateihashes gebundenen `_getSession`-Methoden aus
+den veröffentlichten CJS-/ESM-Adapterkernen 7.2.2 und 7.2.5 gegen diesen Client
+und einen Fake-Store aus. Erfolgs-, Ablauf-, Fehlwert- und Fehlerverhalten sowie
+die Paketauflösung werden geprüft. Dieser Schnittstellentest ersetzt keinen
+vollständigen PostgreSQL-Start oder Browser-Login. Siehe den
+[Änderungsnachweis vom 21.10.2026](../../../../reports/integration/security-refresh-20261021/review/POSTGRESQL_SESSION_DE.md).
 
 Der vorhandene Installer wird durch dieses Paket nicht auf PostgreSQL umgestellt.

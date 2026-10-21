@@ -1,0 +1,190 @@
+TAP version 13
+# Subtest: download endpoint excludes shell, auth, query, redirect and path injection syntax
+ok 1 - download endpoint excludes shell, auth, query, redirect and path injection syntax
+  ---
+  duration_ms: 1.629447
+  type: 'test'
+  ...
+# Subtest: manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+ok 2 - manufacturer must supply real-shaped Ed25519 public trust with separate exact pin
+  ---
+  duration_ms: 87.172724
+  type: 'test'
+  ...
+# Subtest: kit cannot ship changed or omitted signed helpers or extra runtime code
+ok 3 - kit cannot ship changed or omitted signed helpers or extra runtime code
+  ---
+  duration_ms: 0.651653
+  type: 'test'
+  ...
+# Subtest: one command checks a separately delivered script pin before execution; script data survive exact embedding
+ok 4 - one command checks a separately delivered script pin before execution; script data survive exact embedding
+  ---
+  duration_ms: 1.637981
+  type: 'test'
+  ...
+# Subtest: canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+ok 5 - canonical ZIP builder reads back bytes and refuses changed source before it can become a valid kit
+  ---
+  duration_ms: 165.034038
+  type: 'test'
+  ...
+# Subtest: build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+ok 6 - build CLI accepts only explicit manufacturer inputs, never private signing keys or target passwords
+  ---
+  duration_ms: 0.502017
+  type: 'test'
+  ...
+# Subtest: IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+ok 7 - IP selection prefers a validated SSH local destination only when present on an active noninternal interface
+  ---
+  duration_ms: 6.582738
+  type: 'test'
+  ...
+# Subtest: one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+ok 8 - one distinct IPv4 is automatic; loopback, link-local, unspecified, multicast and IPv6 are ineligible
+  ---
+  duration_ms: 0.299662
+  type: 'test'
+  ...
+# Subtest: bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+ok 9 - bootstrap configuration accepts only exact pin fields and valid schema, never custom paths or secrets
+  ---
+  duration_ms: 1.639633
+  type: 'test'
+  ...
+# Subtest: license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+ok 10 - license trust requires authentic pinned public Ed25519 keys and rejects private keys even with matching hash
+  ---
+  duration_ms: 4.834873
+  type: 'test'
+  ...
+# Subtest: TTY must be an actual character terminal before it can receive any possession code
+ok 11 - TTY must be an actual character terminal before it can receive any possession code
+  ---
+  duration_ms: 0.548697
+  type: 'test'
+  ...
+# Subtest: successful runner uses all existing installer flags and emits possession only through opened TTY
+ok 12 - successful runner uses all existing installer flags and emits possession only through opened TTY
+  ---
+  duration_ms: 6.420754
+  type: 'test'
+  ...
+# Subtest: missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+ok 13 - missing TTY, ambiguous IP and changed pins fail before host installation or input creation
+  ---
+  duration_ms: 9.590205
+  type: 'test'
+  ...
+# Subtest: installer failures never read or output code and sanitized error excludes downstream secret messages
+ok 14 - installer failures never read or output code and sanitized error excludes downstream secret messages
+  ---
+  duration_ms: 12.266074
+  type: 'test'
+  ...
+# Subtest: unsafe code permissions and existing input directory fail closed without TTY disclosure
+ok 15 - unsafe code permissions and existing input directory fail closed without TTY disclosure
+  ---
+  duration_ms: 6.053169
+  type: 'test'
+  ...
+# Subtest: CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+ok 16 - CLI cannot select paths or weaken host requirements; errors contain no arbitrary properties
+  ---
+  duration_ms: 1.347482
+  type: 'test'
+  ...
+# Subtest: TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+ok 17 - TTY is revalidated immediately before disclosure and cannot degrade into an ordinary output file
+  ---
+  duration_ms: 0.174282
+  type: 'test'
+  ...
+# Subtest: ambiguous address errors give a bounded corrective message without addresses or secrets
+ok 18 - ambiguous address errors give a bounded corrective message without addresses or secrets
+  ---
+  duration_ms: 0.242546
+  type: 'test'
+  ...
+# Subtest: terminal success is readable and includes public browser trust instructions without arbitrary result properties
+ok 19 - terminal success is readable and includes public browser trust instructions without arbitrary result properties
+  ---
+  duration_ms: 4.748342
+  type: 'test'
+  ...
+# Subtest: preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+ok 20 - preflight refusal preserves its fixed error code and known failed check IDs but never diagnostic detail or secrets
+  ---
+  duration_ms: 3.958381
+  type: 'test'
+  ...
+# Subtest: host failure preserves fixed installation phase through the real runner without disclosure or retries
+ok 21 - host failure preserves fixed installation phase through the real runner without disclosure or retries
+  ---
+  duration_ms: 48.278546
+  type: 'test'
+  ...
+# Subtest: unknown or malformed installation phases are omitted while existing code and preflight checks remain
+ok 22 - unknown or malformed installation phases are omitted while existing code and preflight checks remain
+  ---
+  duration_ms: 0.409918
+  type: 'test'
+  ...
+# Subtest: managed first-start selects only the fixed sequence-15 checkout and retains normal installer flags
+ok 23 - managed first-start selects only the fixed sequence-15 checkout and retains normal installer flags
+  ---
+  duration_ms: 12.850091
+  type: 'test'
+  ...
+# Subtest: managed entry cannot be directed to a historical or arbitrary checkout adapter
+ok 24 - managed entry cannot be directed to a historical or arbitrary checkout adapter
+  ---
+  duration_ms: 8.498784
+  type: 'test'
+  ...
+# Subtest: new trust changes stop before an installer or secret-disclosure call
+ok 25 - new trust changes stop before an installer or secret-disclosure call
+  ---
+  duration_ms: 1.566723
+  type: 'test'
+  ...
+# Subtest: managed install diagnostics permit only the two additional fixed phases
+ok 26 - managed install diagnostics permit only the two additional fixed phases
+  ---
+  duration_ms: 0.668808
+  type: 'test'
+  ...
+# Subtest: managed generator retains independent public pins and rejects secret, URL and selector inputs
+ok 27 - managed generator retains independent public pins and rejects secret, URL and selector inputs
+  ---
+  duration_ms: 1.195262
+  type: 'test'
+  ...
+# Subtest: new generator binds every signed runtime and installer helper byte before kit creation
+ok 28 - new generator binds every signed runtime and installer helper byte before kit creation
+  ---
+  duration_ms: 0.770186
+  type: 'test'
+  ...
+# Subtest: actual public kit excludes untracked private inputs and loads its fixed managed entry with complete dependencies
+ok 29 - actual public kit excludes untracked private inputs and loads its fixed managed entry with complete dependencies
+  ---
+  duration_ms: 402.563503
+  type: 'test'
+  ...
+# Subtest: complete embedded managed preparer and command parse and verify exact bytes before execution
+ok 30 - complete embedded managed preparer and command parse and verify exact bytes before execution
+  ---
+  duration_ms: 15.923517
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 563.991904

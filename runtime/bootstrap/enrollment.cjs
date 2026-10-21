@@ -7,7 +7,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { promisify } = require('node:util');
 const { isDeepStrictEqual } = require('node:util');
-const { validateProfile } = require('../controller-profile/guard.cjs');
+const { validateProfile } = require('../controller-profile/profile-validation.cjs');
 const accountsPolicy = require('./accounts.cjs');
 const MARKER = 'system.meta.eosEnrollment';
 const PROFILE = 'eos-integrated-ui-lab-v1';
@@ -104,7 +104,9 @@ function assertInstance(doc, spec, hostname) {
 }
 // Shared management invariants are also mandatory for the explicitly versioned
 // six-own-adapter test enrollment. This function grants no execution admission.
-async function verifyManagementPolicy({ objects, config, allowPending = false }) {
+async function verifyManagementPolicy({ objects, config, app, allowPending = false }) {
+    const controllerVersion = app ? validateProfile(JSON.parse(fs.readFileSync(path.join(app,
+        'node_modules/iobroker.js-controller/eos-test-profile.json')))).controllerVersion : '7.2.2';
     const marker = await objects.getObjectAsync(MARKER);
     if (marker?.native?.profile !== PROFILE || marker.native.version !== 2 ||
         marker.native.runtimeConfigSha256 !== digest(config) || marker.native.physicalControlEnabled !== false ||
@@ -115,7 +117,7 @@ async function verifyManagementPolicy({ objects, config, allowPending = false })
     }
     const core = await objects.getObjectAsync('system.meta.eosTestBase');
     if (core?.native?.state !== 'complete' || core.native.profile !== 'eos-core-only-bootstrap-v1' ||
-        core.native.coreControllerVersion !== '7.2.2' || core.native.bootstrapPolicyVersion !== 1 ||
+        core.native.coreControllerVersion !== controllerVersion || core.native.bootstrapPolicyVersion !== 1 ||
         core.native.runtimeConfigSha256 !== digest(config)) fail('ENROLLMENT_CORE_BINDING');
     const system = await objects.getObjectAsync('system.config');
     const repos = await objects.getObjectAsync('system.repositories');
@@ -135,7 +137,7 @@ async function verify({ objects, config, app, allowPending = false }) {
     const own = require('./own-adapter-enrollment.cjs');
     if (await objects.getObjectAsync(own.MARKER)) return own.verify({ objects, config, app, allowPending });
     pinnedAdapters(app);
-    await verifyManagementPolicy({ objects, config, allowPending });
+    await verifyManagementPolicy({ objects, config, app, allowPending });
     // Query executable objects, not every measurement and UI asset. ioBroker's
     // view client materializes the response; this count is a post-read limit.
     const result = await objects.getObjectViewAsync('system', 'instance', { startkey: 'system.adapter.', endkey: 'system.adapter.\u9999' });

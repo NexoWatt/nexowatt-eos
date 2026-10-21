@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-21",
+  "sourceCommitBeforeChanges": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "scope": "own adapter source dependency refresh; no assembled runtime or Pi claim",
+  "environment": {
+    "node": "v24.19.0",
+    "npm": "11.9.0",
+    "platform": "linux",
+    "arch": "x64",
+    "targetNode": "24.21.0",
+    "targetDeviceObserved": false,
+    "nativeSystemdTest": false
+  },
+  "dependencyInstall": {
+    "command": "npm ci --ignore-scripts --no-audit --no-fund --fetch-timeout=5000 --fetch-retries=0",
+    "lifecycleHooksExecuted": false
+  },
+  "changedFiles": [
+    {
+      "path": "components/backitup/package-lock.json",
+      "sha256": "9980f9d89e7f3d16f1b46f90cfa92a6a94d49a3f9f651a3d36362b0f3576007c"
+    },
+    {
+      "path": "components/backitup/package.json",
+      "sha256": "40e9b1578c18b66cfb80ac51c887054305981af6f5caf65e41a8ef35c19f91ad"
+    },
+    {
+      "path": "components/devices/package-lock.json",
+      "sha256": "37a7f44891d5e0cd63e4cea502b5c4661c0b601f7b307fb6e457fb20b8db481f"
+    },
+    {
+      "path": "components/devices/package.json",
+      "sha256": "aa3019fdc994335a64147576a223df719b5558ab36e4f3ffefb666060d61c6c1"
+    },
+    {
+      "path": "components/ui/docs/security/DEPENDENCY_REFRESH_2026-10-21_DE.md",
+      "sha256": "0b259dc3349e73ff621560c82cc45fb224ceecc661f3d03457bef33db390fb76"
+    },
+    {
+      "path": "components/ui/package-lock.json",
+      "sha256": "b066ff872b75e7e638e03c0201b6a0f71d022e1d1a1ccc29effaf41c91146d8f"
+    },
+    {
+      "path": "components/ui/package.json",
+      "sha256": "92c3ae7e4bd1622d92a545fffcd0d8fe0dce14cf0a0cfcf3e02feec5afa22635"
+    },
+    {
+      "path": "components/ui/scripts/release-artifact-manifest.json",
+      "sha256": "cecfbd12f008e323034acf5e06a419126fb831bab8fc2669d83283f320f4a8c3"
+    },
+    {
+      "path": "components/ui/scripts/verify-rc67-license-bootstrap-access.js",
+      "sha256": "e1ee12758a18e5f681f00c4a756d930801f76507e928df04c8f461d34904a02d"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/scripts/verify-rc67-license-bootstrap-access.ts",
+      "sha256": "428e4bfe0539190c90a9361250d40df79318cf3f2c238fcb36ef04809b67d138"
+    }
+  ],
+  "tests": [
+    {
+      "id": "adapter-dependency-regression",
+      "command": "timeout 20s node --test reports/integration/security-refresh-20261021/adapters/dependency-regression.test.cjs",
+      "exitCode": 0,
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "id": "devices-final",
+      "cwd": "components/devices",
+      "command": "npm test",
+      "exitCode": 0,
+      "passed": 289,
+      "failed": 0
+    },
+    {
+      "id": "eebus",
+      "cwd": "components/eebus",
+      "command": "npm test",
+      "exitCode": 0,
+      "groups": [
+        "build",
+        "config",
+        "cls-control",
+        "bridge",
+        "implementation-order",
+        "package:50",
+        "security:21",
+        "license:19"
+      ]
+    },
+    {
+      "id": "ocpp21",
+      "cwd": "components/ocpp21",
+      "command": "npm test",
+      "exitCode": 0,
+      "groups": {
+        "core": 25,
+        "package": 46,
+        "unit": 25,
+        "integration": 15
+      }
+    },
+    {
+      "id": "ui-focused",
+      "cwd": "components/ui",
+      "command": "npm run test:eos-auth-security && npm run test:public-api-security && npm run test:eos-os-update-status && npm run test:eos-account-roles && npm run test:package-runtime-start-smoke",
+      "exitCode": 0,
+      "groups": {
+        "auth": 28,
+        "os-update-status": 34,
+        "account-roles-sse-service-worker": 26,
+        "syntax-checked-js-mjs": 238
+      }
+    },
+    {
+      "id": "ui-build",
+      "cwd": "components/ui",
+      "command": "npm run build:ts",
+      "exitCode": 0
+    },
+    {
+      "id": "ui-publication",
+      "cwd": "components/ui",
+      "command": "npm run publish:check && npm pack --dry-run --json --ignore-scripts",
+      "exitCode": 0,
+      "sealedFiles": 408,
+      "npmEntries": 409
+    },
+    {
+      "id": "ui-full",
+      "cwd": "components/ui",
+      "command": "npm run test:all",
+      "exitCode": 1,
+      "reason": "Chromium executable unavailable; chain reached test:stable-1.0.3-home-appcenter; subsequent chain tests not executed",
+      "initialSourceIssueResolved": "RC67 text assertions referenced old labels; updated to existing central Home/Pro license UI without weakening access guards"
+    },
+    {
+      "id": "backup-full",
+      "cwd": "components/backitup",
+      "command": "TZ=UTC npm test",
+      "exitCode": 1,
+      "passedGroups": {
+        "package": 78,
+        "types": 3,
+        "unit": 1,
+        "eos-profile": 2
+      },
+      "sdCard": {
+        "passed": 26,
+        "failed": 1
+      },
+      "reason": "chown to test UID 65534 returned EINVAL in host container; not marked skipped/passed",
+      "initialAttempt": "Without TZ=UTC the existing profile filename assertion failed on local-time conversion"
+    },
+    {
+      "id": "backup-additional",
+      "cwd": "components/backitup",
+      "command": "TZ=UTC npm run test:influxdb-cli && TZ=UTC node --test test/license-guard.js test/eos-startup.js test/backup-archive-result.js test/influx-safety.test.cjs",
+      "exitCode": 0,
+      "passedGroups": {
+        "influx-cli": 7,
+        "license-startup-restore-archive-influx": 72
+      }
+    }
+  ],
+  "openFindings": [
+    "node-forge 1.4.0, no published fixed version",
+    "ocpp-rpc 2.2.1 / AJV 8.14.0, coordinated schema/client migration required",
+    "Dropbox request 2.88.2 / tough-cookie 2.5.0 / uuid 3.4.0, compatible library migration required"
+  ],
+  "productReleaseApproved": false,
+  "evidence": [
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/README_DE.md",
+      "sha256": "3cff97bff629659a55304d0b9f715c2f10d29d250b13cae72ed4608805d7534b"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/audit-after-summary.json",
+      "sha256": "4c862ca4bd9a287fe5980024e666462845e9b415567e7a6e8fa351da9917f20c"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/audit-before-summary.json",
+      "sha256": "2351637f844a4cbde039c8f96b8eb28cb07c4d51bd1a65f56d0d2efd6e301554"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/backitup-audit-after.json",
+      "sha256": "3712806b9235d4b383cd9078531e674e5eed0ae3fa05d9e38651d143337e1e77"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/backitup-audit-before.json",
+      "sha256": "3807f59cbbc66faafc048484575916a3a393f7171d32a2eb2336f70dd86a66a4"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/dependency-regression.test.cjs",
+      "sha256": "c1abcfd07186fc97aa4e7a357c1ac84077de1e2ff54649dca945c33048b23024"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/devices-audit-after.json",
+      "sha256": "3f1aabe7ac5b5ca9f24a2df6b1c8b245f04ac4baf1afa9de6afefe677f31b168"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/devices-audit-before.json",
+      "sha256": "aac77adfbc37942b87112a170c5914e98cd68427d5bb60c88b69b823313cb526"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/eebus-audit-after.json",
+      "sha256": "1d758cd5b5e808f8e03fe5358b41aae0a9413858a0e141616c4c8ee087db060f"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/eebus-audit-before.json",
+      "sha256": "1d758cd5b5e808f8e03fe5358b41aae0a9413858a0e141616c4c8ee087db060f"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ocpp21-audit-after.json",
+      "sha256": "dae5473f6dbb55e3e8858361c9d396f2735760211952520424fe5a2959c3f1f4"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ocpp21-audit-before.json",
+      "sha256": "dae5473f6dbb55e3e8858361c9d396f2735760211952520424fe5a2959c3f1f4"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/pack-checks.json",
+      "sha256": "a125ba56e04288384c246675fae0097c4138c861f26a2cec11ab9bf8a3c769b0"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/registry-metadata.json",
+      "sha256": "175a35595d31026bd6638cd7cc12d717f6e0aa3ce64e620735c3ad014208b84d"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/runtime-sbom-comparison.json",
+      "sha256": "28ba77101ba98b361c940076493cf869b599b73d59b2e72ed0f26c46630b01cf"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ui-audit-after.json",
+      "sha256": "dbe6250d7f910f4e96b76b76ae8d361e1db742da24f2d5cd0adcde0430223030"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ui-audit-before.json",
+      "sha256": "e16985f64626b5e8dd2ec3861f55732133dd16e757bba0081d7211d01ae0ec14"
+    }
+  ]
+}

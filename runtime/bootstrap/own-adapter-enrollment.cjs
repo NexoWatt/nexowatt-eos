@@ -8,7 +8,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { isDeepStrictEqual } = require('node:util');
-const { validateProfile, createGuard } = require('../controller-profile/guard.cjs');
+const { validateProfile, createGuard } = require('../controller-profile/profile-validation.cjs');
 const { parseBoundedJson } = require('../policy/admission.cjs');
 const { PRIVATE_ACL } = require('./accounts.cjs');
 const management = () => require('./enrollment.cjs');
@@ -31,9 +31,13 @@ const fail = code => { throw Object.assign(new Error(code), { code }); };
 const hex = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const exact = (value, keys) => record(value) && isDeepStrictEqual(Object.keys(value).sort(), [...keys].sort());
-const profileValue = () => ({ schemaVersion: 1, kind: 'eos-controller-test-profile', controllerVersion: '7.2.2',
+const profileValue = (controllerVersion = '7.2.2') => validateProfile({ schemaVersion: 1, kind: 'eos-controller-test-profile', controllerVersion,
     adapters: SPECS.map(spec => ({ package: `iobroker.${spec.name}`, version: spec.version, main: spec.main })) });
 
+function controllerVersion(app) {
+    return validateProfile(JSON.parse(fs.readFileSync(path.join(app,
+        'node_modules/iobroker.js-controller/eos-test-profile.json'), 'utf8'))).controllerVersion;
+}
 function pinnedAdapters(app) {
     const profile = validateProfile(JSON.parse(fs.readFileSync(path.join(app, 'node_modules/iobroker.js-controller/eos-test-profile.json'), 'utf8')));
     const expected = profileValue();
@@ -96,7 +100,7 @@ async function instances(objects) {
     if (new Set(rows.map(row => row?._id)).size !== rows.length) fail('OWN_ENROLLMENT_INSTANCE_SCOPE');
     return rows;
 }
-function assertMarker(marker, config, allowPending = false) {
+function assertMarker(marker, config, allowPending = false, version = '7.2.2') {
     if (!exact(marker, ['_id', 'type', 'common', 'native', 'acl', 'from', 'ts']) || marker._id !== MARKER || marker.type !== 'meta' ||
         !isDeepStrictEqual(marker.acl, PRIVATE_ACL) ||
         !exact(marker.native, ['schemaVersion', 'profile', 'state', 'operationId', 'sourceReleaseId', 'targetReleaseId',
@@ -105,7 +109,7 @@ function assertMarker(marker, config, allowPending = false) {
         !['complete', ...(allowPending ? ['pending'] : [])].includes(marker.native.state) ||
         !/^[a-f0-9]{32}$/.test(marker.native.operationId || '') || !hex(marker.native.sourceReleaseId) || !hex(marker.native.targetReleaseId) ||
         (marker.native.schemaVersion === 1 ? marker.native.sourceReleaseId === marker.native.targetReleaseId : marker.native.sourceReleaseId !== marker.native.targetReleaseId) || !hex(marker.native.sourceEnrollmentSha256) ||
-        marker.native.runtimeConfigSha256 !== digest(config) || marker.native.controllerProfileSha256 !== digest(profileValue()) ||
+        marker.native.runtimeConfigSha256 !== digest(config) || marker.native.controllerProfileSha256 !== digest(profileValue(version)) ||
         marker.native.initialConfiguration !== 'unconfigured-no-physical-targets' || marker.native.productionReleaseApproved !== false ||
         marker.from !== 'system.host.eos-own-adapter-enrollment' || !Number.isSafeInteger(marker.ts) || marker.ts < 1 ||
         !isDeepStrictEqual(marker.common, { name: 'EOS six-own-adapter test enrollment', type: 'meta.user' })) fail('OWN_ENROLLMENT_MARKER');
@@ -113,10 +117,10 @@ function assertMarker(marker, config, allowPending = false) {
 async function verify({ objects, config, app, allowPending = false }) {
     pinnedAdapters(app);
     const marker = await objects.getObjectAsync(MARKER);
-    assertMarker(marker, config, allowPending);
+    assertMarker(marker, config, allowPending, controllerVersion(app));
     // The old marker's initial digest is migration evidence, not an immutable
     // account list: authorized invitations/password changes must survive reboot.
-    await management().verifyManagementPolicy({ objects, config });
+    await management().verifyManagementPolicy({ objects, config, app });
     const rows = await instances(objects);
     if (rows.length !== SPECS.length) fail('OWN_ENROLLMENT_INSTANCE_SCOPE');
     for (const row of rows) {
@@ -158,6 +162,7 @@ function markerFor(plan) {
 }
 function validatePlan(value, config, targetApp) {
     const plan = boundedPlan(value);
+    if (controllerVersion(targetApp) !== '7.2.2') fail('OWN_ENROLLMENT_PROFILE_SCOPE');
     if (plan.runtimeConfigSha256 !== digest(config) || !isDeepStrictEqual(plan.marker, markerFor(plan))) fail('OWN_ENROLLMENT_PLAN_BINDING');
     const expected = pinnedAdapters(targetApp).filter(row => !row.spec.port)
         .map(row => instanceDocument(row, config.system.hostname, plan.timestamp));
@@ -268,9 +273,9 @@ async function enrollFresh({ objects, states, config, app, releaseId, checkpoint
         native: { schemaVersion: 2, profile: PROFILE, state: 'pending', operationId: crypto.randomBytes(16).toString('hex'),
             sourceReleaseId: releaseId, targetReleaseId: releaseId,
             sourceEnrollmentSha256: digest(await objects.getObjectAsync(management().MARKER)), runtimeConfigSha256: digest(config),
-            controllerProfileSha256: digest(profileValue()), initialConfiguration: 'unconfigured-no-physical-targets', productionReleaseApproved: false },
+            controllerProfileSha256: digest(profileValue(controllerVersion(app))), initialConfiguration: 'unconfigured-no-physical-targets', productionReleaseApproved: false },
         acl: { ...PRIVATE_ACL }, from: 'system.host.eos-own-adapter-enrollment', ts: Date.now() };
-    assertMarker(marker, config, true);
+    assertMarker(marker, config, true, controllerVersion(app));
     await checkpoint({ kind: 'eos-fresh-own-enrollment', releaseId, operationId: marker.native.operationId,
         instanceIds: documents.map(doc => doc._id), physicalControlEnabled: false });
     await writeExact(objects, marker);

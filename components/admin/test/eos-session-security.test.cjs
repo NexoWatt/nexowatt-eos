@@ -5,10 +5,19 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { stripTypeScriptTypes } = require('node:module');
 const { EosSessionSecurity, readGroupRows } = require(process.env.EOS_TEST_RUNTIME === 'build' ? '../build/lib/eosSessionSecurity' : '../src/lib/eosSessionSecurity');
-// Real, version-pinned upstream OAuth model. Type erasure retains an empty import
-// for an all-type declaration; remove that one non-runtime import only.
-const upstreamSource = fs.readFileSync(path.join(__dirname, 'fixtures/oauth2-model-v1.4.0.ts'), 'utf8');
-const upstream = import(`data:text/javascript;base64,${Buffer.from(stripTypeScriptTypes(upstreamSource, { mode: 'transform' }).replace("import 'oauth2-server';", '')).toString('base64')}`);
+// Dependency-free runs retain the historical model regression fixture; a clean
+// installed-tree integration run exercises the current locked upstream model.
+let upstream;
+if (process.env.EOS_ADMIN_DEPENDENCIES) {
+    assert.ok(path.isAbsolute(process.env.EOS_ADMIN_DEPENDENCIES));
+    const packageRoot = path.join(process.env.EOS_ADMIN_DEPENDENCIES, '@iobroker/webserver');
+    assert.equal(JSON.parse(fs.readFileSync(path.join(packageRoot, 'package.json'))).version, '3.3.1');
+    upstream = Promise.resolve(require(path.join(packageRoot, 'build/lib/oauth2-model')));
+} else {
+    // Type erasure retains an empty all-type import; remove that non-runtime import only.
+    const upstreamSource = fs.readFileSync(path.join(__dirname, 'fixtures/oauth2-model-v1.4.0.ts'), 'utf8');
+    upstream = import(`data:text/javascript;base64,${Buffer.from(stripTypeScriptTypes(upstreamSource, { mode: 'transform' }).replace("import 'oauth2-server';", '')).toString('base64')}`);
+}
 const clone = value => JSON.parse(JSON.stringify(value));
 const STAMP = 'nexowattEosSessionV1';
 async function setup(options) {

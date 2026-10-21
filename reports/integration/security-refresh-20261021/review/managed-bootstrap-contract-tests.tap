@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: managed first-start selects only the fixed sequence-15 checkout and retains normal installer flags
+ok 1 - managed first-start selects only the fixed sequence-15 checkout and retains normal installer flags
+  ---
+  duration_ms: 10.474316
+  type: 'test'
+  ...
+# Subtest: managed entry cannot be directed to a historical or arbitrary checkout adapter
+ok 2 - managed entry cannot be directed to a historical or arbitrary checkout adapter
+  ---
+  duration_ms: 4.307068
+  type: 'test'
+  ...
+# Subtest: new trust changes stop before an installer or secret-disclosure call
+ok 3 - new trust changes stop before an installer or secret-disclosure call
+  ---
+  duration_ms: 1.490759
+  type: 'test'
+  ...
+# Subtest: managed install diagnostics permit only the two additional fixed phases
+ok 4 - managed install diagnostics permit only the two additional fixed phases
+  ---
+  duration_ms: 0.295796
+  type: 'test'
+  ...
+# Subtest: managed generator retains independent public pins and rejects secret, URL and selector inputs
+ok 5 - managed generator retains independent public pins and rejects secret, URL and selector inputs
+  ---
+  duration_ms: 0.905386
+  type: 'test'
+  ...
+# Subtest: new generator binds every signed runtime and installer helper byte before kit creation
+ok 6 - new generator binds every signed runtime and installer helper byte before kit creation
+  ---
+  duration_ms: 0.482078
+  type: 'test'
+  ...
+# Subtest: actual public kit excludes untracked private inputs and loads its fixed managed entry with complete dependencies
+ok 7 - actual public kit excludes untracked private inputs and loads its fixed managed entry with complete dependencies
+  ---
+  duration_ms: 351.089859
+  type: 'test'
+  ...
+# Subtest: complete embedded managed preparer and command parse and verify exact bytes before execution
+ok 8 - complete embedded managed preparer and command parse and verify exact bytes before execution
+  ---
+  duration_ms: 15.207692
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 487.458143

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-security-refresh-managed-bootstrap-source-verification",
+  "date": "2026-10-21",
+  "baseCommit": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "workingTreeChangesIncluded": true,
+  "environment": {
+    "os": "linux",
+    "architecture": "x64",
+    "node": "24.19.0",
+    "python": "3.12.14"
+  },
+  "target": {
+    "os": "Debian 13 / admitted Raspberry Pi OS 13",
+    "architecture": "arm64",
+    "node": "24.21.0",
+    "controller": "7.2.5",
+    "deliverySequence": 15,
+    "deliveryRevision": 12
+  },
+  "tests": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/bootstrap/managed-bootstrap.test.cjs",
+        "tests/bootstrap/first-start.test.cjs",
+        "tests/bootstrap/build-download.test.cjs"
+      ],
+      "exitCode": 0,
+      "tests": 30,
+      "log": "managed-bootstrap.tap"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "tests/bootstrap/prepare-managed-host.test.py"
+      ],
+      "exitCode": 0,
+      "tests": 31,
+      "log": "prepare-managed-host.txt"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "tests/bootstrap/prepare-host.test.py"
+      ],
+      "exitCode": 0,
+      "tests": 27,
+      "log": "prepare-historical-host.txt"
+    }
+  ],
+  "totalPassed": 88,
+  "totalFailed": 0,
+  "sourceFiles": [
+    {
+      "path": "tools/bootstrap/build-managed-download.cjs",
+      "bytes": 13098,
+      "sha256": "b1c0bc93e62bf6880a6b13e3e8a34b43089a82769cfda7873c0a4e0986434894"
+    },
+    {
+      "path": "tools/bootstrap/prepare-managed-host.py",
+      "bytes": 29729,
+      "sha256": "cf0f1a00e1f2e19ca0339b86ed084d33a495a643802c587e3026b5ea82d1c838"
+    },
+    {
+      "path": "tools/bootstrap/first-start-managed.cjs",
+      "bytes": 659,
+      "sha256": "63cec14af7096fcc1e6b366637147e75ec89bbc31388dc2edc9e1293061b8e83"
+    },
+    {
+      "path": "tools/bootstrap/first-start.cjs",
+      "bytes": 13006,
+      "sha256": "c9c8f317404fc4402632cb9000bcfc9d960db1544fba30e268d76bc6ffa15d6b"
+    },
+    {
+      "path": "tests/bootstrap/managed-bootstrap.test.cjs",
+      "bytes": 11238,
+      "sha256": "06184d9e4b52dcb261ec772ca10b96f99cf57c82efdff9522fb16fd531b7acd4"
+    },
+    {
+      "path": "tests/bootstrap/prepare-managed-host.test.py",
+      "bytes": 3990,
+      "sha256": "e2efcb5ba4916759f9d85dbec44e36890e0fc975949fdafd1a200f95934032d1"
+    },
+    {
+      "path": "tests/bootstrap/prepare-host.test.py",
+      "bytes": 26238,
+      "sha256": "64b5cf404dc4f78e956b0f9ca3ba4790ad05a0dff60d9c6005cb6e6e80352bf8"
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "reports/integration/security-refresh-20261021/install/README_DE.md",
+      "bytes": 8131,
+      "sha256": "b92a7efedf1035dc1c72d24bd2bf00123429a585bba9bcb0b926fc9127ec6cbc"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/test-results.json",
+      "bytes": 709,
+      "sha256": "53410764c8fe54f9eef6e830856371cf653a2f742161d0227d2beb1e9221fafe"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/managed-bootstrap.tap",
+      "bytes": 7892,
+      "sha256": "0eaa6708bcef116627ec9cab3c4b141a5830dbf8d0a3237cce3f588cf3dd5a31"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/prepare-managed-host.txt",
+      "bytes": 6000,
+      "sha256": "aadd36e895c26709980edae58a3396f82fd1c9f2a6e20a9782a51861041926c5"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/prepare-historical-host.txt",
+      "bytes": 4983,
+      "sha256": "3e20397c65ff53189d849622cd91e754e3e18a70d1d55199dbfcc4ee3486fdf5"
+    }
+  ],
+  "diffCheck": {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0
+  },
+  "actualOperations": {
+    "realZipCreationReadbackAndModuleClosure": true,
+    "packageInstallation": false,
+    "targetInstallation": false,
+    "runtimeBuild": false,
+    "releaseSigning": false,
+    "persistentKeyCreation": false,
+    "publicInstallCommandCreated": false,
+    "published": false
+  },
+  "scopeLimitations": [
+    "Host effects use explicit doubles; actual archive/crypto/filesystem/Bash syntax and module loading exercised.",
+    "No complete signed release or real manufacturer private key available to this workstream.",
+    "Tests ran on Node 24.19.0 Linux x64, not target Node 24.21.0 ARM64.",
+    "Actual authenticated APT, PostgreSQL, onboarding, restart and Admin-update-button acceptance on a fresh Pi remain open.",
+    "Historical delivery archives and installer command pins were not modified."
+  ],
+  "officialPackageSources": [
+    "https://packages.debian.org/trixie/dnsmasq-base",
+    "https://packages.debian.org/trixie/arm64/dnsmasq-base/filelist",
+    "https://packages.debian.org/trixie/arm64/nftables/filelist"
+  ],
+  "hardwareAcceptance": "OPEN",
+  "productionReleaseApproved": false
+}

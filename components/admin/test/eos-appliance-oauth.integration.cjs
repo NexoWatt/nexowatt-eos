@@ -1,5 +1,5 @@
 'use strict';
-// Real HTTPS/Express/Webserver1.4.0 + maintained OAuth5.3.0 and EOS session
+// Real HTTPS/Express/Webserver3.3.1 + maintained OAuth5.3.0 and EOS session
 // binding, real enrolled PBKDF2 and the native EOS States session API. The
 // underlying PostgreSQL store is an explicit in-memory fixture, not a live DB test.
 const { test } = require('node:test');
@@ -16,6 +16,7 @@ const deps = process.env.EOS_ADMIN_DEPENDENCIES;
 if (!deps || !path.isAbsolute(deps)) throw new Error('EOS_ADMIN_DEPENDENCIES required');
 const express = require(path.join(deps, 'express'));
 const webserverRoot = path.join(deps, '@iobroker/webserver');
+assert.equal(JSON.parse(fs.readFileSync(path.join(webserverRoot, 'package.json'))).version, '3.3.1');
 const resolvedOAuth = require.resolve('oauth2-server', { paths: [webserverRoot] });
 const oauthPackage = JSON.parse(fs.readFileSync(path.join(path.dirname(resolvedOAuth), 'package.json')));
 assert.equal(oauthPackage.name, '@node-oauth/oauth2-server'); assert.equal(oauthPackage.version, '5.3.0');
@@ -40,14 +41,17 @@ test('maintained OAuth serves TLS password login, refresh, revocation and denied
             '-nodes', '-keyout', path.join(directory, 'key'), '-out', path.join(directory, 'cert'), '-days', '1',
             '-subj', '/CN=localhost', '-addext', 'subjectAltName=DNS:localhost', '-addext', 'basicConstraints=critical,CA:FALSE'], { stdio: 'ignore' }).status, 0);
         const cert = fs.readFileSync(path.join(directory, 'cert')); const key = fs.readFileSync(path.join(directory, 'key'));
-        states = new StatesClient({ autoConnect: false }, { store: new SessionStore() });
+        states = new StatesClient({ autoConnect: false }, { store: new SessionStore(),
+            controllerAdapter: { name: '@iobroker/js-controller-adapter', version: '7.2.5' } });
         await states.connectDb();
         const testPassword = 'ephemeral-only-test-password';
         const user = { type: 'user', common: { enabled: true, password: await passwordHash(testPassword) }, native: {} };
         let verificationDelayMs = 0;
         const clone = value => value === undefined ? undefined : JSON.parse(JSON.stringify(value));
         const adapter = { config: {}, log: { warn() {}, info() {}, debug() {}, error() {} },
-            getSession: states.getSession.bind(states),
+            // The controller 7.2.5 adapter bridges the DB error-first callback
+            // to this public session-only API (separately tested against upstream).
+            getSession(id, callback) { states.getSession(id, (_error, session) => callback(session)); },
             setSession: states.setSession.bind(states),
             destroySession: states.destroySession.bind(states),
             async getForeignObjectAsync(id) { return id === 'system.user.admin' ? clone(user) : null; },
@@ -62,7 +66,8 @@ test('maintained OAuth serves TLS password login, refresh, revocation and denied
         security = new EosSessionSecurity(adapter);
         const app = express(); app.use(express.urlencoded({ extended: false, limit: '16kb' }));
         app.all(['/sso', '/sso-callback'], (_req, res) => res.status(403).json({ error: 'ssoUnavailableInLocalSecurityProfile' }));
-        const model = createOAuth2Server(adapter, { app, secure: true, noBasicAuth: true, accessLifetime: 120, refreshLifetime: 600 });
+        const model = createOAuth2Server(adapter, { app, secure: true, noBasicAuth: true, accessLifetime: 120, refreshLifetime: 600,
+            authorizationCode: false, dynamicClientRegistration: false });
         security.bindOAuthModel(model);
         app.get('/private', async (req, res) => {
             const token = req.headers.authorization?.replace(/^Bearer /, '');
@@ -114,6 +119,7 @@ test('maintained OAuth serves TLS password login, refresh, revocation and denied
         });
         await t.test('SSO and authorization-code grants remain unavailable', async () => {
             assert.equal((await request('/sso?redirectUrl=https://example.invalid')).status, 403);
+            assert.equal((await request('/sso-callback?code=invalid&state=invalid')).status, 403);
             const response = await request('/oauth/token', { grant_type: 'authorization_code', client_id: 'ioBroker', code: 'invalid' });
             assert.ok(response.status >= 400); assert.equal(response.body.access_token, undefined);
         });

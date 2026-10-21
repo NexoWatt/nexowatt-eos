@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: Objects loads as client-only PostgreSQL backend and preserves CRUD callbacks
+ok 1 - Objects loads as client-only PostgreSQL backend and preserves CRUD callbacks
+  ---
+  duration_ms: 13.147909
+  type: 'test'
+  ...
+# Subtest: denied global write cannot mutate, publish or call callback twice (F01 regression)
+ok 2 - denied global write cannot mutate, publish or call callback twice (F01 regression)
+  ---
+  duration_ms: 2.501104
+  type: 'test'
+  ...
+# Subtest: per-object deny overrides global write and supplied forged ACL/groups
+ok 3 - per-object deny overrides global write and supplied forged ACL/groups
+  ---
+  duration_ms: 6.870657
+  type: 'test'
+  ...
+# Subtest: current group rights and enabled flag are refreshed without stale upstream ACL cache
+ok 4 - current group rights and enabled flag are refreshed without stale upstream ACL cache
+  ---
+  duration_ms: 1.45817
+  type: 'test'
+  ...
+# Subtest: owner cannot change object ACL to gain broader access or alter users without users rights
+ok 5 - owner cannot change object ACL to gain broader access or alter users without users rights
+  ---
+  duration_ms: 1.702869
+  type: 'test'
+  ...
+# Subtest: prototype-sensitive and cyclic object payloads fail before writes
+ok 6 - prototype-sensitive and cyclic object payloads fail before writes
+  ---
+  duration_ms: 0.699726
+  type: 'test'
+  ...
+# Subtest: exact reviewed built-in views work and appended executable map text fails closed
+ok 7 - exact reviewed built-in views work and appended executable map text fails closed
+  ---
+  duration_ms: 2.163094
+  type: 'test'
+  ...
+# Subtest: built-in custom and instanceStats views preserve projected values
+ok 8 - built-in custom and instanceStats views preserve projected values
+  ---
+  duration_ms: 0.379363
+  type: 'test'
+  ...
+# Subtest: file binary and metadata remain readable through original file API
+ok 9 - file binary and metadata remain readable through original file API
+  ---
+  duration_ms: 3.322963
+  type: 'test'
+  ...
+# Subtest: transaction rollback leaves no partial object or publish when publish fails
+ok 10 - transaction rollback leaves no partial object or publish when publish fails
+  ---
+  duration_ms: 0.917685
+  type: 'test'
+  ...
+# Subtest: system subscriptions, owner lease and release notification use store APIs without Lua
+ok 11 - system subscriptions, owner lease and release notification use store APIs without Lua
+  ---
+  duration_ms: 1.613224
+  type: 'test'
+  ...
+# Subtest: user subscriptions check fresh read ACL for every event
+ok 12 - user subscriptions check fresh read ACL for every event
+  ---
+  duration_ms: 1.588707
+  type: 'test'
+  ...
+# Subtest: system subscription path cannot bypass an explicit user context
+ok 13 - system subscription path cannot bypass an explicit user context
+  ---
+  duration_ms: 1.035252
+  type: 'test'
+  ...
+# Subtest: mutating ACL while a writer waits cannot bypass serialized fresh authorization
+ok 14 - mutating ACL while a writer waits cannot bypass serialized fresh authorization
+  ---
+  duration_ms: 0.892446
+  type: 'test'
+  ...
+# Subtest: file bytes and metadata roll back together on metadata failure
+ok 15 - file bytes and metadata roll back together on metadata failure
+  ---
+  duration_ms: 1.094692
+  type: 'test'
+  ...
+# Subtest: readonly file user cannot force a write with supplied privilege metadata
+ok 16 - readonly file user cannot force a write with supplied privilege metadata
+  ---
+  duration_ms: 1.067681
+  type: 'test'
+  ...
+# Subtest: unknown view and database wipe require explicit supported authority
+ok 17 - unknown view and database wipe require explicit supported authority
+  ---
+  duration_ms: 1.0602
+  type: 'test'
+  ...
+# Subtest: bulk reads and keys do not inherit the nonadministrator group bypass
+ok 18 - bulk reads and keys do not inherit the nonadministrator group bypass
+  ---
+  duration_ms: 2.097695
+  type: 'test'
+  ...
+# Subtest: nonadministrator file rename and recursive operations fail before protected target changes
+ok 19 - nonadministrator file rename and recursive operations fail before protected target changes
+  ---
+  duration_ms: 2.357217
+  type: 'test'
+  ...
+# Subtest: protocol drift invalidates client so subsequent writes fail closed
+ok 20 - protocol drift invalidates client so subsequent writes fail closed
+  ---
+  duration_ms: 0.600667
+  type: 'test'
+  ...
+# Subtest: malformed event and excessive queued bytes invalidate the connection
+ok 21 - malformed event and excessive queued bytes invalidate the connection
+  ---
+  duration_ms: 0.809712
+  type: 'test'
+  ...
+# Subtest: qualified bulk-read compatibility flag and callback retain namespace contract
+ok 22 - qualified bulk-read compatibility flag and callback retain namespace contract
+  ---
+  duration_ms: 1.15248
+  type: 'test'
+  ...
+# Subtest: empty and oversized subscription batches reject instead of leaving callbacks pending
+ok 23 - empty and oversized subscription batches reject instead of leaving callbacks pending
+  ---
+  duration_ms: 0.449569
+  type: 'test'
+  ...
+# Subtest: unlink and delFile cannot bypass recursive deletion guard through inherited helper
+ok 24 - unlink and delFile cannot bypass recursive deletion guard through inherited helper
+  ---
+  duration_ms: 2.850732
+  type: 'test'
+  ...
+# Subtest: bounded wildcard matching preserves Redis classes, escapes and UTF-8 identifiers
+ok 25 - bounded wildcard matching preserves Redis classes, escapes and UTF-8 identifiers
+  ---
+  duration_ms: 22.600702
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 396.883668

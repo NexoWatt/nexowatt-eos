@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 const { EventEmitter } = require('node:events');
 const { Client, Server, getDefaultPort } = require('../../runtime/postgresql/packages/db-states-postgresql/index.cjs');
 const tick = () => new Promise(resolve => setImmediate(resolve));
+const controllerAdapter = { name: '@iobroker/js-controller-adapter', version: '7.2.2' };
 
 // This explicit Store test double exercises the States contract only. It is not a
 // PostgreSQL/TLS/RLS test and deliberately has no networking or host mutations.
@@ -59,7 +60,7 @@ class FakeStore extends EventEmitter {
     }
 }
 async function fixture(t, settings = {}, shared) {
-    const store = new FakeStore(shared); const client = new Client({ autoConnect: false, ...settings }, { store });
+    const store = new FakeStore(shared); const client = new Client({ autoConnect: false, ...settings }, { store, controllerAdapter });
     await client.connectDb(); t.after(() => client.destroy()); return { client, store };
 }
 
@@ -205,7 +206,7 @@ test('unexpected protocol version disconnects and prevents writes', async t => {
 
 test('autoConnect failure is caught and emits only fixed diagnostic; explicit retry can report error', async t => {
     const diagnostics = []; const store = new FakeStore(); store.connect = async () => { throw new Error('fixture private connection text'); };
-    const client = new Client({ logger: { warn: message => diagnostics.push(message) } }, { store }); t.after(() => client.destroy());
+    const client = new Client({ logger: { warn: message => diagnostics.push(message) } }, { store, controllerAdapter }); t.after(() => client.destroy());
     await tick(); assert.deepEqual(diagnostics, ['EOS_PG_STATES_CONNECT_FAILED']); await assert.rejects(client.connectDb(), /fixture private connection text/);
 });
 

@@ -42,7 +42,7 @@ function installPostgresqlHost(options, dependencies = {}) {
         for (const binary of ['/usr/sbin/ip', '/usr/sbin/nft', '/usr/sbin/dnsmasq'])
             if (!trust(binary, root).trusted) fail('PG_MANAGED_HOST_TOOLS_REQUIRED');
     }
-    const productInventory = fullProduct ? (dependencies.inspectProduct || product.inspectApp)(file('app'), managed ? product.OWN_ADAPTER_TEST : product.MANAGEMENT_TEST) : null;
+    const productInventory = fullProduct ? (dependencies.inspectProduct || product.inspectApp)(file('app'), managed ? product.SECURITY_REFRESH_TEST : product.MANAGEMENT_TEST) : null;
     if (!dependencies.skipOwnershipFixture) {
         for (const name of [release, '/etc/nexowatt-eos', '/var/lib/nexowatt-eos', '/var/log/nexowatt-eos',
             '/etc/nexowatt-eos-os-updates', '/var/lib/nexowatt-eos-os-updates', '/etc/systemd/system']) assertNoSymlinkAncestors(at(name));

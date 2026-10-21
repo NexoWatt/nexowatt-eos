@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-controller-security-refresh-verification",
+  "date": "2026-10-21",
+  "sourceBaseline": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "controller": "7.2.5",
+  "executionEnvironment": {
+    "node": "24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "target": {
+    "node": "24.21.0",
+    "platform": "linux-arm64"
+  },
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/controller725-adapter-shutdown.test.cjs",
+        "tests/system/controller725-backup-state.test.cjs",
+        "tests/system/controller725-combined.test.cjs",
+        "tests/system/controller725-controller-pid-state.test.cjs",
+        "tests/system/controller725-controller-profile.test.cjs",
+        "tests/system/controller725-messages.test.cjs",
+        "tests/system/controller725-version-dispatch.test.cjs",
+        "tests/system/controller-profile.test.cjs",
+        "tests/system/bootstrap.test.cjs",
+        "tests/system/activation.test.cjs",
+        "tests/system/certificate-host.test.cjs",
+        "tests/system/certificate-lifecycle.test.cjs",
+        "tests/system/own-adapter-assets.test.cjs",
+        "tests/system/own-adapter-sbom.test.cjs",
+        "tests/system/own-adapter-upload.test.cjs",
+        "tests/onboarding/configuration.test.cjs",
+        "tests/onboarding/enrollment.test.cjs",
+        "tests/onboarding/frontend.test.cjs",
+        "tests/onboarding/issue-code.test.cjs",
+        "tests/onboarding/server.test.cjs",
+        "tests/onboarding/shutdown.test.cjs",
+        "tests/onboarding/web-readiness.test.cjs",
+        "tests/integration/runtime-dependency-policy.test.cjs",
+        "tests/integration/managed-fresh-enrollment.test.cjs",
+        "tests/integration/controller725-managed-fresh-enrollment.test.cjs",
+        "tests/integration/own-adapter-enrollment.test.cjs",
+        "tests/postgresql/own-adapter-product.test.cjs",
+        "tests/postgresql/session-controller-contract.test.cjs"
+      ],
+      "exitCode": 0,
+      "output": "verification.tap",
+      "outputSha256": "709dc3d5b77922441ec6b76aacd81e3a9b86ebbafea1995a9a8c2d71f38d64e8",
+      "tests": 400,
+      "pass": 400,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/controller725-dependency-policy.test.cjs",
+        "tests/integration/runtime-dependency-policy.test.cjs"
+      ],
+      "exitCode": 0,
+      "output": "dependency-policy.tap",
+      "outputSha256": "4c1207b32f08b55ae2254d376612b378bc147be938339d9759212d64996082bb",
+      "tests": 20,
+      "pass": 20,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "coverageNote": "Focused follow-up after the canonical-root-only transformed-package policy was added; supersedes dependency-policy coverage in the earlier 400-test run. The 400-test run was not repeated."
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/postgresql/controller725-objects-guard.test.cjs"
+      ],
+      "exitCode": 0,
+      "output": "objects-resolution-guard.tap",
+      "outputSha256": "02059db45adf07dcc45193501a15aab964fb7fa0bb37f27600981ed03520dbe1",
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/postgresql/controller725-objects.test.cjs"
+      ],
+      "exitCode": 0,
+      "output": "objects725-contract.tap",
+      "outputSha256": "bb95ddd9b91c8250a163af91104bc70d9ee9f639fb165756b0828767182c3554",
+      "tests": 25,
+      "pass": 25,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "environment": {
+        "EOS_CONTROLLER725_APP": "/tmp/eos-review-objects725",
+        "NODE_PATH": "/tmp/eos-review-objects725/node_modules"
+      },
+      "coverageNote": "Actual published 7.2.5 Objects inheritance with fake Store, no PostgreSQL connection or TLS. Exact resolved package identities are asserted before loading the shared suite. Upstream download integrity and independently repeated run are recorded in ../review/."
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "3b50967b9ac52fc59957ebdda446ac5d89fec9db9cef98990312516c8a544bef"
+    },
+    {
+      "path": "runtime/bootstrap/initialize.cjs",
+      "sha256": "8b6680bab68721905c96da46c94dad27803e5ef2e99c3814601e54d73c39c502"
+    },
+    {
+      "path": "runtime/bootstrap/own-adapter-enrollment.cjs",
+      "sha256": "62bb185e00b1b82de200392870b9753bfc4fa42b2e570862fa000db5efd6f872"
+    },
+    {
+      "path": "runtime/controller-profile/profile-validation.cjs",
+      "sha256": "3275cfe668772faa0e74352fde5300313f5b0f016f54e02f3c8e5a5fce1734ff"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "a52bcd79ade7fa3878c87af2ed60a458e12ffdda0d31d489da376b572574bfbe"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/README.md",
+      "sha256": "fdd5f76b77e46fd086b95ca51adf4d8dfb84bf5a7e676adcf6b54d1c75050ed3"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/adapter-shutdown.cjs",
+      "sha256": "192a00670b52d0855f865802c322129fea64a8e00af4f3ea4587d05e309bcd98"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/backup-state.cjs",
+      "sha256": "b5209fbfd7d6d92097ab6d0dd9da5360c4a241d50b27f9271821ea4379927413"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/guard.cjs",
+      "sha256": "f24282561903702f124700322a475102309a2a71cff7258f29dbac19850edab8"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/pid-state.cjs",
+      "sha256": "94f07e5c29ebdbcec0eabe03c15a55ab5528ac1bdba8188df0762c6cbb4925af"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/pinned-build.json",
+      "sha256": "c2358942f2594d3d698959136de69285f4e32bf0d3b9c34c653b7f1ddec288ee"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/transform.cjs",
+      "sha256": "5e49ba9b66f7afe0c54ec732c25acbf2863ae010e780034bdd3813eb41ffa1cf"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "b18635b96443da473ed21a10f99e7d5af00807e4b45ca95a5b15a14bef1fecc5"
+    },
+    {
+      "path": "runtime/transport/certificate-lifecycle.cjs",
+      "sha256": "ac9617a320a24764d8af0717c746bcdfbc6b3bc3a9c93ad4000ae817b1344ac2"
+    },
+    {
+      "path": "tools/integration/runtime-dependency-policy.cjs",
+      "sha256": "28626f42fa4502245ff45ee5814dee270027c1ca1ad7de9ba2a13bde16ecacdb",
+      "verifiedBy": "dependency-policy.tap"
+    },
+    {
+      "path": "tools/system/activate-release.cjs",
+      "sha256": "7b2df41ca44ece664662f7c5d3ae454a9f20dac028517570762571dadf5383b6"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "a0d2a69d42cab5842e860444a4e6cd00aac9fab4b4c73d65af90989980ef9144"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "sha256": "bd66d3d60f17c861b367b81e173776caaa7e5ef8790df298bc46d7ac8b755913"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "a2f80406c1c1d13470e57bee268072e762655f59043fa8ec9652d7d971e1bc6e"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects-guard.cjs",
+      "sha256": "9f4395664bed341a90cb1eb02e88dd003fcfb113a16bdbe158247b94a69a10c3",
+      "verifiedBy": "objects725-contract.tap"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects-guard.test.cjs",
+      "sha256": "353edee0d6b316f377a74e84fba7290572d82994403ae43e3ba55a7eafeeb28c",
+      "verifiedBy": "objects-resolution-guard.tap"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects.test.cjs",
+      "sha256": "39bca5d34385a3f55b538e765036b37f38ced2fb0c4fbe07d2d871245da14bbf",
+      "verifiedBy": "objects725-contract.tap"
+    },
+    {
+      "path": "tests/postgresql/objects.test.cjs",
+      "sha256": "54b72d216e6e35be8a5ab37b35875858d662d583ae6f651155cd912ecc305397",
+      "verifiedBy": "objects725-contract.tap"
+    }
+  ],
+  "legacyArtifactsModified": false,
+  "historicalControllerGuardModified": false,
+  "physicalPiTestPerformed": false,
+  "nativeCompleteProductTestClaimed": false,
+  "releaseSigningPerformed": false,
+  "productionApproved": false,
+  "open": [
+    "Native PostgreSQL/Admin/UI integration against complete newly resolved runtime",
+    "Physical Pi installation/restart and browser login",
+    "Signed update-button installation and manufacturer key provisioning",
+    "Full-system restore and plant acceptance"
+  ]
+}

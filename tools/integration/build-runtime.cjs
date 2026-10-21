@@ -19,15 +19,24 @@ function read(file) {
     if (!s.isFile() || s.size > 16 * 1024 * 1024) reject('BUILD_INPUT');
     return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
-function snapshot(source, target) {
+function snapshot(source, target, trackedFiles) {
+    const permitted = trackedFiles === undefined ? null : new Set(trackedFiles);
+    const directories = new Set();
+    for (const name of permitted || []) {
+        if (!name || path.isAbsolute(name) || name.includes('\\') || name.split('/').some(part => !part || part === '.' || part === '..')) reject('BUILD_TRACKED_PATH');
+        let parent = path.posix.dirname(name);
+        while (parent !== '.') { directories.add(parent); parent = path.posix.dirname(parent); }
+    }
     let count = 0, bytes = 0;
     fs.mkdirSync(target, { mode: 0o700 });
-    function walk(a, b) {
+    function walk(a, b, relative = '') {
         for (const entry of fs.readdirSync(a, { withFileTypes: true })) {
             if (['.git', 'node_modules'].includes(entry.name)) continue;
+            const name = relative ? `${relative}/${entry.name}` : entry.name;
+            if (permitted && !(entry.isDirectory() ? directories.has(name) : permitted.has(name))) continue;
             if (++count > 100000) reject('BUILD_SNAPSHOT_LIMIT');
             const src = path.join(a, entry.name), dst = path.join(b, entry.name);
-            if (entry.isDirectory()) { fs.mkdirSync(dst); walk(src, dst); }
+            if (entry.isDirectory()) { fs.mkdirSync(dst); walk(src, dst, name); }
             else if (entry.isFile()) {
                 const st = fs.lstatSync(src); bytes += st.size;
                 if (st.size > 64 * 1024 * 1024 || bytes > 1024 ** 3 || st.nlink !== 1) reject('BUILD_SNAPSHOT_LIMIT');
@@ -38,8 +47,8 @@ function snapshot(source, target) {
     walk(source, target);
     return { files: count, bytes };
 }
-function run(args, cwd, logfile) {
-    const env = { ...process.env, npm_config_ignore_scripts: 'true', npm_config_audit: 'false', npm_config_fund: 'false', npm_config_offline: 'true' };
+function run(args, cwd, logfile, offline = true) {
+    const env = { ...process.env, npm_config_ignore_scripts: 'true', npm_config_audit: 'false', npm_config_fund: 'false', npm_config_offline: offline ? 'true' : 'false', npm_config_fetch_retries: '0', npm_config_fetch_timeout: '5000' };
     delete env.NODE_OPTIONS; delete env.NODE_PATH;
     // Bind npm to the same reviewed official Node distribution as this process.
     // A different PATH must not silently select an older Node/npm toolchain.
@@ -100,12 +109,31 @@ function targetArguments(platform) {
     if (!['linux-x64', 'linux-arm64'].includes(platform)) reject('BUILD_TARGET_PLATFORM');
     return ['--os=linux', `--cpu=${platform.slice(6)}`, '--libc=glibc'];
 }
-function build({ output, components = COMPONENTS, eebusSource, platform, postgresql = false }) {
+function trackedSourceFiles(source) {
+    const relative = path.relative(REPO, source).split(path.sep).join('/');
+    if (relative.startsWith('../') || path.isAbsolute(relative)) reject('BUILD_TRACKED_PATH');
+    const result = cp.spawnSync('git', ['ls-files', '-z', '--', relative + '/'], { cwd: REPO, encoding: 'utf8', timeout: 10000, maxBuffer: 16 * 1024 * 1024, shell: false });
+    if (result.error || result.status !== 0) reject('BUILD_TRACKED_SOURCE');
+    const prefix = relative + '/';
+    const rows = result.stdout.split('\0').filter(Boolean);
+    if (!rows.length || rows.some(name => !name.startsWith(prefix))) reject('BUILD_TRACKED_SOURCE');
+    return rows.map(name => name.slice(prefix.length));
+}
+function bindPostgresqlPeer(pkg, id, controllerVersion) {
+    if (id !== 'db-objects-postgresql' || controllerVersion !== '7.2.5') return undefined;
+    if (pkg.name !== '@iobroker/db-objects-postgresql' || pkg.peerDependencies?.['@iobroker/db-objects-redis'] !== '7.2.2') reject('BUILD_POSTGRESQL_PEER_INPUT');
+    pkg.peerDependencies['@iobroker/db-objects-redis'] = '7.2.5';
+    return { package: '@iobroker/db-objects-redis', previous: '7.2.2', version: '7.2.5',
+        scope: 'fresh-local-packed-backend-manifest-only' };
+}
+function build({ output, components = COMPONENTS, eebusSource, platform, postgresql = false, releaseScope = product.MANAGEMENT_TEST, resolutionLock, networkMode = 'offline-only' }) {
+    if (!['offline-only', 'cache-stage'].includes(networkMode) || networkMode === 'cache-stage' && resolutionLock) reject('BUILD_NETWORK_MODE');
     const base = path.resolve(output);
     if (base === REPO || base.startsWith(REPO + path.sep) || fs.existsSync(base)) reject('BUILD_FRESH_EXTERNAL_DIRECTORY_REQUIRED');
     if (!Array.isArray(components) || !components.length || new Set(components).size !== components.length || components.some(x => !COMPONENTS.includes(x))) reject('BUILD_COMPONENTS');
     if (postgresql && (components.length !== COMPONENTS.length || eebusSource)) reject('BUILD_FULL_PRODUCT_REQUIRED');
-    if (postgresql) product.inspectSources(REPO);
+    if (postgresql) product.inspectSources(REPO, releaseScope);
+    const controller = product.specsFor(releaseScope).find(row => row.id === 'js-controller');
     const target = targetArguments(platform);
     if (process.versions.node !== '24.21.0') reject('BUILD_NODE_VERSION');
     fs.mkdirSync(base, { mode: 0o700 });
@@ -116,27 +144,37 @@ function build({ output, components = COMPONENTS, eebusSource, platform, postgre
         const backendPackage = !COMPONENTS.includes(id);
         const original = backendPackage ? path.join(REPO, 'runtime/postgresql/packages', id) : id === 'eebus' && eebusSource ? path.resolve(eebusSource) : path.join(REPO, 'components', id);
         const src = path.join(base, 'sources', id);
-        const copied = snapshot(original, src);
+        const copied = snapshot(original, src, releaseScope === product.SECURITY_REFRESH_TEST ? trackedSourceFiles(original) : undefined);
         const pkg = read(path.join(src, 'package.json'));
+        const sourceManifestSha256 = sha(fs.readFileSync(path.join(src, 'package.json')));
+        const peerBinding = bindPostgresqlPeer(pkg, id, controller.version);
+        if (peerBinding) fs.writeFileSync(path.join(src, 'package.json'), JSON.stringify(pkg, null, 2) + '\n');
+        const packedManifestSha256 = sha(fs.readFileSync(path.join(src, 'package.json')));
         overrides.push(pkg.overrides);
         if (!(backendPackage ? /^@(iobroker|nexowatt)\/[a-z0-9_-]+$/.test(pkg.name) : /^iobroker\.[a-z0-9_-]+$/.test(pkg.name)) || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(pkg.version)) reject('BUILD_COMPONENT_IDENTITY');
         if (!pkg.main || path.isAbsolute(pkg.main) || pkg.main.split(/[\\/]/).includes('..') || !fs.existsSync(path.join(src, pkg.main))) reject('BUILD_MAIN_MISSING');
         const result = JSON.parse(run(['pack', '--ignore-scripts', '--json', '--pack-destination', path.join(base, 'packages')], src, path.join(base, 'logs', `pack-${id}.log`)));
         if (!Array.isArray(result) || result.length !== 1 || !/^[a-z0-9_.-]+\.tgz$/.test(result[0].filename)) reject('BUILD_PACK_RESULT');
         const file = result[0].filename;
-        packed.push({ id, package: pkg.name, version: pkg.version, archive: file, sha256: sha(fs.readFileSync(path.join(base, 'packages', file))), main: pkg.main, snapshot: copied, lifecycleScriptsExecuted: false });
+        packed.push({ id, package: pkg.name, version: pkg.version, archive: file, sha256: sha(fs.readFileSync(path.join(base, 'packages', file))), main: pkg.main, snapshot: copied, sourceManifestSha256, packedManifestSha256, ...(peerBinding ? { peerBinding } : {}), lifecycleScriptsExecuted: false });
     }
     const app = path.join(base, 'app');
     const pkg = { name: 'nexowatt-eos-integrated-development', version: postgresql ? '0.2.0-test.3' : '0.2.0-dev.3', private: true,
-        license: 'SEE LICENSE IN LICENSE', engines: { node: '24.21.0' }, dependencies: { 'iobroker.js-controller': '7.2.2' } };
+        license: 'SEE LICENSE IN LICENSE', engines: { node: '24.21.0' }, dependencies: { 'iobroker.js-controller': controller.version } };
     copyRuntimeLicenses(app);
     for (const row of packed) pkg.dependencies[row.package] = `file:../packages/${row.archive}`;
     // npm only honors overrides at the installation root. Preserve explicit
     // source policy rather than silently dropping it when packaging adapters.
-    const mergedOverrides = mergeOverrides([dependencyPolicy.reviewedOverrides(), ...overrides]);
+    const mergedOverrides = mergeOverrides([dependencyPolicy.reviewedOverrides(controller.version), ...overrides]);
     if (Object.keys(mergedOverrides).length) pkg.overrides = mergedOverrides;
     fs.writeFileSync(path.join(app, 'package.json'), JSON.stringify(pkg, null, 2) + '\n');
-    run(['install', '--ignore-scripts', '--omit=dev', '--no-audit', '--no-fund', ...target], app, path.join(base, 'logs', 'install.log'));
+    if (resolutionLock) {
+        const input = read(path.resolve(resolutionLock));
+        if (input.lockfileVersion !== 3 || !input.packages?.['']) reject('BUILD_LOCK');
+        fs.copyFileSync(path.resolve(resolutionLock), path.join(app, 'package-lock.json'), fs.constants.COPYFILE_EXCL);
+    }
+    run([resolutionLock ? 'ci' : 'install', '--ignore-scripts', '--omit=dev', '--no-audit', '--no-fund', ...target], app, path.join(base, 'logs', 'install.log'), networkMode === 'offline-only');
+    fs.copyFileSync(path.join(app, 'package-lock.json'), path.join(base, 'resolution-lock.json'), fs.constants.COPYFILE_EXCL);
     normalizeRoot(app);
     let postgresqlBackendBinding;
     if (postgresql) {
@@ -154,16 +192,16 @@ function build({ output, components = COMPONENTS, eebusSource, platform, postgre
         postgresqlBackendBinding = { originalControllerManifestSha256, controllerManifestSha256: sha(fs.readFileSync(controllerPath)),
             packages: packed.filter(row => !COMPONENTS.includes(row.id)).map(({ package: name, version, sha256 }) => ({ name, version, sha256 })),
             change: 'exact private backend dependencies moved to controller; stale npm hidden lock removed' };
-        product.inspectApp(app);
+        product.inspectApp(app, releaseScope);
     }
     const nativeNormalization = postgresql && platform === 'linux-arm64' ? normalizeSerialport({ app, platform, nodeVersion: process.versions.node }) : undefined;
     if (nativeNormalization) fs.writeFileSync(path.join(base, 'native-transform.json'), JSON.stringify(nativeNormalization, null, 2) + '\n', { flag: 'wx', mode: 0o644 });
-    const runtimeDependencyPolicy = dependencyPolicy.verifyInstalledTree(app);
-    const evidence = { schemaVersion: 1, scope: 'isolated-build-host-installed-assessment-tree', productReleaseApproved: false, targetDeviceObserved: false, targetPlatform: platform, hostPlatform: `${process.platform}-${process.arch}`, node: process.version, npmLifecycleScriptsExecuted: false, npmNetworkMode: 'offline-only', runtimeDependencyPolicy, postgresqlBackendBinding, nativeNormalization, components: packed, packageLockSha256: sha(fs.readFileSync(path.join(app, 'package-lock.json'))) };
+    const runtimeDependencyPolicy = dependencyPolicy.verifyInstalledTree(app, { controllerVersion: controller.version });
+    const evidence = { schemaVersion: 1, scope: 'isolated-build-host-installed-assessment-tree', productReleaseApproved: false, targetDeviceObserved: false, targetPlatform: platform, releaseScope, hostPlatform: `${process.platform}-${process.arch}`, node: process.version, npmLifecycleScriptsExecuted: false, npmNetworkMode: networkMode, resolutionLockSha256: sha(fs.readFileSync(path.join(base, 'resolution-lock.json'))), runtimeDependencyPolicy, postgresqlBackendBinding, nativeNormalization, components: packed, packageLockSha256: sha(fs.readFileSync(path.join(app, 'package-lock.json'))) };
     fs.writeFileSync(path.join(base, 'build-evidence.json'), JSON.stringify(evidence, null, 2) + '\n');
     return evidence;
 }
-module.exports = { COMPONENTS, snapshot, normalizeRoot, mergeOverrides, targetArguments, build };
+module.exports = { COMPONENTS, snapshot, normalizeRoot, mergeOverrides, targetArguments, bindPostgresqlPeer, runNpm: run, build };
 if (require.main === module) {
     try {
         const args = process.argv.slice(2), out = {};

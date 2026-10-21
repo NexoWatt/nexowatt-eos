@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require('playwright');
 async function fixture(role = 'admin', mobile = false) {
-    const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+    const browser = await chromium.launch({ headless: true, executablePath: process.env.EOS_UPDATE_BROWSER_EXECUTABLE || undefined, args: ['--no-sandbox'] });
     const page = await browser.newPage({ viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 } });
     const calls = [], faults = [];
     page.on('pageerror', error => faults.push(error.message));

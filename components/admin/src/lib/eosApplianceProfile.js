@@ -236,7 +236,7 @@ function roleSocketCommandAllowed(role, command, args) {
 }
 
 function installSocketBoundary(commands, authorize, getObjects) {
-    // socket-classes2.3.4's _checkPermissions omits the object payload, forwards
+    // socket-classes2.10.0's _checkPermissions omits the object payload, forwards
     // only the host command and even skips itself for own-password changes.
     // Guard the real dispatch table before any of those lossy/internal checks.
     if (!plain(commands?.commands) || typeof authorize !== 'function' || typeof getObjects !== 'function') throw fail('EOS_SOCKET_PROFILE');

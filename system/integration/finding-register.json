@@ -726,7 +726,7 @@
       "id": "EOS-UPSTREAM-20261021-01",
       "title": "Neuere Controller-/Socket-/Webserver-Korrekturen benötigen gemeinsame EOS-Integration",
       "state": "open",
-      "sourceObservationStatus": "source-lock-sbom-and-public-upstream-review",
+      "sourceObservationStatus": "source-remediation-implemented-full-runtime-delivery-qualification-open",
       "sourceCommit": "a675d6986890d4f3491e421626223c91cd0d1af6",
       "observationDocument": "reports/integration/upstream-review-20261021/README_DE.md",
       "priorityAsReviewed": "high",
@@ -740,14 +740,15 @@
       "verificationScope": "Quellstand, dokumentierte Laufzeit-SBOM, offizielle Release-/Paketmetadaten und begrenzter aktueller npm-Audit; keine Live- oder Exploitprüfung.",
       "ownerRole": "EOS manufacturer development",
       "dueGate": "before next qualified fresh-install baseline; evaluate intended-operation impact promptly",
-      "nextStep": "js-controller 7.2.5, aktuelle Socket-Klassen und Webserveränderungen mit PostgreSQL, Sitzungen, Rollen und eigenen Adaptern qualifizieren.",
-      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe."
+      "nextStep": "7.2.5-/Socket-/Webserver-Quellanpassung und PostgreSQL-Sitzungsvertrag implementiert; frische native Gesamtintegration, signierte Lieferung und Pi-Abnahme weiter nachweisen.",
+      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe.",
+      "remediationEvidence": "reports/integration/security-refresh-20261021/verification.json"
     },
     {
       "id": "EOS-UPSTREAM-20261021-02",
       "title": "Admin-Quelllock und dokumentierte Lieferbasis enthalten unterschiedliche Abhängigkeitsstände",
       "state": "open",
-      "sourceObservationStatus": "source-lock-sbom-and-public-upstream-review",
+      "sourceObservationStatus": "source-remediation-implemented-full-runtime-delivery-qualification-open",
       "sourceCommit": "a675d6986890d4f3491e421626223c91cd0d1af6",
       "observationDocument": "reports/integration/upstream-review-20261021/README_DE.md",
       "priorityAsReviewed": "high",
@@ -761,14 +762,15 @@
       "verificationScope": "Quellstand, dokumentierte Laufzeit-SBOM, offizielle Release-/Paketmetadaten und begrenzter aktueller npm-Audit; keine Live- oder Exploitprüfung.",
       "ownerRole": "EOS manufacturer development",
       "dueGate": "before next qualified fresh-install baseline; evaluate intended-operation impact promptly",
-      "nextStep": "Quelllock und neue Lieferbasis nachvollziehbar angleichen; bereits enthaltene Lieferfixes nicht als fehlend oder als im Quelllock vorhanden ausweisen.",
-      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe."
+      "nextStep": "Neue Gesamtauflösung mit anschließender Offline-ci, tatsächlichem Inventar/SBOM und identischem getesteten/signierten Baum vorgesehen; tatsächlichen frischen Build und Lieferabgleich nachweisen.",
+      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe.",
+      "remediationEvidence": "reports/integration/security-refresh-20261021/verification.json"
     },
     {
       "id": "EOS-UPSTREAM-20261021-03",
       "title": "Aktueller Admin-Produktionsabhängigkeitsscan enthält zu bearbeitende Advisories",
       "state": "open",
-      "sourceObservationStatus": "source-lock-sbom-and-public-upstream-review",
+      "sourceObservationStatus": "source-remediation-implemented-full-runtime-delivery-qualification-open",
       "sourceCommit": "a675d6986890d4f3491e421626223c91cd0d1af6",
       "observationDocument": "reports/integration/upstream-review-20261021/README_DE.md",
       "priorityAsReviewed": "high",
@@ -782,8 +784,27 @@
       "verificationScope": "Quellstand, dokumentierte Laufzeit-SBOM, offizielle Release-/Paketmetadaten und begrenzter aktueller npm-Audit; keine Live- oder Exploitprüfung.",
       "ownerRole": "EOS manufacturer development",
       "dueGate": "before next qualified fresh-install baseline; evaluate intended-operation impact promptly",
-      "nextStep": "Verfügbare Dependency-Fixes in neuer Basis integrieren, konkrete Betroffenheit bewerten, SBOM und Audit erneuern; bestehende Forge-/OCPP-Befunde erhalten.",
-      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe."
+      "nextStep": "Verfügbare kompatible Dependency-Patches in Quelllocks übernommen; aktuelle Teil-Audits und offene Forge-/OCPP-/Dropbox-Befunde dokumentiert. Vollständigen neuen Runtime-Graphen separat prüfen.",
+      "classificationNote": "Paket-/Upstream-Befund; Advisory-Schweregrad ist keine automatisch bestätigte EOS-Ausnutzbarkeit. Keine Produktionsfreigabe.",
+      "remediationEvidence": "reports/integration/security-refresh-20261021/verification.json"
+    },
+    {
+      "id": "EOS-UPSTREAM-20261021-04",
+      "title": "Sitzungsfehlerdiagnose des neuen Adapterkerns muss frei von Sitzungskennungen bleiben",
+      "state": "open",
+      "sourceObservationStatus": "exact-transform-and-isolated-contract-verified-native-delivery-open",
+      "priorityAsReviewed": "high",
+      "observationDocument": "reports/integration/security-refresh-20261021/README_DE.md",
+      "requirementIds": [
+        "EOS-INT-REQ-019",
+        "EOS-INT-REQ-020"
+      ],
+      "remediationVerified": false,
+      "evidence": "reports/integration/security-refresh-20261021/review/postgresql-session-verification.json",
+      "ownerRole": "EOS manufacturer development",
+      "dueGate": "before new qualified fresh-install baseline",
+      "nextStep": "Hashgebundene 7.2.5-Transformation mit festem Diagnosecode in der vollständigen neuen Laufzeit und Lieferung nachweisen; isolierte CJS-/ESM-Vertragstests bestehen.",
+      "classificationNote": "Quellprüfung und gezielter Fixturevertrag; keine tatsächlichen Benutzerkennungen oder Tokens im öffentlichen Nachweis, keine vollständige Produktfreigabe."
     }
   ],
   "controllerScope": "system/integration/controller-observations.json",

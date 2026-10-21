@@ -184,6 +184,9 @@ function applyToBuild(appRoot, adapters = []) {
 // unpatched controller. The pinned source/build relation lives in trusted build
 // tooling. Dynamic profile entries must exactly match the selected catalogue.
 function verifyBuildProfile(appRoot, expectedAdapters = []) {
+    const controller = parseFileJson(readRegular(path.join(appRoot, 'node_modules/iobroker.js-controller/package.json')));
+    if (controller.name === 'iobroker.js-controller' && controller.version === '7.2.5')
+        return verifySecurityRefreshProfile(appRoot, expectedAdapters);
     if (!Array.isArray(expectedAdapters) || expectedAdapters.length > 128) fail('EOS_PROFILE_EXPECTED_ADAPTERS');
     const expected = new Map();
     for (const entry of expectedAdapters) {
@@ -250,4 +253,25 @@ function verifyBuildProfile(appRoot, expectedAdapters = []) {
     return { schemaVersion: 1, kind: 'eos-controller-profile-verification', controllerVersion: '7.2.2',
         productionApproved: false, admittedAdapters: profile.adapters, files: verified };
 }
-module.exports = { HASHES, SOURCE_HASHES, transformFile, buildProfileFiles, applyToBuild, verifyBuildProfile };
+// A separate, version-bound path preserves the historical 7.2.2 output bytes.
+function applySecurityRefreshToBuild(appRoot, adapters = []) {
+    const profile = require('./v7.2.5/transform.cjs');
+    const helpers = ['pid-state', 'backup-state', 'adapter-shutdown'].map(name => require(`./v7.2.5/${name}.cjs`));
+    // Authenticate every complete input before the first write across all four transforms.
+    profile.buildProfileFiles(appRoot, adapters);
+    for (const helper of helpers) helper.prepareFiles(appRoot);
+    const result = profile.applyToBuild(appRoot, adapters);
+    for (const helper of helpers) result.files.push(...helper.applyToBuild(appRoot).files);
+    verifySecurityRefreshProfile(appRoot, adapters);
+    return { ...result, profile: 'security-refresh-test', physicalControlEnabled: false };
+}
+function verifySecurityRefreshProfile(appRoot, adapters = []) {
+    const profile = require('./v7.2.5/transform.cjs').verifyBuildProfile(appRoot, adapters);
+    for (const name of ['pid-state', 'backup-state', 'adapter-shutdown']) {
+        const result = require(`./v7.2.5/${name}.cjs`).verifyBuild(appRoot);
+        profile.files.push(...result.files.map(({ relativePath, sha256 }) => ({ relativePath, sha256 })));
+    }
+    return profile;
+}
+module.exports = { HASHES, SOURCE_HASHES, transformFile, buildProfileFiles, applyToBuild, verifyBuildProfile,
+    applySecurityRefreshToBuild, verifySecurityRefreshProfile };

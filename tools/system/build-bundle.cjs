@@ -159,8 +159,8 @@ function validatePayload(payload, manifest) {
 }
 function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST, networkProfile = false, managedProfile = false }) {
     product.specsFor(releaseScope);
-    if (typeof networkProfile !== 'boolean' || networkProfile && releaseScope !== product.OWN_ADAPTER_TEST) reject('BUILD_NETWORK_PROFILE_REQUIRED');
-    if (typeof managedProfile !== 'boolean' || managedProfile && (!networkProfile || releaseScope !== product.OWN_ADAPTER_TEST)) reject('BUILD_MANAGED_PROFILE_REQUIRED');
+    if (typeof networkProfile !== 'boolean' || networkProfile && !product.ownAdapterScope(releaseScope)) reject('BUILD_NETWORK_PROFILE_REQUIRED');
+    if (typeof managedProfile !== 'boolean' || managedProfile && (!networkProfile || !product.ownAdapterScope(releaseScope))) reject('BUILD_MANAGED_PROFILE_REQUIRED');
     const source = trustedDirectory(appDirectory);
     const target = path.resolve(destination);
     if (target === source || target.startsWith(source + path.sep)) reject('BUILD_OUTPUT_INSIDE_INPUT');
@@ -175,7 +175,7 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
         for (const file of ['host-preflight.cjs', 'install-host.cjs', 'postgresql-host-preflight.cjs', 'install-postgresql-host.cjs', 'prepare-inputs.py', 'prepare-onboarding.cjs', 'prepare-first-start-context.cjs', 'finalize-onboarding.cjs', 'activate-release.cjs', 'build-bundle.cjs', 'eos-base.cjs', 'onboard-ui.cjs', 'rotate-certificates.cjs', 'preflight-installation.cjs', 'update-test-r4-to-r5.cjs', 'update-test-to-r6.cjs', 'diagnose-first-start.cjs', 'recover-r4-first-start-to-r7.cjs', 'recover-r4-restored-r7-to-r8.cjs', 'update-test-to-r9.cjs']) {
             fs.copyFileSync(path.join(REPO, 'tools/system', file), path.join(destination, 'tools/system', file), fs.constants.COPYFILE_EXCL);
         }
-        if (releaseScope === product.OWN_ADAPTER_TEST) {
+        if (product.ownAdapterScope(releaseScope)) {
             fs.copyFileSync(path.join(REPO, 'tools/system/update-test-own-adapters.cjs'),
                 path.join(destination, 'tools/system/update-test-own-adapters.cjs'), fs.constants.COPYFILE_EXCL);
         }
@@ -198,7 +198,7 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
         copyDirectory(path.join(REPO, 'system/test-base/os-updates'), path.join(destination, 'system/test-base/os-updates'));
         fs.mkdirSync(path.join(destination, 'system/postgresql-test'));
         copyDirectory(path.join(REPO, 'system/postgresql-test/systemd'), path.join(destination, 'system/postgresql-test/systemd'));
-        if (releaseScope === product.OWN_ADAPTER_TEST) {
+        if (product.ownAdapterScope(releaseScope)) {
             fs.mkdirSync(path.join(destination, 'system/own-adapter-test'));
             copyDirectory(path.join(REPO, 'system/own-adapter-test/systemd'),
                 path.join(destination, 'system/own-adapter-test/systemd'));

@@ -1,0 +1,696 @@
+[
+  {
+    "component": "ui",
+    "exit": 1,
+    "lockSha256": "4d983f650b2b1e51e37703ed5ea89f55585be827201b20f001a02e2648c75301",
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 1,
+      "total": 1
+    },
+    "vulnerabilities": [
+      {
+        "name": "proxy-addr",
+        "severity": "critical",
+        "nodes": [
+          "node_modules/proxy-addr"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet",
+            "url": "https://github.com/advisories/GHSA-jqcg-44mw-7w3h",
+            "range": ">=1.1.0 <2.0.8"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "component": "devices",
+    "exit": 1,
+    "lockSha256": "d126c4f9f6775a63e7e9f4dbe418d0749ae6f06bb763868247b2a459cbd54a44",
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 4,
+      "critical": 0,
+      "total": 4
+    },
+    "vulnerabilities": [
+      {
+        "name": "@iobroker/adapter-core",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/adapter-core"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/js-controller-common-db"
+        ]
+      },
+      {
+        "name": "@iobroker/js-controller-common-db",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/js-controller-common-db"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "node-forge"
+        ]
+      },
+      {
+        "name": "follow-redirects",
+        "severity": "high",
+        "nodes": [
+          "node_modules/follow-redirects"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "url": "https://github.com/advisories/GHSA-q3jh-wrc6-jgq8",
+            "range": ">=1.16.0 <1.16.1"
+          },
+          {
+            "title": "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "url": "https://github.com/advisories/GHSA-8r9p-f939-6h3c",
+            "range": ">=1.16.0 <1.16.1"
+          }
+        ]
+      },
+      {
+        "name": "node-forge",
+        "severity": "high",
+        "nodes": [
+          "node_modules/node-forge"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+            "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+            "range": "<=1.4.0"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "component": "eebus",
+    "exit": 0,
+    "lockSha256": "c8542ff347bf3f377ab26ffc10664318777408f4d6d5a8287d277bda9a023e5e",
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "vulnerabilities": []
+  },
+  {
+    "component": "ocpp21",
+    "exit": 1,
+    "lockSha256": "090ab8fe479486181db0887bedb3d3420e1a88cd21d83a9782a8c5afc82736c5",
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 2,
+      "high": 3,
+      "critical": 0,
+      "total": 5
+    },
+    "vulnerabilities": [
+      {
+        "name": "@iobroker/adapter-core",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/adapter-core"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/js-controller-common-db"
+        ]
+      },
+      {
+        "name": "@iobroker/js-controller-common-db",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/js-controller-common-db"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "node-forge"
+        ]
+      },
+      {
+        "name": "ajv",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/ajv"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "ajv has ReDoS when using `$data` option",
+            "url": "https://github.com/advisories/GHSA-2g4f-4pwh-qvx6",
+            "range": ">=7.0.0-alpha.0 <8.18.0"
+          }
+        ]
+      },
+      {
+        "name": "node-forge",
+        "severity": "high",
+        "nodes": [
+          "node_modules/node-forge"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+            "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+            "range": "<=1.4.0"
+          }
+        ]
+      },
+      {
+        "name": "ocpp-rpc",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/ocpp-rpc"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "ajv"
+        ]
+      }
+    ]
+  },
+  {
+    "component": "backitup",
+    "exit": 1,
+    "lockSha256": "f64f65ce402a128e6facc0eb9275eaa8ef50cd84c496a0a8dd5b1db5e1426617",
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 6,
+      "high": 16,
+      "critical": 3,
+      "total": 25
+    },
+    "vulnerabilities": [
+      {
+        "name": "@iobroker/adapter-core",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/adapter-core"
+        ],
+        "fixAvailable": {
+          "name": "@iobroker/adapter-core",
+          "version": "3.4.2",
+          "isSemVerMajor": true
+        },
+        "via": [
+          "@iobroker/js-controller-common-db"
+        ]
+      },
+      {
+        "name": "@iobroker/db-base",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/db-base"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/js-controller-common-db"
+        ]
+      },
+      {
+        "name": "@iobroker/db-objects-file",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/db-objects-file"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/db-base",
+          "@iobroker/db-objects-redis"
+        ]
+      },
+      {
+        "name": "@iobroker/db-objects-jsonl",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/db-objects-jsonl"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/db-base",
+          "@iobroker/db-objects-file",
+          "@iobroker/db-objects-redis"
+        ]
+      },
+      {
+        "name": "@iobroker/db-objects-redis",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/db-objects-redis"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/db-base"
+        ]
+      },
+      {
+        "name": "@iobroker/db-states-file",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/db-states-file"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/db-base",
+          "@iobroker/db-states-redis"
+        ]
+      },
+      {
+        "name": "@iobroker/db-states-jsonl",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/db-states-jsonl"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/db-base",
+          "@iobroker/db-states-file",
+          "@iobroker/db-states-redis"
+        ]
+      },
+      {
+        "name": "@iobroker/db-states-redis",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/db-states-redis"
+        ],
+        "fixAvailable": true,
+        "via": [
+          "@iobroker/db-base"
+        ]
+      },
+      {
+        "name": "@iobroker/js-controller-common",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/js-controller-common"
+        ],
+        "fixAvailable": {
+          "name": "@iobroker/js-controller-common",
+          "version": "6.0.0",
+          "isSemVerMajor": true
+        },
+        "via": [
+          "@iobroker/db-objects-file",
+          "@iobroker/db-objects-jsonl",
+          "@iobroker/db-objects-redis",
+          "@iobroker/db-states-file",
+          "@iobroker/db-states-jsonl",
+          "@iobroker/db-states-redis",
+          "@iobroker/js-controller-common-db"
+        ]
+      },
+      {
+        "name": "@iobroker/js-controller-common-db",
+        "severity": "high",
+        "nodes": [
+          "node_modules/@iobroker/js-controller-common-db"
+        ],
+        "fixAvailable": {
+          "name": "@iobroker/adapter-core",
+          "version": "3.4.2",
+          "isSemVerMajor": true
+        },
+        "via": [
+          "node-forge"
+        ]
+      },
+      {
+        "name": "axios",
+        "severity": "high",
+        "nodes": [
+          "node_modules/axios"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "Axios: Prototype pollution gadget in fetch adapter can alter outbound requests",
+            "url": "https://github.com/advisories/GHSA-vh66-26gq-q6x8",
+            "range": ">=1.7.0 <1.20.0"
+          },
+          {
+            "title": "Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method",
+            "url": "https://github.com/advisories/GHSA-9fr6-4gfg-395g",
+            "range": ">=1.0.0 <1.20.0"
+          },
+          {
+            "title": "Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS)",
+            "url": "https://github.com/advisories/GHSA-c29m-xwm3-cm6r",
+            "range": ">=1.16.1 <1.20.0"
+          },
+          {
+            "title": "Axios: ReDoS (O(N\u00b2)) in shouldBypassProxy host normalization, reachable via untrusted redirect Location",
+            "url": "https://github.com/advisories/GHSA-mghh-pgcx-3jjj",
+            "range": ">=1.15.0 <1.20.0"
+          },
+          {
+            "title": "Axios: Prototype Pollution Gadget in axios toFormData Options",
+            "url": "https://github.com/advisories/GHSA-x97p-jq2g-jp4f",
+            "range": ">=1.15.1 <1.20.0"
+          },
+          {
+            "title": "Axios: HTTP/2 adapter bypasses configured DNS lookup and proxy controls",
+            "url": "https://github.com/advisories/GHSA-3pq3-5fj3-cg6v",
+            "range": ">=1.13.0 <1.20.0"
+          },
+          {
+            "title": "Axios: Denial of Service via Unhandled 'error' Event in HTTP/2 ClientHttp2Session Initialization",
+            "url": "https://github.com/advisories/GHSA-542g-h47m-68v8",
+            "range": ">=1.13.0 <1.20.0"
+          },
+          {
+            "title": "Axios: Header Injection via Inherited headers After Minimal Interceptor",
+            "url": "https://github.com/advisories/GHSA-j8rh-479h-cp32",
+            "range": ">=1.0.0 <1.20.0"
+          },
+          {
+            "title": "Axios: Fetch Adapter Header Injection via Inherited FormData getHeaders",
+            "url": "https://github.com/advisories/GHSA-4hqw-qxg8-jxx2",
+            "range": ">=1.12.0 <1.20.0"
+          },
+          {
+            "title": "Axios: Node HTTP adapter prototype-pollution gadget allows request socket hijack via inherited createConnection",
+            "url": "https://github.com/advisories/GHSA-m8m8-qj5v-23w3",
+            "range": ">=1.15.2 <1.20.0"
+          },
+          {
+            "title": "Axios: CIDR-form NO_PROXY entries are ignored, causing proxy exclusion bypass for internal IP ranges",
+            "url": "https://github.com/advisories/GHSA-44g4-m2mj-wpvx",
+            "range": ">=1.15.0 <1.20.0"
+          },
+          {
+            "title": "Axios: maxRedirects: 0 is not enforced by the fetch adapter, allowing redirect-based SSRF",
+            "url": "https://github.com/advisories/GHSA-r4gj-5m52-g5wh",
+            "range": ">=1.17.0 <1.20.0"
+          }
+        ]
+      },
+      {
+        "name": "brace-expansion",
+        "severity": "high",
+        "nodes": [
+          "node_modules/rimraf/node_modules/brace-expansion",
+          "node_modules/webdav/node_modules/brace-expansion"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service",
+            "url": "https://github.com/advisories/GHSA-q2hr-2g5m-vwhr",
+            "range": ">=2.0.0 <2.1.7"
+          },
+          {
+            "title": "brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion",
+            "url": "https://github.com/advisories/GHSA-qhr7-859c-m2p7",
+            "range": ">=2.0.0 <2.1.6"
+          },
+          {
+            "title": "brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion",
+            "url": "https://github.com/advisories/GHSA-6j4f-fj2g-mc7p",
+            "range": ">=2.0.0 <2.1.5"
+          }
+        ]
+      },
+      {
+        "name": "dropbox-v2-api",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/dropbox-v2-api"
+        ],
+        "fixAvailable": false,
+        "via": [
+          "request"
+        ]
+      },
+      {
+        "name": "follow-redirects",
+        "severity": "high",
+        "nodes": [
+          "node_modules/follow-redirects"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "follow-redirects array-form headers bypass cross-origin credential stripping",
+            "url": "https://github.com/advisories/GHSA-q3jh-wrc6-jgq8",
+            "range": ">=1.16.0 <1.16.1"
+          },
+          {
+            "title": "follow-redirects sensitiveHeaders regex escaping can expose credential headers",
+            "url": "https://github.com/advisories/GHSA-8r9p-f939-6h3c",
+            "range": ">=1.16.0 <1.16.1"
+          }
+        ]
+      },
+      {
+        "name": "form-data",
+        "severity": "critical",
+        "nodes": [
+          "node_modules/request/node_modules/form-data"
+        ],
+        "fixAvailable": false,
+        "via": [
+          {
+            "title": "form-data uses unsafe random function in form-data for choosing boundary",
+            "url": "https://github.com/advisories/GHSA-fjxv-7rqg-78g4",
+            "range": "<2.5.4"
+          },
+          {
+            "title": "form-data: CRLF injection in form-data via unescaped multipart field names and filenames",
+            "url": "https://github.com/advisories/GHSA-hmw2-7cc7-3qxx",
+            "range": "<2.5.6"
+          }
+        ]
+      },
+      {
+        "name": "http-cache-semantics",
+        "severity": "high",
+        "nodes": [
+          "node_modules/http-cache-semantics"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "http-cache-semantics max-stale handling can disclose cross-user cached responses",
+            "url": "https://github.com/advisories/GHSA-ch52-4w7c-c8xp",
+            "range": "<=4.2.0"
+          }
+        ]
+      },
+      {
+        "name": "ip-address",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/ip-address"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "ip-address: Address6.isLinkLocal() recognizes fe80::/64 rather than fe80::/10, allowing SSRF and trust-boundary bypass to on-link hosts",
+            "url": "https://github.com/advisories/GHSA-rpw4-54j3-4h4q",
+            "range": "<=10.5.0"
+          },
+          {
+            "title": "ip-address: no classifier recognizes the NAT64 local-use range 64:ff9b:1::/48, allowing SSRF and trust-boundary bypass",
+            "url": "https://github.com/advisories/GHSA-2vr4-cq9g-pvrc",
+            "range": ">=10.2.0 <=10.5.0"
+          },
+          {
+            "title": "ip-address: isInSubnet() and isHostInSubnet() compare addresses of different families as if they shared an address space, allowing an allowlist check to admit an address outside its range",
+            "url": "https://github.com/advisories/GHSA-j6r3-76f7-8jcv",
+            "range": "<=10.7.0"
+          },
+          {
+            "title": "ip-address: Address6 builds a parse diagnostic proportional to the input with no length bound, allowing a single long string to stall or crash the process",
+            "url": "https://github.com/advisories/GHSA-h3mg-xc3c-68pw",
+            "range": "<=10.7.0"
+          }
+        ]
+      },
+      {
+        "name": "moment",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/moment"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "moment vulnerable to Path Traversal via crafted non-string locale name",
+            "url": "https://github.com/advisories/GHSA-4p3w-j4w9-5jqw",
+            "range": ">=2.29.2 <2.31.0"
+          }
+        ]
+      },
+      {
+        "name": "multer",
+        "severity": "high",
+        "nodes": [
+          "node_modules/multer"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "multer vulnerable to Denial of Service via crafted multipart field names",
+            "url": "https://github.com/advisories/GHSA-wc9g-mqfw-jrwm",
+            "range": "<2.3.0"
+          },
+          {
+            "title": "multer vulnerable to Denial of Service via file descriptor leak on aborted uploads",
+            "url": "https://github.com/advisories/GHSA-qfvm-cv95-jqjf",
+            "range": "=2.2.0"
+          },
+          {
+            "title": "multer vulnerable to file size limit bypass via async fileFilter race condition",
+            "url": "https://github.com/advisories/GHSA-qvfw-j98x-7q72",
+            "range": "<2.3.0"
+          },
+          {
+            "title": "multer vulnerable to Denial of Service via oversized array index in field names",
+            "url": "https://github.com/advisories/GHSA-535w-7cp7-47q4",
+            "range": "<2.3.0"
+          },
+          {
+            "title": "multer vulnerable to Denial of Service via orphaned disk writes on aborted uploads",
+            "url": "https://github.com/advisories/GHSA-3pph-fpjx-jg34",
+            "range": ">=2.2.0 <2.4.0"
+          }
+        ]
+      },
+      {
+        "name": "node-forge",
+        "severity": "high",
+        "nodes": [
+          "node_modules/node-forge"
+        ],
+        "fixAvailable": {
+          "name": "@iobroker/adapter-core",
+          "version": "3.4.2",
+          "isSemVerMajor": true
+        },
+        "via": [
+          {
+            "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+            "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+            "range": "<=1.4.0"
+          }
+        ]
+      },
+      {
+        "name": "proxy-addr",
+        "severity": "critical",
+        "nodes": [
+          "node_modules/proxy-addr"
+        ],
+        "fixAvailable": true,
+        "via": [
+          {
+            "title": "proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet",
+            "url": "https://github.com/advisories/GHSA-jqcg-44mw-7w3h",
+            "range": ">=1.1.0 <2.0.8"
+          }
+        ]
+      },
+      {
+        "name": "qs",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/qs",
+          "node_modules/request/node_modules/qs"
+        ],
+        "fixAvailable": false,
+        "via": [
+          {
+            "title": "qs's arrayLimit bypass in its bracket notation allows DoS via memory exhaustion",
+            "url": "https://github.com/advisories/GHSA-6rw7-vpxm-498p",
+            "range": "<6.14.1"
+          },
+          {
+            "title": "qs array-limit bypass via bracket-key comma parsing",
+            "url": "https://github.com/advisories/GHSA-x5fp-wj9c-mxmx",
+            "range": ">=6.14.2 <=6.15.3"
+          },
+          {
+            "title": "qs: Denial of Service via Attacker Controlled isBuffer",
+            "url": "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+            "range": ">=2.2.5 <6.16.0"
+          }
+        ]
+      },
+      {
+        "name": "request",
+        "severity": "critical",
+        "nodes": [
+          "node_modules/request"
+        ],
+        "fixAvailable": false,
+        "via": [
+          {
+            "title": "Server-Side Request Forgery in Request",
+            "url": "https://github.com/advisories/GHSA-p8p7-x288-28g6",
+            "range": "<=2.88.2"
+          },
+          "form-data",
+          "qs",
+          "tough-cookie",
+          "uuid"
+        ]
+      },
+      {
+        "name": "tough-cookie",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/tough-cookie"
+        ],
+        "fixAvailable": false,
+        "via": [
+          {
+            "title": "tough-cookie Prototype Pollution vulnerability",
+            "url": "https://github.com/advisories/GHSA-72xf-g2v4-qvf3",
+            "range": "<4.1.3"
+          }
+        ]
+      },
+      {
+        "name": "uuid",
+        "severity": "moderate",
+        "nodes": [
+          "node_modules/uuid"
+        ],
+        "fixAvailable": false,
+        "via": [
+          {
+            "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+            "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+            "range": "<11.1.1"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -24,7 +24,8 @@ function properties(rows) {
     }
     return out;
 }
-function verifySbomBinding(payload, files, profile, release) {
+function verifySbomBinding(payload, files, profile, release, sbomFile = 'sbom.cdx.json') {
+    if (!['sbom.cdx.json', 'runtime.cdx.json'].includes(sbomFile)) reject('SBOM_FILE_MISSING');
     if (release !== undefined && (!Number.isSafeInteger(release?.sequence) || release.sequence < 1)) reject('SBOM_RELEASE_CONTEXT');
     const rows = new Map(files.map(row => [row.path, row]));
     function load(relative) {
@@ -33,7 +34,7 @@ function verifySbomBinding(payload, files, profile, release) {
         if (sha256(bytes) !== rows.get(relative).sha256) reject('SBOM_FILE_CHANGED');
         return JSON.parse(bytes);
     }
-    const bom = load('sbom.cdx.json'), app = load('app/package.json'), lock = load('app/package-lock.json');
+    const bom = load(sbomFile), app = load('app/package.json'), lock = load('app/package-lock.json');
     if (bom.bomFormat !== 'CycloneDX' || bom.specVersion !== '1.5' || !Array.isArray(bom.components) ||
         !Array.isArray(bom.dependencies) || bom.components.length > 10000) reject('SBOM_FORMAT');
     const root = bom.metadata?.component;
@@ -123,6 +124,12 @@ function verifySbomBinding(payload, files, profile, release) {
         const incoming = bom.dependencies.filter(dep => dep.dependsOn.includes(childRef));
         if (parentEdges.length !== 1 || parentEdges[0].dependsOn.filter(ref => ref === childRef).length !== 1 ||
             incoming.length !== 1 || incoming[0] !== parentEdges[0] || childEdges.length !== 1 || childEdges[0].dependsOn.length) reject('SBOM_EMBEDDED_PARENT');
+    }
+    const fresh = require('./fresh-sbom-binding.cjs');
+    if (props['eos:sbom:assembly'] === fresh.ASSEMBLY) {
+        fresh.verifyFreshSbom({ bom, files, profile, release, record: load('runtime-build.json') });
+        return { installedPackages: count, uniqueNpmComponents: installed.size, embeddedPackages: embedded.size,
+            scope: 'npm-and-explicit-vendored-packages', fullOperatingSystemInventory: false, freshRuntime: true };
     }
     const r9Assembly = 'authenticated-r8-tree-with-six-own-adapter-source-overlays';
     const ownAssembly = 'authenticated-r9-tree-with-six-own-adapters-backup-state-and-adapter-shutdown-transforms';

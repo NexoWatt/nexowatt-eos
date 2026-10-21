@@ -595,20 +595,22 @@ class Web {
         return this.getEosAccessForUserId(await this.readEosCurrentUser(req));
     }
     async getEosNetworkAccess(req) {
-        if (this.settings.auth !== true) return null;
+        if (this.settings.auth !== true)
+            return null;
         // Re-read the revocable access capability on EACH authorization. Upstream
         // req.user may have been resolved before body parsing and is not fresh
         // session authority. Network control never accepts credentials in URLs.
         const fresh = { headers: req.headers, query: {} };
         const access = await this.getEosRequestAccess(fresh);
         if (!access.userId || !['admin', 'installer'].includes(access.role)
-            || (await this.getEosFirstLoginPasswordState(access.userId, access.role)).required) return null;
+            || (await this.getEosFirstLoginPasswordState(access.userId, access.role)).required)
+            return null;
         // Credential, role or password changes during the account/group reads
         // must invalidate the stored session proof before the host operation.
-        if (await this.readEosCurrentUser(fresh) !== access.userId) return null;
+        if (await this.readEosCurrentUser(fresh) !== access.userId)
+            return null;
         return { userId: access.userId, role: access.role };
     }
-
     getEosRoleCapabilities(role) {
         const technical = role === 'admin' || role === 'installer';
         return {
@@ -1733,6 +1735,10 @@ class Web {
                 // Bind upstream OAuth issuance and reads to the revocable EOS credential snapshot.
                 this.oauth2Model = (0, webserver_1.createOAuth2Server)(this.adapter, {
                     app: this.server.app,
+                    // EOS uses local password sessions only. Keep optional v3
+                    // browser grants/registration off even if upstream defaults change.
+                    authorizationCode: false,
+                    dynamicClientRegistration: false,
                     secure: this.settings.secure,
                     accessLifetime: this.settings.ttl,
                     refreshLifetime: 60 * 60 * 24 * 7, // 1 week, same as upstream admin
@@ -1941,7 +1947,6 @@ class Web {
                 authorize: (req) => this.getEosNetworkAccess(req),
                 jsonParser: bodyParser.json({ limit: '16kb', strict: true }),
             });
-
             const sendSecuritySession = (req, res) => {
                 void this.sendEosSecuritySession(req, res).catch(e => {
                     this.adapter.log.warn(`Cannot read EOS security session: ${e instanceof Error ? e.message : e}`);

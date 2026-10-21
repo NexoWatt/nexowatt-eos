@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-postgresql-session-controller-contract-verification",
+  "date": "2026-10-21",
+  "baseCommit": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "finding": "EOS-UPSTREAM-20261021-01",
+  "sourceFiles": [
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/index.cjs",
+      "sha256": "3da2620dbfd6789e17cce75fe8218d03e7a126e7c1fae3306ddc63648cd0a22d"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/README.md",
+      "sha256": "4626656f445fcb24fcf67a76ae04ad1016bbf28196ee1e6d913ec2f03cb64c59"
+    },
+    {
+      "path": "tests/postgresql/states.test.cjs",
+      "sha256": "340a738a2e7f285ccbcefbd281856f50e8b41fc3ab78d14599334d06cc8572c5"
+    },
+    {
+      "path": "tests/postgresql/session-controller-contract.test.cjs",
+      "sha256": "720541b8ed796e7276c0e1766e57612ffb999d007a08a2a592b90bd9e6f30f6c"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/adapter-shutdown.cjs",
+      "sha256": "192a00670b52d0855f865802c322129fea64a8e00af4f3ea4587d05e309bcd98"
+    }
+  ],
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/postgresql/states.test.cjs",
+    "tests/postgresql/session-controller-contract.test.cjs"
+  ],
+  "result": {
+    "status": "passed",
+    "exitCode": 0,
+    "tests": 41,
+    "passed": 41,
+    "failed": 0
+  },
+  "scope": {
+    "upstreamCjsAndEsmMethodBodies": true,
+    "wholeFileHashBinding": true,
+    "fakeStore": true,
+    "nativePostgresql": false,
+    "browserLogin": false,
+    "raspberryPi": false,
+    "productionApproved": false,
+    "sessionFailureDiagnosticsRedacted": true
+  },
+  "independentReview": {
+    "performed": true,
+    "reviewerRole": "separate-controller-agent",
+    "scope": "source-diff-and-complete-contract-test-read",
+    "blockingFindings": 0,
+    "hardwareTested": false
+  }
+}

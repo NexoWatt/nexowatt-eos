@@ -26,6 +26,8 @@ const trackedFiles = [
     // Lifecycle checks alone would not bind a changed resolved dependency tree.
     'package.json',
     'package-lock.json',
+    'src-admin/package.json',
+    'src-admin/package-lock.json',
     'io-package.json',
     'tasks.mts',
     'src-admin/index.html',

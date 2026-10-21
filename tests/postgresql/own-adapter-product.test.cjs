@@ -49,7 +49,11 @@ test('historical and managed signed test contexts select six-adapter execution',
     const release = { product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: 13,
         profile: 'test', nodeVersion: '24.21.0', platforms: ['linux-arm64'] };
     for (const sequence of [13, 14, 15, 16]) {
-        assert.equal(product.releaseScope({ ...release, sequence }), product.OWN_ADAPTER_TEST);
+        const scope = product.releaseScope({ ...release, sequence });
+        assert.equal(scope, sequence >= 15 ? product.SECURITY_REFRESH_TEST : product.OWN_ADAPTER_TEST);
+        assert.equal(product.specsFor(scope).find(row => row.kind === 'core').version, sequence >= 15 ? '7.2.5' : '7.2.2');
+        const wrong = catalog(scope); wrong.entries.find(row => row.kind === 'core').version = '8.0.0';
+        assert.throws(() => product.assertCatalog(wrong, scope), /PRODUCT_CATALOG_SCOPE/);
     }
     for (const sequence of [1, 11, 12]) {
         assert.equal(product.releaseScope({ ...release, sequence }), product.MANAGEMENT_TEST);
@@ -57,7 +61,7 @@ test('historical and managed signed test contexts select six-adapter execution',
     for (const mutation of [{ product: 'other' }, { releaseVersion: '0.2.0-test.4' },
         { profile: 'production' }, { nodeVersion: '24.19.0' }, { platforms: ['linux-x64'] },
         { platforms: ['linux-arm64', 'linux-x64'] }, { platforms: undefined }]) {
-        for (const sequence of [13, 14]) {
+        for (const sequence of [13, 14, 15, 16]) {
             assert.throws(() => product.releaseScope({ ...release, sequence, ...mutation }), /PRODUCT_RELEASE_SCOPE/);
         }
     }

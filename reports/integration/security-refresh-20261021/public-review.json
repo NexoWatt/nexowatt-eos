@@ -1,0 +1,764 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-21",
+  "sourceBaseCommit": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "scope": "Changed and new deliverable files before staging; this record and aggregate verification excluded from self-hashing.",
+  "patternsChecked": [
+    "private-key-block",
+    "github-token",
+    "aws-access-key",
+    "credential-url"
+  ],
+  "filesScanned": 182,
+  "unresolvedMatches": [],
+  "reviewedMatches": [
+    {
+      "path": "tests/bootstrap/prepare-host.test.py",
+      "category": "credential-url",
+      "disposition": "Synthetic example.com credential-rejection regression fixture; not a credential."
+    }
+  ],
+  "review": {
+    "gitTrackedOnlyRuntimeAndInstallerCollection": true,
+    "buildInputsOutsidePublicInstaller": true,
+    "unsignedArchiveAllowlist": true,
+    "privateSigningKeyGenerated": false,
+    "customerDataUsed": false,
+    "actualLicensesUsed": false,
+    "privateLabStateIncluded": false
+  },
+  "limitations": [
+    "Pattern scan cannot prove absence of every possible secret. Public package allowlists and source-only collection are separately fixture-tested.",
+    "Transient test keys and synthetic test identities in fixtures are not production trust."
+  ],
+  "inputs": [
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "7db723cb95dcc8168631ee2c463f2cb19d66b06a494db210b32797321ead8fbc"
+    },
+    {
+      "path": "README.md",
+      "sha256": "8af8a56d1efc14eeb85069c7a9c29e9aced5092c0bce62e868d0b60deb1dbb62"
+    },
+    {
+      "path": "components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json",
+      "sha256": "112412a2144d26e07d36e23a800bbef3d2f32c9313a65c1844a92d19a6f9100d"
+    },
+    {
+      "path": "components/admin/build/i18n/es.json",
+      "sha256": "54369f8044dfa222779849d2f158eb100188a43816d6c42a64575122cb528a30"
+    },
+    {
+      "path": "components/admin/build/i18n/fr.json",
+      "sha256": "0f9b5a35b72169b76993ff3ce5df877c76538124da8a155983ab5274ee86e263"
+    },
+    {
+      "path": "components/admin/build/i18n/it.json",
+      "sha256": "38dae197679fa809acd056fd55df69f67805669039b5a54c0a235161c1f9bc23"
+    },
+    {
+      "path": "components/admin/build/i18n/nl.json",
+      "sha256": "e02dae8b018866bc23cd234b57de8dbe378f122bcc5507494cf5673a09829832"
+    },
+    {
+      "path": "components/admin/build/i18n/pl.json",
+      "sha256": "5504188619fc1d860e3826c998024cd849f09bf67e12b9f9371cd19e6c28fd0e"
+    },
+    {
+      "path": "components/admin/build/i18n/pt.json",
+      "sha256": "256cf247648ed1e1a14fe836b78d67ff3ab0d97e78a65a0937446a6b4d24048d"
+    },
+    {
+      "path": "components/admin/build/i18n/ru.json",
+      "sha256": "f49081ca6798fd442bfd8aaf7c6c3c4ea487bbd393906e62b5bd015eeb829494"
+    },
+    {
+      "path": "components/admin/build/i18n/uk.json",
+      "sha256": "5b8567844bbe05b0d10a961f88d1cfe509145cd34800e0a945e7c7aa678020b2"
+    },
+    {
+      "path": "components/admin/build/i18n/zh-cn.json",
+      "sha256": "4bf9273cd6eeb5e0a0fccc9f3976c88a62beadeba3399c2ecf75f1fc52fd30e8"
+    },
+    {
+      "path": "components/admin/build/lib/eosAccountInvitations.js",
+      "sha256": "e3702658d11774d5fd553b96eb236ab722904c4ccdfcffadcf95b7de514be09a"
+    },
+    {
+      "path": "components/admin/build/lib/eosApplianceProfile.js",
+      "sha256": "32e830fe215aa4ac442f49d550405c3c7f592b8a270b3170e5e1db88ca810478"
+    },
+    {
+      "path": "components/admin/build/lib/eosHttpsClient.js",
+      "sha256": "4c7fc7d836fd54bb91800baf7a2f9480ef182c87d67c75c477f4786b7e67864e"
+    },
+    {
+      "path": "components/admin/build/lib/eosLicenseHttp.js",
+      "sha256": "03e1861f375087cfa53c519b554103d8d045aa662e7abdd6da3307faa9350b7e"
+    },
+    {
+      "path": "components/admin/build/lib/eosLicenseService.js",
+      "sha256": "3c7683d91d1eae9346de16d6cb72fd48baf424b56a39b3300f6a6e0e6108dd0d"
+    },
+    {
+      "path": "components/admin/build/lib/eosUploadGuard.js",
+      "sha256": "ac1bf6fd9a3ff1acce6463b9d2f1c208005ee88d9669794e11bfc3919a15be92"
+    },
+    {
+      "path": "components/admin/build/lib/eosWebResources.js",
+      "sha256": "83e6197a896ff4edb479008c2f3b512e5281970c1ee44858bceb94a77f318491"
+    },
+    {
+      "path": "components/admin/build/lib/web.js",
+      "sha256": "3689e9812eb92bf7a15da15d3f422cfb5b516a15efbc75eb349fd8cd8855cb80"
+    },
+    {
+      "path": "components/admin/build/lib/web.js.map",
+      "sha256": "ad663548f6b04f55e9dbf93ab8a07985f87a39c6ef244d71a4186824ad96e1f9"
+    },
+    {
+      "path": "components/admin/build/main.js",
+      "sha256": "007d870fb46dacb7c865701304260b77a54549b676e84b6b5b099ef02b209e45"
+    },
+    {
+      "path": "components/admin/build/main.js.map",
+      "sha256": "896d608075e808d845d0c3faabea44ffeed16bc8c919c8fc4bac0f808ae43f6b"
+    },
+    {
+      "path": "components/admin/package-lock.json",
+      "sha256": "eda41b53ad16331d4d9ac3b9aa29a892706009372e012315bd9cad49748be08e"
+    },
+    {
+      "path": "components/admin/package.json",
+      "sha256": "82acc0e46415bda4c93e297139880422ffd99ff40e0f8a67fbc104edfeac78b2"
+    },
+    {
+      "path": "components/admin/src-admin/package-lock.json",
+      "sha256": "f1ad441aaefc214092d018d2cf00421cb9cf2bba389c7515238264ddfaacc887"
+    },
+    {
+      "path": "components/admin/src-admin/package.json",
+      "sha256": "5a97a48d8b62d452dc9f2ea5ac9ab1f2c30d563d9e061c7267db4514df9b9225"
+    },
+    {
+      "path": "components/admin/src/i18n/de.json",
+      "sha256": "00842f0aa2121e7fb6a397976b06fcbaada1d9c0dc7e864954dd54a3a72701a2"
+    },
+    {
+      "path": "components/admin/src/i18n/en.json",
+      "sha256": "8c1bc35e6f621933fec35ffd682f60ae735dd3a0fee9324b7a61f6b5e687d775"
+    },
+    {
+      "path": "components/admin/src/lib/eosApplianceProfile.js",
+      "sha256": "32e830fe215aa4ac442f49d550405c3c7f592b8a270b3170e5e1db88ca810478"
+    },
+    {
+      "path": "components/admin/src/lib/eosLicenseService.js",
+      "sha256": "3c7683d91d1eae9346de16d6cb72fd48baf424b56a39b3300f6a6e0e6108dd0d"
+    },
+    {
+      "path": "components/admin/src/lib/web.ts",
+      "sha256": "212c24033c5f1bb2807dc1c40b96589a3148546b49919d279ed32be14f3cf401"
+    },
+    {
+      "path": "components/admin/src/main.ts",
+      "sha256": "6d09904c170e25eee3a3863cb52c54fd0703b0cd3c4eaf607c67c1add57780ad"
+    },
+    {
+      "path": "components/admin/tasks.mts",
+      "sha256": "44fa1efdf0ae06605687f855e4f3d7f6110ed8065e39a9c10197cd9886008d2d"
+    },
+    {
+      "path": "components/admin/test/eos-appliance-oauth.integration.cjs",
+      "sha256": "c2d9b9f99b781930fb69e0b5af90a918352b40a796521f7267f3f7ae039f8704"
+    },
+    {
+      "path": "components/admin/test/eos-appliance-socket.integration.cjs",
+      "sha256": "7d95fb9c253c7910dd3cb086589872f240bfa4afe02ba0be9bc0463f011a426a"
+    },
+    {
+      "path": "components/admin/test/eos-session-security.test.cjs",
+      "sha256": "8a236db79760c49e52a6c9a26183783cdef4443e092d8a67ced9855643817ba7"
+    },
+    {
+      "path": "components/admin/test/eos-update-browser.test.cjs",
+      "sha256": "505efb3005168defd5b36fda35e0ea9495155ae8bf299d24ccc442384e8e2c48"
+    },
+    {
+      "path": "components/admin/test/eos-upstream-socket-security.integration.cjs",
+      "sha256": "74f39bcc8d973fadb0f25a4f423679f09c93da679666ba1f147908994bcc3b65"
+    },
+    {
+      "path": "components/admin/test/lib/load-eos-license-module.cjs",
+      "sha256": "1a5d37674c663aeeb31a25d106dced0cdae21243b7f146a88a02b12fa3b037fa"
+    },
+    {
+      "path": "components/admin/tools/nexowatt-prebuilt-release-selftest.cjs",
+      "sha256": "488d4e6f01025c7f2e63d05855cb8c89327c3a5a4f966b7562455d326bcc46a4"
+    },
+    {
+      "path": "components/admin/tsconfig.build.json",
+      "sha256": "106cfee0940f82e700fdbb091c336dca2555af297bfba8331553533f77794838"
+    },
+    {
+      "path": "components/backitup/package-lock.json",
+      "sha256": "9980f9d89e7f3d16f1b46f90cfa92a6a94d49a3f9f651a3d36362b0f3576007c"
+    },
+    {
+      "path": "components/backitup/package.json",
+      "sha256": "40e9b1578c18b66cfb80ac51c887054305981af6f5caf65e41a8ef35c19f91ad"
+    },
+    {
+      "path": "components/devices/package-lock.json",
+      "sha256": "37a7f44891d5e0cd63e4cea502b5c4661c0b601f7b307fb6e457fb20b8db481f"
+    },
+    {
+      "path": "components/devices/package.json",
+      "sha256": "aa3019fdc994335a64147576a223df719b5558ab36e4f3ffefb666060d61c6c1"
+    },
+    {
+      "path": "components/ui/docs/security/DEPENDENCY_REFRESH_2026-10-21_DE.md",
+      "sha256": "0b259dc3349e73ff621560c82cc45fb224ceecc661f3d03457bef33db390fb76"
+    },
+    {
+      "path": "components/ui/package-lock.json",
+      "sha256": "b066ff872b75e7e638e03c0201b6a0f71d022e1d1a1ccc29effaf41c91146d8f"
+    },
+    {
+      "path": "components/ui/package.json",
+      "sha256": "92c3ae7e4bd1622d92a545fffcd0d8fe0dce14cf0a0cfcf3e02feec5afa22635"
+    },
+    {
+      "path": "components/ui/scripts/release-artifact-manifest.json",
+      "sha256": "cecfbd12f008e323034acf5e06a419126fb831bab8fc2669d83283f320f4a8c3"
+    },
+    {
+      "path": "components/ui/scripts/verify-rc67-license-bootstrap-access.js",
+      "sha256": "e1ee12758a18e5f681f00c4a756d930801f76507e928df04c8f461d34904a02d"
+    },
+    {
+      "path": "components/ui/src-ts/runtime-mirrors/scripts/verify-rc67-license-bootstrap-access.ts",
+      "sha256": "428e4bfe0539190c90a9361250d40df79318cf3f2c238fcb36ef04809b67d138"
+    },
+    {
+      "path": "docs/operations/MANAGED_TEST_UPDATES_DE.md",
+      "sha256": "9bc466978b11492ddce34dca94b8d23e3ff3d61c99be6a9995a0f7b22c061aba"
+    },
+    {
+      "path": "docs/security/ACCEPTANCE.md",
+      "sha256": "efb89efbce4ce6dbf7f168815416124c6e6a187bc7edd10462ed1dc4e2999807"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/README_DE.md",
+      "sha256": "9ee2c79c66d2092c9552815482a64bcb30de7e54008ef20bf9723f1a870e6967"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/README_DE.md",
+      "sha256": "3cff97bff629659a55304d0b9f715c2f10d29d250b13cae72ed4608805d7534b"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/audit-after-summary.json",
+      "sha256": "4c862ca4bd9a287fe5980024e666462845e9b415567e7a6e8fa351da9917f20c"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/audit-before-summary.json",
+      "sha256": "2351637f844a4cbde039c8f96b8eb28cb07c4d51bd1a65f56d0d2efd6e301554"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/backitup-audit-after.json",
+      "sha256": "3712806b9235d4b383cd9078531e674e5eed0ae3fa05d9e38651d143337e1e77"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/backitup-audit-before.json",
+      "sha256": "3807f59cbbc66faafc048484575916a3a393f7171d32a2eb2336f70dd86a66a4"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/dependency-regression.test.cjs",
+      "sha256": "c1abcfd07186fc97aa4e7a357c1ac84077de1e2ff54649dca945c33048b23024"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/devices-audit-after.json",
+      "sha256": "3f1aabe7ac5b5ca9f24a2df6b1c8b245f04ac4baf1afa9de6afefe677f31b168"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/devices-audit-before.json",
+      "sha256": "aac77adfbc37942b87112a170c5914e98cd68427d5bb60c88b69b823313cb526"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/eebus-audit-after.json",
+      "sha256": "1d758cd5b5e808f8e03fe5358b41aae0a9413858a0e141616c4c8ee087db060f"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/eebus-audit-before.json",
+      "sha256": "1d758cd5b5e808f8e03fe5358b41aae0a9413858a0e141616c4c8ee087db060f"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ocpp21-audit-after.json",
+      "sha256": "dae5473f6dbb55e3e8858361c9d396f2735760211952520424fe5a2959c3f1f4"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ocpp21-audit-before.json",
+      "sha256": "dae5473f6dbb55e3e8858361c9d396f2735760211952520424fe5a2959c3f1f4"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/pack-checks.json",
+      "sha256": "a125ba56e04288384c246675fae0097c4138c861f26a2cec11ab9bf8a3c769b0"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/registry-metadata.json",
+      "sha256": "175a35595d31026bd6638cd7cc12d717f6e0aa3ce64e620735c3ad014208b84d"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/runtime-sbom-comparison.json",
+      "sha256": "28ba77101ba98b361c940076493cf869b599b73d59b2e72ed0f26c46630b01cf"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ui-audit-after.json",
+      "sha256": "dbe6250d7f910f4e96b76b76ae8d361e1db742da24f2d5cd0adcde0430223030"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ui-audit-before.json",
+      "sha256": "e16985f64626b5e8dd2ec3861f55732133dd16e757bba0081d7211d01ae0ec14"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/verification.json",
+      "sha256": "2e1f7288cf06f6493761d17fe55575b985f681614f0c8530d0be42e81a09f960"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/admin/README.md",
+      "sha256": "85d061dc1bc4f2bdaae2845f8d0a6ed6b73a0cc6b0a43260ff8548f70892d984"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/admin/results.json",
+      "sha256": "f69e7fbb1f92f09b46cd16d40b65e16b15869a5f9fe6cf5cf80be7bdce5e7dc7"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/README_DE.md",
+      "sha256": "8bb118688c9b88e2c7b6ad08ac8e810a9f61d4d9c43fb60a9614507f69eab396"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/archive-tests.txt",
+      "sha256": "fa97c80fc3eb7334a7712f41052656d9ec705f0053004a58704211e91a7526ad"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/contracts.tap",
+      "sha256": "41c9553fa5a3782c419cd58de229acacb2617d244aa8772fee9e3aa637a63706"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/verification.json",
+      "sha256": "f4c7af126f4e0c792e153828dc433620de3aea9e1ec321b0ef5f99b1dc09f5a6"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/controller/README.md",
+      "sha256": "3280d3d896ee7a251634282d7b19738835f27d03730afab4b0bd48358c1167f0"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/controller/dependency-policy.tap",
+      "sha256": "4c1207b32f08b55ae2254d376612b378bc147be938339d9759212d64996082bb"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/controller/objects-resolution-guard.tap",
+      "sha256": "02059db45adf07dcc45193501a15aab964fb7fa0bb37f27600981ed03520dbe1"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/controller/objects725-contract.tap",
+      "sha256": "bb95ddd9b91c8250a163af91104bc70d9ee9f639fb165756b0828767182c3554"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/controller/published-inputs.json",
+      "sha256": "b0359b6ff09e5a3b1e8cfe2ec6de103bc786942f662ac46fe420e20b48b341d8"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/controller/verification.json",
+      "sha256": "350dc3999a1a547082e4b991929e58db8a238762344b1109748a64da4aa1d078"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/controller/verification.tap",
+      "sha256": "709dc3d5b77922441ec6b76aacd81e3a9b86ebbafea1995a9a8c2d71f38d64e8"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/README_DE.md",
+      "sha256": "b92a7efedf1035dc1c72d24bd2bf00123429a585bba9bcb0b926fc9127ec6cbc"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/managed-bootstrap.tap",
+      "sha256": "0eaa6708bcef116627ec9cab3c4b141a5830dbf8d0a3237cce3f588cf3dd5a31"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/prepare-historical-host.txt",
+      "sha256": "3e20397c65ff53189d849622cd91e754e3e18a70d1d55199dbfcc4ee3486fdf5"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/prepare-managed-host.txt",
+      "sha256": "aadd36e895c26709980edae58a3396f82fd1c9f2a6e20a9782a51861041926c5"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/test-results.json",
+      "sha256": "53410764c8fe54f9eef6e830856371cf653a2f742161d0227d2beb1e9221fafe"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/install/verification.json",
+      "sha256": "c532cf9ce2287db6eb90f1a31f7963a3b4cbbfc84a5165c9c9383fecc5d15655"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/managed-contracts.txt",
+      "sha256": "484bfdfa641cd66328adaef6b0bf3f1c4f0ee62f572f3fdf270be06a3cae1db6"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/INDEPENDENT_REVIEW_DE.md",
+      "sha256": "504ab62a22a5455ec0e73ea44348089bdd039ca2bedfa8a73c5586eb0868eeaa"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/POSTGRESQL_SESSION_DE.md",
+      "sha256": "09957e839fbad03aeafc05ee70ec77140ea0a807f67a84fddc0e24a40961aeff"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/independent-contract-tests.tap",
+      "sha256": "26af972b538a3b904f2dff09ef87cada13553c9170be9924e0ede641d78761b2"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/independent-review.json",
+      "sha256": "6ab20ed97f9aab2ddc270b483fc33112762a2bac5b3186350547b62af0185cf9"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/managed-bootstrap-contract-tests.tap",
+      "sha256": "2d9105bcc4d9280c7e73653cf02383f5ba7988d222a22cafb1e407250fe54037"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/objects725-contract-tests.tap",
+      "sha256": "b8d3ecadcb72c4b9402a22c6c948773210e134fb6b107ceee22296ecf0ca7888"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/postgresql-session-verification.json",
+      "sha256": "a2365906d22ff8459acd82f9abd1af5f8916f65e20e2c976956d5a0b2120b823"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/prepared-archive-tests.txt",
+      "sha256": "0e32cf5bb96fa1036cae2e27776843246962a6c3d05aa93be58a951c1c934bc2"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/workflow-validation.txt",
+      "sha256": "9d34cdaec053c6005199c08f2bac628bd8c087303faa26fd8ab58c3e22216ff5"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "3b50967b9ac52fc59957ebdda446ac5d89fec9db9cef98990312516c8a544bef"
+    },
+    {
+      "path": "runtime/bootstrap/initialize.cjs",
+      "sha256": "8b6680bab68721905c96da46c94dad27803e5ef2e99c3814601e54d73c39c502"
+    },
+    {
+      "path": "runtime/bootstrap/own-adapter-enrollment.cjs",
+      "sha256": "62bb185e00b1b82de200392870b9753bfc4fa42b2e570862fa000db5efd6f872"
+    },
+    {
+      "path": "runtime/controller-profile/profile-validation.cjs",
+      "sha256": "3275cfe668772faa0e74352fde5300313f5b0f016f54e02f3c8e5a5fce1734ff"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "a52bcd79ade7fa3878c87af2ed60a458e12ffdda0d31d489da376b572574bfbe"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/README.md",
+      "sha256": "fdd5f76b77e46fd086b95ca51adf4d8dfb84bf5a7e676adcf6b54d1c75050ed3"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/adapter-shutdown.cjs",
+      "sha256": "192a00670b52d0855f865802c322129fea64a8e00af4f3ea4587d05e309bcd98"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/backup-state.cjs",
+      "sha256": "b5209fbfd7d6d92097ab6d0dd9da5360c4a241d50b27f9271821ea4379927413"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/guard.cjs",
+      "sha256": "f24282561903702f124700322a475102309a2a71cff7258f29dbac19850edab8"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/pid-state.cjs",
+      "sha256": "94f07e5c29ebdbcec0eabe03c15a55ab5528ac1bdba8188df0762c6cbb4925af"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/pinned-build.json",
+      "sha256": "c2358942f2594d3d698959136de69285f4e32bf0d3b9c34c653b7f1ddec288ee"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/transform.cjs",
+      "sha256": "5e49ba9b66f7afe0c54ec732c25acbf2863ae010e780034bdd3813eb41ffa1cf"
+    },
+    {
+      "path": "runtime/controller-profile/websocket-bound.cjs",
+      "sha256": "8e7d243f4b95bc35a592f05d98057d5bd2a36094b120670a5f6925d8d54648f4"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/README.md",
+      "sha256": "4626656f445fcb24fcf67a76ae04ad1016bbf28196ee1e6d913ec2f03cb64c59"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/index.cjs",
+      "sha256": "3da2620dbfd6789e17cce75fe8218d03e7a126e7c1fae3306ddc63648cd0a22d"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "b18635b96443da473ed21a10f99e7d5af00807e4b45ca95a5b15a14bef1fecc5"
+    },
+    {
+      "path": "runtime/release/fresh-sbom-binding.cjs",
+      "sha256": "472d508a6d2a6e732359f8dc43f73d0331e3ef4614b7decaf7db71bc665863cc"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "17d40235494113861815a9caf71976d41af4c94228b877df2421a43e060dfcc8"
+    },
+    {
+      "path": "runtime/transport/certificate-lifecycle.cjs",
+      "sha256": "ac9617a320a24764d8af0717c746bcdfbc6b3bc3a9c93ad4000ae817b1344ac2"
+    },
+    {
+      "path": "system/integration/finding-register.json",
+      "sha256": "6dced633ffa34b82873eb7994cafc5f59876440d7537df75e13c3759abc6b3f0"
+    },
+    {
+      "path": "tests/bootstrap/managed-bootstrap.test.cjs",
+      "sha256": "06184d9e4b52dcb261ec772ca10b96f99cf57c82efdff9522fb16fd531b7acd4"
+    },
+    {
+      "path": "tests/bootstrap/prepare-host.test.py",
+      "sha256": "64b5cf404dc4f78e956b0f9ca3ba4790ad05a0dff60d9c6005cb6e6e80352bf8"
+    },
+    {
+      "path": "tests/bootstrap/prepare-managed-host.test.py",
+      "sha256": "e2efcb5ba4916759f9d85dbec44e36890e0fc975949fdafd1a200f95934032d1"
+    },
+    {
+      "path": "tests/integration-own-adapters/fixture.cjs",
+      "sha256": "bd5bd362ec15496d0bc68f69e1e77d6dc90a70fffa366463b910f0c5670d04d8"
+    },
+    {
+      "path": "tests/integration-own-adapters/management.integration.cjs",
+      "sha256": "c183891b094cc96c3c5ebc11fd2abd3273f82c034542d23eeda8892947547dcf"
+    },
+    {
+      "path": "tests/integration-own-adapters/prepare-fixed-root.cjs",
+      "sha256": "5373952e30e799550e170631531a74b2317a64209548bbdf364db6edddf91083"
+    },
+    {
+      "path": "tests/integration-own-adapters/prepare-security-refresh.cjs",
+      "sha256": "eaef49df7ea82a9359757d50bf8280aa8f78e8ff62749ab0831a9e06f7d3f5bd"
+    },
+    {
+      "path": "tests/integration/controller725-managed-fresh-enrollment.test.cjs",
+      "sha256": "71332b8c2e92e3b3269805fe7bd8b6fd8496407df8d6706176e21af9a064a74a"
+    },
+    {
+      "path": "tests/integration/prepared-runtime-archive.test.py",
+      "sha256": "564abcf3b470cb7be3338b46eb8c2af2dc6c0b6c9a234d0f1665915f1054f289"
+    },
+    {
+      "path": "tests/integration/security-refresh-build.test.cjs",
+      "sha256": "edd7ff26d726f866b568653c6ad03d41c08248b80a50cf0a35de85880e2c224c"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects-guard.cjs",
+      "sha256": "9f4395664bed341a90cb1eb02e88dd003fcfb113a16bdbe158247b94a69a10c3"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects-guard.test.cjs",
+      "sha256": "353edee0d6b316f377a74e84fba7290572d82994403ae43e3ba55a7eafeeb28c"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects.test.cjs",
+      "sha256": "39bca5d34385a3f55b538e765036b37f38ced2fb0c4fbe07d2d871245da14bbf"
+    },
+    {
+      "path": "tests/postgresql/objects.test.cjs",
+      "sha256": "54b72d216e6e35be8a5ab37b35875858d662d583ae6f651155cd912ecc305397"
+    },
+    {
+      "path": "tests/postgresql/own-adapter-product.test.cjs",
+      "sha256": "dfbeb6675720a1d64d72b35a17100037716012d8eda77744b34bc8d79194fe84"
+    },
+    {
+      "path": "tests/postgresql/session-controller-contract.test.cjs",
+      "sha256": "720541b8ed796e7276c0e1766e57612ffb999d007a08a2a592b90bd9e6f30f6c"
+    },
+    {
+      "path": "tests/postgresql/states.test.cjs",
+      "sha256": "340a738a2e7f285ccbcefbd281856f50e8b41fc3ab78d14599334d06cc8572c5"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/LICENSE.upstream.txt",
+      "sha256": "65bf446696eb13c7d8b051f87019e116eb046b8ce296d7acc78d8d22ef8aa26e"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/PROVENANCE.md",
+      "sha256": "57445a9a3e3f43c7b24790ac6b05f9b88aaf663aa0e1678040a34aa868c89fab"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/cjs-adapter.original.txt",
+      "sha256": "6ebf0593db8be7a6aa0ec75fc54be97db72e1705fd220ff5ca304d794f63c625"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/cjs-common-db-tools.original.txt",
+      "sha256": "471884540adde741e539be9dd8f6decddca9971685d359ccab487a1476d0e727"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/cjs-main.original.txt",
+      "sha256": "2b65eaccf223863c12d4db7e0fe273d75fb732e5d6ed67368a8f5c95a0ee488e"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/cjs-setup.original.txt",
+      "sha256": "fa9f14db6f73db3121610acd29baff5ab01fc6451f4ce0ffd47531022c2e4e69"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/cjs-setupBackup.original.txt",
+      "sha256": "616477dc218a6d93a0175f59d2a4f6819c319977d253b08dc0571a318691dce7"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/cjs-setupInstall.original.txt",
+      "sha256": "358568992a2a82eaa5f525654b75de83b44a87a48d0bb5ac6998e60bdb25833d"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/esm-adapter.original.txt",
+      "sha256": "3fc3b1fe76257ba0cf6bb7a8321f7353647de118a19f371c3a8f1e46662478c8"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/esm-common-db-tools.original.txt",
+      "sha256": "0aed4f76a9a5d61752ff34268a67db016e92e505667ed981c727270d0b23c122"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/esm-main.original.txt",
+      "sha256": "b47afb00b6ab1d473e5ef2dd051bf93f6d5a14a5a3e12573da2ba2fa95ef5edf"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/esm-setup.original.txt",
+      "sha256": "3e49f39ff1a98a1a4d14bca7db6a5f90435eeeceaff6385bb6069539e35885ab"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/esm-setupBackup.original.txt",
+      "sha256": "0d8b3050aedb680f384b37863e55f3e82b4680c8b126ba461b9eb6fe8611cded"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/7.2.5/esm-setupInstall.original.txt",
+      "sha256": "678cc920edf2c40b9a1bb8fb5a161d60197af36157d5cd6c07d41423554b15f0"
+    },
+    {
+      "path": "tests/system/controller-profile-fixtures/ws-server-4.5.2.original.txt",
+      "sha256": "a05a65423feb8c0293756c42fd7ba2d884a9fddc7a347690b2d26756aea6912b"
+    },
+    {
+      "path": "tests/system/controller725-adapter-shutdown.test.cjs",
+      "sha256": "690392c5ec2981a685d483a5e8a601dabb26a2a9839f4642731fe58f395c2de9"
+    },
+    {
+      "path": "tests/system/controller725-backup-state.test.cjs",
+      "sha256": "8153e83302ea5ed3bf1b3b96477f6976863a5bb453a26a893897d032354865a3"
+    },
+    {
+      "path": "tests/system/controller725-combined.test.cjs",
+      "sha256": "bb5957185f28e80a2ad4bec5cee5517c03fbdfd1bdbc9367191ad8f261b82f32"
+    },
+    {
+      "path": "tests/system/controller725-controller-pid-state.test.cjs",
+      "sha256": "558599663ff50d326f55fab7d64b97b5c241fec027557afa256bdc062c3d8df9"
+    },
+    {
+      "path": "tests/system/controller725-controller-profile.test.cjs",
+      "sha256": "2cc4d0fedd9507e06e8d9c3e032bfb7d922c6d5d32524be7d010798d06f9e241"
+    },
+    {
+      "path": "tests/system/controller725-dependency-policy.test.cjs",
+      "sha256": "e605828b1b72a36776883272c26abccbff9bbf378d377f7854d3f18e56fdbf90"
+    },
+    {
+      "path": "tests/system/controller725-messages.test.cjs",
+      "sha256": "074d58c2a72e2e363af05c8a09e94d8e13e6a60ce4219033481dbf53dabeacbf"
+    },
+    {
+      "path": "tests/system/controller725-version-dispatch.test.cjs",
+      "sha256": "deab9c941d1de896deef00b709b6439531c221e8b90ee564903b42dad53d17b8"
+    },
+    {
+      "path": "tests/system/update-managed-release.test.cjs",
+      "sha256": "ecd7a1832d82a4f41e85f0a71195d3e7e7546eb3f5f80212632821a1e1491362"
+    },
+    {
+      "path": "tests/system/websocket-bound.test.cjs",
+      "sha256": "7fde9bf2690ed05d57533e7badbc9c84e0198dad021527318ddaeeae9e8a1336"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-download.cjs",
+      "sha256": "b1c0bc93e62bf6880a6b13e3e8a34b43089a82769cfda7873c0a4e0986434894"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-test.cjs",
+      "sha256": "fa1729c5cf961f1081bbe13822db4140c0bcec9dac2748c7ba97839dc8645c7d"
+    },
+    {
+      "path": "tools/bootstrap/first-start-managed.cjs",
+      "sha256": "63cec14af7096fcc1e6b366637147e75ec89bbc31388dc2edc9e1293061b8e83"
+    },
+    {
+      "path": "tools/bootstrap/first-start.cjs",
+      "sha256": "c9c8f317404fc4402632cb9000bcfc9d960db1544fba30e268d76bc6ffa15d6b"
+    },
+    {
+      "path": "tools/bootstrap/prepare-managed-host.py",
+      "sha256": "cf0f1a00e1f2e19ca0339b86ed084d33a495a643802c587e3026b5ea82d1c838"
+    },
+    {
+      "path": "tools/integration/README.md",
+      "sha256": "e2a7fb36636a0f527e8c1a950a9279f6cdea568a10bf5b63cec44869e895fc32"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "sha256": "3f38a0bc84ac67d75c259133c2cc5beeee50d07ced4b0c88580175089029ad05"
+    },
+    {
+      "path": "tools/integration/pack-prepared-runtime.cjs",
+      "sha256": "d5317709aa3683128a8cd64127e578682441a8670e71d12147e5462fcc394cb9"
+    },
+    {
+      "path": "tools/integration/prepare-security-refresh.cjs",
+      "sha256": "e4ed2ac28d4eb41c3b627a2017292aa3c7d16179b9479655942580def99b8b62"
+    },
+    {
+      "path": "tools/integration/prepared-runtime-archive.py",
+      "sha256": "ad8c28a1a257a33da858d05901c849d93c0fe3987c9bb5b8099d6e54c5e2b8b1"
+    },
+    {
+      "path": "tools/integration/runtime-dependency-policy.cjs",
+      "sha256": "28626f42fa4502245ff45ee5814dee270027c1ca1ad7de9ba2a13bde16ecacdb"
+    },
+    {
+      "path": "tools/integration/stage-security-refresh-cache.cjs",
+      "sha256": "e645a7e0a6339cbd7190a3ba8dfc7910cf3b3319d9671a0e67854c90216522e5"
+    },
+    {
+      "path": "tools/integration/verify-security-refresh-native.cjs",
+      "sha256": "46ccd9ac757cafb193630e7f5fa322f846a58e566ec9bcc99351ab8c274d598c"
+    },
+    {
+      "path": "tools/system/activate-release.cjs",
+      "sha256": "7b2df41ca44ece664662f7c5d3ae454a9f20dac028517570762571dadf5383b6"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "a0d2a69d42cab5842e860444a4e6cd00aac9fab4b4c73d65af90989980ef9144"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "sha256": "bd66d3d60f17c861b367b81e173776caaa7e5ef8790df298bc46d7ac8b755913"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "a2f80406c1c1d13470e57bee268072e762655f59043fa8ec9652d7d971e1bc6e"
+    },
+    {
+      "path": "tools/system/update-managed-release.cjs",
+      "sha256": "c0ef84a6a6431ca7d36c1246e179b3400cc6d4b52e0be5bc484e4ef2643a43f9"
+    }
+  ]
+}

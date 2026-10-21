@@ -18,6 +18,7 @@ SOURCE = Path(__file__).resolve().parents[2] / "tools/bootstrap/prepare-host.py"
 SPEC = importlib.util.spec_from_file_location("eos_prepare_host", SOURCE)
 subject = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(subject)
+FIRST_START = "tools/bootstrap/first-start.cjs"
 
 
 def config():
@@ -28,7 +29,7 @@ def config():
 
 
 def kit_entries():
-    return {"tools/bootstrap/first-start.cjs": b"'use strict';\n",
+    return {FIRST_START: b"'use strict';\n",
             "bootstrap.json": b"{}", "license-public-trust.json": b"{}",
             subject.DELIVERY + "/delivery.json": b"{}",
             subject.DELIVERY + "/release-public.pem": b"PUBLIC TEST FIXTURE"}
@@ -215,7 +216,7 @@ class HostPreparation(unittest.TestCase):
             download.assert_not_called()
             node.assert_called_once_with(self.directory / "node.bin", False)
             self.assertEqual(command.call_count, 1)
-            self.assertEqual(command.call_args.args[0], ["/usr/bin/node", str(self.directory / "kit/tools/bootstrap/first-start.cjs")])
+            self.assertEqual(command.call_args.args[0], ["/usr/bin/node", str(self.directory / "kit" / FIRST_START)])
             self.assertEqual(command.call_args.kwargs["cwd"], self.directory / "kit")
 
     def test_local_handoff_cannot_skip_schema_or_fresh_host_admission(self):

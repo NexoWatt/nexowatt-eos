@@ -1,5 +1,13 @@
 # Aktueller Teststand: R11 mit Gerätenetzverwaltung
 
+**21. Oktober: Sicherheitsaktualisierung der neuen Frischbasis.** Die neue
+Quellfassung verwendet ausdrücklich **js-controller 7.2.5; Controller 8 ist
+nicht freigegeben**. Socket-/Webserver- und weitere verfügbare Dependency-Fixes
+werden gemeinsam mit PostgreSQL-Sitzungen und den EOS-Rechtegrenzen geprüft.
+Die neue Basis wird vollständig aus aktuellen Paketen aufgebaut; die bisherigen
+signierten R9–R11-Archive enthalten diese Änderungen nicht.
+[Änderungen, Prüfungen und offene Lieferbedingungen](reports/integration/security-refresh-20261021/README_DE.md).
+
 **21. Oktober: Neue Frischbasis mit EOS-Updateknopf in Umsetzung.** Der neue
 Quellpfad soll eine einmalige Neuinstallation ohne R10-Voraussetzung und danach
 signierte Anpassungen über den Admin ermöglichen. Paketbau, dauerhafte

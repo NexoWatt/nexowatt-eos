@@ -1,4 +1,4 @@
-import { statSync, existsSync, writeFileSync, readFileSync } from 'node:fs';
+import { statSync, existsSync, writeFileSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -190,11 +190,16 @@ function clean(): void {
 }
 
 if (process.argv.includes('--backend-i18n')) {
+    // Backend builds use reviewed local inputs. Updating upstream schemas or
+    // synchronising frontend helpers is a separate frontend maintenance step.
     copyFiles(['src/i18n/*'], 'build/i18n');
-    syncUtils().catch((e: unknown) => {
-        console.error(e);
-        process.exit(1);
-    });
+    // These are already runtime JavaScript, including the byte-bound licensing
+    // verifier. Retain reviewed bytes instead of TypeScript's formatting pass.
+    for (const name of readdirSync(`${dirName}/src/lib`).filter(name => name.endsWith('.js'))) {
+        writeFileSync(`${dirName}/build/lib/${name}`, readFileSync(`${dirName}/src/lib/${name}`));
+        const map = `${dirName}/build/lib/${name}.map`;
+        if (existsSync(map)) unlinkSync(map); // No transformed-source map applies to copied JS.
+    }
 } else if (process.argv.find(e => e.replace(/^-*/, '') === 'react-0-configCSS')) {
     syncUtils()
         .then(() => configCSS())

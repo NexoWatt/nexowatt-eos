@@ -16,6 +16,16 @@ const contentRows = app => inventoryTree(app).map(row => {
     return { path: row.path, size: row.size, sha256: row.sha256 };
 }).sort((a, b) => a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
 function validatePreparation(value, root) {
+    if (value?.kind === 'unsigned-security-refresh-native-preparation') {
+        if (value.schemaVersion !== 1 || value.signed !== false || value.unsignedFixture !== true ||
+            !Number.isSafeInteger(value.sequence) || value.sequence < 15 || value.nodeVersion !== NODE ||
+            value.app !== path.join(root, 'own-adapters-build/app') || value.baselineApp !== path.join(root, 'own-adapters-build/baseline') ||
+            !/^[a-f0-9]{40}$/.test(value.sourceCommit || '') || value.sourceTreeClean !== true ||
+            !['appContentSha256', 'baselineContentSha256', 'runtimeBuildSha256', 'resolutionLockSha256'].every(key => /^[a-f0-9]{64}$/.test(value[key] || '')) ||
+            value.previousSignatureVerified !== false || value.sourceSequence !== 0 || value.baselineKind !== 'unsigned-fresh-management-profile' ||
+            value.previousReleaseId !== sha('unsigned-security-refresh-management-baseline:' + value.baselineContentSha256)) fail('OWN_NATIVE_PREPARATION');
+        return value;
+    }
     if (!value || value.schemaVersion !== 1 || value.kind !== 'unsigned-own-adapters-native-preparation' || value.signed !== false || value.unsignedFixture !== true
         || value.sequence !== 13 || value.nodeVersion !== NODE || value.app !== path.join(root, 'own-adapters-build/app')
         || !/^[a-f0-9]{40}$/.test(value.sourceCommit || '') || !/^[a-f0-9]{64}$/.test(value.appContentSha256 || '')
@@ -30,14 +40,16 @@ function protectedJson(file) {
 }
 function loadFixture(root, uid) {
     const marker = protectedJson(MARKER), state = protectedJson(STATE);
-    if (marker.kind !== 'unsigned-own-adapters-native-fixed-fixture' || marker.signed !== false || marker.unsignedFixture !== true || marker.root !== root
-        || marker.uid !== uid || marker.sequence !== 13 || marker.nodeVersion !== NODE
+    const fresh = marker.kind === 'unsigned-security-refresh-native-fixed-fixture';
+    if (fresh) validatePreparation({ ...marker, kind: 'unsigned-security-refresh-native-preparation', app: path.join(root, 'own-adapters-build/app'), baselineApp: path.join(root, 'own-adapters-build/baseline') }, root);
+    if ((!fresh && marker.kind !== 'unsigned-own-adapters-native-fixed-fixture') || marker.signed !== false || marker.unsignedFixture !== true || marker.root !== root
+        || marker.uid !== uid || (!fresh && marker.sequence !== 13) || marker.nodeVersion !== NODE
         || !/^[a-f0-9]{64}$/.test(marker.releaseId || '') || !/^[a-f0-9]{64}$/.test(marker.appContentSha256 || '')
         || !/^[a-f0-9]{40}$/.test(marker.sourceCommit || '')) fail('OWN_NATIVE_FIXED_FIXTURE');
     const release = path.join(RELEASES, marker.releaseId), app = path.join(release, 'app');
     const pointer = fs.lstatSync(CURRENT);
     if (!pointer.isSymbolicLink() || pointer.uid !== 0 || fs.readlinkSync(CURRENT) !== release
-        || state.releaseId !== marker.releaseId || state.sequence !== 13 || state.nodeVersion !== NODE || state.profile !== 'test') fail('OWN_NATIVE_FIXED_FIXTURE');
+        || state.releaseId !== marker.releaseId || state.sequence !== marker.sequence || state.nodeVersion !== NODE || state.profile !== 'test') fail('OWN_NATIVE_FIXED_FIXTURE');
     if (sha(JSON.stringify(contentRows(app))) !== marker.appContentSha256) fail('OWN_NATIVE_APP_CHANGED');
     const baselineApp = path.join(release, 'baseline');
     if (sha(JSON.stringify(contentRows(baselineApp))) !== marker.baselineContentSha256) fail('OWN_NATIVE_BASELINE_CHANGED');

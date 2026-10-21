@@ -1,0 +1,37 @@
+[
+  {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tests/bootstrap/managed-bootstrap.test.cjs",
+      "tests/bootstrap/first-start.test.cjs",
+      "tests/bootstrap/build-download.test.cjs"
+    ],
+    "exitCode": 0,
+    "tests": 30,
+    "log": "managed-bootstrap.tap"
+  },
+  {
+    "command": [
+      "python3",
+      "-I",
+      "-B",
+      "tests/bootstrap/prepare-managed-host.test.py"
+    ],
+    "exitCode": 0,
+    "tests": 31,
+    "log": "prepare-managed-host.txt"
+  },
+  {
+    "command": [
+      "python3",
+      "-I",
+      "-B",
+      "tests/bootstrap/prepare-host.test.py"
+    ],
+    "exitCode": 0,
+    "tests": 27,
+    "log": "prepare-historical-host.txt"
+  }
+]

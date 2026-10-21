@@ -1,0 +1,343 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@iobroker/adapter-core": {
+      "name": "@iobroker/adapter-core",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@iobroker/js-controller-common-db"
+      ],
+      "effects": [],
+      "range": ">=3.4.3",
+      "nodes": [
+        "node_modules/@iobroker/adapter-core"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/adapter-core",
+        "version": "3.4.2",
+        "isSemVerMajor": true
+      }
+    },
+    "@iobroker/db-base": {
+      "name": "@iobroker/db-base",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/js-controller-common-db"
+      ],
+      "effects": [
+        "@iobroker/db-objects-file",
+        "@iobroker/db-objects-jsonl",
+        "@iobroker/db-objects-redis",
+        "@iobroker/db-states-file",
+        "@iobroker/db-states-jsonl",
+        "@iobroker/db-states-redis"
+      ],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/db-base"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/db-objects-file": {
+      "name": "@iobroker/db-objects-file",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/db-base",
+        "@iobroker/db-objects-redis"
+      ],
+      "effects": [],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/db-objects-file"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/db-objects-jsonl": {
+      "name": "@iobroker/db-objects-jsonl",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/db-base",
+        "@iobroker/db-objects-file",
+        "@iobroker/db-objects-redis"
+      ],
+      "effects": [],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/db-objects-jsonl"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/db-objects-redis": {
+      "name": "@iobroker/db-objects-redis",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/db-base"
+      ],
+      "effects": [],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/db-objects-redis"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/db-states-file": {
+      "name": "@iobroker/db-states-file",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/db-base",
+        "@iobroker/db-states-redis"
+      ],
+      "effects": [],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/db-states-file"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/db-states-jsonl": {
+      "name": "@iobroker/db-states-jsonl",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/db-base",
+        "@iobroker/db-states-file",
+        "@iobroker/db-states-redis"
+      ],
+      "effects": [],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/db-states-jsonl"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/db-states-redis": {
+      "name": "@iobroker/db-states-redis",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@iobroker/db-base"
+      ],
+      "effects": [],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/db-states-redis"
+      ],
+      "fixAvailable": true
+    },
+    "@iobroker/js-controller-common": {
+      "name": "@iobroker/js-controller-common",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@iobroker/db-objects-file",
+        "@iobroker/db-objects-jsonl",
+        "@iobroker/db-objects-redis",
+        "@iobroker/db-states-file",
+        "@iobroker/db-states-jsonl",
+        "@iobroker/db-states-redis",
+        "@iobroker/js-controller-common-db"
+      ],
+      "effects": [],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/js-controller-common"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/js-controller-common",
+        "version": "6.0.0",
+        "isSemVerMajor": true
+      }
+    },
+    "@iobroker/js-controller-common-db": {
+      "name": "@iobroker/js-controller-common-db",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "node-forge"
+      ],
+      "effects": [
+        "@iobroker/adapter-core",
+        "@iobroker/db-base",
+        "@iobroker/js-controller-common"
+      ],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/js-controller-common-db"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/adapter-core",
+        "version": "3.4.2",
+        "isSemVerMajor": true
+      }
+    },
+    "dropbox-v2-api": {
+      "name": "dropbox-v2-api",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "request"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/dropbox-v2-api"
+      ],
+      "fixAvailable": false
+    },
+    "node-forge": {
+      "name": "node-forge",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240912,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+          "severity": "high",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<=1.4.0"
+        }
+      ],
+      "effects": [
+        "@iobroker/js-controller-common-db"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/node-forge"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/adapter-core",
+        "version": "3.4.2",
+        "isSemVerMajor": true
+      }
+    },
+    "request": {
+      "name": "request",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1096727,
+          "name": "request",
+          "dependency": "request",
+          "title": "Server-Side Request Forgery in Request",
+          "url": "https://github.com/advisories/GHSA-p8p7-x288-28g6",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-918"
+          ],
+          "cvss": {
+            "score": 6.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": "<=2.88.2"
+        },
+        "tough-cookie",
+        "uuid"
+      ],
+      "effects": [
+        "dropbox-v2-api"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/request"
+      ],
+      "fixAvailable": false
+    },
+    "tough-cookie": {
+      "name": "tough-cookie",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1097682,
+          "name": "tough-cookie",
+          "dependency": "tough-cookie",
+          "title": "tough-cookie Prototype Pollution vulnerability",
+          "url": "https://github.com/advisories/GHSA-72xf-g2v4-qvf3",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 6.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N"
+          },
+          "range": "<4.1.3"
+        }
+      ],
+      "effects": [
+        "request"
+      ],
+      "range": "<4.1.3",
+      "nodes": [
+        "node_modules/tough-cookie"
+      ],
+      "fixAvailable": false
+    },
+    "uuid": {
+      "name": "uuid",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1119441,
+          "name": "uuid",
+          "dependency": "uuid",
+          "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+          "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-787",
+            "CWE-1285"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<11.1.1"
+        }
+      ],
+      "effects": [
+        "request"
+      ],
+      "range": "<11.1.1",
+      "nodes": [
+        "node_modules/uuid"
+      ],
+      "fixAvailable": false
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 4,
+      "high": 11,
+      "critical": 0,
+      "total": 15
+    },
+    "dependencies": {
+      "prod": 426,
+      "dev": 472,
+      "optional": 39,
+      "peer": 266,
+      "peerOptional": 0,
+      "total": 910
+    }
+  }
+}

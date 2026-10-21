@@ -1,6 +1,23 @@
 # Integration bauen und SBOM erzeugen
 
-## Aktueller vollständiger test.3-Pfad (03.10.2026)
+## Aktueller vollständiger Sicherheitsaufbau (21.10.2026)
+
+Für Managed-Testsequenzen ab 15 ist `stage-security-refresh-cache.cjs` gefolgt
+von `prepare-security-refresh.cjs` der neue vollständige Aufbaupfad. Er packt
+nur versionierte aktuelle Quellen, installiert Controller 7.2.5 und die exakt
+geprüften Abhängigkeiten, erzeugt eine neue tatsächliche SBOM und bindet den
+unveränderten Baum an die native Qualifikation. Historische R9-/R10-/R11-Builds
+und deren Signaturen bleiben separate, unveränderte Profile.
+
+Die Netzauflösung ist ein ausdrücklicher Buildschritt ohne Lifecycle-Skripte;
+die nachfolgende Installation erfolgt mit exakt dieser Lockdatei offline.
+`pack-prepared-runtime.cjs` transportiert nur einen erfolgreich qualifizierten
+unsignierten Baum. Der Hersteller-Signierer benötigt diesen Baum über
+`--prepared-runtime`, neue passende native Evidenz und den extern gehaltenen
+dauerhaften Schlüssel. Befehle, Umfang und offene Prüfschritte stehen im
+[Buildbeleg](../../reports/integration/security-refresh-20261021/build/README_DE.md).
+
+## Historischer vollständiger test.3-Pfad (03.10.2026)
 
 Der Vollbau erfolgt mit `assemble-postgresql-test.cjs --output <NEUES_EXTERNES_VERZEICHNIS> --platform linux-arm64`.
 Er benötigt die unten beschriebene exakte Node-/npm-Werkzeugkette und den vorbereiteten

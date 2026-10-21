@@ -1,0 +1,1051 @@
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var setupBackup_exports = {};
+__export(setupBackup_exports, {
+  BackupRestore: () => BackupRestore
+});
+module.exports = __toCommonJS(setupBackup_exports);
+var import_fs_extra = __toESM(require("fs-extra"), 1);
+var import_node_path = __toESM(require("node:path"), 1);
+var import_js_controller_common = require("@iobroker/js-controller-common");
+var import_promisify_child_process = require("promisify-child-process");
+var tar = __toESM(require("tar"), 1);
+var import_setupUpload = require("./setupUpload.js");
+var import_dbConnection = require("./dbConnection.js");
+var import_customError = require("./customError.js");
+var import_cliProcess = require("../../lib/cli/cliProcess.js");
+var import_promises = require("node:fs/promises");
+const controllerDir = import_js_controller_common.tools.getControllerDir();
+class BackupRestore {
+  hostname = import_js_controller_common.tools.getHostName();
+  tmpDir = import_node_path.default.normalize(import_node_path.default.join(controllerDir, "tmp"));
+  bkpDir = import_node_path.default.normalize(import_node_path.default.join(controllerDir, "backups"));
+  objects;
+  states;
+  processExit;
+  restartController;
+  cleanDatabase;
+  dbMigration;
+  /** these adapters will be reinstalled during restore, while others will be installed after next controller start */
+  PRESERVE_ADAPTERS = ["admin", "backitup"];
+  upload;
+  configParts;
+  configDir;
+  /** Placeholder inserted during backup creation if no custom hostname defined */
+  HOSTNAME_PLACEHOLDER = "$$__hostname__$$";
+  /** Same as HOSTNAME_PLACEHOLDER but used in replace method */
+  HOSTNAME_PLACEHOLDER_REPLACE = "$$$$__hostname__$$$$";
+  /** Regex to replace all occurrences of the HOSTNAME_PLACEHOLDER */
+  HOSTNAME_PLACEHOLDER_REGEX = /\$\$__hostname__\$\$/g;
+  /** Postfix for backup name */
+  BACKUP_POSTFIX = `_backup${import_js_controller_common.tools.appNameLowerCase}`;
+  constructor(options) {
+    options = options || {};
+    if (!options.states) {
+      throw new Error("Invalid arguments: states is missing");
+    }
+    if (!options.objects) {
+      throw new Error("Invalid arguments: objects is missing");
+    }
+    if (!options.processExit) {
+      throw new Error("Invalid arguments: processExit is missing");
+    }
+    if (!options.cleanDatabase) {
+      throw new Error("Invalid arguments: cleanDatabase is missing");
+    }
+    if (!options.restartController) {
+      throw new Error("Invalid arguments: restartController is missing");
+    }
+    this.objects = options.objects;
+    this.states = options.states;
+    this.processExit = options.processExit;
+    this.cleanDatabase = options.cleanDatabase;
+    this.restartController = options.restartController;
+    this.dbMigration = options.dbMigration || false;
+    this.upload = new import_setupUpload.Upload(options);
+    this.configParts = import_js_controller_common.tools.getConfigFileName().split("/");
+    this.configParts.pop();
+    this.configDir = this.configParts.join("/");
+  }
+  // --------------------------------------- BACKUP ---------------------------------------------------
+  async _copyFile(id, srcPath, destPath) {
+    try {
+      const data = await this.objects.readFile(id, srcPath);
+      if (data) {
+        import_fs_extra.default.writeFileSync(destPath, data.file);
+      }
+    } catch (err) {
+      console.log(`Can not copy File ${id}${srcPath} to ${destPath}: ${err.message}`);
+    }
+  }
+  async copyDir(id, srcPath, destPath) {
+    import_fs_extra.default.ensureDirSync(destPath);
+    try {
+      const res = await this.objects.readDirAsync(id, srcPath);
+      if (res) {
+        for (const entry of res) {
+          if (entry.isDir) {
+            await this.copyDir(id, `${srcPath}/${entry.file}`, `${destPath}/${entry.file}`);
+          } else {
+            import_fs_extra.default.ensureDirSync(destPath);
+            await this._copyFile(id, `${srcPath}/${entry.file}`, `${destPath}/${entry.file}`);
+          }
+        }
+      }
+    } catch (err) {
+      if (!err.message.includes("Not exists")) {
+        console.warn(`Directory ${id}/${srcPath} cannot be copied: ${err}`);
+      }
+    }
+  }
+  /**
+   * Get the directory where backups should be stored
+   */
+  static getBackupDir() {
+    return import_node_path.default.join(import_js_controller_common.tools.getRootDir(), "backups/");
+  }
+  copyFileSync(source, target) {
+    let targetFile = target;
+    try {
+      if (import_fs_extra.default.existsSync(target)) {
+        if (import_fs_extra.default.statSync(target).isDirectory()) {
+          targetFile = import_node_path.default.join(target, import_node_path.default.basename(source));
+        }
+      }
+      import_fs_extra.default.writeFileSync(targetFile, import_fs_extra.default.readFileSync(source));
+    } catch (e) {
+      console.error(`Could not copy ${targetFile} to ${source}: ${e.message}`);
+    }
+  }
+  copyFolderRecursiveSync(source, target) {
+    let files = [];
+    if (!import_fs_extra.default.existsSync(target)) {
+      import_fs_extra.default.mkdirSync(target);
+    }
+    const targetFolder = import_node_path.default.join(target, import_node_path.default.basename(source));
+    if (!import_fs_extra.default.existsSync(targetFolder)) {
+      import_fs_extra.default.mkdirSync(targetFolder);
+    }
+    if (import_fs_extra.default.existsSync(source) && import_fs_extra.default.statSync(source).isDirectory()) {
+      files = import_fs_extra.default.readdirSync(source);
+      files.forEach((file) => {
+        const curSource = import_node_path.default.join(source, file);
+        if (!import_fs_extra.default.existsSync(curSource)) {
+          return;
+        }
+        if (import_fs_extra.default.statSync(curSource).isDirectory()) {
+          this.copyFolderRecursiveSync(curSource, targetFolder);
+        } else {
+          this.copyFileSync(curSource, targetFolder);
+        }
+      });
+    }
+  }
+  /**
+   * Removes the temporary backup directory, never throws
+   */
+  removeTempBackupDir() {
+    try {
+      import_fs_extra.default.rmSync(import_node_path.default.join(this.tmpDir, "backup"), { recursive: true, force: true });
+    } catch (e) {
+      console.error(`host.${this.hostname} Cannot clear temporary backup directory: ${e.message}`);
+    }
+  }
+  /**
+   * Pack and compress the backup
+   *
+   * @param name - backup name
+   */
+  _packBackup(name) {
+    return new Promise((resolve, reject) => {
+      const f = import_fs_extra.default.createWriteStream(name);
+      f.on("finish", () => {
+        this.removeTempBackupDir();
+        resolve(import_node_path.default.normalize(name));
+      });
+      f.on("error", (e) => {
+        console.error(`host.${this.hostname} Cannot pack directory ${this.tmpDir}/backup: ${e.message}`);
+        reject(new import_customError.IoBrokerError({ message: e.message, code: import_js_controller_common.EXIT_CODES.CANNOT_GZIP_DIRECTORY }));
+      });
+      try {
+        tar.create({ gzip: true, cwd: `${this.tmpDir}/` }, ["backup"]).pipe(f);
+      } catch (e) {
+        console.error(`host.${this.hostname} Cannot pack directory ${this.tmpDir}/backup: ${e.message}`);
+        reject(new import_customError.IoBrokerError({ message: e.message, code: import_js_controller_common.EXIT_CODES.CANNOT_GZIP_DIRECTORY }));
+      }
+    });
+  }
+  /**
+   * Creates backup and stores with given name
+   *
+   * @param name - name of the backup
+   * @param noConfig - do not store configs (used by setup custom migration)
+   */
+  async createBackup(name, noConfig = false) {
+    if (!name) {
+      const d = /* @__PURE__ */ new Date();
+      name = `${d.getFullYear()}_${`0${d.getMonth() + 1}`.slice(-2)}_${`0${d.getDate()}`.slice(-2)}-${`0${d.getHours()}`.slice(-2)}_${`0${d.getMinutes()}`.slice(-2)}_${`0${d.getSeconds()}`.slice(-2)}${this.BACKUP_POSTFIX}`;
+    } else if (!name.endsWith(this.BACKUP_POSTFIX) && !name.endsWith(`${this.BACKUP_POSTFIX}.tar.gz`)) {
+      name += this.BACKUP_POSTFIX;
+    }
+    name = name.toString().replace(/\\/g, "/");
+    if (!name.includes("/")) {
+      const backupPath = BackupRestore.getBackupDir();
+      import_fs_extra.default.ensureDirSync(backupPath);
+      if (!name.includes(".tar.gz")) {
+        name = `${backupPath + name}.tar.gz`;
+      } else {
+        name = backupPath + name;
+      }
+    }
+    const hostname = import_js_controller_common.tools.getHostName();
+    const thisHostNameStartsWith = `system.host.${hostname}.`;
+    import_fs_extra.default.ensureDirSync(this.bkpDir);
+    import_fs_extra.default.ensureDirSync(this.tmpDir);
+    this.removeTempBackupDir();
+    const backupBasePath = import_node_path.default.join(this.tmpDir, "backup");
+    import_fs_extra.default.ensureDirSync(backupBasePath);
+    import_fs_extra.default.ensureDirSync(import_node_path.default.join(backupBasePath, "files"));
+    let isCustomHostname = false;
+    let config;
+    try {
+      config = await import_fs_extra.default.readJSON(import_js_controller_common.tools.getConfigFileName());
+      isCustomHostname = !!config.system.hostname;
+    } catch (e) {
+      console.error(`host.${hostname} Cannot read config file: ${e.message}`);
+    }
+    if (!noConfig && config) {
+      await (0, import_promises.writeFile)(import_node_path.default.join(backupBasePath, "config.json"), JSON.stringify(config), { encoding: "utf-8" });
+    }
+    const objectsFd = await (0, import_promises.open)(import_node_path.default.join(backupBasePath, "objects.jsonl"), "a");
+    try {
+      const res = await this.objects.getObjectListAsync({ include_docs: true });
+      for (const row of res.rows) {
+        const preprocessedValue = await this._preprocessObject({
+          object: row.value,
+          isCustomHostname,
+          hostname,
+          thisHostNameStartsWith
+        });
+        await objectsFd.write(`${JSON.stringify(preprocessedValue)}
+`);
+      }
+      console.log(`host.${hostname} ${res.rows.length || "no"} objects saved`);
+    } catch (e) {
+      console.error(`host.${hostname} Cannot get objects: ${e.message}`);
+    }
+    await objectsFd.close();
+    const statesFd = await (0, import_promises.open)(import_node_path.default.join(backupBasePath, "states.jsonl"), "a");
+    try {
+      const keys = await this.states.getKeys("*");
+      const objs = await this.states.getStates(keys);
+      if (keys) {
+        for (let i = 0; i < keys.length; i++) {
+          const obj = objs[i];
+          if (!obj) {
+            continue;
+          }
+          if (!isCustomHostname) {
+            if (obj.from === `system.host.${hostname}`) {
+              obj.from.replace(`system.host.${hostname}`, `system.host.${this.HOSTNAME_PLACEHOLDER_REPLACE}`);
+            }
+            if (keys[i].startsWith(thisHostNameStartsWith)) {
+              keys[i] = keys[i].replace(hostname, this.HOSTNAME_PLACEHOLDER_REPLACE);
+            }
+          }
+          await statesFd.write(`${JSON.stringify({ id: keys[i], state: obj })}
+`);
+        }
+        await statesFd.close();
+        console.log(`host.${hostname} ${keys.length} states saved`);
+      }
+    } catch (e) {
+      console.error(`host.${hostname} Cannot get states: ${e.message}`);
+    }
+    console.log(`host.${hostname} Validating backup ...`);
+    try {
+      await this._validateTempDirectory(noConfig);
+      console.log(`host.${hostname} The backup is valid!`);
+      return await this._packBackup(name);
+    } catch (e) {
+      console.error(`host.${hostname} Backup not created: ${e.message}`);
+      this.removeTempBackupDir();
+      if (e instanceof import_customError.IoBrokerError) {
+        throw e;
+      }
+      throw new import_customError.IoBrokerError({ message: e.message, code: import_js_controller_common.EXIT_CODES.CANNOT_EXTRACT_FROM_ZIP });
+    }
+  }
+  //--------------------------------------- RESTORE ---------------------------------------------------
+  /**
+   * Helper to restore raw state
+   *
+   * @param stateId - state ID
+   * @param stateObject - the corresponding state object
+   */
+  async _setStateHelper(stateId, stateObject) {
+    try {
+      await this.states.setRawState(stateId, stateObject);
+    } catch (e) {
+      console.log(`host.${this.hostname} Could not set value for state ${stateId}: ${e.message}`);
+    }
+  }
+  /**
+   * Sets all objects to the db and disables all adapters
+   *
+   * @param object - object to be set
+   */
+  async _setObjHelper(object) {
+    if (!this.dbMigration && object._id && /^system\.adapter\..+\.\d$/.test(object._id) && !object._id.startsWith("system.adapter.admin.") && !object._id.startsWith("system.adapter.backitup.")) {
+      if (object.common?.enabled) {
+        object.common.enabled = false;
+      }
+    }
+    try {
+      await this.objects.setObject(object._id, object);
+    } catch (e) {
+      console.warn(`host.${this.hostname} Cannot restore ${object._id}: ${e.message}`);
+    }
+  }
+  /**
+   * Creates all provided object if non-existing
+   *
+   * @param objectList - list of objects to be created
+   */
+  async _reloadAdapterObject(objectList) {
+    if (!Array.isArray(objectList)) {
+      return;
+    }
+    for (const object of objectList) {
+      let obj;
+      try {
+        obj = await this.objects.getObject(object._id);
+      } catch {
+      }
+      if (!obj) {
+        try {
+          await this.objects.setObject(object._id, object);
+          console.log(`host.${this.hostname} object ${object._id} created`);
+        } catch {
+        }
+      }
+    }
+  }
+  async _reloadAdaptersObjects() {
+    const dirs = [];
+    let _modules;
+    let p = import_node_path.default.join(controllerDir, "node_modules");
+    if (p.includes("js-controller")) {
+      p = import_node_path.default.join(controllerDir, "..", "node_modules");
+    }
+    if (import_fs_extra.default.existsSync(p)) {
+      _modules = import_fs_extra.default.readdirSync(p).filter((dir) => import_fs_extra.default.existsSync(`${p}/${dir}/io-package.json`));
+      if (_modules) {
+        const regEx = new RegExp(`^${import_js_controller_common.tools.appName}\\.`, "i");
+        for (const module2 of _modules) {
+          if (regEx.test(module2) && !dirs.includes(module2.substring(import_js_controller_common.tools.appName.length + 1))) {
+            dirs.push(module2);
+          }
+        }
+      }
+    }
+    if (import_fs_extra.default.existsSync(import_node_path.default.join(controllerDir, "..", "..", "node_modules", `${import_js_controller_common.tools.appName.toLowerCase()}.js-controller`))) {
+      const p2 = import_node_path.default.join(controllerDir, "..");
+      _modules = import_fs_extra.default.readdirSync(p2).filter((dir) => import_fs_extra.default.existsSync(`${p2}/${dir}/io-package.json`));
+      const regEx_ = new RegExp(`^${import_js_controller_common.tools.appName}\\.`, "i");
+      for (const module2 of _modules) {
+        if (regEx_.test(module2) && // If not js-controller
+        module2.substring(import_js_controller_common.tools.appName.length + 1) !== "js-controller" && !dirs.includes(module2.substring(import_js_controller_common.tools.appName.length + 1))) {
+          dirs.push(module2);
+        }
+      }
+    }
+    for (const dir of dirs) {
+      const adapterName = dir.replace(/^iobroker\./i, "");
+      await this.upload.uploadAdapter(adapterName, false, true);
+      await this.upload.uploadAdapter(adapterName, true, true);
+      let pkg;
+      if (!dir) {
+        console.error("Wrong");
+      }
+      const adapterDir = import_js_controller_common.tools.getAdapterDir(adapterName);
+      if (import_fs_extra.default.existsSync(`${adapterDir}/io-package.json`)) {
+        pkg = import_fs_extra.default.readJSONSync(`${adapterDir}/io-package.json`);
+      }
+      if (pkg?.objects?.length) {
+        console.log(`host.${this.hostname} Setup "${dir}" adapter`);
+        await this._reloadAdapterObject(pkg.objects);
+      }
+    }
+  }
+  async _uploadUserFiles(root, uploadPath) {
+    uploadPath = uploadPath || "";
+    if (!import_fs_extra.default.existsSync(root)) {
+      return;
+    }
+    const files = import_fs_extra.default.readdirSync(root + uploadPath);
+    for (const file of files) {
+      const fName = import_node_path.default.join(root, uploadPath, file);
+      if (!import_fs_extra.default.existsSync(fName)) {
+        continue;
+      }
+      const stat = import_fs_extra.default.statSync(fName);
+      if (stat.isDirectory()) {
+        try {
+          await this._uploadUserFiles(root, `${uploadPath}/${file}`);
+        } catch (err) {
+          console.error(`Error: ${err}`);
+        }
+      } else {
+        const parts = uploadPath.split("/");
+        const adapter = parts.splice(0, 2)[1];
+        const _path = `${parts.join("/")}/${file}`;
+        console.log(`host.${this.hostname} Upload user file "${adapter}/${_path}`);
+        try {
+          await this.objects.writeFileAsync(adapter, _path, import_fs_extra.default.readFileSync(`${root + uploadPath}/${file}`));
+        } catch (err) {
+          console.error(`Error: ${err.message}`);
+        }
+      }
+    }
+  }
+  /**
+   * Preprocess object before storing it in the backup file
+   *
+   * @param options object and host information
+   */
+  async _preprocessObject(options) {
+    const { object, isCustomHostname, hostname, thisHostNameStartsWith } = options;
+    if (!object || !object._id || !object.common) {
+      return object;
+    }
+    if (!isCustomHostname) {
+      if (object._id.match(/^system\.adapter\.([\w\d_-]+).(\d+)$/) && object.common.host === hostname) {
+        object.common.host = this.HOSTNAME_PLACEHOLDER;
+        object.common.host = this.HOSTNAME_PLACEHOLDER;
+      } else if (object._id.startsWith(thisHostNameStartsWith)) {
+        object._id = object._id.replace(hostname, this.HOSTNAME_PLACEHOLDER_REPLACE);
+      } else if (object._id === `system.host.${hostname}`) {
+        object._id = `system.host.${this.HOSTNAME_PLACEHOLDER}`;
+        object.common.name = object._id;
+        object.common.hostname = this.HOSTNAME_PLACEHOLDER;
+        if (object.native && object.native.os) {
+          object.native.os.hostname = this.HOSTNAME_PLACEHOLDER;
+        }
+        object.common.name = object._id;
+        object.common.hostname = this.HOSTNAME_PLACEHOLDER;
+        if (object.native?.os) {
+          object.native.os.hostname = this.HOSTNAME_PLACEHOLDER;
+        }
+      }
+    }
+    if (object.type === "meta" && object.common?.type === "meta.user") {
+      if (object._id.trim() === object._id && object._id[object._id.length - 1] !== ".") {
+        await this.copyDir(object._id, "", `${this.tmpDir}/backup/files/${object._id}`);
+      }
+    }
+    if (object.type === "instance" && object.common?.dataFolder) {
+      let dataFolderPath = object.common.dataFolder;
+      if (dataFolderPath[0] !== "/" && !dataFolderPath.match(/^\w:/)) {
+        dataFolderPath = import_node_path.default.join(this.configDir, dataFolderPath);
+      }
+      if (import_fs_extra.default.existsSync(dataFolderPath)) {
+        try {
+          this.copyFolderRecursiveSync(dataFolderPath, `${this.tmpDir}/backup`);
+        } catch (e) {
+          console.error(`host.${hostname} Could not backup "${dataFolderPath}" directory: ${e.message}`);
+          this.removeTempBackupDir();
+          throw new import_customError.IoBrokerError({ message: e.message, code: import_js_controller_common.EXIT_CODES.CANNOT_COPY_DIR });
+        }
+      }
+    }
+    return object;
+  }
+  _copyBackupedFiles(backupDir) {
+    try {
+      if (!import_fs_extra.default.existsSync(backupDir)) {
+        console.log("No additional files to restore");
+        return;
+      }
+      const dirs = import_fs_extra.default.readdirSync(backupDir);
+      dirs.forEach((dir) => {
+        if (dir === "files") {
+          return;
+        }
+        const backupPath = import_node_path.default.join(backupDir, dir);
+        let stat;
+        try {
+          if (!import_fs_extra.default.existsSync(backupPath)) {
+            return;
+          }
+          stat = import_fs_extra.default.statSync(backupPath);
+        } catch (e) {
+          console.error(`Ignoring ${backupPath} because can not get file type: ${e.message}`);
+          return;
+        }
+        if (stat.isDirectory()) {
+          this.copyFolderRecursiveSync(backupPath, this.configDir);
+        }
+      });
+    } catch (e) {
+      console.error(`Ignoring ${backupDir} because can not read directory: ${e.message}`);
+    }
+  }
+  /**
+   * Restore JSONL backup after controller has been stopped
+   *
+   * @param options The restore options
+   */
+  async _restoreJsonlBackup(options) {
+    const { force, dontDeleteAdapters } = options;
+    const hostname = import_js_controller_common.tools.getHostName();
+    const backupBaseDir = import_node_path.default.join(this.tmpDir, "backup");
+    let backupHostName = hostname;
+    let config;
+    if (await import_fs_extra.default.pathExists(import_node_path.default.join(backupBaseDir, "config.json"))) {
+      config = await import_fs_extra.default.readJSON(import_node_path.default.join(backupBaseDir, "config.json"));
+      backupHostName = config.system?.hostname || hostname;
+    }
+    const objFd = await (0, import_promises.open)(import_node_path.default.join(backupBaseDir, "objects.jsonl"));
+    const rlObj = objFd.readLines();
+    const hostObjArr = [];
+    for await (let line of rlObj) {
+      line = line.replace(this.HOSTNAME_PLACEHOLDER_REGEX, hostname);
+      const obj = JSON.parse(line);
+      if (obj._id === `system.host.${backupHostName}`) {
+        hostObjArr.push({ id: obj._id, value: obj });
+        break;
+      }
+    }
+    await objFd.close();
+    const exitCode = this._ensureCompatibility(controllerDir, backupHostName, hostObjArr, force);
+    if (exitCode) {
+      return exitCode;
+    }
+    if (!dontDeleteAdapters) {
+      await this._removeAllAdapters();
+    }
+    if (config) {
+      import_fs_extra.default.writeFileSync(import_js_controller_common.tools.getConfigFileName(), JSON.stringify(config, null, 2));
+      await this.connectToNewDatabase(config);
+    }
+    console.log(`host.${hostname} Clear all objects and states...`);
+    await this.cleanDatabase(false);
+    console.log(`host.${hostname} done.`);
+    const objectsFd = await (0, import_promises.open)(import_node_path.default.join(backupBaseDir, "objects.jsonl"));
+    const rlObjects = objectsFd.readLines();
+    let count = 0;
+    for await (let line of rlObjects) {
+      line = line.replace(this.HOSTNAME_PLACEHOLDER_REGEX, hostname);
+      const obj = JSON.parse(line);
+      await this._setObjHelper(obj);
+      count++;
+    }
+    console.log(`${count} objects restored.`);
+    await objectsFd.close();
+    const statesFd = await (0, import_promises.open)(import_node_path.default.join(backupBaseDir, "states.jsonl"));
+    const rlStates = statesFd.readLines();
+    count = 0;
+    for await (let line of rlStates) {
+      line = line.replace(this.HOSTNAME_PLACEHOLDER_REGEX, hostname);
+      const state = JSON.parse(line);
+      await this._setStateHelper(state.id, state.state);
+      count++;
+    }
+    console.log(`${count} states restored.`);
+    await statesFd.close();
+    return import_js_controller_common.EXIT_CODES.NO_ERROR;
+  }
+  /**
+   * Restore after controller has been stopped
+   *
+   * @param options The restore options
+   */
+  async _restoreAfterStop(options) {
+    const { force, restartOnFinish, dontDeleteAdapters } = options;
+    const backupBaseDir = import_node_path.default.join(this.tmpDir, "backup");
+    const isJsonl = await import_fs_extra.default.pathExists(import_node_path.default.join(backupBaseDir, "objects.jsonl"));
+    if (isJsonl) {
+      const exitCode = await this._restoreJsonlBackup(options);
+      if (exitCode !== import_js_controller_common.EXIT_CODES.NO_ERROR) {
+        return exitCode;
+      }
+    } else {
+      const hostname = import_js_controller_common.tools.getHostName();
+      console.log(`host.${hostname} Restore legacy backup.`);
+      let data = import_fs_extra.default.readFileSync(import_node_path.default.join(backupBaseDir, "backup.json"), "utf8");
+      data = data.replace(this.HOSTNAME_PLACEHOLDER_REGEX, hostname);
+      import_fs_extra.default.writeFileSync(import_node_path.default.join(backupBaseDir, "backup_.json"), data);
+      let restore;
+      try {
+        restore = JSON.parse(data);
+      } catch (e) {
+        console.error(`Cannot parse "${import_node_path.default.join(backupBaseDir, "backup_.json")}": ${e.message}`);
+        return import_js_controller_common.EXIT_CODES.CANNOT_RESTORE_BACKUP;
+      }
+      if (!restore.objects) {
+        console.error("The backup does not contain any objects.");
+        return import_js_controller_common.EXIT_CODES.CANNOT_RESTORE_BACKUP;
+      }
+      const exitCode = this._ensureCompatibility(controllerDir, restore.config?.system?.hostname || hostname, restore.objects, force);
+      if (exitCode) {
+        return exitCode;
+      }
+      if (!dontDeleteAdapters) {
+        await this._removeAllAdapters();
+      }
+      if (restore.config) {
+        import_fs_extra.default.writeFileSync(import_js_controller_common.tools.getConfigFileName(), JSON.stringify(restore.config, null, 2));
+        await this.connectToNewDatabase(restore.config);
+      }
+      console.log(`host.${hostname} Clear all objects and states...`);
+      await this.cleanDatabase(false);
+      console.log(`host.${hostname} done.`);
+      const sList = Object.keys(restore.states);
+      for (let i = 0; i < restore.objects.length; i++) {
+        await this._setObjHelper(restore.objects[i].value);
+        if (i % 200 === 0) {
+          console.log(`host.${this.hostname} Processed ${i}/${restore.objects.length} objects`);
+        }
+      }
+      console.log(`${restore.objects.length} objects restored.`);
+      for (let i = 0; i < sList.length; i++) {
+        const id = sList[i];
+        await this._setStateHelper(id, restore.states[id]);
+        if (i % 200 === 0) {
+          console.log(`host.${this.hostname} Processed ${i}/${sList.length} states`);
+        }
+      }
+      console.log(`${sList.length} states restored.`);
+    }
+    await this._uploadUserFiles(import_node_path.default.join(backupBaseDir, "files"));
+    await this._reloadAdaptersObjects();
+    const packageIO = import_fs_extra.default.readJSONSync(import_node_path.default.join(controllerDir, "io-package.json"));
+    await this._reloadAdapterObject(packageIO ? packageIO.objects : null);
+    this._copyBackupedFiles(backupBaseDir);
+    await this._restorePreservedAdapters();
+    if (force) {
+      console.log("Forced restore - executing setup ...");
+      try {
+        await (0, import_promisify_child_process.exec)(`"${process.execPath}" "${import_node_path.default.join(controllerDir, `${import_js_controller_common.tools.appName.toLowerCase()}.js`)}" setup`);
+      } catch (e) {
+        console.error(`Could not execute "setup" command, please ensure "setup" is called before starting ioBroker: ${e.message}`);
+      }
+    }
+    if (restartOnFinish) {
+      console.log("restart");
+      this.restartController();
+    }
+    return import_js_controller_common.EXIT_CODES.NO_ERROR;
+  }
+  /**
+   * Connects to the database which is configured in `iobroker.json`
+   * Meant to be used after the configuration file has been overwritten
+   *
+   * @param config The new config, needed for logging purposes
+   */
+  async connectToNewDatabase(config) {
+    console.log(`host.${this.hostname} Connecting to new DB "${config.states.type}/${config.objects.type}" (can take up to 20s) ...`);
+    await (0, import_dbConnection.resetDbConnect)();
+    const { objects, states } = await (0, import_dbConnection.dbConnectAsync)(false);
+    console.log(`host.${this.hostname} Successfully connected to new DB`);
+    this.upload = new import_setupUpload.Upload({ states, objects });
+    this.objects = objects;
+    this.states = states;
+  }
+  /**
+   * Removes all adapters
+   */
+  async _removeAllAdapters() {
+    const nodeModulePath = import_node_path.default.join(controllerDir, "..");
+    const nodeModuleDirs = import_fs_extra.default.readdirSync(nodeModulePath, { withFileTypes: true });
+    for (const dir of nodeModuleDirs) {
+      if (dir.isDirectory() && dir.name.startsWith(`${import_js_controller_common.tools.appName.toLowerCase()}.`) && dir.name !== `${import_js_controller_common.tools.appName.toLowerCase()}.js-controller`) {
+        try {
+          const packJson = import_fs_extra.default.readJsonSync(import_node_path.default.join(nodeModulePath, dir.name, "package.json"));
+          console.log(`Removing current installation of ${packJson.name}`);
+          await import_js_controller_common.tools.uninstallNodeModule(packJson.name);
+        } catch {
+        }
+      }
+    }
+  }
+  /**
+   * Ensure that installed controller version matches version in backup
+   *
+   * @param controllerDir - directory of js-controller
+   * @param backupHostname - hostname in backup file
+   * @param backupObjects - the objects contained in the backup
+   * @param force - if force is true, only log
+   */
+  _ensureCompatibility(controllerDir2, backupHostname, backupObjects, force) {
+    try {
+      const ioPackJson = import_fs_extra.default.readJsonSync(import_node_path.default.join(controllerDir2, "io-package.json"));
+      const hostObj = backupObjects.find((obj) => obj.id === `system.host.${backupHostname}`);
+      if (!hostObj) {
+        console.error("No host object found, your backup seems to be corrupted!");
+        return import_js_controller_common.EXIT_CODES.CANNOT_RESTORE_BACKUP;
+      }
+      if (hostObj.value.common.installedVersion !== ioPackJson.common.version) {
+        if (!force) {
+          console.warn("The current version of js-controller differs from the version in the backup.");
+          console.warn("The js-controller version of the backup can not be restored automatically.");
+          console.warn(`To restore the js-controller version of the backup, execute "npm i iobroker.js-controller@${hostObj.value.common.installedVersion} --omit=dev" inside your ioBroker directory`);
+          console.warn("If you really want to restore the backup with the current installed js-controller, execute the restore command with the --force flag");
+          return import_js_controller_common.EXIT_CODES.CANNOT_RESTORE_BACKUP;
+        }
+        console.info("The current version of js-controller differs from the version in the backup.");
+        console.info("The js-controller version of the backup can not be restored automatically.");
+        console.info("Note, that your backup might differ in behavior due to this version change!");
+      }
+    } catch {
+    }
+  }
+  /**
+   * Returns all backups as array
+   */
+  listBackups() {
+    const dir = BackupRestore.getBackupDir();
+    const result = [];
+    if (import_fs_extra.default.existsSync(dir)) {
+      const files = import_fs_extra.default.readdirSync(dir);
+      for (const file of files) {
+        if (file.match(/\.tar\.gz$/i)) {
+          result.push(file);
+        }
+      }
+      return result;
+    }
+    return result;
+  }
+  /**
+   * Validates a JSONL-style backup and all json files inside the backup (in temporary directory)
+   *
+   * @param noConfig if the backup does not contain a `config.json` (used by setup custom migration)
+   */
+  async _validateTempDirectory(noConfig = false) {
+    const backupBaseDir = import_node_path.default.join(this.tmpDir, "backup");
+    if (!noConfig) {
+      await import_fs_extra.default.readJSON(import_node_path.default.join(backupBaseDir, "config.json"));
+      console.log(`host.${this.hostname} "config.json" is valid`);
+    }
+    if (!await import_fs_extra.default.pathExists(import_node_path.default.join(backupBaseDir, "objects.jsonl"))) {
+      throw new Error("Backup does not contain valid objects");
+    }
+    console.log(`host.${this.hostname} "objects.jsonl" exists`);
+    if (!await import_fs_extra.default.pathExists(import_node_path.default.join(backupBaseDir, "states.jsonl"))) {
+      throw new Error("Backup does not contain valid states");
+    }
+    console.log(`host.${this.hostname} "states.jsonl" exists`);
+    await this._validateDatabaseFiles();
+    console.log(`host.${this.hostname} JSONL lines are valid`);
+    try {
+      this._checkDirectory(import_node_path.default.join(backupBaseDir, "files"));
+    } catch (e) {
+      console.warn(`host.${this.hostname} One or more optional files are corrupted: ${e.message}`);
+      console.warn(`host.${this.hostname} Please ensure that self-created JSON files are valid`);
+    }
+  }
+  /**
+   * Validate that the created JSONL files in the temporary directories are parseable
+   */
+  async _validateDatabaseFiles() {
+    const backupBaseDir = import_node_path.default.join(this.tmpDir, "backup");
+    const objectsFd = await (0, import_promises.open)(import_node_path.default.join(backupBaseDir, "objects.jsonl"));
+    const rlObjects = objectsFd.readLines();
+    for await (const line of rlObjects) {
+      try {
+        JSON.parse(line);
+      } catch (e) {
+        throw new Error(`The "objects.jsonl" file is corrupted: ${e.message}`);
+      }
+    }
+    await objectsFd.close();
+    const statesFd = await (0, import_promises.open)(import_node_path.default.join(backupBaseDir, "states.jsonl"));
+    const rlStates = statesFd.readLines();
+    for await (const line of rlStates) {
+      try {
+        JSON.parse(line);
+      } catch (e) {
+        throw new Error(`The "states.jsonl" file is corrupted: ${e.message}`);
+      }
+    }
+    await statesFd.close();
+  }
+  /**
+   * Validates the given backup.json and all json files in the backup, calls processExit afterwards
+   *
+   * @param _name - index or name of the backup
+   */
+  async validateBackup(_name) {
+    let backups;
+    let name = typeof _name === "number" ? _name.toString() : _name;
+    if (!name) {
+      backups = this.listBackups();
+      backups.sort((a, b) => b > a ? 1 : b === a ? 0 : -1);
+      if (backups.length) {
+        console.log("Please specify one of the backup names:");
+        for (const t in backups) {
+          console.log(`${backups[t]} or ${backups[t].replace(`${this.BACKUP_POSTFIX}.tar.gz`, "")} or ${t}`);
+        }
+      } else {
+        console.warn(`No backups found. Create a backup, using "${import_js_controller_common.tools.appName} backup" first`);
+      }
+      throw new import_customError.IoBrokerError({ message: "Backup not found", code: import_js_controller_common.EXIT_CODES.INVALID_ARGUMENTS });
+    }
+    if (parseInt(name, 10).toString() === name.toString()) {
+      backups = this.listBackups();
+      backups.sort((a, b) => b > a ? 1 : b === a ? 0 : -1);
+      name = backups[parseInt(name, 10)];
+      if (!name) {
+        console.log("No matching backup found");
+        if (backups.length) {
+          console.log("Please specify one of the backup names:");
+          for (const t in backups) {
+            console.log(`${backups[t]} or ${backups[t].replace(`${this.BACKUP_POSTFIX}.tar.gz`, "")} or ${t}`);
+          }
+        } else {
+          console.log(`No existing backups. Create a backup, using "${import_js_controller_common.tools.appName} backup" first`);
+        }
+        throw new import_customError.IoBrokerError({ message: "Backup not found", code: import_js_controller_common.EXIT_CODES.INVALID_ARGUMENTS });
+      }
+      console.log(`host.${this.hostname} Using backup file ${name}`);
+    }
+    name = name.toString().replace(/\\/g, "/");
+    if (!name.includes("/")) {
+      name = BackupRestore.getBackupDir() + name;
+      const regEx = new RegExp(this.BACKUP_POSTFIX, "i");
+      if (!regEx.test(name)) {
+        name += this.BACKUP_POSTFIX;
+      }
+      if (!name.match(/\.tar\.gz$/i)) {
+        name += ".tar.gz";
+      }
+    }
+    if (!import_fs_extra.default.existsSync(name)) {
+      console.error(`host.${this.hostname} Cannot find ${name}`);
+      throw new import_customError.IoBrokerError({ message: "Backup not found", code: import_js_controller_common.EXIT_CODES.INVALID_ARGUMENTS });
+    }
+    if (import_fs_extra.default.existsSync(`${this.tmpDir}/backup/backup.json`)) {
+      import_fs_extra.default.unlinkSync(`${this.tmpDir}/backup/backup.json`);
+    }
+    try {
+      await tar.extract({
+        file: name,
+        cwd: this.tmpDir
+      });
+    } catch (e) {
+      const errMessage = `Cannot extract from file "${name}": ${e.message}`;
+      console.error(`host.${this.hostname} ${errMessage}`);
+      throw new import_customError.IoBrokerError({ message: "Backup not found", code: import_js_controller_common.EXIT_CODES.INVALID_ARGUMENTS });
+    }
+    try {
+      if (import_fs_extra.default.existsSync(import_node_path.default.join(this.tmpDir, "backup", "backup.json"))) {
+        this._validateLegacyTempDir();
+      } else {
+        await this._validateTempDirectory();
+      }
+    } catch (e) {
+      console.error(`host.${this.hostname} ${e.message}`);
+      try {
+        this.removeTempBackupDir();
+      } catch (e2) {
+        console.error(`host.${this.hostname} Cannot clear temporary backup directory: ${e2.message}`);
+      }
+      throw new import_customError.IoBrokerError({ message: e.message, code: import_js_controller_common.EXIT_CODES.CANNOT_EXTRACT_FROM_ZIP });
+    }
+    try {
+      this.removeTempBackupDir();
+    } catch (e) {
+      console.error(`host.${this.hostname} Cannot clear temporary backup directory: ${e.message}`);
+      throw new import_customError.IoBrokerError({ message: e.message, code: import_js_controller_common.EXIT_CODES.CANNOT_EXTRACT_FROM_ZIP });
+    }
+  }
+  /**
+   * Validate an unpacked legacy backup in the temporary directory
+   */
+  _validateLegacyTempDir() {
+    console.log(`host.${this.hostname} Starting validation ...`);
+    let backupJSON;
+    try {
+      backupJSON = import_fs_extra.default.readJSONSync(`${this.tmpDir}/backup/backup.json`);
+    } catch (e) {
+      throw new Error(`Backup corrupted. Backup does not contain a valid backup.json file: ${e.message}`);
+    }
+    if (!backupJSON || !backupJSON.objects || !backupJSON.objects.length) {
+      throw new Error(`host.${this.hostname} Backup corrupted. Backup does not contain valid objects`);
+    }
+    console.log(`host.${this.hostname} backup.json OK`);
+    try {
+      this._checkDirectory(`${this.tmpDir}/backup/files`, true);
+    } catch (e) {
+      throw new Error(`Backup corrupted: ${e.message}`);
+    }
+  }
+  /**
+   * Checks a directory for json files and validates them, steps down recursive in subdirectories
+   *
+   * @param path - path to the directory
+   * @param verbose - if logging should be verbose
+   */
+  _checkDirectory(path2, verbose = false) {
+    if (import_fs_extra.default.existsSync(path2)) {
+      const files = import_fs_extra.default.readdirSync(path2);
+      if (!files.length) {
+        return;
+      }
+      for (const file of files) {
+        const filePath = `${path2}/${file}`;
+        if (import_fs_extra.default.existsSync(filePath) && import_fs_extra.default.statSync(filePath).isDirectory()) {
+          this._checkDirectory(filePath, verbose);
+        } else if (file.endsWith(".json")) {
+          try {
+            import_fs_extra.default.readJSONSync(filePath);
+            if (verbose) {
+              console.log(`host.${this.hostname} ${file} OK`);
+            }
+          } catch {
+            throw new Error(`host.${this.hostname} ${filePath} is not a valid json file`);
+          }
+        }
+      }
+    }
+  }
+  /**
+   * Restores a backup
+   *
+   * @param options Restore options
+   */
+  async restoreBackup(options) {
+    const { name: _name, dontDeleteAdapters, force } = options;
+    let backups;
+    let name = typeof _name === "number" ? _name.toString() : _name;
+    if (!name) {
+      console.log("Please specify one of the backup names:");
+      backups = this.listBackups();
+      backups.sort((a, b) => b > a ? 1 : b === a ? 0 : -1);
+      if (backups.length) {
+        backups.forEach((backup, i) => console.log(`${backup} or ${backup.replace(`${this.BACKUP_POSTFIX}.tar.gz`, "")} or ${i}`));
+      } else {
+        console.warn("No backups found");
+      }
+      return { exitCode: import_js_controller_common.EXIT_CODES.INVALID_ARGUMENTS, objects: this.objects, states: this.states };
+    }
+    if (!this.cleanDatabase) {
+      throw new Error("Invalid arguments: cleanDatabase is missing");
+    }
+    if (!this.restartController) {
+      throw new Error("Invalid arguments: restartController is missing");
+    }
+    if (parseInt(name, 10).toString() === name.toString()) {
+      backups = this.listBackups();
+      backups.sort((a, b) => b > a ? 1 : b === a ? 0 : -1);
+      name = backups[parseInt(name, 10)];
+      if (!name) {
+        console.log("No matching backup found");
+        if (backups.length) {
+          console.log("Please specify one of the backup names:");
+          backups.forEach((backup, i) => console.log(`${backup} or ${backup.replace(`${this.BACKUP_POSTFIX}.tar.gz`, "")} or ${i}`));
+        }
+        return { exitCode: import_js_controller_common.EXIT_CODES.INVALID_ARGUMENTS, objects: this.objects, states: this.states };
+      }
+      console.log(`host.${this.hostname} Using backup file ${name}`);
+    }
+    name = name.toString().replace(/\\/g, "/");
+    if (!name.includes("/")) {
+      name = BackupRestore.getBackupDir() + name;
+      const regEx = new RegExp(this.BACKUP_POSTFIX, "i");
+      if (!regEx.test(name)) {
+        name += this.BACKUP_POSTFIX;
+      }
+      if (!name.match(/\.tar\.gz$/i)) {
+        name += ".tar.gz";
+      }
+    }
+    if (!import_fs_extra.default.existsSync(name)) {
+      console.error(`host.${this.hostname} Cannot find ${name}`);
+      return { exitCode: import_js_controller_common.EXIT_CODES.INVALID_ARGUMENTS, objects: this.objects, states: this.states };
+    }
+    const backupBasePath = import_node_path.default.join(this.tmpDir, "backup");
+    if (import_fs_extra.default.existsSync(import_node_path.default.join(backupBasePath, "backup.json"))) {
+      import_fs_extra.default.unlinkSync(import_node_path.default.join(backupBasePath, "backup.json"));
+    }
+    try {
+      await tar.extract({
+        file: name,
+        cwd: this.tmpDir
+      });
+    } catch (e) {
+      console.error(`host.${this.hostname} Cannot extract from file "${name}": ${e.message}`);
+      return { exitCode: import_js_controller_common.EXIT_CODES.CANNOT_EXTRACT_FROM_ZIP, objects: this.objects, states: this.states };
+    }
+    if (!await import_fs_extra.default.pathExists(import_node_path.default.join(backupBasePath, "backup.json")) && !await import_fs_extra.default.pathExists(import_node_path.default.join(backupBasePath, "objects.jsonl"))) {
+      console.error(`host.${this.hostname} Cannot find extracted file "${import_node_path.default.join(backupBasePath, "backup.json")}" or "${import_node_path.default.join(backupBasePath, "objects.jsonl")}"`);
+      return { exitCode: import_js_controller_common.EXIT_CODES.CANNOT_EXTRACT_FROM_ZIP, objects: this.objects, states: this.states };
+    }
+    await import_cliProcess.CLIProcess.stopJSController();
+    const exitCode = await this._restoreAfterStop({
+      restartOnFinish: false,
+      force,
+      dontDeleteAdapters
+    });
+    this.removeTempBackupDir();
+    return { exitCode, objects: this.objects, states: this.states };
+  }
+  /**
+   * This method checks if adapter of PRESERVE_ADAPTERS exists, and re-installs them if this is the case
+   */
+  async _restorePreservedAdapters() {
+    for (const adapterName of this.PRESERVE_ADAPTERS) {
+      try {
+        const adapterObj = await this.objects.getObject(`system.adapter.${adapterName}`);
+        if (adapterObj?.common?.version) {
+          let installSource;
+          if (adapterObj.common.installedFrom) {
+            installSource = adapterObj.common.installedFrom;
+          } else {
+            installSource = `${import_js_controller_common.tools.appName.toLowerCase()}.${adapterName}@${adapterObj.common.version}`;
+          }
+          console.log(`Reinstalling adapter "${adapterName}" from "${installSource}"`);
+          const res = await import_js_controller_common.tools.installNodeModule(installSource);
+          if (!res.success) {
+            console.error(`Could not install adapter "${adapterName}" (${res.exitCode}): ${res.stderr}`);
+          }
+        }
+      } catch (e) {
+        console.error(`Could not ensure existence of adapter "${adapterName}": ${e.message}`);
+      }
+    }
+  }
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  BackupRestore
+});
+//# sourceMappingURL=setupBackup.js.map

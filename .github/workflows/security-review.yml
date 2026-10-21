@@ -178,6 +178,50 @@ jobs:
           This workflow does not constitute a product release approval or CRA/IEC conformity assessment.
           SUMMARY
 
+  security-refresh-source:
+    name: Controller 7.2.5 sessions and actual Admin security dependencies
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '24.21.0'
+          package-manager-cache: false
+      - name: Check actual published controller methods and explicit version boundaries
+        run: |
+          node --test tests/system/controller725-*.test.cjs tests/system/websocket-bound.test.cjs tests/postgresql/session-controller-contract.test.cjs tests/postgresql/controller725-objects-guard.test.cjs tests/integration/controller725-managed-fresh-enrollment.test.cjs
+          node --test tests/integration/security-refresh-build.test.cjs tests/integration/runtime-dependency-policy.test.cjs
+          python3 -I -B tests/integration/prepared-runtime-archive.test.py
+          node --test tests/bootstrap/managed-bootstrap.test.cjs
+          python3 -I -B tests/bootstrap/prepare-managed-host.test.py
+      - name: Install locked Admin tooling and reproduce the shipped backend
+        working-directory: components/admin
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build:backend
+          git diff --exit-code -- build
+          node tools/nexowatt-lock-provenance-check.cjs
+          node tools/nexowatt-prebuilt-release-selftest.cjs
+      - name: Exercise actual Socket and HTTPS dependencies in source and shipped build
+        working-directory: components/admin
+        shell: bash
+        run: |
+          set -euo pipefail
+          export EOS_ADMIN_DEPENDENCIES="$PWD/node_modules"
+          for runtime in source build; do
+            EOS_TEST_RUNTIME="$runtime" node --test test/eos-session-security.test.cjs test/eos-web-resources.test.cjs test/eos-appliance-profile.test.cjs test/eos-appliance-socket.integration.cjs test/eos-upstream-socket-security.integration.cjs test/eos-appliance-oauth.integration.cjs
+          done
+      - name: State current source verification scope
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
+          Exact published controller 7.2.5 behavior, PostgreSQL session callback compatibility, controller-8 denial and actual Admin Socket/HTTPS dependencies are tested on Node 24.21.0.
+          Isolated database fixtures do not substitute for the separate fresh native PostgreSQL job. No test signs or publishes a delivery, changes a Pi, or constitutes production approval.
+          SCOPE
+
   product-contract-checks:
     name: Node 24 bootstrap, onboarding and transport contracts
     runs-on: ubuntu-24.04
@@ -515,11 +559,13 @@ jobs:
         run: |
           set -euo pipefail
           node --test tests/integration/own-adapter-locks.test.cjs
-          for component in ui eebus ocpp21 backitup; do
+          for component in ui devices eebus ocpp21 backitup; do
             npm --prefix "components/$component" ci --ignore-scripts --no-audit --no-fund
           done
       - name: Require identical clients and actual early management admission
         run: node --test tests/integration/own-adapter-admission.test.cjs tests/integration/own-adapter-dependencies.test.cjs
+      - name: Check patched HTTP dependencies and the explicitly retained OCPP validator contract
+        run: node --test reports/integration/security-refresh-20261021/adapters/dependency-regression.test.cjs
       - name: Check actual root-owned UI TLS file protections in an isolated temporary fixture
         # Only this tiny filesystem test needs UID 0; no adapter, listener,
         # dependency installation or product-directory setup runs as root.
@@ -566,7 +612,11 @@ jobs:
           SCOPE
 
   native-r9:
-    name: Current R9 Admin UI central license native PostgreSQL qualification
+    # R9 permits only unchanged dependency overlays. Current security-refresh
+    # source intentionally changes that contract and is qualified by the fresh
+    # job below. The old path remains available at an immutable reviewed source.
+    if: github.event_name == 'workflow_dispatch'
+    name: Historical R9 source native qualification (manual)
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     defaults:
@@ -576,6 +626,7 @@ jobs:
       - name: Checkout exact source including authenticated R8 history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: f3f1ce90642463b0940742b529441ed59375695d
           persist-credentials: false
           fetch-depth: 0
       - name: Use qualified Node release
@@ -616,7 +667,7 @@ jobs:
         if: always() && env.EOS_R9_LAB_ROOT != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: eos-r9-native-${{ github.sha }}
+          name: eos-historical-r9-native-f3f1ce90642463b0940742b529441ed59375695d
           retention-days: 14
           if-no-files-found: warn
           path: |
@@ -627,20 +678,20 @@ jobs:
         if: always()
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
-          This job tests the current unsigned R9 application, authenticating its R8 baseline and binding the six current source overlays by content digest.
+          This manual historical job tests the unsigned R9 application at f3f1ce90642463b0940742b529441ed59375695d, authenticating its R8 baseline and binding those historical overlays by content digest.
           Actual Admin/UI use root-owned EOS paths and real PostgreSQL 17.11 mTLS with Node 24.21.0. No product admission or license verifier is mocked.
-          The release signer requires this successful exact-source/application evidence. Pi, actual systemd mount policy and physical adapter commissioning remain open.
+          This is not evidence for the current security-refresh source. Fresh dependencies are qualified in the separate current six-adapter job. Pi, actual systemd mount policy and physical adapter commissioning remain open.
           SCOPE
 
   native-own-adapters:
-    name: Six own adapters real processes licenses backup and restart
+    name: Fresh controller 7.2.5 six adapters licenses backup and restart
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 45
     defaults:
       run:
         shell: bash
     steps:
-      - name: Checkout exact reviewed sources and immutable R9 input
+      - name: Checkout exact reviewed sources for the fresh runtime
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
@@ -663,28 +714,72 @@ jobs:
           node --test tests/integration-own-adapters/*.test.cjs
       - name: Build pinned PostgreSQL and locked laboratory dependencies
         run: bash tests/integration-controller/prepare-native.sh "$EOS_OWN_ADAPTERS_LAB_ROOT"
-      - name: Prepare exact current six-adapter candidate from authenticated R9
+      - name: Resolve once and assemble a fresh exact locked runtime without lifecycle scripts
         run: |
           set -euo pipefail
           npm --prefix components/ui ci --ignore-scripts --no-audit --no-fund
-          node tests/integration-own-adapters/prepare-app.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" "$GITHUB_WORKSPACE/delivery/test-pi-0.2.0-test.3-r9"
-      - name: Prepare root-owned immutable app and original migration baseline
+          node tools/integration/stage-security-refresh-cache.cjs --output "$RUNNER_TEMP/eos-refresh-resolution"
+          node tools/integration/prepare-security-refresh.cjs --output "$RUNNER_TEMP/eos-refresh-runtime" --sequence 15 --resolution-lock "$RUNNER_TEMP/eos-refresh-resolution/resolution-lock.json"
+          node tests/integration-own-adapters/prepare-security-refresh.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" "$RUNNER_TEMP/eos-refresh-runtime"
+      - name: Check PostgreSQL Objects permissions against the actual fresh 7.2.5 packages
+        run: |
+          EOS_CONTROLLER725_APP="$RUNNER_TEMP/eos-refresh-runtime/app" NODE_PATH="$RUNNER_TEMP/eos-refresh-runtime/app/node_modules" node --test tests/postgresql/controller725-objects.test.cjs
+      - name: Record current production audit for the actual runtime lock without hiding open findings
+        shell: bash
+        run: |
+          set +e
+          npm --prefix "$RUNNER_TEMP/eos-refresh-runtime/app" audit --omit=dev --ignore-scripts --json --fetch-timeout=5000 --fetch-retries=0 > "$RUNNER_TEMP/eos-refresh-audit-raw.json" 2> "$RUNNER_TEMP/eos-refresh-audit-stderr.txt"
+          audit_status=$?
+          set -e
+          EOS_AUDIT_STATUS="$audit_status" python3 -I -B - <<'PY'
+          import hashlib, json, os, pathlib
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])
+          lock = root / 'eos-refresh-runtime/app/package-lock.json'
+          record = dict(schemaVersion=1, kind='actual-security-refresh-runtime-production-audit',
+              sourceCommit=os.environ['GITHUB_SHA'], packageLockSha256=hashlib.sha256(lock.read_bytes()).hexdigest(),
+              exitCode=int(os.environ['EOS_AUDIT_STATUS']), auditAvailable=False,
+              productReleaseApproved=False, vulnerabilityReachabilityAssessed=False)
+          try:
+              raw = json.loads((root / 'eos-refresh-audit-raw.json').read_text())
+              counts = raw['metadata']['vulnerabilities']
+              assert not raw.get('error') and record['exitCode'] in [0, 1]
+              assert all(type(counts[k]) is int and counts[k] >= 0 for k in ['info', 'low', 'moderate', 'high', 'critical', 'total'])
+              record.update(auditAvailable=True, counts=counts, affectedPackages=sorted(raw['vulnerabilities']))
+          except (ValueError, KeyError, AssertionError, TypeError):
+              record['status'] = 'AUDIT_UNAVAILABLE_NO_CLEAN_CLAIM'
+          else:
+              record['status'] = 'OPEN_DEPENDENCY_FINDINGS' if counts['total'] else 'NO_REPORTED_FINDINGS_IN_THIS_AUDIT'
+          (root / 'eos-refresh-audit.json').write_text(json.dumps(record, indent=2) + '\n')
+          print(record['status'])
+          PY
+      - name: Prepare root-owned immutable app and explicit unsigned laboratory baseline
         env:
           EOS_DISPOSABLE_MANAGEMENT_LAB: '1'
           EOS_DISPOSABLE_OWN_ADAPTERS_LAB: '1'
         run: |
           sudo --preserve-env=GITHUB_ACTIONS,EOS_DISPOSABLE_MANAGEMENT_LAB,EOS_DISPOSABLE_OWN_ADAPTERS_LAB "$(command -v node)" \
             tests/integration-own-adapters/prepare-fixed-root.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" "$(id -u)" "$(id -g)"
-      - name: Require actual six-process startup central leases backup rollback and restart
+      - name: Require actual fresh enrollment six-process startup central leases backup and restart
         run: |
           set -euo pipefail
           umask 077
           node tests/integration-own-adapters/run-native.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" | tee "$EOS_OWN_ADAPTERS_LAB_ROOT/own-adapters-native.tap"
+      - name: Retain the exact qualified unsigned runtime for later protected signing
+        run: |
+          node tools/integration/pack-prepared-runtime.cjs --prepared-runtime "$RUNNER_TEMP/eos-refresh-runtime" --native-evidence "$EOS_OWN_ADAPTERS_LAB_ROOT" --output "$RUNNER_TEMP/eos-security-refresh-unsigned.tar.gz"
+      - name: Upload only the verified unsigned runtime allowlist
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: eos-security-refresh-unsigned-${{ github.sha }}
+          retention-days: 30
+          if-no-files-found: error
+          compression-level: 0
+          path: ${{ runner.temp }}/eos-security-refresh-unsigned.tar.gz
       - name: Preserve only source-bound sanitized own-adapter evidence
         if: always() && env.EOS_OWN_ADAPTERS_LAB_ROOT != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: eos-own-adapters-native-${{ github.sha }}
+          name: eos-security-refresh-native-${{ github.sha }}
           retention-days: 14
           if-no-files-found: warn
           path: |
@@ -692,12 +787,16 @@ jobs:
             ${{ env.EOS_OWN_ADAPTERS_LAB_ROOT }}/own-adapters-native-evidence.json
             ${{ env.EOS_OWN_ADAPTERS_LAB_ROOT }}/own-adapters-native-prepared.json
             ${{ env.EOS_OWN_ADAPTERS_LAB_ROOT }}/own-adapters-source-binding.json
+            ${{ runner.temp }}/eos-refresh-runtime/runtime-build.json
+            ${{ runner.temp }}/eos-refresh-runtime/runtime.cdx.json
+            ${{ runner.temp }}/eos-refresh-runtime/app/package-lock.json
+            ${{ runner.temp }}/eos-refresh-audit.json
       - name: State actual qualification scope
         if: always()
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
-          This job qualifies an unsigned candidate built from authenticated R9 and exact current six-own-adapter source overlays.
-          Native x64 PostgreSQL 17.11 mTLS, immutable root-owned App, six actual adapter processes, central Home/Pro license responses, logical backup export, exact enrollment rollback and restart are tested without runtime mocks.
+          This job qualifies a fresh unsigned controller 7.2.5 candidate with current six-own-adapter packages and newly resolved, then offline-installed locked dependencies. Controller 8 is refused. No R9 dependency inheritance is claimed.
+          Native x64 PostgreSQL 17.11 mTLS, immutable root-owned App, six actual adapter processes, central Home/Pro license responses, logical backup export, rejection before fresh-enrollment writes and enrollment retention after restart are tested without runtime mocks. Historical migration rollback is not claimed for this fresh scenario; managed-update rollback has separate contract tests.
           No real device or station is configured. Unconfigured processes do not mean connected plant devices. No Pi/ARM64, systemd mount-policy, full-system restore, timing, production or CRA acceptance is asserted.
-          Private database/configuration, backup archives, journals, passwords, UUID, certificate keys and issuer material are deliberately excluded from artifacts. Only successful exact-source evidence can satisfy a later release gate.
+          Private database/configuration, backup archives, journals, passwords, UUID, certificate keys and issuer material are deliberately excluded from artifacts. Only successful exact-source and exact-runtime evidence can satisfy a later release gate. The prepared app is unsigned; a persistent manufacturer key and separate publication/readback remain required.
           SCOPE

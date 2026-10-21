@@ -67,12 +67,18 @@ function prepare(root, uidText, gidText) {
         fs.mkdirSync(path.join(app, 'node_modules/iobroker.js-controller/tmp'), { recursive: true, mode: 0o755 });
         protectTree(app);
         if (sha(JSON.stringify(contentRows(app))) !== prepared.appContentSha256) fail('COPIED_APP_DIGEST');
+        if (prepared.kind === 'unsigned-security-refresh-native-preparation') {
+            const managed = path.join(release, 'system/managed-test');
+            fs.mkdirSync(managed, { recursive: true, mode: 0o755 });
+            fs.copyFileSync(path.resolve(__dirname, '../../system/managed-test/profile.json'), path.join(managed, 'profile.json'), fs.constants.COPYFILE_EXCL);
+            protectTree(path.join(release, 'system'));
+        }
         const trustBytes = fs.readFileSync('/etc/nexowatt-eos/license-trust.json');
-        fs.writeFileSync(STATE, JSON.stringify({ schemaVersion: 1, releaseId, sequence: 13, nodeVersion: NODE,
+        fs.writeFileSync(STATE, JSON.stringify({ schemaVersion: 1, releaseId, sequence: prepared.sequence, nodeVersion: NODE,
             publicKeySha256: sha(trustBytes), profile: 'test' }) + '\n', { flag: 'wx', mode: 0o644 });
         fs.symlinkSync(release, CURRENT, 'dir');
         fs.writeFileSync(MARKER, JSON.stringify({ ...prepared, app: undefined,
-            kind: 'unsigned-own-adapters-native-fixed-fixture', root, uid, gid, releaseId,
+            kind: prepared.kind === 'unsigned-security-refresh-native-preparation' ? 'unsigned-security-refresh-native-fixed-fixture' : 'unsigned-own-adapters-native-fixed-fixture', root, uid, gid, releaseId,
             rootOwnedApp: true, signed: false, hardwareConnected: false }) + '\n', { flag: 'wx', mode: 0o644 });
         process.stdout.write('OWN_NATIVE_UNSIGNED_FIXED_FIXTURE_READY\n');
     } finally { process.umask(previousUmask); }

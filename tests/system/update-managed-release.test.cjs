@@ -16,12 +16,12 @@ const publicKey = pair.publicKey.export({ format: 'pem', type: 'spki' });
 const base = { releaseId: 'b'.repeat(64), sequence: 15, nodeVersion: '24.21.0', profile: 'test', publicKeySha256: sha256(publicKey) };
 const test = nodeTest;
 function descriptors() {
-    const manifest = sequence => ({ sequence, profile: 'test', releaseVersion: '0.2.0-test.3', nodeVersion: '24.21.0',
+    const manifest = sequence => ({ product: 'nexowatt-eos', sequence, profile: 'test', releaseVersion: '0.2.0-test.3', nodeVersion: '24.21.0',
         platforms: ['linux-arm64'], files: [{ path: 'runtime/postgresql/schema.sql', size: 4, sha256: sha256('sql\n'), mode: 0o644 },
             { path: 'system/postgresql-test/systemd/nexowatt-eos-controller.service', size: 5, sha256: sha256('unit\n'), mode: 0o644 },
             { path: 'app/node_modules/iobroker.js-controller/eos-test-profile.json', size: 3, sha256: sha256('{}\n'), mode: 0o644 }] });
     const product = require('../../runtime/product/scope.cjs');
-    const catalog = { catalogRevision: 9, entries: product.specsFor(product.OWN_ADAPTER_TEST).map(spec => ({ id: spec.id, package: spec.package,
+    const catalog = { catalogRevision: 9, entries: product.specsFor(product.SECURITY_REFRESH_TEST).map(spec => ({ id: spec.id, package: spec.package,
         version: spec.version, sha256: '1'.repeat(64), kind: spec.kind, required: true,
         review: { status: 'approved-test' }, permissions: { shellExec: false } })) };
     return { old: { releaseId: base.releaseId, manifest: manifest(base.sequence), catalog },
@@ -139,6 +139,15 @@ test('transition allows Admin own-package digests but refuses sequence, system/s
         x => x.next.catalog.entries[1].review.status = 'pending', x => x.next.catalog.entries[1].permissions.shellExec = true,
         x => x.next.catalog.entries.pop()]) {
         const x = descriptors(); mutate(x); assert.throws(() => repair.validateTransition(x.old, x.next, { expectedReleaseId: ID }));
+    }
+});
+test('managed transition pins controller 7.2.5 and rejects historical or major-8 catalogues', () => {
+    for (const version of ['7.2.2', '8.0.0', '8.0.0-alpha.8']) {
+        for (const side of ['old', 'next']) {
+            const d = descriptors();
+            d[side].catalog.entries.find(row => row.id === 'js-controller').version = version;
+            assert.throws(() => repair.validateTransition(d.old, d.next, { expectedReleaseId: ID }), /PRODUCT_CATALOG_SCOPE/);
+        }
     }
 });
 test('successful managed update installs state before trial start and preserves fresh completion/configuration', async t => {

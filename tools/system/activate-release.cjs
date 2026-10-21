@@ -8,7 +8,7 @@ const { command } = require('./host-preflight.cjs');
 const { readFileLimited, sha256 } = require('../../runtime/release/bundle.cjs');
 const { rootOwned, checkInstalled } = require('../../runtime/release/installed-check.cjs');
 const { validatePayload } = require('./build-bundle.cjs');
-const { validateProfile } = require('../../runtime/controller-profile/guard.cjs');
+const { validateProfile } = require('../../runtime/controller-profile/profile-validation.cjs');
 const PROFILE_FILE = 'app/node_modules/iobroker.js-controller/eos-test-profile.json';
 const MUTABLE_METADATA = new Set(['catalog.json', 'sbom.cdx.json', 'app/package.json', 'app/package-lock.json',
     'app/node_modules/.package-lock.json', PROFILE_FILE]);
@@ -34,7 +34,7 @@ function validateAdditive(old, next) {
     const existing = new Map(old.catalog.entries.map(e => [e.id, e]));
     const incoming = new Map(next.catalog.entries.map(e => [e.id, e]));
     const core = existing.get('js-controller'), newCore = incoming.get('js-controller');
-    if (core?.kind !== 'core' || !core.required || core.version !== '7.2.2' || !newCore ||
+    if (core?.kind !== 'core' || !core.required || !['7.2.2', '7.2.5'].includes(core.version) || !newCore ||
         !same(without(core, ['sha256']), without(newCore, ['sha256']))) reject('ACTIVATION_CORE_CHANGE');
     if (next.catalog.catalogRevision <= old.catalog.catalogRevision) reject('ACTIVATION_CATALOG_SEQUENCE');
     for (const [id, item] of existing) {
@@ -64,6 +64,7 @@ function validateAdditive(old, next) {
         if (!prefix || oldModules.has(prefix)) reject('ACTIVATION_NON_ADDITIVE_FILE');
     }
     const previousProfile = validateProfile(old.profile), profile = validateProfile(next.profile);
+    if (previousProfile.controllerVersion !== core.version || profile.controllerVersion !== newCore.version) reject('ACTIVATION_CORE_CHANGE');
     const profiles = new Map(profile.adapters.map(e => [e.package, e]));
     for (const spec of previousProfile.adapters) if (!same(spec, profiles.get(spec.package))) reject('ACTIVATION_PROFILE_CHANGE');
     const expected = next.catalog.entries.filter(e => e.kind === 'adapter');

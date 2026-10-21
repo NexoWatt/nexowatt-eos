@@ -6,7 +6,7 @@ const fs = require('node:fs/promises');
 const { constants } = require('node:fs');
 const path = require('node:path');
 const { performance } = require('node:perf_hooks');
-const { assertEosPlatform } = require('../../packages/eos-license-client/eos-platform');
+const { assertEosPlatform } = require('../../packages/eos-license-client');
 const { TextDecoder } = require('node:util');
 const { EncryptedLicenseStore, verifyLicense, validatePublicKeys, normalizeUuid } = require('./eosLicenseCore');
 

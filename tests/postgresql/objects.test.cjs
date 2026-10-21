@@ -8,8 +8,9 @@ const { Client } = require('../../runtime/postgresql/packages/db-objects-postgre
 const { match } = require('../../runtime/postgresql/packages/db-objects-postgresql/facade.cjs');
 const { applyView } = require('../../runtime/postgresql/packages/db-objects-postgresql/views.cjs');
 
-// Contract fake only: these tests exercise the real 7.2.2 Objects domain class
-// and the new facade/guards. They do NOT connect to PostgreSQL or test its TLS.
+// Contract fake only: these tests exercise the actually resolved Objects domain
+// class and EOS facade/guards. controller725-objects.test.cjs binds the fresh
+// run to canonical 7.2.5 dependencies. No PostgreSQL connection or TLS is tested.
 class FakeStore extends EventEmitter {
     constructor() { super(); this.rows = new Map(); this.events = []; this.context = new AsyncLocalStorage(); this.tail = Promise.resolve(); this.connected = false; }
     async connect() { this.connected = true; this.emit('connected'); }

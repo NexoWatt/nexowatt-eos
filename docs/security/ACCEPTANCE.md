@@ -1,6 +1,6 @@
 # EOS: Änderungen, Migration und Freigabesperren
 
-**Nachtrag vom 21.10.2026:** Der [aktuelle Upstream-Vergleich](../../reports/integration/upstream-review-20261021/README_DE.md) unterscheidet Quelllock, dokumentierte Laufzeitbasis und offizielle Stable-/Latest-Versionen. Neue Integrations- und Dependency-Aufgaben sind unter EOS-UPSTREAM-20261021-01 bis -03 im Befundregister offen. Dieser Nachtrag ändert weder Laufzeitcode noch signierte Lieferdateien und erteilt keine Installations-/Produktionsfreigabe.
+**Umsetzungsnachtrag vom 21.10.2026:** Auf den [Upstream-Vergleich](../../reports/integration/upstream-review-20261021/README_DE.md) folgt die [Sicherheitsaktualisierung](../../reports/integration/security-refresh-20261021/README_DE.md) mit js-controller **7.2.5**, angepasstem PostgreSQL-Sitzungsvertrag, aktuellen Socket-/Webserver-Paketen und verfügbaren Dependency-Fixes. Controller 8 bleibt ausgeschlossen. EOS-UPSTREAM-20261021-01 bis -03 bleiben bis zum gebundenen vollständigen Laufzeitnachweis und zur neuen Lieferung offen; lokale Quelltests schließen diese Lieferbedingungen nicht. Historische signierte Archive werden nicht verändert. Keine Produktionsfreigabe.
 
 **Nachtrag vom 07.10.2026:** Lizenzanzeige, tatsächlicher UI-Start und CI-Fixtures
 wurden nachgeprüft und korrigiert. Der quellgebundene

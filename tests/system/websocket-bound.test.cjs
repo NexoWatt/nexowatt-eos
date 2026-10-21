@@ -8,6 +8,24 @@ const vm = require('node:vm');
 const crypto = require('node:crypto');
 const bound = require('../../runtime/controller-profile/websocket-bound.cjs');
 const original = fs.readFileSync(path.join(__dirname, 'controller-profile-fixtures/ws-server-4.5.1.original.txt'));
+const current = fs.readFileSync(path.join(__dirname, 'controller-profile-fixtures/ws-server-4.5.2.original.txt'));
+test('new 4.5.2 transport retains its lower CPU compression setting and the EOS inbound cap', () => {
+    const profile = bound.PROFILES['4.5.2'];
+    assert.equal(bound.CURRENT_VERSION, '4.5.2');
+    assert.equal(crypto.createHash('sha256').update(current).digest('hex'), profile.original);
+    const result = bound.transform(current);
+    assert.equal(result.sha256, profile.output);
+    let options;
+    class WebSocketServer { constructor(value) { options = value; } on() {} }
+    const module = { exports: {} };
+    vm.runInNewContext(result.content, { exports: module.exports, module,
+        require: name => name === 'ws' ? { WebSocketServer } : require(name), console, setTimeout, clearTimeout });
+    new module.exports.SocketIO({});
+    assert.equal(options.maxPayload, 1048576);
+    assert.equal(options.perMessageDeflate.zlibDeflateOptions.level, 6);
+    assert.throws(() => bound.transform(Buffer.concat([current, Buffer.from('\n')])), /EOS_WEBSOCKET_BUILD_PROFILE/);
+    assert.throws(() => bound.transform(Buffer.from(result.content)), /EOS_WEBSOCKET_BUILD_PROFILE/);
+});
 test('only the pinned upstream transport can be transformed', () => {
     assert.equal(crypto.createHash('sha256').update(original).digest('hex'), bound.ORIGINAL);
     const transformed = bound.transform(original);
@@ -42,6 +60,8 @@ test('nested or wrong-version transport cannot satisfy top-level transformation'
     bound.identity(app, read);
     fs.writeFileSync(path.join(ws, 'package.json'), JSON.stringify({ name: '@iobroker/ws-server', version: '4.5.2', main: 'build/index.js' }));
     assert.throws(() => bound.identity(app, read), /EOS_WEBSOCKET_BUILD_PROFILE/);
+    assert.equal(bound.identity(app, read, '4.5.2'), bound.PROFILES['4.5.2']);
+    assert.throws(() => bound.identity(app, read, '__proto__'), /EOS_WEBSOCKET_BUILD_PROFILE/);
 });
 test('an unpatched admitted Admin cannot pass the signed-build verification gate', t => {
     const transform = require('../../runtime/controller-profile/transform.cjs');

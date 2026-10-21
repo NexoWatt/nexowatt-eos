@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 'use strict';
 
+/**
+ * NexoWatt Quellcode-Erklärung (DE)
+ * Aufgabe: Prüft den engen, rollen-geschützten Zugang zum zentralen Lizenzstatus.
+ * Daten und Wirkung: Liest Quell-/Laufzeitdateien und prüft synthetische Requests;
+ * startet keine Adapter und verändert keine Lizenz oder Gerätesteuerung.
+ * Bei Änderungen: Texte dürfen dem zentralen Home-/Pro-Vertrag folgen, die
+ * Prüfungen auf Anmeldung, Capability, Schreibsperre und Testprofil bleiben erhalten.
+ */
+
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -113,8 +122,8 @@ function verifyMain(source, label) {
     `${label}: Lizenz-Lese-API ist nicht rollen-geschützt.`);
   assert.match(source, /app\.post\('\/api\/license\/save'[\s\S]*?hasCapability\(access, 'license\.manage'\)/,
     `${label}: Lizenz-Schreib-API ist nicht rollen-geschützt.`);
-  assert.match(source, /href="\/license\.html\?nwAdmin=1">Lizenz aktivieren<\/a>/,
-    `${label}: Sperrseite enthält keinen direkten Aktivierungsweg.`);
+  assert.match(source, /href="\/license\.html\?nwAdmin=1">Zentralen Lizenzstatus öffnen<\/a>/,
+    `${label}: Sperrseite enthält keinen direkten Weg zum zentralen Lizenzstatus.`);
   assert.match(source, /Die Lizenz wird zentral im <b>EOS Admin<\/b> verwaltet/,
     `${label}: Hinweis auf die zentrale Lizenzverwaltung fehlt.`);
   assert.match(source, /return res\.status\(409\)\.json\(\{ ok: false, error: 'CENTRAL_LICENSE_MANAGEMENT'/,
@@ -129,8 +138,8 @@ function verifyMain(source, label) {
 verifyMain(mainTs, 'main.ts');
 verifyMain(mainJs, 'main.js');
 
-assert.match(licenseHtml, /Die Lizenz wird zentral im EOS Admin verwaltet/);
-assert.match(licenseHtml, /keine Lizenzschlüssel/);
+assert.match(licenseHtml, /Home oder Pro wird einmal im EOS Admin aktiviert/);
+assert.match(licenseHtml, /Ein zusätzlicher UI-Lizenzschlüssel ist nicht erforderlich/);
 assert.match(licenseHtml, /Admin-Anmeldung wird geprüft/);
 assert.match(licenseHtml, /data-nw-required-capability="license\.manage"/);
 assert.ok(licenseHtml.indexOf('/static/auth.js') < licenseHtml.indexOf('/static/license.js'));
@@ -141,7 +150,7 @@ assert.doesNotMatch(licenseHtml, /<input[^>]+value="NW/i, 'Lizenz-HTML enthält 
 
 for (const [source, label] of [[licenseTs, 'license.ts'], [licenseJs, 'license.js']]) {
   assert.match(source, /requireCapability\('license\.manage'/, `${label}: Capability-Prüfung fehlt.`);
-  assert.match(source, /Zentrale Lizenz gültig\. Gerätesteuerung bleibt im Testprofil gesperrt/,
+  assert.match(source, /Gerätesteuerung bleibt im Testprofil gesperrt/,
     `${label}: Testprofil darf nach einer Lizenzfreigabe keine Gerätesteuerung versprechen.`);
   assert.match(source, /fetch\('\/api\/license\/info', \{ credentials: 'same-origin', cache: 'no-store'/,
     `${label}: Lizenzstatus muss authentifiziert und ohne Cache gelesen werden.`);

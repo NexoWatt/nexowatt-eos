@@ -99,8 +99,11 @@ function validateTransition(previous, next, options) {
     if (next.releaseId !== options.expectedReleaseId || next.manifest.sequence <= previous.manifest.sequence ||
         previous.manifest.sequence < 15 || next.manifest.profile !== 'test' || next.manifest.releaseVersion !== '0.2.0-test.3' ||
         next.manifest.nodeVersion !== NODE_VERSION || JSON.stringify(next.manifest.platforms) !== '["linux-arm64"]') fail('REPAIR_RELEASE_SCOPE');
-    product.assertCatalog(previous.catalog, product.OWN_ADAPTER_TEST);
-    product.assertCatalog(next.catalog, product.OWN_ADAPTER_TEST);
+    // Managed baselines start with the independently assembled 7.2.5 profile.
+    // Derive both scopes from their authenticated manifests; never accept a
+    // historical 7.2.2 catalogue merely because the six adapters are present.
+    product.assertCatalog(previous.catalog, product.releaseScope(previous.manifest));
+    product.assertCatalog(next.catalog, product.releaseScope(next.manifest));
     const oldRows = new Map(previous.manifest.files.map(row => [row.path, row]));
     const nextRows = new Map(next.manifest.files.map(row => [row.path, row]));
     // Host, database, dependency and enrollment changes need a separate migration.

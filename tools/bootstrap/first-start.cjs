@@ -23,7 +23,7 @@ const fail = code => { throw Object.assign(new Error(code), { code }); };
 // command lines, stderr, paths or exception messages to diagnose a host failure.
 const INSTALL_PHASES = new Set(['accounts', 'directories', 'certificates', 'first-start-security',
     'initdb', 'release-state', 'units', 'schema', 'live-database-gate', 'controller',
-    'first-start-identity-context']);
+    'first-start-identity-context', 'managed-update-service', 'technical-network-service']);
 const CHECK_IDS = new Set(['os', 'root', 'architecture', 'systemd-running', 'hostname', 'node-exact-version',
     'systemd-manager', 'no-distribution-clusters', 'openssl-tls13', 'ports-free', 'fresh-unit-namespace', 'free-space',
     ...REQUIRED.map(file => `tool:${file}`), ...FRESH_PATHS.map(file => `fresh-path:${file}`),
@@ -110,7 +110,10 @@ function main(argv = process.argv.slice(2), dependencies = {}) {
     const root = dependencies.root ?? ROOT;
     const ownerCheck = dependencies.ownerCheck ?? rootOwned;
     const read = dependencies.read ?? readFileLimited;
-    const install = dependencies.install ?? checkout.main;
+    // Only the separate authenticated managed entry supplies its fixed adapter.
+    // No CLI, bootstrap JSON or environment field can select a checkout module.
+    const selectedCheckout = dependencies.checkout ?? checkout;
+    const install = dependencies.install ?? selectedCheckout.main;
     const interfaces = dependencies.interfaces ?? os.networkInterfaces();
     const sshConnection = dependencies.sshConnection ?? process.env.SSH_CONNECTION;
     ownerCheck(root);
@@ -118,7 +121,7 @@ function main(argv = process.argv.slice(2), dependencies = {}) {
     const config = parseBootstrap(read(configFile, 4096).bytes);
     const trustFile = path.join(root, 'license-public-trust.json'); ownerCheck(trustFile);
     validateLicenseTrust(read(trustFile, 32768).bytes, config.licenseTrustSha256);
-    const publicKey = path.join(root, checkout.DELIVERY_DIRECTORY, 'release-public.pem'); ownerCheck(publicKey);
+    const publicKey = path.join(root, selectedCheckout.DELIVERY_DIRECTORY, 'release-public.pem'); ownerCheck(publicKey);
     const key = read(publicKey, 16384).bytes; validatePublicKey(key);
     if (sha256(key) !== config.releasePublicKeySha256) fail('BOOTSTRAP_RELEASE_TRUST');
     const address = selectIPv4(interfaces, sshConnection);

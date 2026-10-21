@@ -135,6 +135,16 @@ class Client {
         this.metaNamespace = namespace(settings.metaNamespace, 'meta');
         const prefixes = [this.namespaceRedis, this.namespaceMsg, this.namespaceLog, this.namespaceSession, this.metaNamespace];
         if (prefixes.some((prefix, index) => prefixes.some((other, otherIndex) => index !== otherIndex && prefix.startsWith(other)))) throw fail('EOS_PG_STATES_NAMESPACE_COLLISION');
+        // The database callback differs in controller 7.2.5; the public Adapter
+        // callback is still session-only. Bind this seam to the installed,
+        // reviewed controller instead of guessing from callback arity or JSON.
+        // The explicit metadata injection is a code-only unit-test seam.
+        let controllerAdapter;
+        try { controllerAdapter = injection.controllerAdapter || require('@iobroker/js-controller-adapter/package.json'); }
+        catch { throw fail('EOS_PG_STATES_CONTROLLER_IDENTITY'); }
+        if (controllerAdapter.name !== '@iobroker/js-controller-adapter'
+            || !['7.2.2', '7.2.5'].includes(controllerAdapter.version)) throw fail('EOS_PG_STATES_CONTROLLER_IDENTITY');
+        this._legacySessionCallback = controllerAdapter.version === '7.2.2';
         this._system = new Set(); this._user = new Set(); this._messages = new Set(); this._logs = new Set();
         this._ready = false; this._closed = false; this._connecting = false; this._initialized = false;
         this._generation = 0; this._pendingEvents = 0; this._pendingEventBytes = 0;
@@ -267,7 +277,7 @@ class Client {
     }
     subscribeLog(id, callback) { return this._subscription(this._logs, this.namespaceLog, id, false, callback); }
     unsubscribeLog(id, callback) { return this._subscription(this._logs, this.namespaceLog, id, true, callback); }
-    getSession(id, callback) { return this._call(callback, async () => { this._assertReady(); return parse(await this.store.get(this._qualified(this.namespaceSession, id))); }, true); }
+    getSession(id, callback) { return this._call(callback, async () => { this._assertReady(); return parse(await this.store.get(this._qualified(this.namespaceSession, id))); }, this._legacySessionCallback); }
     setSession(id, expireS, obj, callback) { return this._call(callback, async () => { this._assertReady(); const ttlMs = expiration(expireS); if (ttlMs === null) throw fail('EOS_PG_STATES_INVALID_EXPIRY'); await this.store.set(this._qualified(this.namespaceSession, id), json(obj), { ttlMs }); }); }
     destroySession(id, callback) { return this._call(callback, async () => { this._assertReady(); await this.store.delete(this._qualified(this.namespaceSession, id)); }); }
     async getProtocolVersion() { this._assertReady(); return (await this.store.get(`${this.metaNamespace}states.protocolVersion`))?.toString('utf8') ?? null; }

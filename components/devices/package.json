@@ -41,5 +41,8 @@
     "verify:release": "node scripts/release-guard.cjs",
     "prepack": "npm run verify:release && npm test && node scripts/package-sanitize.cjs prepare",
     "postpack": "node scripts/package-sanitize.cjs restore"
+  },
+  "overrides": {
+    "follow-redirects": "1.16.1"
   }
 }

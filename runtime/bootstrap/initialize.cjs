@@ -13,6 +13,7 @@ const PROFILE = 'eos-core-only-bootstrap-v1';
 const MARKER = 'system.meta.eosTestBase';
 const BOOTSTRAP_POLICY_VERSION = 1;
 const CORE_CONTROLLER_VERSION = '7.2.2';
+const REVIEWED_CONTROLLER_VERSIONS = Object.freeze(['7.2.2', '7.2.5']);
 const MAX_OBJECTS = 512;
 const silent = Object.fromEntries(['silly', 'debug', 'info', 'warn', 'error'].map(k => [k, () => {}]));
 const fail = code => { throw new Error(code); };
@@ -52,10 +53,10 @@ function readPinnedApp(app) {
     const pkg = load('package.json');
     const lock = load('package-lock.json');
     const controller = load('node_modules/iobroker.js-controller/package.json');
-    if (pkg.dependencies?.['iobroker.js-controller'] !== '7.2.2' || controller.version !== '7.2.2' ||
-        lock.packages?.['node_modules/iobroker.js-controller']?.version !== '7.2.2') fail('CONTROLLER_VERSION_MISMATCH');
+    if (!REVIEWED_CONTROLLER_VERSIONS.includes(controller.version) || pkg.dependencies?.['iobroker.js-controller'] !== controller.version ||
+        lock.packages?.['node_modules/iobroker.js-controller']?.version !== controller.version) fail('CONTROLLER_VERSION_MISMATCH');
     const profile = load('node_modules/iobroker.js-controller/eos-test-profile.json');
-    if (profile.schemaVersion !== 1 || profile.kind !== 'eos-controller-test-profile' || profile.controllerVersion !== CORE_CONTROLLER_VERSION ||
+    if (profile.schemaVersion !== 1 || profile.kind !== 'eos-controller-test-profile' || profile.controllerVersion !== controller.version ||
         !Array.isArray(profile.adapters) || profile.adapters.length > 128) fail('CONTROLLER_PROFILE_REQUIRED');
     const iopkg = load('node_modules/iobroker.js-controller/io-package.json');
     if (!Array.isArray(iopkg.objects) || !iopkg.objects.every(o => typeof o?._id === 'string')) fail('INVALID_CONTROLLER_BASELINE');
@@ -108,11 +109,11 @@ async function initialize({ objects, states, config, defaults, appLockSha256, co
     assertRuntimeConfig(config);
     if (!/^[a-f0-9]{64}$/.test(appLockSha256) || !Array.isArray(defaults)) fail('INVALID_BOOTSTRAP_INPUT');
     const hostname = config.system.hostname;
-    if (controllerVersion !== CORE_CONTROLLER_VERSION) fail('CONTROLLER_VERSION_MISMATCH');
+    if (!REVIEWED_CONTROLLER_VERSIONS.includes(controllerVersion)) fail('CONTROLLER_VERSION_MISMATCH');
     // Data-policy identity survives an additive signed release. The host gate verifies
     // every immutable package byte and same controller before activation. This marker
     // is not a substitute for that release signature and records the initial lock only.
-    const binding = { profile: PROFILE, coreControllerVersion: CORE_CONTROLLER_VERSION, bootstrapPolicyVersion: BOOTSTRAP_POLICY_VERSION,
+    const binding = { profile: PROFILE, coreControllerVersion: controllerVersion, bootstrapPolicyVersion: BOOTSTRAP_POLICY_VERSION,
         runtimeConfigSha256: hash(JSON.stringify(config)) };
     // An enrolled laboratory UI is checked against a separate, fixed policy.
     // Its marker alone cannot admit packages: the signed controller profile and
@@ -167,8 +168,8 @@ async function initialize({ objects, states, config, defaults, appLockSha256, co
     return { status: 'CORE_INITIALIZED', profile: PROFILE, adaptersEnabled: 0, adminLoginEnabled: false };
 }
 
-async function waitController({ objects, states, config, controllerPid, timeoutMs = 30000, pollMs = 200 }) {
-    if (!Number.isSafeInteger(controllerPid) || controllerPid < 2 || !Number.isInteger(timeoutMs) ||
+async function waitController({ objects, states, config, controllerPid, timeoutMs = 30000, pollMs = 200, controllerVersion = CORE_CONTROLLER_VERSION }) {
+    if (!REVIEWED_CONTROLLER_VERSIONS.includes(controllerVersion) || !Number.isSafeInteger(controllerPid) || controllerPid < 2 || !Number.isInteger(timeoutMs) ||
         timeoutMs < 1 || timeoutMs > 30000 || !Number.isInteger(pollMs) || pollMs < 1 || pollMs > 1000) fail('INVALID_READINESS_OPTIONS');
     const prefix = `system.host.${config.system.hostname}`;
     const until = Date.now() + timeoutMs;
@@ -178,8 +179,8 @@ async function waitController({ objects, states, config, controllerPid, timeoutM
         const now = Date.now();
         if (alive?.val === true && alive.ack === true && Number.isFinite(alive.ts) &&
             alive.ts <= now + 1000 && now - alive.ts < 30000 && pid?.val === controllerPid && pid.ack === true &&
-            host?.type === 'host' && host.common?.installedVersion === '7.2.2') {
-            return { status: 'CONTROLLER_READY', profile: PROFILE, controllerVersion: '7.2.2', heartbeatVerified: true, pidVerified: true };
+            host?.type === 'host' && host.common?.installedVersion === controllerVersion) {
+            return { status: 'CONTROLLER_READY', profile: PROFILE, controllerVersion, heartbeatVerified: true, pidVerified: true };
         }
         if (now >= until) break;
         await new Promise(resolve => setTimeout(resolve, Math.min(pollMs, until - now)));
@@ -224,7 +225,7 @@ async function main(argv = process.argv.slice(2)) {
             connect(States, config.states, clients),
         ]);
         let result = await initialize({ objects, states, config, ...pinned, verifyOnly: args.verifyOnly || args.waitController });
-        if (args.waitController) result = await waitController({ objects, states, config, controllerPid: Number(args['--controller-pid']) });
+        if (args.waitController) result = await waitController({ objects, states, config, controllerVersion: pinned.controllerVersion, controllerPid: Number(args['--controller-pid']) });
         process.stdout.write(JSON.stringify(result) + '\n');
         return 0;
     } catch (error) {

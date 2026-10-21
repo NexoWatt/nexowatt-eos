@@ -17,6 +17,10 @@ const fail = code => { throw Object.assign(new Error(code), { code }); };
 // candidate's execution permissions. This does not itself enable instances.
 const MANAGEMENT_TEST = 'management-test';
 const OWN_ADAPTER_TEST = 'own-adapter-test';
+const SECURITY_REFRESH_TEST = 'security-refresh-test';
+const SECURITY_REFRESH_SPECS = Object.freeze(SPECS.map(spec => Object.freeze({ ...spec,
+    version: spec.id === 'js-controller' ? '7.2.5' : spec.version, execute: true })));
+const ownAdapterScope = scope => [OWN_ADAPTER_TEST, SECURITY_REFRESH_TEST].includes(scope);
 function releaseScope(manifest) {
     // Execution expansion belongs only to the new, separately signed test
     // revision. An old bundle never inherits it merely by being rebuilt.
@@ -24,10 +28,11 @@ function releaseScope(manifest) {
     if (manifest.product !== 'nexowatt-eos' || manifest.releaseVersion !== '0.2.0-test.3' ||
         manifest.profile !== 'test' || manifest.nodeVersion !== '24.21.0' ||
         !Array.isArray(manifest.platforms) || manifest.platforms.length !== 1 || manifest.platforms[0] !== 'linux-arm64') fail('PRODUCT_RELEASE_SCOPE');
-    return OWN_ADAPTER_TEST;
+    return manifest.sequence >= 15 ? SECURITY_REFRESH_TEST : OWN_ADAPTER_TEST;
 }
 function specsFor(scope = MANAGEMENT_TEST) {
     if (scope === MANAGEMENT_TEST) return SPECS;
+    if (scope === SECURITY_REFRESH_TEST) return SECURITY_REFRESH_SPECS;
     if (scope !== OWN_ADAPTER_TEST) fail('PRODUCT_TEST_SCOPE');
     return Object.freeze(SPECS.map(spec => Object.freeze({ ...spec, execute: true })));
 }
@@ -42,7 +47,7 @@ function inspectPackage(directory, spec, scope = MANAGEMENT_TEST) {
     return { id: spec.id, package: spec.package, version: spec.version, installed: true,
         configured: false, active: false, physicalControlEnabled: false,
         executionAdmitted: spec.execute, acceptance: spec.execute ?
-            (scope === OWN_ADAPTER_TEST ? 'own-adapter-test-only' : 'management-test-only') : 'hardware-and-security-acceptance-open' };
+            (ownAdapterScope(scope) ? 'own-adapter-test-only' : 'management-test-only') : 'hardware-and-security-acceptance-open' };
 }
 function inspectSources(repo, scope = MANAGEMENT_TEST) {
     return specsFor(scope).filter(spec => spec.source).map(spec => ({ ...inspectPackage(path.join(repo, 'components', spec.source), spec, scope), sourcePresent: true, installed: false }));
@@ -69,4 +74,4 @@ function assertCatalog(catalog, scope = MANAGEMENT_TEST) {
     return catalog;
 }
 const admittedAdapters = (scope = MANAGEMENT_TEST) => specsFor(scope).filter(spec => spec.kind === 'adapter' && spec.execute).map(({ package: name, version, main }) => ({ package: name, version, main }));
-module.exports = { PROFILE, SPECS, MANAGEMENT_TEST, OWN_ADAPTER_TEST, releaseScope, specsFor, inspectSources, inspectApp, assertCatalog, admittedAdapters };
+module.exports = { PROFILE, SPECS, MANAGEMENT_TEST, OWN_ADAPTER_TEST, SECURITY_REFRESH_TEST, SECURITY_REFRESH_SPECS, ownAdapterScope, releaseScope, specsFor, inspectSources, inspectApp, assertCatalog, admittedAdapters };

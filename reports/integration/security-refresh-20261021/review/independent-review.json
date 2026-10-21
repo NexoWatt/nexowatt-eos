@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-security-refresh-independent-integration-review",
+  "date": "2026-10-21",
+  "baseCommit": "83f7070c9ec58184188b5f310d0c14140a10e9d4",
+  "findingReferences": [
+    "EOS-UPSTREAM-20261021-01",
+    "EOS-UPSTREAM-20261021-02",
+    "EOS-UPSTREAM-20261021-03",
+    "EOS-OCPP-LOCK-AUDIT-20261007"
+  ],
+  "reviewStatus": "no-additional-blocking-source-finding-in-reviewed-scope",
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "7db723cb95dcc8168631ee2c463f2cb19d66b06a494db210b32797321ead8fbc"
+    },
+    {
+      "path": "components/admin/src/lib/eosApplianceProfile.js",
+      "sha256": "32e830fe215aa4ac442f49d550405c3c7f592b8a270b3170e5e1db88ca810478"
+    },
+    {
+      "path": "components/admin/src/lib/web.ts",
+      "sha256": "212c24033c5f1bb2807dc1c40b96589a3148546b49919d279ed32be14f3cf401"
+    },
+    {
+      "path": "components/admin/src/main.ts",
+      "sha256": "6d09904c170e25eee3a3863cb52c54fd0703b0cd3c4eaf607c67c1add57780ad"
+    },
+    {
+      "path": "components/admin/test/eos-upstream-socket-security.integration.cjs",
+      "sha256": "74f39bcc8d973fadb0f25a4f423679f09c93da679666ba1f147908994bcc3b65"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "3b50967b9ac52fc59957ebdda446ac5d89fec9db9cef98990312516c8a544bef"
+    },
+    {
+      "path": "runtime/bootstrap/initialize.cjs",
+      "sha256": "8b6680bab68721905c96da46c94dad27803e5ef2e99c3814601e54d73c39c502"
+    },
+    {
+      "path": "runtime/bootstrap/own-adapter-enrollment.cjs",
+      "sha256": "62bb185e00b1b82de200392870b9753bfc4fa42b2e570862fa000db5efd6f872"
+    },
+    {
+      "path": "runtime/controller-profile/profile-validation.cjs",
+      "sha256": "3275cfe668772faa0e74352fde5300313f5b0f016f54e02f3c8e5a5fce1734ff"
+    },
+    {
+      "path": "runtime/controller-profile/transform.cjs",
+      "sha256": "a52bcd79ade7fa3878c87af2ed60a458e12ffdda0d31d489da376b572574bfbe"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/adapter-shutdown.cjs",
+      "sha256": "192a00670b52d0855f865802c322129fea64a8e00af4f3ea4587d05e309bcd98"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/backup-state.cjs",
+      "sha256": "b5209fbfd7d6d92097ab6d0dd9da5360c4a241d50b27f9271821ea4379927413"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/guard.cjs",
+      "sha256": "f24282561903702f124700322a475102309a2a71cff7258f29dbac19850edab8"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/pid-state.cjs",
+      "sha256": "94f07e5c29ebdbcec0eabe03c15a55ab5528ac1bdba8188df0762c6cbb4925af"
+    },
+    {
+      "path": "runtime/controller-profile/v7.2.5/transform.cjs",
+      "sha256": "5e49ba9b66f7afe0c54ec732c25acbf2863ae010e780034bdd3813eb41ffa1cf"
+    },
+    {
+      "path": "runtime/controller-profile/websocket-bound.cjs",
+      "sha256": "8e7d243f4b95bc35a592f05d98057d5bd2a36094b120670a5f6925d8d54648f4"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/auth.cjs",
+      "sha256": "dcfdeb710b78fca4dae8bca3480a0b4092a606694a5cc94c13e6bc37926def63"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/facade.cjs",
+      "sha256": "c5af1ed63dc25d0f2d3655c1ecfbdb7a98ab9418330c79689dac0ba84a2aa26a"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/index.cjs",
+      "sha256": "65e55c87b9ee0c02deeda9e356e8d1e57cfa19d1df4e92921c73024e8d8eb76b"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/views.cjs",
+      "sha256": "53c339eff8692c167c41a71356d74d5b18ccd2de27a871c7705b33e572919881"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "b18635b96443da473ed21a10f99e7d5af00807e4b45ca95a5b15a14bef1fecc5"
+    },
+    {
+      "path": "runtime/release/fresh-sbom-binding.cjs",
+      "sha256": "472d508a6d2a6e732359f8dc43f73d0331e3ef4614b7decaf7db71bc665863cc"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "17d40235494113861815a9caf71976d41af4c94228b877df2421a43e060dfcc8"
+    },
+    {
+      "path": "runtime/transport/certificate-lifecycle.cjs",
+      "sha256": "ac9617a320a24764d8af0717c746bcdfbc6b3bc3a9c93ad4000ae817b1344ac2"
+    },
+    {
+      "path": "tests/bootstrap/managed-bootstrap.test.cjs",
+      "sha256": "06184d9e4b52dcb261ec772ca10b96f99cf57c82efdff9522fb16fd531b7acd4"
+    },
+    {
+      "path": "tests/integration-own-adapters/management.integration.cjs",
+      "sha256": "c183891b094cc96c3c5ebc11fd2abd3273f82c034542d23eeda8892947547dcf"
+    },
+    {
+      "path": "tests/integration-own-adapters/prepare-security-refresh.cjs",
+      "sha256": "eaef49df7ea82a9359757d50bf8280aa8f78e8ff62749ab0831a9e06f7d3f5bd"
+    },
+    {
+      "path": "tests/integration/controller725-managed-fresh-enrollment.test.cjs",
+      "sha256": "71332b8c2e92e3b3269805fe7bd8b6fd8496407df8d6706176e21af9a064a74a"
+    },
+    {
+      "path": "tests/integration/prepared-runtime-archive.test.py",
+      "sha256": "564abcf3b470cb7be3338b46eb8c2af2dc6c0b6c9a234d0f1665915f1054f289"
+    },
+    {
+      "path": "tests/integration/security-refresh-build.test.cjs",
+      "sha256": "edd7ff26d726f866b568653c6ad03d41c08248b80a50cf0a35de85880e2c224c"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects-guard.cjs",
+      "sha256": "9f4395664bed341a90cb1eb02e88dd003fcfb113a16bdbe158247b94a69a10c3"
+    },
+    {
+      "path": "tests/postgresql/controller725-objects.test.cjs",
+      "sha256": "39bca5d34385a3f55b538e765036b37f38ced2fb0c4fbe07d2d871245da14bbf"
+    },
+    {
+      "path": "tests/postgresql/objects.test.cjs",
+      "sha256": "54b72d216e6e35be8a5ab37b35875858d662d583ae6f651155cd912ecc305397"
+    },
+    {
+      "path": "tests/system/controller725-combined.test.cjs",
+      "sha256": "bb5957185f28e80a2ad4bec5cee5517c03fbdfd1bdbc9367191ad8f261b82f32"
+    },
+    {
+      "path": "tests/system/controller725-dependency-policy.test.cjs",
+      "sha256": "e605828b1b72a36776883272c26abccbff9bbf378d377f7854d3f18e56fdbf90"
+    },
+    {
+      "path": "tests/system/controller725-messages.test.cjs",
+      "sha256": "074d58c2a72e2e363af05c8a09e94d8e13e6a60ce4219033481dbf53dabeacbf"
+    },
+    {
+      "path": "tests/system/update-managed-release.test.cjs",
+      "sha256": "ecd7a1832d82a4f41e85f0a71195d3e7e7546eb3f5f80212632821a1e1491362"
+    },
+    {
+      "path": "tests/system/websocket-bound.test.cjs",
+      "sha256": "7fde9bf2690ed05d57533e7badbc9c84e0198dad021527318ddaeeae9e8a1336"
+    },
+    {
+      "path": "tools/bootstrap/build-kit.py",
+      "sha256": "355ea3fbaa09d723d60ffa4b9e77aadcb57880143b4790e8285613cad87beffa"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-download.cjs",
+      "sha256": "b1c0bc93e62bf6880a6b13e3e8a34b43089a82769cfda7873c0a4e0986434894"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-test.cjs",
+      "sha256": "fa1729c5cf961f1081bbe13822db4140c0bcec9dac2748c7ba97839dc8645c7d"
+    },
+    {
+      "path": "tools/bootstrap/first-start-managed.cjs",
+      "sha256": "63cec14af7096fcc1e6b366637147e75ec89bbc31388dc2edc9e1293061b8e83"
+    },
+    {
+      "path": "tools/bootstrap/first-start.cjs",
+      "sha256": "c9c8f317404fc4402632cb9000bcfc9d960db1544fba30e268d76bc6ffa15d6b"
+    },
+    {
+      "path": "tools/bootstrap/prepare-managed-host.py",
+      "sha256": "cf0f1a00e1f2e19ca0339b86ed084d33a495a643802c587e3026b5ea82d1c838"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "sha256": "3f38a0bc84ac67d75c259133c2cc5beeee50d07ced4b0c88580175089029ad05"
+    },
+    {
+      "path": "tools/integration/pack-prepared-runtime.cjs",
+      "sha256": "d5317709aa3683128a8cd64127e578682441a8670e71d12147e5462fcc394cb9"
+    },
+    {
+      "path": "tools/integration/prepare-security-refresh.cjs",
+      "sha256": "e4ed2ac28d4eb41c3b627a2017292aa3c7d16179b9479655942580def99b8b62"
+    },
+    {
+      "path": "tools/integration/prepared-runtime-archive.py",
+      "sha256": "ad8c28a1a257a33da858d05901c849d93c0fe3987c9bb5b8099d6e54c5e2b8b1"
+    },
+    {
+      "path": "tools/integration/runtime-dependency-policy.cjs",
+      "sha256": "28626f42fa4502245ff45ee5814dee270027c1ca1ad7de9ba2a13bde16ecacdb"
+    },
+    {
+      "path": "tools/integration/stage-security-refresh-cache.cjs",
+      "sha256": "e645a7e0a6339cbd7190a3ba8dfc7910cf3b3319d9671a0e67854c90216522e5"
+    },
+    {
+      "path": "tools/integration/verify-security-refresh-native.cjs",
+      "sha256": "46ccd9ac757cafb193630e7f5fa322f846a58e566ec9bcc99351ab8c274d598c"
+    },
+    {
+      "path": "tools/system/activate-release.cjs",
+      "sha256": "7b2df41ca44ece664662f7c5d3ae454a9f20dac028517570762571dadf5383b6"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "a0d2a69d42cab5842e860444a4e6cd00aac9fab4b4c73d65af90989980ef9144"
+    },
+    {
+      "path": "tools/system/install-managed-from-checkout.cjs",
+      "sha256": "12b98809ceaf9ac0e6401a9561651d6d090ea2858eca6a38583b77ca15454bc0"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "sha256": "bd66d3d60f17c861b367b81e173776caaa7e5ef8790df298bc46d7ac8b755913"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "a2f80406c1c1d13470e57bee268072e762655f59043fa8ec9652d7d971e1bc6e"
+    },
+    {
+      "path": "tools/system/update-managed-release.cjs",
+      "sha256": "c0ef84a6a6431ca7d36c1246e179b3400cc6d4b52e0be5bc484e4ef2643a43f9"
+    }
+  ],
+  "environment": {
+    "node": "24.19.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "testRuns": [
+    {
+      "scope": "selected-controller-product-build-contracts",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/update-managed-release.test.cjs",
+        "tests/system/websocket-bound.test.cjs",
+        "tests/integration/controller725-managed-fresh-enrollment.test.cjs",
+        "tests/integration/security-refresh-build.test.cjs",
+        "tests/system/controller725-combined.test.cjs",
+        "tests/system/controller725-messages.test.cjs",
+        "tests/system/controller725-dependency-policy.test.cjs"
+      ],
+      "result": {
+        "exitCode": 0,
+        "tests": 50,
+        "passed": 50,
+        "failed": 0
+      },
+      "output": "independent-contract-tests.tap"
+    },
+    {
+      "scope": "actual-published-objects725-domain-with-fake-store",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/postgresql/controller725-objects.test.cjs"
+      ],
+      "environmentRequirement": "EOS_CONTROLLER725_APP identifies the separately staged public Objects 7.2.5 dependency tree; NODE_PATH points to that tree/node_modules. The wrapper verifies actual source backend resolution through four canonical 7.2.5 package directories before loading the unchanged 25-test suite.",
+      "result": {
+        "exitCode": 0,
+        "tests": 25,
+        "passed": 25,
+        "failed": 0
+      },
+      "output": "objects725-contract-tests.tap"
+    },
+    {
+      "scope": "unsigned-archive-contract",
+      "command": [
+        "python3",
+        "-B",
+        "tests/integration/prepared-runtime-archive.test.py"
+      ],
+      "result": {
+        "exitCode": 0,
+        "tests": 3,
+        "passed": 3,
+        "failed": 0
+      },
+      "output": "prepared-archive-tests.txt"
+    },
+    {
+      "scope": "managed-first-install-kit-and-entry-contracts",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/bootstrap/managed-bootstrap.test.cjs"
+      ],
+      "result": {
+        "exitCode": 0,
+        "tests": 8,
+        "passed": 8,
+        "failed": 0
+      },
+      "output": "managed-bootstrap-contract-tests.tap",
+      "actualZipAndEntryModuleLoad": true,
+      "aptOrHostInstallationExecuted": false
+    }
+  ],
+  "actualObjectsDependencies": [
+    {
+      "name": "@iobroker/db-objects-redis",
+      "version": "7.2.5",
+      "source": "https://registry.npmjs.org/@iobroker/db-objects-redis/-/db-objects-redis-7.2.5.tgz",
+      "integrity": "sha512-j9UuK8IAiyAKkjfAsG4EIcv/TzzGBMed/5XNaa3dg7cgZEZuwYKXt99BwOq95zXpFyilIfmsVCFVboKkr/ru8A==",
+      "manifestSha256": "550b2ec7ad7fa24ab44188a906a5ef01aa69f85076ef6e97949ccfb3b0e9e40b",
+      "observedCodeFiles": [
+        {
+          "path": "build/cjs/index.js",
+          "sha256": "2436defd519eb6e1bd62c256db4ed5e2a8886a67d201afcb0761235e0147d118"
+        },
+        {
+          "path": "build/cjs/lib/objects/constants.js",
+          "sha256": "6a3f36b4e87704753b047fe4a9df71bfe98dd33e85c9b3b62b0d749febe60015"
+        },
+        {
+          "path": "build/cjs/lib/objects/interview.js",
+          "sha256": "33bb8a8cba4d94c53c6207f569efc282dbcd760b3219bc96efc25a1787208640"
+        },
+        {
+          "path": "build/cjs/lib/objects/objectsInRedisClient.js",
+          "sha256": "9d05a86e757fa85401a702a78dce9cc8c4240a3b86306b40ed867db130cc6630"
+        },
+        {
+          "path": "build/cjs/lib/objects/objectsUtils.js",
+          "sha256": "2009b23e15840e98242cc75c1cf6b4f8159dbc2c367aae7b066816bc744bbf06"
+        }
+      ]
+    },
+    {
+      "name": "@iobroker/db-base",
+      "version": "7.2.5",
+      "source": "https://registry.npmjs.org/@iobroker/db-base/-/db-base-7.2.5.tgz",
+      "integrity": "sha512-eILLlOgYX0jLjF9oETDw5KMYhF8kluE3qz6RjjCCUqIImbKbnkGLPiDYEtcaRdgyKIQkNHowyp721LJIo13MEQ==",
+      "manifestSha256": "8bb71664b8aee5e6f59400be97aae84a2425b265447ef764489dd06fa015aaf5",
+      "observedCodeFiles": [
+        {
+          "path": "build/cjs/index.js",
+          "sha256": "c42af4851295af35f69318cfd0990569944a27639698f2ca14b4397efe5fd30d"
+        },
+        {
+          "path": "build/cjs/lib/constants.js",
+          "sha256": "bcf3c2522fbb3a8d4110fba7662db11871781a80b70ef53f73d476029460e1a7"
+        },
+        {
+          "path": "build/cjs/lib/inMemFileDB.js",
+          "sha256": "64fae313bafb41cd6a36967363fb504d7ce0318a14677737d897dbe1d0173a6b"
+        },
+        {
+          "path": "build/cjs/lib/redisHandler.js",
+          "sha256": "d24fc872a79bcaea0ee7dc5bcdebfd2959bfa26f5841ff60dc920cae750c4091"
+        }
+      ]
+    },
+    {
+      "name": "@iobroker/js-controller-common-db",
+      "version": "7.2.5",
+      "source": "https://registry.npmjs.org/@iobroker/js-controller-common-db/-/js-controller-common-db-7.2.5.tgz",
+      "integrity": "sha512-9Al/E3W8yA/2SjDCoSA62uMVgSXcrWd9N5vhag/ND8k8V/e2d9GJVktAuKOFFj05CY29hBjprW9MaflsLwakzA==",
+      "manifestSha256": "d757521a87d77ac78dae0ba86e3f1738dac7b722c6f4bf2f2089787cb16113f6",
+      "observedCodeFiles": [
+        {
+          "path": "build/cjs/index.js",
+          "sha256": "887e0eee491af8ddd4b9eb9ef20af2efeb406f737aa6249c9152753618488e84"
+        },
+        {
+          "path": "build/cjs/lib/common/aliasProcessing.js",
+          "sha256": "3d7c35ce32ba219bb6f8807fe8b624933cb448303006e5803f75807f35c074a6"
+        },
+        {
+          "path": "build/cjs/lib/common/constants.js",
+          "sha256": "e0ce53afe068f63752094df4d98e0414794c813c7458e62287d1a601478069b2"
+        },
+        {
+          "path": "build/cjs/lib/common/exitCodes.js",
+          "sha256": "c9fc3222fb41b4af4eb7e24a4830a8bd683468b93f7fc4d99dc920d8d734f3e4"
+        },
+        {
+          "path": "build/cjs/lib/common/interview.js",
+          "sha256": "43cdea09fb15677f4371d48387a9ef2e222a0009af575fa936e8fe2fd922a44f"
+        },
+        {
+          "path": "build/cjs/lib/common/logger.js",
+          "sha256": "33a2e77a5b141af7b837d378fe7699f9ebdd3b6b9983df231645893cb7f1fcab"
+        },
+        {
+          "path": "build/cjs/lib/common/maybeCallback.js",
+          "sha256": "40734d3c405ba1e7316c89ba6f2802517cd73f9503c22fa84f5f785ff2627c17"
+        },
+        {
+          "path": "build/cjs/lib/common/password.js",
+          "sha256": "3087cc618ece7d8ea3443e177bebbb1865d742c0ffd7f3eeab6e39ae407dfe1b"
+        },
+        {
+          "path": "build/cjs/lib/common/session.js",
+          "sha256": "a1b4e4d5f0646f01f563ef171649e98f4b9f0cba0ed24a74ed13042d7bc7e1ac"
+        },
+        {
+          "path": "build/cjs/lib/common/tools.js",
+          "sha256": "471884540adde741e539be9dd8f6decddca9971685d359ccab487a1476d0e727"
+        }
+      ]
+    },
+    {
+      "name": "readline-sync",
+      "version": "1.4.10",
+      "source": "https://registry.npmjs.org/readline-sync/-/readline-sync-1.4.10.tgz",
+      "integrity": "sha512-gNva8/6UAe8QYepIQH/jQ2qn91Qj0B9sYjMBBs3QOB8F2CXcKgLxQaJRP76sWVRQt+QU+8fAkCbCvjjMFu7Ycw==",
+      "manifestSha256": "e7ae040740213d68016c61fd504cb34413d63d7a5fd21b3d95fbcf1b9bfdfdb1",
+      "observedCodeFiles": []
+    }
+  ],
+  "controllerDiscoveryInput": {
+    "publishedInputsReference": "../controller/published-inputs.json",
+    "package": "iobroker.js-controller",
+    "version": "7.2.5",
+    "controllerProcessStarted": false
+  },
+  "outputs": [
+    {
+      "path": "reports/integration/security-refresh-20261021/review/independent-contract-tests.tap",
+      "sha256": "26af972b538a3b904f2dff09ef87cada13553c9170be9924e0ede641d78761b2"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/objects725-contract-tests.tap",
+      "sha256": "b8d3ecadcb72c4b9402a22c6c948773210e134fb6b107ceee22296ecf0ca7888"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/prepared-archive-tests.txt",
+      "sha256": "0e32cf5bb96fa1036cae2e27776843246962a6c3d05aa93be58a951c1c934bc2"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/review/managed-bootstrap-contract-tests.tap",
+      "sha256": "2d9105bcc4d9280c7e73653cf02383f5ba7988d222a22cafb1e407250fe54037"
+    }
+  ],
+  "independence": {
+    "postgresqlSessionChangeAuthoredByReviewer": true,
+    "postgresqlSessionChangeCountedAsIndependent": false,
+    "separateSessionReview": "postgresql-session-verification.json"
+  },
+  "scope": {
+    "sourceReview": true,
+    "actualPublishedControllerMethods": true,
+    "actualPublishedObjectsDomain": true,
+    "fakeStore": true,
+    "fullFreshRuntimeAssembly": false,
+    "nativePostgresqlQualification": false,
+    "browserTestsRunByThisReviewer": false,
+    "raspberryPi": false,
+    "privateSigningKeyProvisioned": false,
+    "productionApproved": false,
+    "firstInstallKitReviewed": true,
+    "realInstallerKitPrivacyTest": true,
+    "aptTransactionsExecuted": false
+  },
+  "remainingGates": [
+    "clean-Node24.21-npm11.19-fresh-assembly",
+    "exact-source-and-app-native-PostgreSQL-qualification",
+    "actual-runtime-production-audit-and-open-finding-assessment",
+    "Pi-ARM64-systemd-and-device-acceptance",
+    "persistent-manufacturer-signing-authority-and-delivery-readback"
+  ]
+}

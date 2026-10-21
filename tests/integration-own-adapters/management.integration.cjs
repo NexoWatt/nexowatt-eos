@@ -74,14 +74,15 @@ async function observation(probe, ca) {
 
 test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, central NWL3 license and immutable EOS admission', { timeout: 830000 }, async t => {
     assert.equal(process.version, 'v24.21.0');
-    const children = [], clients = [], evidence = { schemaVersion: 1, kind: 'eos-own-adapters-native-management', sourceReleaseId: fixture.previousReleaseId,
-        sourceSequence: 12, targetSequence: 13, sourceCommit: fixture.sourceCommit, fixtureReleaseId: fixture.releaseId,
-        appContentSha256: fixture.appContentSha256, nodeVersion: process.versions.node, sequence: 13, licenseFormat: 'NWL3', passed: false,
+    const children = [], clients = [], evidence = { schemaVersion: 1, kind: fixture.kind === 'unsigned-security-refresh-native-fixed-fixture' ? 'eos-security-refresh-native-management' : 'eos-own-adapters-native-management', sourceReleaseId: fixture.previousReleaseId,
+        sourceSequence: fixture.sourceSequence ?? 12, targetSequence: fixture.sequence, sourceCommit: fixture.sourceCommit, fixtureReleaseId: fixture.releaseId,
+        appContentSha256: fixture.appContentSha256, nodeVersion: process.versions.node, sequence: fixture.sequence, runtimeBuildSha256: fixture.runtimeBuildSha256, licenseFormat: 'NWL3', passed: false,
         signed: false, unsignedFixture: true, hardwareTested: false, checks: {}, candidateSigned: false, fixedRootOwnedEosPaths: true, nativePostgresql: '17.11', node: process.version, hostArch: process.arch, signedPayloadPlatform: 'linux-arm64',
         candidateAppBytesUnchanged: false, lifecycleScriptsExecuted: false, nativeModulesRebuilt: false, mockedRuntimeDependencies: false,
         ownDeviceAdapterProcessesStarted: false, physicalHardwareConnected: false, physicalCommandsSent: false, actualSystemdMountPolicy: false, physicalPiAcceptance: false, productionReleaseApproved: false,
         managementReadinessPassed: false, restartPassed: false, boots: [], stages: [], bootstrapSteps: [], finalSteps: [] };
-    let active, servicePassword, licenseUuid, activeLog, activeBoot, runtimeDiagnostics, licenseSession, migrationPlan;
+    const freshRuntime = fixture.kind === 'unsigned-security-refresh-native-fixed-fixture';
+    let active, servicePassword, licenseUuid, activeLog, activeBoot, runtimeDiagnostics, licenseSession, migrationPlan, freshMarker;
     let expectedEdition = null;
     function checkRuntime(phase) {
         if (!activeLog || !activeBoot) return;
@@ -200,7 +201,7 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         await observer.subscribeMessage('system.adapter.' + spec.name + '.0');
     const pinned = bootstrap.readPinnedApp(fixture.baselineApp);
     const verifyFresh = () => bootstrap.initialize({ objects, states, config, ...pinned, verifyOnly: true });
-    await stage('production first-run bootstrap creates historical two-adapter migration baseline', async () => {
+    await stage(freshRuntime ? 'production first-run bootstrap creates fresh management enrollment' : 'production first-run bootstrap creates historical two-adapter migration baseline', async () => {
         await bootstrapStep('fresh-instance-count', async () => {
             const rows = (await objects.getObjectViewAsync('system', 'instance', {})).rows;
             evidence.initialInstanceCount = Array.isArray(rows) && rows.length <= 10000 ? rows.length : null;
@@ -220,7 +221,7 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         licenseSession = await require('../integration-r9/license-session.cjs').createSession({ core, uuid, issuer, ca: fs.readFileSync('/etc/nexowatt-eos/web/ca.crt'), password: servicePassword });
         // No initial license is written: activation must traverse the real authenticated HTTP API.
     });
-    await stage('historical management bootstrap migrates to six own adapters and asset-only upload preserves enrollment', async () => {
+    await stage(freshRuntime ? 'fresh enrollment admits six own adapters and asset-only upload preserves enrollment' : 'historical management bootstrap migrates to six own adapters and asset-only upload preserves enrollment', async () => {
         // Historical fresh-baseline uploads happen before any migration plan.
         // The live six-adapter path must never call upload NAME: that CLI also
         // rewrites instance metadata and would invalidate exact rollback.
@@ -230,20 +231,36 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
             doc.common.enabled = true; await objects.setObjectAsync(id, doc);
         }
         await enrollment.verify({ objects, config, app: fixture.baselineApp });
-        const sourceReleaseId = fixture.previousReleaseId, targetReleaseId = fixture.releaseId;
-        const input = { objects, states, config, sourceApp: fixture.baselineApp, targetApp: app, sourceReleaseId, targetReleaseId };
-        let plan = await ownEnrollment.planMigration(input);
         const checkpoint = async value => {
             const file = path.join(root, 'own-enrollment-private-journal.json');
             const fd = fs.openSync(file, 'w', 0o600);
             try { fs.writeFileSync(fd, JSON.stringify(value)); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
         };
-        await ownEnrollment.applyMigration({ ...input, plan, checkpoint });
-        await ownEnrollment.rollbackMigration({ ...input, plan });
-        await enrollment.verify({ objects, config, app: fixture.baselineApp });
-        plan = await ownEnrollment.planMigration(input);
-        await ownEnrollment.applyMigration({ ...input, plan, checkpoint });
-        migrationPlan = plan;
+        if (freshRuntime) {
+            const ids = [enrollment.MARKER, ownEnrollment.MARKER, ...ownEnrollment.SPECS.map(spec => `system.adapter.${spec.name}.0`)];
+            const snapshot = await Promise.all(ids.map(id => objects.getObjectAsync(id)));
+            await assert.rejects(ownEnrollment.enrollFresh({ objects, states, config, app, releaseId: fixture.releaseId,
+                checkpoint: async () => { throw new Error('FRESH_NATIVE_CHECKPOINT_REJECTED'); } }), /FRESH_NATIVE_CHECKPOINT_REJECTED/);
+            assert.deepEqual(await Promise.all(ids.map(id => objects.getObjectAsync(id))), snapshot);
+            await enrollment.verify({ objects, config, app });
+            evidence.checks.freshEnrollmentPrewriteFailureIsAtomic = true;
+            await ownEnrollment.enrollFresh({ objects, states, config, app, releaseId: fixture.releaseId, checkpoint });
+            freshMarker = await objects.getObjectAsync(ownEnrollment.MARKER);
+            assert.equal(freshMarker.native.schemaVersion, 2);
+            assert.equal(freshMarker.native.sourceReleaseId, fixture.releaseId);
+            assert.equal(freshMarker.native.targetReleaseId, fixture.releaseId);
+        } else {
+            const sourceReleaseId = fixture.previousReleaseId, targetReleaseId = fixture.releaseId;
+            const input = { objects, states, config, sourceApp: fixture.baselineApp, targetApp: app, sourceReleaseId, targetReleaseId };
+            let plan = await ownEnrollment.planMigration(input);
+            await ownEnrollment.applyMigration({ ...input, plan, checkpoint });
+            await ownEnrollment.rollbackMigration({ ...input, plan });
+            await enrollment.verify({ objects, config, app: fixture.baselineApp });
+            plan = await ownEnrollment.planMigration(input);
+            await ownEnrollment.applyMigration({ ...input, plan, checkpoint });
+            migrationPlan = plan;
+            evidence.checks.nativeEnrollmentAndPrestartRollback = true;
+        }
         const uploaded = await require('../../runtime/bootstrap/upload-own-assets.cjs').uploadAssets({ objects, states, config, app });
         assert.equal(uploaded.ok, true); assert.equal(uploaded.code, 'OWN_ASSETS_VERIFIED'); assert.equal(uploaded.adapters, 6);
         assert.equal(uploaded.instancesAndMarkersUnchanged, true); assert.equal(uploaded.unrelatedFilesPreserved, true);
@@ -252,7 +269,6 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
             instancesAndMarkersUnchanged: true, unrelatedFilesPreserved: true };
         evidence.checks.assetOnlyUploadPreservesEnrollment = true;
         await ownEnrollment.verify({ objects, config, app });
-        evidence.checks.nativeEnrollmentAndPrestartRollback = true;
     });
     const ca = fs.readFileSync('/etc/nexowatt-eos/web/ca.crt');
     const normalStop = appRequire('@iobroker/js-controller-common').EXIT_CODES.JS_CONTROLLER_STOPPED;
@@ -264,7 +280,7 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         activeLog = new (require('../integration-management/runtime-log.cjs').RuntimeLog)(runtimeLogDirectory, text => runtimeDiagnostics.observe(text));
         active = launch([path.join(controller, 'controller.js')], options); children.push(active);
         active.evidenceScope = 'controller';
-        await bootstrap.waitController({ objects, states, config, controllerPid: active.pid, timeoutMs: 30000, pollMs: 100 });
+        await bootstrap.waitController({ objects, states, config, controllerVersion: pinned.controllerVersion, controllerPid: active.pid, timeoutMs: 30000, pollMs: 100 });
         row.coreReadyMs = Date.now() - startedAt;
         row.stage = 'adapters';
         await currentReadiness.waitAdapters(states, startedAt);
@@ -456,19 +472,26 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
             nativeDatabaseExport: true, archiveContentsRead: true, inspections, restorePerformed: false, completeSystemBackup: false };
         checkRuntime('backup-inspected');
     });
-    await stage('actual six-adapter stop, exact migration rollback and reapplication retain restart readiness', async () => {
+    await stage(freshRuntime ? 'actual six-adapter stop retains fresh enrollment and restart readiness' : 'actual six-adapter stop, exact migration rollback and reapplication retain restart readiness', async () => {
         const previous = active.pid; checkRuntime('rollback-before-stop'); await stop(active); checkRuntime('rollback-after-stop'); assert.equal(active.exitCode, normalStop);
-        const input = { objects, states, config, sourceApp: fixture.baselineApp, targetApp: app,
-            sourceReleaseId: fixture.previousReleaseId, targetReleaseId: fixture.releaseId };
-        await ownEnrollment.rollbackMigration({ ...input, plan: migrationPlan });
-        await enrollment.verify({ objects, config, app: fixture.baselineApp });
-        migrationPlan = await ownEnrollment.planMigration(input);
-        await ownEnrollment.applyMigration({ ...input, plan: migrationPlan, checkpoint: async value => {
-            const fd = fs.openSync(path.join(root, 'own-enrollment-poststart-private-journal.json'), 'wx', 0o600);
-            try { fs.writeFileSync(fd, JSON.stringify(value)); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
-        } });
-        await require('../../runtime/bootstrap/upload-own-assets.cjs').uploadAssets({ objects, states, config, app });
-        evidence.checks.nativePoststartEnrollmentRollback = true;
+        if (freshRuntime) {
+            assert.deepEqual(await objects.getObjectAsync(ownEnrollment.MARKER), freshMarker);
+            await ownEnrollment.verify({ objects, config, app });
+            await enrollment.verify({ objects, config, app });
+            evidence.checks.freshEnrollmentRetainedAfterRestart = true;
+        } else {
+            const input = { objects, states, config, sourceApp: fixture.baselineApp, targetApp: app,
+                sourceReleaseId: fixture.previousReleaseId, targetReleaseId: fixture.releaseId };
+            await ownEnrollment.rollbackMigration({ ...input, plan: migrationPlan });
+            await enrollment.verify({ objects, config, app: fixture.baselineApp });
+            migrationPlan = await ownEnrollment.planMigration(input);
+            await ownEnrollment.applyMigration({ ...input, plan: migrationPlan, checkpoint: async value => {
+                const fd = fs.openSync(path.join(root, 'own-enrollment-poststart-private-journal.json'), 'wx', 0o600);
+                try { fs.writeFileSync(fd, JSON.stringify(value)); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
+            } });
+            await require('../../runtime/bootstrap/upload-own-assets.cjs').uploadAssets({ objects, states, config, app });
+            evidence.checks.nativePoststartEnrollmentRollback = true;
+        }
         leaseObserver.reset(); const next = await boot(); await waitOwnAdapters(true, 'pro'); assert.notEqual(next, previous); evidence.restartPassed = true; evidence.checks.restart = true;
     });
     await stage('final shutdown leaves exact admitted instance scope and unchanged six-own-adapter application bytes', async () => {
