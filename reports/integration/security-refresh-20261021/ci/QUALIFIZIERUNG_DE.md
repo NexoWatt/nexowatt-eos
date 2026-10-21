@@ -27,8 +27,12 @@ Nachtrag: Der erste CodeQL-Versuch hat seine SARIF-Ergebnisse hochgeladen,
 wurde am 21.10.2026 um 20:45 UTC aber beim anschließenden Verpacken der
 Analysedaten abgebrochen. Der Job gilt als **abgebrochen, nicht bestanden**.
 Ein erneuter Lauf am identischen Quellstand ist erforderlich. Nachfolgende
-Versuche sind am oben verlinkten Lauf zu prüfen; dieser Bericht behauptet
-für einen späteren Versuch kein vorweggenommenes Ergebnis.
+Versuche sind am oben verlinkten Lauf zu prüfen.
+
+Der zweite Versuch am identischen Quellcommit ist inzwischen erfolgreich
+abgeschlossen: Job `119477070784`, Laufversuch 2 vom 21.10.2026. Damit ist
+der CodeQL-Job bestanden. Dies behauptet weder Warnungsfreiheit noch eine
+Schließung der offenen Abhängigkeitsbefunde.
 
 Das erzeugte unsigned-Archiv wurde als Herstellertransport zurückgelesen.
 Hash-, Quell-, SBOM- und native Nachweise sind separat gebunden. Weder dieses

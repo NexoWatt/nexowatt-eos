@@ -64,6 +64,10 @@ Eine dauerhaft gesicherte Ed25519-Autorität muss außerhalb des Repositories
 bereitgestellt werden, beispielsweise in einer geschützten CI-Umgebung oder
 einem geschützten Offline-Signierprozess. Die bisherigen Einmal-Testschlüssel
 sind dafür nicht verfügbar. Private Schlüssel nicht in den Chat kopieren.
+Für den Windows-Rechner ist die
+[verschlüsselte Schlüsselablage unter WSL 2](WINDOWS_SIGNIERRECHNER_DE.md)
+beschrieben. Die dauerhafte Schlüsseldatei wird ausschließlich beim
+Hersteller erzeugt; ihre Bereitstellung ist noch nicht als erfolgt bestätigt.
 
 Die Sicherheitsaktualisierung benötigt eine **vollständig neue Laufzeitbasis**.
 Ein Quellen-Overlay auf R9 kann die geänderten Controller-/Dependency-Versionen

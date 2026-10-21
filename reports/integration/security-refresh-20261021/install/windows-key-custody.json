@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "kind": "windows-wsl-encrypted-manufacturer-key-format-preparation",
+  "date": "2026-10-21",
+  "sourceBaseCommit": "4111dc08d4d7db78b486f21a2971b61be40d7b0e",
+  "qualifiedRuntimeCommit": "a2733fa5561f7327ff3689b7464f8727760fb670",
+  "userReportedWsl": {
+    "distribution": "Ubuntu",
+    "state": "Running",
+    "version": 2
+  },
+  "testEnvironment": {
+    "os": "Linux container",
+    "openssl": "3.0.13",
+    "node": "24.19.0",
+    "windowsExecution": false,
+    "wslExecution": false
+  },
+  "checks": {
+    "documentationBashSyntax": true,
+    "encryptedPkcs8Scrypt": true,
+    "ed25519KeyType": true,
+    "opensslSpkiEqualsNodeCanonicalSpki": true,
+    "signatureVerified": true,
+    "incorrectPassphraseRejected": true,
+    "existingDirectoryRejected": true,
+    "privateFixtureFileMode": "0600",
+    "encryptedFixtureHeaderChecked": true
+  },
+  "testScope": "Disposable format fixture only; not manufacturer provisioning, WSL execution or release signing. Test secrets supplied through a private temporary passphrase file, never command value; wrong-password negative case used a non-secret dummy. Production instructions use terminal prompts.",
+  "testMaterialRetained": false,
+  "manufacturerPrivateKeyGeneratedHere": false,
+  "privateDataPublished": false,
+  "actualManufacturerProvisioningConfirmed": false,
+  "fullWslSigningQualified": false,
+  "protectedBackupConfirmed": false,
+  "temporaryDecryptionWorkflowImplemented": false,
+  "existingSignerAcceptsEncryptedPrivateKeyDirectly": false,
+  "inputBindings": [
+    {
+      "path": "docs/operations/WINDOWS_SIGNIERRECHNER_DE.md",
+      "sha256": "5f432f09c774981b2acc247037b576b8aaccd5f70b55ac20bb127c66e5115116"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-test.cjs",
+      "sha256": "fa1729c5cf961f1081bbe13822db4140c0bcec9dac2748c7ba97839dc8645c7d"
+    },
+    {
+      "path": "tools/bootstrap/sign-managed-channel.cjs",
+      "sha256": "75669a39fc2d37b4a4ee6f6e4e8638f44f038155f3d561fe296a8cb70bcd25d1"
+    },
+    {
+      "path": "tools/integration/create-managed-archive.cjs",
+      "sha256": "d25fdf5e89d90ff95ec7c4ae12719e7794ce2b19160e15c0b12a0e04cb66e77b"
+    }
+  ],
+  "limits": [
+    "WSL2 installation is user-reported; no access to user PC.",
+    "The Linux key format check does not qualify the full Windows/WSL signing workflow.",
+    "Encrypted master must later be decrypted locally into an owner-only temporary key file and cleaned up.",
+    "Private master and passphrase stay outside repository and chat.",
+    "Authentic public NWL3 license trust remains separate and required."
+  ]
+}
