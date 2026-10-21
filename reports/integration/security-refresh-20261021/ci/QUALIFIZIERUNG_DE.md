@@ -23,6 +23,13 @@ werden in `qualified-a2733fa.json` gesondert geführt; ein laufender Scan ist
 kein bestandener Scan und ein erfolgreicher Scan allein kein Nachweis, dass
 keine Warnungen bestehen.
 
+Nachtrag: Der erste CodeQL-Versuch hat seine SARIF-Ergebnisse hochgeladen,
+wurde am 21.10.2026 um 20:45 UTC aber beim anschließenden Verpacken der
+Analysedaten abgebrochen. Der Job gilt als **abgebrochen, nicht bestanden**.
+Ein erneuter Lauf am identischen Quellstand ist erforderlich. Nachfolgende
+Versuche sind am oben verlinkten Lauf zu prüfen; dieser Bericht behauptet
+für einen späteren Versuch kein vorweggenommenes Ergebnis.
+
 Das erzeugte unsigned-Archiv wurde als Herstellertransport zurückgelesen.
 Hash-, Quell-, SBOM- und native Nachweise sind separat gebunden. Weder dieses
 Archiv noch ein grüner Laborlauf ersetzen eine Herstellersignatur.
