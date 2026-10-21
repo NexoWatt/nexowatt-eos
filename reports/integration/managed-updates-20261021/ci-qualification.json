@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed-updates-remote-source-qualification",
+  "checkedAt": "2026-10-21",
+  "sourceCommit": "f3f1ce90642463b0940742b529441ed59375695d",
+  "sourceTree": "e578d98a819ef0a8bd76e9cdfaf349ff8b9458df",
+  "environment": {
+    "os": "Ubuntu 24.04 GitHub-hosted runners",
+    "platform": "linux-x64",
+    "node": "24.21.0",
+    "physicalPi": false
+  },
+  "status": "PASS_WITH_SCOPE_LIMITS",
+  "sourceRuns": [
+    {
+      "runId": 39601408273,
+      "sourceCommit": "f3f1ce90642463b0940742b529441ed59375695d",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39601408273",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 119226560996,
+          "name": "contracts",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226561070,
+          "name": "browser",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "runId": 39601408173,
+      "sourceCommit": "f3f1ce90642463b0940742b529441ed59375695d",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39601408173",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 119226867495,
+          "name": "Native PostgreSQL mTLS Admin and UI startup and restart",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226867567,
+          "name": "Node 24 bootstrap, onboarding and transport contracts",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226867697,
+          "name": "Six own adapters real processes licenses backup and restart",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226867736,
+          "name": "Build, syntax and isolated security regression",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226867869,
+          "name": "Native PostgreSQL 17.11 mTLS controller startup and restart",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226867894,
+          "name": "Architecture contracts and partial source SBOM",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226868053,
+          "name": "Current own-adapter EOS admission and central licensing",
+          "conclusion": "success"
+        },
+        {
+          "id": 119226868215,
+          "name": "Current R9 Admin UI central license native PostgreSQL qualification",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "staticAnalysis": {
+    "runId": 39601408213,
+    "jobId": 119226807371,
+    "sourceCommit": "f3f1ce90642463b0940742b529441ed59375695d",
+    "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39601408213",
+    "status": "completed",
+    "conclusion": "success",
+    "scope": "CodeQL security-and-quality workflow execution; no claim that execution success proves absence of vulnerabilities"
+  },
+  "unchangedNetworkAndWorkflowRuns": [
+    {
+      "runId": 39600616661,
+      "sourceCommit": "38a2fdbbe2de97011e4d4c7c4f9411b309444243",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39600616661",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 119223871544,
+          "name": "Actual Admin network panel browser interaction",
+          "conclusion": "success"
+        },
+        {
+          "id": 119223871923,
+          "name": "Actual isolated DHCP nftables IPv4 IPv6 and timeout behavior",
+          "conclusion": "success"
+        },
+        {
+          "id": 119223872124,
+          "name": "Network policy host transactions and Admin authorization",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "runId": 39600616591,
+      "sourceCommit": "38a2fdbbe2de97011e4d4c7c4f9411b309444243",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39600616591",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 119223870677,
+          "name": "Pinned workflow syntax and expression checks",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "unchangedNetworkEvidenceScope": "Network implementation and network/workflow-validation definitions were unchanged by f3f1ce9; these two workflows ran at the explicitly recorded earlier source commit, not at f3f1ce9.",
+  "managedTestGroups": [
+    {
+      "jobId": 119226560996,
+      "group": "contracts",
+      "passed": 38,
+      "failed": 0,
+      "skipped": 1,
+      "total": 39
+    },
+    {
+      "jobId": 119226560996,
+      "group": "regression",
+      "passed": 44,
+      "failed": 0,
+      "skipped": 0,
+      "total": 44
+    },
+    {
+      "jobId": 119226560996,
+      "group": "root-owned temporary fixtures and actual Unix socket",
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "total": 25
+    },
+    {
+      "jobId": 119226561070,
+      "group": "actual Chromium with explicit HTTP fixtures",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "total": 2
+    }
+  ],
+  "evidenceFiles": [
+    "ci-managed-contracts.txt",
+    "ci-managed-browser.txt"
+  ],
+  "evidenceSanitization": "Only test-result summary lines retained; no raw runner environment, checkout authentication output or absolute runner directories.",
+  "countsAreOverlapping": true,
+  "verifiedBoundaries": [
+    "actual local cryptography and temporary files",
+    "actual Unix-domain socket service exercised in an isolated runner",
+    "actual shipped update UI exercised in Chromium using explicit HTTP response fixtures",
+    "existing native PostgreSQL mTLS/controller/Admin/UI startup and restart qualification",
+    "existing real own-adapter process, licensing, backup and rollback qualification",
+    "isolated Linux network namespace DHCP/nftables checks at the separately recorded source commit"
+  ],
+  "scopeLimits": [
+    "Managed host installation uses command fixtures; this is not a full managed systemd installation or real Pi update.",
+    "Existing native backup/rollback suites do not establish a completed new managed Pi update cycle.",
+    "No new release archive or signed channel was built or published.",
+    "Persistent signing authority is not provisioned.",
+    "Fresh ARM64/systemd installation, two update-button cycles, power-loss recovery, data/license preservation and hardware timing acceptance remain open.",
+    "V1 accepts own-adapter source patches at unchanged versions/dependencies; general host/package migrations and Admin8/React19 remain open.",
+    "Adapter isolation acceptance remains open.",
+    "No certification of all historical repository objects or published archives."
+  ],
+  "releaseCandidateBuilt": false,
+  "persistentSigningAuthorityConfigured": false,
+  "freshPiInstallationTested": false,
+  "actualPiUpdateTested": false,
+  "productionReleaseApproved": false,
+  "publicReportSanitized": true
+}

@@ -1,0 +1,132 @@
+✔ all update routes require current installer/service authority before parsing (4.182608ms)
+✔ same-origin custom header and HTTPS cannot be bypassed with forwarding headers (1.07075ms)
+✔ revoked session between authorization and JSON parsing cannot start update (0.495684ms)
+✔ only fixed operations, release identity and maintenance confirmation reach host (1.323525ms)
+✔ source/build route and client stay identical; current web binds protected update prefix (1.496538ms)
+✔ fresh six-adapter enrollment needs no historical release, preserves accounts and creates unconfigured adapters (168.480364ms)
+✔ fresh enrollment rejects live controller and changed signed profile before writes (2.669644ms)
+✔ interrupted fresh enrollment remains pending and cannot be replayed over partial objects (5.972112ms)
+✔ actual Ed25519 envelope authenticates an eligible update; unrelated and old releases are not offered (8.362821ms)
+✔ altered payload, different key, expired/future envelope, unpinned URL, oversized archive and duplicate release fail closed (4.087163ms)
+✔ check is asynchronous; install uses displayed ID and explicit maintenance confirmation; duplicate clicks cannot start two jobs (49.056804ms)
+✔ restart with unfinished job retains recovery state and discards cached candidate (2.474618ms)
+✔ range transport accepts only exact 206 Content-Range and length, rejects redirect, whole-file fallback and overflow (1.447574ms)
+✔ archive is atomically exclusive and accepted only with exact downloaded SHA-256; failed data is removed (2.030692ms)
+✔ fresh checkout installer accepts only its new ARM64 baseline and independent trust pin (35.341092ms)
+✔ publisher signs a valid receiver envelope without claiming publication or exposing the key (4.542976ms)
+✔ publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output (4.710931ms)
+﹣ fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail (0.138631ms) # root-owned file integration requires uid 0
+✔ CLI requires explicit new trust, absolute paths and supervised invocation (7.155253ms)
+✔ only exact healthy managed state and fresh completion are accepted (37.507491ms)
+✔ transition allows Admin own-package digests but refuses sequence, system/schema and admission changes (1.95763ms)
+✔ successful managed update installs state before trial start and preserves fresh completion/configuration (18.297636ms)
+✔ baseline readiness failure never stages, locks or stops an unhealthy controller (3.694314ms)
+✔ trust, signature, owner, linked state and installed-unit drift fail before mutation (17.965701ms)
+✔ pre-existing foreign coordinator lock and guard survive unmodified (7.737609ms)
+✔ staging/native/report failure before stop leaves old controller running and removes only own gates (30.892773ms)
+✔ trial failure restarts only authenticated healthy managed baseline and unlocks after readiness (33.409664ms)
+✔ fallback readiness failure leaves exact managed baseline stopped and locked (14.9458ms)
+✔ foreign state, current, completion and coordinator bytes are never overwritten (105.381595ms)
+✔ failed controller stop never claims restored state or unlocks (73.134211ms)
+✔ state, trial report, permit, start, active report and unlock faults exercise rollback boundaries (397.601005ms)
+✔ failure to record durable rollback leaves old release stopped and locked (19.487933ms)
+✔ ExecStopPost only quiesces same invocation seq16; malformed protected lock requires matching journal (0.476496ms)
+✔ failure serializer exposes only fixed codes, stages and reasons (0.159473ms)
+✔ real candidate signature and payload tampering are refused before any service effect (11.036138ms)
+✔ second guard durability failure reconstructs activation gate first and stops our trial (20.404268ms)
+✔ protected configuration drift before stop aborts without overwriting or stopping healthy managed baseline (9.962935ms)
+✔ failed new assets are followed by old signed asset readback before rollback restart (13.972889ms)
+✔ old asset restoration failure prevents a claimed working rollback (14.485539ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 1095.184109
+✔ first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices (345.329641ms)
+✔ configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan (4.248728ms)
+✔ every partial object-store write keeps the start gate closed and refuses unsafe replay (15.144782ms)
+✔ configuration, running controller, unknown password hash and different replay handoff are rejected before mutation (2.696064ms)
+✔ first-run marker and safety policy drift block subsequent enrollment verification (10.844347ms)
+✔ minimal first start enrolls admin only and preserves host defaults without inventing plant settings (2.055339ms)
+✔ EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes (10.592794ms)
+✔ historical wizard state remains verifiable and never creates a new boot gate or implicit repair (5.910396ms)
+✔ first start never replaces telemetry settings with implicit consent (0.546392ms)
+✔ legacy default admits precisely management; explicit new scope is fixed to six own adapters (1.640497ms)
+✔ all-adapter catalog is rejected by management scope; new scope rejects missing or extra entries (0.85417ms)
+✔ source inventory reports candidate admission, never installation, activity or physical control (7.177405ms)
+✔ unknown scope is not a force or production switch (0.319396ms)
+✔ historical and managed signed test contexts select six-adapter execution (0.293386ms)
+✔ generic fresh install and additive activation cannot bypass journaled own-adapter migration (12.64057ms)
+✔ finalizer verifies before starting; persists only after authenticated TLS probes (2.275594ms)
+✔ parallel attempt failing exclusive lock never stops the owning finalizer (0.484718ms)
+✔ interruption at stop always blocks restart and stops controller (0.203711ms)
+✔ interruption at enroll always blocks restart and stops controller (0.200546ms)
+✔ interruption at verify always blocks restart and stops controller (0.142406ms)
+✔ interruption at configureLicense always blocks restart and stops controller (0.173574ms)
+✔ interruption at upload always blocks restart and stops controller (0.178231ms)
+✔ interruption at enableWebInstances always blocks restart and stops controller (0.208438ms)
+✔ interruption at authorize always blocks restart and stops controller (0.319516ms)
+✔ interruption at start always blocks restart and stops controller (0.883024ms)
+✔ interruption at probe always blocks restart and stops controller (0.31555ms)
+✔ interruption at persist always blocks restart and stops controller (0.153423ms)
+✔ interruption at enableBoot always blocks restart and stops controller (0.134554ms)
+✔ interruption at disableSetup always blocks restart and stops controller (0.104309ms)
+✔ interruption at release always blocks restart and stops controller (0.095936ms)
+✔ managed assembly binds independent fresh/follow-up sequence, reconstructed base and current bytes (64.86259ms)
+✔ own assembly binds six own adapters, six identical clients and exact CLI/core transforms (13.688886ms)
+✔ verified sequence 13 requires own assembly even if its marker is removed or replaced with R9 (31.643987ms)
+✔ own assembly cannot be relabeled as sequence12 or other signed release context (35.0494ms)
+✔ network assembly binds sequence14 to distinct R9 reconstruction and R10 transition pins (10.177271ms)
+✔ sequence14 requires the new network marker and rejects missing, old or invented markers (35.071544ms)
+✔ network marker rejects missing signed context, downgrade and later sequence reuse (44.101699ms)
+✔ network profile requires exact reconstruction, predecessor, target and execution scope (70.318996ms)
+✔ network profile retains app, owner, mode, scan and exact transform binding gates (100.754973ms)
+✔ new standalone marker requires exact predecessor, test scope and truthful scan/resolution claims (60.819977ms)
+✔ own derivative rejects stale content/mode digests, duplicate claims and misleading package archive hashes (42.82796ms)
+✔ new CLI transform files require updated exact pedigree table, not old hash or upstream archive identity (33.045119ms)
+✔ real payload coordinator appends all independently verified backup and shutdown transforms before SBOM validation only in own scope (3.589584ms)
+✔ shutdown derivative source and exact two-file transform profile cannot be removed or widened (61.587786ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 748.19586
+✔ PostgreSQL prerequisite fixture passes independently of preserved Redis hold (17.678159ms)
+✔ fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1 (5.140504ms)
+✔ unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent (34.415255ms)
+✔ unit namespace accepts full names, instances, escaped names and known C-locale table columns (2.969299ms)
+✔ unit namespace rejects empty, malformed, incomplete or failed unit listings (11.470369ms)
+✔ unsupported PostgreSQL 17.10 rejected (4.096385ms)
+✔ unsupported PostgreSQL 16.11 rejected (4.279164ms)
+✔ unsupported PostgreSQL 18.1 rejected (4.33633ms)
+✔ every protected existing path, including old standalone EOS, rejects without mutations (43.562127ms)
+✔ malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed (10.738286ms)
+✔ real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions (473.344307ms)
+✔ backend rejects mixtures, injected loader names and TLS downgrade (0.68361ms)
+✔ database and runtime service boundaries retain network discovery without root privileges (0.320138ms)
+✔ installer command-double starts schema and live gate before controller; never invokes Redis/npm (651.922591ms)
+✔ failed live gate preserves data and stops owned services without killing apt (1066.978521ms)
+✔ failed admission or implicit start performs no command or persistent write (2.817548ms)
+✔ failed structured target checks are retained before fail-closed cleanup (1111.90665ms)
+✔ existing distribution database cluster is never adopted or deleted (3.678879ms)
+✔ fresh managed host installs independent updater and unconfigured network before HTTPS first start (24.24896ms)
+✔ missing network tools abort fresh managed host before changes; later failure disables addon boot scheduling (20.148799ms)
+✔ actual UDS is root-owned, group-restricted, finite and framed before dispatch (12.821095ms)
+✔ fresh checkout installer accepts only its new ARM64 baseline and independent trust pin (16.484792ms)
+✔ publisher signs a valid receiver envelope without claiming publication or exposing the key (5.038088ms)
+✔ publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output (80.77382ms)
+✔ fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail (167.719752ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3573.470519

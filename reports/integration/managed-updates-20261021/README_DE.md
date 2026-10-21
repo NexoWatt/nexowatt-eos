@@ -18,8 +18,8 @@ kein systemd und keine physische Geräteaktion in dieser Umgebung.
 | Bestehender Erststart, Enrollment, Quiesce, R11-Rückfall, Produktumfang, Bundles und PostgreSQL-Installer | 165 PASS | `regression.tap`; vor den zwei zusätzlichen Managed-Host-Fixtures ausgeführt |
 | PostgreSQL-Installer einschließlich neuer Managed-Frischinstallation und Fehlerbereinigung | 20 PASS | `managed-host-fixtures.tap`; Befehlsdoubles, kein systemd-Installationsnachweis |
 | Admin-Postbuild und versiegelte Source/Runtime-Dateien | PASS | `admin-seal.txt`; kein vollständiger React-Neubau |
-| Echter lokaler Unix-Socket | BLOCKIERT | `socket-local-blocked.tap`; `listen EPERM` durch Ausführungsumgebung; CI-Prüfung vorgesehen |
-| Chromium-Browserinteraktion | OFFEN lokal | Chromium-Download scheiterte; CI prüft echtes Chromium mit HTTP-Fixtures |
+| Echter lokaler Unix-Socket | BLOCKIERT | `socket-local-blocked.tap`; `listen EPERM` durch Ausführungsumgebung; tatsächlicher Socket inzwischen in CI bestanden |
+| Chromium-Browserinteraktion | OFFEN lokal | Chromium-Download scheiterte; zwei Tests in echtem CI-Chromium mit HTTP-Fixtures bestanden |
 | Öffentliche Range-Auslieferung | OFFEN | Lokaler HTTPS-Versuch nach fünf Sekunden ohne Verbindung abgebrochen; kein erfolgreicher Rücklesetest |
 
 Zählungen sind je Testlauf und enthalten Überschneidungen; nicht zu einer
@@ -38,7 +38,7 @@ persistenter Trust, unveränderliche Commit-URL, begrenzte Downloadzeit/-größe
 exklusiver Auftrag, persistierter Wiederherstellungszustand, Rückfall auf
 belegten alten Stand, unveränderte Enrollment-/Datenbank-/Hostverträge.
 Mobilbreite und schnelles Schließen/Wiederöffnen des Dialogs wurden im Code
-korrigiert; Browsernachweis erst nach tatsächlichem Testlauf.
+korrigiert und inzwischen in echtem CI-Chromium mit HTTP-Fixtures geprüft.
 
 Die weitergehende Prüfung der System- und Adapterisolation bleibt offen.
 Ein manuell bestätigtes Backup wird nicht automatisch erstellt oder auf
@@ -76,5 +76,26 @@ den Checkout-Eigentümer, und der Browsertest fand die deutsche Schließen-
 Beschriftung nicht. Die Testvorbereitung erzeugt die Unit nun als neue
 root-eigene Datei; die Browserfixture erhält explizit UTF-8 wie die reale
 Adminseite. Die Produkt-Schutzprüfungen wurden nicht gelockert. Die vier
-Trust-Fixture-Tests bestehen lokal; erneute CI-Abnahme ist erforderlich.
+Trust-Fixture-Tests bestehen lokal. Die erneute CI am Commit
+`f3f1ce90642463b0940742b529441ed59375695d` besteht: beide Managed-Jobs
+(Verträge/root-eigene Fixtures und Chromium) sind grün.
 Siehe `ci-fixture-followup.json` und `trust-fixture-followup.tap`.
+
+## CI am veröffentlichten Quellstand
+
+`ci-qualification.json` bindet die Ergebnisse an Commit
+`f3f1ce90642463b0940742b529441ed59375695d` und die öffentlichen Actions-Läufe.
+Beide Managed-Jobs und alle acht übergreifenden Sicherheits-/Integrationsgruppen
+sind bestanden. Die Managed-Gruppen melden 38 PASS/1 SKIP, 44 PASS und
+25 PASS; die letzte Gruppe läuft mit root-eigenen temporären Dateien und
+enthält den tatsächlichen Unix-Socket. Beide Chromium-Tests sind bestanden.
+Die separaten Netzwerk- und Workflowprüfungen bestanden am ausdrücklich
+ausgewiesenen früheren Commit; deren Implementierung wurde danach nicht
+geändert. Auch der CodeQL-Prüflauf ist erfolgreich abgeschlossen. Dies ist
+kein Nachweis vollständiger Schwachstellenfreiheit.
+
+Die erhaltenen Textbelege enthalten nur Testzusammenfassungen. Die erfolgreichen
+nativen PostgreSQL-, Adapterprozess-, Backup- und Rückfallprüfungen betreffen
+ihre jeweiligen Integrationsumgebungen. Sie ersetzen weder eine vollständige
+Managed-systemd-Installation noch die Abnahme auf einem echten Test-Pi.
+Der Auslieferungs- und Freigabestatus oben bleibt deshalb unverändert.

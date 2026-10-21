@@ -3,7 +3,7 @@
   "kind": "managed-update-ci-fixture-followup",
   "sourceCommit": "38a2fdbbe2de97011e4d4c7c4f9411b309444243",
   "initialManagedRun": 39600616678,
-  "status": "CORRECTED_FIXTURES_PENDING_CI",
+  "status": "CORRECTED_FIXTURES_CI_PASS",
   "rootFixture": {
     "job": 119223871119,
     "observed": "one copied unit fixture retained checkout ownership; root ownership assertion rejected it",
@@ -16,8 +16,17 @@
     "job": 119223871809,
     "observed": "one browser test timed out looking for the German close-button label; mobile and role test passed",
     "change": "serve fixture HTML and JavaScript as UTF-8, matching the shipped index; explicit charset meta added",
-    "correctedBrowserResult": "PENDING"
+    "correctedBrowserResult": "PASS_TWO_REAL_CHROMIUM_TESTS_WITH_HTTP_FIXTURES"
   },
   "runtimeBehaviorChanged": false,
-  "productionReleaseApproved": false
+  "productionReleaseApproved": false,
+  "correctedSourceCommit": "f3f1ce90642463b0940742b529441ed59375695d",
+  "correctedManagedRun": 39601408273,
+  "correctedRootOwnedTestGroup": {
+    "job": 119226560996,
+    "passed": 25,
+    "failed": 0,
+    "includesActualUnixSocket": true,
+    "includesActualSystemd": false
+  }
 }
