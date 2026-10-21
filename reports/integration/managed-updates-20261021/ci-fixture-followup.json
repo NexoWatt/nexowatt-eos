@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "kind": "managed-update-ci-fixture-followup",
+  "sourceCommit": "38a2fdbbe2de97011e4d4c7c4f9411b309444243",
+  "initialManagedRun": 39600616678,
+  "status": "CORRECTED_FIXTURES_PENDING_CI",
+  "rootFixture": {
+    "job": 119223871119,
+    "observed": "one copied unit fixture retained checkout ownership; root ownership assertion rejected it",
+    "change": "materialize an exclusive new root-owned fixture file using the actual staging writer approach; ownership checks retained",
+    "localTestsPassed": 4,
+    "evidence": "trust-fixture-followup.tap",
+    "actualUnixSocketPassedInInitialCI": true
+  },
+  "browserFixture": {
+    "job": 119223871809,
+    "observed": "one browser test timed out looking for the German close-button label; mobile and role test passed",
+    "change": "serve fixture HTML and JavaScript as UTF-8, matching the shipped index; explicit charset meta added",
+    "correctedBrowserResult": "PENDING"
+  },
+  "runtimeBehaviorChanged": false,
+  "productionReleaseApproved": false
+}

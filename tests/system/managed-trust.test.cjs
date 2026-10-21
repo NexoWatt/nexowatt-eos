@@ -52,7 +52,10 @@ test('fresh installer pins immutable service paths and public trust, never start
     const f = fixture(t), id = 'a'.repeat(64), at = p => path.join(f.directory, p);
     for (const p of [`/opt/nexowatt/eos/releases/${id}/system/managed-test`, `/opt/nexowatt/eos/verified/${id}`, '/etc/nexowatt-eos', '/etc/systemd/system', '/var/lib']) fs.mkdirSync(at(p), { recursive: true });
     fs.writeFileSync(at(`/opt/nexowatt/eos/verified/${id}/release-public.pem`), f.publicKey);
-    fs.copyFileSync(path.resolve(__dirname, '../../system/managed-test', UNIT), at(`/opt/nexowatt/eos/releases/${id}/system/managed-test/${UNIT}`));
+    // Materialize a fresh root-owned staged file, as the actual bundle staging
+    // writer does; copying a runner-owned checkout is not installed evidence.
+    fs.writeFileSync(at(`/opt/nexowatt/eos/releases/${id}/system/managed-test/${UNIT}`),
+        fs.readFileSync(path.resolve(__dirname, '../../system/managed-test', UNIT)), { mode: 0o644, flag: 'wx' });
     // Scratch parent /tmp is intentionally writable; assert every fixture path
     // below its private boundary while retaining real file ownership/mode checks.
     const owner = p => { const s = fs.lstatSync(p); assert.equal(s.uid, 0); assert.equal(s.isSymbolicLink(), false); assert.equal(s.mode & 0o022, 0); };

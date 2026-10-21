@@ -66,3 +66,15 @@ V1 erlaubt eigene Adapterpatches bei unveränderten Versionen/Abhängigkeiten.
 Admin 8/React 19, allgemeine Paket-/Hostmigrationen und die vollständige
 Bereinigung älterer Node-Engine-Angaben sind damit nicht abgeschlossen.
 Keine Produktions-, Anlagen-, Sicherheitsvollständigkeits- oder CRA-Freigabe.
+
+## Erste CI und korrigierte Testvorbereitung
+
+Am Quellcommit `38a2fdbbe2de97011e4d4c7c4f9411b309444243` bestanden die
+Vertragsprüfungen und der tatsächliche Unix-Socket-Test unter Node 24.21.0.
+Der neue Gesamtlauf blieb zunächst rot: eine kopierte Unit-Testdatei hatte
+den Checkout-Eigentümer, und der Browsertest fand die deutsche Schließen-
+Beschriftung nicht. Die Testvorbereitung erzeugt die Unit nun als neue
+root-eigene Datei; die Browserfixture erhält explizit UTF-8 wie die reale
+Adminseite. Die Produkt-Schutzprüfungen wurden nicht gelockert. Die vier
+Trust-Fixture-Tests bestehen lokal; erneute CI-Abnahme ist erforderlich.
+Siehe `ci-fixture-followup.json` und `trust-fixture-followup.tap`.

@@ -19,9 +19,9 @@ async function fixture(role = 'admin', mobile = false) {
             if (operation === 'install') state = { ...state, phase: 'INSTALLING', busy: true };
             return route.fulfill({ contentType: 'application/json', body: JSON.stringify(state) });
         }
-        if (pathname === '/js/eos-system-updates.js') return route.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(path.join(__dirname, '../adminWww/js/eos-system-updates.js'), 'utf8') });
+        if (pathname === '/js/eos-system-updates.js') return route.fulfill({ contentType: 'application/javascript; charset=utf-8', body: fs.readFileSync(path.join(__dirname, '../adminWww/js/eos-system-updates.js'), 'utf8') });
         if (pathname === '/css/eos-system-updates.css') return route.fulfill({ contentType: 'text/css', body: fs.readFileSync(path.join(__dirname, '../adminWww/css/eos-system-updates.css'), 'utf8') });
-        return route.fulfill({ contentType: 'text/html', body: `<!doctype html><html lang="de"><head><link rel="stylesheet" href="/css/eos-system-updates.css"></head><body><script>window.NEXOWATT_EOS_ACCESS_ROLE=${JSON.stringify(role)};window.NEXOWATT_EOS_DOM_COORDINATOR={subscribe(fn){const m=new MutationObserver(fn);m.observe(document.documentElement,{childList:true,subtree:true});return ()=>m.disconnect();}}</script><div class="eos-basic-settings-actions"></div><script src="/js/eos-system-updates.js"></script></body></html>` });
+        return route.fulfill({ contentType: 'text/html; charset=utf-8', body: `<!doctype html><html lang="de"><head><meta charset="utf-8"><link rel="stylesheet" href="/css/eos-system-updates.css"></head><body><script>window.NEXOWATT_EOS_ACCESS_ROLE=${JSON.stringify(role)};window.NEXOWATT_EOS_DOM_COORDINATOR={subscribe(fn){const m=new MutationObserver(fn);m.observe(document.documentElement,{childList:true,subtree:true});return ()=>m.disconnect();}}</script><div class="eos-basic-settings-actions"></div><script src="/js/eos-system-updates.js"></script></body></html>` });
     });
     await page.goto('https://eos.example/');
     return { browser, page, calls, faults, complete() { state = { ...state, phase: 'SUCCEEDED', busy: false }; } };
