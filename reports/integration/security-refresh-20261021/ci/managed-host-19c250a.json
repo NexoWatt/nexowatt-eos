@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed-host-ci-fixture-followup",
+  "date": "2026-10-21",
+  "sourceBaseline": "19c250aa6516881587cea045ab384308b37647d1",
+  "failedCi": {
+    "runId": 39665823379,
+    "jobId": 119450458651,
+    "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39665823379/job/119450458651",
+    "node": "24.21.0",
+    "tests": 25,
+    "pass": 23,
+    "fail": 2,
+    "cause": "Both failures arose from managedFixture expecting own-adapter-test while sequence 15 correctly selected security-refresh-test. The second test stopped before its intended network-command failure."
+  },
+  "changes": [
+    "Managed installer fixture asserts security-refresh-test and exact controller 7.2.5.",
+    "The fixture now supplies seven coherent package/lock identities and invokes actual product.inspectApp.",
+    "Negative cases reject coherent 7.2.2 and 8.0.0 trees, plus installed controller metadata inconsistent with the 7.2.5 lock, before any command or host state write."
+  ],
+  "productionCodeChanged": false,
+  "executionEnvironment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "uid": 0
+  },
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/postgresql/host-install.test.cjs"
+      ],
+      "output": "managed-host-19c250a.tap",
+      "outputSha256": "0e5c9b4cfc3a1adf3b2a05a51d4708023bf287040024222690f2a55fdd24a4f9",
+      "exitCode": 0,
+      "tests": 23,
+      "pass": 23,
+      "fail": 0,
+      "skip": 0
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/system/managed-trust.test.cjs",
+        "tests/system/managed-socket.test.cjs",
+        "tests/postgresql/host-install.test.cjs"
+      ],
+      "output": "managed-contracts-local-19c250a.tap",
+      "outputSha256": "328735ec96016b0c05a5d273109df8569d05f0b3f1dae3b7925686980e4ce7da",
+      "exitCode": 1,
+      "tests": 28,
+      "pass": 27,
+      "fail": 1,
+      "skip": 0,
+      "limitation": "The unchanged managed-socket test cannot bind a Unix socket in this execution environment (listen EPERM). This test passed in the referenced CI job. No skip or weakened socket check was introduced."
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "tests/postgresql/host-install.test.cjs",
+      "sha256": "2f2071a75a5dd8510414833ca7779275b99aaebf6eed7aff169b534a16ecc3bd"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "sha256": "bd66d3d60f17c861b367b81e173776caaa7e5ef8790df298bc46d7ac8b755913"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "b18635b96443da473ed21a10f99e7d5af00807e4b45ca95a5b15a14bef1fecc5"
+    }
+  ],
+  "nativePostgresqlInstallationPerformed": false,
+  "physicalPiTestPerformed": false,
+  "ciRerunPerformed": false,
+  "productionApproved": false,
+  "open": [
+    "Repeat managed-install CI on the corrected commit using Node 24.21.0.",
+    "Physical Pi installation, reboot and update-button acceptance remain outside this fixture repair."
+  ]
+}

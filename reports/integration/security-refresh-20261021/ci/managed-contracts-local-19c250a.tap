@@ -1,0 +1,192 @@
+TAP version 13
+# Subtest: PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+ok 1 - PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+  ---
+  duration_ms: 14.930861
+  type: 'test'
+  ...
+# Subtest: fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+ok 2 - fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+  ---
+  duration_ms: 4.442715
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+ok 3 - unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+  ---
+  duration_ms: 36.286725
+  type: 'test'
+  ...
+# Subtest: unit namespace accepts full names, instances, escaped names and known C-locale table columns
+ok 4 - unit namespace accepts full names, instances, escaped names and known C-locale table columns
+  ---
+  duration_ms: 3.001904
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects empty, malformed, incomplete or failed unit listings
+ok 5 - unit namespace rejects empty, malformed, incomplete or failed unit listings
+  ---
+  duration_ms: 12.590684
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 17.10 rejected
+ok 6 - unsupported PostgreSQL 17.10 rejected
+  ---
+  duration_ms: 3.953578
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 16.11 rejected
+ok 7 - unsupported PostgreSQL 16.11 rejected
+  ---
+  duration_ms: 3.295116
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 18.1 rejected
+ok 8 - unsupported PostgreSQL 18.1 rejected
+  ---
+  duration_ms: 4.228612
+  type: 'test'
+  ...
+# Subtest: every protected existing path, including old standalone EOS, rejects without mutations
+ok 9 - every protected existing path, including old standalone EOS, rejects without mutations
+  ---
+  duration_ms: 42.426187
+  type: 'test'
+  ...
+# Subtest: malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+ok 10 - malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+  ---
+  duration_ms: 9.572457
+  type: 'test'
+  ...
+# Subtest: real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions
+ok 11 - real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions
+  ---
+  duration_ms: 139.927769
+  type: 'test'
+  ...
+# Subtest: backend rejects mixtures, injected loader names and TLS downgrade
+ok 12 - backend rejects mixtures, injected loader names and TLS downgrade
+  ---
+  duration_ms: 0.353443
+  type: 'test'
+  ...
+# Subtest: database and runtime service boundaries retain network discovery without root privileges
+ok 13 - database and runtime service boundaries retain network discovery without root privileges
+  ---
+  duration_ms: 0.499843
+  type: 'test'
+  ...
+# Subtest: installer command-double starts schema and live gate before controller; never invokes Redis/npm
+ok 14 - installer command-double starts schema and live gate before controller; never invokes Redis/npm
+  ---
+  duration_ms: 16.690863
+  type: 'test'
+  ...
+# Subtest: failed live gate preserves data and stops owned services without killing apt
+ok 15 - failed live gate preserves data and stops owned services without killing apt
+  ---
+  duration_ms: 11.61815
+  type: 'test'
+  ...
+# Subtest: failed admission or implicit start performs no command or persistent write
+ok 16 - failed admission or implicit start performs no command or persistent write
+  ---
+  duration_ms: 1.9642
+  type: 'test'
+  ...
+# Subtest: failed structured target checks are retained before fail-closed cleanup
+ok 17 - failed structured target checks are retained before fail-closed cleanup
+  ---
+  duration_ms: 13.007052
+  type: 'test'
+  ...
+# Subtest: existing distribution database cluster is never adopted or deleted
+ok 18 - existing distribution database cluster is never adopted or deleted
+  ---
+  duration_ms: 2.90596
+  type: 'test'
+  ...
+# Subtest: fresh managed host installs independent updater and unconfigured network before HTTPS first start
+ok 19 - fresh managed host installs independent updater and unconfigured network before HTTPS first start
+  ---
+  duration_ms: 30.298069
+  type: 'test'
+  ...
+# Subtest: fresh managed host rejects coherently declared controller 7.2.2 before commands or host writes
+ok 20 - fresh managed host rejects coherently declared controller 7.2.2 before commands or host writes
+  ---
+  duration_ms: 5.320258
+  type: 'test'
+  ...
+# Subtest: fresh managed host rejects coherently declared controller 8.0.0 before commands or host writes
+ok 21 - fresh managed host rejects coherently declared controller 8.0.0 before commands or host writes
+  ---
+  duration_ms: 3.859406
+  type: 'test'
+  ...
+# Subtest: fresh managed host rejects installed controller identity inconsistent with the 7.2.5 lock before mutation
+ok 22 - fresh managed host rejects installed controller identity inconsistent with the 7.2.5 lock before mutation
+  ---
+  duration_ms: 3.140763
+  type: 'test'
+  ...
+# Subtest: missing network tools abort fresh managed host before changes; later failure disables addon boot scheduling
+ok 23 - missing network tools abort fresh managed host before changes; later failure disables addon boot scheduling
+  ---
+  duration_ms: 25.318014
+  type: 'test'
+  ...
+# Subtest: actual UDS is root-owned, group-restricted, finite and framed before dispatch
+not ok 24 - actual UDS is root-owned, group-restricted, finite and framed before dispatch
+  ---
+  duration_ms: 4.695357
+  type: 'test'
+  location: '/workspace/scratch/f5ced8c90b3e/nexowatt-eos/tests/system/managed-socket.test.cjs:19:1'
+  failureType: 'testCodeFailure'
+  error: 'listen EPERM: operation not permitted /root/eos-managed-socket-x3LEAR/control.sock'
+  code: 'EPERM'
+  stack: |-
+    Server.setupListenHandle [as _listen2] (node:net:2145:21)
+    listenInCluster (node:net:2224:12)
+    Server.listen (node:net:2361:5)
+    serve (/workspace/scratch/f5ced8c90b3e/nexowatt-eos/runtime/updates/service.cjs:124:12)
+    TestContext.<anonymous> (/workspace/scratch/f5ced8c90b3e/nexowatt-eos/tests/system/managed-socket.test.cjs:23:18)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: fresh checkout installer accepts only its new ARM64 baseline and independent trust pin
+ok 25 - fresh checkout installer accepts only its new ARM64 baseline and independent trust pin
+  ---
+  duration_ms: 13.587566
+  type: 'test'
+  ...
+# Subtest: publisher signs a valid receiver envelope without claiming publication or exposing the key
+ok 26 - publisher signs a valid receiver envelope without claiming publication or exposing the key
+  ---
+  duration_ms: 6.048215
+  type: 'test'
+  ...
+# Subtest: publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output
+ok 27 - publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output
+  ---
+  duration_ms: 2.205083
+  type: 'test'
+  ...
+# Subtest: fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail
+ok 28 - fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail
+  ---
+  duration_ms: 7.551069
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 27
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 499.617627

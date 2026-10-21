@@ -126,5 +126,5 @@ if (require.main === module) {
         if (a.length !== 6 || a[0] !== '--output' || a[2] !== '--sequence' || a[4] !== '--resolution-lock' || !/^[1-9][0-9]*$/.test(a[3])) fail('FRESH_BUILD_USAGE');
         const value = prepare({ output: a[1], sequence: Number(a[3]), resolutionLock: a[5] });
         process.stdout.write(JSON.stringify({ ok: true, sourceCommit: value.record.sourceCommit, appContentSha256: value.record.appContentSha256, signed: false, productionReleaseApproved: false }) + '\n');
-    } catch (error) { process.stderr.write((/^[A-Z][A-Z0-9_]+$/.test(error?.code || '') ? error.code : 'FRESH_BUILD_FAILED') + '\n'); process.exitCode = 1; }
+    } catch (error) { process.stderr.write(JSON.stringify(require('./runtime-dependency-policy.cjs').failureSummary(error, 'FRESH_BUILD_FAILED')) + '\n'); process.exitCode = 1; }
 }

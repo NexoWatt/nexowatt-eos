@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "sourceBaseCommit": "19c250aa6516881587cea045ab384308b37647d1",
+  "kind": "fresh-runtime-resolution-followup",
+  "workingTreeChangesIncluded": true,
+  "ciFailure": {
+    "jobId": 119450459754,
+    "code": "DEPENDENCY_POLICY_REFRESH_PIN",
+    "cause": "UI exact adapter-core 3.4.1 conflicts with required 3.4.3."
+  },
+  "policyRelaxed": false,
+  "diagnosticPrivacy": "Only allowlisted public package/code identities, numeric bounded versions, root/nested placement and bounded depth; no arbitrary exception messages or relative/absolute input paths.",
+  "checks": {
+    "policyContracts": {
+      "passed": 23,
+      "failed": 0,
+      "evidence": "contracts.tap"
+    },
+    "actualCombinedResolution": {
+      "passed": true,
+      "sourcePackages": 9,
+      "lifecycleScriptsExecuted": false,
+      "node": "24.19.0",
+      "npm": "11.9.0",
+      "targetDependencies": "linux-arm64",
+      "resolutionLockSha256": "7425a79b1b867bab6d2fe54f5dcbdd397384bf50790916ed853117932c71def2",
+      "evidence": "diagnostic.json"
+    }
+  },
+  "inputs": [
+    {
+      "path": "tools/integration/runtime-dependency-policy.cjs",
+      "sha256": "8e1e31f721b399c4126792c0e01bd06dcbe88796b4e4b844b394276f8094e006"
+    },
+    {
+      "path": "tools/integration/prepare-security-refresh.cjs",
+      "sha256": "eb07cb10d17f22bbccc111260972a2483487183c74dc2f5ee5e3e033b9ec34bd"
+    },
+    {
+      "path": "tools/integration/stage-security-refresh-cache.cjs",
+      "sha256": "e17929f60aaff0bc3d381d368f73fd6fbda3b11a223f23e0be4a908b5791c3ce"
+    },
+    {
+      "path": "tests/system/controller725-dependency-policy.test.cjs",
+      "sha256": "bfc1bcbe39e4bb0c3a864f5c36a7ae72f9d02f75da2b127454b7822409d6d4c7"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-19c250a/diagnose-resolution.cjs",
+      "sha256": "1f08fe784ee6f9a59ba1d1393b9cc84dc55af34c7dfd44041cced0dff541bbcf"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-19c250a/contracts.tap",
+      "sha256": "c3ca85d96f5a65bf09915b5296b7d1884c8a6284f84dec6ada2627a6cc7e1694"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/build/ci-followup-19c250a/diagnostic.json",
+      "sha256": "6090632cc94cf90a7e71395f71c46dadc81caa2c32a634e6ad63e9a0523f22a1"
+    }
+  ],
+  "limits": [
+    "Diagnostic local toolchain is not the release toolchain.",
+    "No production prepare guard bypass or release artifact created.",
+    "Actual new Node 24.21/npm 11.19 complete build, native run, audit, signing and Pi acceptance remain required."
+  ]
+}

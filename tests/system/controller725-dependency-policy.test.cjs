@@ -38,3 +38,32 @@ for (const name of ['iobroker.js-controller', '@iobroker/js-controller-cli', '@i
         const f = fixture(t); f.add(name, name === '@iobroker/ws-server' ? '4.5.2' : '7.2.5', 'node_modules/another/');
         assert.throws(f.verify, /DEPENDENCY_POLICY_UNTRANSFORMED_COPY/);
     });
+
+test('the exact stale UI adapter-core pin fails with bounded public package diagnostics', t => {
+    const f = fixture(t); f.add('@iobroker/adapter-core', '3.4.1', 'node_modules/iobroker.nexowatt-ui/');
+    let failure;
+    try { f.verify(); } catch (error) { failure = error; }
+    assert.equal(failure?.code, 'DEPENDENCY_POLICY_REFRESH_PIN');
+    assert.deepEqual(policy.failureSummary(failure), { ok: false, code: 'DEPENDENCY_POLICY_REFRESH_PIN', dependency: {
+        package: '@iobroker/adapter-core', placement: 'nested', nestingDepth: 1,
+        expected: '3.4.3', locked: '3.4.1', installed: '3.4.1', identityMatches: true, lockLink: false, integrityBound: true } });
+});
+test('failure diagnostics omit arbitrary exception text registry URLs and private values', () => {
+    const summary = policy.failureSummary({ code: 'DEPENDENCY_POLICY_REFRESH_PIN', message: 'PRIVATE_EXCEPTION', stack: 'PRIVATE_STACK',
+        diagnostic: { package: '@scope/name\nPRIVATE', path: '/private/key.pem', expected: '3.4.3', locked: 'https://token@registry/private',
+            installed: 'PRIVATE_VERSION', identityMatches: false, lockLink: false, integrityBound: false, token: 'PRIVATE_TOKEN' } });
+    assert.equal(summary.dependency.package, 'INVALID'); assert.equal(summary.dependency.placement, 'INVALID');
+    assert.equal(summary.dependency.locked, 'INVALID'); assert.equal(summary.dependency.installed, 'INVALID');
+    assert.doesNotMatch(JSON.stringify(summary), /PRIVATE|https:|token|registry/);
+    assert.deepEqual(policy.failureSummary(new Error('PRIVATE_EXCEPTION'), 'FRESH_CACHE_FAILED'), { ok: false, code: 'FRESH_CACHE_FAILED' });
+});
+test('syntactically valid private identities paths prereleases and error codes never reach diagnostics', () => {
+    const summary = policy.failureSummary({ code: 'DEPENDENCY_POLICY_REFRESH_PIN', diagnostic: {
+        package: '@private-marker/private-package', path: 'node_modules/private-marker/node_modules/@iobroker/adapter-core',
+        expected: '3.4.3-private-marker', locked: '3.4.1-private-marker', installed: '3.4.1-private-marker' } });
+    assert.equal(summary.dependency.package, 'INVALID');
+    assert.equal(summary.dependency.expected, 'INVALID'); assert.equal(summary.dependency.locked, 'INVALID'); assert.equal(summary.dependency.installed, 'INVALID');
+    assert.equal(summary.dependency.placement, 'nested'); assert.equal(summary.dependency.nestingDepth, 1);
+    assert.doesNotMatch(JSON.stringify(summary), /private-marker|private-package|node_modules/);
+    assert.deepEqual(policy.failureSummary({ code: 'PRIVATE_ERROR_CODE' }, 'PRIVATE_FALLBACK'), { ok: false, code: 'DEPENDENCY_POLICY_FAILED' });
+});

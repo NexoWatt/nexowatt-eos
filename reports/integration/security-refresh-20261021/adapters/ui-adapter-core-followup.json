@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-21",
+  "sourceCommitBeforeFix": "19c250aa6516881587cea045ab384308b37647d1",
+  "scope": "UI exact adapter-core pin alignment; final installed source dependency tree only",
+  "previousUiLockSha256": "b066ff872b75e7e638e03c0201b6a0f71d022e1d1a1ccc29effaf41c91146d8f",
+  "existingPackageVersionChanges": [
+    {
+      "path": "node_modules/@iobroker/adapter-core",
+      "before": "3.4.1",
+      "after": "3.4.3"
+    },
+    {
+      "path": "node_modules/follow-redirects",
+      "before": "1.16.0",
+      "after": "1.16.1"
+    }
+  ],
+  "addedLockEntries": 70,
+  "removedLockEntries": 0,
+  "resolution": {
+    "@iobroker/adapter-core": "3.4.3",
+    "@iobroker/js-controller-common-db": "7.2.5",
+    "axios": "1.20.0",
+    "follow-redirects": "1.16.1",
+    "node-forge": "1.4.0"
+  },
+  "audit": {
+    "command": "npm audit --omit=dev --ignore-scripts --json --fetch-timeout=5000 --fetch-retries=0",
+    "exitCode": 1,
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 3,
+      "critical": 0,
+      "total": 3
+    },
+    "remainingPackageNodes": [
+      "@iobroker/adapter-core",
+      "@iobroker/js-controller-common-db",
+      "node-forge"
+    ],
+    "interpretation": "Three package nodes of the same known unpatched node-forge chain, not three independent defects. Supersedes the earlier zero findings for the previous standalone UI lock."
+  },
+  "tests": [
+    {
+      "command": "npm run build:types",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:adapter-state-api && npm run test:adapter-state-api-runtime",
+      "exitCode": 0,
+      "runtimeCases": 7
+    },
+    {
+      "command": "npm run test:package-runtime-start-smoke",
+      "exitCode": 0,
+      "syntaxCheckedFiles": 238
+    },
+    {
+      "command": "node --test scripts/verify-eos-integrated.cjs scripts/verify-eos-auth-security.cjs test/eos-license-entitlements.test.cjs",
+      "exitCode": 0,
+      "passed": 53,
+      "failed": 0
+    },
+    {
+      "command": "node scripts/verify-stable-1.0.9-access.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "timeout 20s node --test reports/integration/security-refresh-20261021/adapters/dependency-regression.test.cjs",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "command": "npm run release:generate-manifest && npm run publish:check",
+      "exitCode": 0,
+      "sealedFiles": 408
+    },
+    {
+      "command": "npm pack --dry-run --json --ignore-scripts",
+      "exitCode": 0,
+      "entryCount": 409
+    }
+  ],
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "24.19.0",
+    "npm": "11.9.0"
+  },
+  "lifecycleHooksExecuted": false,
+  "runtimePolicyChanged": false,
+  "targetDeviceObserved": false,
+  "assembledRuntimeQualified": false,
+  "historicalEvidenceRewritten": false,
+  "files": [
+    {
+      "path": "components/ui/package.json",
+      "sha256": "2224f9a278bba9e557d2a58c976a44f02fd8f4662c986d9a2763e462c675d5cb"
+    },
+    {
+      "path": "components/ui/package-lock.json",
+      "sha256": "0632040af9b2e82f246bf93984cc6f9a63d911631cf222913d540bf0ed1a343f"
+    },
+    {
+      "path": "components/ui/scripts/release-artifact-manifest.json",
+      "sha256": "4b97d89c00b4b19a6eaf8abf7655b97b07ab6a3dd437c2487e69fbdab0b9dd09"
+    },
+    {
+      "path": "components/ui/docs/security/DEPENDENCY_REFRESH_2026-10-21_DE.md",
+      "sha256": "0d77362ac96e315cb8022cac9b319c2750cb2a7c8da53b38f38cfec8eff74ca0"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/dependency-regression.test.cjs",
+      "sha256": "d1c58b2e6aa2d532086bed10af7592e7664f1ce079d64d7b35691e54198432da"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/UI_ADAPTER_CORE_PIN_DE.md",
+      "sha256": "5a0e3f74891d21c0e9c691361986ff90cae6c8c0c5ad1fde10399ddf7e2b0249"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/ui-adapter-core-audit.json",
+      "sha256": "e40f72e7b4ee14d69fd9852a06152f2d776fec6c3966c60b3ce6f173e5115611"
+    }
+  ]
+}

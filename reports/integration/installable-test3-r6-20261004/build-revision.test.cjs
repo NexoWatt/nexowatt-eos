@@ -60,7 +60,10 @@ test('valid current Admin seal cannot widen the historical R6 source scope', () 
         assert.equal(sha256(fs.readFileSync(path.join(ROOT, source))), expected, source);
         if (sourceTarget(source) === null) outsideHistoricalScope.push(source);
     }
-    assert.deepEqual(outsideHistoricalScope, ['components/admin/docs/EOS_NETWORK_DE.md']);
+    // Current frontend dependency manifests belong to the new sealed Admin build,
+    // but remain outside the immutable R6 overlay scope just like its later docs.
+    assert.deepEqual(outsideHistoricalScope, ['components/admin/docs/EOS_NETWORK_DE.md',
+        'components/admin/src-admin/package-lock.json', 'components/admin/src-admin/package.json']);
     assert.throws(() => sourceEntries(), { code: 'R6_ADMIN_SOURCE_SEAL' });
 });
 test('plain CommonJS security modules match reviewed source and executable bytes', () => {

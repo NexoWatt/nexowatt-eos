@@ -8,7 +8,16 @@ const vm = require('node:vm');
 const { createRequire } = require('node:module');
 function loadLicenseModule(file) {
   const originalRequire = createRequire(file);
-  const load = name => /(?:^|\/)eos-platform$/.test(name) ? { assertEosPlatform: () => true } : originalRequire(name);
+  const load = name => {
+    if (/(?:^|\/)eos-platform$/.test(name)) return { assertEosPlatform: () => true };
+    // Der Admin-Dienst verwendet den öffentlichen Paket-Einstieg. Auch diesen
+    // echten Client isoliert laden, damit nur dessen Plattformprüfung ersetzt
+    // wird; Kryptografie, Lease-Prüfung und der globale require-Cache bleiben echt.
+    if (/(?:^|\/)packages\/eos-license-client(?:\/index\.js)?$/.test(name)) {
+      return loadLicenseModule(originalRequire.resolve(name));
+    }
+    return originalRequire(name);
+  };
   return compile(file, load);
 }
 function compile(file, load) {

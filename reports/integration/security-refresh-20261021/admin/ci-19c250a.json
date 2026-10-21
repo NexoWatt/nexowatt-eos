@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-21T19:57:48.486Z",
+  "repository": "NexoWatt/nexowatt-eos",
+  "sourceCommit": "19c250aa6516881587cea045ab384308b37647d1",
+  "workflowRunId": 39665823332,
+  "jobId": 119450459146,
+  "jobUrl": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39665823332/job/119450459146",
+  "name": "Controller 7.2.5 sessions and actual Admin security dependencies",
+  "status": "completed",
+  "conclusion": "success",
+  "node": "24.21.0",
+  "checks": {
+    "cleanLockedAdminInstall": {
+      "packagesAdded": 757
+    },
+    "backendReproduction": {
+      "gitDiffExitCode": 0
+    },
+    "lockProvenance": {
+      "backend": "PASS",
+      "frontend": "PASS"
+    },
+    "prebuiltSeal": {
+      "sourceRuntimeFiles": 1495,
+      "backendRuntimeFiles": 30
+    },
+    "actualSourceSecurity": {
+      "tests": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "actualBuiltSecurity": {
+      "tests": 77,
+      "passed": 77,
+      "failed": 0
+    },
+    "knownUpstreamLimitCharacterizationsPerSecurityRun": 2
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Check actual published controller methods and explicit version boundaries",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Install locked Admin tooling and reproduce the shipped backend",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Exercise actual Socket and HTTPS dependencies in source and shipped build",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "State current source verification scope",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 13
+    },
+    {
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 14
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    }
+  ],
+  "scope": "This follow-up records the successful source/controller/Admin dependency CI job for the exact commit. It does not establish native PostgreSQL/Pi acceptance, success of other jobs, signed delivery or production approval."
+}

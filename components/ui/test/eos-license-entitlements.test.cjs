@@ -20,6 +20,18 @@ const firstStart = require('../../../runtime/bootstrap/first-start-configuration
 const planPolicy = require('../../../runtime/onboarding/configuration.cjs');
 const { configuredSettings } = require('../../../tests/onboarding/fixtures.cjs');
 
+test('isolated license fixture preserves production platform enforcement and module cache', () => {
+  const file = path.join(__dirname, '../../admin/packages/eos-license-client/index.js');
+  const production = require(file);
+  const isolated = loadLicenseModule(file);
+  assert.equal(require(file), production);
+  assert.notEqual(isolated.assertEosPlatform, production.assertEosPlatform);
+  assert.equal(isolated.assertEosPlatform('eos-admin'), true);
+  assert.throws(() => production.assertEosPlatform('invalid fixture adapter'),
+    error => error.code === 'EOS_PLATFORM_ADAPTER' || error.code === 'EOS_PLATFORM_UNSUPPORTED');
+  assert.equal(require(file).assertEosPlatform, production.assertEosPlatform);
+});
+
 function syntaxBodies(file, names, kind) {
   const source = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
   const found = new Map();

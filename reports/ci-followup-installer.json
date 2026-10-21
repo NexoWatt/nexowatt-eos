@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-historical-r6-ci-followup",
+  "date": "2026-10-21",
+  "baseCommit": "19c250aa6516881587cea045ab384308b37647d1",
+  "reportedFailingCiJob": "119450459508",
+  "fix": "Exact current Admin seal exclusion expectation includes the two newly sealed frontend dependency manifests; historical builder scope is unchanged.",
+  "expectedRejectedSources": [
+    "components/admin/docs/EOS_NETWORK_DE.md",
+    "components/admin/src-admin/package-lock.json",
+    "components/admin/src-admin/package.json"
+  ],
+  "requiredRejection": "R6_ADMIN_SOURCE_SEAL",
+  "historicalBuilderUnchangedAgainstHead": true,
+  "historicalBindingSha256": "bbbb583883aacc97e7206655d61614a72ec20c19033afa68a0ec655ae11049b0",
+  "environment": {
+    "node": "24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "reports/integration/installable-test3-r6-20261004/build-revision.test.cjs"
+  ],
+  "exitCode": 0,
+  "passed": 8,
+  "failed": 0,
+  "skipped": 0,
+  "diffCheckExitCode": 0,
+  "sourceFiles": [
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/build-revision.test.cjs",
+      "sha256": "b6844a95220380c925c2dc7ff61a32a1af0409f2b81bfd159d9a574c3cadb08c",
+      "bytes": 9616
+    },
+    {
+      "path": "reports/integration/installable-test3-r6-20261004/build-revision.cjs",
+      "sha256": "7a1d02c72d3972e25753b47a083fb877466a4ffd716c551dea0c5f346e5b6e02",
+      "bytes": 22207
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "reports/ci-followup-installer.tap",
+      "sha256": "30ceabc97b564930a7f780e8db355a48987c0f8016d68a8027d016efcbcaba8f",
+      "bytes": 2031
+    },
+    {
+      "path": "reports/ci-followup-installer.md",
+      "sha256": "57012d1c39969ef4665c1df0a78bdad257b32178f412d00506a1afd83c213ad6",
+      "bytes": 1405
+    }
+  ],
+  "newCiRunVerified": false,
+  "runtimeBuildExecuted": false,
+  "targetInstallationExecuted": false,
+  "hardwareAcceptance": "OPEN"
+}

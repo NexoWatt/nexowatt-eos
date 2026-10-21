@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "sourceCommitBeforeFix": "19c250aa6516881587cea045ab384308b37647d1",
+  "reportedCiJob": "119450459543",
+  "date": "2026-10-21",
+  "environment": {
+    "platform": "linux",
+    "arch": "x64",
+    "node": "24.19.0",
+    "npm": "11.9.0"
+  },
+  "scope": "isolated UI test fixture and matching current artifact manifest; production modules unchanged",
+  "reproducedBefore": {
+    "command": "node --test test/eos-license-entitlements.test.cjs",
+    "cwd": "components/ui",
+    "exitCode": 1,
+    "passed": 4,
+    "failed": 4
+  },
+  "verificationAfter": [
+    {
+      "command": "node --test scripts/verify-eos-integrated.cjs scripts/verify-eos-auth-security.cjs test/eos-license-entitlements.test.cjs",
+      "cwd": "components/ui",
+      "exitCode": 0,
+      "passed": 53,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node scripts/verify-stable-1.0.9-access.cjs",
+      "cwd": "components/ui",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run publish:check",
+      "cwd": "components/ui",
+      "exitCode": 0,
+      "sealedFiles": 408
+    },
+    {
+      "command": "npm pack --dry-run --json --ignore-scripts",
+      "cwd": "components/ui",
+      "exitCode": 0,
+      "entryCount": 409
+    },
+    {
+      "command": "git diff --check -- components/ui",
+      "exitCode": 0
+    }
+  ],
+  "lifecycleHooksExecuted": false,
+  "targetDeviceObserved": false,
+  "ciRerunIncluded": false,
+  "changedFiles": [
+    {
+      "path": "components/ui/scripts/eos-license-fixture.cjs",
+      "sha256": "e747d8f0f54e3e906412b724a3d96d248a5e02c61cb17519a5e45beb2371ad2e"
+    },
+    {
+      "path": "components/ui/scripts/release-artifact-manifest.json",
+      "sha256": "4b97d89c00b4b19a6eaf8abf7655b97b07ab6a3dd437c2487e69fbdab0b9dd09"
+    },
+    {
+      "path": "components/ui/test/eos-license-entitlements.test.cjs",
+      "sha256": "d395e5843e08ebc2051f916b61033e6a981b055d2e39852eb3e5dcdb79da2f2f"
+    },
+    {
+      "path": "reports/integration/security-refresh-20261021/adapters/CI_UI_LICENSE_FIXTURE_DE.md",
+      "sha256": "188ee2b0ec3ea06ef005283c7bfd62e34513cd4b14fc20c1e8c2b124dd2daca4"
+    }
+  ]
+}

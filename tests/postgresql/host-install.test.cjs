@@ -12,6 +12,7 @@ const { assertRuntimeConfig } = require('../../runtime/bootstrap/initialize.cjs'
 const { mergeControllerConfig } = require('../../tools/system/install-host.cjs');
 const { inspectPostgresqlHost, REQUIRED, UNITS, FRESH_PATHS } = require('../../tools/system/postgresql-host-preflight.cjs');
 const { installPostgresqlHost } = require('../../tools/system/install-postgresql-host.cjs');
+const product = require('../../runtime/product/scope.cjs');
 const REPO = path.resolve(__dirname, '../..');
 function fixture(t) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-pg-installer-')); fs.chmodSync(root, 0o755);
@@ -243,7 +244,23 @@ function managedFixture(t) {
         'runtime/onboarding/policy.cjs', 'runtime/bootstrap/first-start-configuration.cjs',
         'tools/system/finalize-onboarding.cjs', 'tools/system/prepare-first-start-context.cjs']) f.write(`${f.options.releasePath}/${name}`, '{}');
     f.deps.toolTrust = () => ({ trusted: true });
-    f.deps.inspectProduct = (_app, scope) => { assert.equal(scope, 'own-adapter-test'); return []; };
+    const app = `${f.options.releasePath}/app`, specs = product.specsFor(product.SECURITY_REFRESH_TEST);
+    assert.equal(specs.find(spec => spec.kind === 'core').version, '7.2.5');
+    const dependencies = Object.fromEntries(specs.map(spec => [spec.package, spec.version]));
+    const lock = { lockfileVersion: 3, packages: { '': { dependencies } } };
+    for (const spec of specs) {
+        const directory = `${app}/node_modules/${spec.package}`;
+        f.write(`${directory}/package.json`, JSON.stringify({ name: spec.package, version: spec.version, main: spec.main }));
+        f.write(`${directory}/io-package.json`, JSON.stringify({ common: { name: spec.package.slice('iobroker.'.length), version: spec.version } }));
+        f.write(`${directory}/${spec.main}`, 'fixture');
+        lock.packages[`node_modules/${spec.package}`] = { version: spec.version };
+    }
+    f.write(`${app}/package.json`, JSON.stringify({ dependencies }));
+    f.write(`${app}/package-lock.json`, JSON.stringify(lock));
+    f.deps.inspectProduct = (directory, scope) => {
+        assert.equal(scope, product.SECURITY_REFRESH_TEST);
+        return product.inspectApp(directory, scope);
+    };
     f.deps.provisionWeb = ({ directory }) => { fs.mkdirSync(directory, { recursive: true }); for (const name of ['admin.key', 'ui.key', 'setup.key']) fs.writeFileSync(path.join(directory, name), 'fixture'); };
     f.deps.provisionSetupWeb = () => {};
     f.deps.prepareOnboarding = () => ({ code: 'fixture-only', expiresAt: '2026-10-22T00:00:00.000Z', setupId: 'd'.repeat(32) });
@@ -263,6 +280,33 @@ test('fresh managed host installs independent updater and unconfigured network b
     const setup = f.commands.findIndex(([, a]) => a.includes('nexowatt-eos-setup.target'));
     assert.ok(update >= 0 && network > update && setup > network);
     assert.equal(f.commands.some(([, a]) => a.includes('nexowatt-eos-updates.service')), false, 'updater starts only after finalization');
+});
+for (const version of ['7.2.2', '8.0.0']) test(`fresh managed host rejects coherently declared controller ${version} before commands or host writes`, t => {
+    const f = managedFixture(t), app = `${f.options.releasePath}/app`, name = 'iobroker.js-controller';
+    const update = (relative, change) => {
+        const value = JSON.parse(fs.readFileSync(f.at(`${app}/${relative}`), 'utf8'));
+        change(value); f.write(`${app}/${relative}`, JSON.stringify(value));
+    };
+    update('package.json', value => { value.dependencies[name] = version; });
+    update('package-lock.json', value => {
+        value.packages[''].dependencies[name] = version;
+        value.packages[`node_modules/${name}`].version = version;
+    });
+    update(`node_modules/${name}/package.json`, value => { value.version = version; });
+    update(`node_modules/${name}/io-package.json`, value => { value.common.version = version; });
+    assert.throws(() => installPostgresqlHost(f.options, f.deps), { code: 'PRODUCT_LOCK_SCOPE' });
+    assert.equal(f.commands.length, 0);
+    assert.equal(fs.existsSync(f.at('/etc/nexowatt-eos')), false);
+    assert.equal(fs.existsSync(f.at('/var/lib/nexowatt-eos')), false);
+});
+test('fresh managed host rejects installed controller identity inconsistent with the 7.2.5 lock before mutation', t => {
+    const f = managedFixture(t);
+    f.write(`${f.options.releasePath}/app/node_modules/iobroker.js-controller/package.json`,
+        JSON.stringify({ name: 'iobroker.js-controller', version: '7.2.2', main: 'controller.js' }));
+    assert.throws(() => installPostgresqlHost(f.options, f.deps), { code: 'PRODUCT_PACKAGE_IDENTITY' });
+    assert.equal(f.commands.length, 0);
+    assert.equal(fs.existsSync(f.at('/etc/nexowatt-eos')), false);
+    assert.equal(fs.existsSync(f.at('/var/lib/nexowatt-eos')), false);
 });
 test('missing network tools abort fresh managed host before changes; later failure disables addon boot scheduling', t => {
     const a = managedFixture(t); a.deps.toolTrust = () => ({ trusted: false });

@@ -12,7 +12,20 @@ const path = require('node:path');
 const { test } = require('node:test');
 const root = path.resolve(__dirname, '../../../..');
 const req = name => createRequire(path.join(root, 'components', name, 'package.json'));
-const pkg = (request, name) => request(`${name}/package.json`).version;
+// Metadaten entlang des tatsächlich aufgelösten Einstiegspunkts lesen: manche
+// Pakete exportieren package.json nicht; der überprüfte Paketname muss passen.
+function pkg(request, name) {
+    let directory = path.dirname(request.resolve(name));
+    while (directory.startsWith(root + path.sep)) {
+        const file = path.join(directory, 'package.json');
+        if (fs.existsSync(file)) {
+            const metadata = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (metadata.name === name) return metadata.version;
+        }
+        directory = path.dirname(directory);
+    }
+    throw new Error(`Package identity not found: ${name}`);
+}
 async function listen(server) {
     server.listen(0, '127.0.0.1');
     await once(server, 'listening');
@@ -22,6 +35,16 @@ function close(server) {
     server.closeAllConnections();
     return new Promise(resolve => server.close(resolve));
 }
+
+test('UI adapter-core resolves the reviewed controller-7 peer instead of a stale nested version', () => {
+    const ui = req('ui');
+    assert.equal(pkg(ui, '@iobroker/adapter-core'), '3.4.3');
+    const core = createRequire(ui.resolve('@iobroker/adapter-core'));
+    assert.equal(pkg(core, '@iobroker/js-controller-common-db'), '7.2.5');
+    const common = createRequire(core.resolve('@iobroker/js-controller-common-db'));
+    assert.equal(pkg(common, 'axios'), '1.20.0');
+    assert.equal(pkg(createRequire(common.resolve('axios')), 'follow-redirects'), '1.16.1');
+});
 
 test('UI and backup HTTP consumers resolve the reviewed proxy-addr patch', () => {
     for (const component of ['ui', 'backitup']) {

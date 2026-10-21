@@ -23,5 +23,5 @@ if (require.main === module) {
     try {
         if (process.argv.length !== 4 || process.argv[2] !== '--output') throw Object.assign(new Error('FRESH_CACHE_USAGE'), { code: 'FRESH_CACHE_USAGE' });
         process.stdout.write(JSON.stringify(stage(process.argv[3])) + '\n');
-    } catch (error) { process.stderr.write((/^[A-Z][A-Z0-9_]+$/.test(error?.code || '') ? error.code : 'FRESH_CACHE_FAILED') + '\n'); process.exitCode = 1; }
+    } catch (error) { process.stderr.write(JSON.stringify(require('./runtime-dependency-policy.cjs').failureSummary(error, 'FRESH_CACHE_FAILED')) + '\n'); process.exitCode = 1; }
 }

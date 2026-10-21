@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: one approved leaf override merges without dropping source OAuth override
+ok 1 - one approved leaf override merges without dropping source OAuth override
+  ---
+  duration_ms: 1.277694
+  type: 'test'
+  ...
+# Subtest: conflicting component override fails before npm is invoked
+ok 2 - conflicting component override fails before npm is invoked
+  ---
+  duration_ms: 0.64381
+  type: 'test'
+  ...
+# Subtest: actual resolution, approved identities and lock binding all verified
+ok 3 - actual resolution, approved identities and lock binding all verified
+  ---
+  duration_ms: 7.260791
+  type: 'test'
+  ...
+# Subtest: missing root override rejected even when tree happens to contain fixed esbuild
+ok 4 - missing root override rejected even when tree happens to contain fixed esbuild
+  ---
+  duration_ms: 2.064689
+  type: 'test'
+  ...
+# Subtest: unreviewed controller or loader versions fail closed
+ok 5 - unreviewed controller or loader versions fail closed
+  ---
+  duration_ms: 5.220483
+  type: 'test'
+  ...
+# Subtest: old esbuild reached by actual loader cannot hide behind approved root declaration
+ok 6 - old esbuild reached by actual loader cannot hide behind approved root declaration
+  ---
+  duration_ms: 2.77157
+  type: 'test'
+  ...
+# Subtest: installed version differing from lock fails even if version is patched
+ok 7 - installed version differing from lock fails even if version is patched
+  ---
+  duration_ms: 3.283179
+  type: 'test'
+  ...
+# Subtest: another vulnerable esbuild copy in the installed lock cannot escape leaf verification
+ok 8 - another vulnerable esbuild copy in the installed lock cannot escape leaf verification
+  ---
+  duration_ms: 2.200865
+  type: 'test'
+  ...
+# Subtest: CJS module-type markers do not mask the actual controller package identity
+ok 9 - CJS module-type markers do not mask the actual controller package identity
+  ---
+  duration_ms: 8.284928
+  type: 'test'
+  ...
+# Subtest: advisory range distinguishes patched versions and rejects ambiguous prereleases
+ok 10 - advisory range distinguishes patched versions and rejects ambiguous prereleases
+  ---
+  duration_ms: 0.695787
+  type: 'test'
+  ...
+# Subtest: fresh policy authenticates real installed identities and records exact reviewed socket dependencies
+ok 11 - fresh policy authenticates real installed identities and records exact reviewed socket dependencies
+  ---
+  duration_ms: 42.166672
+  type: 'test'
+  ...
+# Subtest: unreviewed or vulnerable nested @iobroker/socket-classes@2.10.1 cannot hide behind the root tree
+ok 12 - unreviewed or vulnerable nested @iobroker/socket-classes@2.10.1 cannot hide behind the root tree
+  ---
+  duration_ms: 6.284735
+  type: 'test'
+  ...
+# Subtest: unreviewed or vulnerable nested @iobroker/js-controller-adapter@8.0.0 cannot hide behind the root tree
+ok 13 - unreviewed or vulnerable nested @iobroker/js-controller-adapter@8.0.0 cannot hide behind the root tree
+  ---
+  duration_ms: 7.034104
+  type: 'test'
+  ...
+# Subtest: unreviewed or vulnerable nested @iobroker/db-objects-redis@7.2.2 cannot hide behind the root tree
+ok 14 - unreviewed or vulnerable nested @iobroker/db-objects-redis@7.2.2 cannot hide behind the root tree
+  ---
+  duration_ms: 5.098569
+  type: 'test'
+  ...
+# Subtest: unreviewed or vulnerable nested follow-redirects@1.15.11 cannot hide behind the root tree
+ok 15 - unreviewed or vulnerable nested follow-redirects@1.15.11 cannot hide behind the root tree
+  ---
+  duration_ms: 5.454255
+  type: 'test'
+  ...
+# Subtest: same-version nested iobroker.js-controller cannot bypass the transformed canonical package
+ok 16 - same-version nested iobroker.js-controller cannot bypass the transformed canonical package
+  ---
+  duration_ms: 4.320858
+  type: 'test'
+  ...
+# Subtest: same-version nested @iobroker/js-controller-cli cannot bypass the transformed canonical package
+ok 17 - same-version nested @iobroker/js-controller-cli cannot bypass the transformed canonical package
+  ---
+  duration_ms: 4.804607
+  type: 'test'
+  ...
+# Subtest: same-version nested @iobroker/js-controller-common-db cannot bypass the transformed canonical package
+ok 18 - same-version nested @iobroker/js-controller-common-db cannot bypass the transformed canonical package
+  ---
+  duration_ms: 4.480157
+  type: 'test'
+  ...
+# Subtest: same-version nested @iobroker/js-controller-adapter cannot bypass the transformed canonical package
+ok 19 - same-version nested @iobroker/js-controller-adapter cannot bypass the transformed canonical package
+  ---
+  duration_ms: 5.071228
+  type: 'test'
+  ...
+# Subtest: same-version nested @iobroker/ws-server cannot bypass the transformed canonical package
+ok 20 - same-version nested @iobroker/ws-server cannot bypass the transformed canonical package
+  ---
+  duration_ms: 3.756178
+  type: 'test'
+  ...
+# Subtest: the exact stale UI adapter-core pin fails with bounded public package diagnostics
+ok 21 - the exact stale UI adapter-core pin fails with bounded public package diagnostics
+  ---
+  duration_ms: 6.919171
+  type: 'test'
+  ...
+# Subtest: failure diagnostics omit arbitrary exception text registry URLs and private values
+ok 22 - failure diagnostics omit arbitrary exception text registry URLs and private values
+  ---
+  duration_ms: 0.336246
+  type: 'test'
+  ...
+# Subtest: syntactically valid private identities paths prereleases and error codes never reach diagnostics
+ok 23 - syntactically valid private identities paths prereleases and error codes never reach diagnostics
+  ---
+  duration_ms: 0.178599
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 218.255652

@@ -1,10 +1,17 @@
 # Sicherheitsabhängigkeiten vom 21.10.2026
 
-UI 1.0.21 hält `proxy-addr` per npm-Override auf 2.0.8. Damit wird die im
-Quell-Lockfile vorhandene Version 2.0.7 ersetzt. Eine übergeordnete
-EOS-Laufzeitinstallation muss den Override an ihrer Installationswurzel
-übernehmen. Der frische Produktions-Audit dieses Quellpakets meldete danach
-keinen Befund; dies ist keine allgemeine Sicherheitsgarantie.
+UI 1.0.21 hält `proxy-addr` per npm-Override auf 2.0.8 und
+`follow-redirects` auf 1.16.1. `@iobroker/adapter-core` ist exakt auf 3.4.3
+angehoben, damit die neue gemeinsame Laufzeit keine zusätzliche alte Kopie 3.4.1
+benötigt. Dessen Controller-Common-DB-Peer löst im Quell-Lockfile auf 7.2.5 auf;
+die Controller-Hauptversion bleibt 7. Eine übergeordnete EOS-Laufzeitinstallation
+muss die Overrides an ihrer Installationswurzel übernehmen.
+
+Nach der ersten isolierten `proxy-addr`-Korrektur meldete der Produktions-Audit
+keinen Befund. Nach Aufnahme des neuen Common-DB-Peers meldet der erneute Audit
+drei hoch eingestufte Paketknoten derselben bereits bekannten, ungepatchten
+Forge-Kette (`adapter-core` → Common-DB → `node-forge` 1.4.0). Der Befund bleibt
+offen; ein früherer Nullbefund wird nicht auf den geänderten Baum übertragen.
 
 Das aktuelle Artefaktmanifest wurde mit dem vorhandenen Generator an die bereits
 vorhandenen zentralen Lizenzdateien angepasst. Die alten Text-Erwartungen im
@@ -20,4 +27,6 @@ keinen ARM64-/Pi-Test unter der Zielversion.
 
 Die zugehörigen Dateihashes, Audit-Rohdaten, tatsächlichen Prüfergebnisse und
 Grenzen stehen im Gesamtprojekt unter
-`reports/integration/security-refresh-20261021/adapters/`.
+`reports/integration/security-refresh-20261021/adapters/`; der nachfolgende
+Adapter-Core-Abgleich ist separat in `UI_ADAPTER_CORE_PIN_DE.md` und
+`ui-adapter-core-followup.json` dokumentiert.

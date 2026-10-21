@@ -13,7 +13,43 @@ const REFRESH_PINS = Object.freeze({ '@iobroker/socket-classes': '2.10.0', '@iob
     axios: '1.20.0', multer: '2.4.0' });
 const TRANSFORMED = new Set(['iobroker.js-controller', '@iobroker/js-controller-cli', '@iobroker/js-controller-common-db', '@iobroker/js-controller-adapter', '@iobroker/ws-server']);
 const LOADER = '@alcalzone/esbuild-register';
-const fail = code => { throw Object.assign(new Error(code), { code }); };
+const fail = (code, diagnostic) => { throw Object.assign(new Error(code), { code, ...(diagnostic ? { diagnostic } : {}) }); };
+const PACKAGE_PATH = /^(?:node_modules\/(?:@[a-z0-9_.~-]+\/)?[a-z0-9_.~-]+\/)*node_modules\/(?:@[a-z0-9_.~-]+\/)?[a-z0-9_.~-]+$/;
+const PUBLIC_PACKAGES = new Set([...Object.keys(REFRESH_PINS), 'iobroker.js-controller', 'brace-expansion', 'form-data',
+    ...['adapter', 'cli', 'common', 'common-db'].map(suffix => `@iobroker/js-controller-${suffix}`),
+    ...['states', 'objects'].flatMap(kind => ['file', 'jsonl', 'redis'].map(backend => `@iobroker/db-${kind}-${backend}`))]);
+const PUBLIC_CODES = new Set([
+    'DEPENDENCY_POLICY_FAILED', 'FRESH_CACHE_FAILED', 'FRESH_CACHE_USAGE', 'FRESH_BUILD_FAILED',
+    ...['UNREVIEWED_VERSION', 'INPUT', 'IDENTITY', 'ESCAPE', 'LOCK', 'ROOT_OVERRIDE', 'LOCK_IDENTITY', 'LOCK_PATH',
+        'REFRESH_PIN', 'UNTRANSFORMED_COPY', 'AFFECTED_ESBUILD', 'PACKAGE'].map(code => `DEPENDENCY_POLICY_${code}`),
+    ...['GIT', 'CLEAN_HOST', 'SEQUENCE', 'LOCK_REQUIRED', 'OUTPUT', 'ARCHITECTURE', 'SBOM', 'SOURCE_CHANGED',
+        'DIRECTORY', 'LOCK_CHANGED', 'CATALOG', 'USAGE'].map(code => `FRESH_BUILD_${code}`),
+    ...['INPUT', 'TRACKED_PATH', 'SNAPSHOT_LIMIT', 'SOURCE_LINK', 'NPM_TOOLCHAIN', 'OFFLINE_CACHE_MISS', 'NPM_FAILED',
+        'LOCK', 'IDENTITY', 'LOCK_IDENTITY', 'ARCHIVE_INTEGRITY', 'OVERRIDE_SHAPE', 'OVERRIDE_CONFLICT', 'TARGET_PLATFORM',
+        'TRACKED_SOURCE', 'POSTGRESQL_PEER_INPUT', 'NETWORK_MODE', 'FRESH_EXTERNAL_DIRECTORY_REQUIRED', 'COMPONENTS',
+        'FULL_PRODUCT_REQUIRED', 'NODE_VERSION', 'COMPONENT_IDENTITY', 'MAIN_MISSING', 'PACK_RESULT', 'USAGE'].map(code => `BUILD_${code}`)
+]);
+const safeVersion = value => typeof value === 'string' && /^[0-9]{1,6}\.[0-9]{1,6}\.[0-9]{1,6}$/.test(value) ? value : 'INVALID';
+function safePlacement(value) {
+    if (typeof value !== 'string' || value.length > 1024 || !PACKAGE_PATH.test(value)) return { placement: 'INVALID', nestingDepth: null };
+    const nestingDepth = value.split('node_modules/').length - 2;
+    return nestingDepth >= 0 && nestingDepth <= 32 ? { placement: nestingDepth ? 'nested' : 'root', nestingDepth } : { placement: 'INVALID', nestingDepth: null };
+}
+function failureSummary(error, fallback = 'DEPENDENCY_POLICY_FAILED') {
+    const code = PUBLIC_CODES.has(error?.code) ? error.code : PUBLIC_CODES.has(fallback) ? fallback : 'DEPENDENCY_POLICY_FAILED';
+    const result = { ok: false, code };
+    // Never serialize arbitrary npm errors, registry URLs, process output,
+    // environment or credentials. Only fixed public dependency identities.
+    if (code === 'DEPENDENCY_POLICY_REFRESH_PIN' && error?.diagnostic) {
+        const row = error.diagnostic;
+        result.dependency = {
+            package: PUBLIC_PACKAGES.has(row.package) ? row.package : 'INVALID', ...safePlacement(row.path),
+            expected: safeVersion(row.expected), locked: safeVersion(row.locked), installed: safeVersion(row.installed),
+            identityMatches: row.identityMatches === true, lockLink: row.lockLink === true, integrityBound: row.integrityBound === true
+        };
+    }
+    return result;
+}
 function selectedPolicy(controllerVersion = POLICY.controller) {
     if (!['7.2.2', '7.2.5'].includes(controllerVersion)) fail('DEPENDENCY_POLICY_UNREVIEWED_VERSION');
     return { ...POLICY, controller: controllerVersion };
@@ -84,7 +120,10 @@ function verifyInstalledTree(appInput, options = {}) {
         if (relative.split('/').some(part => part === '..' || part === '.') || path.isAbsolute(relative) || relative.includes('\\')) fail('DEPENDENCY_POLICY_LOCK_PATH');
         const installed = read(path.join(app, relative, 'package.json'));
         if (entry.version !== pin || installed.name !== name || installed.version !== pin || entry.link ||
-            !/^sha512-[A-Za-z0-9+/]+={0,2}$/.test(entry.integrity || '')) fail('DEPENDENCY_POLICY_REFRESH_PIN');
+            !/^sha512-[A-Za-z0-9+/]+={0,2}$/.test(entry.integrity || '')) fail('DEPENDENCY_POLICY_REFRESH_PIN', {
+                package: name, path: relative, expected: pin, locked: entry.version, installed: installed.version,
+                identityMatches: installed.name === name, lockLink: entry.link === true,
+                integrityBound: /^sha512-[A-Za-z0-9+/]+={0,2}$/.test(entry.integrity || '') });
         if (TRANSFORMED.has(name) && relative !== `node_modules/${name}`) fail('DEPENDENCY_POLICY_UNTRANSFORMED_COPY');
         refreshedInstances.push({ path: relative, name, version: pin });
     }
@@ -104,4 +143,4 @@ function verifyInstalledTree(appInput, options = {}) {
         inspectedEsbuildInstances: instances, refreshedInstances, packageLockSha256: createHash('sha256').update(fs.readFileSync(lockFile)).digest('hex'),
         verifiedHost: { platform: process.platform, arch: process.arch }, lifecycleScriptsRequired: false };
 }
-module.exports = { POLICY, reviewedOverrides, affected, verifyInstalledTree };
+module.exports = { POLICY, reviewedOverrides, affected, verifyInstalledTree, failureSummary };

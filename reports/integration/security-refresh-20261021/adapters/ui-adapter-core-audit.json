@@ -1,0 +1,96 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@iobroker/adapter-core": {
+      "name": "@iobroker/adapter-core",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@iobroker/js-controller-common-db"
+      ],
+      "effects": [],
+      "range": ">=3.4.3",
+      "nodes": [
+        "node_modules/@iobroker/adapter-core"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/adapter-core",
+        "version": "3.4.2",
+        "isSemVerMajor": true
+      }
+    },
+    "@iobroker/js-controller-common-db": {
+      "name": "@iobroker/js-controller-common-db",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "node-forge"
+      ],
+      "effects": [
+        "@iobroker/adapter-core"
+      ],
+      "range": ">=6.0.1-alpha.0-20240522-6037ce8ae",
+      "nodes": [
+        "node_modules/@iobroker/js-controller-common-db"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/adapter-core",
+        "version": "3.4.2",
+        "isSemVerMajor": true
+      }
+    },
+    "node-forge": {
+      "name": "node-forge",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240912,
+          "name": "node-forge",
+          "dependency": "node-forge",
+          "title": "node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements",
+          "url": "https://github.com/advisories/GHSA-86w9-cpqp-85rv",
+          "severity": "high",
+          "cwe": [
+            "CWE-347"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": "<=1.4.0"
+        }
+      ],
+      "effects": [
+        "@iobroker/js-controller-common-db"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/node-forge"
+      ],
+      "fixAvailable": {
+        "name": "@iobroker/adapter-core",
+        "version": "3.4.2",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 3,
+      "critical": 0,
+      "total": 3
+    },
+    "dependencies": {
+      "prod": 114,
+      "dev": 159,
+      "optional": 37,
+      "peer": 71,
+      "peerOptional": 0,
+      "total": 343
+    }
+  }
+}
