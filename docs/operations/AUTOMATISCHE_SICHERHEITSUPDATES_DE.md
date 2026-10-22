@@ -13,6 +13,11 @@ ersetzt für diese Lieferung den zuvor vorgesehenen Node-Stand 24.21.0.
 Der bisherige native Nachweis am Quellcommit
 `a2733fa5561f7327ff3689b7464f8727760fb670` bleibt ein Nachweis für seinen
 damaligen Stand; er qualifiziert diese neue Laufzeit nicht.
+Der neue Stand `06ed52f636d0da58d56a86646cdbe4ba601f1776` besitzt inzwischen
+seinen eigenen erfolgreichen Linux-x64-Nachweis mit sechs Adaptern, Lizenzen,
+Backup und Neustart. Das erzeugte unsignierte Archiv wurde zurückgelesen und
+gegen Quell-, Stücklisten- und native Nachweise geprüft. Die ARM64-/Pi-Abnahme
+und die signierte Auslieferung stehen weiterhin aus.
 
 Der Hersteller übernimmt eine genaue offizielle Node-Datei, prüft deren
 SHA-256 und bindet Binärdatei, Lizenztext, Versionsmetadaten und SBOM in die

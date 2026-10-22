@@ -1,9 +1,11 @@
 # Test-Pi frisch installieren, danach Updates im Admin
 
 Nach dem Node-Sicherheitsrelease vom 21.10.2026 wird die neue Testbasis auf
-Node 24.22.1 und gekoppelte Node-/EOS-Updates umgestellt. Die vorherige Basis
-unter Node 24.21.0 ist im Linux-x64-Labor geprüft; dieser Nachweis wird nicht
-auf die neue Fassung übertragen. Eine signierte Pi-Auslieferung fehlt noch.
+Node 24.22.1 und gekoppelte Node-/EOS-Updates umgestellt. Der neue Quellstand
+`06ed52f636d0da58d56a86646cdbe4ba601f1776` hat seinen eigenen vollständigen
+Linux-x64-Lauf mit sechs Adaptern, Lizenzen, Backup und Neustart bestanden;
+das erzeugte unsignierte Paket wurde zurückgelesen und geprüft. Dieser
+Nachweis ersetzt keine ARM64-/Pi-Abnahme. Eine signierte Pi-Auslieferung fehlt noch.
 Sie bleibt ausdrücklich auf js-controller **7.2.5**. Controller 8 wird weder
 automatisch bezogen noch durch den neuen Paket-/Katalogvertrag zugelassen.
 **Bestehenden Test-Pi noch nicht löschen.** Der R11-Befehl in der README ist

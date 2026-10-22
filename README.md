@@ -4,9 +4,12 @@
 Die neue Frischbasis wird auf **Node 24.22.1** umgestellt; js-controller bleibt
 **7.2.5**. Künftige geprüfte Node-24-Updates werden Bestandteil der signierten
 EOS-Lieferung. Die Linux-Automatik erhält gemeinsame Wartungssperren und eine
-sichtbare Behandlung ausstehender Dienst-/Kernelaktivierungen. Dieser neue
-Stand benötigt eine eigene Qualifikation; die unten genannten älteren
-Prüfergebnisse und R11-Pakete enthalten diese Änderung nicht.
+sichtbare Behandlung ausstehender Dienst-/Kernelaktivierungen. Der neue
+Quellstand `06ed52f636d0da58d56a86646cdbe4ba601f1776` hat den vollständigen
+Linux-x64-Test mit sechs Adaptern, Lizenzen, Backup und Neustart bestanden.
+Das unsignierte Paket wurde zurückgelesen und geprüft. Herstellersignierung,
+öffentliche Auslieferung und Pi-Abnahme fehlen weiterhin. Die unten genannten
+älteren Prüfergebnisse und R11-Pakete enthalten diese Änderung nicht.
 [Betriebsablauf](docs/operations/AUTOMATISCHE_SICHERHEITSUPDATES_DE.md) ·
 [Änderungs- und Prüfbericht](reports/integration/automatic-security-updates-20261022/README_DE.md).
 

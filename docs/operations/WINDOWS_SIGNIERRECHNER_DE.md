@@ -104,8 +104,12 @@ Seit dem Sicherheitsrelease vom 21.10.2026 wird die neue Frischlieferung unter
 Linux mit Node 24.22.1 vorbereitet. Der zuvor qualifizierte Quellcommit
 `a2733fa5561f7327ff3689b7464f8727760fb670` gehört zur früheren Node-24.21.0-Basis
 und darf nicht als Nachweis für das neue Paket verwendet werden. Der Signierlauf
-benötigt den neu qualifizierten sauberen Quellcommit, dessen genaue vorbereitete
+benötigt den neu qualifizierten sauberen Quellcommit
+`06ed52f636d0da58d56a86646cdbe4ba601f1776`, dessen genaue vorbereitete
 Laufzeit-/Nachweisdateien und das hashgeprüfte offizielle ARM64-Node-Archiv.
+Dieser neue Gesamtbuild und die Rückprüfung seines unsignierten Transportarchivs
+sind im [CI-Nachweis](../../reports/integration/automatic-security-updates-20261022/ci/verification.json)
+dokumentiert. Ein späterer Dokumentationscommit ersetzt diesen Buildstand nicht.
 Ein späterer Dokumentationscommit ersetzt diesen Herkunftsnachweis nicht.
 Siehe [Node- und Linux-Aktualisierung](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
 

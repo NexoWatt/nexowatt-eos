@@ -59,8 +59,9 @@ Kernel-flock und Fehler-/Rückfallmodelle sind damit belegt. Ein unter Node
 24.22.1 neu gebauter Gesamtstand muss zusätzlich die verpflichtenden CI-
 Prüfungen und die spätere ARM64-/Pi-Abnahme bestehen. Browser- und lokale
 Socket-Ausführung waren in diesem Container eingeschränkt; ihre CI-Gates
-bleiben verpflichtend. Zum Zeitpunkt dieses Quellcommits wird kein CI-Erfolg
-behauptet.
+bleiben verpflichtend. Zum Zeitpunkt dieser lokalen Prüfung lag noch kein
+CI-Ergebnis vor. Der anschließend ausgeführte Gesamtbuild ist unten getrennt
+mit seinem tatsächlichen Quellcommit dokumentiert.
 
 Teilnachweise (Testzahlen überlappen und werden nicht addiert):
 
@@ -79,6 +80,49 @@ geänderten gemeinsam verwendeten Dateien gilt zusätzlich der Endstandnachweis.
 Unveränderte historische Lieferungen, ihre Schlüssel und ihre Prüfberichte
 werden nicht überschrieben. Private Herstellerschlüssel, Passphrasen,
 Kundendaten und echte Lizenzdateien gehören nicht zum öffentlichen Inhalt.
+
+## Neuer Gesamtbuild und tatsächliche Rückprüfung
+
+Der korrigierte Lauf [39725865926](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39725865926)
+am Quellcommit `06ed52f636d0da58d56a86646cdbe4ba601f1776` bestand alle acht
+ausgeführten Sicherheitsjobs. Der vorherige Abbruch durch die abweichende
+gebündelte npm-Version ist im [separaten Fehlerbericht](node-package/CI_TOOLCHAIN_FOLLOWUP_DE.md)
+erhalten. Der neue Lauf verwendete tatsächlich Node **24.22.1** und den
+festgelegten Hersteller-Buildhelfer npm **11.19.0**. npm wird nicht ausgeliefert.
+
+Der frische native Linux-x64-Test bestand **15/15** Prüfungen einschließlich
+Erststart, sechs Adapterprozessen, zentraler Lizenzen, logischem Backup und
+Neustart. Paketaufbau, tatsächliche SBOM, ARM64-Node-Download und Archivhash
+wurden ebenfalls geprüft. Die Browserprüfungen am unveränderten Laufzeitcode
+des vorhergehenden Commits bestanden mit 4/4 Update- und 5/5 Netzwerkfällen.
+Auch [CodeQL](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39725865712)
+und die [Workflow-Prüfung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39725865795)
+für den neuen Quellcommit sind erfolgreich abgeschlossen. Die vollständigen
+[Managed-Update-Verträge](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39725191148)
+und die [Netzwerkqualifikation](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39725190974)
+sind ebenfalls grün; der anschließende Compiler-Fix änderte keinen der dabei
+geprüften Laufzeit-, Installer-, Admin- oder Testbäume.
+
+Das CI-Archiv wurde anschließend erneut heruntergeladen. Beide ZIP-Digests,
+der enthaltene Tarball und alle **22.441** Inventarzeilen stimmen überein.
+`verifyPrepared` und `verifyNativeEvidence` bestätigten den heruntergeladenen
+Baum, **22.431** App-Dateien, Node-Metadaten/-Binärdatei/-Lizenz, die tatsächliche
+SBOM und den nativen Nachweis für denselben Commit. Lokal wurde die ARM64-
+Binärdatei dabei nicht ausgeführt. Details: [CI-Verifikation](ci/verification.json)
+und [Rücklesevermerk](ci/artifact-readback.json). Die [tatsächliche SBOM](ci/runtime.cdx.json),
+der [Buildrecord](ci/runtime-build.json), [native TAP](ci/own-adapters-native.tap)
+und die zugehörigen bereinigten Nachweise sind zusätzlich im Repository erhalten.
+
+Das unsignierte Archiv hat **134.040.451 Byte** und SHA-256
+`9854adfb48b52074a67a443bc77756132efc767e9e9c1f2cdb026f41087a17ff`.
+Es ist Herstellertransport und kein freigegebener Installationsbefehl.
+
+Der [Audit des tatsächlichen neuen Lockbaums](ci/actual-production-audit.json)
+enthält weiterhin **26 betroffene Paketknoten: 20 hoch, 6 mittel, 0 kritisch**.
+Dies sind keine 26 unabhängig gezählten Sicherheitslücken. Die konkrete
+Erreichbarkeit wurde dadurch nicht nachgewiesen; die Befunde bleiben offen.
+Node-Aktualisierung und grüne Integration bedeuten keine vollständige
+Schwachstellenfreiheit oder Produktionsfreigabe.
 
 ## Noch erforderliche Zielnachweise
 
