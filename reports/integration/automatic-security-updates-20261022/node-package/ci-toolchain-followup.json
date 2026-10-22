@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-fresh-ci-toolchain-failure-followup",
+  "date": "2026-10-22",
+  "observedSourceCommit": "2f017f31331dbd6d8f731a5e43516c192a8dc6ad",
+  "workflowRunId": 39725190988,
+  "jobId": 119647367797,
+  "observedNodeVersion": "24.22.1",
+  "observedBundledNpmVersion": "11.19.1",
+  "requiredCompilerNpmVersion": "11.19.0",
+  "failedStep": "Resolve once and assemble a fresh exact locked runtime without lifecycle scripts",
+  "failureCode": "BUILD_NPM_TOOLCHAIN",
+  "officialArm64ArchiveDownloadAndSha256CheckPassed": true,
+  "nativePostgresql1711BuildPassed": true,
+  "completeEosRuntimePrepared": false,
+  "freshNativeEosQualificationPerformed": false,
+  "fix": "Fresh CI explicitly installs npm11.19.0 using the npm-cli adjacent to process.execPath and the matching explicit prefix; verifies actual CLI and package manifest versions",
+  "localChecks": [
+    "workflow YAML parsed",
+    "pin step belongs only to native-own-adapters",
+    "CI pin step bash -n passed",
+    "manufacturer documentation command bash -n passed",
+    "git diff --check passed"
+  ],
+  "fixedCiRerunResult": "PENDING",
+  "runtimeValidatorsChanged": false,
+  "historicalToolchainsChanged": false,
+  "publishedInstallationRelease": false,
+  "productionReleaseApproved": false,
+  "fixSourceFiles": [
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "877ab5d68c12e7198343b5245bbd41f5ee19677bff40fcbfe5496e3ac92657bf"
+    },
+    {
+      "path": "PARAMETERS.md",
+      "sha256": "85660a0924210bef12fccca004a0893b40cb2f074a2cd28b3f6d2ef2627827df"
+    },
+    {
+      "path": "docs/operations/WINDOWS_SIGNIERRECHNER_DE.md",
+      "sha256": "7c98e039c2d67b6f45afcae019182930ba76b869cb6c1b57c856fd37e00955cb"
+    },
+    {
+      "path": "docs/operations/MANAGED_TEST_UPDATES_DE.md",
+      "sha256": "9a2477cbde500df699586b23921e19c841a96847c5c672a0dfd88053de0e6314"
+    }
+  ]
+}

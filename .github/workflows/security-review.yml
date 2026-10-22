@@ -704,6 +704,20 @@ jobs:
         with:
           node-version: '24.22.1'
           package-manager-cache: false
+      - name: Pin the separately qualified manufacturer npm compiler
+        # Node 24.22.1 bundles npm 11.19.1; build-runtime deliberately requires
+        # npm 11.19.0 beside process.execPath. npm is not shipped to the Pi.
+        run: |
+          set -euo pipefail
+          [[ "$(node --version)" == v24.22.1 ]]
+          eos_node_prefix=$(node -p "require('node:path').resolve(require('node:path').dirname(process.execPath), '..')")
+          eos_npm_cli="$eos_node_prefix/lib/node_modules/npm/bin/npm-cli.js"
+          [[ -f "$eos_npm_cli" && ! -L "$eos_npm_cli" ]]
+          node "$eos_npm_cli" install --global --prefix "$eos_node_prefix" npm@11.19.0 \
+            --registry=https://registry.npmjs.org/ --strict-ssl=true \
+            --ignore-scripts --no-audit --no-fund --fetch-timeout=5000 --fetch-retries=0
+          [[ "$(node "$eos_npm_cli" --version)" == 11.19.0 ]]
+          node -e "const p=require('node:path'); const f=p.resolve(p.dirname(process.execPath),'../lib/node_modules/npm/package.json'); if(require(f).version!=='11.19.0') process.exit(1); console.log('Manufacturer toolchain: Node '+process.versions.node+', adjacent npm '+require(f).version);"
       - name: Prepare fresh explicit own-adapter laboratory
         run: |
           set -euo pipefail

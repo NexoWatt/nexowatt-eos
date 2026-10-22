@@ -93,6 +93,13 @@ Controllertransformationen und native Prüfung beziehen sich auf denselben
 vorbereiteten Laufzeitbaum. Details und tatsächlicher Prüfstatus stehen im
 [Umsetzungsbericht](../../reports/integration/security-refresh-20261021/README_DE.md).
 
+Der Hersteller-Build benötigt Node **24.22.1** und separat festgelegtes npm
+**11.19.0** direkt neben diesem Interpreter. Das mit Node24.22.1 gelieferte npm
+11.19.1 wird für diesen Build nicht ungeprüft übernommen. Der genaue
+[Vorbereitungsschritt](WINDOWS_SIGNIERRECHNER_DE.md) und der frische CI-Job
+prüfen den tatsächlichen npm-Pfad und die Version. npm wird nicht auf den Pi
+mitgeliefert; der bestehende strikte Buildvertrag bleibt erhalten.
+
 `tools/bootstrap/build-managed-test.cjs` erhält den bereits vorbereiteten und
 geprüften Laufzeitbaum über `--prepared-runtime`, außerdem `--native-evidence`,
 `--private-key`, `--public-key-sha256`, `--sequence` und `--node-archive`. Sequenz 15 ist für die

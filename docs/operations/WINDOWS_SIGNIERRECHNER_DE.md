@@ -108,6 +108,32 @@ benötigt den neu qualifizierten sauberen Quellcommit, dessen genaue vorbereitet
 Laufzeit-/Nachweisdateien und das hashgeprüfte offizielle ARM64-Node-Archiv.
 Ein späterer Dokumentationscommit ersetzt diesen Herkunftsnachweis nicht.
 Siehe [Node- und Linux-Aktualisierung](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
+
+Für Paketauflösung und Build wird zusätzlich exakt **npm 11.19.0** benötigt.
+Node 24.22.1 bringt npm 11.19.1 mit; diese Werkzeuge werden deshalb getrennt
+festgelegt. npm wird ausschließlich auf dem Hersteller-Buildrechner verwendet
+und nicht mit dem Node-Laufzeitpaket auf den Pi ausgeliefert.
+
+Den folgenden Schritt nur in einer vorbereiteten, vom normalen Benutzer
+beschreibbaren Node-24.22.1-Buildumgebung ausführen, nicht auf der Anlage. Er
+installiert npm in genau die Node-Distribution, deren Interpreter anschließend
+den Build ausführt; ein abweichendes npm aus `PATH` genügt nicht. Die privaten
+Signierdateien werden dabei nicht gelesen oder verwendet.
+
+```bash
+(
+set -euo pipefail
+[[ "$(node --version)" == v24.22.1 ]]
+eos_node_prefix=$(node -p "require('node:path').resolve(require('node:path').dirname(process.execPath), '..')")
+eos_npm_cli="$eos_node_prefix/lib/node_modules/npm/bin/npm-cli.js"
+[[ -f "$eos_npm_cli" && ! -L "$eos_npm_cli" ]]
+node "$eos_npm_cli" install --global --prefix "$eos_node_prefix" npm@11.19.0 \
+  --registry=https://registry.npmjs.org/ --strict-ssl=true \
+  --ignore-scripts --no-audit --no-fund --fetch-timeout=5000 --fetch-retries=0
+[[ "$(node "$eos_npm_cli" --version)" == 11.19.0 ]]
+node -e "const p=require('node:path'); const f=p.resolve(p.dirname(process.execPath),'../lib/node_modules/npm/package.json'); if(require(f).version!=='11.19.0') process.exit(1); console.log('Manufacturer toolchain: Node '+process.versions.node+', adjacent npm '+require(f).version);"
+)
+```
 Die neu erzeugte Update-Autorität ersetzt auch nicht die getrennten,
 authentifizierten öffentlichen Prüfschlüssel der vorhandenen NWL3-Lizenzen.
 

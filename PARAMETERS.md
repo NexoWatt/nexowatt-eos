@@ -22,6 +22,16 @@ The tools create local candidates only; neither publishes automatically.
 `--output`, `--sequence`, `--resolution-lock`, and `--node-archive`; the last argument is
 the pinned ARM64 archive that becomes part of the signed payload.
 
+The manufacturer compiler is exactly Node **24.22.1** with npm **11.19.0**.
+Node 24.22.1's bundled npm 11.19.1 is not the separately qualified compiler.
+Install npm 11.19.0 into that Node distribution's own prefix, then verify the
+adjacent `lib/node_modules/npm/package.json` and `npm-cli.js --version` before
+resolution or assembly. A different npm found through `PATH` does not satisfy
+the build gate. Fresh CI performs this explicit pin; historical jobs retain
+their original toolchains. npm is a manufacturer build tool and is not part
+of the three-file Node runtime shipped to the Pi. See the exact local command
+in [manufacturer preparation](docs/operations/WINDOWS_SIGNIERRECHNER_DE.md).
+
 `tools/bootstrap/build-managed-download.cjs` takes `--base-url`,
 `--license-trust`, `--license-trust-sha256`, `--release-public-key-sha256`,
 `--output`, and `--node-archive`. For the exact GitHub Release asset base
