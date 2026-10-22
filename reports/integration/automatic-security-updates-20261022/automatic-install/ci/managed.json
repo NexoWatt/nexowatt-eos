@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-automatic-install-managed-ci-observation",
+  "date": "2026-10-22",
+  "sourceCommit": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+  "runId": 39736782798,
+  "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39736782798",
+  "status": "completed",
+  "conclusion": "success",
+  "startedAt": "2026-10-22T06:53:19Z",
+  "finishedAt": "2026-10-22T06:55:17Z",
+  "environment": {
+    "platform": "Linux x64 GitHub-hosted runner",
+    "nodeVersion": "24.22.1",
+    "browser": "Chrome Headless Shell 151.0.7922.34",
+    "playwrightChromiumRevision": "1234"
+  },
+  "contracts": {
+    "jobId": 119684225545,
+    "conclusion": "success",
+    "nodeRuns": [
+      {
+        "command": "node --test tests/system/managed-channel.test.cjs tests/system/managed-trust.test.cjs tests/system/update-managed-release.test.cjs tests/integration/managed-fresh-enrollment.test.cjs components/admin/test/eos-update-http.test.cjs components/admin/test/eos-os-update-status.test.cjs",
+        "tests": 91,
+        "passed": 90,
+        "failed": 0,
+        "skipped": 1,
+        "skipReason": "One file-integration case requires uid0; exercised in the separate root job step below."
+      },
+      {
+        "command": "node --test tests/onboarding/enrollment.test.cjs tests/system/first-start-finalizer.test.cjs tests/postgresql/own-adapter-product.test.cjs tests/system/own-adapter-sbom.test.cjs",
+        "tests": 44,
+        "passed": 44,
+        "failed": 0,
+        "skipped": 0,
+        "skipReason": null
+      },
+      {
+        "command": "node --test tests/system/managed-node-runtime.test.cjs tests/integration/node-runtime-package.test.cjs tests/integration/serialport-native.test.cjs",
+        "tests": 24,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 12,
+        "skipReason": "Twelve native package fixture cases require EOS_NATIVE_TEST_APP pointing to the original unnormalized offline app tree. This job does not set it; the separate Security job owns that evidence."
+      },
+      {
+        "command": "node --test tests/system/automatic-node-updates.test.cjs tests/integration/r8-managed-enrollment.test.cjs",
+        "tests": 26,
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0,
+        "skipReason": null
+      },
+      {
+        "command": "node --test tests/integration/node-only-package.test.cjs tests/system/update-r8-to-managed.test.cjs",
+        "tests": 18,
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0,
+        "skipReason": null
+      },
+      {
+        "command": "node --test tests/bootstrap/public-r8-managed-entry.test.cjs",
+        "tests": 7,
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "skipReason": null
+      },
+      {
+        "command": "node --test tests/system/os-updates-host-contract.test.cjs tests/system/os-updates-cross-contract.test.cjs",
+        "tests": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "skipReason": null
+      },
+      {
+        "command": "sudo -- \"$(command -v node)\" --test tests/system/managed-trust.test.cjs tests/system/managed-socket.test.cjs tests/postgresql/host-install.test.cjs tests/system/install-os-maintenance.test.cjs tests/system/migrate-r8-host.test.cjs tests/system/migrate-r8-os-maintenance.test.cjs",
+        "tests": 55,
+        "passed": 55,
+        "failed": 0,
+        "skipped": 0,
+        "skipReason": null
+      }
+    ],
+    "pythonRuns": [
+      {
+        "command": "python3 -I -B tests/integration/node-runtime-archive.test.py",
+        "tests": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "command": "python3 -I -B tests/integration/prepared-runtime-archive.test.py",
+        "tests": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "command": "python3 -I -B tests/bootstrap/download-r8-managed.test.py",
+        "tests": 3,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 2,
+        "skipReason": "Two protected /root staging cases require local root. This CI step is unprivileged. Both were executed locally; see ../r8-entry/verification.json."
+      }
+    ],
+    "prebuilt": {
+      "passed": true,
+      "sealedFiles": 1498,
+      "backendFiles": 31
+    },
+    "summaryLines": [
+      "ℹ tests 91",
+      "ℹ pass 90",
+      "ℹ fail 0",
+      "ℹ skipped 1",
+      "ℹ tests 44",
+      "ℹ pass 44",
+      "ℹ fail 0",
+      "ℹ skipped 0",
+      "ℹ tests 24",
+      "ℹ pass 12",
+      "ℹ fail 0",
+      "ℹ skipped 12",
+      "ℹ tests 26",
+      "ℹ pass 26",
+      "ℹ fail 0",
+      "ℹ skipped 0",
+      "ℹ tests 18",
+      "ℹ pass 18",
+      "ℹ fail 0",
+      "ℹ skipped 0",
+      "ℹ tests 7",
+      "ℹ pass 7",
+      "ℹ fail 0",
+      "ℹ skipped 0",
+      "Ran 5 tests in 0.013s",
+      "OK",
+      "Ran 6 tests in 0.041s",
+      "OK",
+      "Ran 3 tests in 0.000s",
+      "OK (skipped=2)",
+      "ℹ tests 6",
+      "ℹ pass 6",
+      "ℹ fail 0",
+      "ℹ skipped 0",
+      "[NexoWatt EOS prebuilt release] OK (1498 sealed source/runtime files; 31 backend runtime files; no tsc/tsx required for npm publish)",
+      "ℹ tests 55",
+      "ℹ pass 55",
+      "ℹ fail 0",
+      "ℹ skipped 0"
+    ]
+  },
+  "browser": {
+    "jobId": 119684225175,
+    "conclusion": "success",
+    "command": "NODE_PATH=\"$GITHUB_WORKSPACE/tests/network/browser/node_modules\" node --test components/admin/test/eos-update-browser.test.cjs",
+    "tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "cases": [
+      "✔ update needs maintenance confirmation, uses only selected ID, escapes notes and survives dialog close/reopen (1501.104547ms)",
+      "✔ customer has no update entry; mobile installer dialog stays inside viewport (416.269ms)",
+      "✔ Node and Linux status remain separate; pending activation never appears as fully applied (322.341406ms)",
+      "✔ missing Linux state is explicit and Node status text cannot inject markup (228.233213ms)",
+      "✔ automatic Node policy needs no browser install request; deferral and unknown policy stay visible (373.604951ms)"
+    ],
+    "summaryLines": [
+      "ℹ tests 5",
+      "ℹ pass 5",
+      "ℹ fail 0",
+      "ℹ skipped 0",
+      "ℹ duration_ms 3118.765339"
+    ]
+  },
+  "limits": [
+    "Per-run counts are test executions, not distinct tests; some suites repeat under root and must not be added as unique coverage.",
+    "Browser scenarios use a real Chromium process with explicit HTTP fixtures; they do not install an update or establish Pi/device acceptance.",
+    "Root filesystem and actual local socket fixtures are exercised in the root CI step; no production device, real APT transaction or physical plant was modified.",
+    "Successful workflow status does not replace native package fixture evidence, signed delivery, public artifact readback or ARM64/Pi acceptance."
+  ],
+  "rawLogsStored": false
+}

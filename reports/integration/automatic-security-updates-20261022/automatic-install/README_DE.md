@@ -68,6 +68,31 @@ Teilnachweise: [Node-Empfänger](node-receiver/README.md),
 [OS-Übernahme](os-review/README_DE.md), [R8-Einstieg](r8-entry/README_DE.md),
 [R8-Migration](../../r8-direct-managed-20261022/README.md).
 
+## Neuer nativer Lauf und Browserprüfung
+
+Am veröffentlichten Quellcommit
+`f353dd08bf8ac5897e9b1c357994d4047a82ed6d` bestand der neue vollständige
+Laufzeittest unter Node 24.22.1/npm 11.19.0 mit PostgreSQL 17.11 auf Linux x64:
+**15/15 Fälle ohne Skip**. Alle acht ausgeführten Sicherheitsgruppen und die
+Managed-Verträge bestanden. Chromium bestand **5/5 Fälle ohne Skip**, darunter
+die neue Automatikdarstellung. Begründete Skips einzelner normaler CI-Verträge
+sind getrennt in `ci/managed.json` aufgeführt; wiederholte Läufe werden nicht
+als zusätzliche eindeutige Fälle gezählt.
+
+Auch CodeQL und die Workflowvalidierung wurden am gleichen Quellcommit
+erfolgreich abgeschlossen. Die vier vollständigen CI-Läufe mit Jobstatus sind
+in [qualification.json](ci/qualification.json) festgehalten. Erfolgreiche
+Prüfläufe sind keine Aussage, dass sämtliche Sicherheitsbefunde geschlossen sind.
+
+Das neue unsignierte vorbereitete ARM64-Archiv wurde vollständig zurückgelesen,
+ZIP-/Tar-Digests und Inventar wurden geprüft. `verifyPrepared` und
+`verifyNativeEvidence` bestätigten die Bindung an genau diesen Quellstand.
+Die tatsächliche SBOM, native Rohbelege und Auditdatei liegen unter
+[CI und Artefaktprüfung](ci/README_NATIVE_DE.md). Dieser neue Nachweis betrifft
+die frische Laufzeit und ersetzt keinen vollständigen R8-Hostmigrationstest.
+Für die spätere Signierung muss der exakt qualifizierte Quellcommit verwendet
+werden; ein späterer Dokumentationscommit ist keine neue Buildqualifikation.
+
 ## Offene Liefer- und Zielprüfungen
 
 Die geänderten Quellen sind noch kein signiertes neues Installationspaket.
@@ -84,7 +109,7 @@ Kernel-/Dienstaktivierung auf dem Zielgerät. Der bisherige native Nachweis am
 Commit `06ed52f636d0da58d56a86646cdbe4ba601f1776` qualifiziert seinen damaligen
 Stand und wird nicht als Nachweis dieser neuen Migration umgedeutet.
 
-Die 20 hohen und 6 moderaten betroffenen Paketknoten des vorherigen tatsächlichen
-Dependency-Audits bleiben offen; dieses Inkrement ändert ihre Abhängigkeiten
-nicht. Keine Aussage über vollständige Schwachstellenfreiheit, Produktions-,
+Der neue tatsächliche Dependency-Audit bestätigt weiterhin 20 hohe und 6 moderate
+betroffene Paketknoten. Diese Befunde bleiben offen; dieses Inkrement ändert ihre
+Abhängigkeiten nicht. Keine Aussage über vollständige Schwachstellenfreiheit, Produktions-,
 CRA-, physische Anlagen- oder 50-/100-ms-Freigabe.

@@ -5,8 +5,13 @@ Der neue Migrationsweg führt von einem vollständig eingerichteten R8
 direkt zur neuen Managed-Basis mit **Node 24.22.1 und js-controller 7.2.5**.
 Die Zwischenstände R9–R11 werden dabei nicht einzeln installiert.
 Anschließend werden Linux-Sicherheitsupdates und freigegebene reine
-Node-24-Updates selbstständig nachts installiert werden; allgemeine
+Node-24-Updates selbstständig nachts installiert; allgemeine
 EOS-Anpassungen bleiben über den Updateknopf erreichbar.
+Der Quellcommit `f353dd08bf8ac5897e9b1c357994d4047a82ed6d` besitzt jetzt
+seinen eigenen erfolgreichen Laufzeittest (15/15) und Chromium-Test (5/5).
+Das neu erzeugte unsignierte Archiv wurde gegen die tatsächlichen Build- und
+nativen Nachweise zurückgeprüft. Die direkte R8-Hostmigration ist damit noch
+nicht auf einem Pi ausgeführt.
 Dieser neue direkte Updatebefehl ist noch nicht signiert, veröffentlicht
 oder auf dem Pi abgenommen. Die folgenden historischen Befehle sind eigene,
 an ihre damaligen Ausgangsversionen gebundene Lieferwege.

@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-automatic-updates-r8-source-ci-qualification",
+  "observedAt": "2026-10-22T07:14:03.826Z",
+  "sourceCommit": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+  "workflows": [
+    {
+      "id": 39736782725,
+      "name": "CodeQL",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39736782725",
+      "sourceCommit": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+      "status": "completed",
+      "conclusion": "success",
+      "createdAt": "2026-10-22T06:53:18Z",
+      "updatedAt": "2026-10-22T07:10:49Z",
+      "jobs": [
+        {
+          "id": 119684225339,
+          "name": "Analyze (javascript)",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 39736782733,
+      "name": "EOS security regression",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39736782733",
+      "sourceCommit": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+      "status": "completed",
+      "conclusion": "success",
+      "createdAt": "2026-10-22T06:53:18Z",
+      "updatedAt": "2026-10-22T07:00:02Z",
+      "jobs": [
+        {
+          "id": 119684225217,
+          "name": "Node 24 bootstrap, onboarding and transport contracts",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225303,
+          "name": "Native PostgreSQL 17.11 mTLS controller startup and restart",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225321,
+          "name": "Fresh controller 7.2.5 six adapters licenses backup and restart",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225408,
+          "name": "Build, syntax and isolated security regression",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225495,
+          "name": "Current own-adapter EOS admission and central licensing",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225509,
+          "name": "Controller 7.2.5 sessions and actual Admin security dependencies",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225525,
+          "name": "Architecture contracts and partial source SBOM",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225526,
+          "name": "Native PostgreSQL mTLS Admin and UI startup and restart",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684227091,
+          "name": "Historical R9 source native qualification (manual)",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ]
+    },
+    {
+      "id": 39736782798,
+      "name": "EOS managed fresh installation and update contracts",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39736782798",
+      "sourceCommit": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+      "status": "completed",
+      "conclusion": "success",
+      "createdAt": "2026-10-22T06:53:19Z",
+      "updatedAt": "2026-10-22T06:55:17Z",
+      "jobs": [
+        {
+          "id": 119684225175,
+          "name": "browser",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 119684225545,
+          "name": "contracts",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 39736783064,
+      "name": "EOS workflow validation",
+      "url": "https://github.com/NexoWatt/nexowatt-eos/actions/runs/39736783064",
+      "sourceCommit": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+      "status": "completed",
+      "conclusion": "success",
+      "createdAt": "2026-10-22T06:53:19Z",
+      "updatedAt": "2026-10-22T06:54:12Z",
+      "jobs": [
+        {
+          "id": 119684226008,
+          "name": "Pinned workflow syntax and expression checks",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "localVerification": {
+    "report": "../integration/verification.json",
+    "nodeTests": 324,
+    "pythonTests": 42,
+    "failed": 0,
+    "skipped": 0,
+    "nodeVersion": "24.19.0",
+    "platform": "Linux x64"
+  },
+  "freshNative": {
+    "report": "native-artifact-verification.json",
+    "nodeVersion": "24.22.1",
+    "npmVersion": "11.19.0",
+    "postgresqlVersion": "17.11",
+    "platform": "Linux x64",
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0
+  },
+  "chromium": {
+    "report": "managed.json",
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unsignedArtifact": {
+    "report": "artifact-readback.json",
+    "preparedSequence": 15,
+    "archiveSha256": "f3164a04ee70860bfd113ad4df4c4f967c0c0830f7c47b4456c68ac04d7b7378",
+    "verifiedPrepared": true,
+    "verifiedNativeEvidence": true
+  },
+  "openDependencyFindings": {
+    "report": "actual-production-audit.json",
+    "unit": "affected package nodes, not unique CVEs or reachability findings",
+    "high": 20,
+    "moderate": 6,
+    "critical": 0
+  },
+  "limits": [
+    "Workflow success is not a claim that CodeQL or all dependencies have no security findings.",
+    "CI invocation counts overlap and must not be summed as unique tests; individual fixture skips and separate coverage are listed in managed.json.",
+    "The native execution was a fresh x64 runtime, not a complete R8 host migration and not ARM64 or physical Pi execution.",
+    "No actual systemd/APT update or physical plant was exercised.",
+    "The new release and initial channel still require local manufacturer signing, publication and complete public artifact readback.",
+    "Production, CRA and physical-control approval are not granted."
+  ],
+  "actualR8MigrationExecuted": false,
+  "signedReleaseCreated": false,
+  "publicReleasePublished": false,
+  "physicalPiTested": false,
+  "productionReleaseApproved": false
+}

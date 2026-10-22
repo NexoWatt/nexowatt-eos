@@ -109,6 +109,14 @@ SHA-256, Node-Version und Ausgangsrelease aus `delivery.json` und setzt
 diesen unveränderten Quellenbestand geprüfte Ausgangsstände. Der vorhandene
 `sign-managed-channel.cjs` prüft auch dieses Angebot mit dem Empfängerschema.
 
+Der Hersteller muss den signierten Kanal rechtzeitig erneuern: Seine Gültigkeit
+beträgt höchstens 31 Tage. Ein abgelaufener oder fehlender Kanal wird als Fehler
+angezeigt und berechtigt nicht zur Installation. Auch ein zunächst leeres
+Angebot muss bei der ersten Auslieferung mit dem dauerhaften Herstellerschlüssel
+signiert und veröffentlicht werden. Automatisch ist die Installation auf der
+Anlage; die Herstellerprüfung, neue native Qualifikation und Pflege dieses
+signierten Angebots bleiben erforderlich.
+
 Die Anlage prüft erneut Signatur, Ausgangsrelease, streng höhere Node-24-Version
 und unveränderte App-/Hostdateien. Ein gesetztes Automatikfeld allein macht ein
 allgemeines EOS-Update nicht automatisch zulässig. Bei Fehlern bleiben Diagnose,
