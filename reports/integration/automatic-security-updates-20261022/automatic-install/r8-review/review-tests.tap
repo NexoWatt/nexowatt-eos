@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: direct R8 plan has hashes only, preserves two management instances and creates four passive configurations
+ok 1 - direct R8 plan has hashes only, preserves two management instances and creates four passive configurations
+  ---
+  duration_ms: 16.689569
+  type: 'test'
+  ...
+# Subtest: apply checkpoints first, updates only core version and adds six-adapter marker and passive instances
+ok 2 - apply checkpoints first, updates only core version and adds six-adapter marker and passive instances
+  ---
+  duration_ms: 11.50194
+  type: 'test'
+  ...
+# Subtest: rollback restores exact original core and all existing account, configuration and management documents
+ok 3 - rollback restores exact original core and all existing account, configuration and management documents
+  ---
+  duration_ms: 14.186946
+  type: 'test'
+  ...
+# Subtest: every apply write acknowledgement failure, including core marker, can restore the original R8 store
+ok 4 - every apply write acknowledgement failure, including core marker, can restore the original R8 store
+  ---
+  duration_ms: 68.571594
+  type: 'test'
+  ...
+# Subtest: rollback resumes after each delete acknowledgement failure or core restoration acknowledgement failure
+ok 5 - rollback resumes after each delete acknowledgement failure or core restoration acknowledgement failure
+  ---
+  duration_ms: 57.730217
+  type: 'test'
+  ...
+# Subtest: refuses wrong R8 identity before any DB write
+ok 6 - refuses wrong R8 identity before any DB write
+  ---
+  duration_ms: 2.598566
+  type: 'test'
+  ...
+# Subtest: refuses core changed before any DB write
+ok 7 - refuses core changed before any DB write
+  ---
+  duration_ms: 2.909882
+  type: 'test'
+  ...
+# Subtest: refuses management changed before any DB write
+ok 8 - refuses management changed before any DB write
+  ---
+  duration_ms: 3.278292
+  type: 'test'
+  ...
+# Subtest: refuses live controller before any DB write
+ok 9 - refuses live controller before any DB write
+  ---
+  duration_ms: 3.288297
+  type: 'test'
+  ...
+# Subtest: refuses missing journal before any DB write
+ok 10 - refuses missing journal before any DB write
+  ---
+  duration_ms: 3.839851
+  type: 'test'
+  ...
+# Subtest: refuses unsafe target plan before any DB write
+ok 11 - refuses unsafe target plan before any DB write
+  ---
+  duration_ms: 3.21617
+  type: 'test'
+  ...
+# Subtest: rollback refuses foreign core change without partial deletion
+ok 12 - rollback refuses foreign core change without partial deletion
+  ---
+  duration_ms: 7.921877
+  type: 'test'
+  ...
+# Subtest: rollback refuses foreign target configuration without partial deletion
+ok 13 - rollback refuses foreign target configuration without partial deletion
+  ---
+  duration_ms: 10.303007
+  type: 'test'
+  ...
+# Subtest: rollback refuses foreign marker without partial deletion
+ok 14 - rollback refuses foreign marker without partial deletion
+  ---
+  duration_ms: 8.703295
+  type: 'test'
+  ...
+# Subtest: rollback refuses missing marker with migrated core without partial deletion
+ok 15 - rollback refuses missing marker with migrated core without partial deletion
+  ---
+  duration_ms: 9.152657
+  type: 'test'
+  ...
+# Subtest: failed durable checkpoint has zero database mutations
+ok 16 - failed durable checkpoint has zero database mutations
+  ---
+  duration_ms: 3.474837
+  type: 'test'
+  ...
+# Subtest: incomplete historical Admin ACL projection is rejected before planning or mutation
+ok 17 - incomplete historical Admin ACL projection is rejected before planning or mutation
+  ---
+  duration_ms: 1.779551
+  type: 'test'
+  ...
+# Subtest: only exact authenticated R8 and independently pinned new release/key are accepted
+ok 18 - only exact authenticated R8 and independently pinned new release/key are accepted
+  ---
+  duration_ms: 10.561954
+  type: 'test'
+  ...
+# Subtest: direct transition permits controller7.2.5 Node24.22.1 with unchanged PostgreSQL schema only
+ok 19 - direct transition permits controller7.2.5 Node24.22.1 with unchanged PostgreSQL schema only
+  ---
+  duration_ms: 1.389859
+  type: 'test'
+  ...
+# Subtest: healthy R8 migrates directly once, preserves protected files and activates automatic services last
+ok 20 - healthy R8 migrates directly once, preserves protected files and activates automatic services last
+  ---
+  duration_ms: 33.444484
+  type: 'test'
+  ...
+# Subtest: baseline readiness, unit drift and wrong trust fail before maintenance mutations
+ok 21 - baseline readiness, unit drift and wrong trust fail before maintenance mutations
+  ---
+  duration_ms: 50.758355
+  type: 'test'
+  ...
+# Subtest: all mutation phases restore authenticated R8 and never require intermediate releases
+ok 22 - all mutation phases restore authenticated R8 and never require intermediate releases
+  ---
+  duration_ms: 174.716121
+  type: 'test'
+  ...
+# Subtest: rollback restores host units before old pointer and old assets before R8 controller start
+ok 23 - rollback restores host units before old pointer and old assets before R8 controller start
+  ---
+  duration_ms: 21.239067
+  type: 'test'
+  ...
+# Subtest: unknown host, database, lease or restored readiness failure keeps runtime stopped and gated
+ok 24 - unknown host, database, lease or restored readiness failure keeps runtime stopped and gated
+  ---
+  duration_ms: 103.158086
+  type: 'test'
+  ...
+# Subtest: tampered private host/enrollment plans never authorize rollback over unknown state
+ok 25 - tampered private host/enrollment plans never authorize rollback over unknown state
+  ---
+  duration_ms: 37.42066
+  type: 'test'
+  ...
+# Subtest: foreign lock or prior journal prevents repeated migration and remains untouched
+ok 26 - foreign lock or prior journal prevents repeated migration and remains untouched
+  ---
+  duration_ms: 15.977072
+  type: 'test'
+  ...
+# Subtest: supervisor quiesce is bound to own invocation and sequence15 only
+ok 27 - supervisor quiesce is bound to own invocation and sequence15 only
+  ---
+  duration_ms: 0.505787
+  type: 'test'
+  ...
+# Subtest: release state remains readable with a restrictive root supervisor umask
+ok 28 - release state remains readable with a restrictive root supervisor umask
+  ---
+  duration_ms: 2.843783
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 553.275164

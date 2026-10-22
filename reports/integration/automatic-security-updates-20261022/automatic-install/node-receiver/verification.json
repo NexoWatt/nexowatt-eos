@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "task": "automatic-same-major-node-update-receiver",
+  "baseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "at": "2026-10-22T05:54:45.943020+00:00",
+  "environment": {
+    "node": "v24.19.0",
+    "host": "local Linux sandbox; no Pi/systemd/APT actions"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/system/automatic-node-updates.test.cjs",
+    "tests/system/managed-channel.test.cjs",
+    "tests/system/update-managed-release.test.cjs",
+    "tests/system/managed-node-runtime.test.cjs"
+  ],
+  "exitCode": 0,
+  "result": "PASS",
+  "tests": 53,
+  "passed": 53,
+  "skipped": 0,
+  "files": {
+    "runtime/updates/automatic-node.cjs": "dde111da5661d84136549c4ea3e831f97bed915d856d7516f067bdbd26726286",
+    "runtime/updates/channel.cjs": "202269ed811eb26c8a436457ec5278df8859d87d2affe29cd1600696f9ca3367",
+    "runtime/updates/service.cjs": "26de884c73b687121e834c877adf7fbc830ae861f15f822298aa603487686e7f",
+    "runtime/updates/worker.cjs": "efb07023f25c34f07cceb2c7230302b14429a50981c772640f8f808e899d5c13",
+    "tools/system/update-managed-release.cjs": "95ef7c495f864ef8bd8fc78915e594fec53d3159ca744592fdaff49b8f77632c",
+    "tests/system/automatic-node-updates.test.cjs": "a990c44451400313c0717dc633444390d14cd60681337b8da2ccea1f4aa608ba",
+    "tests/system/managed-channel.test.cjs": "61dc89d1e12216b3f6e6cf6e7641216533e3f4380471731685a9c53d2e4a6c30",
+    "tests/system/update-managed-release.test.cjs": "dd7858cd4f3cf55d0b44f3e0997b79c73258c83bd81e37f2df01fe4b75037eb8",
+    "tests/system/managed-node-runtime.test.cjs": "87df125e43441fc0d95151ea5bbec35c2cfdbdf552b1595a7761a68939b81775"
+  },
+  "rawEvidenceSha256": "0e1ca631f49ad3c85fbd6a31be4c81a4992987b024cc57415f548ae6f8f9f1a9",
+  "limits": [
+    "Services, native probe and baseline inventory in transaction tests are fault-injection doubles; file/fsync/symlink operations are actual.",
+    "Actual Ed25519 envelopes and actual kernel flock process contention are exercised.",
+    "No ARM64 Node execution, installed timer/scheduler, physical device, Pi or production acceptance performed.",
+    "Automatic mode only on completed managed TEST baseline with physicalControlEnabled false.",
+    "No signed Node-only release or publisher feed produced by these tests."
+  ]
+}

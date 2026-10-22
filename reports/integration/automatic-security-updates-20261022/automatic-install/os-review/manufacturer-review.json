@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-node-only-manufacturer-secondary-source-review",
+  "generatedAt": "2026-10-22T05:58:59.939248+00:00",
+  "baseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "reviewedFileHashes": {
+    "tools/integration/prepare-node-only-runtime.cjs": "68fb77bde958f68b9e2f3d2d0f0698cdab0f5b66210301b7ea1142c2c2185de5",
+    "tools/bootstrap/build-node-only-test.cjs": "1ae95ce795cf6d488acc19e483597522916a2af1361bf1de5ab4d1f75f78e324",
+    "tools/integration/prepared-runtime-archive.py": "81e2211460a387fef3e97f298b5e29c1011c5cd2ba14c0dfc7fee3c1d45b7ad4",
+    "tools/integration/verify-security-refresh-native.cjs": "e72ae872d28f14a8851f9d549bc24f9b781f60d93ccae86a17663a184b90441f",
+    "tests/integration/node-only-package.test.cjs": "649deabe99dba296e424a00b5d62f4e22c5651c710ef447b2de1855c72245341",
+    "tests/integration/prepared-runtime-archive.test.py": "9ea26c69294fd9652a85944ee1ddc8fddb226a25e45443191fddf5a43ce7e4f0"
+  },
+  "reviewer": "separate assistant task os_automatic_review; not independent certification",
+  "findings": [
+    {
+      "id": "NODE_ONLY_REVIEW_SBOM_DERIVATION",
+      "status": "fixed-and-regression-verified",
+      "problem": "Prepared SBOM was not required to equal deterministic derivation of the authenticated baseline SBOM.",
+      "resolution": "assertPreparedBinding now compares the complete decoded SBOM with rebindSbom of the authenticated baseline; altered components, metadata and provenance are rejected."
+    },
+    {
+      "id": "NODE_ONLY_REVIEW_PAX_BOUNDS",
+      "status": "fixed-and-regression-verified",
+      "problem": "Prepared archive parser interpreted PAX before explicit raw extension and expanded-size bounds.",
+      "resolution": "Imported raw_headers validates size/count/PAX first; exact metadata/schema, canonical members, path-only PAX and unchanged input are checked. Oversized declared PAX is rejected before destination creation."
+    }
+  ],
+  "observedChecks": [
+    {
+      "command": "node --test tests/integration/node-only-package.test.cjs",
+      "exitCode": 0,
+      "passed": 7,
+      "failed": 0,
+      "rawEvidence": "../packaging/node-only.tap"
+    },
+    {
+      "command": "python3 -B tests/integration/prepared-runtime-archive.test.py",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "rawEvidence": "../packaging/prepared-transport.txt"
+    }
+  ],
+  "conclusions": [
+    "Signed baseline and independently pinned public key are required before deriving a candidate.",
+    "Application, catalog and host source bytes/modes remain bound to the authenticated baseline; only three Node files and derived SBOM/build record may differ.",
+    "New native evidence is mandatory and binds current source, exact Node version, app inventory and complete build-record digest before private-key reading/signing.",
+    "Unsigned transport alone never authorizes signing or privileged installation; baseline, preparation and native gates are reapplied."
+  ],
+  "limits": [
+    "No actual future Node release archive exists in this task; no end-to-end future Node candidate, signature, release publication or Pi update was performed.",
+    "Tests use synthetic Node version labels where necessary and actual prior SBOM metadata; they are not execution of a future Node version.",
+    "Existing native validator performs native x64 management checks; ARM64 Pi and physical-system acceptance remain separate."
+  ]
+}

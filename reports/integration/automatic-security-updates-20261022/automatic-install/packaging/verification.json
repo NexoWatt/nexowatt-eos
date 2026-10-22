@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "kind": "automatic-node-manufacturer-tool-contract-verification",
+  "baseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "observedAt": "2026-10-22T05:59:06.839473+00:00",
+  "environment": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "scope": "Linux container contract tests"
+  },
+  "checks": [
+    {
+      "command": "node --test --test-reporter=tap tests/integration/node-only-package.test.cjs",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "node-only.tap"
+    },
+    {
+      "command": "python3 -I -B tests/integration/prepared-runtime-archive.test.py",
+      "passed": 6,
+      "failed": 0,
+      "evidence": "prepared-transport.txt"
+    }
+  ],
+  "files": [
+    {
+      "path": "tools/integration/prepare-node-only-runtime.cjs",
+      "sha256": "68fb77bde958f68b9e2f3d2d0f0698cdab0f5b66210301b7ea1142c2c2185de5"
+    },
+    {
+      "path": "tools/bootstrap/build-node-only-test.cjs",
+      "sha256": "1ae95ce795cf6d488acc19e483597522916a2af1361bf1de5ab4d1f75f78e324"
+    },
+    {
+      "path": "tools/integration/prepared-runtime-archive.py",
+      "sha256": "81e2211460a387fef3e97f298b5e29c1011c5cd2ba14c0dfc7fee3c1d45b7ad4"
+    },
+    {
+      "path": "tests/integration/node-only-package.test.cjs",
+      "sha256": "649deabe99dba296e424a00b5d62f4e22c5651c710ef447b2de1855c72245341"
+    },
+    {
+      "path": "tests/integration/prepared-runtime-archive.test.py",
+      "sha256": "9ea26c69294fd9652a85944ee1ddc8fddb226a25e45443191fddf5a43ce7e4f0"
+    },
+    {
+      "path": "runtime/updates/automatic-node.cjs",
+      "sha256": "dde111da5661d84136549c4ea3e831f97bed915d856d7516f067bdbd26726286"
+    },
+    {
+      "path": "runtime/updates/channel.cjs",
+      "sha256": "202269ed811eb26c8a436457ec5278df8859d87d2affe29cd1600696f9ca3367"
+    },
+    {
+      "path": "tools/integration/verify-security-refresh-native.cjs",
+      "sha256": "e72ae872d28f14a8851f9d549bc24f9b781f60d93ccae86a17663a184b90441f"
+    }
+  ],
+  "futureNodeReleaseBuilt": false,
+  "nativeTargetExecution": false,
+  "physicalPiTested": false,
+  "signedReleaseCreated": false,
+  "published": false,
+  "productionReleaseApproved": false
+}

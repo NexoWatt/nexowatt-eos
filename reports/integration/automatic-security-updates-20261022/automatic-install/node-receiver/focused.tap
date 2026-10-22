@@ -1,0 +1,328 @@
+TAP version 13
+# Subtest: Berlin window, summer/winter and repeated DST hour use one local date without daytime catch-up
+ok 1 - Berlin window, summer/winter and repeated DST hour use one local date without daytime catch-up
+  ---
+  duration_ms: 1.232997
+  type: 'test'
+  ...
+# Subtest: only manufacturer-marked newer same-major releases are automatically eligible
+ok 2 - only manufacturer-marked newer same-major releases are automatically eligible
+  ---
+  duration_ms: 4.272471
+  type: 'test'
+  ...
+# Subtest: automatic scheduler launches internal mode without any fabricated maintenance confirmation
+ok 3 - automatic scheduler launches internal mode without any fabricated maintenance confirmation
+  ---
+  duration_ms: 14.605432
+  type: 'test'
+  ...
+# Subtest: manual releases remain available without automatic installation; daytime performs no network request
+ok 4 - manual releases remain available without automatic installation; daytime performs no network request
+  ---
+  duration_ms: 7.63849
+  type: 'test'
+  ...
+# Subtest: expired or altered signed feed never queues; network attempt is durable and once per day across restart/clock rollback
+ok 5 - expired or altered signed feed never queues; network attempt is durable and once per day across restart/clock rollback
+  ---
+  duration_ms: 37.259831
+  type: 'test'
+  ...
+# Subtest: busy/recovery skips before attempt; OS lock failure defers next daily window and cleans harmless staging
+ok 6 - busy/recovery skips before attempt; OS lock failure defers next daily window and cleans harmless staging
+  ---
+  duration_ms: 17.602752
+  type: 'test'
+  ...
+# Subtest: download/check completing outside maintenance window cannot start a new automatic worker
+ok 7 - download/check completing outside maintenance window cannot start a new automatic worker
+  ---
+  duration_ms: 7.63201
+  type: 'test'
+  ...
+# Subtest: interrupted check is harmless; interrupted automatic job remains fail-closed recovery
+ok 8 - interrupted check is harmless; interrupted automatic job remains fail-closed recovery
+  ---
+  duration_ms: 29.590946
+  type: 'test'
+  ...
+# Subtest: job records have an exact internal mode and cannot include caller confirmation/URL overrides
+ok 9 - job records have an exact internal mode and cannot include caller confirmation/URL overrides
+  ---
+  duration_ms: 0.602382
+  type: 'test'
+  ...
+# Subtest: actual Ed25519 envelope authenticates an eligible update; unrelated and old releases are not offered
+ok 10 - actual Ed25519 envelope authenticates an eligible update; unrelated and old releases are not offered
+  ---
+  duration_ms: 6.495147
+  type: 'test'
+  ...
+# Subtest: altered payload, different key, expired/future envelope, unpinned URL, oversized archive and duplicate release fail closed
+ok 11 - altered payload, different key, expired/future envelope, unpinned URL, oversized archive and duplicate release fail closed
+  ---
+  duration_ms: 6.585766
+  type: 'test'
+  ...
+# Subtest: check is asynchronous; install uses displayed ID and explicit maintenance confirmation; duplicate clicks cannot start two jobs
+ok 12 - check is asynchronous; install uses displayed ID and explicit maintenance confirmation; duplicate clicks cannot start two jobs
+  ---
+  duration_ms: 12.378449
+  type: 'test'
+  ...
+# Subtest: restart with unfinished job retains recovery state and discards cached candidate
+ok 13 - restart with unfinished job retains recovery state and discards cached candidate
+  ---
+  duration_ms: 4.502991
+  type: 'test'
+  ...
+# Subtest: range transport accepts only exact 206 Content-Range and length, rejects redirect, whole-file fallback and overflow
+ok 14 - range transport accepts only exact 206 Content-Range and length, rejects redirect, whole-file fallback and overflow
+  ---
+  duration_ms: 2.150938
+  type: 'test'
+  ...
+# Subtest: archive is atomically exclusive and accepted only with exact downloaded SHA-256; failed data is removed
+ok 15 - archive is atomically exclusive and accepted only with exact downloaded SHA-256; failed data is removed
+  ---
+  duration_ms: 5.516135
+  type: 'test'
+  ...
+# Subtest: signed Release asset path binds sequence and release ID; Node downgrades are never offered
+ok 16 - signed Release asset path binds sequence and release ID; Node downgrades are never offered
+  ---
+  duration_ms: 2.602833
+  type: 'test'
+  ...
+# Subtest: Release download preserves range through only the fixed GitHub CDN redirect boundary
+ok 17 - Release download preserves range through only the fixed GitHub CDN redirect boundary
+  ---
+  duration_ms: 1.826567
+  type: 'test'
+  ...
+# Subtest: redirect does not reset the absolute 5-second request deadline
+ok 18 - redirect does not reset the absolute 5-second request deadline
+  ---
+  duration_ms: 0.9841
+  type: 'test'
+  ...
+# Subtest: durable successful worker result survives daemon restart and restart follows persisted success
+ok 19 - durable successful worker result survives daemon restart and restart follows persisted success
+  ---
+  duration_ms: 12.867249
+  type: 'test'
+  ...
+# Subtest: ordinary OS maintenance contention removes retryable staging after durable failure status
+ok 20 - ordinary OS maintenance contention removes retryable staging after durable failure status
+  ---
+  duration_ms: 7.214057
+  type: 'test'
+  ...
+# Subtest: post-activation result failure still retires old daemon runtime after durable failure report
+ok 21 - post-activation result failure still retires old daemon runtime after durable failure report
+  ---
+  duration_ms: 6.216966
+  type: 'test'
+  ...
+# Subtest: Node policy admits reviewed major 24 floor and strictly rejects downgrade, prerelease, malformed and alternate majors
+ok 22 - Node policy admits reviewed major 24 floor and strictly rejects downgrade, prerelease, malformed and alternate majors
+  ---
+  duration_ms: 2.069204
+  type: 'test'
+  ...
+# Subtest: signed runtime descriptor binds actual binary, ELF architecture, mode and full upstream license
+ok 23 - signed runtime descriptor binds actual binary, ELF architecture, mode and full upstream license
+  ---
+  duration_ms: 7.662246
+  type: 'test'
+  ...
+# Subtest: runtime rejects missing/extra signed files, mismatched versions and linked binary paths
+ok 24 - runtime rejects missing/extra signed files, mismatched versions and linked binary paths
+  ---
+  duration_ms: 11.446597
+  type: 'test'
+  ...
+# Subtest: kernel lease serializes independent processes and rejects unsafe lock files
+ok 25 - kernel lease serializes independent processes and rejects unsafe lock files
+  ---
+  duration_ms: 18.129941
+  type: 'test'
+  ...
+# Subtest: ordinary maintenance contention stays retryable; only durable trial failures require recovery
+ok 26 - ordinary maintenance contention stays retryable; only durable trial failures require recovery
+  ---
+  duration_ms: 0.432926
+  type: 'test'
+  ...
+# Subtest: CLI requires explicit new trust, absolute paths and supervised invocation
+ok 27 - CLI requires explicit new trust, absolute paths and supervised invocation
+  ---
+  duration_ms: 5.709318
+  type: 'test'
+  ...
+# Subtest: only exact healthy managed state and fresh completion are accepted
+ok 28 - only exact healthy managed state and fresh completion are accepted
+  ---
+  duration_ms: 40.668419
+  type: 'test'
+  ...
+# Subtest: transition allows Admin own-package digests but refuses sequence, system/schema and admission changes
+ok 29 - transition allows Admin own-package digests but refuses sequence, system/schema and admission changes
+  ---
+  duration_ms: 3.253057
+  type: 'test'
+  ...
+# Subtest: managed transition pins controller 7.2.5 and rejects historical or major-8 catalogues
+ok 30 - managed transition pins controller 7.2.5 and rejects historical or major-8 catalogues
+  ---
+  duration_ms: 0.782775
+  type: 'test'
+  ...
+# Subtest: automatic Node transaction keeps application/catalogue exact and performs no asset database upload
+ok 31 - automatic Node transaction keeps application/catalogue exact and performs no asset database upload
+  ---
+  duration_ms: 25.86377
+  type: 'test'
+  ...
+# Subtest: automatic Node denies same-version, app/catalogue changes and closed window before stage or stop
+ok 32 - automatic Node denies same-version, app/catalogue changes and closed window before stage or stop
+  ---
+  duration_ms: 28.104979
+  type: 'test'
+  ...
+# Subtest: automatic Node respects window again after candidate probe and rolls runtime back on failed startup
+ok 33 - automatic Node respects window again after candidate probe and rolls runtime back on failed startup
+  ---
+  duration_ms: 44.578091
+  type: 'test'
+  ...
+# Subtest: successful managed update installs state before trial start and preserves fresh completion/configuration
+ok 34 - successful managed update installs state before trial start and preserves fresh completion/configuration
+  ---
+  duration_ms: 15.362659
+  type: 'test'
+  ...
+# Subtest: Node upgrade switches signed runtime and EOS state as one pair and restores both after trial failure
+ok 35 - Node upgrade switches signed runtime and EOS state as one pair and restores both after trial failure
+  ---
+  duration_ms: 33.226226
+  type: 'test'
+  ...
+# Subtest: shared OS maintenance lease refusal prevents all transaction effects and runtime repacks/downgrades fail
+ok 36 - shared OS maintenance lease refusal prevents all transaction effects and runtime repacks/downgrades fail
+  ---
+  duration_ms: 2.003365
+  type: 'test'
+  ...
+# Subtest: baseline readiness failure never stages, locks or stops an unhealthy controller
+ok 37 - baseline readiness failure never stages, locks or stops an unhealthy controller
+  ---
+  duration_ms: 2.620209
+  type: 'test'
+  ...
+# Subtest: trust, signature, owner, linked state and installed-unit drift fail before mutation
+ok 38 - trust, signature, owner, linked state and installed-unit drift fail before mutation
+  ---
+  duration_ms: 24.482723
+  type: 'test'
+  ...
+# Subtest: pre-existing foreign coordinator lock and guard survive unmodified
+ok 39 - pre-existing foreign coordinator lock and guard survive unmodified
+  ---
+  duration_ms: 6.961355
+  type: 'test'
+  ...
+# Subtest: staging/native/report failure before stop leaves old controller running and removes only own gates
+ok 40 - staging/native/report failure before stop leaves old controller running and removes only own gates
+  ---
+  duration_ms: 36.001801
+  type: 'test'
+  ...
+# Subtest: trial failure restarts only authenticated healthy managed baseline and unlocks after readiness
+ok 41 - trial failure restarts only authenticated healthy managed baseline and unlocks after readiness
+  ---
+  duration_ms: 17.105279
+  type: 'test'
+  ...
+# Subtest: fallback readiness failure leaves exact managed baseline stopped and locked
+ok 42 - fallback readiness failure leaves exact managed baseline stopped and locked
+  ---
+  duration_ms: 14.990195
+  type: 'test'
+  ...
+# Subtest: foreign state, current, completion and coordinator bytes are never overwritten
+ok 43 - foreign state, current, completion and coordinator bytes are never overwritten
+  ---
+  duration_ms: 91.700395
+  type: 'test'
+  ...
+# Subtest: failed controller stop never claims restored state or unlocks
+ok 44 - failed controller stop never claims restored state or unlocks
+  ---
+  duration_ms: 10.009961
+  type: 'test'
+  ...
+# Subtest: state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+ok 45 - state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+  ---
+  duration_ms: 113.018775
+  type: 'test'
+  ...
+# Subtest: failure to record durable rollback leaves old release stopped and locked
+ok 46 - failure to record durable rollback leaves old release stopped and locked
+  ---
+  duration_ms: 14.84796
+  type: 'test'
+  ...
+# Subtest: ExecStopPost only quiesces same invocation seq16; malformed protected lock requires matching journal
+ok 47 - ExecStopPost only quiesces same invocation seq16; malformed protected lock requires matching journal
+  ---
+  duration_ms: 0.570253
+  type: 'test'
+  ...
+# Subtest: failure serializer exposes only fixed codes, stages and reasons
+ok 48 - failure serializer exposes only fixed codes, stages and reasons
+  ---
+  duration_ms: 0.202877
+  type: 'test'
+  ...
+# Subtest: real candidate signature and payload tampering are refused before any service effect
+ok 49 - real candidate signature and payload tampering are refused before any service effect
+  ---
+  duration_ms: 9.916009
+  type: 'test'
+  ...
+# Subtest: second guard durability failure reconstructs activation gate first and stops our trial
+ok 50 - second guard durability failure reconstructs activation gate first and stops our trial
+  ---
+  duration_ms: 14.767949
+  type: 'test'
+  ...
+# Subtest: protected configuration drift before stop aborts without overwriting or stopping healthy managed baseline
+ok 51 - protected configuration drift before stop aborts without overwriting or stopping healthy managed baseline
+  ---
+  duration_ms: 9.079703
+  type: 'test'
+  ...
+# Subtest: failed new assets are followed by old signed asset readback before rollback restart
+ok 52 - failed new assets are followed by old signed asset readback before rollback restart
+  ---
+  duration_ms: 15.080507
+  type: 'test'
+  ...
+# Subtest: old asset restoration failure prevents a claimed working rollback
+ok 53 - old asset restoration failure prevents a claimed working rollback
+  ---
+  duration_ms: 17.755789
+  type: 'test'
+  ...
+1..53
+# tests 53
+# suites 0
+# pass 53
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 724.098943

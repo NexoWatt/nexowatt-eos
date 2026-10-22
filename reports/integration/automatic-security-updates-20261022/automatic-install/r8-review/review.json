@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "separate implementation subagent; internal AI-assisted source review, not independent certification",
+  "at": "2026-10-22T06:00:01.258470+00:00",
+  "baseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "scope": [
+    "runtime/bootstrap/r8-managed-enrollment.cjs",
+    "tests/integration/r8-managed-enrollment.test.cjs",
+    "tools/system/update-r8-to-managed.cjs",
+    "tests/system/update-r8-to-managed.test.cjs"
+  ],
+  "sourceSha256": {
+    "runtime/bootstrap/r8-managed-enrollment.cjs": "d7cc3eb0fcc4056d9f02749fa2092376910c352d4b52d75cf9c6bb253cbf2f10",
+    "tests/integration/r8-managed-enrollment.test.cjs": "fe9ed674a51bd9dbc89318e189314127855d11e6f29dc8b90458cf9d294a8990",
+    "tools/system/update-r8-to-managed.cjs": "679dcb3e0a6e6a74692d2ebc279b0bf737927edca206cd5fbc4f42d3744f7d74",
+    "tests/system/update-r8-to-managed.test.cjs": "c47d8e54318ebef333b7683f1ea572582b8c30ad6f7a5bf3118e86cba8ca6b36"
+  },
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "tests/integration/r8-managed-enrollment.test.cjs",
+    "tests/system/update-r8-to-managed.test.cjs"
+  ],
+  "runtime": "v24.19.0",
+  "exitCode": 0,
+  "tests": 28,
+  "passed": 28,
+  "skipped": 0,
+  "rawEvidenceSha256": "b1f67c6d41efb95a9a61c6bae91ae3dd2eed44baecc9b8502c17e97ddef50ceb",
+  "blockingSourceFindings": [],
+  "verifiedBySourceReview": [
+    "Exact authenticated R8 identity and independent target release/key pins; only target sequence15 / Node24.22.1 / controller7.2.5.",
+    "Core marker before/after hashes restrict database core change to controllerVersion7.2.2->7.2.5; original account/password/config values never copied into migration plan.",
+    "Durable private plans precede mutation; acknowledgment-loss tests cover every enrollment write and rollback deletion/core restore.",
+    "Unknown marker/core/instance changes reject cleanup before deletions, and coordinator retains stop gates on uncertain rollback.",
+    "Asset upload must read back bytes and preserve instance/marker snapshots; original units and pointer/state are restored before old asset upload and restart.",
+    "Passive EEBUS gate precedes identity/config migration, and empty devices JSON does not invoke legacy instance migration.",
+    "Restored R8 readiness precedes restored certificate timer and gate removal; restrictive supervisor umask test keeps public state readable."
+  ],
+  "openChecks": [
+    "No ARM64 execution of new full direct-R8 transition, systemd/APT operation or actual database migration test performed here.",
+    "Whole-controller candidate startup and old-upload rollback must be tested natively: unexpected instance normalization is refused by strict rollback and leaves runtime stopped, rather than being overwritten.",
+    "Durable migration plans retained after failed attempts or proven rollback deliberately prevent unreviewed retries; operator recovery remains necessary.",
+    "Existing dependency findings, hardware/physical safety and production acceptance remain open."
+  ]
+}

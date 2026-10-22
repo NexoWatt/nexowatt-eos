@@ -9,7 +9,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const { EventEmitter } = require('node:events');
-const { registerUpdateRoutes } = require('../build/lib/eosUpdateHttp');
+const { registerUpdateRoutes, sanitizeAutomaticNode } = require('../build/lib/eosUpdateHttp');
 
 const BASE = '/nexowatt/managed-updates';
 const ID = 'a'.repeat(64);
@@ -171,4 +171,31 @@ test('shared Linux/EOS maintenance contention returns a retryable conflict', asy
     const h = harness({ requestUpdate: async () => { throw Object.assign(Error(), { code: 'UPDATE_MAINTENANCE_BUSY' }); } });
     const result = await h.dispatch('POST', 'install', { body: BODY });
     assert.equal(result.status, 429); assert.equal(result.body.error, 'UPDATE_MAINTENANCE_BUSY');
+});
+test('automatic Node status has a fixed read-only contract; unknown policy never claims automatic installation', async () => {
+    const automaticNode = { enabled: true, mode: 'signed-node-only', major: 24,
+        schedule: { timeZone: 'Europe/Berlin', start: '02:30', end: '03:00', catchUp: false },
+        state: 'DEFERRED', reason: 'UPDATE_MAINTENANCE_BUSY', lastAttempt: '2026-10-22T00:30:00.000Z' };
+    const h = harness({ requestUpdate: async () => ({ ok: true, automaticNode }) });
+    assert.deepEqual((await h.dispatch('GET', 'status')).body.automaticNode, automaticNode);
+    assert.deepEqual(h.calls, [['status', {}]]);
+    for (const bad of [undefined, null, [], { ...automaticNode, enabled: false }, { ...automaticNode, major: 26 },
+        { ...automaticNode, mode: 'arbitrary-latest' }, { ...automaticNode, state: 'UNKNOWN' },
+        { ...automaticNode, schedule: { ...automaticNode.schedule, catchUp: true } },
+        { ...automaticNode, schedule: { ...automaticNode.schedule, start: '13:00' } },
+        { ...automaticNode, lastAttempt: '2026-02-30T00:30:00.000Z' },
+        { ...automaticNode, reason: 'PRIVATE_FIXTURE sensitive diagnostic' },
+        { ...automaticNode, privatePath: 'PRIVATE_FIXTURE' }]) {
+        assert.equal(sanitizeAutomaticNode(bad), null);
+        const invalid = harness({ requestUpdate: async () => ({ ok: true, automaticNode: bad }) });
+        const response = await invalid.dispatch('GET', 'status');
+        assert.equal(response.body.automaticNode, null);
+        assert.doesNotMatch(JSON.stringify(response), /PRIVATE_FIXTURE/);
+    }
+});
+test('browser cannot authorize automatic mode or bypass maintenance confirmation', async () => {
+    const h = harness();
+    for (const body of [{ ...BODY, automatic: true }, { releaseId: ID, automaticNodeUpdate: true },
+        { ...BODY, mode: 'automatic-node' }]) denied(await h.dispatch('POST', 'install', { body }), 400);
+    assert.deepEqual(h.calls, []);
 });

@@ -14,6 +14,23 @@ function validBody(operation, body) {
         && body.maintenanceConfirmed === true;
 }
 
+// Automatic installation is a host policy, never a browser permission. Only
+// its bounded display contract crosses this route; missing/unknown means unknown.
+function sanitizeAutomaticNode(value) {
+    if (!exact(value, ['enabled', 'mode', 'major', 'schedule', 'state', 'reason', 'lastAttempt'])
+        || value.enabled !== true || value.mode !== 'signed-node-only' || value.major !== 24
+        || !exact(value.schedule, ['timeZone', 'start', 'end', 'catchUp'])
+        || value.schedule.timeZone !== 'Europe/Berlin' || value.schedule.start !== '02:30'
+        || value.schedule.end !== '03:00' || value.schedule.catchUp !== false
+        || !['SCHEDULED', 'CHECKING', 'NO_UPDATE', 'MANUAL_RELEASE', 'QUEUED', 'SUCCEEDED', 'DEFERRED', 'FAILED', 'RECOVERY_REQUIRED'].includes(value.state)
+        || !(value.reason === null || typeof value.reason === 'string' && /^(?:UPDATE|REPAIR)_[A-Z0-9_]{1,72}$/.test(value.reason))
+        || !(value.lastAttempt === null || typeof value.lastAttempt === 'string' && Number.isFinite(Date.parse(value.lastAttempt))
+            && new Date(value.lastAttempt).toISOString() === value.lastAttempt)) return null;
+    return { enabled: true, mode: 'signed-node-only', major: 24,
+        schedule: { timeZone: 'Europe/Berlin', start: '02:30', end: '03:00', catchUp: false },
+        state: value.state, reason: value.reason, lastAttempt: value.lastAttempt };
+}
+
 function registerUpdateRoutes(app, { authorize, secure, jsonParser, requestUpdate = defaultRequest, getOsUpdateStatus = defaultOsStatus }) {
     const rates = new Map();
     const osStatus = async () => {
@@ -60,7 +77,7 @@ function registerUpdateRoutes(app, { authorize, secure, jsonParser, requestUpdat
             const result = await requestUpdate(operation, body);
             // Independent read-only OS state; a successful EOS request is not
             // evidence that Linux packages are updated or activated.
-            res.status(200).json({ ...result, osUpdates: await osStatus() });
+            res.status(200).json({ ...result, automaticNode: sanitizeAutomaticNode(result.automaticNode), osUpdates: await osStatus() });
         } catch (error) {
             const code = typeof error?.code === 'string' && /^UPDATE_[A-Z0-9_]{1,72}$/.test(error.code)
                 ? error.code : 'UPDATE_UNAVAILABLE';
@@ -77,4 +94,4 @@ function registerUpdateRoutes(app, { authorize, secure, jsonParser, requestUpdat
     });
 }
 
-module.exports = { registerUpdateRoutes, validBody };
+module.exports = { registerUpdateRoutes, validBody, sanitizeAutomaticNode };

@@ -6,10 +6,16 @@ const { spawn } = require('node:child_process');
 const { verifyBundle } = require('../release/bundle.cjs');
 const { atomicWrite } = require('../../tools/system/activate-release.cjs');
 const { DIRECTORY, TRUST, load, readState, code } = require('./service.cjs');
-const { verifyFeed, selectRelease, fail } = require('./channel.cjs');
+const { verifyFeed, selectRelease, fail, exact } = require('./channel.cjs');
 const { downloadArchive } = require('./transport.cjs');
 const { update } = require('../../tools/system/update-managed-release.cjs');
 const maintenanceLease = require('./maintenance-lease.cjs');
+const automaticNode = require('./automatic-node.cjs');
+function validateJobRequest(request, operationId) {
+    if (!exact(request, ['operationId', 'releaseId', 'mode']) || request.operationId !== operationId
+        || !['manual', 'automatic-node'].includes(request.mode) || !/^[a-f0-9]{64}$/.test(request.releaseId || '')) fail('UPDATE_JOB');
+    return request;
+}
 function failurePhase(error, locked) {
     if (error?.restoredPreviousActive === true) return 'ROLLED_BACK';
     return locked || ['REPAIR_RECOVERY_REQUIRED', 'REPAIR_TRIAL_FAILED_RESTORED_STOPPED'].includes(error?.code)
@@ -32,9 +38,10 @@ async function run(operationId) {
     const report = (phase, error = null, extra = {}) => atomicWrite(path.join(directory, 'result.json'),
         JSON.stringify({ operationId, phase, error, ...extra }) + '\n');
     try {
-        const trust = load(TRUST, 16384), request = JSON.parse(load(path.join(directory, 'request.json'), 1024));
-        if (request.operationId !== operationId) fail('UPDATE_JOB');
-        const release = selectRelease(verifyFeed(load(path.join(directory, 'feed.json')), trust), readState());
+        const trust = load(TRUST, 16384), request = validateJobRequest(JSON.parse(load(path.join(directory, 'request.json'), 1024)), operationId);
+        const automaticNodeUpdate = request.mode === 'automatic-node';
+        if (automaticNodeUpdate && !automaticNode.windowAt(Date.now()).open) fail('UPDATE_AUTOMATIC_WINDOW');
+        const release = selectRelease(verifyFeed(load(path.join(directory, 'feed.json')), trust), readState(), { automaticNodeUpdate });
         if (!release || release.releaseId !== request.releaseId) fail('UPDATE_CANDIDATE_CHANGED');
         // Avoid downloading a full release while Debian security maintenance
         // already owns the host. The same lease spans download and activation.
@@ -49,7 +56,8 @@ async function run(operationId) {
         if (verified.releaseId !== release.releaseId || verified.manifest.sequence !== release.sequence) fail('UPDATE_RELEASE_BINDING');
         report('INSTALLING');
         const result = await update({ bundleDirectory, publicKeyFile: TRUST, expectedReleaseId: release.releaseId,
-            expectedKeySha256: crypto.createHash('sha256').update(trust).digest('hex') }, { acquireMaintenanceLease: async () => lease });
+            expectedKeySha256: crypto.createHash('sha256').update(trust).digest('hex'),
+            ...(automaticNodeUpdate ? { automaticNodeUpdate: true } : {}) }, { acquireMaintenanceLease: async () => lease });
         if (!result.ok || result.releaseId !== release.releaseId) fail('UPDATE_ACTIVATION');
         report('SUCCEEDED', null, { nodeVersion: result.nodeVersion, previousNodeVersion: result.previousNodeVersion });
         try { fs.unlinkSync(archive); fs.rmSync(extracted, { recursive: true }); } catch { /* bounded retained staging; active result stays true */ }
@@ -60,7 +68,7 @@ async function run(operationId) {
         process.exitCode = 1;
     } finally { lease?.release(); }
 }
-module.exports = { run, extract, failurePhase };
+module.exports = { run, extract, failurePhase, validateJobRequest };
 if (require.main === module) {
     if (process.argv.length !== 3) process.exitCode = 2;
     else run(process.argv[2]).catch(() => { process.exitCode = 1; });

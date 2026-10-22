@@ -44,7 +44,9 @@ function verifyFeed(bytes, trust, { now = Date.now() } = {}) {
         || !Array.isArray(body.releases) || body.releases.length > 32) fail('UPDATE_FEED');
     const ids = new Set(), sequences = new Set();
     for (const release of body.releases) {
-        if (!exact(release, ['releaseId', 'sequence', 'version', 'nodeVersion', 'platform', 'fromReleaseIds', 'url', 'bytes', 'sha256', 'notes'])
+        const fields = ['releaseId', 'sequence', 'version', 'nodeVersion', 'platform', 'fromReleaseIds', 'url', 'bytes', 'sha256', 'notes'];
+        const automatic = exact(release, [...fields, 'automaticNodeUpdate']) && release.automaticNodeUpdate === true;
+        if (!(exact(release, fields) || automatic)
             || !hash(release.releaseId) || !hash(release.sha256) || ids.has(release.releaseId)
             || !Number.isSafeInteger(release.sequence) || release.sequence < 16 || sequences.has(release.sequence)
             || release.version !== '0.2.0-test.3' || !nodePolicy.supportedVersion(release.nodeVersion) || release.platform !== 'linux-arm64'
@@ -57,11 +59,12 @@ function verifyFeed(bytes, trust, { now = Date.now() } = {}) {
     }
     return body;
 }
-function selectRelease(feed, state) {
+function selectRelease(feed, state, { automaticNodeUpdate = false } = {}) {
     if (!state || !hash(state.releaseId) || state.profile !== 'test' || !nodePolicy.supportedVersion(state.nodeVersion)
         || !Number.isSafeInteger(state.sequence) || state.sequence < 15) fail('UPDATE_BASELINE');
     return feed.releases.filter(r => r.sequence > state.sequence && r.fromReleaseIds.includes(state.releaseId)
-        && nodePolicy.compareVersions(r.nodeVersion, state.nodeVersion) >= 0)
+        && nodePolicy.compareVersions(r.nodeVersion, state.nodeVersion) >= 0
+        && (!automaticNodeUpdate || r.automaticNodeUpdate === true && nodePolicy.compareVersions(r.nodeVersion, state.nodeVersion) > 0))
         .sort((a, b) => b.sequence - a.sequence)[0] || null;
 }
 module.exports = { FEED_URL, MAX_FEED, fail, exact, hash, publicKey, archiveUrl, verifyFeed, selectRelease };

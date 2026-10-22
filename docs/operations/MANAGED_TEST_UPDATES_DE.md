@@ -1,4 +1,14 @@
-# Test-Pi frisch installieren, danach Updates im Admin
+# Managed-Testbasis: Frischinstallation, direkter R8-Übergang und Updates
+
+**Präzisierung vom 22.10.2026:** Für den vorhandenen, vollständig eingerichteten
+R8-Teststand ist ein [direkter Übergang](R8_DIREKT_MANAGED_UPDATE_DE.md) auf diese neue Basis implementiert.
+Die Neuinstallation bleibt ein eigener Weg für einen leeren Test-Pi.
+Linux-Sicherheitsupdates und gesondert freigegebene reine Node-24-Pakete werden
+auf der neuen Basis automatisch installiert. Der Bedienknopf ist für allgemeine
+EOS-Änderungen vorgesehen. Details zum Nachtfenster und den Grenzen stehen in
+[Automatische Sicherheitsupdates](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
+Ein installierbarer neuer Befehl setzt weiterhin Signierung, öffentliche
+Rückprüfung und Zielabnahme voraus.
 
 Nach dem Node-Sicherheitsrelease vom 21.10.2026 wird die neue Testbasis auf
 Node 24.22.1 und gekoppelte Node-/EOS-Updates umgestellt. Der neue Quellstand

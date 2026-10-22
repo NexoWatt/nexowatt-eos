@@ -10,6 +10,7 @@ const { atomicWrite } = require('../../tools/system/activate-release.cjs');
 const channel = require('./channel.cjs');
 const transport = require('./transport.cjs');
 const nodePolicy = require('./node-policy.cjs');
+const automaticNode = require('./automatic-node.cjs');
 const DIRECTORY = '/var/lib/nexowatt-eos-updates';
 const SOCKET = '/run/nexowatt-eos-updates/control.sock';
 const TRUST = '/etc/nexowatt-eos/update-trust.pem';
@@ -30,11 +31,20 @@ class Manager {
         Object.assign(this, { directory, trust, state, fetchFeed, launch, readResult, now, runningNodeVersion, restartAfterRuntimeChange });
         this.status = { phase: 'IDLE', candidate: null, checkedAt: null, error: null, operationId: null };
         this.envelope = null; this.pending = false; this.lastCheck = 0;
+        this.automatic = automaticNode.initialRecord();
     }
     restore() {
+        const automaticFile = path.join(this.directory, 'automatic-node.json');
+        if (fs.existsSync(automaticFile)) this.automatic = automaticNode.validateRecord(JSON.parse(this.readResult(automaticFile, 8192)));
         const file = path.join(this.directory, 'status.json');
         if (fs.existsSync(file)) {
             this.status = JSON.parse(this.readResult(file));
+            if (this.status.phase === 'CHECKING' && this.status.operationId === null) {
+                // Interrupted network checks never acquired activation gates or
+                // launched a worker; retain the daily attempt without inventing
+                // a host recovery requirement.
+                this.status.phase = 'FAILED'; this.status.error = 'UPDATE_INTERRUPTED';
+            }
             if (BUSY.has(this.status.phase) && this.status.operationId) {
                 // The worker result is durable before its exit. A service restart
                 // in the tiny gap before the manager callback must retain it.
@@ -45,10 +55,21 @@ class Manager {
             // Never reuse an on-disk candidate as installation authority.
             this.status.candidate = null; this.persist();
         }
+        if (this.automatic.state === 'CHECKING') this.automaticResult(this.status.phase === 'RECOVERY_REQUIRED' ? 'RECOVERY_REQUIRED' : 'FAILED', 'UPDATE_INTERRUPTED');
+        if (this.automatic.state === 'QUEUED') this.automaticFinished();
     }
     persist() { atomicWrite(path.join(this.directory, 'status.json'), JSON.stringify(this.status) + '\n'); }
+    persistAutomatic() { automaticNode.validateRecord(this.automatic); atomicWrite(path.join(this.directory, 'automatic-node.json'), JSON.stringify(this.automatic) + '\n'); }
+    automaticResult(state, reason = null) { this.automatic = { ...this.automatic, state, reason }; this.persistAutomatic(); }
+    automaticFinished() {
+        const phase = this.status.phase;
+        const state = phase === 'SUCCEEDED' ? 'SUCCEEDED' : phase === 'RECOVERY_REQUIRED' || BUSY.has(phase) ? 'RECOVERY_REQUIRED'
+            : ['REPAIR_MAINTENANCE_IN_PROGRESS', 'UPDATE_AUTOMATIC_WINDOW'].includes(this.status.error) ? 'DEFERRED' : 'FAILED';
+        const reason = /^(?:UPDATE|REPAIR)_[A-Z_]{1,70}$/.test(this.status.error || '') ? this.status.error : null;
+        this.automaticResult(state, reason);
+    }
     view() {
-        return { ok: true, installed: this.state(), ...this.status, busy: this.pending || BUSY.has(this.status.phase) };
+        return { ok: true, installed: this.state(), ...this.status, busy: this.pending || BUSY.has(this.status.phase), automaticNode: automaticNode.view(this.automatic) };
     }
     refreshWorker() {
         if (!this.status.operationId) return;
@@ -82,18 +103,61 @@ class Manager {
         if (!this.envelope) channel.fail('UPDATE_CHECK_REQUIRED');
         const candidate = channel.selectRelease(channel.verifyFeed(this.envelope, this.trust(), { now: this.now() }), this.state());
         if (!candidate || candidate.releaseId !== request.releaseId) channel.fail('UPDATE_CANDIDATE_CHANGED');
+        return this.queue(candidate, 'manual');
+    }
+    // Called only by the installed scheduler. No socket request can select this
+    // mode, supply an URL, bypass the window or invent operator confirmation.
+    async tickAutomatic() {
+        const window = automaticNode.windowAt(this.now());
+        if (!window.open || this.automatic.lastAttemptDate !== null && window.date <= this.automatic.lastAttemptDate
+            || this.pending || BUSY.has(this.status.phase) || this.status.phase === 'RECOVERY_REQUIRED') return false;
+        // Persist before network/effects: daemon restart and the repeated DST
+        // hour cannot create additional same-day installation attempts.
+        this.automatic = { schemaVersion: 1, lastAttemptDate: window.date, lastAttempt: new Date(this.now()).toISOString(), state: 'CHECKING', reason: null };
+        this.persistAutomatic();
+        this.pending = true; this.envelope = null;
+        this.status = { phase: 'CHECKING', candidate: null, checkedAt: null, error: null, operationId: null }; this.persist();
+        try {
+            const bytes = await this.fetchFeed();
+            const feed = channel.verifyFeed(bytes, this.trust(), { now: this.now() });
+            const state = this.state();
+            const candidate = channel.selectRelease(feed, state, { automaticNodeUpdate: true });
+            this.envelope = bytes;
+            this.status = { ...this.status, phase: 'UP_TO_DATE', candidate: null, checkedAt: new Date(this.now()).toISOString() };
+            if (!candidate) {
+                const manual = channel.selectRelease(feed, state);
+                this.status = { ...this.status, phase: manual ? 'AVAILABLE' : 'UP_TO_DATE', candidate: manual };
+                this.automaticResult(manual ? 'MANUAL_RELEASE' : 'NO_UPDATE');
+            } else if (!automaticNode.windowAt(this.now()).open || automaticNode.windowAt(this.now()).date !== window.date) {
+                this.status = { ...this.status, phase: 'AVAILABLE', candidate };
+                this.automaticResult('DEFERRED', 'UPDATE_AUTOMATIC_WINDOW');
+            } else {
+                this.pending = false;
+                this.status.candidate = candidate;
+                this.queue(candidate, 'automatic-node');
+                return true;
+            }
+        } catch (error) {
+            this.status = { ...this.status, phase: 'FAILED', candidate: null, error: code(error) };
+            this.automaticResult('FAILED', code(error));
+        }
+        this.pending = false; this.persist(); return false;
+    }
+    queue(candidate, mode) {
         if (fs.readdirSync(path.join(this.directory, 'jobs')).length >= 5) channel.fail('UPDATE_STAGING_FULL');
         const operationId = crypto.randomUUID(), job = path.join(this.directory, 'jobs', operationId);
         fs.mkdirSync(job, { mode: 0o700 });
         fs.writeFileSync(path.join(job, 'feed.json'), this.envelope, { mode: 0o600, flag: 'wx' });
-        fs.writeFileSync(path.join(job, 'request.json'), JSON.stringify({ operationId, releaseId: candidate.releaseId }), { mode: 0o600, flag: 'wx' });
+        fs.writeFileSync(path.join(job, 'request.json'), JSON.stringify({ operationId, releaseId: candidate.releaseId, mode }), { mode: 0o600, flag: 'wx' });
         this.status = { ...this.status, phase: 'QUEUED', operationId, error: null }; this.persist();
+        if (mode === 'automatic-node') this.automaticResult('QUEUED');
         this.pending = true;
         try { this.launch(operationId, () => {
             this.pending = false;
             try { this.refreshWorker(); } catch { this.status.phase = 'RECOVERY_REQUIRED'; this.status.error = 'UPDATE_JOB'; }
             if (BUSY.has(this.status.phase)) { this.status.phase = 'RECOVERY_REQUIRED'; this.status.error = 'UPDATE_INTERRUPTED'; }
             this.persist();
+            if (mode === 'automatic-node') this.automaticFinished();
             // Terminal success, pretrial failure and proven active rollback are
             // represented by durable status/evidence. Repeated harmless lock
             // contention must not fill staging; uncertain recovery is retained.
@@ -105,7 +169,8 @@ class Manager {
             // this daemon must retire its old interpreter. Recovery status and
             // durable gates survive this restart; main verifies the pair first.
             if (this.state().nodeVersion !== this.runningNodeVersion) this.restartAfterRuntimeChange();
-        }); } catch { this.pending = false; this.status.phase = 'FAILED'; this.status.error = 'UPDATE_START_FAILED'; this.persist(); }
+        }); } catch { this.pending = false; this.status.phase = 'FAILED'; this.status.error = 'UPDATE_START_FAILED'; this.persist();
+            if (mode === 'automatic-node') this.automaticFinished(); }
         return this.view();
     }
 }
@@ -175,6 +240,8 @@ function main() {
     manager.restore(); serve(manager, { gid });
     const check = () => { try { manager.dispatch({ operation: 'check' }); } catch { /* busy or recovery remains visible */ } };
     setTimeout(check, 10000); setInterval(check, 6 * 60 * 60 * 1000).unref();
+    const automatic = () => { manager.tickAutomatic().catch(() => { /* durable attempt prevents restart loops; status stays inspectable */ }); };
+    setTimeout(automatic, 15000); setInterval(automatic, 60000).unref();
 }
 module.exports = { Manager, validRequest, serve, DIRECTORY, SOCKET, TRUST, STATE, load, readState, code };
 if (require.main === module) { try { main(); } catch (error) { process.stderr.write(code(error) + '\n'); process.exitCode = 1; } }

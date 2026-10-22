@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-r8-os-adoption-source-contracts",
+  "generatedAt": "2026-10-22T05:53:27.786572+00:00",
+  "baseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "files": {
+    "tools/system/migrate-r8-os-maintenance.cjs": "0da6f6ee6e51831badf88691952ab4cf2cb9b319ec64aa00ca180fdfc756b322",
+    "tests/system/migrate-r8-os-maintenance.test.cjs": "a6e419289625a87e74f223cbb9a16bfa4ab284ccd8c415be4ec174c4c285f919",
+    "tools/system/install-os-maintenance.cjs": "49b2ec8b938f35eff71b660e0fa4ccaaf146f79858ecb6115bf3a0ccb8cd9053",
+    "runtime/os-updates/runner.py": "2ebb94a07eec27b39c80b940a4e08d62eab79c8e0077fb85657ab2cad09c669f",
+    "runtime/os-updates/policy-rc.d": "c8a11670f1fc2bfc22cd64fd686c317efe5e41954079bd296d47305debd9164a",
+    "system/test-base/systemd/nexowatt-eos-os-updates.timer": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e",
+    "system/postgresql-test/systemd/nexowatt-eos-os-updates.timer": "749bb10c8aa4196c906eb7d326417ced6399be54a92cb4a8a76bd8a93e2e5e0e",
+    "system/managed-test/apt-managed.conf": "3b6edecede552b524db04db9690da77adf209d7d7516d37caacc7df6b14057a3",
+    "system/test-base/os-updates/policy.json": "f3d567c897912214a963bcfe66cbb9903fb3b8aeddffd823ec4766d1c237e16c"
+  },
+  "sourceUnchangedDuringTests": true,
+  "runtime": {
+    "node": "v24.19.0",
+    "python": "3.12.14",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39"
+  },
+  "checks": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "tests/system/migrate-r8-os-maintenance.test.cjs",
+        "tests/system/install-os-maintenance.test.cjs",
+        "tests/system/os-updates-cross-contract.test.cjs"
+      ],
+      "environmentOverrides": {},
+      "exitCode": 0,
+      "log": "node-contracts.txt"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tests/system/os-updates.test.py"
+      ],
+      "environmentOverrides": {
+        "PYTHONPATH": "/tmp/eos-os-update-test-deps"
+      },
+      "exitCode": 0,
+      "log": "python-contracts.txt"
+    }
+  ],
+  "scope": "Local filesystem, fake systemctl and APT workflow contracts; actual apt-config read-only parsing. No package installation, systemd or Pi operation.",
+  "hardwareAcceptance": false,
+  "nativeNode24221Execution": false
+}

@@ -96,7 +96,9 @@ function validatePayload(payload, manifest) {
     if (manifest.sequence >= 15) {
         for (const name of ['system/managed-test/profile.json', 'system/managed-test/nexowatt-eos-updates.service',
             'tools/system/install-managed-updates.cjs', 'tools/system/install-os-maintenance.cjs', 'tools/system/update-managed-release.cjs', 'tools/system/extract-test-bundle.py',
-            'tools/integration/test-archive.py', ...['channel', 'transport', 'service', 'worker', 'node-policy', 'maintenance-lease'].map(n => `runtime/updates/${n}.cjs`)]) {
+            'tools/system/update-r8-to-managed.cjs', 'tools/system/migrate-r8-host.cjs', 'tools/system/migrate-r8-os-maintenance.cjs',
+            'runtime/bootstrap/r8-managed-enrollment.cjs',
+            'tools/integration/test-archive.py', ...['channel', 'transport', 'service', 'worker', 'node-policy', 'maintenance-lease', 'automatic-node'].map(n => `runtime/updates/${n}.cjs`)]) {
             const row = manifest.files.find(file => file.path === name);
             if (!row || !row.size || row.mode !== 0o644 || row.sha256 !== sha256(readFileLimited(path.join(payload, name)).bytes)) reject('BUILD_MANAGED_PROFILE_REQUIRED');
         }
@@ -197,7 +199,7 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
                 fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
             }
         }
-        if (managedProfile) for (const name of ['install-managed-updates.cjs', 'install-os-maintenance.cjs', 'update-managed-release.cjs', 'extract-test-bundle.py'])
+        if (managedProfile) for (const name of ['install-managed-updates.cjs', 'install-os-maintenance.cjs', 'update-managed-release.cjs', 'extract-test-bundle.py', 'update-r8-to-managed.cjs', 'migrate-r8-host.cjs', 'migrate-r8-os-maintenance.cjs'])
             fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'tools/integration'));
         if (managedProfile) fs.copyFileSync(path.join(REPO, 'tools/integration/test-archive.py'), path.join(destination, 'tools/integration/test-archive.py'), fs.constants.COPYFILE_EXCL);

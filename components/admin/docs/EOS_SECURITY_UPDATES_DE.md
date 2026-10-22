@@ -10,9 +10,21 @@ sind. Der js-controller bleibt beim vereinbarten Hauptstand 7.
 ## Anzeige und Bedienung
 
 - Der Dialog zeigt die installierte Node.js-Version und die im angebotenen
-  signierten EOS-Paket enthaltene Version. Die bestehende Wartungsbestätigung
-  bleibt vor der Installation erforderlich. EOS und die passende Laufzeit
-  werden gemeinsam durch den getrennten Systemdienst installiert und geprüft.
+  signierten EOS-Paket enthaltene Version. Signierte, ausdrücklich für die
+  Automatik freigegebene reine Node-24-Updates installiert der Host selbstständig
+  täglich zwischen 02:30 und 03:00 Uhr Europe/Berlin. Ein Klick, eine Bestätigung
+  im Browser oder ein geöffneter Admin sind dafür nicht erforderlich. Ein
+  verpasstes Fenster wird erst am nächsten Tag nachgeholt.
+- Die Node-Anzeige trennt geplante Prüfung, fehlendes Angebot, manuelles
+  EOS-Angebot, laufende Installation, Erfolg, Zurückstellung, Fehler und
+  Wiederherstellungssperre. Unbekannte Verträge zeigen keine bestätigte Automatik.
+  Die Installation aktiviert die Laufzeit mit einem kontrollierten EOS-Neustart;
+  die Anzeige behauptet keinen unterbrechungsfreien Anlagenbetrieb.
+- Andere EOS-Anpassungen und eine bewusst sofort angestoßene Installation
+  erfolgen weiterhin über den Updateknopf mit Wartungsbestätigung. Die
+  automatische Node-Installation erteilt keine allgemeine Freigabe für geänderte
+  EOS-Quellen, Abhängigkeiten oder Hauptversionen. Der Host prüft die signierten
+  Inhalte selbst; ein Kennzeichen im Browser autorisiert keinen Paketwechsel.
 - Für Linux erscheinen die tatsächlich beobachtete Automatik und Zeitsteuerung,
   letzter Versuch und erfolgreicher Durchlauf, offene/blockierte/zurückgehaltene
   Sicherheitsupdates sowie der Aktivierungs- und Neustartbedarf.
@@ -52,6 +64,11 @@ Installateur können diese Admin-Schnittstelle nutzen; jede Anfrage prüft die
 aktuelle Berechtigung. Schreibzugriffe verlangen zusätzlich Same-Origin und
 den bestehenden benannten Header. Es wurde kein neuer privilegierter
 Aktionsendpunkt eingeführt. Browserinhalte werden mit `textContent` erzeugt.
+`automaticNode` wird vor der HTTP-Antwort auf den festen Modus, Node-Hauptstand,
+das konkrete Nachtfenster, Zustandswerte, einen begrenzten Diagnosecode und
+einen ISO-Zeitpunkt reduziert. Fehlende, zusätzliche oder ungültige Felder
+werden als unbekannt ausgegeben. Der Browser kann weder den Automatikmodus
+aktivieren noch die Bestätigung einer manuell gestarteten Installation umgehen.
 
 Quelle und ausgelieferte JavaScript-/CSS-Dateien werden gemeinsam gepflegt;
 der Backend-Build kopiert bereits ausführbares JavaScript unverändert. Der
@@ -61,6 +78,8 @@ vorhandene Prebuilt-Vertrag versiegelt diese Dateien nach den Prüfungen.
 
 Der Änderungsnachweis liegt unter
 `reports/integration/automatic-security-updates-20261022/admin/` im EOS-Repository.
+Der Nachtrag für die selbstständige Installation liegt unter
+`reports/integration/automatic-security-updates-20261022/automatic-install/admin/`.
 Die lokalen Status-/HTTP-Vertragsprüfungen sind keine Installation, kein
 Paketlauf und keine Anlagenabnahme. Die erweiterten Chromium-Szenarien gehören
 zum vorhandenen Managed-Updates-CI-Job; fehlende lokale Browserausführung wird

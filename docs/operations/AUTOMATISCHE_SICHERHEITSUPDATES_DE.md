@@ -1,9 +1,13 @@
-# Node.js und Linux zusammen mit EOS pflegen
+# Automatische Aktualisierung von Node.js und Linux
 
-Stand: 22.10.2026. Gilt für die neue Managed-Frischbasis ab Sequenz 15;
-historische R4–R11-Installationen erhalten diese Funktion nicht durch einen
-Quellcommit. Die signierte Auslieferung und die Abnahme auf dem Test-Pi sind
-weiterhin erforderlich.
+Stand: 22.10.2026. Ziel ist die selbstständige Installation von
+Linux-Sicherheitsupdates und freigegebenen Node-24-Aktualisierungen ohne
+Bedienklick. Die Funktion gehört zur neuen Managed-Basis ab Sequenz 15.
+Für einen vollständig eingerichteten R8-Teststand ist ein eigener direkter
+[Übergang implementiert](R8_DIREKT_MANAGED_UPDATE_DE.md); R9–R11 müssen dabei
+nicht nacheinander installiert werden.
+Ein Quellcommit verändert keinen Pi. Die signierte Auslieferung und die
+Abnahme auf dem Test-Pi sind weiterhin erforderlich.
 
 ## Node.js als Bestandteil der EOS-Lieferung
 
@@ -26,15 +30,31 @@ Node-Version von npm oder einem Installationsskript. Die gemeinsame Lieferung
 erhält einen neuen Quell-, Build- und Integrationsnachweis.
 
 Im EOS-Admin zeigt **EOS-Updates** die installierte und die angebotene
-Node-Version. Nach dem bestätigten EOS-Update wird Node gemeinsam mit den
-EOS-Dateien aktiviert. Der Releasezeiger verbindet beide Stände; bei einem
+Node-Version. Reine Node-Updates erhalten eine gesonderte Herstellerfreigabe
+im signierten Feed. Der Empfänger prüft zusätzlich, dass sämtliche Anwendungs-,
+Adapterkatalog- und Hostdateien unverändert sind. Nur die Node-Dateien und ihre
+gebundenen Build-/Stücklistennachweise dürfen sich ändern.
+
+Diese Pakete werden im täglichen Zeitfenster **02:30 bis 03:00 Uhr,
+Europe/Berlin**, automatisch installiert und durch einen kontrollierten
+EOS-Dienstneustart aktiviert. Es gibt keinen nachgeholten Start tagsüber und
+höchstens einen automatischen Versuch pro Kalendertag. Signatur, Zeitgültigkeit,
+Ausgangszustand und Wartungssperre werden erneut geprüft. Ein unterbrochener
+Vorgang mit ungeklärtem Zustand sperrt weitere Installationen.
+
+Der Releasezeiger verbindet Anwendung und Node-Laufzeit; bei einem
 fehlgeschlagenen Start müssen beide auf den überprüften Vorgänger zurückfallen.
-Eine unvollständige Wiederherstellung bleibt als Fehler sichtbar.
+Eine unvollständige Wiederherstellung bleibt als Fehler sichtbar. Allgemeine
+EOS-Änderungen werden weiterhin über den Updateknopf bestätigt. Die
+Node-Automatik behauptet keine vom Benutzer bestätigte Sicherung.
 
 Zugelassen sind geprüfte, signierte Aktualisierungen innerhalb von Node 24 ab
 24.22.1 ohne Versionsrückschritt. Ein Node-Hauptversionswechsel oder ein Wechsel
 zu js-controller 8 ist dadurch nicht freigeschaltet. Die vorhandenen Grenzen
 für Adapterversionen, Abhängigkeiten und Datenbankmigrationen gelten weiter.
+Die aktuelle automatische Aktivierung gilt für den verifizierten Testbetrieb
+mit `physicalControlEnabled: false`. Daraus wird keine unbeaufsichtigte
+Neustartfreigabe für eine physisch regelnde Energieanlage abgeleitet.
 
 Die vollständigen Pakete einschließlich Node können größer als das
 GitHub-Git-Dateilimit sein. Neue große Pakete werden als GitHub-Release-Assets
@@ -83,6 +103,7 @@ Automatisierung reduziert die laufende Arbeit. Sie ersetzt weder die
 Herstellerprüfung neuer Lieferungen noch die Behandlung von Fehlern und
 notwendigen Wartungsneustarts.
 
-[Umsetzungs- und Prüfbericht](../../reports/integration/automatic-security-updates-20261022/README_DE.md)
+[Umsetzungs- und Prüfbericht zur automatischen Installation](../../reports/integration/automatic-security-updates-20261022/automatic-install/README_DE.md)
+· [Herstellerablauf für reine Node-Updates](NODE_AUTOMATIK_HERSTELLER_DE.md)
 · [Frischinstallation und Updateknopf](MANAGED_TEST_UPDATES_DE.md)
 · [OS-Komponente und Vertrauensgrenzen](../../runtime/os-updates/README.md)

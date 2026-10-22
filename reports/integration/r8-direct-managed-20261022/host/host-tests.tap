@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: exact R8 directly adopts all target units and permanent updater without any intermediate release
+ok 1 - exact R8 directly adopts all target units and permanent updater without any intermediate release
+  ---
+  duration_ms: 49.954137
+  type: 'test'
+  ...
+# Subtest: rollback restores each authenticated R8 unit and removes only new empty updater paths
+ok 2 - rollback restores each authenticated R8 unit and removes only new empty updater paths
+  ---
+  duration_ms: 71.485596
+  type: 'test'
+  ...
+# Subtest: preparation rejects changed baseline units, existing updater paths, foreign baselines and symlinks before host mutation
+ok 3 - preparation rejects changed baseline units, existing updater paths, foreign baselines and symlinks before host mutation
+  ---
+  duration_ms: 23.447772
+  type: 'test'
+  ...
+# Subtest: modified plan or target files cannot introduce arbitrary service paths
+ok 4 - modified plan or target files cannot introduce arbitrary service paths
+  ---
+  duration_ms: 13.157509
+  type: 'test'
+  ...
+# Subtest: partial unit replacement is rolled back after a failed write, preserving customer configuration
+ok 5 - partial unit replacement is rolled back after a failed write, preserving customer configuration
+  ---
+  duration_ms: 30.976963
+  type: 'test'
+  ...
+# Subtest: foreign edit blocks rollback instead of overwriting a changed host or claiming a healthy fallback
+ok 6 - foreign edit blocks rollback instead of overwriting a changed host or claiming a healthy fallback
+  ---
+  duration_ms: 39.296084
+  type: 'test'
+  ...
+# Subtest: rollback retains updater status evidence rather than recursively deleting it
+ok 7 - rollback retains updater status evidence rather than recursively deleting it
+  ---
+  duration_ms: 53.622175
+  type: 'test'
+  ...
+# Subtest: network failure and untrusted host tools fail closed, activation never starts early
+ok 8 - network failure and untrusted host tools fail closed, activation never starts early
+  ---
+  duration_ms: 8.988077
+  type: 'test'
+  ...
+# Subtest: activation refuses a pointer still on R8 before starting automatic services
+ok 9 - activation refuses a pointer still on R8 before starting automatic services
+  ---
+  duration_ms: 34.287382
+  type: 'test'
+  ...
+# Subtest: certificate checker timer is paused without killing an active checker and original enabled state is preserved
+ok 10 - certificate checker timer is paused without killing an active checker and original enabled state is preserved
+  ---
+  duration_ms: 54.908545
+  type: 'test'
+  ...
+# Subtest: disabled inactive certificate timer remains disabled and inactive after restoration
+ok 11 - disabled inactive certificate timer remains disabled and inactive after restoration
+  ---
+  duration_ms: 52.112504
+  type: 'test'
+  ...
+# Subtest: busy or racing certificate check blocks host changes and is never stopped
+ok 12 - busy or racing certificate check blocks host changes and is never stopped
+  ---
+  duration_ms: 13.289938
+  type: 'test'
+  ...
+# Subtest: foreign certificate timer enable-state change and malformed snapshot are refused
+ok 13 - foreign certificate timer enable-state change and malformed snapshot are refused
+  ---
+  duration_ms: 13.127965
+  type: 'test'
+  ...
+# Subtest: unit replacement and rollback preserve signed 0644 modes under restrictive root umask
+ok 14 - unit replacement and rollback preserve signed 0644 modes under restrictive root umask
+  ---
+  duration_ms: 52.374311
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 623.913054

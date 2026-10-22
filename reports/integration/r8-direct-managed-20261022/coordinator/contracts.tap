@@ -1,0 +1,310 @@
+TAP version 13
+# Subtest: direct R8 plan has hashes only, preserves two management instances and creates four passive configurations
+ok 1 - direct R8 plan has hashes only, preserves two management instances and creates four passive configurations
+  ---
+  duration_ms: 17.211927
+  type: 'test'
+  ...
+# Subtest: apply checkpoints first, updates only core version and adds six-adapter marker and passive instances
+ok 2 - apply checkpoints first, updates only core version and adds six-adapter marker and passive instances
+  ---
+  duration_ms: 18.773563
+  type: 'test'
+  ...
+# Subtest: rollback restores exact original core and all existing account, configuration and management documents
+ok 3 - rollback restores exact original core and all existing account, configuration and management documents
+  ---
+  duration_ms: 13.531657
+  type: 'test'
+  ...
+# Subtest: every apply write acknowledgement failure, including core marker, can restore the original R8 store
+ok 4 - every apply write acknowledgement failure, including core marker, can restore the original R8 store
+  ---
+  duration_ms: 101.111193
+  type: 'test'
+  ...
+# Subtest: rollback resumes after each delete acknowledgement failure or core restoration acknowledgement failure
+ok 5 - rollback resumes after each delete acknowledgement failure or core restoration acknowledgement failure
+  ---
+  duration_ms: 60.783918
+  type: 'test'
+  ...
+# Subtest: refuses wrong R8 identity before any DB write
+ok 6 - refuses wrong R8 identity before any DB write
+  ---
+  duration_ms: 2.027155
+  type: 'test'
+  ...
+# Subtest: refuses core changed before any DB write
+ok 7 - refuses core changed before any DB write
+  ---
+  duration_ms: 1.958972
+  type: 'test'
+  ...
+# Subtest: refuses management changed before any DB write
+ok 8 - refuses management changed before any DB write
+  ---
+  duration_ms: 2.929045
+  type: 'test'
+  ...
+# Subtest: refuses live controller before any DB write
+ok 9 - refuses live controller before any DB write
+  ---
+  duration_ms: 5.139644
+  type: 'test'
+  ...
+# Subtest: refuses missing journal before any DB write
+ok 10 - refuses missing journal before any DB write
+  ---
+  duration_ms: 4.26875
+  type: 'test'
+  ...
+# Subtest: refuses unsafe target plan before any DB write
+ok 11 - refuses unsafe target plan before any DB write
+  ---
+  duration_ms: 2.075498
+  type: 'test'
+  ...
+# Subtest: rollback refuses foreign core change without partial deletion
+ok 12 - rollback refuses foreign core change without partial deletion
+  ---
+  duration_ms: 9.557728
+  type: 'test'
+  ...
+# Subtest: rollback refuses foreign target configuration without partial deletion
+ok 13 - rollback refuses foreign target configuration without partial deletion
+  ---
+  duration_ms: 10.624965
+  type: 'test'
+  ...
+# Subtest: rollback refuses foreign marker without partial deletion
+ok 14 - rollback refuses foreign marker without partial deletion
+  ---
+  duration_ms: 8.607005
+  type: 'test'
+  ...
+# Subtest: rollback refuses missing marker with migrated core without partial deletion
+ok 15 - rollback refuses missing marker with migrated core without partial deletion
+  ---
+  duration_ms: 9.723447
+  type: 'test'
+  ...
+# Subtest: failed durable checkpoint has zero database mutations
+ok 16 - failed durable checkpoint has zero database mutations
+  ---
+  duration_ms: 3.21333
+  type: 'test'
+  ...
+# Subtest: incomplete historical Admin ACL projection is rejected before planning or mutation
+ok 17 - incomplete historical Admin ACL projection is rejected before planning or mutation
+  ---
+  duration_ms: 1.968778
+  type: 'test'
+  ...
+# Subtest: exact R8 directly adopts all target units and permanent updater without any intermediate release
+ok 18 - exact R8 directly adopts all target units and permanent updater without any intermediate release
+  ---
+  duration_ms: 68.345823
+  type: 'test'
+  ...
+# Subtest: rollback restores each authenticated R8 unit and removes only new empty updater paths
+ok 19 - rollback restores each authenticated R8 unit and removes only new empty updater paths
+  ---
+  duration_ms: 57.558525
+  type: 'test'
+  ...
+# Subtest: preparation rejects changed baseline units, existing updater paths, foreign baselines and symlinks before host mutation
+ok 20 - preparation rejects changed baseline units, existing updater paths, foreign baselines and symlinks before host mutation
+  ---
+  duration_ms: 28.746144
+  type: 'test'
+  ...
+# Subtest: modified plan or target files cannot introduce arbitrary service paths
+ok 21 - modified plan or target files cannot introduce arbitrary service paths
+  ---
+  duration_ms: 9.976225
+  type: 'test'
+  ...
+# Subtest: partial unit replacement is rolled back after a failed write, preserving customer configuration
+ok 22 - partial unit replacement is rolled back after a failed write, preserving customer configuration
+  ---
+  duration_ms: 26.916399
+  type: 'test'
+  ...
+# Subtest: foreign edit blocks rollback instead of overwriting a changed host or claiming a healthy fallback
+ok 23 - foreign edit blocks rollback instead of overwriting a changed host or claiming a healthy fallback
+  ---
+  duration_ms: 41.168389
+  type: 'test'
+  ...
+# Subtest: rollback retains updater status evidence rather than recursively deleting it
+ok 24 - rollback retains updater status evidence rather than recursively deleting it
+  ---
+  duration_ms: 61.394658
+  type: 'test'
+  ...
+# Subtest: network failure and untrusted host tools fail closed, activation never starts early
+ok 25 - network failure and untrusted host tools fail closed, activation never starts early
+  ---
+  duration_ms: 12.466528
+  type: 'test'
+  ...
+# Subtest: activation refuses a pointer still on R8 before starting automatic services
+ok 26 - activation refuses a pointer still on R8 before starting automatic services
+  ---
+  duration_ms: 36.180476
+  type: 'test'
+  ...
+# Subtest: certificate checker timer is paused without killing an active checker and original enabled state is preserved
+ok 27 - certificate checker timer is paused without killing an active checker and original enabled state is preserved
+  ---
+  duration_ms: 57.84562
+  type: 'test'
+  ...
+# Subtest: disabled inactive certificate timer remains disabled and inactive after restoration
+ok 28 - disabled inactive certificate timer remains disabled and inactive after restoration
+  ---
+  duration_ms: 55.721645
+  type: 'test'
+  ...
+# Subtest: busy or racing certificate check blocks host changes and is never stopped
+ok 29 - busy or racing certificate check blocks host changes and is never stopped
+  ---
+  duration_ms: 16.783886
+  type: 'test'
+  ...
+# Subtest: foreign certificate timer enable-state change and malformed snapshot are refused
+ok 30 - foreign certificate timer enable-state change and malformed snapshot are refused
+  ---
+  duration_ms: 11.32626
+  type: 'test'
+  ...
+# Subtest: unit replacement and rollback preserve signed 0644 modes under restrictive root umask
+ok 31 - unit replacement and rollback preserve signed 0644 modes under restrictive root umask
+  ---
+  duration_ms: 60.780864
+  type: 'test'
+  ...
+# Subtest: R8 adoption journals before writes, enables sole scheduler policy and restores exact original timers
+ok 32 - R8 adoption journals before writes, enables sole scheduler policy and restores exact original timers
+  ---
+  duration_ms: 24.726155
+  type: 'test'
+  ...
+# Subtest: existing empty shared lock inode is preserved through apply and rollback
+ok 33 - existing empty shared lock inode is preserved through apply and rollback
+  ---
+  duration_ms: 14.60306
+  type: 'test'
+  ...
+# Subtest: foreign helpers, nonempty locks, symlinks and disabled operator policy are refused before mutation
+ok 34 - foreign helpers, nonempty locks, symlinks and disabled operator policy are refused before mutation
+  ---
+  duration_ms: 17.528881
+  type: 'test'
+  ...
+# Subtest: live OS or distro maintenance is never killed and inhibits adoption
+ok 35 - live OS or distro maintenance is never killed and inhibits adoption
+  ---
+  duration_ms: 6.918637
+  type: 'test'
+  ...
+# Subtest: timer/service start race after read-only prepare aborts before helper installation
+ok 36 - timer/service start race after read-only prepare aborts before helper installation
+  ---
+  duration_ms: 5.523238
+  type: 'test'
+  ...
+# Subtest: plan cannot retarget a path or substitute content; changed target source is refused
+ok 37 - plan cannot retarget a path or substitute content; changed target source is refused
+  ---
+  duration_ms: 10.807919
+  type: 'test'
+  ...
+# Subtest: partial apply can rollback without replacing foreign files; empty lock remains stable
+ok 38 - partial apply can rollback without replacing foreign files; empty lock remains stable
+  ---
+  duration_ms: 8.633064
+  type: 'test'
+  ...
+# Subtest: wrong lock directory rights and untrusted tools fail closed
+ok 39 - wrong lock directory rights and untrusted tools fail closed
+  ---
+  duration_ms: 3.116405
+  type: 'test'
+  ...
+# Subtest: only exact authenticated R8 and independently pinned new release/key are accepted
+ok 40 - only exact authenticated R8 and independently pinned new release/key are accepted
+  ---
+  duration_ms: 11.888437
+  type: 'test'
+  ...
+# Subtest: direct transition permits controller7.2.5 Node24.22.1 with unchanged PostgreSQL schema only
+ok 41 - direct transition permits controller7.2.5 Node24.22.1 with unchanged PostgreSQL schema only
+  ---
+  duration_ms: 1.553896
+  type: 'test'
+  ...
+# Subtest: healthy R8 migrates directly once, preserves protected files and activates automatic services last
+ok 42 - healthy R8 migrates directly once, preserves protected files and activates automatic services last
+  ---
+  duration_ms: 45.93861
+  type: 'test'
+  ...
+# Subtest: baseline readiness, unit drift and wrong trust fail before maintenance mutations
+ok 43 - baseline readiness, unit drift and wrong trust fail before maintenance mutations
+  ---
+  duration_ms: 69.413592
+  type: 'test'
+  ...
+# Subtest: all mutation phases restore authenticated R8 and never require intermediate releases
+ok 44 - all mutation phases restore authenticated R8 and never require intermediate releases
+  ---
+  duration_ms: 172.238581
+  type: 'test'
+  ...
+# Subtest: rollback restores host units before old pointer and old assets before R8 controller start
+ok 45 - rollback restores host units before old pointer and old assets before R8 controller start
+  ---
+  duration_ms: 28.716548
+  type: 'test'
+  ...
+# Subtest: unknown host, database, lease or restored readiness failure keeps runtime stopped and gated
+ok 46 - unknown host, database, lease or restored readiness failure keeps runtime stopped and gated
+  ---
+  duration_ms: 119.079452
+  type: 'test'
+  ...
+# Subtest: tampered private host/enrollment plans never authorize rollback over unknown state
+ok 47 - tampered private host/enrollment plans never authorize rollback over unknown state
+  ---
+  duration_ms: 53.037257
+  type: 'test'
+  ...
+# Subtest: foreign lock or prior journal prevents repeated migration and remains untouched
+ok 48 - foreign lock or prior journal prevents repeated migration and remains untouched
+  ---
+  duration_ms: 21.164213
+  type: 'test'
+  ...
+# Subtest: supervisor quiesce is bound to own invocation and sequence15 only
+ok 49 - supervisor quiesce is bound to own invocation and sequence15 only
+  ---
+  duration_ms: 0.537795
+  type: 'test'
+  ...
+# Subtest: release state remains readable with a restrictive root supervisor umask
+ok 50 - release state remains readable with a restrictive root supervisor umask
+  ---
+  duration_ms: 2.640303
+  type: 'test'
+  ...
+1..50
+# tests 50
+# suites 0
+# pass 50
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 658.46495

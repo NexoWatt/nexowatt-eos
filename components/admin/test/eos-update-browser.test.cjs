@@ -11,6 +11,9 @@ async function fixture(role = 'admin', mobile = false) {
     const calls = [], faults = [];
     page.on('pageerror', error => faults.push(error.message));
     let state = { ok: true, phase: 'AVAILABLE', busy: false, installed: { sequence: 15, nodeVersion: '24.22.1' },
+        automaticNode: { enabled: true, mode: 'signed-node-only', major: 24,
+            schedule: { timeZone: 'Europe/Berlin', start: '02:30', end: '03:00', catchUp: false },
+            state: 'SCHEDULED', reason: null, lastAttempt: null },
         osUpdates: { schemaVersion: 1, availability: 'available', health: 'warning', summary: {
             state: 'attention', lastAttemptAt: '2026-10-22T02:00:00Z', lastSuccessAt: '2026-10-22T02:00:00Z',
             policy: { automatic: true, serviceRestartPolicy: 'defer-package-service-actions' }, timers: { enabled: true, active: true },
@@ -87,6 +90,32 @@ test('missing Linux state is explicit and Node status text cannot inject markup'
         await f.page.getByText('Installierte Node.js-Laufzeit: Unbekannt', { exact: true }).waitFor();
         await f.page.getByText('Der Zustand der Linux-Sicherheitsupdates ist momentan nicht bestätigt.', { exact: true }).waitFor();
         assert.equal(await f.page.locator('.eos-system-updates img').count(), 0);
+        assert.deepEqual(f.faults, []);
+    } finally { await f.browser.close(); }
+});
+test('automatic Node policy needs no browser install request; deferral and unknown policy stay visible', async () => {
+    const f = await fixture();
+    try {
+        f.setState({ candidate: { releaseId: 'a'.repeat(64), sequence: 16, nodeVersion: '24.23.1', automaticNodeUpdate: true, notes: 'Node-Aktualisierung' } });
+        await f.page.getByRole('button', { name: 'EOS-Updates', exact: true }).click();
+        const node = f.page.locator('[data-node-updates]');
+        await node.getByText('Freigegebene Node-24-Updates werden ohne Klick und ohne geöffneten Browser installiert.', { exact: true }).waitFor();
+        await node.getByText('Täglich 02:30–03:00 Uhr · Europe/Berlin', { exact: true }).waitFor();
+        await f.page.getByText('Dieses Angebot ist für die automatische Node-Aktualisierung vorgemerkt.', { exact: false }).waitFor();
+        assert.equal(f.calls.filter(c => c.operation === 'install').length, 0);
+        await f.page.getByRole('button', { name: 'Schließen', exact: true }).click();
+        f.setState({ automaticNode: { enabled: true, mode: 'signed-node-only', major: 24,
+            schedule: { timeZone: 'Europe/Berlin', start: '02:30', end: '03:00', catchUp: false },
+            state: 'DEFERRED', reason: 'UPDATE_MAINTENANCE_BUSY', lastAttempt: '2026-10-22T00:30:00.000Z' } });
+        await f.page.getByRole('button', { name: 'EOS-Updates', exact: true }).click();
+        await node.getByText('Die automatische Node-Aktualisierung wurde zurückgestellt.', { exact: false }).waitFor();
+        assert.equal(await node.getAttribute('data-health'), 'warning');
+        await f.page.getByRole('button', { name: 'Schließen', exact: true }).click();
+        f.setState({ automaticNode: null, candidate: null });
+        await f.page.getByRole('button', { name: 'EOS-Updates', exact: true }).click();
+        await node.getByText('Die automatische Node-Aktualisierung ist momentan nicht bestätigt.', { exact: true }).waitFor();
+        assert.equal(await node.getAttribute('data-health'), 'warning');
+        assert.equal(f.calls.filter(c => c.operation === 'install').length, 0);
         assert.deepEqual(f.faults, []);
     } finally { await f.browser.close(); }
 });

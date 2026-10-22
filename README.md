@@ -1,5 +1,19 @@
 # Aktueller Teststand: R11 mit Gerätenetzverwaltung
 
+**22. Oktober: Direkter R8-Übergang und automatische Node-Updates im Quellcode umgesetzt.**
+Der neue Migrationsweg führt von einem vollständig eingerichteten R8
+direkt zur neuen Managed-Basis mit **Node 24.22.1 und js-controller 7.2.5**.
+Die Zwischenstände R9–R11 werden dabei nicht einzeln installiert.
+Anschließend werden Linux-Sicherheitsupdates und freigegebene reine
+Node-24-Updates selbstständig nachts installiert werden; allgemeine
+EOS-Anpassungen bleiben über den Updateknopf erreichbar.
+Dieser neue direkte Updatebefehl ist noch nicht signiert, veröffentlicht
+oder auf dem Pi abgenommen. Die folgenden historischen Befehle sind eigene,
+an ihre damaligen Ausgangsversionen gebundene Lieferwege.
+[Automatik](docs/operations/AUTOMATISCHE_SICHERHEITSUPDATES_DE.md) ·
+[Direkter R8-Übergang](docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md) ·
+[Prüfbericht](reports/integration/automatic-security-updates-20261022/automatic-install/README_DE.md).
+
 **22. Oktober: Node-Sicherheitsrelease und automatische Linux-Wartung.**
 Die neue Frischbasis wird auf **Node 24.22.1** umgestellt; js-controller bleibt
 **7.2.5**. Künftige geprüfte Node-24-Updates werden Bestandteil der signierten

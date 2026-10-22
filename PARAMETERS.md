@@ -2,6 +2,31 @@
 
 ## Managed test baseline and update candidates (2026-10-22)
 
+The automatic Node policy is separate from the manually confirmed EOS update
+operation. Signed feed entries may opt into `automaticNodeUpdate: true`; the
+receiver additionally requires a strictly newer supported Node 24 runtime and
+byte-identical application, catalogue and host files. Only the three Node files,
+`sbom.cdx.json` and `runtime-build.json` may change. The daily activation window
+is 02:30–03:00 Europe/Berlin, with no daytime catch-up and at most one persisted
+attempt per local calendar day. This uses the existing TEST completion policy
+(`physicalControlEnabled: false`), shared OS maintenance lock and proven rollback;
+it never fabricates an operator backup/maintenance confirmation.
+
+`tools/system/update-r8-to-managed.cjs` is a separate one-time coordinator for
+the exact authenticated completed R8 sequence 11, targeting sequence 15. It
+accepts only `--bundle`, `--public-key`, `--expected-release-id` and
+`--expected-key-sha256`; `--quiesce-incomplete` is supervisor-only. It runs with
+R8's trusted system Node 24.21.0 and probes the target bundled Node 24.22.1 before
+activation. There is no intermediate R9/R10/R11 installation. The permanent
+manufacturer key is bound by the new immutable entry, not inferred from the old
+R8 key. Existing license trust is retained and needs no replacement input.
+`tools/bootstrap/build-public-r8-managed-entry.cjs --output <absolute-directory>`
+requires the actual signed `delivery/managed-test-15` package and produces the
+entry; `--finalize-command <absolute-directory> --entry-base-url <immutable-raw-base>`
+binds the generated operator command after the entry location is known. Local
+finalization does not attest public readback. See the
+[R8 procedure](docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md).
+
 These source tools do not constitute a published installation release.
 `tools/system/install-managed-from-checkout.cjs preflight` only inspects the
 prepared host. Its `install` operation requires the five explicit values

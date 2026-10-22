@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: Node-only package retains authenticated host/app/catalog bytes and changes only runtime and derived records
+ok 1 - Node-only package retains authenticated host/app/catalog bytes and changes only runtime and derived records
+  ---
+  duration_ms: 18.289035
+  type: 'test'
+  ...
+# Subtest: retained source provenance distinguishes current assembler from original sources across two Node patches
+ok 2 - retained source provenance distinguishes current assembler from original sources across two Node patches
+  ---
+  duration_ms: 5.275219
+  type: 'test'
+  ...
+# Subtest: same-version repack, downgrade, major change, changed baseline record and changed tested app are refused
+ok 3 - same-version repack, downgrade, major change, changed baseline record and changed tested app are refused
+  ---
+  duration_ms: 5.6223
+  type: 'test'
+  ...
+# Subtest: manufacturer candidate must retain the exact derived SBOM, including unchanged components and metadata
+ok 4 - manufacturer candidate must retain the exact derived SBOM, including unchanged components and metadata
+  ---
+  duration_ms: 4.657622
+  type: 'test'
+  ...
+# Subtest: actual prior SBOM keeps all npm components unchanged and rebinds only Node references and provenance
+ok 5 - actual prior SBOM keeps all npm components unchanged and rebinds only Node references and provenance
+  ---
+  duration_ms: 36.512783
+  type: 'test'
+  ...
+# Subtest: baseline verifier rejects mismatched public trust and a tampered actual signature before payload handling
+ok 6 - baseline verifier rejects mismatched public trust and a tampered actual signature before payload handling
+  ---
+  duration_ms: 8.457056
+  type: 'test'
+  ...
+# Subtest: manufacturer channel signer signs explicit automatic Node offer and receiver retains opt-in
+ok 7 - manufacturer channel signer signs explicit automatic Node offer and receiver retains opt-in
+  ---
+  duration_ms: 5.541729
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 231.489247

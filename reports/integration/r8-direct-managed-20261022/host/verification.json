@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "scope": "R8 direct managed migration host helper filesystem and stubbed command contracts",
+  "baseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "checkedAt": "2026-10-22T05:59:06.852740+00:00",
+  "environment": {
+    "node": "v24.19.0",
+    "platform": "local Linux container"
+  },
+  "sourceFiles": [
+    {
+      "path": "tools/system/migrate-r8-host.cjs",
+      "sha256": "8dce7cf316bcba981e957fcae033da20b97373b30c3ed6623cea1b832ae23432"
+    },
+    {
+      "path": "tests/system/migrate-r8-host.test.cjs",
+      "sha256": "66127bbd231eb061ee579c9d33462f129d1a0683e3727d92150a64b90c2375c8"
+    }
+  ],
+  "command": "node --test --test-reporter=tap tests/system/migrate-r8-host.test.cjs",
+  "result": {
+    "tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0
+  },
+  "executed": [
+    "temporary filesystem unit replacement",
+    "partial write rollback",
+    "foreign edit rejection",
+    "plan and source drift rejection",
+    "persistent updater evidence retention",
+    "pointer state guard before activation",
+    "certificate checker timer pause and original state restoration",
+    "busy and racing checker rejection without killing service",
+    "explicit signed unit mode under root umask 0077"
+  ],
+  "notExecuted": [
+    "real systemd or network helper installation",
+    "real R8 image migration",
+    "Node24.22.1 ARM64 execution",
+    "physical plant or Pi acceptance"
+  ],
+  "productionReleaseApproved": false
+}

@@ -16,6 +16,7 @@ contract = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(contract)
 FILES = {'runtime-build.json', 'catalog.json', 'runtime.cdx.json', 'controller-transform.json',
          'resolution-lock.json', 'runtime-sbom-coverage.json', 'runtime.npm.cdx.json'}
+NODE_ONLY_FILES = {'runtime-build.json', 'catalog.json', 'runtime.cdx.json', 'resolution-lock.json'}
 NODE_FILES = {'node-runtime/bin/node', 'node-runtime/runtime.json', 'node-runtime/LICENSE'}
 MANIFEST = 'unsigned-prepared-inventory.json'
 
@@ -29,9 +30,22 @@ def allowed(name):
     check(not any(part in ('.git', '.bin', '__pycache__') for part in name.split('/')))
     return name
 
+def transport_kind(record):
+    check(isinstance(record, dict))
+    retained = record.get('nodeOnlyUpdate')
+    if retained is None:
+        return 'unsigned-security-refresh-runtime'
+    check(isinstance(retained, dict) and retained.get('kind') == 'retained-signed-runtime-node-update-v1')
+    return 'unsigned-node-only-runtime'
+
+def required_files(kind):
+    check(kind in ('unsigned-security-refresh-runtime', 'unsigned-node-only-runtime'))
+    return NODE_ONLY_FILES if kind == 'unsigned-node-only-runtime' else FILES
+
 def inventory(root):
     rows = []
-    for top in ['app', 'node-runtime', *sorted(FILES)]:
+    record = json.loads(contract.bounded(root / 'runtime-build.json', contract.MAX_MANIFEST))
+    for top in ['app', 'node-runtime', *sorted(required_files(transport_kind(record)))]:
         current = root / top
         check(current.exists() and not current.is_symlink())
         files = sorted(current.rglob('*')) if current.is_dir() else [current]
@@ -50,29 +64,51 @@ def inventory(root):
 def read_members(archive, destination=None):
     check(archive.stat().st_size <= contract.MAX_ARCHIVE)
     seen = set()
-    with contract.plain_file(archive, contract.MAX_ARCHIVE) as handle, tarfile.open(fileobj=handle, mode='r:gz') as tar:
-        header = tar.next()
-        check(header is not None and header.name == MANIFEST and header.isfile() and header.size <= contract.MAX_MANIFEST)
-        raw = tar.extractfile(header).read(contract.MAX_MANIFEST + 1)
-        metadata = json.loads(raw)
-        check(metadata.get('kind') == 'unsigned-security-refresh-runtime' and metadata.get('signed') is False)
-        files = contract.manifest_rows(json.dumps({'profile': 'test', 'files': metadata.get('files')}).encode())
-        check(FILES | NODE_FILES <= set(files) and any(name.startswith('app/') for name in files))
-        while (item := tar.next()) is not None:
-            name = allowed(item.name)
-            check(item.isfile() and not item.issym() and not item.islnk() and name in files and name not in seen)
-            row = files[name]
-            check(item.size == row['size'] and item.mode == row['mode'] and item.uid == item.gid == 0)
-            raw = tar.extractfile(item).read(contract.MAX_FILE + 1)
-            check(len(raw) == row['size'] and hashlib.sha256(raw).hexdigest() == row['sha256'])
-            seen.add(name)
-            if destination is not None:
-                target = destination / name
-                target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-                with target.open('xb') as output:
-                    output.write(raw)
-                target.chmod(row['mode'])
-        check(seen == set(files))
+    with contract.plain_file(archive, contract.MAX_ARCHIVE) as handle:
+        before = os.fstat(handle.fileno())
+        # Bound PAX records and total expanded bytes before tarfile interprets
+        # extensions; a tiny compressed input must not request huge allocations.
+        contract.raw_headers(handle)
+        with gzip.GzipFile(fileobj=handle, mode='rb') as zipped, tarfile.open(fileobj=zipped, mode='r|') as tar:
+            def member(item):
+                check(item is not None and item.type == tarfile.REGTYPE and not item.linkname)
+                check(item.uid == item.gid == 0 and item.uname == item.gname == '' and item.mtime == contract.MTIME)
+                check(set(item.pax_headers) <= {'path'} and not tar.pax_headers)
+            header = tar.next()
+            member(header)
+            check(header.name == MANIFEST and header.mode == 0o644 and 0 <= header.size <= contract.MAX_MANIFEST)
+            raw = tar.extractfile(header).read(contract.MAX_MANIFEST + 1)
+            check(len(raw) == header.size)
+            metadata = json.loads(raw)
+            check(isinstance(metadata, dict) and set(metadata) == {'schemaVersion', 'kind', 'signed', 'files'})
+            check(type(metadata['schemaVersion']) is int and metadata['schemaVersion'] == 1 and metadata['signed'] is False)
+            kind = metadata['kind']
+            required = required_files(kind)
+            files = contract.manifest_rows(json.dumps({'profile': 'test', 'files': metadata['files']}).encode())
+            check(required | NODE_FILES <= set(files) and any(name.startswith('app/') for name in files))
+            check(all(name in required or name in NODE_FILES or name.startswith('app/') for name in files))
+            while (item := tar.next()) is not None:
+                member(item)
+                name = allowed(item.name)
+                check(name in files and name not in seen)
+                row = files[name]
+                check(item.size == row['size'] and item.mode == row['mode'])
+                raw = tar.extractfile(item).read(contract.MAX_FILE + 1)
+                check(len(raw) == row['size'] and hashlib.sha256(raw).hexdigest() == row['sha256'])
+                if name == 'runtime-build.json':
+                    check(transport_kind(json.loads(raw)) == kind)
+                seen.add(name)
+                if destination is not None:
+                    target = destination / name
+                    target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+                    with target.open('xb') as output:
+                        output.write(raw)
+                    target.chmod(row['mode'])
+            check(seen == set(files) and not tar.pax_headers)
+            remainder = tar.fileobj.read(10241)
+            check(len(remainder) <= 10240 and not any(remainder))
+        after = os.fstat(handle.fileno())
+        check((before.st_size, before.st_mtime_ns, before.st_ctime_ns) == (after.st_size, after.st_mtime_ns, after.st_ctime_ns))
     return files
 
 def pack(root, archive):
@@ -81,7 +117,8 @@ def pack(root, archive):
     check(root not in archive.parents)
     rows = inventory(root)
     by_path = {row['path']: row for row in rows}
-    metadata = json.dumps({'schemaVersion': 1, 'kind': 'unsigned-security-refresh-runtime', 'signed': False,
+    kind = transport_kind(json.loads(contract.bounded(root / 'runtime-build.json', contract.MAX_MANIFEST)))
+    metadata = json.dumps({'schemaVersion': 1, 'kind': kind, 'signed': False,
                            'files': rows}, separators=(',', ':')).encode()
     try:
         with archive.open('xb') as handle:

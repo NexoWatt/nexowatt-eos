@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "change": "direct R8 to managed15 public entry preparation",
+  "sourceBaseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "date": "2026-10-22",
+  "nodeVersion": "v24.19.0",
+  "pythonVersion": "3.12.14",
+  "environment": "Linux x86_64",
+  "sourceSha256": {
+    "tools/bootstrap/build-public-r8-managed-entry.cjs": "4709a10de3330ea7de740dda7cbf7f5e45d898c0cf16da470cb681ed4efa2278",
+    "tools/bootstrap/download-r8-managed.py": "6226188d823f0001e85863b3ed702823279d52a6d4adf4ba5947338604fe3af4",
+    "tests/bootstrap/public-r8-managed-entry.test.cjs": "4558c0bc6bfa80cec8f14da30c8436899401bec7129379c5bc32b7178951990f",
+    "tests/bootstrap/download-r8-managed.test.py": "88e290a8080bc5a7321fe2e84c678e18f861aad10a63aa79134a8fc2a058583a",
+    "tools/bootstrap/prepare-managed-host.py": "d152e4d713e64c2e724e2ccd9936a329582cc17cac8e4361e0e96c27b9925205",
+    "tools/system/extract-test-bundle.py": "84958e5adb16cabf556b5b48b7f4791a3540921e98bfc75967a0717492a3610f",
+    "tools/integration/test-archive.py": "3947e859ce789d175d238d3a52d6ac98e2eec9a5caacfc2b091f1ab85284f99b"
+  },
+  "checks": [
+    {
+      "command": "node --test --test-reporter=tap tests/bootstrap/public-r8-managed-entry.test.cjs",
+      "status": "PASSED",
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "contracts.tap"
+    },
+    {
+      "command": "python3 -B tests/bootstrap/download-r8-managed.test.py",
+      "status": "PASSED",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "python.txt"
+    }
+  ],
+  "limits": [
+    "Metadata/render/finalization tests use synthetic archive descriptors with the already public manufacturer key; no actual new signed archive was created or accepted.",
+    "Python download tests replace the network transport; only temporary local files and real digest verification execute.",
+    "The supervisor test substitutes os.execve and does not start a target updater.",
+    "No GitHub release asset, real download, APT/systemd operation, Pi migration or hardware acceptance was executed.",
+    "A genuine signed managed15 bundle containing the exact new R8 coordinator is still required before an operator entry can be built.",
+    "Public byte readback is required after publication; command finalization does not perform it."
+  ]
+}

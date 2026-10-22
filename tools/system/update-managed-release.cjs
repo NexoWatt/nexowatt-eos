@@ -20,6 +20,7 @@ const product = require('../../runtime/product/scope.cjs');
 const UPLOAD_SERVICE = 'nexowatt-eos-upload.service';
 const nodePolicy = require('../../runtime/updates/node-policy.cjs');
 const maintenanceLease = require('../../runtime/updates/maintenance-lease.cjs');
+const automaticNode = require('../../runtime/updates/automatic-node.cjs');
 const SERVICE = 'nexowatt-eos-controller.service';
 const DIRECTORY = '/etc/nexowatt-eos';
 const MALFORMED_PROTECTED_LOCK = Symbol('malformed-protected-lock');
@@ -29,6 +30,7 @@ const FAILURE_STAGES = new Set(['PREFLIGHT', 'SOURCE_VERIFY', 'STAGE', 'NATIVE_P
     'TRIAL', 'CONTROLLER_START', 'DB_CONNECT', 'DB_CLOSE', 'ADAPTER_HEARTBEAT', 'WEB_HTTPS', 'ADMIN_HTTPS', 'UI_HTTPS', 'VERIFY_LIVE', 'COMPLETION',
     'BOOT_CONFIGURATION', 'ACTIVE_REPORT', 'UNLOCK', 'BASELINE_READINESS', 'ROLLBACK_START', 'ROLLBACK_READINESS', 'NETWORK_CHECK', 'NETWORK_INSTALL', 'NETWORK_ROLLBACK', 'NETWORK_READINESS', 'ASSET_UPLOAD', 'ASSET_ROLLBACK']);
 const FAILURE_CODES = new Set([
+    'UPDATE_AUTOMATIC_NODE_REQUIRED', 'UPDATE_AUTOMATIC_PAYLOAD', 'UPDATE_AUTOMATIC_WINDOW',
     'REPAIR_MAINTENANCE_LOCK', 'UPDATE_RUNTIME_VERSION', 'UPDATE_RUNTIME_DOWNGRADE', 'UPDATE_RUNTIME_BINDING',
     'UPDATE_RUNTIME_DESCRIPTOR', 'UPDATE_RUNTIME_BINARY', 'UPDATE_RUNTIME_LICENSE', 'UPDATE_RUNTIME_REPACK', 'REPAIR_MANAGED_BASELINE_REQUIRED', 'REPAIR_COMPLETED_FIRST_START_REQUIRED', 'REPAIR_NATIVE_PROBE_FAILED', 'REPAIR_TRIAL_FAILED_RESTORED_ACTIVE',
     'INSTALLED_SIGNATURE', 'INSTALLED_CONTENT', 'INSTALLED_KEY', 'INSTALLED_PLATFORM', 'INSTALLED_RELEASE_ID', 'INSTALLED_UNTRUSTED_PATH',
@@ -96,6 +98,7 @@ function validatePins(options) {
     if (!options || !/^[a-f0-9]{64}$/.test(options.expectedReleaseId || '') || !/^[a-f0-9]{64}$/.test(options.expectedKeySha256 || '')) fail('REPAIR_EXPLICIT_NEW_TRUST_REQUIRED');
     for (const key of ['bundleDirectory', 'publicKeyFile']) if (typeof options[key] !== 'string' ||
         !path.isAbsolute(options[key]) || path.resolve(options[key]) !== options[key]) fail('REPAIR_INPUT_PATH');
+    if (Object.hasOwn(options, 'automaticNodeUpdate') && options.automaticNodeUpdate !== true) fail('REPAIR_USAGE');
 }
 function validateTransition(previous, next, options) {
     if (next.releaseId !== options.expectedReleaseId || next.manifest.sequence <= previous.manifest.sequence ||
@@ -320,6 +323,10 @@ async function transaction(options, dependencies, lease) {
     const candidate = (dependencies.verifyBundle || bundle.verifyBundle)(verifyOptions);
     const next = { ...candidate, ...(dependencies.validatePayload || validatePayload)(candidate.payloadPath, candidate.manifest) };
     validateTransition(previous, next, options);
+    if (options.automaticNodeUpdate === true) {
+        automaticNode.assertTransition(previous, next);
+        if (!automaticNode.windowAt((dependencies.now || Date.now)()).open) fail('UPDATE_AUTOMATIC_WINDOW');
+    }
     (dependencies.validateRuntime || nodePolicy.validateRuntime)(candidate.payloadPath, candidate.manifest);
     const TARGET_SEQUENCE = next.manifest.sequence;
     for (const row of previous.manifest.files.filter(item => item.path.startsWith('system/postgresql-test/systemd/'))) {
@@ -361,6 +368,7 @@ async function transaction(options, dependencies, lease) {
         phase, failureStage: failure?.failureStage ?? null, failureCode: failure?.failureCode ?? null, failureReason: failure?.failureReason ?? null,
         previousReleaseId: baseline.releaseId, targetSequence: TARGET_SEQUENCE, targetReleaseId: options.expectedReleaseId, at: new Date().toISOString(),
         previousNodeVersion: baseline.nodeVersion, targetNodeVersion: next.manifest.nodeVersion,
+        automaticNodeUpdate: options.automaticNodeUpdate === true,
         previousControllerState: serviceState, physicalControlEnabled: false, productionReleaseApproved: false }) + '\n');
     function switchPointer(expected, target) {
         assertPointer(expected);
@@ -432,6 +440,7 @@ async function transaction(options, dependencies, lease) {
         assertOwnLock(); assertPointer(oldTarget); assertPreserved();
         if (!read(stateFile).equals(original)) fail('REPAIR_STATE_CHANGED');
         if (run(['show', SERVICE, '--property=ActiveState', '--value']) !== 'active') fail('REPAIR_CONTROLLER_BUSY');
+        if (options.automaticNodeUpdate === true && !automaticNode.windowAt((dependencies.now || Date.now)()).open) fail('UPDATE_AUTOMATIC_WINDOW');
         // A failed stop can already alter service state. From here retain the
         // gate until the new release or an authenticated healthy managed baseline is proven.
         transitioned = true; setStage('STOP');
@@ -448,8 +457,13 @@ async function transaction(options, dependencies, lease) {
         if (!read(stateFile).equals(original)) fail('REPAIR_STATE_CHANGED');
         write(stateFile, newState); report('TRIAL');
         assertOwnLock(); assertPointer(nextTarget); assertPreserved();
-        setStage('ASSET_UPLOAD'); assetsAttempted = true;
-        run(['reset-failed', UPLOAD_SERVICE]); run(['start', UPLOAD_SERVICE]); stopped();
+        // Byte-identical application assets need no database upload in an
+        // automatic Node-only transaction. The previous runtime remains the
+        // rollback copy; no database migration/restore is implied.
+        if (options.automaticNodeUpdate !== true) {
+            setStage('ASSET_UPLOAD'); assetsAttempted = true;
+            run(['reset-failed', UPLOAD_SERVICE]); run(['start', UPLOAD_SERVICE]); stopped();
+        }
         assertOwnLock(); assertPointer(nextTarget); assertPreserved();
         maintenance.authorizeStart(at(DIRECTORY), 'test-release-repair');
         const startedAt = Date.now();

@@ -7,9 +7,9 @@
 .eos-system-updates progress { width: 100%; }
 .eos-system-updates :focus-visible, .eos-updates-entry:focus-visible { outline: 3px solid #a9e4d6; outline-offset: 3px; }
 
-.eos-system-updates .eos-os-update-status { border-top: 1px solid #526372; margin-top: 24px; padding-top: 12px; }
+.eos-system-updates .eos-os-update-status, .eos-system-updates .eos-node-update-status { border-top: 1px solid #526372; margin-top: 24px; padding-top: 12px; }
 .eos-system-updates dl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px 16px; }
 .eos-system-updates dt { color: #b9c9d3; }
 .eos-system-updates dd { margin: 0; overflow-wrap: anywhere; }
-.eos-system-updates .eos-os-update-status[data-health=warning] h3 { color: #f6cf85; }
+.eos-system-updates .eos-os-update-status[data-health=warning] h3, .eos-system-updates .eos-node-update-status[data-health=warning] h3 { color: #f6cf85; }
 @media (max-width: 520px) { .eos-system-updates { padding: 18px; } .eos-system-updates dl { grid-template-columns: minmax(0, 1fr); gap: 2px; } .eos-system-updates dd { margin-bottom: 10px; } }

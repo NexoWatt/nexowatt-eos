@@ -34,6 +34,36 @@
     const time = value => typeof value === 'string' && Number.isFinite(Date.parse(value))
         ? new Intl.DateTimeFormat(undefined, { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value)) : 'Noch nicht bestätigt';
     const requirement = value => ({ required: 'Erforderlich', 'not-required': 'Nicht erforderlich', unknown: 'Unbekannt' })[value] || 'Unbekannt';
+    function renderAutomaticNode(content, value) {
+        const section = el('section'); section.className = 'eos-node-update-status'; section.dataset.nodeUpdates = '';
+        section.setAttribute('aria-labelledby', 'eos-node-update-heading');
+        const heading = el('h3', 'Node.js · automatische Updates'); heading.id = 'eos-node-update-heading'; section.append(heading);
+        const states = { SCHEDULED: 'Die automatische Prüfung wartet auf das nächste Wartungsfenster.',
+            CHECKING: 'Die automatische Prüfung läuft.', NO_UPDATE: 'Für diesen Stand ist kein neueres automatisches Node-Update freigegeben.',
+            MANUAL_RELEASE: 'Das angebotene EOS-Update benötigt eine manuelle Installation.',
+            QUEUED: 'Das automatische Node-Update wird installiert. EOS startet dabei kontrolliert neu.',
+            SUCCEEDED: 'Das automatische Node-Update wurde erfolgreich installiert.',
+            DEFERRED: 'Die automatische Node-Aktualisierung wurde zurückgestellt. Der nächste Versuch erfolgt im nächsten Wartungsfenster.',
+            FAILED: 'Die automatische Node-Aktualisierung ist fehlgeschlagen. Der Fehler muss geprüft werden.',
+            RECOVERY_REQUIRED: 'Die automatische Aktualisierung ist gesperrt. Eine Wiederherstellungsprüfung durch den Service ist erforderlich.' };
+        if (value?.enabled !== true || value.mode !== 'signed-node-only' || value.major !== 24
+            || value.schedule?.timeZone !== 'Europe/Berlin' || value.schedule.start !== '02:30'
+            || value.schedule.end !== '03:00' || value.schedule.catchUp !== false || !Object.hasOwn(states, value.state)) {
+            section.dataset.health = 'warning'; section.append(el('p', 'Die automatische Node-Aktualisierung ist momentan nicht bestätigt.'));
+            content.append(section); return;
+        }
+        section.dataset.health = ['DEFERRED', 'FAILED', 'RECOVERY_REQUIRED'].includes(value.state) ? 'warning' : 'ok';
+        const status = el('p', states[value.state]); status.setAttribute('role', 'status'); section.append(status);
+        section.append(el('p', 'Freigegebene Node-24-Updates werden ohne Klick und ohne geöffneten Browser installiert.'));
+        const list = el('dl');
+        const row = (name, text) => list.append(el('dt', name), el('dd', text));
+        row('Automatische Installation', 'Aktiv · nur signierte Node-Updates innerhalb von Version 24');
+        row('Wartungsfenster', 'Täglich 02:30–03:00 Uhr · Europe/Berlin');
+        row('Verpasstes Wartungsfenster', 'Nächster Tag · kein Nachholen am Tag');
+        row('Letzter automatischer Versuch', time(value.lastAttempt));
+        section.append(list, el('p', 'Andere EOS-Anpassungen werden weiterhin über den Updateknopf installiert. Hauptversionswechsel sind nicht automatisch freigegeben.'));
+        content.append(section);
+    }
     function renderOsStatus(content, result) {
         const section = el('section'); section.className = 'eos-os-update-status'; section.dataset.osUpdates = '';
         section.setAttribute('aria-labelledby', 'eos-os-update-heading');
@@ -90,16 +120,19 @@
             content.append(el('h3', `Neuer Teststand: ${data.candidate.sequence}`), el('p', data.candidate.notes),
                 el('p', `Node.js im geprüften EOS-Paket: ${version(data.candidate.nodeVersion)}`),
                 el('p', 'EOS und die zugehörige Node.js-Laufzeit werden gemeinsam installiert und geprüft.'));
+            if (data.candidate.automaticNodeUpdate === true && data.automaticNode?.enabled === true) content.append(el('p',
+                'Dieses Angebot ist für die automatische Node-Aktualisierung vorgemerkt. Die Installation im Wartungsfenster benötigt keine Bestätigung im Browser.'));
         }
         if (data.error && /^(?:UPDATE|REPAIR)_[A-Z0-9_]+$/.test(data.error)) content.append(el('p', `Diagnose: ${data.error}`));
         const check = button('Updates prüfen', () => void act('check', {})); check.disabled = data.busy || busy || data.phase === 'RECOVERY_REQUIRED'; content.append(check);
         if (data.candidate && data.phase === 'AVAILABLE') {
             const label = el('label'); const confirm = el('input'); confirm.type = 'checkbox';
-            label.append(confirm, document.createTextNode(' Wartungsfenster vorbereitet und Sicherung vorhanden. Die Regelung wird während des Neustarts unterbrochen.'));
+            label.append(confirm, document.createTextNode(' Für die sofortige manuelle Installation: Wartungsfenster vorbereitet und Sicherung vorhanden. Die Regelung wird während des Neustarts unterbrochen.'));
             const install = button('Update installieren', () => void act('install', { releaseId: data.candidate.releaseId, maintenanceConfirmed: true }));
             install.disabled = true; confirm.addEventListener('change', () => { install.disabled = !confirm.checked || busy; }); content.append(label, install);
         }
         if (data.phase === 'SUCCEEDED') content.append(button('Admin neu laden', () => location.reload()));
+        renderAutomaticNode(content, data.automaticNode);
         renderOsStatus(content, data.osUpdates);
     }
     async function act(operation, body) {

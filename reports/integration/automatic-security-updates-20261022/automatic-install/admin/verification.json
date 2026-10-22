@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "change": "automatic Node24 installation Admin status",
+  "sourceBaseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "date": "2026-10-22",
+  "nodeVersion": "v24.19.0",
+  "environment": "Linux x86_64",
+  "sourceSha256": {
+    "components/admin/src/lib/eosUpdateHttp.js": "2256e6df516727136f8a9c9ab6c7afc4f727ecad5f82eff07cabf6a323dce27c",
+    "components/admin/build/lib/eosUpdateHttp.js": "2256e6df516727136f8a9c9ab6c7afc4f727ecad5f82eff07cabf6a323dce27c",
+    "components/admin/src-admin/public/js/eos-system-updates.js": "c52d4dae9a3f3380ae226575ab579410b359722457516e8967bd7c149403a601",
+    "components/admin/adminWww/js/eos-system-updates.js": "c52d4dae9a3f3380ae226575ab579410b359722457516e8967bd7c149403a601",
+    "components/admin/src-admin/public/css/eos-system-updates.css": "f96ae27ce30ec6226a43e2139da460b4b7803e554e83aad5c7ad140db97b9aa8",
+    "components/admin/adminWww/css/eos-system-updates.css": "f96ae27ce30ec6226a43e2139da460b4b7803e554e83aad5c7ad140db97b9aa8",
+    "components/admin/test/eos-update-http.test.cjs": "1c94b7862f28fc7fc9ebb1f0555c146ac7c17b5f21b06e1be975372a601a8111",
+    "components/admin/test/eos-update-browser.test.cjs": "579767b7d5e35154da0e0d49833972351bd374bf64f8222b43db7dc64d618954",
+    "components/admin/docs/EOS_SECURITY_UPDATES_DE.md": "83dde8aae70f98941580597b6e671f96ff7d28544d2b6171dfb4217b45b28fc4",
+    "components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json": "368a82f39c5b8ed31f8b828664f603d6a316bd37848bb4dd1eac9a7b81c24fc4"
+  },
+  "checks": [
+    {
+      "command": "node --test --test-reporter=tap components/admin/test/eos-update-http.test.cjs components/admin/test/eos-os-update-status.test.cjs",
+      "status": "PASSED",
+      "tests": 45,
+      "passed": 45,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "contracts.tap"
+    },
+    {
+      "command": "node components/admin/tools/nexowatt-prebuilt-release-selftest.cjs",
+      "status": "PASSED",
+      "sealedFiles": 1498,
+      "backendFiles": 31,
+      "evidence": "prebuilt.txt"
+    },
+    {
+      "command": "node --check components/admin/adminWww/js/eos-system-updates.js; node --check components/admin/test/eos-update-browser.test.cjs",
+      "status": "PASSED"
+    },
+    {
+      "command": "node --test components/admin/test/eos-update-browser.test.cjs",
+      "status": "NOT_RUN",
+      "reason": "No Chromium executable available locally; existing CI browser job executes five scenarios including the new automatic-installation scenario."
+    }
+  ],
+  "limits": [
+    "Injected HTTP/OS fixtures are not an actual update or Pi installation.",
+    "No target systemd/APT/ARM64/physical plant operations were executed.",
+    "Main-source changes do not modify the signed historical R8 package."
+  ]
+}

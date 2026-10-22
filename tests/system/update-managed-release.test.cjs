@@ -152,6 +152,49 @@ test('managed transition pins controller 7.2.5 and rejects historical or major-8
         }
     }
 });
+test('automatic Node transaction keeps application/catalogue exact and performs no asset database upload', async t => {
+    const f = fixture(t); f.options.automaticNodeUpdate = true;
+    f.dependencies.now = () => Date.parse('2026-10-22T00:40:00.000Z');
+    f.desc.next.manifest.nodeVersion = '24.22.2';
+    for (const row of f.desc.next.manifest.files.filter(r => r.path.startsWith('node-runtime/'))) row.sha256 = 'd'.repeat(64);
+    const result = await repair.update(f.options, f.dependencies);
+    assert.equal(result.nodeVersion, '24.22.2'); assert.equal(f.journal().automaticNodeUpdate, true);
+    assert.equal(f.events.includes('start nexowatt-eos-upload.service'), false);
+    assert.equal(f.current(), '/opt/nexowatt/eos/releases/' + ID); assert.equal(f.active(), 'active');
+});
+test('automatic Node denies same-version, app/catalogue changes and closed window before stage or stop', async t => {
+    for (const change of ['same-node', 'own-app', 'catalog', 'daytime', 'physical-control']) {
+        const f = fixture(t); f.options.automaticNodeUpdate = true;
+        f.dependencies.now = () => Date.parse('2026-10-22T00:40:00.000Z');
+        if (change !== 'same-node') f.desc.next.manifest.nodeVersion = '24.22.2';
+        if (change === 'own-app') {
+            const row = { path: 'app/node_modules/iobroker.eos-admin/lib/fixture.js', size: 1, mode: 0o644, sha256: 'a'.repeat(64) };
+            f.desc.old.manifest.files.push(row); f.desc.next.manifest.files.push({ ...row, sha256: 'd'.repeat(64) });
+        }
+        if (change === 'catalog') f.desc.next.catalog.entries[1].sha256 = 'e'.repeat(64);
+        if (change === 'daytime') f.dependencies.now = () => Date.parse('2026-10-22T12:00:00.000Z');
+        if (change === 'physical-control') {
+            const file = f.at('/etc/nexowatt-eos/first-start-complete.json');
+            fs.writeFileSync(file, JSON.stringify({ ...JSON.parse(fs.readFileSync(file)), physicalControlEnabled: true }));
+        }
+        await assert.rejects(repair.update(f.options, f.dependencies), /UPDATE_AUTOMATIC_(?:NODE_REQUIRED|PAYLOAD|WINDOW)|REPAIR_COMPLETED_FIRST_START_REQUIRED/);
+        assert.equal(f.events.includes('stage'), false); assert.equal(f.active(), 'active'); assert.equal(f.locked(), false);
+    }
+});
+test('automatic Node respects window again after candidate probe and rolls runtime back on failed startup', async t => {
+    for (const expired of [false, true]) {
+        const f = fixture(t); f.options.automaticNodeUpdate = true;
+        let clock = Date.parse('2026-10-22T00:40:00.000Z'); f.dependencies.now = () => clock;
+        f.desc.next.manifest.nodeVersion = '24.22.2';
+        f.dependencies.nativeProbe = () => { if (expired) clock = Date.parse('2026-10-22T01:00:00.000Z'); return { passed: true }; };
+        if (!expired) f.dependencies.readiness = async payload => { if (path.basename(payload) === ID) throw Object.assign(Error('trial'), { code: 'ONBOARD_HTTPS_NOT_READY' }); };
+        await assert.rejects(repair.update(f.options, f.dependencies), expired ? /UPDATE_AUTOMATIC_WINDOW/ : /REPAIR_TRIAL_FAILED_RESTORED_ACTIVE/);
+        assert.equal(f.current(), oldTarget); assert.deepEqual(fs.readFileSync(f.at(stateFile)), f.state);
+        assert.equal(f.active(), 'active'); assert.equal(f.locked(), false);
+        assert.equal(f.events.includes('start nexowatt-eos-upload.service'), false);
+        if (expired) assert.equal(f.events.some(e => e.startsWith('stop ')), false);
+    }
+});
 test('successful managed update installs state before trial start and preserves fresh completion/configuration', async t => {
     const f = fixture(t), before = repair.PRESERVED.map(name => fs.readFileSync(f.at('/etc/nexowatt-eos/' + name)));
     const result = await repair.update(f.options, f.dependencies);

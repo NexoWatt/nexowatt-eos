@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-r8-direct-managed-contract-verification",
+  "at": "2026-10-22T05:59:41.933115+00:00",
+  "baseCommit": "02257b74c9124f504979d9bc012af27451719aca",
+  "sourceBinding": "working tree file hashes; not a signed release",
+  "node": "v24.19.0",
+  "command": "node --test --test-reporter=tap tests/system/update-r8-to-managed.test.cjs tests/system/migrate-r8-host.test.cjs tests/system/migrate-r8-os-maintenance.test.cjs tests/integration/r8-managed-enrollment.test.cjs",
+  "passed": true,
+  "tests": 50,
+  "failed": 0,
+  "skipped": 0,
+  "sources": [
+    {
+      "path": "tools/system/update-r8-to-managed.cjs",
+      "sha256": "679dcb3e0a6e6a74692d2ebc279b0bf737927edca206cd5fbc4f42d3744f7d74"
+    },
+    {
+      "path": "tools/system/migrate-r8-host.cjs",
+      "sha256": "8dce7cf316bcba981e957fcae033da20b97373b30c3ed6623cea1b832ae23432"
+    },
+    {
+      "path": "tools/system/migrate-r8-os-maintenance.cjs",
+      "sha256": "0da6f6ee6e51831badf88691952ab4cf2cb9b319ec64aa00ca180fdfc756b322"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "238dd496f9bb13f9c22405d0d9b6dd0ff4c061f41be6056310f7e54acee60136"
+    },
+    {
+      "path": "runtime/bootstrap/r8-managed-enrollment.cjs",
+      "sha256": "d7cc3eb0fcc4056d9f02749fa2092376910c352d4b52d75cf9c6bb253cbf2f10"
+    },
+    {
+      "path": "tests/system/update-r8-to-managed.test.cjs",
+      "sha256": "c47d8e54318ebef333b7683f1ea572582b8c30ad6f7a5bf3118e86cba8ca6b36"
+    },
+    {
+      "path": "tests/system/migrate-r8-host.test.cjs",
+      "sha256": "66127bbd231eb061ee579c9d33462f129d1a0683e3727d92150a64b90c2375c8"
+    },
+    {
+      "path": "tests/system/migrate-r8-os-maintenance.test.cjs",
+      "sha256": "a6e419289625a87e74f223cbb9a16bfa4ab284ccd8c415be4ec174c4c285f919"
+    },
+    {
+      "path": "tests/integration/r8-managed-enrollment.test.cjs",
+      "sha256": "fe9ed674a51bd9dbc89318e189314127855d11e6f29dc8b90458cf9d294a8990"
+    },
+    {
+      "path": "docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md",
+      "sha256": "78fd5eb63e415882c1aeefdee5d1d5e228f3c72c544dba78d77d52c7feac611d"
+    }
+  ],
+  "rawEvidenceSha256": "e483a99132f5a99bc8c2c337f8baa4b8eaeec6d16535c21973b1bc83d9cf5221",
+  "realOperations": [
+    "temporary files",
+    "exclusive private files",
+    "fsync",
+    "atomic symlink/state replacement",
+    "restrictive umask handling",
+    "historical signed R8 archive verification"
+  ],
+  "doubles": [
+    "systemd service commands",
+    "APT status/commands",
+    "object store database",
+    "controller/HTTPS readiness",
+    "ARM64 native execution",
+    "coordinator bundle inventory for transaction faults"
+  ],
+  "open": [
+    "signed target sequence15 release",
+    "public entry readback",
+    "whole native R8 PostgreSQL migration and restore",
+    "Pi systemd integration and reboot/crash",
+    "physical hardware acceptance"
+  ],
+  "productionReleaseApproved": false
+}
