@@ -11,6 +11,9 @@ const bundle = require('../../runtime/release/bundle.cjs');
 const { copyDirectory, componentRows } = require('../system/build-bundle.cjs');
 const { componentTreeDigest } = require('../../runtime/policy/admission.cjs');
 const fresh = require('../../runtime/release/fresh-sbom-binding.cjs');
+const nodeRuntime = require('./prepare-node-runtime.cjs');
+const nodePolicy = require('../../runtime/updates/node-policy.cjs');
+const TARGET_NODE = nodeRuntime.policy.currentVersion;
 const ROOT = path.resolve(__dirname, '../..');
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const json = file => JSON.parse(bundle.readFileLimited(file, 32 * 1024 * 1024).bytes);
@@ -21,7 +24,7 @@ function git(args) {
     return result.stdout.trim();
 }
 function source() {
-    if (process.platform !== 'linux' || process.versions.node !== fresh.NODE || git(['status', '--porcelain'])) fail('FRESH_BUILD_CLEAN_HOST');
+    if (process.platform !== 'linux' || process.versions.node !== TARGET_NODE || git(['status', '--porcelain'])) fail('FRESH_BUILD_CLEAN_HOST');
     const commit = git(['rev-parse', 'HEAD']);
     if (!/^[a-f0-9]{40}$/.test(commit)) fail('FRESH_BUILD_GIT');
     return commit;
@@ -46,12 +49,15 @@ function freshCatalog(files) {
     product.assertCatalog(catalog, product.SECURITY_REFRESH_TEST);
     return catalog;
 }
-function prepare({ output, sequence = 15, resolutionLock }) {
+function prepare({ output, sequence = 15, resolutionLock, nodeArchive }) {
     sequenceValue(sequence);
     if (!path.isAbsolute(resolutionLock || '') || fs.realpathSync(resolutionLock) !== resolutionLock) fail('FRESH_BUILD_LOCK_REQUIRED');
     const sourceCommit = source(), base = path.resolve(output || '');
     if (!path.isAbsolute(output || '') || output !== base || base === ROOT || base.startsWith(ROOT + path.sep) || fs.existsSync(base)) fail('FRESH_BUILD_OUTPUT');
+    nodeRuntime.verifyArchive(nodeArchive, TARGET_NODE);
     fs.mkdirSync(base, { mode: 0o700 });
+    const nodeRuntimeDirectory = path.join(base, 'node-runtime');
+    const nodeMetadata = nodeRuntime.prepare({ archive: nodeArchive, destination: nodeRuntimeDirectory, version: TARGET_NODE });
     const assembly = path.join(base, 'assembly');
     const evidence = build({ output: assembly, platform: 'linux-arm64', postgresql: true, releaseScope: product.SECURITY_REFRESH_TEST, resolutionLock });
     fs.copyFileSync(path.join(assembly, 'resolution-lock.json'), path.join(base, 'resolution-lock.json'), fs.constants.COPYFILE_EXCL);
@@ -67,14 +73,14 @@ function prepare({ output, sequence = 15, resolutionLock }) {
     profile.files.push({ relativePath: manifest.relativePath, sha256: manifest.sha256 });
     write(path.join(base, 'controller-transform.json'), transform);
     product.inspectApp(app, product.SECURITY_REFRESH_TEST);
-    const architecture = require('./check-runtime-architecture.cjs').checkRuntimeArchitecture({ app, platform: 'linux-arm64', nodeVersion: fresh.NODE });
+    const architecture = require('./check-runtime-architecture.cjs').checkRuntimeArchitecture({ app, platform: 'linux-arm64', nodeVersion: TARGET_NODE });
     if (!architecture.passed) fail('FRESH_BUILD_ARCHITECTURE');
     const canonical = require('./create-managed-archive.cjs').canonicalInventory(bundle.inventory(app).map(row => ({ ...row, path: `app/${row.path}` })),
-        { profile: 'test', nodeVersion: fresh.NODE, platforms: ['linux-arm64'] }, [architecture]);
+        { profile: 'test', nodeVersion: TARGET_NODE, platforms: ['linux-arm64'] }, [architecture]);
     for (const row of canonical.files) fs.chmodSync(path.join(app, row.path.slice(4)), row.mode);
     const files = bundle.inventory(app);
     const record = { schemaVersion: 1, kind: fresh.ASSEMBLY, sourceCommit, sourceTreeClean: true,
-        sequence, nodeVersion: fresh.NODE, npmVersion: '11.19.0', controllerVersion: fresh.CONTROLLER,
+        sequence, nodeVersion: TARGET_NODE, nodeRuntime: nodeMetadata, npmVersion: '11.19.0', controllerVersion: fresh.CONTROLLER,
         platform: 'linux-arm64', archiveModePolicy: canonical.modePolicy, signed: false, lifecycleScriptsExecuted: false, npmNetworkMode: 'offline-only',
         resolutionLockSha256: evidence.resolutionLockSha256, sourcePackages: evidence.components, runtimeDependencyPolicy: evidence.runtimeDependencyPolicy,
         controllerProfile: profile, packageLockSha256: bundle.sha256(fs.readFileSync(path.join(app, 'package-lock.json'))),
@@ -108,23 +114,27 @@ function verifyPrepared({ directory, sourceCommit, sequence }) {
     require('./runtime-dependency-policy.cjs').verifyInstalledTree(app, { controllerVersion: fresh.CONTROLLER });
     const bom = json(path.join(directory, 'runtime.cdx.json'));
     const payloadRows = files.map(row => ({ ...row, path: `app/${row.path}` }));
+    const nodeRuntimeDirectory = path.join(directory, 'node-runtime');
+    payloadRows.push(...bundle.inventory(nodeRuntimeDirectory).map(row => ({ ...row, path: `node-runtime/${row.path}` })));
+    const nodeMetadata = nodePolicy.validateRuntime(directory, { nodeVersion: TARGET_NODE, files: payloadRows });
+    if (JSON.stringify(nodeMetadata) !== JSON.stringify(record.nodeRuntime)) fail('FRESH_BUILD_NODE_CHANGED');
     payloadRows.push({ path: 'runtime-build.json', sha256: bundle.sha256(fs.readFileSync(recordFile)) });
     fresh.verifyFreshSbom({ bom, files: payloadRows, profile, release: { sequence }, record });
     const bomBytes = bundle.readFileLimited(path.join(directory, 'runtime.cdx.json'), 32 * 1024 * 1024).bytes;
     payloadRows.push({ path: 'runtime.cdx.json', size: bomBytes.length, sha256: bundle.sha256(bomBytes), mode: 0o644 });
     require('../../runtime/release/sbom-binding.cjs').verifySbomBinding(directory, payloadRows, profile, { sequence }, 'runtime.cdx.json');
-    const architecture = require('./check-runtime-architecture.cjs').checkRuntimeArchitecture({ app, platform: 'linux-arm64', nodeVersion: fresh.NODE });
+    const architecture = require('./check-runtime-architecture.cjs').checkRuntimeArchitecture({ app, platform: 'linux-arm64', nodeVersion: TARGET_NODE });
     if (!architecture.passed) fail('FRESH_BUILD_ARCHITECTURE');
     const catalog = product.assertCatalog(json(path.join(directory, 'catalog.json')), product.SECURITY_REFRESH_TEST);
     for (const entry of catalog.entries) if (entry.sha256 !== componentTreeDigest(componentRows(payloadRows, entry.package))) fail('FRESH_BUILD_CATALOG');
-    return { directory, app, record, files, catalog, catalogFile: path.join(directory, 'catalog.json'), sbomFile: path.join(directory, 'runtime.cdx.json'), recordFile };
+    return { directory, app, record, files, nodeRuntimeDirectory, catalog, catalogFile: path.join(directory, 'catalog.json'), sbomFile: path.join(directory, 'runtime.cdx.json'), recordFile };
 }
 module.exports = { prepare, verifyPrepared, source, sequenceValue, freshCatalog };
 if (require.main === module) {
     try {
         const a = process.argv.slice(2);
-        if (a.length !== 6 || a[0] !== '--output' || a[2] !== '--sequence' || a[4] !== '--resolution-lock' || !/^[1-9][0-9]*$/.test(a[3])) fail('FRESH_BUILD_USAGE');
-        const value = prepare({ output: a[1], sequence: Number(a[3]), resolutionLock: a[5] });
+        if (a.length !== 8 || a[0] !== '--output' || a[2] !== '--sequence' || a[4] !== '--resolution-lock' || a[6] !== '--node-archive' || !/^[1-9][0-9]*$/.test(a[3])) fail('FRESH_BUILD_USAGE');
+        const value = prepare({ output: a[1], sequence: Number(a[3]), resolutionLock: a[5], nodeArchive: a[7] });
         process.stdout.write(JSON.stringify({ ok: true, sourceCommit: value.record.sourceCommit, appContentSha256: value.record.appContentSha256, signed: false, productionReleaseApproved: false }) + '\n');
     } catch (error) { process.stderr.write(JSON.stringify(require('./runtime-dependency-policy.cjs').failureSummary(error, 'FRESH_BUILD_FAILED')) + '\n'); process.exitCode = 1; }
 }

@@ -56,15 +56,21 @@ function publicKeyFrom(file) {
     const { bytes } = readFileLimited(path.resolve(file), 16384);
     return validatePublicKey(bytes);
 }
-function probeNativeForInstallation(payloadPath, platform, exec = command) {
+function probeNativeForInstallation(payloadPath, platform, exec = command, options = {}) {
+    const expected = options.nodeVersion || '24.21.0';
+    const executable = options.nodeExecutable || '/usr/bin/node';
+    if (Object.keys(options).some(key => !['nodeVersion', 'nodeExecutable'].includes(key)) ||
+        (expected === '24.21.0' ? executable !== '/usr/bin/node' :
+            !require('../../runtime/updates/node-policy.cjs').supportedVersion(expected) ||
+            executable !== path.join(payloadPath, 'node-runtime/bin/node'))) reject('EOS_NATIVE_TARGET_REJECTED');
     // Invoked only after signature, payload and root-controlled import checks.
     // No device enumeration/open/write: the child only loads the pinned ABI.
-    const result = exec('/usr/bin/node', [path.join(payloadPath, 'runtime/native/serialport-acceptance.cjs'),
+    const result = exec(executable, [path.join(payloadPath, 'runtime/native/serialport-acceptance.cjs'),
         '--app', path.join(payloadPath, 'app')], { timeout: 20000 });
     let report;
     try { report = JSON.parse(result.stdout); } catch { reject('EOS_NATIVE_TARGET_REJECTED'); }
     if (result.status !== 0 || result.error || report.kind !== 'eos-serialport-native-target-probe' || report.passed !== true ||
-        report.platform !== platform || report.node !== '24.21.0' || report.deviceIoPerformed !== false ||
+        report.platform !== platform || report.node !== expected || report.deviceIoPerformed !== false ||
         report.hardwareAccepted !== false || !Array.isArray(report.bindings) || report.bindings.length !== 2)
         reject('EOS_NATIVE_TARGET_REJECTED');
     return report;
@@ -104,7 +110,9 @@ function installChecked({ bundleDirectory, keyFile, start, setupInput }) {
     const preflight = (databaseBackend === 'postgresql' ? inspectPostgresqlHost : inspectHost)({ expectedNodeVersion: verified.manifest.nodeVersion, platform: process.arch, webPorts });
     if (!preflight.ready) reject('HOST_PREFLIGHT_REJECTED');
     if (databaseBackend === 'postgresql' && start !== true) reject('PG_EXPLICIT_START_REQUIRED');
-    const nativeAcceptance = fullProduct ? probeNativeForInstallation(verified.payloadPath, `${process.platform}-${process.arch}`) : null;
+    const nativeAcceptance = fullProduct ? probeNativeForInstallation(verified.payloadPath, `${process.platform}-${process.arch}`, command,
+        verified.manifest.sequence >= 15 ? { nodeExecutable: path.join(verified.payloadPath, 'node-runtime/bin/node'),
+            nodeVersion: verified.manifest.nodeVersion } : {}) : null;
     assertNoSymlinkAncestors('/opt/nexowatt/eos');
     fs.mkdirSync('/opt/nexowatt/eos/releases', { recursive: true, mode: 0o755 });
     fs.mkdirSync('/opt/nexowatt/eos/verified', { mode: 0o755 });

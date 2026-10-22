@@ -173,10 +173,11 @@ function checkRuntimeArchitecture(options) {
             else reviewedBare.set(packagePath, barePin);
         }
         if (manifest.name === '@serialport/bindings-cpp') {
-            const pin = serialport.policy.packages.find(row => row.packagePath === packagePath && row.version === manifest.version);
             try {
+                const selected = serialport.forNode(options.nodeVersion);
+                const pin = selected.policy.packages.find(row => row.packagePath === packagePath && row.version === manifest.version);
                 if (!pin) reject('ARCH_SERIALPORT_POLICY');
-                const evidence = serialport.assertPackage({ app: root, pin, lockEntry: lock.packages[packagePath],
+                const evidence = selected.assertPackage({ app: root, pin, lockEntry: lock.packages[packagePath],
                     platform: options.platform, nodeVersion: options.nodeVersion });
                 reviewedSerialport.set(packagePath, pin);
                 report.exceptions.push({ ...evidence, reason: 'Exact upstream SRI and original file inventory; foreign prebuilds removed; fixed loader and pinned ARM64/glibc Node-API library. Actual target dlopen/export probe required before installation; no hardware acceptance.' });

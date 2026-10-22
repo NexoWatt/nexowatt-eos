@@ -14,17 +14,30 @@ function assertNativeHost(host) {
         const error = new Error('NATIVE_HOST_CONTRACT'); error.code = error.message; throw error;
     }
 }
+// Managed releases carry their own signed Node 24 runtime. Node-API, libuv
+// major and glibc remain bounded, and each candidate must pass the real target
+// dlopen/export probe before activation. Historical exact-24.21 loader is kept.
+function assertManagedNativeHost(host) {
+    const version = /^24\.(0|[1-9][0-9]{0,3})\.(0|[1-9][0-9]{0,3})$/.exec(host.node || '');
+    if (host.platform !== 'linux' || host.arch !== 'arm64' || !version ||
+        Number(version[1]) < 22 || Number(version[1]) === 22 && Number(version[2]) < 1 ||
+        !Number.isInteger(Number(host.napi)) || Number(host.napi) < 8 || !/^1\.[0-9]+\.[0-9]+$/.test(host.uv || '') ||
+        !/^2\.[0-9]+$/.test(host.glibc || '') || Number(host.glibc.split('.')[1]) < 28 || host.electron || host.nw) {
+        const error = new Error('NATIVE_HOST_CONTRACT'); error.code = error.message; throw error;
+    }
+}
 function hostIdentity(runtime = process) {
     return { platform: runtime.platform, arch: runtime.arch, node: runtime.versions.node,
         napi: runtime.versions.napi, uv: runtime.versions.uv, electron: runtime.versions.electron,
         nw: runtime.versions.nw, glibc: runtime.report?.getReport()?.header?.glibcVersionRuntime };
 }
-function loaderSource(pin) {
+function loaderSource(pin, selected = policy) {
+    const hostContract = selected === policy ? assertNativeHost : assertManagedNativeHost;
     // No node-gyp-build, build/Release, nearby executable or environment-selected
     // path remains. The signed package loads one root-owned exact binary only.
     return `'use strict';\n// EOS fixed native TEST loader; upstream MIT license remains in LICENSE.\n` +
         `const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');\n` +
-        `const assertNativeHost = ${assertNativeHost.toString().replace(/\r\n/g, '\n')};\nconst hostIdentity = ${hostIdentity.toString().replace(/\r\n/g, '\n')};\n` +
+        `const assertNativeHost = ${hostContract.toString().replace(/\r\n/g, '\n')};\nconst hostIdentity = ${hostIdentity.toString().replace(/\r\n/g, '\n')};\n` +
         `assertNativeHost(hostIdentity());\n` +
         `const file = path.join(__dirname, ${JSON.stringify(pin.native)});\n` +
         `for (let current = file;; current = path.dirname(current)) {\n` +
@@ -79,39 +92,53 @@ function packageFiles(directory) {
     }
     walk(''); return rows.sort(compare);
 }
-function normalizedFiles(pin) {
+function normalizedFiles(pin, selected = policy) {
     if (!/^[a-f0-9]{64}$/.test(pin.patchedLoaderSha256 || '') || !Number.isSafeInteger(pin.patchedLoaderBytes)) fail('NATIVE_POLICY_INCOMPLETE');
     const rows = pin.originalFiles.filter(row => !row.path.endsWith('.node') || row.path === pin.native)
         .map(row => row.path === pin.loader ? { path: row.path, bytes: pin.patchedLoaderBytes, sha256: pin.patchedLoaderSha256 } : { ...row });
-    const loader = Buffer.from(loaderSource(pin));
+    const loader = Buffer.from(loaderSource(pin, selected));
     if (sha(loader) !== pin.fixedLoaderSha256 || loader.length !== pin.fixedLoaderBytes) fail('NATIVE_POLICY_LOADER');
     rows.push({ path: 'eos-native-loader.cjs', bytes: loader.length, sha256: sha(loader) });
     return rows.sort(compare);
 }
 function treeDigest(rows) { return sha(Buffer.from(JSON.stringify(rows))); }
-function packageReport(pin) {
-    return { profile: policy.profile, packagePath: pin.packagePath, package: pin.package, version: pin.version,
-        originalTreeSha256: treeDigest(pin.originalFiles), normalizedTreeSha256: treeDigest(normalizedFiles(pin)),
+function packageReport(pin, selected = policy) {
+    return { profile: selected.profile, packagePath: pin.packagePath, package: pin.package, version: pin.version,
+        originalTreeSha256: treeDigest(pin.originalFiles), normalizedTreeSha256: treeDigest(normalizedFiles(pin, selected)),
         selectedNative: `${pin.packagePath}/${pin.native}`, nativeSha256: pin.nativeSha256,
         napi: pin.napi, targetProbeRequired: true, hardwareAccepted: false };
 }
-function normalizationEvidence() {
-    const packages = policy.packages.map(pin => ({ ...packageReport(pin), upstreamArchive: pin.archive,
+function normalizationEvidence(selected = policy) {
+    const packages = selected.packages.map(pin => ({ ...packageReport(pin, selected), upstreamArchive: pin.archive,
         upstreamIntegrity: pin.integrity, upstreamArchiveSha256: pin.archiveSha256,
         removedFiles: pin.originalFiles.filter(row => row.path.endsWith('.node') && row.path !== pin.native),
         modifiedFiles: [{ path: pin.loader, originalSha256: pin.originalFiles.find(row => row.path === pin.loader).sha256,
-            sha256: pin.patchedLoaderSha256 }], addedFiles: normalizedFiles(pin).filter(row => row.path === 'eos-native-loader.cjs'),
+            sha256: pin.patchedLoaderSha256 }], addedFiles: normalizedFiles(pin, selected).filter(row => row.path === 'eos-native-loader.cjs'),
         lifecycleScriptsExecuted: false, targetCodeExecuted: false }));
-    return { schemaVersion: 1, kind: 'eos-serialport-native-normalization', profile: policy.profile,
-        platform: policy.target.platform, nodeVersion: policy.target.nodeVersion,
+    return { schemaVersion: 1, kind: 'eos-serialport-native-normalization', profile: selected.profile,
+        platform: selected.target.platform, nodeVersion: selected.target.nodeVersion,
         packages, hardwareAccepted: false, targetLoadProbeRequired: true };
 }
-function assertPackage({ app, pin, lockEntry, platform, nodeVersion, normalized = true }) {
-    if (platform !== policy.target.platform || nodeVersion !== policy.target.nodeVersion ||
+function assertPackage({ app, pin, lockEntry, platform, nodeVersion, normalized = true }, selected = policy) {
+    const managed = selected !== policy;
+    const versionAllowed = managed ? require('../updates/node-policy.cjs').supportedVersion(nodeVersion) : nodeVersion === selected.target.nodeVersion;
+    if (platform !== selected.target.platform || !versionAllowed ||
         lockEntry?.version !== pin.version || lockEntry.resolved !== pin.archive || lockEntry.integrity !== pin.integrity || lockEntry.link) fail('NATIVE_PACKAGE_IDENTITY');
-    const rows = packageFiles(path.join(app, pin.packagePath)), expected = normalized ? normalizedFiles(pin) : pin.originalFiles;
+    const rows = packageFiles(path.join(app, pin.packagePath)), expected = normalized ? normalizedFiles(pin, selected) : pin.originalFiles;
     if (JSON.stringify(rows) !== JSON.stringify(expected)) fail('NATIVE_PACKAGE_CONTENT');
-    return packageReport(pin);
+    return packageReport(pin, selected);
 }
-module.exports = { policy, sha, assertNativeHost, hostIdentity, loaderSource, patchedLoader,
+function forNode(version) {
+    if (version === policy.target.nodeVersion) return module.exports;
+    require('../updates/node-policy.cjs').validateVersion(version);
+    const baseline = require('./serialport-managed-policy.json');
+    // The exact loader/native bytes are stable across allowed Node 24 updates,
+    // while evidence must name the actual candidate, never the baseline pin.
+    const selected = { ...baseline, target: { ...baseline.target, nodeVersion: version } };
+    return { ...module.exports, policy: selected, assertNativeHost: assertManagedNativeHost,
+        loaderSource: pin => loaderSource(pin, selected), normalizedFiles: pin => normalizedFiles(pin, selected),
+        packageReport: pin => packageReport(pin, selected), normalizationEvidence: () => normalizationEvidence(selected),
+        assertPackage: input => assertPackage(input, selected) };
+}
+module.exports = { policy, sha, assertNativeHost, assertManagedNativeHost, forNode, hostIdentity, loaderSource, patchedLoader,
     packageFiles, normalizedFiles, treeDigest, packageReport, normalizationEvidence, assertPackage };

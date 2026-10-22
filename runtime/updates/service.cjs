@@ -9,6 +9,7 @@ const { readFileLimited } = require('../release/bundle.cjs');
 const { atomicWrite } = require('../../tools/system/activate-release.cjs');
 const channel = require('./channel.cjs');
 const transport = require('./transport.cjs');
+const nodePolicy = require('./node-policy.cjs');
 const DIRECTORY = '/var/lib/nexowatt-eos-updates';
 const SOCKET = '/run/nexowatt-eos-updates/control.sock';
 const TRUST = '/etc/nexowatt-eos/update-trust.pem';
@@ -24,8 +25,9 @@ function validRequest(request) {
 }
 class Manager {
     constructor({ directory = DIRECTORY, trust = () => load(TRUST, 16384), state = readState,
-        fetchFeed = () => transport.request(channel.FEED_URL), launch, readResult = load, now = Date.now } = {}) {
-        Object.assign(this, { directory, trust, state, fetchFeed, launch, readResult, now });
+        fetchFeed = () => transport.request(channel.FEED_URL), launch, readResult = load, now = Date.now,
+        runningNodeVersion = process.versions.node, restartAfterRuntimeChange = () => {} } = {}) {
+        Object.assign(this, { directory, trust, state, fetchFeed, launch, readResult, now, runningNodeVersion, restartAfterRuntimeChange });
         this.status = { phase: 'IDLE', candidate: null, checkedAt: null, error: null, operationId: null };
         this.envelope = null; this.pending = false; this.lastCheck = 0;
     }
@@ -33,6 +35,11 @@ class Manager {
         const file = path.join(this.directory, 'status.json');
         if (fs.existsSync(file)) {
             this.status = JSON.parse(this.readResult(file));
+            if (BUSY.has(this.status.phase) && this.status.operationId) {
+                // The worker result is durable before its exit. A service restart
+                // in the tiny gap before the manager callback must retain it.
+                try { this.refreshWorker(); } catch { /* retain fail-closed recovery */ }
+            }
             if (BUSY.has(this.status.phase)) this.status = { phase: 'RECOVERY_REQUIRED', candidate: null,
                 checkedAt: null, error: 'UPDATE_INTERRUPTED', operationId: this.status.operationId };
             // Never reuse an on-disk candidate as installation authority.
@@ -87,11 +94,17 @@ class Manager {
             try { this.refreshWorker(); } catch { this.status.phase = 'RECOVERY_REQUIRED'; this.status.error = 'UPDATE_JOB'; }
             if (BUSY.has(this.status.phase)) { this.status.phase = 'RECOVERY_REQUIRED'; this.status.error = 'UPDATE_INTERRUPTED'; }
             this.persist();
-            // Successful work is fully represented by durable status + installed
-            // release evidence. Do not exhaust staging after five normal updates.
-            if (this.status.phase === 'SUCCEEDED') {
+            // Terminal success, pretrial failure and proven active rollback are
+            // represented by durable status/evidence. Repeated harmless lock
+            // contention must not fill staging; uncertain recovery is retained.
+            if (['SUCCEEDED', 'FAILED', 'ROLLED_BACK'].includes(this.status.phase)) {
                 try { fs.rmSync(job, { recursive: true }); } catch { /* bounded, explicitly visible staging quota */ }
             }
+            // A result write can fail after activation has already committed.
+            // The installed pair, not only the last job label, decides whether
+            // this daemon must retire its old interpreter. Recovery status and
+            // durable gates survive this restart; main verifies the pair first.
+            if (this.state().nodeVersion !== this.runningNodeVersion) this.restartAfterRuntimeChange();
         }); } catch { this.pending = false; this.status.phase = 'FAILED'; this.status.error = 'UPDATE_START_FAILED'; this.persist(); }
         return this.view();
     }
@@ -124,17 +137,37 @@ function serve(manager, { socketPath = SOCKET, gid } = {}) {
     server.listen(socketPath, () => { fs.chownSync(socketPath, 0, gid); fs.chmodSync(socketPath, 0o660); });
     return server;
 }
+function verifyActiveRuntime(requireRunning = false) {
+    const state = readState();
+    if (!channel.hash(state?.releaseId) || !nodePolicy.supportedVersion(state?.nodeVersion)) channel.fail('UPDATE_BASELINE');
+    const activePath = '/opt/nexowatt/eos/releases/' + state.releaseId;
+    rootOwned('/opt/nexowatt/eos');
+    const pointer = fs.lstatSync('/opt/nexowatt/eos/current');
+    if (!pointer.isSymbolicLink() || pointer.uid !== 0 || fs.realpathSync('/opt/nexowatt/eos/current') !== activePath) channel.fail('UPDATE_BASELINE');
+    checkInstalled({ releasePath: activePath, evidencePath: '/opt/nexowatt/eos/verified/' + state.releaseId,
+        expectedNodeVersion: state.nodeVersion });
+    const activeManifest = JSON.parse(load('/opt/nexowatt/eos/verified/' + state.releaseId + '/manifest.json', 16 * 1024 * 1024));
+    nodePolicy.validateRuntime(activePath, activeManifest);
+    if (requireRunning && (state.nodeVersion !== process.versions.node || fs.realpathSync(process.execPath) !== path.join(activePath, nodePolicy.BINARY))) channel.fail('UPDATE_RUNTIME_BINDING');
+    return state;
+}
 function main() {
-    if (process.getuid?.() !== 0 || process.argv.length !== 2 || process.versions.node !== '24.21.0'
+    if (process.getuid?.() !== 0 || process.argv.length !== 2 || !nodePolicy.supportedVersion(process.versions.node)
         || !/^[a-f0-9]{32}$/.test(process.env.INVOCATION_ID || '')) channel.fail('UPDATE_SERVICE_ONLY');
     const releasePath = path.resolve(__dirname, '../..');
-    checkInstalled({ releasePath, evidencePath: '/opt/nexowatt/eos/verified/' + path.basename(releasePath) });
+    const evidencePath = '/opt/nexowatt/eos/verified/' + path.basename(releasePath);
+    const manifest = JSON.parse(load(path.join(evidencePath, 'manifest.json'), 16 * 1024 * 1024));
+    nodePolicy.validateVersion(manifest.nodeVersion);
+    checkInstalled({ releasePath, evidencePath, expectedNodeVersion: manifest.nodeVersion });
+    verifyActiveRuntime(true);
     rootOwned(DIRECTORY); rootOwned(path.join(DIRECTORY, 'jobs')); channel.publicKey(load(TRUST, 16384));
     const groups = fs.readFileSync('/etc/group', 'utf8').split('\n').filter(row => row.startsWith('eos-runtime:'));
     const gid = Number(groups[0]?.split(':')[2]);
     if (groups.length !== 1 || !Number.isSafeInteger(gid) || gid < 1) channel.fail('UPDATE_GROUP');
-    const manager = new Manager({ launch: (id, done) => {
-        const child = spawn('/usr/bin/node', [path.join(__dirname, 'worker.cjs'), id], { stdio: 'ignore',
+    const manager = new Manager({ restartAfterRuntimeChange: () => {
+        verifyActiveRuntime(false); setImmediate(() => process.exit(0));
+    }, launch: (id, done) => {
+        const child = spawn('/opt/nexowatt/eos/current/' + nodePolicy.BINARY, [path.join(__dirname, 'worker.cjs'), id], { stdio: 'ignore',
             env: { PATH: '/usr/sbin:/usr/bin:/sbin:/bin', LC_ALL: 'C', INVOCATION_ID: process.env.INVOCATION_ID } });
         let ended = false; const finish = () => { if (!ended) { ended = true; done(); } };
         child.once('error', finish); child.once('exit', finish);

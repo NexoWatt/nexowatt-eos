@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed-node-core-verification",
+  "baseCommit": "99ef5086bc5b0ee590de17e109b85e4738c973ae",
+  "testedNode": "v24.19.0",
+  "testedHost": "linux-x64",
+  "freshTargetNode": "24.22.1",
+  "controllerVersion": "7.2.5",
+  "syntaxChecksPassed": true,
+  "sourceFiles": [
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "86065b3103a29c4224f7dbab3151a838b83b778aaf51aef058734d41e6b96efb"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "1de13675bbeb1636826a40105a8af31958fcfbb66cb42e839390e4dae5867b0f"
+    },
+    {
+      "path": "runtime/native/serialport-contract.cjs",
+      "sha256": "a71d98c6b9dd81fcaea4e19980609c73042bcbccda198a610477df2acf988f52"
+    },
+    {
+      "path": "runtime/native/serialport-acceptance.cjs",
+      "sha256": "cbfcdac3b997f7876924e0b2b5314c7407be58a50d4466649731db052459172d"
+    },
+    {
+      "path": "runtime/native/serialport-policy.json",
+      "sha256": "206c91ef814ec548b2489e54163493c814e239c355fd92423e5fb3f42b719cc2"
+    },
+    {
+      "path": "runtime/native/serialport-managed-policy.json",
+      "sha256": "3af966a8e4129c87a5f6a0c55f820612e796b55d7fdf6cd688a4c58d0c8d6c72"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "ec537eae556034359ae4876285071119bb2778812ae584e925d7e712aa09c0f1"
+    },
+    {
+      "path": "runtime/release/fresh-sbom-binding.cjs",
+      "sha256": "4d62bc75810330bda8a4b88b91a443c9d6b944d8fed7dbb0d10ea0e116c0e105"
+    },
+    {
+      "path": "runtime/updates/node-policy.cjs",
+      "sha256": "51c944949d768a3d849c148685fc333acf9b21985ab7712726eba0bf525de14b"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "34f4eb9b19b46d201e1d609af2bd66fdd65858f5955ce22c71912dc2e4c57e43"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "85208750f0f5cdaa77a8080a35c7c7d25482e133029b734d0b56b7250564713b"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "sha256": "5553239ff494124d348ebadcbb5c4a7ca12eca1a47d0ee810dbf64539c6e2edd"
+    },
+    {
+      "path": "tools/system/postgresql-host-preflight.cjs",
+      "sha256": "610121b450c060981377740d3ac66750cbdf9faf2ea12e2bf643ff9cd8482127"
+    },
+    {
+      "path": "tools/system/install-managed-from-checkout.cjs",
+      "sha256": "55835df85919059a39c47240ad545b3e03664e325f8b7ae1e3c64dd42962b68b"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "529f7eaae87619bfb59a1611ebd643aa682755c03bfe6cb9f4a78303c87364a1"
+    },
+    {
+      "path": "tools/integration/normalize-serialport-native.cjs",
+      "sha256": "2efaedae1a4508188b0d6da5e434d850b0a735d8cc0c8aaa5cc493d82ad0568c"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "f57caf85cefe5deb277749e60e391134df4e1e12460d28d9f60ad3d795cfad9a"
+    },
+    {
+      "path": "tools/integration/bind-sbom.py",
+      "sha256": "c8b573823da37825a5b6eb23d6a15059566ddbceadd40cb2ef7a5984d1417b37"
+    },
+    {
+      "path": "runtime/postgresql/packages/store/package.json",
+      "sha256": "9cb6bd01bb2787da7779ae1e4efb1f2da67c97ecce63431a5e097e9a20155459"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/package.json",
+      "sha256": "aa746f9c964c1c7757cca7e4feca225a1700a5b34ad703502b35aaf00fecdd8c"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/package.json",
+      "sha256": "5e1b109d34a824a6e9a97209d181fa9e6a161fbd0fa4858962bdec8a4cb6443a"
+    },
+    {
+      "path": "tests/integration/serialport-native.test.cjs",
+      "sha256": "83e2e23a161fd6b866bda78a164a305d7ad65ab85d48b324fe8f8214eb8902f1"
+    },
+    {
+      "path": "tests/postgresql/host-install.test.cjs",
+      "sha256": "99737d676c90001bc665b61bda2244a7deea403c9ba936dd0421432ac134c441"
+    },
+    {
+      "path": "tests/postgresql/full-product.test.cjs",
+      "sha256": "756b33f75e1f41bc6f826ba7ec583e7fd5ae5d1877d7f5e9f957d15bce785094"
+    },
+    {
+      "path": "tests/postgresql/own-adapter-product.test.cjs",
+      "sha256": "a94226acfbdb7215e79fdd8570cd480d5d380b44f7a309b1c8aed86a93a18efa"
+    },
+    {
+      "path": "tests/system/install-from-checkout.test.cjs",
+      "sha256": "ffa02a29bdbc4c19846877f36bc9b0d596a1790878d5779d1d0ea3c4160df6d1"
+    },
+    {
+      "path": "tests/system/sbom-binding.test.cjs",
+      "sha256": "6a35599e2c3d6bfb32b9e8743961ed7fd754fd47e93622dd3100f7cda5f8a2bd"
+    },
+    {
+      "path": "tests/integration/payload-architecture-report.test.cjs",
+      "sha256": "7a90a759220c2b84fe11ab627433da12399cb43b7a2f1450a212bbc2987029c5"
+    },
+    {
+      "path": "tests/integration/runtime-architecture.test.cjs",
+      "sha256": "29aeb17cb668e083e297d87bcdb2a3e84cb5a36a8482787412fd97fd26d7f477"
+    },
+    {
+      "path": "tests/onboarding/enrollment.test.cjs",
+      "sha256": "6d0e6ef6dbc13dd4dcae8e8bbea4e77c717e2ae745a20909889130cff8b71123"
+    },
+    {
+      "path": "tests/system/certificate-host.test.cjs",
+      "sha256": "700a5257788e1a4c058ea26ba0d8bd84a0e970093fc7813181b7a829b7c9f13c"
+    }
+  ],
+  "actualArm64BinaryExecuted": false,
+  "targetInstallationTested": false,
+  "plantAccepted": false,
+  "productionApproved": false,
+  "tests": {
+    "total": 137,
+    "passed": 137,
+    "failed": 0,
+    "skipped": 0,
+    "log": "tests.tap",
+    "sha256": "55c08e1946cd927c9331bf0e7eb20a3f1c70c3201b69c4ee85a057f4dd7dc88a",
+    "originalNativePackagesVerified": true,
+    "candidateVersionsNormalizedAndSbomBound": [
+      "24.22.1",
+      "24.22.2",
+      "24.23.0"
+    ]
+  }
+}

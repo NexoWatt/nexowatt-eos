@@ -61,7 +61,7 @@ function main(argv) {
     const args = parse(argv);
     if (process.platform !== 'linux' || process.getuid?.() !== 0) fail('CHECKOUT_LINUX_ROOT_REQUIRED');
     assertNoSymlinkAncestors(ROOT);
-    const preflight = inspectPostgresqlHost({ expectedNodeVersion: '24.21.0', platform: process.arch });
+    const preflight = inspectPostgresqlHost({ expectedNodeVersion: require('../../runtime/updates/node-policy.cjs').BASELINE_VERSION, platform: process.arch });
     for (const file of ['/usr/sbin/nft', '/usr/sbin/dnsmasq', '/usr/sbin/ip']) {
         if (!require('./host-preflight.cjs').toolTrust(file).trusted) preflight.ready = false;
     }

@@ -4,12 +4,42 @@
 const { isDeepStrictEqual: equal } = require('node:util');
 const { sha256 } = require('./bundle.cjs');
 const ASSEMBLY = 'fresh-security-refresh-runtime-20261021';
-const NODE = '24.21.0';
+const NODE = '24.22.1';
 const CONTROLLER = '7.2.5';
 const OWNERS = Object.freeze(['iobroker.js-controller', '@iobroker/js-controller-cli', '@iobroker/js-controller-adapter', '@iobroker/js-controller-common-db', '@iobroker/ws-server']);
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const content = rows => rows.map(({ path, size, sha256 }) => ({ path, size, sha256 }));
 const digest = rows => sha256(Buffer.from(JSON.stringify(rows)));
+function nodeComponent(record) {
+    const node = record?.nodeRuntime;
+    if (!node || Object.keys(node).sort().join('|') !== ['schemaVersion', 'version', 'platform', 'archiveSha256', 'binarySha256', 'licenseSha256'].sort().join('|') ||
+        node.schemaVersion !== 1 || node.version !== record.nodeVersion || node.platform !== 'linux-arm64' ||
+        !require('../updates/node-policy.cjs').supportedVersion(node.version) ||
+        ['archiveSha256', 'binarySha256', 'licenseSha256'].some(k => !/^[a-f0-9]{64}$/.test(node[k] || ''))) fail('FRESH_SBOM_NODE');
+    return { type: 'application', name: 'node', version: node.version,
+        'bom-ref': `eos-node-runtime:${node.version}:${node.platform}`,
+        hashes: [{ alg: 'SHA-256', content: node.binarySha256 }],
+        properties: [{ name: 'eos:scope', value: 'signed-node-runtime' },
+            { name: 'eos:installed-path', value: 'node-runtime/bin/node' },
+            { name: 'eos:archive-sha256', value: node.archiveSha256 },
+            { name: 'eos:metadata-sha256', value: sha256(Buffer.from(JSON.stringify(node, null, 2) + '\n')) },
+            { name: 'eos:license-path', value: 'node-runtime/LICENSE' },
+            { name: 'eos:license-sha256', value: node.licenseSha256 }] };
+}
+function verifyNodeComponent(bom, files, record) {
+    const expected = nodeComponent(record);
+    const entries = bom.components.filter(row => propMap(row.properties)['eos:scope'] === 'signed-node-runtime');
+    if (entries.length !== 1 || !equal(entries[0], expected)) fail('FRESH_SBOM_NODE');
+    const props = propMap(expected.properties), rows = files.filter(row => row.path.startsWith('node-runtime/'));
+    const required = [['node-runtime/bin/node', record.nodeRuntime.binarySha256, 0o755],
+        ['node-runtime/runtime.json', props['eos:metadata-sha256'], 0o644],
+        ['node-runtime/LICENSE', record.nodeRuntime.licenseSha256, 0o644]];
+    if (rows.length !== required.length || required.some(([name, hash, mode]) => {
+        const row = rows.find(x => x.path === name);
+        return !row || row.sha256 !== hash || row.mode !== mode || !Number.isSafeInteger(row.size) || row.size < 1;
+    })) fail('FRESH_SBOM_NODE');
+    return true;
+}
 function propMap(rows) {
     const result = Object.create(null);
     for (const row of rows || []) {
@@ -50,6 +80,13 @@ function bindFreshSbom({ bom, files, profile, record, sequence }) {
         component.properties ||= [];
         component.properties.push({ name: 'eos:transform:file-table-sha256', value: digest(table) });
     }
+    if (copy.components.some(row => propMap(row.properties)['eos:scope'] === 'signed-node-runtime')) fail('FRESH_SBOM_NODE');
+    const node = nodeComponent(record);
+    copy.components.push(node);
+    copy.dependencies ||= [];
+    copy.dependencies.push({ ref: node['bom-ref'], dependsOn: [] });
+    const root = copy.dependencies.find(row => row.ref === copy.metadata?.component?.['bom-ref']);
+    if (root) root.dependsOn.push(node['bom-ref']);
     const properties = {
         'eos:sbom:assembly': ASSEMBLY, 'eos:sbom:target-sequence': String(sequence),
         'eos:sbom:source-commit': record.sourceCommit, 'eos:sbom:fresh-npm-resolution': 'true',
@@ -74,7 +111,8 @@ function verifyFreshSbom({ bom, files, profile, release, record }) {
     const row = files.find(row => row.path === 'runtime-build.json');
     if (!row || props['eos:sbom:build-record-sha256'] !== row.sha256 ||
         record?.schemaVersion !== 1 || record.kind !== ASSEMBLY || record.sourceCommit !== props['eos:sbom:source-commit'] ||
-        record.sourceTreeClean !== true || record.nodeVersion !== NODE || record.npmVersion !== '11.19.0' ||
+        record.sourceTreeClean !== true || !require('../updates/node-policy.cjs').supportedVersion(record.nodeVersion) ||
+        (release.nodeVersion !== undefined && record.nodeVersion !== release.nodeVersion) || record.npmVersion !== '11.19.0' ||
         record.controllerVersion !== CONTROLLER || record.platform !== 'linux-arm64' || record.sequence !== release.sequence ||
         record.signed !== false || record.lifecycleScriptsExecuted !== false || record.productionReleaseApproved !== false ||
         record.appContentSha256 !== digest(content(appRows)) || record.appModeSha256 !== digest(appRows) ||
@@ -94,6 +132,7 @@ function verifyFreshSbom({ bom, files, profile, release, record }) {
             propMap(component.properties)['eos:transform:file-table-sha256'] !== digest(table)) fail('FRESH_SBOM_TRANSFORM');
     }
     if (!equal(record.controllerProfile, profile)) fail('FRESH_SBOM_PROFILE_BINDING');
+    verifyNodeComponent(bom, files, record);
     return true;
 }
-module.exports = { ASSEMBLY, NODE, CONTROLLER, OWNERS, content, digest, transformTable, bindFreshSbom, verifyFreshSbom };
+module.exports = { ASSEMBLY, NODE, CONTROLLER, OWNERS, content, digest, transformTable, nodeComponent, verifyNodeComponent, bindFreshSbom, verifyFreshSbom };

@@ -237,7 +237,14 @@ test('existing distribution database cluster is never adopted or deleted', t => 
 
 function managedFixture(t) {
     const f = installFixture(t);
-    f.options.sequence = 15; f.options.releaseVersion = '0.2.0-test.3';
+    f.options.sequence = 15; f.options.releaseVersion = '0.2.0-test.3'; f.options.expectedNodeVersion = '24.22.1';
+    f.write(`${f.options.releasePath}/node-runtime/bin/node`, 'modeled signed Node binary; not executed', 0o755);
+    for (const name of ['runtime.json', 'LICENSE']) f.write(`${f.options.releasePath}/node-runtime/${name}`, 'fixture');
+    const render = require('../../tools/system/build-bundle.cjs').renderManagedNodeUnit;
+    for (const unit of UNITS) {
+        const name = `${f.options.releasePath}/system/postgresql-test/systemd/${unit}`;
+        f.write(name, render(fs.readFileSync(f.at(name), 'utf8')));
+    }
     f.options.setup = { schemaVersion: 1, hosts: ['eos.test'], origin: 'https://eos.test:8443',
         licenseTrustFile: '/root/public-trust.json', licenseTrustSha256: 'c'.repeat(64), trust: {}, trustSha256: 'c'.repeat(64) };
     for (const name of ['runtime/onboarding/main.cjs', 'runtime/onboarding/state.cjs', 'runtime/onboarding/server.cjs',
@@ -264,6 +271,7 @@ function managedFixture(t) {
     f.deps.provisionWeb = ({ directory }) => { fs.mkdirSync(directory, { recursive: true }); for (const name of ['admin.key', 'ui.key', 'setup.key']) fs.writeFileSync(path.join(directory, name), 'fixture'); };
     f.deps.provisionSetupWeb = () => {};
     f.deps.prepareOnboarding = () => ({ code: 'fixture-only', expiresAt: '2026-10-22T00:00:00.000Z', setupId: 'd'.repeat(32) });
+    f.deps.installOSMaintenance = () => ({ installed: true });
     f.deps.installManagedUpdates = () => { f.commands.push(['fixture-updater-install', []]); };
     const exec = f.deps.exec;
     f.deps.exec = (p, a) => {
@@ -280,6 +288,12 @@ test('fresh managed host installs independent updater and unconfigured network b
     const setup = f.commands.findIndex(([, a]) => a.includes('nexowatt-eos-setup.target'));
     assert.ok(update >= 0 && network > update && setup > network);
     assert.equal(f.commands.some(([, a]) => a.includes('nexowatt-eos-updates.service')), false, 'updater starts only after finalization');
+    const nodeCalls = f.commands.filter(([p]) => p.endsWith('/node'));
+    assert.ok(nodeCalls.length >= 2);
+    assert.ok(nodeCalls.every(([p]) => p === f.at(`${f.options.releasePath}/node-runtime/bin/node`)));
+    const unit = fs.readFileSync(f.at('/etc/systemd/system/nexowatt-eos-controller.service'), 'utf8');
+    assert.match(unit, /ExecStart=\/opt\/nexowatt\/eos\/current\/node-runtime\/bin\/node /);
+    assert.doesNotMatch(unit, /\/usr\/bin\/node/);
 });
 for (const version of ['7.2.2', '8.0.0']) test(`fresh managed host rejects coherently declared controller ${version} before commands or host writes`, t => {
     const f = managedFixture(t), app = `${f.options.releasePath}/app`, name = 'iobroker.js-controller';

@@ -11,8 +11,8 @@ const { Manager, validRequest } = require('../../runtime/updates/service.cjs');
 const { request, downloadArchive } = require('../../runtime/updates/transport.cjs');
 const pair = crypto.generateKeyPairSync('ed25519');
 const trust = pair.publicKey.export({ format: 'pem', type: 'spki' });
-const now = Date.now(), state = { releaseId: 'a'.repeat(64), sequence: 15, profile: 'test', nodeVersion: '24.21.0' };
-const release = { releaseId: 'b'.repeat(64), sequence: 16, version: '0.2.0-test.3', nodeVersion: '24.21.0', platform: 'linux-arm64',
+const now = Date.now(), state = { releaseId: 'a'.repeat(64), sequence: 15, profile: 'test', nodeVersion: '24.22.1' };
+const release = { releaseId: 'b'.repeat(64), sequence: 16, version: '0.2.0-test.3', nodeVersion: '24.22.1', platform: 'linux-arm64',
     fromReleaseIds: [state.releaseId], url: `https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/${'c'.repeat(40)}/delivery/managed-test-16/eos-linux-arm64.tar.gz`,
     bytes: 123, sha256: 'd'.repeat(64), notes: 'Teständerung' };
 const feed = () => ({ schemaVersion: 1, channel: 'eos-managed-test-v1', issuedAt: new Date(now - 1000).toISOString(),
@@ -34,7 +34,7 @@ test('altered payload, different key, expired/future envelope, unpinned URL, ove
     assert.throws(() => channel.verifyFeed(sign(feed()), crypto.generateKeyPairSync('ed25519').publicKey.export({ format: 'pem', type: 'spki' })), /UPDATE_SIGNATURE/);
     for (const change of [b => b.expiresAt = new Date(now).toISOString(), b => b.issuedAt = new Date(now + 600000).toISOString(),
         b => b.releases[0].url = release.url.replace('/' + 'c'.repeat(40) + '/', '/main/'), b => b.releases[0].url += '?x=1',
-        b => b.releases[0].bytes = 101 * 1024 * 1024, b => b.releases[0].nodeVersion = '22.22.2',
+        b => b.releases[0].bytes = 257 * 1024 * 1024, b => b.releases[0].nodeVersion = '22.22.2',
         b => b.releases[0].fromReleaseIds = [], b => b.releases.push(structuredClone(b.releases[0])), b => b.extra = true]) {
         const b = feed(); change(b); assert.throws(() => channel.verifyFeed(sign(b), trust, { now }), /UPDATE_FEED/);
     }
@@ -93,4 +93,83 @@ test('archive is atomically exclusive and accepted only with exact downloaded SH
     fs.unlinkSync(file);
     await assert.rejects(downloadArchive(r, file, { fetchRange: async () => Buffer.from('bad') }), /UPDATE_ARCHIVE_HASH/);
     assert.equal(fs.existsSync(file), false);
+});
+const assetUrl = `https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-16-${release.releaseId}/eos-linux-arm64.tar.gz`;
+test('signed Release asset path binds sequence and release ID; Node downgrades are never offered', () => {
+    const body = feed(); Object.assign(body.releases[0], { url: assetUrl, bytes: 150 * 1024 * 1024, nodeVersion: '24.23.0' });
+    const verified = channel.verifyFeed(sign(body), trust, { now });
+    assert.equal(channel.selectRelease(verified, state).nodeVersion, '24.23.0');
+    assert.equal(channel.selectRelease(verified, { ...state, nodeVersion: '24.24.0' }), null);
+    for (const url of [assetUrl.replace('managed-test-16-', 'managed-test-17-'), assetUrl.replace(release.releaseId, 'e'.repeat(64)),
+        assetUrl.replace('https:', 'http:'), assetUrl + '?secret=1']) {
+        body.releases[0].url = url; assert.throws(() => channel.verifyFeed(sign(body), trust, { now }), /UPDATE_FEED/);
+    }
+});
+test('Release download preserves range through only the fixed GitHub CDN redirect boundary', async () => {
+    const cdn = 'https://release-assets.githubusercontent.com/github-production-release-asset/123/456?sig=fixture';
+    const seen = [];
+    const requestImpl = (url, options, callback) => {
+        seen.push(url); assert.equal(options.headers.Range, 'bytes=0-2');
+        return (url === assetUrl ? response(302, { location: cdn }, []) : response(206,
+            { 'content-range': 'bytes 0-2/3', 'content-length': '3' }, ['abc']))(url, options, callback);
+    };
+    assert.equal((await request(assetUrl, { start: 0, end: 2, total: 3, requestImpl })).toString(), 'abc');
+    assert.deepEqual(seen, [assetUrl, cdn]);
+    for (const target of ['http://release-assets.githubusercontent.com/github-production-release-asset/x',
+        'https://release-assets.githubusercontent.com.evil.invalid/github-production-release-asset/x',
+        'https://user:password@release-assets.githubusercontent.com/github-production-release-asset/x',
+        'https://release-assets.githubusercontent.com:444/github-production-release-asset/x',
+        'https://release-assets.githubusercontent.com/other/x', 'https://127.0.0.1/private', '/relative'])
+        await assert.rejects(request(assetUrl, { start: 0, end: 2, total: 3, requestImpl: response(302, { location: target }, []) }), /UPDATE_DOWNLOAD_RESPONSE/);
+    await assert.rejects(request(assetUrl, { start: 0, end: 2, total: 3, requestImpl: response(302, { location: cdn }, []) }), /UPDATE_DOWNLOAD_RESPONSE/);
+});
+test('redirect does not reset the absolute 5-second request deadline', async t => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const cdn = 'https://release-assets.githubusercontent.com/github-production-release-asset/123/456?sig=fixture';
+    let callback, destroyed = 0, requests = 0;
+    const requestImpl = (url, options, handle) => {
+        requests++; const req = new EventEmitter(); req.destroy = () => { destroyed++; };
+        if (url === assetUrl) callback = () => { const res = new EventEmitter(); Object.assign(res, { statusCode: 302, headers: { location: cdn }, destroy() {} }); handle(res); };
+        return req;
+    };
+    const pending = request(assetUrl, { start: 0, end: 2, total: 3, requestImpl });
+    const rejected = assert.rejects(pending, /UPDATE_DOWNLOAD_TIMEOUT/);
+    t.mock.timers.tick(4000); callback(); assert.equal(requests, 2);
+    t.mock.timers.tick(1000); await rejected; assert.ok(destroyed >= 2);
+});
+test('durable successful worker result survives daemon restart and restart follows persisted success', async t => {
+    const f = fixture(t), m = f.manager;
+    m.dispatch({ operation: 'check' }); await m.checkPromise;
+    const queued = m.dispatch({ operation: 'install', releaseId: release.releaseId, maintenanceConfirmed: true });
+    const job = path.join(f.directory, 'jobs', queued.operationId);
+    fs.writeFileSync(path.join(job, 'result.json'), JSON.stringify({ operationId: queued.operationId, phase: 'SUCCEEDED', error: null }));
+    m.restore(); assert.equal(m.view().phase, 'SUCCEEDED');
+    let restarted = false;
+    m.runningNodeVersion = '24.22.0';
+    m.restartAfterRuntimeChange = () => {
+        assert.equal(JSON.parse(fs.readFileSync(path.join(f.directory, 'status.json'))).phase, 'SUCCEEDED');
+        assert.equal(fs.existsSync(job), false); restarted = true;
+    };
+    f.done(); assert.equal(restarted, true);
+});
+test('ordinary OS maintenance contention removes retryable staging after durable failure status', async t => {
+    const f = fixture(t), m = f.manager; m.dispatch({ operation: 'check' }); await m.checkPromise;
+    const queued = m.dispatch({ operation: 'install', releaseId: release.releaseId, maintenanceConfirmed: true });
+    const job = path.join(f.directory, 'jobs', queued.operationId);
+    fs.writeFileSync(path.join(job, 'result.json'), JSON.stringify({ operationId: queued.operationId, phase: 'FAILED', error: 'REPAIR_MAINTENANCE_IN_PROGRESS' }));
+    f.done(); assert.equal(fs.existsSync(job), false);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(f.directory, 'status.json'))).phase, 'FAILED');
+    assert.equal(m.view().error, 'REPAIR_MAINTENANCE_IN_PROGRESS');
+});
+test('post-activation result failure still retires old daemon runtime after durable failure report', async t => {
+    const f = fixture(t), m = f.manager; m.dispatch({ operation: 'check' }); await m.checkPromise;
+    const queued = m.dispatch({ operation: 'install', releaseId: release.releaseId, maintenanceConfirmed: true });
+    const job = path.join(f.directory, 'jobs', queued.operationId);
+    fs.writeFileSync(path.join(job, 'result.json'), JSON.stringify({ operationId: queued.operationId, phase: 'FAILED', error: 'UPDATE_FAILED' }));
+    m.state = () => ({ ...state, releaseId: release.releaseId, sequence: 16, nodeVersion: '24.23.0' });
+    m.runningNodeVersion = '24.22.1'; let restarted = false;
+    m.restartAfterRuntimeChange = () => {
+        assert.equal(JSON.parse(fs.readFileSync(path.join(f.directory, 'status.json'))).phase, 'FAILED'); restarted = true;
+    };
+    f.done(); assert.equal(restarted, true);
 });

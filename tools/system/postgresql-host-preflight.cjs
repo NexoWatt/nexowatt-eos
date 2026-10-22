@@ -54,7 +54,7 @@ function inspectPostgresqlHost({ expectedNodeVersion, platform = process.arch, r
     for (const [file, result] of trusted) add(`tool:${file}`, result.trusted, result.resolved);
     const run = (file, args) => trusted.get(file)?.trusted ? exec(file, args) : { status: null, stdout: '', error: 'UNTRUSTED_TOOL' };
     const node = run('/usr/bin/node', ['--version']);
-    add('node-exact-version', expectedNodeVersion === '24.21.0' && node.status === 0 && !node.error &&
+    add('node-exact-version', ['24.21.0', '24.22.1'].includes(expectedNodeVersion) && node.status === 0 && !node.error &&
         node.stdout.trim() === `v${expectedNodeVersion}`, { expected: expectedNodeVersion || null, observed: node.stdout.trim() });
     const manager = run('/usr/bin/systemctl', ['show', '--property=Version', '--property=SystemState']);
     add('systemd-manager', manager.status === 0 && !manager.error && Number(/^Version=(\d+)/m.exec(manager.stdout)?.[1] || 0) >= 257 &&

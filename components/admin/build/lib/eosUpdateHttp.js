@@ -2,6 +2,7 @@
 
 const { isEosSameOriginRequest } = require('./eosRequestSecurity');
 const { requestUpdate: defaultRequest } = require('./eosUpdateClient');
+const { getOsUpdateStatus: defaultOsStatus } = require('./eosOsUpdateStatus');
 const plain = value => !!value && typeof value === 'object' && !Array.isArray(value)
     && [Object.prototype, null].includes(Object.getPrototypeOf(value));
 const exact = (value, keys) => plain(value) && Object.keys(value).length === keys.length
@@ -13,8 +14,12 @@ function validBody(operation, body) {
         && body.maintenanceConfirmed === true;
 }
 
-function registerUpdateRoutes(app, { authorize, secure, jsonParser, requestUpdate = defaultRequest }) {
+function registerUpdateRoutes(app, { authorize, secure, jsonParser, requestUpdate = defaultRequest, getOsUpdateStatus = defaultOsStatus }) {
     const rates = new Map();
+    const osStatus = async () => {
+        try { return await getOsUpdateStatus(); }
+        catch { return { schemaVersion: 1, availability: 'unavailable', health: 'warning', summary: null }; }
+    };
     const guard = write => async (req, res, next) => {
         res.setHeader('Cache-Control', 'no-store');
         res.setHeader('Pragma', 'no-cache');
@@ -42,6 +47,7 @@ function registerUpdateRoutes(app, { authorize, secure, jsonParser, requestUpdat
         } catch { res.status(503).json({ error: 'UPDATE_AUTH_UNAVAILABLE' }); }
     };
     const handle = operation => async (req, res) => {
+        let authorized = false;
         try {
             const body = operation === 'status' ? {} : req.body;
             if (!validBody(operation, body)) return res.status(400).json({ error: 'UPDATE_REQUEST' });
@@ -50,12 +56,16 @@ function registerUpdateRoutes(app, { authorize, secure, jsonParser, requestUpdat
             if (!access?.userId || !['admin', 'installer'].includes(access.role)) {
                 return res.status(403).json({ error: 'UPDATE_PERMISSION' });
             }
-            res.status(200).json(await requestUpdate(operation, body));
+            authorized = true;
+            const result = await requestUpdate(operation, body);
+            // Independent read-only OS state; a successful EOS request is not
+            // evidence that Linux packages are updated or activated.
+            res.status(200).json({ ...result, osUpdates: await osStatus() });
         } catch (error) {
             const code = typeof error?.code === 'string' && /^UPDATE_[A-Z0-9_]{1,72}$/.test(error.code)
                 ? error.code : 'UPDATE_UNAVAILABLE';
-            res.status(code === 'UPDATE_BUSY' ? 429 : ['UPDATE_UNAVAILABLE', 'UPDATE_TIMEOUT', 'UPDATE_RESPONSE'].includes(code) ? 503 : 400)
-                .json({ error: code });
+            res.status(['UPDATE_BUSY', 'UPDATE_MAINTENANCE_BUSY'].includes(code) ? 429 : ['UPDATE_UNAVAILABLE', 'UPDATE_TIMEOUT', 'UPDATE_RESPONSE'].includes(code) ? 503 : 400)
+                .json({ error: code, ...(authorized && operation === 'status' ? { osUpdates: await osStatus() } : {}) });
         }
     };
     app.get('/nexowatt/managed-updates/status', guard(false), handle('status'));

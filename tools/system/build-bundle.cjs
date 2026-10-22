@@ -9,6 +9,9 @@ const { verifyBuildProfile } = require('../../runtime/controller-profile/transfo
 const { verifySbomBinding } = require('../../runtime/release/sbom-binding.cjs');
 const { checkRuntimeArchitecture } = require('../integration/check-runtime-architecture.cjs');
 const product = require('../../runtime/product/scope.cjs');
+const nodeRuntime = require('../../runtime/updates/node-policy.cjs');
+const MANAGED_NODE = '/opt/nexowatt/eos/current/node-runtime/bin/node';
+function renderManagedNodeUnit(source) { return source.replaceAll('/usr/bin/node', MANAGED_NODE); }
 const REPO = path.resolve(__dirname, '../..');
 function reject(code) { const error = new Error(code); error.code = code; throw error; }
 function parseJson(file) { return JSON.parse(readFileLimited(file, 16 * 1024 * 1024).bytes); }
@@ -92,14 +95,21 @@ function validatePayload(payload, manifest) {
     }
     if (manifest.sequence >= 15) {
         for (const name of ['system/managed-test/profile.json', 'system/managed-test/nexowatt-eos-updates.service',
-            'tools/system/install-managed-updates.cjs', 'tools/system/update-managed-release.cjs', 'tools/system/extract-test-bundle.py',
-            'tools/integration/test-archive.py', ...['channel', 'transport', 'service', 'worker'].map(n => `runtime/updates/${n}.cjs`)]) {
+            'tools/system/install-managed-updates.cjs', 'tools/system/install-os-maintenance.cjs', 'tools/system/update-managed-release.cjs', 'tools/system/extract-test-bundle.py',
+            'tools/integration/test-archive.py', ...['channel', 'transport', 'service', 'worker', 'node-policy', 'maintenance-lease'].map(n => `runtime/updates/${n}.cjs`)]) {
             const row = manifest.files.find(file => file.path === name);
             if (!row || !row.size || row.mode !== 0o644 || row.sha256 !== sha256(readFileLimited(path.join(payload, name)).bytes)) reject('BUILD_MANAGED_PROFILE_REQUIRED');
         }
         const managed = parseJson(path.join(payload, 'system/managed-test/profile.json'));
         if (JSON.stringify(managed) !== JSON.stringify({ schemaVersion: 1, profile: 'eos-managed-test-v1', minimumSequence: 15,
-            nodeVersion: '24.21.0', platform: 'linux-arm64' })) reject('BUILD_MANAGED_PROFILE_REQUIRED');
+            nodeVersion: nodeRuntime.BASELINE_VERSION, platform: 'linux-arm64' })) reject('BUILD_MANAGED_PROFILE_REQUIRED');
+    }
+    if (releaseScope === product.SECURITY_REFRESH_TEST) {
+        nodeRuntime.validateRuntime(payload, manifest);
+        for (const row of manifest.files.filter(row => /^system\/(?:test-base|postgresql-test|own-adapter-test)\/systemd\/.+\.service$/.test(row.path))) {
+            const text = readFileLimited(path.join(payload, row.path)).bytes.toString('utf8');
+            if (text.includes('/usr/bin/node')) reject('BUILD_MANAGED_NODE_UNIT');
+        }
     }
     const productInventory = fullProduct ? product.inspectApp(path.join(payload, 'app'), releaseScope) : null;
     if (fullProduct) product.assertCatalog(catalog, releaseScope);
@@ -145,7 +155,7 @@ function validatePayload(payload, manifest) {
         const relativePath = 'node_modules/iobroker.js-controller/package.json';
         profile.files.push({ relativePath, sha256: sha256(readFileLimited(path.join(payload, 'app', relativePath)).bytes) });
     }
-    const sbom = verifySbomBinding(payload, manifest.files, profile, { sequence: manifest.sequence });
+    const sbom = verifySbomBinding(payload, manifest.files, profile, { sequence: manifest.sequence, nodeVersion: manifest.nodeVersion });
     // Every advertised platform must match the installed native payload. A
     // cross-built ARM tree remains untested on hardware until the Pi accepts it.
     if (!Array.isArray(manifest.platforms) || !manifest.platforms.length) reject('BUILD_ARCHITECTURE');
@@ -157,10 +167,12 @@ function validatePayload(payload, manifest) {
     }
     return { catalog, plan, sbom, databaseBackend, productInventory, architectureReports };
 }
-function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST, networkProfile = false, managedProfile = false }) {
+function preparePayload({ appDirectory, destination, catalogFile, sbomFile, releaseScope = product.MANAGEMENT_TEST, networkProfile = false, managedProfile = false, nodeRuntimeDirectory }) {
     product.specsFor(releaseScope);
     if (typeof networkProfile !== 'boolean' || networkProfile && !product.ownAdapterScope(releaseScope)) reject('BUILD_NETWORK_PROFILE_REQUIRED');
     if (typeof managedProfile !== 'boolean' || managedProfile && (!networkProfile || !product.ownAdapterScope(releaseScope))) reject('BUILD_MANAGED_PROFILE_REQUIRED');
+    if (managedProfile && releaseScope === product.SECURITY_REFRESH_TEST && typeof nodeRuntimeDirectory !== 'string') reject('BUILD_NODE_RUNTIME_REQUIRED');
+    if (nodeRuntimeDirectory !== undefined && (!managedProfile || releaseScope !== product.SECURITY_REFRESH_TEST)) reject('BUILD_NODE_RUNTIME_SCOPE');
     const source = trustedDirectory(appDirectory);
     const target = path.resolve(destination);
     if (target === source || target.startsWith(source + path.sep)) reject('BUILD_OUTPUT_INSIDE_INPUT');
@@ -169,6 +181,7 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
     fs.mkdirSync(destination, { mode: 0o700 });
     try {
         copyDirectory(source, path.join(destination, 'app'), true);
+        if (nodeRuntimeDirectory) copyDirectory(nodeRuntimeDirectory, path.join(destination, 'node-runtime'));
         copyRuntimeLicenses(destination, 'app/');
         copyDirectory(path.join(REPO, 'runtime'), path.join(destination, 'runtime'));
         fs.mkdirSync(path.join(destination, 'tools')); fs.mkdirSync(path.join(destination, 'tools/system'));
@@ -184,7 +197,7 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
                 fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
             }
         }
-        if (managedProfile) for (const name of ['install-managed-updates.cjs', 'update-managed-release.cjs', 'extract-test-bundle.py'])
+        if (managedProfile) for (const name of ['install-managed-updates.cjs', 'install-os-maintenance.cjs', 'update-managed-release.cjs', 'extract-test-bundle.py'])
             fs.copyFileSync(path.join(REPO, 'tools/system', name), path.join(destination, 'tools/system', name), fs.constants.COPYFILE_EXCL);
         fs.mkdirSync(path.join(destination, 'tools/integration'));
         if (managedProfile) fs.copyFileSync(path.join(REPO, 'tools/integration/test-archive.py'), path.join(destination, 'tools/integration/test-archive.py'), fs.constants.COPYFILE_EXCL);
@@ -207,6 +220,17 @@ function preparePayload({ appDirectory, destination, catalogFile, sbomFile, rele
             // units and already signed deliveries are never edited in place.
             fs.copyFileSync(path.join(REPO, 'system/own-adapter-test/systemd/nexowatt-eos-upload.service'),
                 path.join(destination, 'system/postgresql-test/systemd/nexowatt-eos-upload.service'));
+        }
+        if (managedProfile && releaseScope === product.SECURITY_REFRESH_TEST) {
+            // Transform only the new candidate copies. Historical templates,
+            // archives and their byte identities remain unchanged.
+            for (const directory of ['system/test-base/systemd', 'system/postgresql-test/systemd', 'system/own-adapter-test/systemd']) {
+                for (const entry of fs.readdirSync(path.join(destination, directory))) {
+                    if (!entry.endsWith('.service')) continue;
+                    const file = path.join(destination, directory, entry);
+                    fs.writeFileSync(file, renderManagedNodeUnit(fs.readFileSync(file, 'utf8')), { mode: 0o644 });
+                }
+            }
         }
         fs.copyFileSync(catalogFile, path.join(destination, 'catalog.json'), fs.constants.COPYFILE_EXCL);
         fs.copyFileSync(sbomFile, path.join(destination, 'sbom.cdx.json'), fs.constants.COPYFILE_EXCL);
@@ -242,7 +266,7 @@ function main(argv) {
         return createBundle({ sourceDirectory: payload, bundleDirectory: output, metadata, privateKey: key.bytes });
     } finally { fs.rmSync(scratch, { recursive: true, force: true }); }
 }
-module.exports = { copyDirectory, runtimeLicenseNotices, copyRuntimeLicenses, componentRows, validatePayload, preparePayload, main };
+module.exports = { MANAGED_NODE, renderManagedNodeUnit, copyDirectory, runtimeLicenseNotices, copyRuntimeLicenses, componentRows, validatePayload, preparePayload, main };
 if (require.main === module) {
     try { process.stdout.write(`${JSON.stringify({ ok: true, ...main(process.argv.slice(2)) })}\n`); }
     catch (error) { process.stderr.write(`${JSON.stringify({ ok: false, code: /^[A-Z_]+$/.test(error.code || '') ? error.code : 'BUILD_FAILED' })}\n`); process.exitCode = 1; }

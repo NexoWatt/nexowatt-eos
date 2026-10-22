@@ -137,3 +137,11 @@ test('changed actual transform rows and duplicated or unrecognized profile recor
     const k = transformFixture(t); k.bom.components.push({ ...k.component, 'bom-ref': 'duplicate' });
     assert.throws(() => k.check(k.profile), { code: 'SBOM_TRANSFORM_COMPONENT' });
 });
+
+test('a Node runtime component cannot bypass package identity without the fresh signed binding', t => {
+    const f = fixture(t);
+    f.bom.components.push({ type: 'application', name: 'node', version: '24.22.1',
+        'bom-ref': 'eos-node-runtime:24.22.1:linux-arm64',
+        properties: [{ name: 'eos:scope', value: 'signed-node-runtime' }] });
+    assert.throws(f.check, { code: 'SBOM_NODE_RUNTIME' });
+});

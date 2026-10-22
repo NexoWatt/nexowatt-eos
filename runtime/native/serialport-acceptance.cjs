@@ -4,10 +4,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { rootOwned } = require('../release/installed-check.cjs');
-const { policy, assertNativeHost, hostIdentity, assertPackage } = require('./serialport-contract.cjs');
+const serialport = require('./serialport-contract.cjs');
 const EXPECTED = Object.freeze(['Poller', 'close', 'drain', 'flush', 'get', 'getBaudRate', 'open', 'set', 'update']);
 function probe(app) {
-    const host = hostIdentity(); assertNativeHost(host);
+    const host = serialport.hostIdentity();
+    const { policy, assertNativeHost, assertPackage } = serialport.forNode(host.node); assertNativeHost(host);
     if (!path.isAbsolute(app) || fs.realpathSync(app) !== app) throw new Error('NATIVE_APP_PATH');
     rootOwned(app);
     const lock = JSON.parse(fs.readFileSync(path.join(app, 'package-lock.json'), 'utf8')), bindings = [];

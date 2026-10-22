@@ -4,6 +4,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { inventoryTree } = require('../../runtime/postgresql/integration.cjs');
 const NODE = '24.21.0';
+const FRESH_NODE = require('../../tools/integration/node-runtime-policy.json').currentVersion;
 const BASE_RELEASE_ID = '97780e881765e2c9854e81ac7187b3ed120eccc8cc0dea0821492c9a54e23000';
 const STATE = '/etc/nexowatt-eos/release-state.json';
 const MARKER = '/etc/nexowatt-eos/own-adapters-native-lab.json';
@@ -18,7 +19,7 @@ const contentRows = app => inventoryTree(app).map(row => {
 function validatePreparation(value, root) {
     if (value?.kind === 'unsigned-security-refresh-native-preparation') {
         if (value.schemaVersion !== 1 || value.signed !== false || value.unsignedFixture !== true ||
-            !Number.isSafeInteger(value.sequence) || value.sequence < 15 || value.nodeVersion !== NODE ||
+            !Number.isSafeInteger(value.sequence) || value.sequence < 15 || value.nodeVersion !== FRESH_NODE ||
             value.app !== path.join(root, 'own-adapters-build/app') || value.baselineApp !== path.join(root, 'own-adapters-build/baseline') ||
             !/^[a-f0-9]{40}$/.test(value.sourceCommit || '') || value.sourceTreeClean !== true ||
             !['appContentSha256', 'baselineContentSha256', 'runtimeBuildSha256', 'resolutionLockSha256'].every(key => /^[a-f0-9]{64}$/.test(value[key] || '')) ||
@@ -43,16 +44,16 @@ function loadFixture(root, uid) {
     const fresh = marker.kind === 'unsigned-security-refresh-native-fixed-fixture';
     if (fresh) validatePreparation({ ...marker, kind: 'unsigned-security-refresh-native-preparation', app: path.join(root, 'own-adapters-build/app'), baselineApp: path.join(root, 'own-adapters-build/baseline') }, root);
     if ((!fresh && marker.kind !== 'unsigned-own-adapters-native-fixed-fixture') || marker.signed !== false || marker.unsignedFixture !== true || marker.root !== root
-        || marker.uid !== uid || (!fresh && marker.sequence !== 13) || marker.nodeVersion !== NODE
+        || marker.uid !== uid || (!fresh && marker.sequence !== 13) || marker.nodeVersion !== (fresh ? FRESH_NODE : NODE)
         || !/^[a-f0-9]{64}$/.test(marker.releaseId || '') || !/^[a-f0-9]{64}$/.test(marker.appContentSha256 || '')
         || !/^[a-f0-9]{40}$/.test(marker.sourceCommit || '')) fail('OWN_NATIVE_FIXED_FIXTURE');
     const release = path.join(RELEASES, marker.releaseId), app = path.join(release, 'app');
     const pointer = fs.lstatSync(CURRENT);
     if (!pointer.isSymbolicLink() || pointer.uid !== 0 || fs.readlinkSync(CURRENT) !== release
-        || state.releaseId !== marker.releaseId || state.sequence !== marker.sequence || state.nodeVersion !== NODE || state.profile !== 'test') fail('OWN_NATIVE_FIXED_FIXTURE');
+        || state.releaseId !== marker.releaseId || state.sequence !== marker.sequence || state.nodeVersion !== marker.nodeVersion || state.profile !== 'test') fail('OWN_NATIVE_FIXED_FIXTURE');
     if (sha(JSON.stringify(contentRows(app))) !== marker.appContentSha256) fail('OWN_NATIVE_APP_CHANGED');
     const baselineApp = path.join(release, 'baseline');
     if (sha(JSON.stringify(contentRows(baselineApp))) !== marker.baselineContentSha256) fail('OWN_NATIVE_BASELINE_CHANGED');
     return { ...marker, app, baselineApp };
 }
-module.exports = { NODE, BASE_RELEASE_ID, STATE, MARKER, CURRENT, RELEASES, sha, contentRows, validatePreparation, loadFixture };
+module.exports = { NODE, FRESH_NODE, BASE_RELEASE_ID, STATE, MARKER, CURRENT, RELEASES, sha, contentRows, validatePreparation, loadFixture };

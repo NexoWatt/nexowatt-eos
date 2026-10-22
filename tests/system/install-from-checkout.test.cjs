@@ -74,3 +74,32 @@ test('deployment restores the operator umask on failure (process API fixture; PO
         assert.throws(() => withDeploymentUmask(() => { assert.equal(process.umask(), 0o022); throw new Error('fixture failure'); }), /fixture failure/);
         assert.equal(process.umask(), 0o077);
 });
+
+test('managed native installation probe uses the candidate binary and exact report version', () => {
+    const payload = '/opt/nexowatt/eos/releases/' + 'a'.repeat(64);
+    const nodeExecutable = path.join(payload, 'node-runtime/bin/node');
+    const report = { kind: 'eos-serialport-native-target-probe', passed: true, platform: 'linux-arm64',
+        node: '24.23.0', deviceIoPerformed: false, hardwareAccepted: false, bindings: [{}, {}] };
+    let called = false;
+    const exec = (file, args) => { called = true; assert.equal(file, nodeExecutable);
+        assert.equal(args[0], path.join(payload, 'runtime/native/serialport-acceptance.cjs'));
+        return { status: 0, stdout: JSON.stringify(report) }; };
+    assert.deepEqual(probeNativeForInstallation(payload, 'linux-arm64', exec, { nodeExecutable, nodeVersion: '24.23.0' }), report);
+    assert.equal(called, true);
+    for (const options of [{ nodeExecutable: '/usr/bin/node', nodeVersion: '24.23.0' },
+        { nodeExecutable, nodeVersion: '24.21.0' }, { nodeExecutable, nodeVersion: '25.0.0' }]) {
+        assert.throws(() => probeNativeForInstallation(payload, 'linux-arm64', () => { throw Error('MUST_NOT_EXECUTE'); }, options), /EOS_NATIVE_TARGET_REJECTED/);
+    }
+    assert.throws(() => probeNativeForInstallation(payload, 'linux-arm64', exec,
+        { nodeExecutable, nodeVersion: '24.22.1' }), /EOS_NATIVE_TARGET_REJECTED/);
+});
+test('fresh unit rendering pairs service executable with current while preserving source templates', () => {
+    const { renderManagedNodeUnit, MANAGED_NODE } = require('../../tools/system/build-bundle.cjs');
+    const file = path.join(__dirname, '../../system/postgresql-test/systemd/nexowatt-eos-controller.service');
+    const before = fs.readFileSync(file, 'utf8'), rendered = renderManagedNodeUnit(before);
+    assert.match(before, /ExecStart=\/usr\/bin\/node /);
+    assert.ok(rendered.includes('ExecStart=' + MANAGED_NODE + ' '));
+    assert.doesNotMatch(rendered, /\/usr\/bin\/node/);
+    assert.equal(fs.readFileSync(file, 'utf8'), before);
+    assert.equal(renderManagedNodeUnit(rendered), rendered);
+});

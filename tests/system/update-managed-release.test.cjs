@@ -13,12 +13,13 @@ const ID = 'a'.repeat(64);
 // Services, baseline inventory verification and native probing are explicit doubles.
 const pair = crypto.generateKeyPairSync('ed25519');
 const publicKey = pair.publicKey.export({ format: 'pem', type: 'spki' });
-const base = { releaseId: 'b'.repeat(64), sequence: 15, nodeVersion: '24.21.0', profile: 'test', publicKeySha256: sha256(publicKey) };
+const base = { releaseId: 'b'.repeat(64), sequence: 15, nodeVersion: '24.22.1', profile: 'test', publicKeySha256: sha256(publicKey) };
 const test = nodeTest;
 function descriptors() {
-    const manifest = sequence => ({ product: 'nexowatt-eos', sequence, profile: 'test', releaseVersion: '0.2.0-test.3', nodeVersion: '24.21.0',
+    const manifest = sequence => ({ product: 'nexowatt-eos', sequence, profile: 'test', releaseVersion: '0.2.0-test.3', nodeVersion: '24.22.1',
         platforms: ['linux-arm64'], files: [{ path: 'runtime/postgresql/schema.sql', size: 4, sha256: sha256('sql\n'), mode: 0o644 },
             { path: 'system/postgresql-test/systemd/nexowatt-eos-controller.service', size: 5, sha256: sha256('unit\n'), mode: 0o644 },
+            ...['node-runtime/bin/node', 'node-runtime/runtime.json', 'node-runtime/LICENSE'].map(name => ({path:name,size:4,sha256:sha256(name),mode:name.endsWith('/node') ? 0o755 : 0o644})),
             { path: 'app/node_modules/iobroker.js-controller/eos-test-profile.json', size: 3, sha256: sha256('{}\n'), mode: 0o644 }] });
     const product = require('../../runtime/product/scope.cjs');
     const catalog = { catalogRevision: 9, entries: product.specsFor(product.SECURITY_REFRESH_TEST).map(spec => ({ id: spec.id, package: spec.package,
@@ -58,7 +59,8 @@ function fixture(t) {
         expectedReleaseId: ID, expectedKeySha256: sha256(publicKey) };
     const desc = descriptors(); desc.next.payloadPath = at('/import/bundle/payload');
     const events = []; let active = 'active';
-    const dependencies = { root, uid: 0, ownerUid: process.getuid(), invocationId: '3'.repeat(32), nodeVersion: '24.21.0', platform: 'linux-arm64',
+    const dependencies = { root, uid: 0, ownerUid: process.getuid(), invocationId: '3'.repeat(32), nodeVersion: '24.22.1', platform: 'linux-arm64',
+        acquireMaintenanceLease: async () => ({assert() {}, release() {}}), validateRuntime: () => ({}),
         assertRuntimeStopped: () => { events.push('assert-stopped'); assert.equal(active, 'inactive'); },
         networkInstaller: (op) => { events.push('network:' + op); return {ok:true}; },
         ownerCheck: () => {}, toolTrust: () => ({ trusted: true }), trustedImport: () => {},
@@ -164,6 +166,40 @@ test('successful managed update installs state before trial start and preserves 
     assert.ok(f.events.indexOf('native') < f.events.indexOf('stop ' + controller + ' nexowatt-eos-upload.service'));
     assert.ok(f.events.indexOf('readiness:' + ID) < f.events.indexOf('revoke'));
     assert.ok(!f.events.some(row => /postgresql.*stop|daemon-reload|enable|initialize|setup/.test(row)));
+});
+test('Node upgrade switches signed runtime and EOS state as one pair and restores both after trial failure', async t => {
+    for (const rollback of [false, true]) {
+        const f = fixture(t); f.desc.next.manifest.nodeVersion = '24.23.0';
+        for (const row of f.desc.next.manifest.files.filter(r => r.path.startsWith('node-runtime/'))) row.sha256 = 'd'.repeat(64);
+        f.dependencies.nativeProbe = (payload, platform, exec, options) => {
+            assert.equal(options.nodeExecutable, path.join(payload, 'node-runtime/bin/node'));
+            assert.equal(options.nodeVersion, '24.23.0'); return { passed: true };
+        };
+        f.dependencies.readiness = async payload => {
+            const current = JSON.parse(fs.readFileSync(f.at(stateFile)));
+            assert.equal(path.basename(payload), current.releaseId);
+            assert.equal(current.nodeVersion, current.releaseId === ID ? '24.23.0' : '24.22.1');
+            if (rollback && current.releaseId === ID) throw Object.assign(Error('trial'), { code: 'ONBOARD_HTTPS_NOT_READY' });
+        };
+        if (rollback) {
+            await assert.rejects(repair.update(f.options, f.dependencies), /REPAIR_TRIAL_FAILED_RESTORED_ACTIVE/);
+            assert.equal(f.current(), oldTarget); assert.deepEqual(fs.readFileSync(f.at(stateFile)), f.state);
+        } else {
+            const result = await repair.update(f.options, f.dependencies);
+            assert.equal(result.nodeVersion, '24.23.0'); assert.equal(result.previousNodeVersion, '24.22.1');
+            assert.equal(JSON.parse(fs.readFileSync(f.at(stateFile))).nodeVersion, '24.23.0');
+        }
+        assert.equal(f.active(), 'active'); assert.equal(f.locked(), false);
+    }
+});
+test('shared OS maintenance lease refusal prevents all transaction effects and runtime repacks/downgrades fail', async t => {
+    const f = fixture(t); f.dependencies.acquireMaintenanceLease = async () => { throw Object.assign(Error('busy'), { code: 'REPAIR_MAINTENANCE_IN_PROGRESS' }); };
+    await assert.rejects(repair.update(f.options, f.dependencies), /REPAIR_MAINTENANCE_IN_PROGRESS/);
+    assert.deepEqual(f.events, []); assert.equal(f.locked(), false);
+    const d = descriptors(); d.next.manifest.files.find(r => r.path === 'node-runtime/bin/node').sha256 = 'e'.repeat(64);
+    assert.throws(() => repair.validateTransition(d.old, d.next, { expectedReleaseId: ID }), /UPDATE_RUNTIME_REPACK/);
+    d.old.manifest.nodeVersion = '24.23.0';
+    assert.throws(() => repair.validateTransition(d.old, d.next, { expectedReleaseId: ID }), /UPDATE_RUNTIME_DOWNGRADE/);
 });
 test('baseline readiness failure never stages, locks or stops an unhealthy controller', async t => {
     const f = fixture(t); f.dependencies.readiness = async () => { throw Object.assign(Error('PRIVATE'), { code: 'ONBOARD_HTTPS_NOT_READY', failureStage: 'UI_HTTPS', reason: 'tls' }); };
@@ -311,7 +347,7 @@ test('real candidate signature and payload tampering are refused before any serv
         f.options.bundleDirectory = f.at('/signed-bundle');
         createBundle({ sourceDirectory: source, bundleDirectory: f.options.bundleDirectory,
             metadata: { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence: 16,
-                profile: 'test', nodeVersion: '24.21.0', platforms: ['linux-arm64'] },
+                profile: 'test', nodeVersion: '24.22.1', platforms: ['linux-arm64'] },
             privateKey: pair.privateKey.export({ format: 'pem', type: 'pkcs8' }) });
         f.options.expectedReleaseId = sha256(fs.readFileSync(path.join(f.options.bundleDirectory, 'manifest.json')));
         if (kind === 'signature') fs.writeFileSync(path.join(f.options.bundleDirectory, 'manifest.sig'), Buffer.alloc(64));

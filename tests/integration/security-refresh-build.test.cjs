@@ -10,14 +10,15 @@ const { bindPostgresqlPeer, snapshot } = require('../../tools/integration/build-
 const native = require('../../tools/integration/verify-security-refresh-native.cjs');
 const { validatePreparation } = require('../integration-own-adapters/fixture.cjs');
 const hash = x => sha256(Buffer.from(x));
-function fixture() {
+function fixture(nodeVersion = fresh.NODE) {
     const files = fresh.OWNERS.map((name, index) => ({ path: `node_modules/${name}/file.js`, size: 1, sha256: hash(String(index)), mode: 0o644 }));
     files.push({ path: 'package-lock.json', size: 2, sha256: hash('{}'), mode: 0o644 });
     files.sort((a, b) => a.path < b.path ? -1 : 1);
     const profile = { schemaVersion: 1, kind: 'eos-controller-profile-verification', controllerVersion: '7.2.5', productionApproved: false,
         files: files.filter(row => row.path !== 'package-lock.json').map(row => ({ relativePath: row.path, sha256: row.sha256 })) };
     const record = { schemaVersion: 1, kind: fresh.ASSEMBLY, sourceCommit: 'a'.repeat(40), sourceTreeClean: true, sequence: 15,
-        nodeVersion: fresh.NODE, npmVersion: '11.19.0', controllerVersion: '7.2.5', platform: 'linux-arm64', signed: false,
+        nodeVersion, nodeRuntime: { schemaVersion: 1, version: nodeVersion, platform: 'linux-arm64',
+            archiveSha256: 'e'.repeat(64), binarySha256: 'f'.repeat(64), licenseSha256: 'a'.repeat(64) }, npmVersion: '11.19.0', controllerVersion: '7.2.5', platform: 'linux-arm64', signed: false,
         lifecycleScriptsExecuted: false, productionReleaseApproved: false, controllerProfile: profile,
         packageLockSha256: hash('{}'), resolutionLockSha256: 'd'.repeat(64), appContentSha256: fresh.digest(fresh.content(files)), appModeSha256: fresh.digest(files) };
     const components = fresh.OWNERS.map(name => ({ name, version: name === '@iobroker/ws-server' ? '4.5.2' : '7.2.5', type: 'library', hashes: [{ alg: 'SHA-512', content: 'a'.repeat(128) }] }));
@@ -26,7 +27,10 @@ function fixture() {
     const bom = fresh.bindFreshSbom({ bom: { metadata: { properties: [] }, components }, files, profile, record, sequence: 15 });
     const rows = files.map(row => ({ ...row, path: `app/${row.path}` }));
     rows.push({ path: 'runtime-build.json', sha256: hash(JSON.stringify(record, null, 2) + '\n') });
-    return { bom, files: rows, profile, release: { sequence: 15 }, record };
+    rows.push({ path: 'node-runtime/bin/node', size: 64, sha256: record.nodeRuntime.binarySha256, mode: 0o755 },
+        { path: 'node-runtime/LICENSE', size: 10, sha256: record.nodeRuntime.licenseSha256, mode: 0o644 },
+        { path: 'node-runtime/runtime.json', size: 400, sha256: hash(JSON.stringify(record.nodeRuntime, null, 2) + '\n'), mode: 0o644 });
+    return { bom, files: rows, profile, release: { sequence: 15, nodeVersion }, record };
 }
 test('fresh complete-tree SBOM binds source, sequence, lock, all five transformed packages and local bytes', () => {
     const input = fixture(); assert.equal(fresh.verifyFreshSbom(input), true);
@@ -40,10 +44,36 @@ test('fresh complete-tree SBOM binds source, sequence, lock, all five transforme
 });
 test('fresh SBOM retains six identical embedded license-client copies and rejects a hidden divergent copy', () => {
     const original = fixture();
-    for (const change of [x => x.bom.components.pop(), x => x.bom.components.at(-1).version = '1.0.1',
-        x => x.bom.components.at(-1).properties[1].value = 'e'.repeat(64),
-        x => x.bom.components.at(-1).properties.push({ name: 'eos:tree-sha256', value: 'e'.repeat(64) })]) {
+    const client = x => x.bom.components.find(row => row.name === '@nexowatt/eos-license-client');
+    for (const change of [x => x.bom.components.splice(x.bom.components.indexOf(client(x)), 1), x => client(x).version = '1.0.1',
+        x => client(x).properties[1].value = 'e'.repeat(64),
+        x => client(x).properties.push({ name: 'eos:tree-sha256', value: 'e'.repeat(64) })]) {
         const changed = structuredClone(original); change(changed); assert.throws(() => fresh.verifyFreshSbom(changed));
+    }
+});
+test('immutable fresh SBOM validator admits exact future Node24 patches and minors while rejecting major or downgrade', () => {
+    for (const version of ['24.22.2', '24.23.0']) {
+        const input = fixture(version);
+        assert.equal(fresh.verifyFreshSbom(input), true);
+        assert.equal(input.bom.components.find(row => row.name === 'node').version, version);
+        input.release.nodeVersion = '24.22.1';
+        assert.throws(() => fresh.verifyFreshSbom(input));
+    }
+    for (const version of ['24.21.0', '24.22.0', '25.0.0']) assert.throws(() => fixture(version), /FRESH_SBOM_NODE/);
+});
+test('fresh SBOM binds Node binary, complete license and metadata independently of npm packages', () => {
+    const original = fixture();
+    for (const change of [
+        x => { x.files = x.files.filter(row => row.path !== 'node-runtime/LICENSE'); },
+        x => { x.files.find(row => row.path === 'node-runtime/bin/node').sha256 = '1'.repeat(64); },
+        x => { x.files.find(row => row.path === 'node-runtime/bin/node').mode = 0o644; },
+        x => { x.files.find(row => row.path === 'node-runtime/runtime.json').sha256 = '2'.repeat(64); },
+        x => { x.bom.components.push(structuredClone(x.bom.components.find(row => row.name === 'node'))); },
+        x => { x.bom.components.find(row => row.name === 'node').hashes[0].content = '3'.repeat(64); },
+        x => { x.release.nodeVersion = '24.23.0'; }
+    ]) {
+        const altered = structuredClone(original); change(altered);
+        assert.throws(() => fresh.verifyFreshSbom(altered));
     }
 });
 test('only the fresh packed PostgreSQL backend can bind the reviewed newer Redis base API', () => {
@@ -70,7 +100,7 @@ function nativeFixture() {
         resolutionLockSha256: record.resolutionLockSha256, appContentSha256, baselineContentSha256,
         app: '/tmp/fresh-native/own-adapters-build/app', baselineApp: '/tmp/fresh-native/own-adapters-build/baseline' };
     Object.assign(evidence, { kind: 'eos-security-refresh-native-management', sourceReleaseId: previousReleaseId, sourceSequence: 0,
-        targetSequence: 15, sequence: 15, sourceCommit, appContentSha256, runtimeBuildSha256 });
+        targetSequence: 15, sequence: 15, sourceCommit, appContentSha256, runtimeBuildSha256, nodeVersion: fresh.NODE });
     delete evidence.checks.nativeEnrollmentAndPrestartRollback; delete evidence.checks.nativePoststartEnrollmentRollback;
     evidence.checks.freshEnrollmentPrewriteFailureIsAtomic = true; evidence.checks.freshEnrollmentRetainedAfterRestart = true;
     const binding = { schemaVersion: 1, kind: 'eos-security-refresh-native-source-binding', sourceCommit, sourceTreeClean: true,

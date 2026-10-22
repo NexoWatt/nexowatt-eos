@@ -5,6 +5,7 @@ import base64
 import hashlib
 import importlib.util
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,6 +22,13 @@ def native_binding(app, bom, evidence_path):
         if present: raise base.EvidenceError('NATIVE_EVIDENCE_REQUIRED')
         return []
     evidence, evidence_hash = base.read_json(evidence_path)
+    if evidence.get('profile') == 'eos-serialport-linux-arm64-glibc-managed-node24-v1':
+        policy, _ = base.read_json(ROOT / 'runtime/native/serialport-managed-policy.json')
+        version = evidence.get('nodeVersion')
+        if not isinstance(version, str) or not re.fullmatch(r'24\.(0|[1-9][0-9]{0,3})\.(0|[1-9][0-9]{0,3})', version) or \
+           tuple(map(int, version.split('.'))) < (24, 22, 1):
+            raise base.EvidenceError('NATIVE_EVIDENCE_IDENTITY')
+        policy['target']['nodeVersion'] = version
     if not present or evidence.get('schemaVersion') != 1 or evidence.get('kind') != 'eos-serialport-native-normalization' or \
        evidence.get('profile') != policy['profile'] or evidence.get('platform') != policy['target']['platform'] or \
        evidence.get('nodeVersion') != policy['target']['nodeVersion'] or evidence.get('hardwareAccepted') is not False or \

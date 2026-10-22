@@ -73,7 +73,7 @@ async function observation(probe, ca) {
 }
 
 test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, central NWL3 license and immutable EOS admission', { timeout: 830000 }, async t => {
-    assert.equal(process.version, 'v24.21.0');
+    assert.equal(process.versions.node, fixture.nodeVersion);
     const children = [], clients = [], evidence = { schemaVersion: 1, kind: fixture.kind === 'unsigned-security-refresh-native-fixed-fixture' ? 'eos-security-refresh-native-management' : 'eos-own-adapters-native-management', sourceReleaseId: fixture.previousReleaseId,
         sourceSequence: fixture.sourceSequence ?? 12, targetSequence: fixture.sequence, sourceCommit: fixture.sourceCommit, fixtureReleaseId: fixture.releaseId,
         appContentSha256: fixture.appContentSha256, nodeVersion: process.versions.node, sequence: fixture.sequence, runtimeBuildSha256: fixture.runtimeBuildSha256, licenseFormat: 'NWL3', passed: false,

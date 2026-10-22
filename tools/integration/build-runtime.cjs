@@ -135,7 +135,8 @@ function build({ output, components = COMPONENTS, eebusSource, platform, postgre
     if (postgresql) product.inspectSources(REPO, releaseScope);
     const controller = product.specsFor(releaseScope).find(row => row.id === 'js-controller');
     const target = targetArguments(platform);
-    if (process.versions.node !== '24.21.0') reject('BUILD_NODE_VERSION');
+    const buildNodeVersion = releaseScope === product.SECURITY_REFRESH_TEST ? require('./node-runtime-policy.json').currentVersion : '24.21.0';
+    if (process.versions.node !== buildNodeVersion) reject('BUILD_NODE_VERSION');
     fs.mkdirSync(base, { mode: 0o700 });
     for (const d of ['sources', 'packages', 'logs', 'app']) fs.mkdirSync(path.join(base, d));
     const packed = [], overrides = [];
@@ -160,7 +161,7 @@ function build({ output, components = COMPONENTS, eebusSource, platform, postgre
     }
     const app = path.join(base, 'app');
     const pkg = { name: 'nexowatt-eos-integrated-development', version: postgresql ? '0.2.0-test.3' : '0.2.0-dev.3', private: true,
-        license: 'SEE LICENSE IN LICENSE', engines: { node: '24.21.0' }, dependencies: { 'iobroker.js-controller': controller.version } };
+        license: 'SEE LICENSE IN LICENSE', engines: { node: buildNodeVersion }, dependencies: { 'iobroker.js-controller': controller.version } };
     copyRuntimeLicenses(app);
     for (const row of packed) pkg.dependencies[row.package] = `file:../packages/${row.archive}`;
     // npm only honors overrides at the installation root. Preserve explicit

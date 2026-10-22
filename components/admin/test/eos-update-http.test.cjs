@@ -21,6 +21,7 @@ function harness(options = {}) {
     const errors = [];
     const order = [];
     const calls = [];
+    const osReads = [];
     const app = {
         get(url, ...handlers) { routes.set(`GET ${url}`, handlers); },
         post(url, ...handlers) { routes.set(`POST ${url}`, handlers); },
@@ -40,6 +41,11 @@ function harness(options = {}) {
                 options.afterParse?.(req);
                 next();
             }
+        },
+        getOsUpdateStatus: async () => {
+            osReads.push(true);
+            if (options.getOsUpdateStatus) return options.getOsUpdateStatus();
+            return { schemaVersion: 1, availability: 'unavailable', health: 'warning', summary: null };
         },
         requestUpdate: async (...args) => {
             calls.push(args);
@@ -96,7 +102,7 @@ function harness(options = {}) {
             next();
         });
     }
-    return { dispatch, routes, calls, order };
+    return { dispatch, routes, calls, order, osReads };
 }
 
 function denied(response, status = 403) {
@@ -111,7 +117,7 @@ test('all update routes require current installer/service authority before parsi
     for (const access of [null, false, {}, { role: 'admin' }, { userId: 'user', role: 'enduser' }]) {
         const h = harness();
         for (const [method, operation, body] of REQUESTS) denied(await h.dispatch(method, operation, { access, body }));
-        assert.deepEqual(h.calls, []); assert.ok(!h.order.includes('parse'));
+        assert.deepEqual(h.calls, []); assert.deepEqual(h.osReads, []); assert.ok(!h.order.includes('parse'));
     }
 });
 test('same-origin custom header and HTTPS cannot be bypassed with forwarding headers', async () => {
@@ -123,7 +129,7 @@ test('same-origin custom header and HTTPS cannot be bypassed with forwarding hea
 });
 test('revoked session between authorization and JSON parsing cannot start update', async () => {
     const h = harness({ afterParse: req => { req.access = null; } });
-    denied(await h.dispatch('POST', 'install', { body: BODY })); assert.deepEqual(h.calls, []);
+    denied(await h.dispatch('POST', 'install', { body: BODY })); assert.deepEqual(h.calls, []); assert.deepEqual(h.osReads, []);
 });
 test('only fixed operations, release identity and maintenance confirmation reach host', async () => {
     const h = harness();
@@ -133,8 +139,36 @@ test('only fixed operations, release identity and maintenance confirmation reach
     assert.deepEqual(h.calls, [['status', {}], ['check', {}], ['install', BODY]]);
 });
 test('source/build route and client stay identical; current web binds protected update prefix', () => {
-    for (const file of ['eosUpdateHttp.js', 'eosUpdateClient.js']) assert.equal(fs.readFileSync(path.join(__dirname, '../src/lib', file), 'utf8'), fs.readFileSync(path.join(__dirname, '../build/lib', file), 'utf8'));
+    for (const file of ['eosUpdateHttp.js', 'eosUpdateClient.js', 'eosOsUpdateStatus.js']) assert.equal(fs.readFileSync(path.join(__dirname, '../src/lib', file), 'utf8'), fs.readFileSync(path.join(__dirname, '../build/lib', file), 'utf8'));
     for (const file of ['../src/lib/web.ts', '../build/lib/web.js']) {
         const text = fs.readFileSync(path.join(__dirname, file), 'utf8'); assert.match(text, /license\|network\|updates\|managed-updates/); assert.match(text, /registerUpdateRoutes/);
     }
+});
+
+test('OS maintenance status is independent of EOS success and available when its host socket restarts', async () => {
+    const os = { schemaVersion: 1, availability: 'stale', health: 'warning', summary: { state: 'attention' } };
+    const good = harness({ getOsUpdateStatus: async () => os });
+    const result = await good.dispatch('GET', 'status');
+    assert.deepEqual(result.body.osUpdates, os); assert.equal(result.body.ok, true);
+    const offline = harness({ getOsUpdateStatus: async () => os, requestUpdate: async () => { throw Object.assign(Error('PRIVATE_FIXTURE'), { code: 'UPDATE_UNAVAILABLE' }); } });
+    const failure = await offline.dispatch('GET', 'status');
+    assert.equal(failure.status, 503); assert.deepEqual(failure.body.osUpdates, os); assert.equal(failure.body.error, 'UPDATE_UNAVAILABLE');
+    assert.doesNotMatch(JSON.stringify(failure), /PRIVATE_FIXTURE/);
+});
+test('OS read failure cannot block signed EOS updates or leak filesystem details', async () => {
+    const h = harness({ getOsUpdateStatus: async () => { throw Error('PRIVATE_FIXTURE'); } });
+    const result = await h.dispatch('POST', 'install', { body: BODY });
+    assert.equal(result.status, 200); assert.equal(result.body.osUpdates.availability, 'unavailable');
+    assert.doesNotMatch(JSON.stringify(result), /PRIVATE_FIXTURE/);
+});
+test('authorization failures after guard do not read the OS status', async () => {
+    let checks = 0;
+    const h = harness({ authorize: async () => { if (++checks === 1) return { userId: 'tech', role: 'installer' }; throw Error('PRIVATE_FIXTURE'); } });
+    const result = await h.dispatch('GET', 'status');
+    assert.equal(result.status, 503); assert.deepEqual(h.osReads, []); assert.deepEqual(h.calls, []);
+});
+test('shared Linux/EOS maintenance contention returns a retryable conflict', async () => {
+    const h = harness({ requestUpdate: async () => { throw Object.assign(Error(), { code: 'UPDATE_MAINTENANCE_BUSY' }); } });
+    const result = await h.dispatch('POST', 'install', { body: BODY });
+    assert.equal(result.status, 429); assert.equal(result.body.error, 'UPDATE_MAINTENANCE_BUSY');
 });

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Development-only native PostgreSQL laboratory. No host package or service changes.
-NATIVE_PG_LAB_VERSION='2026-10-04'
+NATIVE_PG_LAB_VERSION='2026-10-22'
 set -euo pipefail
 umask 077
 [[ ${EUID} -ne 0 && $# -eq 1 && $1 = /* && -d $1 && ! -L $1 ]] || exit 1
@@ -9,7 +9,7 @@ lab_root=$(realpath -- "$1")
 repo_root=$(git rev-parse --show-toplevel)
 printf 'EOS native PostgreSQL laboratory preparation %s\n' "$NATIVE_PG_LAB_VERSION"
 for tool in curl tar sha256sum make gcc bison flex openssl npm; do command -v "$tool" >/dev/null; done
-node -e 'if (process.version !== "v24.21.0" || process.platform !== "linux" || process.arch !== "x64") process.exit(1)'
+node -e 'const target = require(process.argv[1]).currentVersion; if (!["24.21.0", target].includes(process.versions.node) || process.platform !== "linux" || process.arch !== "x64") process.exit(1)' "$repo_root/tools/integration/node-runtime-policy.json"
 
 mkdir "$lab_root/controller" "$lab_root/pg-client" "$lab_root/source"
 cp "$repo_root/system/test-base/app/package.json" "$repo_root/system/test-base/app/package-lock.json" "$lab_root/controller/"

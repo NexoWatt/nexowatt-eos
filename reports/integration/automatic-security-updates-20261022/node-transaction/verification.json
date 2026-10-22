@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "kind": "managed-node-update-transaction-verification",
+  "date": "2026-10-22",
+  "sourceBaseCommit": "99ef5086bc5b0ee590de17e109b85e4738c973ae",
+  "nodeBaselineVersion": "24.22.1",
+  "controllerVersion": "7.2.5",
+  "testEnvironment": {
+    "platform": "Linux x64 container",
+    "node": "v24.19.0",
+    "actualArm64NodeExecution": false,
+    "systemdExecution": false,
+    "piExecution": false
+  },
+  "command": "node --test --test-reporter=tap tests/system/managed-node-runtime.test.cjs tests/system/managed-channel.test.cjs tests/system/update-managed-release.test.cjs tests/system/managed-trust.test.cjs",
+  "tests": 45,
+  "passed": 45,
+  "failed": 0,
+  "skipped": 0,
+  "realKernelLockContentionVerified": true,
+  "pairedRuntimeRollbackWithServiceDoublesVerified": true,
+  "actualManufacturerSignatureVerified": false,
+  "privateManufacturerKeyReceived": false,
+  "independentAgentSourceReview": true,
+  "externalCertification": false,
+  "additionalAttempt": {
+    "test": "tests/system/managed-socket.test.cjs",
+    "result": "not-passed-environment-restriction",
+    "error": "listen EPERM",
+    "socketSurfaceChanged": false
+  },
+  "open": [
+    "Full rebuilt-runtime/native CI on Node24.22.1",
+    "Signed manufacturer release and public readback",
+    "Pi/systemd activation and runtime rollback",
+    "Power-loss and physical-device safety/performance acceptance"
+  ],
+  "inputBindings": [
+    {
+      "path": "runtime/updates/node-policy.cjs",
+      "sha256": "51c944949d768a3d849c148685fc333acf9b21985ab7712726eba0bf525de14b"
+    },
+    {
+      "path": "runtime/updates/maintenance-lease.cjs",
+      "sha256": "7241cb9799b2a1530c533b6e1f498fdd2062b47dc0df34e6e8faf7be007024f5"
+    },
+    {
+      "path": "runtime/updates/channel.cjs",
+      "sha256": "992430ecc1477b7b808c3f25d969ac6d5838318f69b568717cba73440dedf83e"
+    },
+    {
+      "path": "runtime/updates/transport.cjs",
+      "sha256": "eda5a5c6864c429e6d2ad57d4cf4a401341dcfb2bbeed1e26eff475c04e820ec"
+    },
+    {
+      "path": "runtime/updates/service.cjs",
+      "sha256": "0b91510dc478b3f524c2f83c680321692448929449137e586fa7ec1a2f34338d"
+    },
+    {
+      "path": "runtime/updates/worker.cjs",
+      "sha256": "efec5a884395c5329d91e84545b3d07f9a42b571df093f78a40ae7e9a17fb027"
+    },
+    {
+      "path": "tools/system/update-managed-release.cjs",
+      "sha256": "51c0c84d26a7797ada55b23ee887d5aa151f4515dbcfced132d99f01b7957bcc"
+    },
+    {
+      "path": "system/managed-test/nexowatt-eos-updates.service",
+      "sha256": "542a0cd305add43cb22f7942c95623fcf163b8c6c0d7d6aab0b7a888600434ec"
+    },
+    {
+      "path": "tests/system/managed-node-runtime.test.cjs",
+      "sha256": "87df125e43441fc0d95151ea5bbec35c2cfdbdf552b1595a7761a68939b81775"
+    },
+    {
+      "path": "tests/system/managed-channel.test.cjs",
+      "sha256": "61dc89d1e12216b3f6e6cf6e7641216533e3f4380471731685a9c53d2e4a6c30"
+    },
+    {
+      "path": "tests/system/update-managed-release.test.cjs",
+      "sha256": "fe6909427c700ab5ef4573bbf0e93a68bed12fbd0ed14dc12a54429c2c46bb01"
+    },
+    {
+      "path": "tests/system/managed-trust.test.cjs",
+      "sha256": "1eb3bde8ea5ca0af4939ae77ba4683f5a17d8871f4b8b283b587ebd0a17fb698"
+    },
+    {
+      "path": "reports/integration/automatic-security-updates-20261022/node-transaction/tests.tap",
+      "sha256": "d40233a19fcac01caac6b40700413c385421c704f568e85d4a833b09ac592cba"
+    },
+    {
+      "path": "reports/integration/automatic-security-updates-20261022/node-transaction/README_DE.md",
+      "sha256": "19656735bbf4e30c9d267bb0840eff606ac78bf05601174fcdc03771e738d0e8"
+    }
+  ]
+}

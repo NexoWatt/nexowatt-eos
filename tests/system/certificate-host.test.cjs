@@ -49,6 +49,22 @@ test('explicit host rotation uses only fixed bounded stop/start operations and r
     assert.deepEqual(f.permits, ['blocked', 'certificate-rotation', 'blocked']);
     assert.equal(fs.existsSync(path.join(f.etc, '.activation.lock')), false);
 });
+test('certificate workers follow the verified release Node and retain the historical executable', async t => {
+    for (const sequence of [14, 15, 16]) {
+        const f = fixture(t), release = path.join(f.target, 'release'), exec = f.dependencies.exec;
+        f.dependencies.verifyHost = () => ({ release, state: { sequence } });
+        delete f.dependencies.rebind;
+        f.dependencies.exec = (command, args, options) => {
+            const result = exec(command, args, options);
+            if (args.includes('rebind')) result.stdout = JSON.stringify({ status: 'CERTIFICATE_MARKERS_REBOUND' });
+            return result;
+        };
+        assert.equal((await runOperation('rotate', f.dependencies)).status, 'TRANSPORT_CERTIFICATES_ROTATED');
+        const worker = f.calls.find(call => call.args.includes('rebind'));
+        assert.equal(worker.command, sequence >= 15 ? path.join(release, 'node-runtime/bin/node') : '/usr/bin/node');
+        assert.equal(worker.options.timeout, 25000);
+    }
+});
 test('root privilege and installed release verification precede service actions', async t => {
     const f = fixture(t);
     await assert.rejects(runOperation('rotate', { ...f.dependencies, uid: 1000 }), /ROOT_OPERATOR_REQUIRED/);

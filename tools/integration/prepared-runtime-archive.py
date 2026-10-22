@@ -16,6 +16,7 @@ contract = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(contract)
 FILES = {'runtime-build.json', 'catalog.json', 'runtime.cdx.json', 'controller-transform.json',
          'resolution-lock.json', 'runtime-sbom-coverage.json', 'runtime.npm.cdx.json'}
+NODE_FILES = {'node-runtime/bin/node', 'node-runtime/runtime.json', 'node-runtime/LICENSE'}
 MANIFEST = 'unsigned-prepared-inventory.json'
 
 def check(value):
@@ -24,13 +25,13 @@ def check(value):
 
 def allowed(name):
     contract.safe(name)
-    check(name in FILES or name.startswith('app/'))
+    check(name in FILES or name in NODE_FILES or name.startswith('app/'))
     check(not any(part in ('.git', '.bin', '__pycache__') for part in name.split('/')))
     return name
 
 def inventory(root):
     rows = []
-    for top in ['app', *sorted(FILES)]:
+    for top in ['app', 'node-runtime', *sorted(FILES)]:
         current = root / top
         check(current.exists() and not current.is_symlink())
         files = sorted(current.rglob('*')) if current.is_dir() else [current]
@@ -56,7 +57,7 @@ def read_members(archive, destination=None):
         metadata = json.loads(raw)
         check(metadata.get('kind') == 'unsigned-security-refresh-runtime' and metadata.get('signed') is False)
         files = contract.manifest_rows(json.dumps({'profile': 'test', 'files': metadata.get('files')}).encode())
-        check(FILES <= set(files) and any(name.startswith('app/') for name in files))
+        check(FILES | NODE_FILES <= set(files) and any(name.startswith('app/') for name in files))
         while (item := tar.next()) is not None:
             name = allowed(item.name)
             check(item.isfile() and not item.issym() and not item.islnk() and name in files and name not in seen)

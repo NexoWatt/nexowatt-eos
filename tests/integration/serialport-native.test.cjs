@@ -36,7 +36,7 @@ function fixture(t) {
     }
     write('app/package-lock.json', lock);
     const check = () => checkRuntimeArchitecture({ app, platform: 'linux-arm64', nodeVersion: '24.21.0' });
-    const run = () => normalize({ app, platform: 'linux-arm64', nodeVersion: '24.21.0' });
+    const run = (nodeVersion = '24.21.0') => normalize({ app, platform: 'linux-arm64', nodeVersion });
     return { root, app, lock, write, check, run };
 }
 function bomFor(f) {
@@ -174,4 +174,74 @@ test('missing or falsified native evidence cannot produce a bound SBOM', options
 test('runtime verifier refuses unchanged upstream hash claims for normalized package bytes', options, t => {
     const f = fixture(t); f.run(); f.write('sbom.cdx.json', bomFor(f));
     assert.throws(() => verifySbomBinding(f.root, inventory(f.root)), { code: 'SBOM_NATIVE_BINDING' });
+});
+
+// Managed Node is admitted only through a separately signed runtime contract.
+// These are static/command-double checks, not ARM64 dlopen qualification.
+test('managed serialport contract preserves historical loaders and admits bounded Node 24 candidates only', () => {
+    const managed = native.forNode('24.22.1');
+    assert.notEqual(managed.policy.profile, native.policy.profile);
+    assert.deepEqual(managed.policy.packages.map(p => [p.nativeSha256, p.archiveSha256, p.originalFiles]),
+        native.policy.packages.map(p => [p.nativeSha256, p.archiveSha256, p.originalFiles]));
+    for (const version of ['24.22.1', '24.22.2', '24.23.0']) {
+        assert.doesNotThrow(() => native.forNode(version).assertNativeHost({ ...goodHost, node: version }));
+        assert.equal(native.forNode(version).policy.target.nodeVersion, version);
+        assert.equal(native.forNode(version).normalizationEvidence().nodeVersion, version);
+    }
+    for (const version of ['24.21.0', '24.22.0', '22.23.4', '25.0.0', '26.12.1', '24.023.0', '24.23.0-rc.1']) {
+        assert.throws(() => managed.assertNativeHost({ ...goodHost, node: version }), /NATIVE_HOST_CONTRACT/);
+    }
+    for (const patch of [{ arch: 'x64' }, { platform: 'win32' }, { napi: '7' }, { uv: '2.0.0' },
+        { glibc: '2.27' }, { glibc: undefined }, { electron: '40' }, { nw: '1' }]) {
+        assert.throws(() => managed.assertNativeHost({ ...goodHost, node: '24.22.1', ...patch }), /NATIVE_HOST_CONTRACT/);
+    }
+    for (const pin of managed.policy.packages) {
+        const source = managed.loaderSource(pin);
+        assert.equal(native.sha(source), pin.fixedLoaderSha256);
+        assert.equal(Buffer.byteLength(source), pin.fixedLoaderBytes);
+        assert.match(source, /RTLD_NOW/);
+        assert.doesNotMatch(source, /node-gyp-build|process\.env|execPath/);
+        assert.equal(managed.normalizedFiles(pin).filter(row => row.path.endsWith('.node')).length, 1);
+    }
+    for (const pin of native.policy.packages) {
+        assert.equal(native.sha(native.loaderSource(pin)), pin.fixedLoaderSha256);
+    }
+});
+test('actual normalization and Python SBOM evidence bind the requested future Node candidate', options, t => {
+    for (const version of ['24.22.1', '24.22.2', '24.23.0']) {
+        const f = fixture(t), evidence = f.run(version), bom = bomFor(f);
+        assert.equal(evidence.nodeVersion, version);
+        assert.deepEqual(evidence, native.forNode(version).normalizationEvidence());
+        const result = bindNative(f, bom, evidence);
+        assert.equal(result.status, 0, result.stderr);
+        const bound = JSON.parse(fs.readFileSync(path.join(f.root, 'sbom.cdx.json')));
+        const evidenceHash = native.sha(fs.readFileSync(path.join(f.root, 'native-transform.json')));
+        for (const component of bound.components.filter(row => row.name === '@serialport/bindings-cpp')) {
+            assert.equal(component.properties.find(row => row.name === 'eos:native:evidence-sha256').value, evidenceHash);
+        }
+        for (const invalid of ['24.21.0', '24.22.0', '25.0.0', '24.023.0', '24.23.0-rc.1']) {
+            const rejected = bindNative(f, bomFor(f), { ...evidence, nodeVersion: invalid });
+            assert.notEqual(rejected.status, 0);
+            assert.match(rejected.stderr, /NATIVE_EVIDENCE_IDENTITY/);
+        }
+    }
+    assert.equal(require('../../runtime/native/serialport-managed-policy.json').target.nodeVersion, '24.22.1');
+    assert.equal(native.normalizationEvidence().nodeVersion, '24.21.0');
+});
+test('managed native loader rejects incompatible target before any filesystem or dlopen access', () => {
+    const managed = native.forNode('24.22.1');
+    for (const version of ['24.21.0', '24.22.0', '25.0.0']) {
+        let touched = false;
+        const context = { module: { exports: {} }, __dirname: '/unread',
+            process: { platform: 'linux', arch: 'arm64', versions: { node: version, napi: '10', uv: '1.51.0' },
+                report: { getReport: () => ({ header: { glibcVersionRuntime: '2.41' } }) },
+                dlopen() { touched = true; } },
+            require(name) {
+                if (name === 'node:fs') return new Proxy({}, { get() { touched = true; throw Error('UNEXPECTED_FS'); } });
+                if (['node:path', 'node:crypto'].includes(name)) return require(name);
+                throw Error('UNEXPECTED_REQUIRE');
+            } };
+        assert.throws(() => vm.runInNewContext(managed.loaderSource(managed.policy.packages[0]), context), /NATIVE_HOST_CONTRACT/);
+        assert.equal(touched, false);
+    }
 });

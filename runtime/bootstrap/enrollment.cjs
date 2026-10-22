@@ -39,7 +39,7 @@ function managedApp(app) {
     if (!fs.existsSync(file)) return false;
     const value = JSON.parse(fs.readFileSync(file, 'utf8'));
     if (!isDeepStrictEqual(value, { schemaVersion: 1, profile: 'eos-managed-test-v1', minimumSequence: 15,
-        nodeVersion: '24.21.0', platform: 'linux-arm64' })) fail('ENROLLMENT_MANAGED_PROFILE');
+        nodeVersion: require('../updates/node-policy.cjs').BASELINE_VERSION, platform: 'linux-arm64' })) fail('ENROLLMENT_MANAGED_PROFILE');
     return true;
 }
 function pinnedAdapters(app) {

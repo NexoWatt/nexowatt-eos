@@ -11,6 +11,8 @@ const fresh = require('../integration/prepare-security-refresh.cjs');
 const native = require('../integration/verify-security-refresh-native.cjs');
 const { createManagedArchive } = require('../integration/create-managed-archive.cjs');
 const { componentTreeDigest } = require('../../runtime/policy/admission.cjs');
+const nodeRuntime = require('../integration/prepare-node-runtime.cjs');
+const nodePolicy = require('../../runtime/updates/node-policy.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 function git(args) {
@@ -18,11 +20,11 @@ function git(args) {
     if (result.status !== 0 || result.error) fail('MANAGED_BUILD_GIT'); return result.stdout.trim();
 }
 function main(argv) {
-    const flags = ['--prepared-runtime', '--native-evidence', '--private-key', '--public-key-sha256', '--sequence'];
-    if (argv.length !== 10 || flags.some((name, i) => argv[i * 2] !== name) || !/^[a-f0-9]{64}$/.test(argv[7])) fail('MANAGED_BUILD_USAGE');
+    const flags = ['--prepared-runtime', '--native-evidence', '--private-key', '--public-key-sha256', '--sequence', '--node-archive'];
+    if (argv.length !== 12 || flags.some((name, i) => argv[i * 2] !== name) || !/^[a-f0-9]{64}$/.test(argv[7])) fail('MANAGED_BUILD_USAGE');
     const sequence = Number(argv[9]);
     if (!/^[1-9][0-9]*$/.test(argv[9]) || !Number.isSafeInteger(sequence) || sequence < 15) fail('MANAGED_BUILD_SEQUENCE');
-    if (process.platform !== 'linux' || process.versions.node !== '24.21.0' || git(['status', '--porcelain'])) fail('MANAGED_BUILD_CLEAN_HOST');
+    if (process.platform !== 'linux' || process.versions.node !== nodeRuntime.policy.currentVersion || git(['status', '--porcelain'])) fail('MANAGED_BUILD_CLEAN_HOST');
     const keyFile = argv[5];
     if (!path.isAbsolute(keyFile) || path.resolve(keyFile) !== keyFile || fs.realpathSync(keyFile) !== keyFile || keyFile.startsWith(ROOT + path.sep)) fail('MANAGED_BUILD_PRIVATE_LOCATION');
     const stat = fs.lstatSync(keyFile);
@@ -31,6 +33,8 @@ function main(argv) {
     const output = path.join(ROOT, 'delivery/managed-test-' + sequence);
     if (fs.existsSync(output)) fail('MANAGED_BUILD_IMMUTABLE_OUTPUT');
     const prepared = fresh.verifyPrepared({ directory: argv[1], sourceCommit, sequence });
+    const pinnedNode = nodeRuntime.verifyArchive(argv[11], prepared.record.nodeVersion);
+    if (pinnedNode.sha256 !== prepared.record.nodeRuntime.archiveSha256) fail('MANAGED_BUILD_NODE_BINDING');
     const evidence = native.verifyNativeEvidence({ directory: argv[3], sourceCommit, files: prepared.files,
         record: prepared.record, runtimeBuildSha256: bundle.sha256(fs.readFileSync(prepared.recordFile)) });
     fs.mkdirSync(path.join(ROOT, '.work'), { recursive: true });
@@ -39,14 +43,15 @@ function main(argv) {
     fs.mkdirSync(work, { mode: 0o700 });
     const payload = path.join(work, 'payload');
     const files = build.preparePayload({ appDirectory: prepared.app, destination: payload, catalogFile: prepared.catalogFile,
-        sbomFile: prepared.sbomFile, releaseScope: product.SECURITY_REFRESH_TEST, networkProfile: true, managedProfile: true });
+        sbomFile: prepared.sbomFile, nodeRuntimeDirectory: prepared.nodeRuntimeDirectory,
+        releaseScope: product.SECURITY_REFRESH_TEST, networkProfile: true, managedProfile: true });
     fs.copyFileSync(prepared.recordFile, path.join(payload, 'runtime-build.json'), fs.constants.COPYFILE_EXCL);
     fs.chmodSync(path.join(payload, 'runtime-build.json'), 0o644);
     const catalog = structuredClone(prepared.catalog);
     for (const entry of catalog.entries) entry.sha256 = componentTreeDigest(build.componentRows(files, entry.package));
     fs.writeFileSync(path.join(payload, 'catalog.json'), JSON.stringify(catalog, null, 2) + '\n');
     const metadata = { schemaVersion: 1, product: 'nexowatt-eos', releaseVersion: '0.2.0-test.3', sequence,
-        profile: 'test', nodeVersion: '24.21.0', platforms: ['linux-arm64'] };
+        profile: 'test', nodeVersion: prepared.record.nodeVersion, platforms: ['linux-arm64'] };
     build.validatePayload(payload, { ...metadata, files: bundle.inventory(payload) });
     if (git(['status', '--porcelain']) || git(['rev-parse', 'HEAD']) !== sourceCommit) fail('MANAGED_BUILD_SOURCE_CHANGED');
     const key = bundle.readFileLimited(keyFile, 16384).bytes;
@@ -54,7 +59,7 @@ function main(argv) {
     try { result = createManagedArchive({ payloadDirectory: payload, archivePath: path.join(work, 'eos-linux-arm64.tar.gz'),
         publicKeyPath: path.join(work, 'release-public.pem'), metadata, privateKey: key, expectedPublicKeySha256: argv[7] }); }
     finally { key.fill(0); }
-    if (!Number.isSafeInteger(result.archiveBytes) || result.archiveBytes > 100 * 1024 * 1024) fail('MANAGED_BUILD_CHANNEL_SIZE');
+    if (!Number.isSafeInteger(result.archiveBytes) || result.archiveBytes > nodePolicy.MAX_ARCHIVE_BYTES) fail('MANAGED_BUILD_CHANNEL_SIZE');
     fs.mkdirSync(output);
     for (const name of ['eos-linux-arm64.tar.gz', 'release-public.pem']) fs.copyFileSync(path.join(work, name), path.join(output, name), fs.constants.COPYFILE_EXCL);
     const delivery = { schemaVersion: 1, runtimeVersion: '0.2.0-test.3', deliveryRevision: sequence - 3, releaseSequence: sequence,

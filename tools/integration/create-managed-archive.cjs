@@ -7,13 +7,14 @@ const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 const bundle = require('../../runtime/release/bundle.cjs');
 const { validatePayload } = require('../system/build-bundle.cjs');
+const nodePolicy = require('../../runtime/updates/node-policy.cjs');
 const PYTHON = process.platform === 'win32' ? 'python' : '/usr/bin/python3';
 const HELPER = path.join(__dirname, 'test-archive.py');
 const MODE_POLICY = 'eos-test-static-executables-755-others-644-v1';
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 
 function validateArchiveProfile(metadata) {
-    if (metadata.profile !== 'test' || metadata.nodeVersion !== '24.21.0' ||
+    if (metadata.profile !== 'test' || !nodePolicy.supportedVersion(metadata.nodeVersion) ||
         !Array.isArray(metadata.platforms) || metadata.platforms.length !== 1 ||
         !['linux-arm64', 'linux-x64'].includes(metadata.platforms[0])) fail('TEST_ARCHIVE_PROFILE');
 }
@@ -35,7 +36,12 @@ function canonicalInventory(files, metadata, architectureReports) {
         if (native.disposition === 'target-static-native-executable') executablePaths.push(relative);
     }
     const executables = new Set(executablePaths);
-    // Script entry points use fixed /usr/bin/node or /usr/bin/python3 commands.
+    if (byPath.has(nodePolicy.BINARY)) {
+        executables.add(nodePolicy.BINARY);
+        executablePaths.push(nodePolicy.BINARY);
+    }
+    // Script entry points use fixed interpreter paths; the signed Node ELF is
+    // itself executable. Other scripts remain non-executable payload data.
     // .node libraries and other-runtime assets do not receive execute bits.
     return { files: files.map(row => ({ ...row, mode: executables.has(row.path) ? 0o755 : 0o644 })),
         executablePaths: executablePaths.sort(), modePolicy: MODE_POLICY };
@@ -47,7 +53,7 @@ function python(args) {
     if (result.error || result.status !== 0) fail('TEST_ARCHIVE_IO');
     try { return JSON.parse(result.stdout); } catch { fail('TEST_ARCHIVE_RESPONSE'); }
 }
-function verifyTestArchive({ archivePath, publicKey, expectedReleaseId, platform, nodeVersion = '24.21.0' }) {
+function verifyTestArchive({ archivePath, publicKey, expectedReleaseId, platform, nodeVersion = nodePolicy.BASELINE_VERSION }) {
     bundle.validatePublicKey(publicKey);
     const observed = python(['verify', path.resolve(archivePath)]);
     if (observed.schemaVersion !== 1 || observed.kind !== 'eos-test-archive-readback' || observed.passed !== true ||

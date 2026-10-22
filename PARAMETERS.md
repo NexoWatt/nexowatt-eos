@@ -1,6 +1,6 @@
 # NexoWatt EOS review profile — parameters
 
-## Managed test baseline and update candidates (2026-10-21)
+## Managed test baseline and update candidates (2026-10-22)
 
 These source tools do not constitute a published installation release.
 `tools/system/install-managed-from-checkout.cjs preflight` only inspects the
@@ -11,11 +11,28 @@ sequence-15 ARM64 test baseline. It neither downloads OS packages nor accepts
 user passwords on the command line.
 
 Manufacturer tooling `tools/bootstrap/build-managed-test.cjs` requires, in
-order, `--native-evidence`, `--private-key`, `--public-key-sha256`, and
-`--sequence` (15 or higher). `tools/bootstrap/sign-managed-channel.cjs` requires,
+order, `--prepared-runtime`, `--native-evidence`, `--private-key`,
+`--public-key-sha256`, `--sequence` (15 or higher), and `--node-archive`.
+The archive is the exact official ARM64 Node 24.22.1 input already bound to
+prepared-runtime and native evidence; it is not a signing-key input. `tools/bootstrap/sign-managed-channel.cjs` requires,
 in order, `--input`, `--private-key`, `--public-key-sha256`, and `--output`.
 Private-key arguments are paths to protected external files, never key values.
 The tools create local candidates only; neither publishes automatically.
+`tools/integration/prepare-security-refresh.cjs` takes, in order,
+`--output`, `--sequence`, `--resolution-lock`, and `--node-archive`; the last argument is
+the pinned ARM64 archive that becomes part of the signed payload.
+
+`tools/bootstrap/build-managed-download.cjs` takes `--base-url`,
+`--license-trust`, `--license-trust-sha256`, `--release-public-key-sha256`,
+`--output`, and `--node-archive`. For the exact GitHub Release asset base
+`https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-<releaseId>`,
+it prepares assets without an operator command. Publish the small `install.sh`
+separately in an immutable Git commit, then invoke the same tool with
+`--finalize-command <absolute-output-directory> --entry-base-url <immutable-raw-delivery-base>`.
+The entry base must be `https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/<40hex>/delivery/<directory>`.
+Finalization binds the local script hash and creates `INSTALL_COMMAND.txt`;
+it does not perform public readback. Verify the actual public script and all
+assets before handing that command to an operator.
 See [scope and outstanding acceptance](docs/operations/MANAGED_TEST_UPDATES_DE.md).
 
 ## Failed first-start diagnosis (2026-10-04)

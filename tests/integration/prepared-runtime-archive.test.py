@@ -19,7 +19,8 @@ class ArchiveTests(unittest.TestCase):
         self.source.mkdir()
         (self.source / 'app').mkdir()
         (self.source / 'app/main.js').write_text('module.exports = 1;\n')
-        for name in archive.FILES:
+        for name in archive.FILES | archive.NODE_FILES:
+            (self.source / name).parent.mkdir(parents=True, exist_ok=True)
             (self.source / name).write_text('{}\n')
         (self.source / 'do-not-ship-secret.txt').write_text('excluded fixture marker')
 
@@ -36,7 +37,7 @@ class ArchiveTests(unittest.TestCase):
         archive.extract(one, target)
         self.assertEqual((target / 'app/main.js').read_bytes(), (self.source / 'app/main.js').read_bytes())
         self.assertFalse((target / 'do-not-ship-secret.txt').exists())
-        self.assertEqual(set(archive.read_members(one)), {'app/main.js', *archive.FILES})
+        self.assertEqual(set(archive.read_members(one)), {'app/main.js', *archive.FILES, *archive.NODE_FILES})
 
     def test_links_missing_files_and_output_collision_fail(self):
         (self.source / 'app/link').symlink_to(self.source / 'runtime-build.json')

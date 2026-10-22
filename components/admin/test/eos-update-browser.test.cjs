@@ -10,8 +10,14 @@ async function fixture(role = 'admin', mobile = false) {
     const page = await browser.newPage({ viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 } });
     const calls = [], faults = [];
     page.on('pageerror', error => faults.push(error.message));
-    let state = { ok: true, phase: 'AVAILABLE', busy: false, installed: { sequence: 15 },
-        candidate: { releaseId: 'a'.repeat(64), sequence: 16, notes: '<img src=x onerror=alert(1)> Geprüfte Anpassung' } };
+    let state = { ok: true, phase: 'AVAILABLE', busy: false, installed: { sequence: 15, nodeVersion: '24.22.1' },
+        osUpdates: { schemaVersion: 1, availability: 'available', health: 'warning', summary: {
+            state: 'attention', lastAttemptAt: '2026-10-22T02:00:00Z', lastSuccessAt: '2026-10-22T02:00:00Z',
+            policy: { automatic: true, serviceRestartPolicy: 'defer-package-service-actions' }, timers: { enabled: true, active: true },
+            pending: { securityCount: 2, blockedSecurityCount: 1, heldSecurityCount: 0 },
+            activation: { state: 'required', serviceRestartCount: 1, sessionRestartCount: 0, serviceActionsDeferred: true },
+            reboot: { state: 'required' }, coverage: { state: 'gap', gapCount: 1, maintenanceDeferred: false } } },
+        candidate: { releaseId: 'a'.repeat(64), sequence: 16, nodeVersion: '24.23.1', notes: '<img src=x onerror=alert(1)> Geprüfte Anpassung' } };
     await page.route('https://eos.example/**', route => {
         const request = route.request(), pathname = new URL(request.url()).pathname;
         if (pathname.startsWith('/nexowatt/managed-updates/')) {
@@ -24,7 +30,7 @@ async function fixture(role = 'admin', mobile = false) {
         return route.fulfill({ contentType: 'text/html; charset=utf-8', body: `<!doctype html><html lang="de"><head><meta charset="utf-8"><link rel="stylesheet" href="/css/eos-system-updates.css"></head><body><script>window.NEXOWATT_EOS_ACCESS_ROLE=${JSON.stringify(role)};window.NEXOWATT_EOS_DOM_COORDINATOR={subscribe(fn){const m=new MutationObserver(fn);m.observe(document.documentElement,{childList:true,subtree:true});return ()=>m.disconnect();}}</script><div class="eos-basic-settings-actions"></div><script src="/js/eos-system-updates.js"></script></body></html>` });
     });
     await page.goto('https://eos.example/');
-    return { browser, page, calls, faults, complete() { state = { ...state, phase: 'SUCCEEDED', busy: false }; } };
+    return { browser, page, calls, faults, setState(patch) { state = { ...state, ...patch }; }, complete() { state = { ...state, phase: 'SUCCEEDED', busy: false }; } };
 }
 test('update needs maintenance confirmation, uses only selected ID, escapes notes and survives dialog close/reopen', async () => {
     const f = await fixture();
@@ -51,5 +57,36 @@ test('customer has no update entry; mobile installer dialog stays inside viewpor
         await f.page.getByRole('button', { name: 'Update installieren' }).waitFor();
         const box = await f.page.locator('.eos-system-updates').boundingBox();
         assert.ok(box.x >= 0 && box.x + box.width <= 390); assert.deepEqual(f.faults, []);
+    } finally { await f.browser.close(); }
+});
+
+test('Node and Linux status remain separate; pending activation never appears as fully applied', async () => {
+    const f = await fixture();
+    try {
+        await f.page.getByRole('button', { name: 'EOS-Updates', exact: true }).click();
+        await f.page.getByText('Installierte Node.js-Laufzeit: 24.22.1', { exact: true }).waitFor();
+        await f.page.getByText('Node.js im geprüften EOS-Paket: 24.23.1', { exact: true }).waitFor();
+        const os = f.page.locator('[data-os-updates]');
+        assert.equal(await os.getAttribute('data-health'), 'warning');
+        await os.getByText('Installierte Pakete sind teilweise noch nicht wirksam.', { exact: false }).waitFor();
+        await os.getByText('Paketbedingte Dienstaktionen stehen noch aus', { exact: false }).waitFor();
+        await f.page.getByRole('button', { name: 'Schließen', exact: true }).click();
+        f.setState({ phase: 'SUCCEEDED', candidate: null, osUpdates: { availability: 'stale', health: 'warning', summary: { state: 'ok' } } });
+        await f.page.getByRole('button', { name: 'EOS-Updates', exact: true }).click();
+        await f.page.getByRole('button', { name: 'Admin neu laden', exact: true }).waitFor();
+        await os.getByText('Der Linux-Updatestatus ist veraltet.', { exact: false }).waitFor();
+        assert.equal(await os.getAttribute('data-health'), 'warning');
+        assert.deepEqual(f.faults, []);
+    } finally { await f.browser.close(); }
+});
+test('missing Linux state is explicit and Node status text cannot inject markup', async () => {
+    const f = await fixture();
+    try {
+        f.setState({ installed: { sequence: 15, nodeVersion: '<img src=x>' }, candidate: null, osUpdates: null });
+        await f.page.getByRole('button', { name: 'EOS-Updates', exact: true }).click();
+        await f.page.getByText('Installierte Node.js-Laufzeit: Unbekannt', { exact: true }).waitFor();
+        await f.page.getByText('Der Zustand der Linux-Sicherheitsupdates ist momentan nicht bestätigt.', { exact: true }).waitFor();
+        assert.equal(await f.page.locator('.eos-system-updates img').count(), 0);
+        assert.deepEqual(f.faults, []);
     } finally { await f.browser.close(); }
 });

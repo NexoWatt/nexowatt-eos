@@ -151,7 +151,8 @@ async function runOperation(mode, dependencies = {}) {
     const rebind = dependencies.rebind || ((oldConfig, newConfig) => {
         const next = load(path.join(work, 'next-config.json'));
         const direction = isDeepStrictEqual(newConfig, next) ? 'forward' : 'backward';
-        const result = exec('/usr/bin/node', [path.join(verified.release, 'tools/system/rotate-certificates.cjs'), 'rebind', direction], { timeout: 25000 });
+        const executable = verified.state.sequence >= 15 ? path.join(verified.release, 'node-runtime/bin/node') : '/usr/bin/node';
+        const result = exec(executable, [path.join(verified.release, 'tools/system/rotate-certificates.cjs'), 'rebind', direction], { timeout: 25000 });
         if (result.error || result.status !== 0) fail('CERTIFICATE_DB_REBIND_FAILED');
         try { if (JSON.parse(result.stdout).status !== 'CERTIFICATE_MARKERS_REBOUND') fail('CERTIFICATE_DB_REBIND_FAILED'); }
         catch { fail('CERTIFICATE_DB_REBIND_FAILED'); }

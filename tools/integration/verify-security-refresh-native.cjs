@@ -6,6 +6,7 @@ const { isDeepStrictEqual: equal } = require('node:util');
 const ROOT = path.resolve(__dirname, '../..');
 const bundle = require(path.join(ROOT, 'runtime/release/bundle.cjs'));
 const fresh = require(path.join(ROOT, 'runtime/release/fresh-sbom-binding.cjs'));
+const TARGET_NODE = require('./node-runtime-policy.json').currentVersion;
 const { appHash, passedTap } = require(path.join(ROOT, 'tools/bootstrap/verify-r9-native-evidence.cjs'));
 
 const CHECKS = Object.freeze(['postgresqlMtls', 'platformDeniesUnadmittedProcess', 'initiallyUnlicensed',
@@ -56,11 +57,11 @@ function validate({ preparation, evidence, binding, tap, sourceCommit, appConten
   if (!/^[a-f0-9]{40}$/.test(sourceCommit || '') || !/^[a-f0-9]{64}$/.test(appContentSha256 || '') ||
       !/^[a-f0-9]{64}$/.test(baseline || '') || !/^[a-f0-9]{64}$/.test(runtimeBuildSha256 || '') ||
       record?.kind !== fresh.ASSEMBLY || record.sourceCommit !== sourceCommit || record.appContentSha256 !== appContentSha256 ||
-      record.sourceTreeClean !== true || record.controllerVersion !== fresh.CONTROLLER || record.nodeVersion !== fresh.NODE ||
+      record.sourceTreeClean !== true || record.controllerVersion !== fresh.CONTROLLER || record.nodeVersion !== TARGET_NODE ||
       !Number.isSafeInteger(record.sequence) || record.sequence < 15 ||
       preparation?.schemaVersion !== 1 || preparation.kind !== 'unsigned-security-refresh-native-preparation' ||
       preparation.signed !== false || preparation.unsignedFixture !== true || preparation.sourceTreeClean !== true ||
-      preparation.sequence !== record.sequence || preparation.nodeVersion !== fresh.NODE || preparation.sourceCommit !== sourceCommit ||
+      preparation.sequence !== record.sequence || preparation.nodeVersion !== TARGET_NODE || preparation.sourceCommit !== sourceCommit ||
       preparation.previousSignatureVerified !== false || preparation.sourceSequence !== 0 ||
       preparation.baselineKind !== 'unsigned-fresh-management-profile' ||
       preparation.previousReleaseId !== bundle.sha256(Buffer.from('unsigned-security-refresh-management-baseline:' + baseline)) ||
@@ -73,7 +74,7 @@ function validate({ preparation, evidence, binding, tap, sourceCommit, appConten
       binding.runtimeBuildSha256 !== runtimeBuildSha256 || !equal(binding.runtimeBuild, record) ||
       evidence?.schemaVersion !== 1 || evidence.kind !== 'eos-security-refresh-native-management' || evidence.passed !== true ||
       evidence.sourceReleaseId !== preparation.previousReleaseId || evidence.sourceSequence !== 0 || evidence.targetSequence !== record.sequence || evidence.sequence !== record.sequence ||
-      evidence.sourceCommit !== sourceCommit || evidence.appContentSha256 !== appContentSha256 || evidence.nodeVersion !== fresh.NODE ||
+      evidence.sourceCommit !== sourceCommit || evidence.appContentSha256 !== appContentSha256 || evidence.nodeVersion !== TARGET_NODE ||
       evidence.runtimeBuildSha256 !== runtimeBuildSha256 ||
       evidence.licenseFormat !== 'NWL3' || evidence.signed !== false || evidence.unsignedFixture !== true || evidence.candidateSigned !== false ||
       evidence.hardwareTested !== false || evidence.productionReleaseApproved !== false || evidence.hostArch !== 'x64' ||

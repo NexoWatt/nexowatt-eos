@@ -45,6 +45,10 @@ function verifySbomBinding(payload, files, profile, release, sbomFile = 'sbom.cd
     if (props['eos:sbom:scope'] !== 'installed-test-runtime-npm-tree' ||
         props['eos:sbom:package-json-sha256'] !== rows.get('app/package.json').sha256 ||
         props['eos:sbom:package-lock-sha256'] !== rows.get('app/package-lock.json').sha256) reject('SBOM_ROOT_BINDING');
+    const fresh = require('./fresh-sbom-binding.cjs');
+    const freshCandidate = props['eos:sbom:assembly'] === fresh.ASSEMBLY;
+    const freshRecord = freshCandidate ? load('runtime-build.json') : null;
+    let nodeComponents = 0;
     const identities = new Set(), installed = new Set(), refs = new Set([root['bom-ref']]);
     const embedded = new Map();
     for (const component of bom.components) {
@@ -53,7 +57,11 @@ function verifySbomBinding(payload, files, profile, release, sbomFile = 'sbom.cd
             !component['bom-ref'] || refs.has(component['bom-ref'])) reject('SBOM_COMPONENT');
         refs.add(component['bom-ref']);
         const cp = properties(component.properties || []);
-        if (cp['eos:scope'] === 'embedded-package-files-observed-in-runtime-tree') {
+        if (cp['eos:scope'] === 'signed-node-runtime') {
+            if (!freshCandidate || ++nodeComponents !== 1 || component.name !== 'node' || component.type !== 'application') reject('SBOM_NODE_RUNTIME');
+            // Detailed row, archive, binary, metadata and record binding is
+            // mandatory in verifyFreshSbom before any successful return.
+        } else if (cp['eos:scope'] === 'embedded-package-files-observed-in-runtime-tree') {
             const relative = cp['eos:installed-path'];
             if (!Object.hasOwn(EMBEDDED, relative || '') || embedded.has(relative) ||
                 component.name !== EMBEDDED[relative] || component['bom-ref'] !== `eos-embedded:${relative}`) reject('SBOM_EMBEDDED');
@@ -86,17 +94,18 @@ function verifySbomBinding(payload, files, profile, release, sbomFile = 'sbom.cd
             !Object.hasOwn(lock.packages, owner) || !rows.has(`app/${owner}/package.json`)) reject('SBOM_UNLISTED_PACKAGE');
     }
     if (identities.size !== installed.size || [...identities].some(id => !installed.has(id))) reject('SBOM_COMPONENT_NOT_INSTALLED');
-    const hasNativeDerivative = serialport.policy.packages.some(pin => rows.has(`app/${pin.packagePath}/eos-native-loader.cjs`));
+    const selectedNative = freshCandidate ? serialport.forNode(freshRecord.nodeVersion) : serialport;
+    const hasNativeDerivative = selectedNative.policy.packages.some(pin => rows.has(`app/${pin.packagePath}/eos-native-loader.cjs`));
     if (hasNativeDerivative) {
-        const evidenceHash = sha256(Buffer.from(JSON.stringify(serialport.normalizationEvidence(), null, 2) + '\n'));
-        for (const pin of serialport.policy.packages) {
-            const checked = serialport.assertPackage({ app: path.join(payload, 'app'), pin,
-                lockEntry: lock.packages[pin.packagePath], platform: serialport.policy.target.platform, nodeVersion: serialport.policy.target.nodeVersion });
+        const evidenceHash = sha256(Buffer.from(JSON.stringify(selectedNative.normalizationEvidence(), null, 2) + '\n'));
+        for (const pin of selectedNative.policy.packages) {
+            const checked = selectedNative.assertPackage({ app: path.join(payload, 'app'), pin,
+                lockEntry: lock.packages[pin.packagePath], platform: selectedNative.policy.target.platform, nodeVersion: freshCandidate ? freshRecord.nodeVersion : selectedNative.policy.target.nodeVersion });
             const components = bom.components.filter(row => row.name === pin.package && row.version === pin.version);
             if (components.length !== 1) reject('SBOM_NATIVE_COMPONENT');
             const component = components[0], ancestors = component.pedigree?.ancestors, cp = properties(component.properties || []);
             const hashes = [{ alg: 'SHA-512', content: Buffer.from(pin.integrity.slice(7), 'base64').toString('hex') }];
-            const expected = { profile: serialport.policy.profile, 'installed-path': pin.packagePath,
+            const expected = { profile: selectedNative.policy.profile, 'installed-path': pin.packagePath,
                 'original-tree-sha256': checked.originalTreeSha256, 'normalized-tree-sha256': checked.normalizedTreeSha256,
                 'evidence-sha256': evidenceHash, 'target-load-probe-required': 'true' };
             if (component.modified !== true || Object.hasOwn(component, 'hashes') || !Array.isArray(ancestors) || ancestors.length !== 1 ||
@@ -125,9 +134,9 @@ function verifySbomBinding(payload, files, profile, release, sbomFile = 'sbom.cd
         if (parentEdges.length !== 1 || parentEdges[0].dependsOn.filter(ref => ref === childRef).length !== 1 ||
             incoming.length !== 1 || incoming[0] !== parentEdges[0] || childEdges.length !== 1 || childEdges[0].dependsOn.length) reject('SBOM_EMBEDDED_PARENT');
     }
-    const fresh = require('./fresh-sbom-binding.cjs');
-    if (props['eos:sbom:assembly'] === fresh.ASSEMBLY) {
-        fresh.verifyFreshSbom({ bom, files, profile, release, record: load('runtime-build.json') });
+    if (freshCandidate) {
+        if (nodeComponents !== 1) reject('SBOM_NODE_RUNTIME');
+        fresh.verifyFreshSbom({ bom, files, profile, release, record: freshRecord });
         return { installedPackages: count, uniqueNpmComponents: installed.size, embeddedPackages: embedded.size,
             scope: 'npm-and-explicit-vendored-packages', fullOperatingSystemInventory: false, freshRuntime: true };
     }

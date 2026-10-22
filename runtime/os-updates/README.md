@@ -1,4 +1,62 @@
-# EOS Betriebssystemwartung – Implementierungsstand 2026-10-01
+# EOS Betriebssystemwartung
+
+## Ergänzung 22.10.2026: automatische Wartung der neuen Managed-Testbasis
+
+Die neue Frischinstallation ab Sequenz 15 aktiviert weiterhin die tägliche
+automatische Paketwartung um 02:00 Uhr Europe/Berlin mit bis zu 15 Minuten
+Zufallsverzögerung. Sie übernimmt jetzt auch die Zuständigkeit für diesen
+Automatisierungsweg: Ein bereits laufender fremder APT-Wartungsdienst führt
+zum Installationsabbruch; andernfalls werden ausschließlich der fremde
+`apt-daily-upgrade.timer` deaktiviert/maskiert und die beiden periodischen
+APT-Schalter auf null gesetzt. Eine laufende dpkg-Transaktion wird nicht beendet.
+Die wirksamen Werte werden zurückgelesen. Unbekannte bestehende
+`/usr/sbin/policy-rc.d`-Dateien werden niemals überschrieben.
+
+Der signierte EOS-Helfer `runtime/os-updates/policy-rc.d` wird root-eigen mit
+0755 installiert. Nur der feste OS-Dienst setzt
+`NEXOWATT_EOS_OS_MAINTENANCE=1` in der bereinigten Kindprozessumgebung. Während
+dieses Laufs verweigert der Helfer Standardaktionen über Debians `invoke-rc.d`
+und `deb-systemd-invoke` mit dem vorgesehenen Status 101. Ein direktes
+`systemctl` in einem Paket-Maintainerskript oder dessen `--force`-Umgehung wird
+dadurch **nicht** allgemein verhindert; `serviceRestartsPossible` bleibt deshalb
+wahr. Es wird keine unterbrechungsfreie oder vollständig aktivierte Anlage
+behauptet. Automatische Reboots bleiben aus.
+
+Vor jedem Managed-Wartungslauf müssen installierter Helfer und signierter
+Quelltext bytegleich sein. Die reine Quellablage installiert den Helfer nicht.
+Unterdrückte Serviceaktionen hinterlassen ausschließlich eine geschützte,
+an den aktuellen Systemstart gebundene Markierung; Servicenamen oder Argumente
+werden nicht gespeichert. `activation.serviceActionsDeferred=true` hält die
+Anzeige auf „Aktivierung erforderlich“, auch wenn `needrestart` keine laufende
+alte Bibliothek mehr erkennt. Ein späterer Systemneustart verwirft die alte
+Markierung beim nächsten Prüflauf. Ein bloßer erneuter Paketlauf löscht sie nicht.
+
+OS- und signierte EOS-/Node-Wartung verwenden denselben Kernel-`flock` auf
+`/var/lib/nexowatt-eos-os-updates/private/maintenance.lock`, root-eigen 0600,
+mit Prüfung von Dateityp, Eigentümer, Rechten und Linkanzahl. Ein bereits
+belegter Lock beendet den zweiten Lauf mit dem ausdrücklich als Verschiebung
+behandelten Status 75, ohne die laufenden Statusbelege zu überschreiben.
+Eine zurückgebliebene EOS-Aktivierungssperre verhindert APT auch nach dem Ende
+des ursprünglichen Prozesses; der Status zeigt `eos-maintenance-in-progress`.
+Der nächste reguläre Timerlauf versucht die Wartung erneut. `Persistent=false`
+bleibt erhalten: verpasste Nachtfenster werden nicht überraschend tagsüber
+nachgeholt. Bei dauerhaft belegtem Lock wird der letzte Erfolg sichtbar veraltet.
+
+Paketkonfigurationsdialoge verwenden `--force-confdef` und `--force-confold`.
+Die Auswahl bleibt auf signierte Origins derselben Debian-Hauptversion und
+gegebenenfalls den stabilen Pi-Herstellerstrom begrenzt. Debian-Basis- und
+Updates-Archive bleiben eingeschlossen, weil Sicherheitsfixes dorthin wandern;
+dies installiert auch stabile Fehlerkorrekturen und ist kein ausschließlich
+nach CVE klassifizierter Filter. Holds, Pins und offene Pakete werden weiter
+als offen gemeldet. `nodejs`/`npm` bleiben außerhalb dieses APT-Automaten;
+die eigene Node-Laufzeit wird mit dem getrennten signierten EOS-Paket aktualisiert.
+Npm-Dependencies, EEPROM/Boot-Firmware außerhalb dieser Pakete, Container und
+manuelle Software werden durch APT nicht vollständig abgedeckt.
+
+[Änderungs- und Prüfbericht](../../reports/integration/automatic-security-updates-20261022/os/README_DE.md).
+Echte Pi-/systemd-/APT-/Stromausfall- und Anlagenprüfungen bleiben offen.
+
+## Historischer Implementierungsstand 01.10.2026
 
 Diese Komponente ist Quellcode für das gesperrte EOS-Testprofil, kein Nachweis
 bereits installierter Updates auf dem Raspberry Pi. Die Redis-Neuinstallations-

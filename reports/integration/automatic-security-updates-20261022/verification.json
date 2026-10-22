@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-automatic-security-updates-integrated-verification",
+  "date": "2026-10-22",
+  "sourceBaseCommit": "99ef5086bc5b0ee590de17e109b85e4738c973ae",
+  "environment": {
+    "node": "v24.19.0",
+    "python": "Python 3.12.14",
+    "platform": "linux-x64",
+    "nativeTargetRuntimeExecuted": false,
+    "piInstallationExecuted": false,
+    "aptOrSystemdChanged": false
+  },
+  "target": {
+    "node": "24.22.1",
+    "jsController": "7.2.5",
+    "platform": "linux-arm64",
+    "minimumSequence": 15
+  },
+  "checks": {
+    "integratedNode": {
+      "suites": 23,
+      "total": 271,
+      "passed": 271,
+      "failed": 0,
+      "skipped": 0,
+      "originalSerialportFixtureUsed": true
+    },
+    "finalFreshSbom": {
+      "total": 9,
+      "passed": 9
+    },
+    "osPython": {
+      "total": 28,
+      "passed": 28
+    },
+    "adminPrebuilt": {
+      "passed": true,
+      "sealedFiles": 1498,
+      "backendFiles": 31
+    },
+    "changedJavaScriptPythonSyntax": {
+      "checked": 64,
+      "passed": true
+    },
+    "diffWhitespacePassed": true,
+    "changedPrivatePemAndGithubTokenPatternMatches": 0,
+    "ciAtSourceCommit": "pending",
+    "piAcceptance": "open",
+    "productionApproval": false
+  },
+  "sourceFiles": [
+    {
+      "path": ".github/workflows/eos-managed-updates.yml",
+      "sha256": "8374bbc42d56b32e2e283bba7549437fcf05cd7f719b6a9b207ad9f450cfac68"
+    },
+    {
+      "path": ".github/workflows/eos-network.yml",
+      "sha256": "c7f2ce4032c4ad8f60e22881ef21b5ee17d1cec3aef66cd6e71b8f44883a3686"
+    },
+    {
+      "path": ".github/workflows/security-review.yml",
+      "sha256": "bb207a655a79375bcca1ee4a45d380c89098cd2357d325095ab70018cc11f392"
+    },
+    {
+      "path": "PARAMETERS.md",
+      "sha256": "05e7b8d0efb46e10d201ef3eb38e6eb28ef9cf0528cd98f863c889bf6749a1d4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "462fb3d066448c53e36f1d659bf06342f5bd5f672fc921b0de637a569ee7df40"
+    },
+    {
+      "path": "components/admin/NEXOWATT_EOS_PREBUILT_MANIFEST.json",
+      "sha256": "b9da9d7e22117eabbffc30e1b9070bdea2c7415ceed5692c77dafe5bc22bf1a1"
+    },
+    {
+      "path": "components/admin/adminWww/css/eos-system-updates.css",
+      "sha256": "00bfa0b9017074f6ae401bfe59d3e8195900a9c22bbd3caf0d864fcba5019d59"
+    },
+    {
+      "path": "components/admin/adminWww/js/eos-system-updates.js",
+      "sha256": "9be3e0f114bc2bc19505b73e8d077308eb46a7bb71b2fb58bee451ef175b9be2"
+    },
+    {
+      "path": "components/admin/build/lib/eosOsUpdateStatus.js",
+      "sha256": "5d96bb467814f1d92169c0bff2035e751e900556db97933557ca415e0e45e9b5"
+    },
+    {
+      "path": "components/admin/build/lib/eosUpdateHttp.js",
+      "sha256": "2efd2921f6a153a43d3812fcaf4b69bb046a355952ab8e492ccf2a56f7d3c62b"
+    },
+    {
+      "path": "components/admin/docs/EOS_SECURITY_UPDATES_DE.md",
+      "sha256": "f5738cdb8fdaa89e75553bea6c85d9fcd6b3a4209ac964eac3913fb8f3ae3f6e"
+    },
+    {
+      "path": "components/admin/src-admin/public/css/eos-system-updates.css",
+      "sha256": "00bfa0b9017074f6ae401bfe59d3e8195900a9c22bbd3caf0d864fcba5019d59"
+    },
+    {
+      "path": "components/admin/src-admin/public/js/eos-system-updates.js",
+      "sha256": "9be3e0f114bc2bc19505b73e8d077308eb46a7bb71b2fb58bee451ef175b9be2"
+    },
+    {
+      "path": "components/admin/src/lib/eosOsUpdateStatus.js",
+      "sha256": "5d96bb467814f1d92169c0bff2035e751e900556db97933557ca415e0e45e9b5"
+    },
+    {
+      "path": "components/admin/src/lib/eosUpdateHttp.js",
+      "sha256": "2efd2921f6a153a43d3812fcaf4b69bb046a355952ab8e492ccf2a56f7d3c62b"
+    },
+    {
+      "path": "components/admin/test/eos-os-update-status.test.cjs",
+      "sha256": "7f87c0b5e98b0a855656b3932c46fafb7eadb2ffcab79c5aaf505b30f85447e4"
+    },
+    {
+      "path": "components/admin/test/eos-update-browser.test.cjs",
+      "sha256": "eefdca875a5ec9f36e3045b51c9a3376e0be7d091a3e0f28c4c1a6142d266706"
+    },
+    {
+      "path": "components/admin/test/eos-update-http.test.cjs",
+      "sha256": "0c343e91db261ceca42ea6d26144e6edd64254e6af3a1d7745ff9ea4ce3f8270"
+    },
+    {
+      "path": "docs/operations/AUTOMATISCHE_SICHERHEITSUPDATES_DE.md",
+      "sha256": "087c07e9362fb14b5656ec1b9702630882d404b878a9e4a9db3c99aac2e18c3e"
+    },
+    {
+      "path": "docs/operations/MANAGED_TEST_UPDATES_DE.md",
+      "sha256": "a2788fed7bedc0ab209f649205da40c9c5f9f10e7ea5cd28307b71c853add341"
+    },
+    {
+      "path": "docs/operations/WINDOWS_SIGNIERRECHNER_DE.md",
+      "sha256": "a757283aa221d493b73f791e23d67b080617076387b36192b4df67db9537314a"
+    },
+    {
+      "path": "docs/requirements/EOS-REQ-MANAGED-UPDATES-20261021.md",
+      "sha256": "19c87cdd54df967c27c3d7895f682306c3aebbd0971545bd69c1e9c91c2ce328"
+    },
+    {
+      "path": "runtime/bootstrap/enrollment.cjs",
+      "sha256": "1de13675bbeb1636826a40105a8af31958fcfbb66cb42e839390e4dae5867b0f"
+    },
+    {
+      "path": "runtime/native/serialport-acceptance.cjs",
+      "sha256": "cbfcdac3b997f7876924e0b2b5314c7407be58a50d4466649731db052459172d"
+    },
+    {
+      "path": "runtime/native/serialport-contract.cjs",
+      "sha256": "a71d98c6b9dd81fcaea4e19980609c73042bcbccda198a610477df2acf988f52"
+    },
+    {
+      "path": "runtime/native/serialport-managed-policy.json",
+      "sha256": "3af966a8e4129c87a5f6a0c55f820612e796b55d7fdf6cd688a4c58d0c8d6c72"
+    },
+    {
+      "path": "runtime/os-updates/README.md",
+      "sha256": "8efe86484b9d517693a99eebbc05a770c61096e0c77d51206f54ae6cfc2afd14"
+    },
+    {
+      "path": "runtime/os-updates/policy-rc.d",
+      "sha256": "c8a11670f1fc2bfc22cd64fd686c317efe5e41954079bd296d47305debd9164a"
+    },
+    {
+      "path": "runtime/os-updates/runner.py",
+      "sha256": "2ebb94a07eec27b39c80b940a4e08d62eab79c8e0077fb85657ab2cad09c669f"
+    },
+    {
+      "path": "runtime/os-updates/status.schema.json",
+      "sha256": "948f6361b13bfe59113d5d597659fd400e66b119c3eb6daae6e17d65c87a8bc8"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-objects-postgresql/package.json",
+      "sha256": "aa746f9c964c1c7757cca7e4feca225a1700a5b34ad703502b35aaf00fecdd8c"
+    },
+    {
+      "path": "runtime/postgresql/packages/db-states-postgresql/package.json",
+      "sha256": "5e1b109d34a824a6e9a97209d181fa9e6a161fbd0fa4858962bdec8a4cb6443a"
+    },
+    {
+      "path": "runtime/postgresql/packages/store/package.json",
+      "sha256": "9cb6bd01bb2787da7779ae1e4efb1f2da67c97ecce63431a5e097e9a20155459"
+    },
+    {
+      "path": "runtime/product/scope.cjs",
+      "sha256": "86065b3103a29c4224f7dbab3151a838b83b778aaf51aef058734d41e6b96efb"
+    },
+    {
+      "path": "runtime/release/fresh-sbom-binding.cjs",
+      "sha256": "4d62bc75810330bda8a4b88b91a443c9d6b944d8fed7dbb0d10ea0e116c0e105"
+    },
+    {
+      "path": "runtime/release/sbom-binding.cjs",
+      "sha256": "ec537eae556034359ae4876285071119bb2778812ae584e925d7e712aa09c0f1"
+    },
+    {
+      "path": "runtime/updates/channel.cjs",
+      "sha256": "992430ecc1477b7b808c3f25d969ac6d5838318f69b568717cba73440dedf83e"
+    },
+    {
+      "path": "runtime/updates/maintenance-lease.cjs",
+      "sha256": "7241cb9799b2a1530c533b6e1f498fdd2062b47dc0df34e6e8faf7be007024f5"
+    },
+    {
+      "path": "runtime/updates/node-policy.cjs",
+      "sha256": "51c944949d768a3d849c148685fc333acf9b21985ab7712726eba0bf525de14b"
+    },
+    {
+      "path": "runtime/updates/service.cjs",
+      "sha256": "0b91510dc478b3f524c2f83c680321692448929449137e586fa7ec1a2f34338d"
+    },
+    {
+      "path": "runtime/updates/transport.cjs",
+      "sha256": "eda5a5c6864c429e6d2ad57d4cf4a401341dcfb2bbeed1e26eff475c04e820ec"
+    },
+    {
+      "path": "runtime/updates/worker.cjs",
+      "sha256": "efec5a884395c5329d91e84545b3d07f9a42b571df093f78a40ae7e9a17fb027"
+    },
+    {
+      "path": "system/managed-test/apt-managed.conf",
+      "sha256": "3b6edecede552b524db04db9690da77adf209d7d7516d37caacc7df6b14057a3"
+    },
+    {
+      "path": "system/managed-test/nexowatt-eos-updates.service",
+      "sha256": "542a0cd305add43cb22f7942c95623fcf163b8c6c0d7d6aab0b7a888600434ec"
+    },
+    {
+      "path": "system/managed-test/profile.json",
+      "sha256": "dc06ffea01b8b390ddcd8f20b9a410bc043c1326e4f18e6957f2b2572a1fca18"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "e9dcac32f1f8d154b7a79328b789c108e70b419d6f8ab07d57c95045f508f26d"
+    },
+    {
+      "path": "system/test-base/os-updates/initial-status.json",
+      "sha256": "e387ccb47ce09f788e76b82957fe26646b39a1a1ba9e97ac5925ec5cd651faca"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "e9dcac32f1f8d154b7a79328b789c108e70b419d6f8ab07d57c95045f508f26d"
+    },
+    {
+      "path": "tests/bootstrap/managed-bootstrap.test.cjs",
+      "sha256": "31660629ab7b1e4ae9d85c722f8a7ef1be97756ef93f230058f1543fe2a57ca1"
+    },
+    {
+      "path": "tests/bootstrap/prepare-managed-host.test.py",
+      "sha256": "a094cc0edb61530ac3584f47a039af921f4b1705cdc5056c3dca2c0b6d20d515"
+    },
+    {
+      "path": "tests/integration-controller/prepare-native.sh",
+      "sha256": "ffee9c9fa58cc9422f702bf91bc1e6556a74b123f07b3c93993b2afd41b9d75d"
+    },
+    {
+      "path": "tests/integration-own-adapters/fixture.cjs",
+      "sha256": "1bed620b2c548836e924747d01015dd2972ded3cd2268c929f431aa01ad9c3a6"
+    },
+    {
+      "path": "tests/integration-own-adapters/management.integration.cjs",
+      "sha256": "c1f330ca8876e82c5c3e02e881b3e9e60132d9c7d36a041fe024783644a8f911"
+    },
+    {
+      "path": "tests/integration-own-adapters/prepare-fixed-root.cjs",
+      "sha256": "e358eb37c7001c80295b8069a411da660e9e94f5ef43f421b43438ea0244d0cf"
+    },
+    {
+      "path": "tests/integration-own-adapters/run-native.cjs",
+      "sha256": "b5f3dc13e4546512ca662059f405f79f3ab475ac4e985ccdf6c4745aca7feae7"
+    },
+    {
+      "path": "tests/integration/node-runtime-archive.test.py",
+      "sha256": "b57332fb3f05def27c951ad5497ccc70bab57edb9ead10e3b98bccc06e4e9456"
+    },
+    {
+      "path": "tests/integration/node-runtime-package.test.cjs",
+      "sha256": "02ef7945c43809a5aca687b7a38f6fa056a15f2e0d39e4562c172a524f4376f2"
+    },
+    {
+      "path": "tests/integration/prepared-runtime-archive.test.py",
+      "sha256": "40b9eb205c44a278bab23f275b09efc4008db92ff487ade6e60b87907acbd1c7"
+    },
+    {
+      "path": "tests/integration/security-refresh-build.test.cjs",
+      "sha256": "eb9696747d2bdb6b9a892d231118d4ff709bbdfa55d2133ad5572743dc15f74d"
+    },
+    {
+      "path": "tests/integration/serialport-native.test.cjs",
+      "sha256": "83e2e23a161fd6b866bda78a164a305d7ad65ab85d48b324fe8f8214eb8902f1"
+    },
+    {
+      "path": "tests/postgresql/host-install.test.cjs",
+      "sha256": "99737d676c90001bc665b61bda2244a7deea403c9ba936dd0421432ac134c441"
+    },
+    {
+      "path": "tests/postgresql/own-adapter-product.test.cjs",
+      "sha256": "a94226acfbdb7215e79fdd8570cd480d5d380b44f7a309b1c8aed86a93a18efa"
+    },
+    {
+      "path": "tests/system/certificate-host.test.cjs",
+      "sha256": "700a5257788e1a4c058ea26ba0d8bd84a0e970093fc7813181b7a829b7c9f13c"
+    },
+    {
+      "path": "tests/system/install-from-checkout.test.cjs",
+      "sha256": "ffa02a29bdbc4c19846877f36bc9b0d596a1790878d5779d1d0ea3c4160df6d1"
+    },
+    {
+      "path": "tests/system/install-os-maintenance.test.cjs",
+      "sha256": "6dc4ba93e95f18a9021620084cf14e73090a05b0f3f54fe7542178613293344e"
+    },
+    {
+      "path": "tests/system/managed-channel.test.cjs",
+      "sha256": "61dc89d1e12216b3f6e6cf6e7641216533e3f4380471731685a9c53d2e4a6c30"
+    },
+    {
+      "path": "tests/system/managed-node-runtime.test.cjs",
+      "sha256": "87df125e43441fc0d95151ea5bbec35c2cfdbdf552b1595a7761a68939b81775"
+    },
+    {
+      "path": "tests/system/os-updates.test.py",
+      "sha256": "ff046d8ed6589d5c8d8585e3a114aa998e401b13cd98feb8e6b2eb405776a97e"
+    },
+    {
+      "path": "tests/system/sbom-binding.test.cjs",
+      "sha256": "6a35599e2c3d6bfb32b9e8743961ed7fd754fd47e93622dd3100f7cda5f8a2bd"
+    },
+    {
+      "path": "tests/system/update-managed-release.test.cjs",
+      "sha256": "fe6909427c700ab5ef4573bbf0e93a68bed12fbd0ed14dc12a54429c2c46bb01"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-download.cjs",
+      "sha256": "f281e492f38739aa40f2b7bb28a8b73b7f6515bf4c37a189abd19c0162f284bb"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-test.cjs",
+      "sha256": "a020b3eec00c42cfaa65058b6b94a249012f0c42440091856c39a6ea9077ab52"
+    },
+    {
+      "path": "tools/bootstrap/prepare-managed-host.py",
+      "sha256": "d152e4d713e64c2e724e2ccd9936a329582cc17cac8e4361e0e96c27b9925205"
+    },
+    {
+      "path": "tools/integration/bind-sbom.py",
+      "sha256": "c8b573823da37825a5b6eb23d6a15059566ddbceadd40cb2ef7a5984d1417b37"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "sha256": "a925aed111911423033dce54573c01c3854d40f44ac9988e24fcd020a8b001a8"
+    },
+    {
+      "path": "tools/integration/check-runtime-architecture.cjs",
+      "sha256": "f57caf85cefe5deb277749e60e391134df4e1e12460d28d9f60ad3d795cfad9a"
+    },
+    {
+      "path": "tools/integration/create-managed-archive.cjs",
+      "sha256": "006502856a754478451231958e320b86a5aa86962968743f09f966f841489266"
+    },
+    {
+      "path": "tools/integration/node-runtime-archive.py",
+      "sha256": "9fbc396cd9f74de9fb372fa2f2b5f3eb82585efb84881886cb927b8650dce779"
+    },
+    {
+      "path": "tools/integration/node-runtime-policy.json",
+      "sha256": "64092dc0a5f75a9271e87ca61b6a391a0534b82884c681acc87405d9b187057a"
+    },
+    {
+      "path": "tools/integration/normalize-serialport-native.cjs",
+      "sha256": "2efaedae1a4508188b0d6da5e434d850b0a735d8cc0c8aaa5cc493d82ad0568c"
+    },
+    {
+      "path": "tools/integration/prepare-node-runtime.cjs",
+      "sha256": "13e438b478634fb7c284ab70b9dcae9ff33cf88719d7e6ceda41a5e3c2eba9b4"
+    },
+    {
+      "path": "tools/integration/prepare-security-refresh.cjs",
+      "sha256": "0e1bc66190e295654e212e0e5444553325579ee97e777b82a8388558b9f1d508"
+    },
+    {
+      "path": "tools/integration/prepared-runtime-archive.py",
+      "sha256": "f90dc5f62419d4f6d310f08e5afdc39b4448b294d558f76e3a084baabc1072dd"
+    },
+    {
+      "path": "tools/integration/verify-security-refresh-native.cjs",
+      "sha256": "e72ae872d28f14a8851f9d549bc24f9b781f60d93ccae86a17663a184b90441f"
+    },
+    {
+      "path": "tools/system/build-bundle.cjs",
+      "sha256": "34f4eb9b19b46d201e1d609af2bd66fdd65858f5955ce22c71912dc2e4c57e43"
+    },
+    {
+      "path": "tools/system/eos-base.cjs",
+      "sha256": "85208750f0f5cdaa77a8080a35c7c7d25482e133029b734d0b56b7250564713b"
+    },
+    {
+      "path": "tools/system/install-managed-from-checkout.cjs",
+      "sha256": "55835df85919059a39c47240ad545b3e03664e325f8b7ae1e3c64dd42962b68b"
+    },
+    {
+      "path": "tools/system/install-os-maintenance.cjs",
+      "sha256": "49b2ec8b938f35eff71b660e0fa4ccaaf146f79858ecb6115bf3a0ccb8cd9053"
+    },
+    {
+      "path": "tools/system/install-postgresql-host.cjs",
+      "sha256": "5553239ff494124d348ebadcbb5c4a7ca12eca1a47d0ee810dbf64539c6e2edd"
+    },
+    {
+      "path": "tools/system/postgresql-host-preflight.cjs",
+      "sha256": "610121b450c060981377740d3ac66750cbdf9faf2ea12e2bf643ff9cd8482127"
+    },
+    {
+      "path": "tools/system/rotate-certificates.cjs",
+      "sha256": "529f7eaae87619bfb59a1611ebd643aa682755c03bfe6cb9f4a78303c87364a1"
+    },
+    {
+      "path": "tools/system/update-managed-release.cjs",
+      "sha256": "51c0c84d26a7797ada55b23ee887d5aa151f4515dbcfced132d99f01b7957bcc"
+    }
+  ],
+  "logs": [
+    {
+      "path": "integrated.tap",
+      "sha256": "a615d87175315757df8a2a930ff4e3625f87a7aa1470d84708d742eb8f8dcf55"
+    },
+    {
+      "path": "future-sbom.tap",
+      "sha256": "20d0f0b8284c9ed1586701c18a4b207bce88cdb7bc40f117981295cc89722afe"
+    },
+    {
+      "path": "os-python.txt",
+      "sha256": "de1ae5b512f79d3390c90abbab6594a8c2ef0980e96043c38e3468810f9ad42b"
+    },
+    {
+      "path": "prebuilt.txt",
+      "sha256": "00eba9ad214b4fdb8bfad93954da306552596d806f1214d7a84bdd894670171e"
+    }
+  ]
+}

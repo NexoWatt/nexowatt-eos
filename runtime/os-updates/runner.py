@@ -3,7 +3,9 @@
 
 APT verifies each release against the distro-specific Signed-By keyring. The
 separate list cache/config excludes unsigned host sources and arbitrary hooks.
-Package maintainer scripts remain privileged and can restart services.
+Package maintainer scripts remain privileged. Managed hosts defer standard
+Debian service-helper actions; direct calls by maintainer scripts remain a
+documented boundary rather than an interruption-free guarantee.
 """
 import datetime as dt
 import fcntl
@@ -24,6 +26,10 @@ from urllib.parse import quote
 STATE = Path('/var/lib/nexowatt-eos-os-updates')
 POLICY = Path('/etc/nexowatt-eos-os-updates/policy.json')
 UNIT = 'nexowatt-eos-os-updates.timer'
+RELEASE_STATE = Path('/etc/nexowatt-eos/release-state.json')
+ACTIVATION_LOCK = Path('/etc/nexowatt-eos/.activation.lock')
+SERVICE_POLICY = Path('/usr/sbin/policy-rc.d')
+BOOT_ID = Path('/proc/sys/kernel/random/boot_id')
 MAX_STATUS = 65536
 MAX_CAPTURE = 4 * 1024 * 1024
 RUNTIME_PINS = {'nodejs', 'npm'}
@@ -57,14 +63,15 @@ def initial_status():
         'policy': {'automatic': True, 'rebootAutomatic': False,
                    'schedule': '*-*-* 02:00:00 Europe/Berlin',
                    'randomizedDelaySeconds': 900, 'debianMajor': None,
-                   'origins': [], 'serviceRestartsPossible': True},
+                   'origins': [], 'serviceRestartsPossible': True,
+                   'serviceRestartPolicy': 'unrestricted-package-actions'},
         'timers': {'enabled': None, 'active': None, 'checkedAt': None},
         'pending': {'securityCount': None, 'heldSecurityCount': None,
                     'blockedSecurityCount': None, 'availableCount': None,
                     'vendorCount': None, 'packages': [], 'truncated': False},
         'reboot': {'state': 'unknown', 'evidence': []},
         'activation': {'state': 'unknown', 'serviceRestartCount': None,
-                       'sessionRestartCount': None},
+                       'sessionRestartCount': None, 'serviceActionsDeferred': None},
         'coverage': {'state': 'unknown', 'gaps': ['not-yet-checked']},
         'sbom': None,
     }
@@ -204,6 +211,7 @@ Acquire::https::Timeout "60";
 Acquire::Retries "2";
 APT::Update::Error-Mode "any";
 DPkg::Lock::Timeout "120";
+DPkg::Options {{ "--force-confdef"; "--force-confold"; }};
 Unattended-Upgrade::Automatic-Reboot "false";
 Unattended-Upgrade::MinimalSteps "true";
 Unattended-Upgrade::AutoFixInterruptedDpkg "false";
@@ -281,7 +289,46 @@ def restart_status(text, marker_exists=False):
     activation = 'unknown' if not valid else 'required' if services or sessions else 'not-required'
     return {'state': reboot, 'evidence': evidence}, {
         'state': activation, 'serviceRestartCount': services if valid else None,
-        'sessionRestartCount': sessions if valid else None}
+        'sessionRestartCount': sessions if valid else None, 'serviceActionsDeferred': None}
+
+
+def managed_service_policy():
+    """Require the signed helper on managed installations, preserve legacy scope."""
+    if not RELEASE_STATE.exists() and not RELEASE_STATE.is_symlink():
+        return False
+    state = read_json(RELEASE_STATE, 4096)
+    if not isinstance(state, dict) or type(state.get('sequence')) is not int:
+        raise MaintenanceError('configuration-invalid')
+    if state['sequence'] < 15:
+        return False
+    installed = trusted_path(SERVICE_POLICY)
+    expected = trusted_path(Path(__file__).resolve(strict=True).with_name('policy-rc.d'))
+    info = installed.stat()
+    if (info.st_nlink != 1 or stat.S_IMODE(info.st_mode) != 0o755
+            or installed.read_bytes() != expected.read_bytes()):
+        raise MaintenanceError('configuration-invalid')
+    return True
+
+
+def service_actions_deferred(private):
+    """Keep suppressed actions pending across jobs; a subsequent boot activates them."""
+    marker = private / 'service-actions-deferred'
+    if not marker.exists() and not marker.is_symlink():
+        return False
+    trusted_path(marker)
+    info = marker.stat()
+    if info.st_nlink != 1 or info.st_mode & 0o077:
+        raise MaintenanceError('configuration-invalid')
+    value = marker.read_bytes()
+    current = BOOT_ID.read_text().strip()
+    if not re.fullmatch(r'[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', current):
+        raise MaintenanceError('configuration-invalid')
+    if not re.fullmatch(rb'[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}\n', value):
+        raise MaintenanceError('configuration-invalid')
+    if value.decode('ascii').strip() == current:
+        return True
+    marker.unlink()
+    return False
 
 
 def dpkg_sbom(text, generated_at):
@@ -406,12 +453,21 @@ def main():
     trusted_path(private, directory=True)
     if stat.S_IMODE(private.stat().st_mode) != 0o711:
         raise MaintenanceError('configuration-invalid')
+    # Shared with the signed EOS/Node transaction. The persistent root-owned
+    # directory avoids writable /run/lock and stale path replacement on reboot.
     lock_fd = os.open(private / 'maintenance.lock', os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+    lock_stat = os.fstat(lock_fd)
+    if (not stat.S_ISREG(lock_stat.st_mode) or lock_stat.st_uid != 0
+            or lock_stat.st_nlink != 1 or lock_stat.st_mode & 0o077):
+        os.close(lock_fd)
+        raise MaintenanceError('configuration-invalid')
     try:
         fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
         os.close(lock_fd)
-        return 3
+        # Another maintenance owner retains the status. Do not overwrite a
+        # concurrently running OS job's evidence with an invented new result.
+        return 75
     previous = read_json(STATE / 'status.json') if (STATE / 'status.json').exists() else initial_status()
     status = initial_status()
     status['lastSuccessAt'] = previous.get('lastSuccessAt')
@@ -423,11 +479,16 @@ def main():
         if set(policy) != {'schemaVersion', 'enabled'} or policy['schemaVersion'] != 1 or type(policy['enabled']) is not bool:
             raise MaintenanceError('configuration-invalid')
         status['policy']['automatic'] = policy['enabled']
+        guarded = managed_service_policy()
+        status['policy']['serviceRestartPolicy'] = ('defer-package-service-actions' if guarded
+                                                    else 'unrestricted-package-actions')
         for tool in TOOLS:
             trusted_path(Path(tool).resolve(strict=True))
         env = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LANG': 'C.UTF-8',
                'LC_ALL': 'C.UTF-8', 'HOME': '/root', 'DEBIAN_FRONTEND': 'noninteractive',
                'NEEDRESTART_MODE': 'l', 'APT_CONFIG': str(private / 'apt.conf')}
+        if guarded:
+            env['NEXOWATT_EOS_OS_MAINTENANCE'] = '1'
         commands = Commands(env, private, lock_fd)
         status['timers'] = timer_status(commands)
         automation_gap = distro_automation_gap(commands)
@@ -436,6 +497,14 @@ def main():
             status['generatedAt'] = timestamp()
             atomic_json(STATE / 'status.json', status, MAX_STATUS)
             return 0
+        # A previous interrupted EOS transaction can outlive its process lock.
+        # Its protected activation guard remains authoritative until recovery.
+        if ACTIVATION_LOCK.exists() or ACTIVATION_LOCK.is_symlink():
+            status['state'] = 'attention'
+            status['coverage'] = {'state': 'gap', 'gaps': ['eos-maintenance-in-progress']}
+            return 0
+        if guarded:
+            service_actions_deferred(private)  # validate retained evidence before APT
         os_release = trusted_path(Path('/etc/os-release').resolve(strict=True))
         major, codename = parse_os_release(os_release.read_text())
         status['policy']['debianMajor'] = major
@@ -502,6 +571,11 @@ def main():
             status['reboot'], status['activation'] = restart_status(restart_text, Path('/run/reboot-required').exists())
         except MaintenanceError:
             status['reboot'], status['activation'] = restart_status('', Path('/run/reboot-required').exists())
+        if guarded:
+            deferred = service_actions_deferred(private)
+            status['activation']['serviceActionsDeferred'] = deferred
+            if deferred:
+                status['activation']['state'] = 'required'
         _, inventory = commands.run(['/usr/bin/dpkg-query', '-W', '-f=${binary:Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n'], 'inventory-failed')
         when = timestamp()
         bom = dpkg_sbom(inventory, when)

@@ -7,8 +7,9 @@ const { startLab } = require('../postgresql/fixtures/lab-cluster.cjs');
 const { NODE, loadFixture } = require('./fixture.cjs');
 async function run(input) {
     const root = checkedRoot(input); process.umask(0o077);
-    if (process.versions.node !== NODE || process.platform !== 'linux' || process.arch !== 'x64') throw new Error('OWN_NATIVE_NODE_REQUIRED');
-    loadFixture(root, process.getuid());
+    if (process.platform !== 'linux' || process.arch !== 'x64') throw new Error('OWN_NATIVE_NODE_REQUIRED');
+    const fixture = loadFixture(root, process.getuid());
+    if (process.versions.node !== fixture.nodeVersion) throw new Error('OWN_NATIVE_NODE_REQUIRED');
     const data = '/var/lib/nexowatt-eos/iobroker-data';
     if (fs.readdirSync(data).length || fs.statSync(data).uid !== process.getuid() || (fs.statSync(data).mode & 0o777) !== 0o700) throw new Error('OWN_NATIVE_FRESH_DATA_REQUIRED');
     const lab = await startLab({ binDirectory: path.join(root, 'postgresql/bin'), schemaFile: path.resolve(__dirname, '../../runtime/postgresql/schema.sql'), profile: 'management' });

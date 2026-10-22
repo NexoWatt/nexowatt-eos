@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-node-packaging-focused-source-verification",
+  "date": "2026-10-22",
+  "baseCommit": "99ef5086bc5b0ee590de17e109b85e4738c973ae",
+  "worktreeState": "reviewed concurrent implementation; individual source hashes below",
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "kernel": "6.18.55",
+    "node": "v24.19.0",
+    "python": "3.12.14"
+  },
+  "target": {
+    "nodeVersion": "24.22.1",
+    "platform": "linux-arm64",
+    "controllerVersion": "7.2.5",
+    "releaseSequence": 15
+  },
+  "upstreamSource": "https://nodejs.org/en/blog/release/v24.22.1",
+  "upstreamArchiveDownload": {
+    "performed": false,
+    "attempt": "bounded HEAD official ARM64 archive; proxy CONNECT timeout"
+  },
+  "tests": [
+    {
+      "command": "python3 -B tests/bootstrap/prepare-managed-host.test.py",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "python3 -B tests/integration/node-runtime-archive.test.py",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "python3 -B tests/integration/prepared-runtime-archive.test.py",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test tests/bootstrap/managed-bootstrap.test.cjs",
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test tests/integration/node-runtime-package.test.cjs",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test tests/integration/security-refresh-build.test.cjs",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test tests/integration-own-adapters/fixture.test.cjs",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "distinctTestsPassed": 72,
+  "diffWhitespaceCheckPassed": true,
+  "testMethod": "synthetic ELF and archive fixtures; explicit network/host doubles; real local copy, inventory, cryptography, kit extraction and module loading",
+  "nativeQualificationExecuted": false,
+  "targetExecutionPerformed": false,
+  "hardwareQualified": false,
+  "productionReleaseApproved": false,
+  "manufacturerSigningPerformed": false,
+  "published": false,
+  "openGates": [
+    "actual official Node archive acquisition",
+    "fresh complete source-bound build",
+    "new native qualification on Node24.22.1",
+    "manufacturer signature",
+    "public immutable entry and release asset readback",
+    "WSL signing workflow",
+    "Pi fresh installation and update-button test",
+    "real rollback/power-failure acceptance"
+  ],
+  "sourceFiles": [
+    {
+      "path": "tools/integration/node-runtime-policy.json",
+      "sha256": "64092dc0a5f75a9271e87ca61b6a391a0534b82884c681acc87405d9b187057a"
+    },
+    {
+      "path": "tools/integration/node-runtime-archive.py",
+      "sha256": "9fbc396cd9f74de9fb372fa2f2b5f3eb82585efb84881886cb927b8650dce779"
+    },
+    {
+      "path": "tools/integration/prepare-node-runtime.cjs",
+      "sha256": "13e438b478634fb7c284ab70b9dcae9ff33cf88719d7e6ceda41a5e3c2eba9b4"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-test.cjs",
+      "sha256": "a020b3eec00c42cfaa65058b6b94a249012f0c42440091856c39a6ea9077ab52"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-download.cjs",
+      "sha256": "f281e492f38739aa40f2b7bb28a8b73b7f6515bf4c37a189abd19c0162f284bb"
+    },
+    {
+      "path": "tools/bootstrap/prepare-managed-host.py",
+      "sha256": "d152e4d713e64c2e724e2ccd9936a329582cc17cac8e4361e0e96c27b9925205"
+    },
+    {
+      "path": "tools/integration/prepare-security-refresh.cjs",
+      "sha256": "0e1bc66190e295654e212e0e5444553325579ee97e777b82a8388558b9f1d508"
+    },
+    {
+      "path": "tools/integration/build-runtime.cjs",
+      "sha256": "a925aed111911423033dce54573c01c3854d40f44ac9988e24fcd020a8b001a8"
+    },
+    {
+      "path": "tools/integration/create-managed-archive.cjs",
+      "sha256": "006502856a754478451231958e320b86a5aa86962968743f09f966f841489266"
+    },
+    {
+      "path": "tools/integration/verify-security-refresh-native.cjs",
+      "sha256": "e72ae872d28f14a8851f9d549bc24f9b781f60d93ccae86a17663a184b90441f"
+    },
+    {
+      "path": "tools/integration/prepared-runtime-archive.py",
+      "sha256": "f90dc5f62419d4f6d310f08e5afdc39b4448b294d558f76e3a084baabc1072dd"
+    },
+    {
+      "path": "runtime/release/fresh-sbom-binding.cjs",
+      "sha256": "4d62bc75810330bda8a4b88b91a443c9d6b944d8fed7dbb0d10ea0e116c0e105"
+    },
+    {
+      "path": "system/managed-test/profile.json",
+      "sha256": "dc06ffea01b8b390ddcd8f20b9a410bc043c1326e4f18e6957f2b2572a1fca18"
+    },
+    {
+      "path": "tests/integration-own-adapters/fixture.cjs",
+      "sha256": "1bed620b2c548836e924747d01015dd2972ded3cd2268c929f431aa01ad9c3a6"
+    },
+    {
+      "path": "tests/integration-own-adapters/prepare-fixed-root.cjs",
+      "sha256": "e358eb37c7001c80295b8069a411da660e9e94f5ef43f421b43438ea0244d0cf"
+    },
+    {
+      "path": "tests/integration-own-adapters/run-native.cjs",
+      "sha256": "b5f3dc13e4546512ca662059f405f79f3ab475ac4e985ccdf6c4745aca7feae7"
+    },
+    {
+      "path": "tests/integration-own-adapters/management.integration.cjs",
+      "sha256": "c1f330ca8876e82c5c3e02e881b3e9e60132d9c7d36a041fe024783644a8f911"
+    },
+    {
+      "path": "tests/bootstrap/managed-bootstrap.test.cjs",
+      "sha256": "31660629ab7b1e4ae9d85c722f8a7ef1be97756ef93f230058f1543fe2a57ca1"
+    },
+    {
+      "path": "tests/bootstrap/prepare-managed-host.test.py",
+      "sha256": "a094cc0edb61530ac3584f47a039af921f4b1705cdc5056c3dca2c0b6d20d515"
+    },
+    {
+      "path": "tests/integration/node-runtime-archive.test.py",
+      "sha256": "b57332fb3f05def27c951ad5497ccc70bab57edb9ead10e3b98bccc06e4e9456"
+    },
+    {
+      "path": "tests/integration/node-runtime-package.test.cjs",
+      "sha256": "02ef7945c43809a5aca687b7a38f6fa056a15f2e0d39e4562c172a524f4376f2"
+    },
+    {
+      "path": "tests/integration/prepared-runtime-archive.test.py",
+      "sha256": "40b9eb205c44a278bab23f275b09efc4008db92ff487ade6e60b87907acbd1c7"
+    },
+    {
+      "path": "tests/integration/security-refresh-build.test.cjs",
+      "sha256": "eb9696747d2bdb6b9a892d231118d4ff709bbdfa55d2133ad5572743dc15f74d"
+    }
+  ]
+}

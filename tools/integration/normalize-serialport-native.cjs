@@ -2,8 +2,9 @@
 // Only use on a fresh offline build. Historical app trees are not rewritten.
 const fs = require('node:fs');
 const path = require('node:path');
-const { policy, sha, assertPackage, patchedLoader, loaderSource, normalizationEvidence } = require('../../runtime/native/serialport-contract.cjs');
+const serialport = require('../../runtime/native/serialport-contract.cjs');
 function normalize({ app, platform, nodeVersion }) {
+    const { policy, sha, assertPackage, patchedLoader, loaderSource, normalizationEvidence } = serialport.forNode(nodeVersion);
     app = path.resolve(app);
     const lock = JSON.parse(fs.readFileSync(path.join(app, 'package-lock.json'), 'utf8'));
     // Verify every original package before mutating any one of them. Only exact

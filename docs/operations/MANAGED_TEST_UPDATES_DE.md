@@ -1,7 +1,9 @@
 # Test-Pi frisch installieren, danach Updates im Admin
 
-Die neue Testbasis ist gebaut und im Linux-x64-Labor nativ geprüft, aber noch
-nicht signiert oder als Pi-Installationspaket ausgeliefert.
+Nach dem Node-Sicherheitsrelease vom 21.10.2026 wird die neue Testbasis auf
+Node 24.22.1 und gekoppelte Node-/EOS-Updates umgestellt. Die vorherige Basis
+unter Node 24.21.0 ist im Linux-x64-Labor geprüft; dieser Nachweis wird nicht
+auf die neue Fassung übertragen. Eine signierte Pi-Auslieferung fehlt noch.
 Sie bleibt ausdrücklich auf js-controller **7.2.5**. Controller 8 wird weder
 automatisch bezogen noch durch den neuen Paket-/Katalogvertrag zugelassen.
 **Bestehenden Test-Pi noch nicht löschen.** Der R11-Befehl in der README ist
@@ -13,7 +15,7 @@ Er installiert diese neue Frischbasis nicht.
 1. Vorhandene Sicherung auf Wiederherstellbarkeit prüfen, aktuelle Daten und
    Lizenzinformationen sichern, Wartungsfenster vorsehen.
 2. Nach Freigabe die neue signierte ARM64-Testbasis auf einen frischen,
-   vorbereiteten Debian-13-Host installieren. Node ist exakt 24.21.0;
+   vorbereiteten Debian-13-Host installieren. Node ist für diese Frischbasis exakt 24.22.1;
    PostgreSQL-, TLS-, OS-Update- und Netzwerkvoraussetzungen werden geprüft.
 3. Den HTTPS-Erststart abschließen. Konten und sechs eigene Adapter werden
    einmalig eingerichtet; Geräteadapter haben zunächst keine physischen Ziele.
@@ -34,15 +36,20 @@ und keinen Prozessstart erzwingen: Service prüft zuerst Zustand und Journal.
 
 - Fester Feed: `delivery/update-channel/test.json` auf `main`, signierter
   Umschlag mit zeitlich begrenzter Gültigkeit (höchstens 31 Tage).
-- Archivpfad: `delivery/managed-test-<Sequenz>/eos-linux-arm64.tar.gz` an einem
-  unveränderlichen Git-Commit. Bis 100 MiB; 1-MiB-Rangeabrufe; pro externem
-  Abruf höchstens fünf Sekunden einschließlich DNS, TLS und Körper.
+- Neue große Pakete einschließlich Node werden über ein fest benanntes
+  GitHub-Release-Asset bezogen; Tag `managed-test-<Sequenz>-<Release-ID>`.
+  Historische unveränderliche Git-Archivpfade bleiben erkennbar. Bis 256 MiB;
+  1-MiB-Rangeabrufe; pro externem Abruf höchstens fünf Sekunden einschließlich
+  DNS, TLS, erlaubter GitHub-CDN-Weiterleitung und Körper. Signatur, Größe und
+  SHA-256 entscheiden über die Zulassung.
 - `/etc/nexowatt-eos/update-trust.pem` bindet den Hersteller dauerhaft.
   Private Schlüssel gehören nicht auf den Pi, ins Repository oder in Logs.
-- `nexowatt-eos-updates.service` bleibt an die unveränderliche erste
-  Releaseinstallation gebunden. Der Controller folgt dem getrennten
-  `current`-Zeiger. Der gleiche, bereits installierte Transaktionscode prüft
-  Folgepakete; kein aus einem Feed geladener Shell-/Installationsbefehl.
+- Der JavaScript-Transaktionscode von `nexowatt-eos-updates.service` bleibt an
+  die unveränderliche erste Releaseinstallation gebunden. Seine Node-Binärdatei
+  und der Controller folgen dem gemeinsam umgeschalteten `current`-Zeiger.
+  Nach dem dauerhaften Abschluss startet der Update-Dienst unter der aktiven
+  Node-Version neu. Der bereits installierte Transaktionscode prüft Folgepakete;
+  kein aus einem Feed geladener Shell-/Installationsbefehl.
 - Admin-API `/nexowatt/managed-updates/{status,check,install}`; getrennt von
   der vorhandenen `/nexowatt/updates`-Status-/Einstellungsschnittstelle.
 - Status `/var/lib/nexowatt-eos-updates/status.json`, Aufträge darunter in
@@ -88,7 +95,7 @@ vorbereiteten Laufzeitbaum. Details und tatsächlicher Prüfstatus stehen im
 
 `tools/bootstrap/build-managed-test.cjs` erhält den bereits vorbereiteten und
 geprüften Laufzeitbaum über `--prepared-runtime`, außerdem `--native-evidence`,
-`--private-key`, `--public-key-sha256` und `--sequence`. Sequenz 15 ist für die
+`--private-key`, `--public-key-sha256`, `--sequence` und `--node-archive`. Sequenz 15 ist für die
 Frischbasis reserviert. Der private Schlüssel wird ausschließlich auf dem
 geschützten Hersteller-Buildhost eingelesen. Ein erfolgreiches Linux-x64-Labor
 ersetzt weder den Frischinstallations-/systemd-Test noch die ARM64-/Pi-Abnahme.
@@ -128,7 +135,7 @@ Installationskern für einen authentifizierten, root-kontrollierten Checkout.
 Er installiert selbst keine Betriebssystempakete. Der neue feste Einstieg
 `first-start-managed.cjs` und `prepare-managed-host.py` ergänzen die geprüften
 Debian-13-/ARM64-Frischhostbedingungen, APT-Herkunftsprüfungen und den
-hashgebundenen Node-24.21.0-Schritt einschließlich der benötigten
+hashgebundenen Node-24.22.1-Schritt einschließlich der benötigten
 Netzwerkwerkzeuge. Diese Hoständerungen wurden noch nicht auf einem Pi ausgeführt.
 
 `build-managed-download.cjs` erzeugt das öffentliche Installationspaket und
@@ -137,7 +144,16 @@ und separat authentifizierten öffentlichen Release-/Lizenzprüfschlüsseln.
 Es übernimmt ausschließlich versionierte Quelldateien und entfernt interne
 Buildaufzeichnungen aus der öffentlichen Ausgabe. Ein generierter Befehl ist
 erst nach Veröffentlichung und vollständigem öffentlichem Rücklesen verwendbar.
-Der vollständige neue Laufzeitbaum am Quellstand
+Mit einer GitHub-Release-Adresse als `--base-url` erzeugt dieser erste Schritt
+noch keinen Installationsbefehl. Die großen Dateien kommen als Release-Assets
+unter `managed-test-15-<Release-ID>`; die kleine `install.sh` wird anschließend
+in einem Git-Commit veröffentlicht. Danach erstellt derselbe Generator mit
+`--finalize-command <absolutes-Ausgabeverzeichnis> --entry-base-url <unveränderliche-Raw-Adresse>`
+die Datei `INSTALL_COMMAND.txt`. Die Raw-Adresse muss den vollständigen
+40-stelligen Commit und ein Unterverzeichnis von `delivery/` enthalten.
+Auch dieser Schritt prüft nur die lokale Bindung: Der tatsächliche öffentliche
+Rücklesetest aller Dateien bleibt vor Weitergabe des Befehls verpflichtend.
+Der vorherige vollständige Laufzeitbaum unter Node 24.21.0 am Quellstand
 `a2733fa5561f7327ff3689b7464f8727760fb670` bestand die native Prüfung mit
 sechs Adaptern, zentralen Lizenzen, Backup und Neustart. Das daraus erzeugte
 CI-Archiv ist ausdrücklich **unsignierter Transport für den Hersteller**.
@@ -157,7 +173,10 @@ Lieferungen und deren Schlüssel bleiben unverändert. Der Downloadgenerator
 erhält denselben Hash als `--release-public-key-sha256`; Feed und spätere
 Folgepakete müssen zur auf dem frisch installierten Pi verankerten Autorität passen.
 
-V1 beschränkt Folgeupdates auf eigene Adapterdateien bei gleichbleibenden
-Versionen und Host-/Abhängigkeitsverträgen. Weitere Migrationsarten sind offen.
+Folgeupdates umfassen eigene Adapterdateien bei gleichbleibenden Paketversionen
+und Host-/Abhängigkeitsverträgen sowie den gesondert gebundenen Node-24-Laufzeitbaum.
+Node- und EOS-Stand wechseln gemeinsam; Node-Hauptversionswechsel und andere
+Migrationsarten bleiben gesperrt. Die [automatische Linux-Wartung](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md)
+koordiniert ihre Pakettransaktionen über dieselbe geschützte Wartungssperre.
 Siehe [Anforderungen](../requirements/EOS-REQ-MANAGED-UPDATES-20261021.md) und
 [Prüfbericht](../../reports/integration/managed-updates-20261021/README_DE.md).

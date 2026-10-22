@@ -1,5 +1,6 @@
 """Offline security/behavior tests; never execute APT or mutate this host."""
 import importlib.util
+from importlib.machinery import SourceFileLoader
 import json
 from pathlib import Path
 import sys
@@ -17,6 +18,10 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location('eos_os_updates', ROOT / 'runtime/os-updates/runner.py')
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
+policy_loader = SourceFileLoader('eos_service_policy', str(ROOT / 'runtime/os-updates/policy-rc.d'))
+policy_spec = importlib.util.spec_from_loader(policy_loader.name, policy_loader)
+policy_helper = importlib.util.module_from_spec(policy_spec)
+policy_loader.exec_module(policy_helper)
 
 
 def origin(codename='trixie-security', trusted=True, origin='Debian', label='Debian-Security', component='main'):
@@ -53,6 +58,53 @@ class FakeCommands:
 
 
 class PureContracts(unittest.TestCase):
+    def test_service_policy_defers_only_scoped_job_and_records_no_service_names(self):
+        with tempfile.TemporaryDirectory(dir="/root") as tmp:
+            base=Path(tmp);private=base/'private';private.mkdir(mode=0o711)
+            marker=private/'service-actions-deferred';boot=base/'boot-id'
+            boot.write_text('11111111-1111-1111-1111-111111111111\n')
+            with patch.object(policy_helper,'PRIVATE',private),patch.object(policy_helper,'MARKER',marker),patch.object(policy_helper,'BOOT_ID',boot):
+                with patch.dict(os.environ,{},clear=True):
+                    self.assertEqual(policy_helper.main(),0);self.assertFalse(marker.exists())
+                with patch.dict(os.environ,{'NEXOWATT_EOS_OS_MAINTENANCE':'1'},clear=True):
+                    self.assertEqual(policy_helper.main(),101)
+                    self.assertEqual(marker.read_text(),boot.read_text())
+                    self.assertEqual(marker.stat().st_mode & 0o777,0o600)
+                    marker.unlink();victim=base/'victim';victim.write_text('unchanged')
+                    marker.symlink_to(victim)
+                    self.assertEqual(policy_helper.main(),101)
+                    self.assertEqual(victim.read_text(),'unchanged')
+
+    def test_service_deferral_survives_jobs_until_a_new_boot_and_rejects_untrusted_marker(self):
+        with tempfile.TemporaryDirectory(dir="/root") as tmp:
+            base=Path(tmp);marker=base/'service-actions-deferred';boot=base/'boot-id'
+            value='11111111-1111-1111-1111-111111111111\n'
+            marker.write_text(value);marker.chmod(0o600);boot.write_text(value)
+            with patch.object(m,'BOOT_ID',boot):
+                self.assertTrue(m.service_actions_deferred(base))
+                self.assertTrue(m.service_actions_deferred(base))
+                marker.chmod(0o644)
+                with self.assertRaises(m.MaintenanceError):m.service_actions_deferred(base)
+                marker.chmod(0o600);boot.write_text('22222222-2222-2222-2222-222222222222\n')
+                self.assertFalse(m.service_actions_deferred(base));self.assertFalse(marker.exists())
+
+    def test_managed_policy_missing_modified_or_non_executable_rejected_before_apt(self):
+        with tempfile.TemporaryDirectory(dir="/root") as tmp:
+            base=Path(tmp);state=base/'release-state.json';helper=base/'policy-rc.d'
+            state.write_text('{"sequence":15}')
+            signed=base/'signed';signed.mkdir();(signed/'runner.py').write_text('# fixture origin')
+            (signed/'policy-rc.d').write_bytes((ROOT/'runtime/os-updates/policy-rc.d').read_bytes())
+            with patch.object(m,'RELEASE_STATE',state),patch.object(m,'SERVICE_POLICY',helper),patch.object(m,'__file__',str(signed/'runner.py')):
+                with self.assertRaises(FileNotFoundError):m.managed_service_policy()
+                helper.write_bytes((ROOT/'runtime/os-updates/policy-rc.d').read_bytes());helper.chmod(0o755)
+                self.assertTrue(m.managed_service_policy())
+                helper.chmod(0o644)
+                with self.assertRaises(m.MaintenanceError):m.managed_service_policy()
+                helper.chmod(0o755);helper.write_text('#!/bin/sh\nexit 0\n')
+                with self.assertRaises(m.MaintenanceError):m.managed_service_policy()
+                state.write_text('{"sequence":14}')
+                self.assertFalse(m.managed_service_policy())
+
     def test_schema_status_policy_and_generated_sbom(self):
         schema=json.loads((ROOT/'runtime/os-updates/status.schema.json').read_text())
         validator=jsonschema.Draft202012Validator(schema,format_checker=jsonschema.FormatChecker())
@@ -142,6 +194,7 @@ class PureContracts(unittest.TestCase):
         self.assertIn('Acquire::https::Verify-Peer "true";', config)
         self.assertIn('Acquire::AllowInsecureRepositories "false";', config)
         self.assertIn('Unattended-Upgrade::Automatic-Reboot "false";', config)
+        self.assertIn('DPkg::Options { "--force-confdef"; "--force-confold"; };', config)
         self.assertIn('"^nodejs$"; "^npm$";', config)
         self.assertIn('Signed-By: /usr/share/keyrings/raspberrypi-archive-keyring.gpg', sources)
         self.assertNotIn('beta', sources)
@@ -253,6 +306,7 @@ class Workflow(unittest.TestCase):
         FakeCommands.calls=[];FakeCommands.fail=None
         self.patchers=[patch.object(m,'STATE',self.base),patch.object(m,'POLICY',self.policy),
                        patch.object(m,'Commands',FakeCommands),patch.object(m,'TOOLS',()),patch.object(m,'parse_os_release',return_value=('13','trixie')),
+                       patch.object(m,'managed_service_policy',return_value=False),patch.object(m,'ACTIVATION_LOCK',self.base/'activation.lock'),
                        patch.object(m,'trusted_path',side_effect=lambda p,directory=False:Path(p)),
                        patch.object(sys,'argv',['runner.py']),
                        patch.dict(sys.modules,{'apt':types.SimpleNamespace(Cache=lambda:[]),
@@ -298,5 +352,30 @@ class Workflow(unittest.TestCase):
         self.assertEqual(m.main(),1)
         self.assertEqual(self.status()['lastError']['code'],'configuration-invalid')
         self.assertEqual(FakeCommands.calls,[])
+    def test_retained_eos_activation_lock_defers_without_package_mutation(self):
+        (self.base/'activation.lock').write_text('protected retained transaction')
+        self.assertEqual(m.main(),0)
+        s=self.status()
+        self.assertEqual(s['state'],'attention')
+        self.assertEqual(s['coverage']['gaps'],['eos-maintenance-in-progress'])
+        self.assertEqual(s['lastSuccessAt'],self.previous['lastSuccessAt'])
+        self.assertFalse(any(c[0] in {'/usr/bin/apt-get','/usr/bin/unattended-upgrade'} for c in FakeCommands.calls))
+    def test_shared_kernel_lease_rejects_competing_job_without_overwriting_evidence(self):
+        lock=os.open(self.base/'private/maintenance.lock',os.O_CREAT|os.O_RDWR,0o600)
+        try:
+            m.fcntl.flock(lock,m.fcntl.LOCK_EX|m.fcntl.LOCK_NB)
+            before=(self.base/'status.json').read_bytes()
+            self.assertEqual(m.main(),75)
+            self.assertEqual((self.base/'status.json').read_bytes(),before)
+            self.assertEqual(FakeCommands.calls,[])
+        finally:os.close(lock)
+    def test_deferred_service_actions_cannot_be_reported_fully_activated(self):
+        with patch.object(m,'managed_service_policy',return_value=True),patch.object(m,'service_actions_deferred',return_value=True):
+            self.assertEqual(m.main(),0)
+        s=self.status()
+        self.assertEqual(s['activation']['state'],'required')
+        self.assertTrue(s['activation']['serviceActionsDeferred'])
+        self.assertEqual(s['state'],'attention')
+        self.assertEqual(s['policy']['serviceRestartPolicy'],'defer-package-service-actions')
 
 if __name__=='__main__':unittest.main(verbosity=2)

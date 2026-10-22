@@ -11,12 +11,13 @@ Type=simple
 User=root
 Group=root
 # The fresh installer substitutes only a verified 64-hex release ID. The daemon
-# stays on this immutable baseline while the controller's current pointer moves.
-ExecStart=/usr/bin/node /opt/nexowatt/eos/releases/@RELEASE_ID@/runtime/updates/service.cjs
-ExecStopPost=/usr/bin/node /opt/nexowatt/eos/releases/@RELEASE_ID@/tools/system/update-managed-release.cjs --quiesce-incomplete
+# keeps immutable coordinator code; its interpreter follows the signed current
+# Node/EOS pair and is restarted after a successful runtime change.
+ExecStart=/opt/nexowatt/eos/current/node-runtime/bin/node /opt/nexowatt/eos/releases/@RELEASE_ID@/runtime/updates/service.cjs
+ExecStopPost=/opt/nexowatt/eos/current/node-runtime/bin/node /opt/nexowatt/eos/releases/@RELEASE_ID@/tools/system/update-managed-release.cjs --quiesce-incomplete
 UnsetEnvironment=NODE_OPTIONS NODE_PATH NODE_EXTRA_CA_CERTS NODE_TLS_REJECT_UNAUTHORIZED SSLKEYLOGFILE OPENSSL_CONF OPENSSL_MODULES LD_PRELOAD LD_LIBRARY_PATH
 Environment=PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
-Restart=on-failure
+Restart=always
 RestartSec=10
 RuntimeDirectory=nexowatt-eos-updates
 RuntimeDirectoryMode=0755
@@ -39,7 +40,7 @@ LockPersonality=yes
 RestrictRealtime=yes
 RestrictNamespaces=yes
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
-ReadWritePaths=/opt/nexowatt/eos /etc/nexowatt-eos /var/lib/nexowatt-eos-updates /run/nexowatt-eos-updates
+ReadWritePaths=/opt/nexowatt/eos /etc/nexowatt-eos /var/lib/nexowatt-eos-updates /run/nexowatt-eos-updates /var/lib/nexowatt-eos-os-updates/private/maintenance.lock
 MemoryHigh=384M
 MemoryMax=768M
 CPUWeight=10

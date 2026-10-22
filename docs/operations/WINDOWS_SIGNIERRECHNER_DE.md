@@ -100,9 +100,14 @@ des öffentlichen Fingerabdrucks und Aufräumen erforderlich. Dieser Schritt
 wird erst mit den exakten geprüften Laufzeit-/Nachweisdateien eingerichtet.
 Der private Schlüssel wird dafür nicht an GitHub oder in den Chat übertragen.
 
-Der vollständige Build-Signierer verlangt Linux, Node 24.21.0 und den sauberen
-geprüften Quellcommit `a2733fa5561f7327ff3689b7464f8727760fb670`.
+Seit dem Sicherheitsrelease vom 21.10.2026 wird die neue Frischlieferung unter
+Linux mit Node 24.22.1 vorbereitet. Der zuvor qualifizierte Quellcommit
+`a2733fa5561f7327ff3689b7464f8727760fb670` gehört zur früheren Node-24.21.0-Basis
+und darf nicht als Nachweis für das neue Paket verwendet werden. Der Signierlauf
+benötigt den neu qualifizierten sauberen Quellcommit, dessen genaue vorbereitete
+Laufzeit-/Nachweisdateien und das hashgeprüfte offizielle ARM64-Node-Archiv.
 Ein späterer Dokumentationscommit ersetzt diesen Herkunftsnachweis nicht.
+Siehe [Node- und Linux-Aktualisierung](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
 Die neu erzeugte Update-Autorität ersetzt auch nicht die getrennten,
 authentifizierten öffentlichen Prüfschlüssel der vorhandenen NWL3-Lizenzen.
 

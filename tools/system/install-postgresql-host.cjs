@@ -16,7 +16,7 @@ const SERVICES = ['nexowatt-eos-controller.service', 'nexowatt-eos-initialize.se
     'nexowatt-eos-setup.service', 'nexowatt-eos-setup-finalize.path', 'nexowatt-eos-setup-finalize.service', 'nexowatt-eos-setup-license.service'];
 function installPostgresqlHost(options, dependencies = {}) {
     if (options?.profile !== 'test' || !/^[a-f0-9]{64}$/.test(options.releaseId || '') ||
-        !/^[a-f0-9]{64}$/.test(options.publicKeySha256 || '') || options.expectedNodeVersion !== '24.21.0' ||
+        !/^[a-f0-9]{64}$/.test(options.publicKeySha256 || '') || (options.sequence >= 15 ? options.expectedNodeVersion !== require('../../runtime/updates/node-policy.cjs').BASELINE_VERSION : options.expectedNodeVersion !== '24.21.0') ||
         !Number.isSafeInteger(options.sequence) || options.sequence < 1) fail('PG_PINNED_TEST_RELEASE_REQUIRED');
     // An initialized PostgreSQL schema is mandatory, including for a test host.
     if (options.start !== true) fail('PG_EXPLICIT_START_REQUIRED');
@@ -32,6 +32,7 @@ function installPostgresqlHost(options, dependencies = {}) {
     const release = `/opt/nexowatt/eos/releases/${options.releaseId}`;
     if (options.releasePath !== release) fail('PG_VERIFIED_STAGED_RELEASE_REQUIRED');
     const root = dependencies.root || '/', at = file => path.join(root, file), file = name => path.join(at(release), name);
+    const nodeExecutable = managed ? file('node-runtime/bin/node') : '/usr/bin/node';
     const exec = dependencies.exec || command, uid = dependencies.uid ?? process.getuid?.();
     if (uid !== 0) fail('PG_ROOT_OPERATOR_REQUIRED');
     const report = (dependencies.preflight || inspectPostgresqlHost)({ root, exec, uid,
@@ -54,10 +55,12 @@ function installPostgresqlHost(options, dependencies = {}) {
         ...(fullProduct ? ['runtime/onboarding/main.cjs', 'runtime/onboarding/state.cjs', 'runtime/onboarding/server.cjs',
             'runtime/onboarding/policy.cjs', 'runtime/bootstrap/first-start-configuration.cjs',
             'tools/system/finalize-onboarding.cjs', 'tools/system/prepare-first-start-context.cjs'] : []),
+        ...(managed ? ['node-runtime/bin/node', 'node-runtime/runtime.json', 'node-runtime/LICENSE'] : []),
         'system/test-base/os-updates/policy.json', 'system/test-base/os-updates/initial-status.json',
         ...hostUnits.map(unit => `system/postgresql-test/systemd/${unit}`)]) {
         const st = fs.lstatSync(file(name));
-        if (!st.isFile() || st.isSymbolicLink() || st.uid !== 0 || (st.mode & 0o022)) fail('PG_INVALID_RELEASE_LAYOUT');
+        if (!st.isFile() || st.isSymbolicLink() || st.uid !== 0 || (st.mode & 0o022) ||
+            name === 'node-runtime/bin/node' && (st.mode & 0o7777) !== 0o755) fail('PG_INVALID_RELEASE_LAYOUT');
     }
     function run(binary, args, opts = {}) {
         const result = exec(binary, args, opts);
@@ -134,6 +137,9 @@ function installPostgresqlHost(options, dependencies = {}) {
         unitsInstalled = true;
         for (const unit of hostUnits) privateWrite(at(`/etc/systemd/system/${unit}`), fs.readFileSync(file(`system/postgresql-test/systemd/${unit}`)), 0o644);
         if (managed) {
+            phase = 'automatic-os-maintenance';
+            (dependencies.installOSMaintenance || require('./install-os-maintenance.cjs').installOSMaintenance)({
+                releaseId: options.releaseId }, { root, exec });
             phase = 'managed-update-service';
             (dependencies.installManagedUpdates || require('./install-managed-updates.cjs').installManagedUpdates)({
                 releaseId: options.releaseId, publicKeySha256: options.publicKeySha256 }, { root });
@@ -151,7 +157,7 @@ function installPostgresqlHost(options, dependencies = {}) {
         sql(['-d', 'eos', '-f', `${release}/runtime/postgresql/schema.sql`]);
         sql(['-d', 'postgres', '-c', 'REVOKE ALL ON DATABASE eos FROM PUBLIC; GRANT CONNECT ON DATABASE eos TO eos_objects,eos_states;']);
         phase = 'live-database-gate';
-        const result = exec('/usr/bin/node', [file('runtime/postgresql/acceptance.cjs'), '--config', at('/etc/nexowatt-eos/iobroker.json'),
+        const result = exec(nodeExecutable, [file('runtime/postgresql/acceptance.cjs'), '--config', at('/etc/nexowatt-eos/iobroker.json'),
             '--app', file('app')], { timeout: 60000 });
         let acceptance;
         try { acceptance = JSON.parse(result.stdout); } catch { fail('PG_LIVE_DATABASE_GATE_FAILED'); }
@@ -165,7 +171,7 @@ function installPostgresqlHost(options, dependencies = {}) {
         privateWrite(at('/var/lib/nexowatt-eos/.initialized'), JSON.stringify({ releaseId: options.releaseId, profile: 'test', at: new Date().toISOString() }) + '\n', 0o644);
         if (fullProduct) {
             phase = 'first-start-identity-context';
-            run('/usr/bin/node', [file('tools/system/prepare-first-start-context.cjs')], { timeout: 35000 });
+            run(nodeExecutable, [file('tools/system/prepare-first-start-context.cjs')], { timeout: 35000 });
             groupReadable('/etc/nexowatt-eos/onboarding.json', 'eos-setup');
         }
         const target = fullProduct ? 'nexowatt-eos-setup.target' : 'nexowatt-eos.target';

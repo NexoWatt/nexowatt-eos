@@ -1,0 +1,832 @@
+TAP version 13
+# Subtest: validator performs one real architecture scan and returns that same successful report
+ok 1 - validator performs one real architecture scan and returns that same successful report
+  ---
+  duration_ms: 72.495548
+  type: 'test'
+  ...
+# Subtest: each advertised platform receives its own real mandatory scan
+ok 2 - each advertised platform receives its own real mandatory scan
+  ---
+  duration_ms: 46.001657
+  type: 'test'
+  ...
+# Subtest: unknown native input is rejected by the validator despite supplied extra skip/report arguments
+ok 3 - unknown native input is rejected by the validator despite supplied extra skip/report arguments
+  ---
+  duration_ms: 40.686612
+  type: 'test'
+  ...
+# Subtest: catalog and SBOM failures still reject before the architecture gate
+ok 4 - catalog and SBOM failures still reject before the architecture gate
+  ---
+  duration_ms: 67.358457
+  type: 'test'
+  ...
+# Subtest: public archive API signs a core fixture through all actual payload gates without validator injection
+ok 5 - public archive API signs a core fixture through all actual payload gates without validator injection
+  ---
+  duration_ms: 241.178641
+  type: 'test'
+  ...
+# Subtest: architecture-independent tree has no executed target code or included Node claim
+ok 6 - architecture-independent tree has no executed target code or included Node claim
+  ---
+  duration_ms: 14.786819
+  type: 'test'
+  ...
+# Subtest: separate matching ARM64 and x64 esbuild trees pass static header checks
+ok 7 - separate matching ARM64 and x64 esbuild trees pass static header checks
+  ---
+  duration_ms: 13.985354
+  type: 'test'
+  ...
+# Subtest: x64 optional package cannot be relabeled as an ARM64 delivery
+ok 8 - x64 optional package cannot be relabeled as an ARM64 delivery
+  ---
+  duration_ms: 2.652079
+  type: 'test'
+  ...
+# Subtest: ARM64 package with a mislabeled x64 binary fails
+ok 9 - ARM64 package with a mislabeled x64 binary fails
+  ---
+  duration_ms: 3.7635
+  type: 'test'
+  ...
+# Subtest: native allow rules require exact package paths and explicit esbuild platform metadata
+ok 10 - native allow rules require exact package paths and explicit esbuild platform metadata
+  ---
+  duration_ms: 16.703597
+  type: 'test'
+  ...
+# Subtest: wrong ELF width or big-endian content fails even with matching manifest
+ok 11 - wrong ELF width or big-endian content fails even with matching manifest
+  ---
+  duration_ms: 5.182268
+  type: 'test'
+  ...
+# Subtest: missing or version-mismatched optional target esbuild cannot silently pass
+ok 12 - missing or version-mismatched optional target esbuild cannot silently pass
+  ---
+  duration_ms: 8.394369
+  type: 'test'
+  ...
+# Subtest: dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+ok 13 - dynamic esbuild or an unexpected interpreter requires explicit new ABI review
+  ---
+  duration_ms: 5.253654
+  type: 'test'
+  ...
+# Subtest: unknown native executable and Node ABI add-on fail closed
+ok 14 - unknown native executable and Node ABI add-on fail closed
+  ---
+  duration_ms: 4.499744
+  type: 'test'
+  ...
+# Subtest: native suffix with unrecognized or truncated bytes fails
+ok 15 - native suffix with unrecognized or truncated bytes fails
+  ---
+  duration_ms: 2.11389
+  type: 'test'
+  ...
+# Subtest: reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+ok 16 - reviewed Bare versions preserve foreign variants with honest other-runtime disposition
+  ---
+  duration_ms: 1.83782
+  type: 'test'
+  ...
+# Subtest: Bare path/header mismatch or unreviewed version is rejected
+ok 17 - Bare path/header mismatch or unreviewed version is rejected
+  ---
+  duration_ms: 3.529443
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh exact package metadata cannot approve changed same-header native content
+ok 18 - bare-fs fresh exact package metadata cannot approve changed same-header native content
+  ---
+  duration_ms: 9.951062
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects registry drift before native approval
+ok 19 - bare-fs fresh package rejects registry drift before native approval
+  ---
+  duration_ms: 9.563506
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects integrity drift before native approval
+ok 20 - bare-fs fresh package rejects integrity drift before native approval
+  ---
+  duration_ms: 8.848404
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects manifest drift before native approval
+ok 21 - bare-fs fresh package rejects manifest drift before native approval
+  ---
+  duration_ms: 9.192535
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects loader drift before native approval
+ok 22 - bare-fs fresh package rejects loader drift before native approval
+  ---
+  duration_ms: 15.481767
+  type: 'test'
+  ...
+# Subtest: bare-fs fresh package rejects missing-native drift before native approval
+ok 23 - bare-fs fresh package rejects missing-native drift before native approval
+  ---
+  duration_ms: 12.866622
+  type: 'test'
+  ...
+# Subtest: bare-url fresh exact package metadata cannot approve changed same-header native content
+ok 24 - bare-url fresh exact package metadata cannot approve changed same-header native content
+  ---
+  duration_ms: 12.302925
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects registry drift before native approval
+ok 25 - bare-url fresh package rejects registry drift before native approval
+  ---
+  duration_ms: 10.674306
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects integrity drift before native approval
+ok 26 - bare-url fresh package rejects integrity drift before native approval
+  ---
+  duration_ms: 14.246583
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects manifest drift before native approval
+ok 27 - bare-url fresh package rejects manifest drift before native approval
+  ---
+  duration_ms: 19.460226
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects loader drift before native approval
+ok 28 - bare-url fresh package rejects loader drift before native approval
+  ---
+  duration_ms: 9.178534
+  type: 'test'
+  ...
+# Subtest: bare-url fresh package rejects missing-native drift before native approval
+ok 29 - bare-url fresh package rejects missing-native drift before native approval
+  ---
+  duration_ms: 9.345882
+  type: 'test'
+  ...
+# Subtest: ELF program-header and interpreter offsets are bounded before reads
+ok 30 - ELF program-header and interpreter offsets are bounded before reads
+  ---
+  duration_ms: 0.553742
+  type: 'test'
+  ...
+# Subtest: known PE and Mach-O headers are classified but not accepted as Linux esbuild
+ok 31 - known PE and Mach-O headers are classified but not accepted as Linux esbuild
+  ---
+  duration_ms: 2.322701
+  type: 'test'
+  ...
+# Subtest: npm platform constraints honor deny lists, any, libc and malformed metadata
+ok 32 - npm platform constraints honor deny lists, any, libc and malformed metadata
+  ---
+  duration_ms: 1.381783
+  type: 'test'
+  ...
+# Subtest: unreviewed gyp build dependency and changed diskusage loader are blocked
+ok 33 - unreviewed gyp build dependency and changed diskusage loader are blocked
+  ---
+  duration_ms: 2.404051
+  type: 'test'
+  ...
+# Subtest: lock drift is rejected for an actual installed package
+ok 34 - lock drift is rejected for an actual installed package
+  ---
+  duration_ms: 1.504094
+  type: 'test'
+  ...
+# Subtest: internal npm file links are accepted; external, cyclic and directory links fail
+ok 35 - internal npm file links are accepted; external, cyclic and directory links fail
+  ---
+  duration_ms: 3.036841
+  type: 'test'
+  ...
+# Subtest: target, metadata, file-size and depth limits fail before execution
+ok 36 - target, metadata, file-size and depth limits fail before execution
+  ---
+  duration_ms: 7.340995
+  type: 'test'
+  ...
+# Subtest: host contract rejects wrong OS, CPU, Node, musl, old glibc, NAPI, libuv and alternate runtimes
+ok 37 - host contract rejects wrong OS, CPU, Node, musl, old glibc, NAPI, libuv and alternate runtimes
+  ---
+  duration_ms: 3.043781
+  type: 'test'
+  ...
+# Subtest: fixed loaders are deterministically pinned and have no selectable loading fallback
+ok 38 - fixed loaders are deterministically pinned and have no selectable loading fallback
+  ---
+  duration_ms: 1.266101
+  type: 'test'
+  ...
+# Subtest: target probe fails on an incompatible host before inspecting an application or loading code
+ok 39 - target probe fails on an incompatible host before inspecting an application or loading code
+  ---
+  duration_ms: 111.797443
+  type: 'test'
+  ...
+# Subtest: fixed loader verifies bytes and ownership before eager binding; environment cannot select a file
+ok 40 - fixed loader verifies bytes and ownership before eager binding; environment cannot select a file
+  ---
+  duration_ms: 31.007109
+  type: 'test'
+  ...
+# Subtest: real original upstream packages are rejected; exact normalization admits only two fixed ARM64 libraries
+ok 41 - real original upstream packages are rejected; exact normalization admits only two fixed ARM64 libraries
+  ---
+  duration_ms: 117.367787
+  type: 'test'
+  ...
+# Subtest: one changed upstream package blocks all pruning before the first mutation
+ok 42 - one changed upstream package blocks all pruning before the first mutation
+  ---
+  duration_ms: 26.159994
+  type: 'test'
+  ...
+# Subtest: unknown original files and mismatched archive integrity cannot enter the native contract
+ok 43 - unknown original files and mismatched archive integrity cannot enter the native contract
+  ---
+  duration_ms: 20.919194
+  type: 'test'
+  ...
+# Subtest: normalization refuses already transformed sources rather than silently replacing evidence
+ok 44 - normalization refuses already transformed sources rather than silently replacing evidence
+  ---
+  duration_ms: 28.055895
+  type: 'test'
+  ...
+# Subtest: changed loader, changed binary and unreviewed package file each revoke native admission
+ok 45 - changed loader, changed binary and unreviewed package file each revoke native admission
+  ---
+  duration_ms: 56.216245
+  type: 'test'
+  ...
+# Subtest: hardlinked files and unexpected symlink directories fail the whole package contract
+ok 46 - hardlinked files and unexpected symlink directories fail the whole package contract
+  ---
+  duration_ms: 28.380557
+  type: 'test'
+  ...
+# Subtest: normalization does not authorize another Node version, platform or an unknown addon
+ok 47 - normalization does not authorize another Node version, platform or an unknown addon
+  ---
+  duration_ms: 41.848068
+  type: 'test'
+  ...
+# Subtest: Python native SBOM binding and runtime verifier agree on exact derivative and upstream provenance
+ok 48 - Python native SBOM binding and runtime verifier agree on exact derivative and upstream provenance
+  ---
+  duration_ms: 88.827638
+  type: 'test'
+  ...
+# Subtest: missing or falsified native evidence cannot produce a bound SBOM
+ok 49 - missing or falsified native evidence cannot produce a bound SBOM
+  ---
+  duration_ms: 98.88319
+  type: 'test'
+  ...
+# Subtest: runtime verifier refuses unchanged upstream hash claims for normalized package bytes
+ok 50 - runtime verifier refuses unchanged upstream hash claims for normalized package bytes
+  ---
+  duration_ms: 29.148829
+  type: 'test'
+  ...
+# Subtest: managed serialport contract preserves historical loaders and admits bounded Node 24 candidates only
+ok 51 - managed serialport contract preserves historical loaders and admits bounded Node 24 candidates only
+  ---
+  duration_ms: 2.231064
+  type: 'test'
+  ...
+# Subtest: actual normalization and Python SBOM evidence bind the requested future Node candidate
+ok 52 - actual normalization and Python SBOM evidence bind the requested future Node candidate
+  ---
+  duration_ms: 804.887093
+  type: 'test'
+  ...
+# Subtest: managed native loader rejects incompatible target before any filesystem or dlopen access
+ok 53 - managed native loader rejects incompatible target before any filesystem or dlopen access
+  ---
+  duration_ms: 2.366536
+  type: 'test'
+  ...
+# Subtest: first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+ok 54 - first account is fixed service role, frontend hash accepted, no default personal passwords or active physical devices
+  ---
+  duration_ms: 37.904415
+  type: 'test'
+  ...
+# Subtest: configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+ok 55 - configured handoff maps measured-plant inputs into disabled UI instance and retains private device plan
+  ---
+  duration_ms: 6.622678
+  type: 'test'
+  ...
+# Subtest: every partial object-store write keeps the start gate closed and refuses unsafe replay
+ok 56 - every partial object-store write keeps the start gate closed and refuses unsafe replay
+  ---
+  duration_ms: 28.43658
+  type: 'test'
+  ...
+# Subtest: configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+ok 57 - configuration, running controller, unknown password hash and different replay handoff are rejected before mutation
+  ---
+  duration_ms: 9.011106
+  type: 'test'
+  ...
+# Subtest: first-run marker and safety policy drift block subsequent enrollment verification
+ok 58 - first-run marker and safety policy drift block subsequent enrollment verification
+  ---
+  duration_ms: 17.636117
+  type: 'test'
+  ...
+# Subtest: minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+ok 59 - minimal first start enrolls admin only and preserves host defaults without inventing plant settings
+  ---
+  duration_ms: 2.550018
+  type: 'test'
+  ...
+# Subtest: EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes
+ok 60 - EOS first start completes the redundant Admin wizard without telemetry consent or identity/configuration changes
+  ---
+  duration_ms: 12.001327
+  type: 'test'
+  ...
+# Subtest: historical wizard state remains verifiable and never creates a new boot gate or implicit repair
+ok 61 - historical wizard state remains verifiable and never creates a new boot gate or implicit repair
+  ---
+  duration_ms: 20.977631
+  type: 'test'
+  ...
+# Subtest: first start never replaces telemetry settings with implicit consent
+ok 62 - first start never replaces telemetry settings with implicit consent
+  ---
+  duration_ms: 0.671618
+  type: 'test'
+  ...
+# Subtest: all six actual source manifests and executable entrypoints exist; source presence is not installation
+ok 63 - all six actual source manifests and executable entrypoints exist; source presence is not installation
+  ---
+  duration_ms: 16.543275
+  type: 'test'
+  ...
+# Subtest: complete installed fixture has seven mandatory packages but only two executable adapters
+ok 64 - complete installed fixture has seven mandatory packages but only two executable adapters
+  ---
+  duration_ms: 3.745223
+  type: 'test'
+  ...
+# Subtest: test.2-sized product, missing entrypoint and changed root lock are rejected
+ok 65 - test.2-sized product, missing entrypoint and changed root lock are rejected
+  ---
+  duration_ms: 4.377021
+  type: 'test'
+  ...
+# Subtest: product catalog cannot admit field adapters or silently omit required Management packages
+ok 66 - product catalog cannot admit field adapters or silently omit required Management packages
+  ---
+  duration_ms: 0.39061
+  type: 'test'
+  ...
+# Subtest: public setup inputs require matching HTTPS origin and an independently pinned public trust export
+ok 67 - public setup inputs require matching HTTPS origin and an independently pinned public trust export
+  ---
+  duration_ms: 6.383823
+  type: 'test'
+  ...
+# Subtest: full-product host install rejects missing first-start security inputs before commands
+ok 68 - full-product host install rejects missing first-start security inputs before commands
+  ---
+  duration_ms: 0.956861
+  type: 'test'
+  ...
+# Subtest: setup boot target excludes Controller; isolated frontend cannot read DB or user data
+ok 69 - setup boot target excludes Controller; isolated frontend cannot read DB or user data
+  ---
+  duration_ms: 0.826488
+  type: 'test'
+  ...
+# Subtest: public first-start context binds only the actual database UUID to fixed public trust
+ok 70 - public first-start context binds only the actual database UUID to fixed public trust
+  ---
+  duration_ms: 1.196197
+  type: 'test'
+  ...
+# Subtest: missing assembly is rejected on every build host before any signing output
+ok 71 - missing assembly is rejected on every build host before any signing output
+  ---
+  duration_ms: 1.100525
+  type: 'test'
+  ...
+# Subtest: PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+ok 72 - PostgreSQL prerequisite fixture passes independently of preserved Redis hold
+  ---
+  duration_ms: 16.45969
+  type: 'test'
+  ...
+# Subtest: fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+ok 73 - fresh unit namespace uses a successful complete list, independent of systemd257 empty-pattern exit 1
+  ---
+  duration_ms: 7.960204
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+ok 74 - unit namespace rejects any existing EOS or ioBroker state even when protected paths are absent
+  ---
+  duration_ms: 60.652845
+  type: 'test'
+  ...
+# Subtest: unit namespace accepts full names, instances, escaped names and known C-locale table columns
+ok 75 - unit namespace accepts full names, instances, escaped names and known C-locale table columns
+  ---
+  duration_ms: 5.753717
+  type: 'test'
+  ...
+# Subtest: unit namespace rejects empty, malformed, incomplete or failed unit listings
+ok 76 - unit namespace rejects empty, malformed, incomplete or failed unit listings
+  ---
+  duration_ms: 26.819519
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 17.10 rejected
+ok 77 - unsupported PostgreSQL 17.10 rejected
+  ---
+  duration_ms: 10.21266
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 16.11 rejected
+ok 78 - unsupported PostgreSQL 16.11 rejected
+  ---
+  duration_ms: 7.748159
+  type: 'test'
+  ...
+# Subtest: unsupported PostgreSQL 18.1 rejected
+ok 79 - unsupported PostgreSQL 18.1 rejected
+  ---
+  duration_ms: 17.06587
+  type: 'test'
+  ...
+# Subtest: every protected existing path, including old standalone EOS, rejects without mutations
+ok 80 - every protected existing path, including old standalone EOS, rejects without mutations
+  ---
+  duration_ms: 73.893564
+  type: 'test'
+  ...
+# Subtest: malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+ok 81 - malformed listeners, occupied IPv6 port, mutable executable and timeout fail closed
+  ---
+  duration_ms: 19.141143
+  type: 'test'
+  ...
+# Subtest: real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions
+ok 82 - real OpenSSL provisioning, distinct identities, bootstrap profile and private key permissions
+  ---
+  duration_ms: 170.040199
+  type: 'test'
+  ...
+# Subtest: backend rejects mixtures, injected loader names and TLS downgrade
+ok 83 - backend rejects mixtures, injected loader names and TLS downgrade
+  ---
+  duration_ms: 0.418452
+  type: 'test'
+  ...
+# Subtest: database and runtime service boundaries retain network discovery without root privileges
+ok 84 - database and runtime service boundaries retain network discovery without root privileges
+  ---
+  duration_ms: 0.324973
+  type: 'test'
+  ...
+# Subtest: installer command-double starts schema and live gate before controller; never invokes Redis/npm
+ok 85 - installer command-double starts schema and live gate before controller; never invokes Redis/npm
+  ---
+  duration_ms: 20.876926
+  type: 'test'
+  ...
+# Subtest: failed live gate preserves data and stops owned services without killing apt
+ok 86 - failed live gate preserves data and stops owned services without killing apt
+  ---
+  duration_ms: 15.932657
+  type: 'test'
+  ...
+# Subtest: failed admission or implicit start performs no command or persistent write
+ok 87 - failed admission or implicit start performs no command or persistent write
+  ---
+  duration_ms: 3.111742
+  type: 'test'
+  ...
+# Subtest: failed structured target checks are retained before fail-closed cleanup
+ok 88 - failed structured target checks are retained before fail-closed cleanup
+  ---
+  duration_ms: 16.808858
+  type: 'test'
+  ...
+# Subtest: existing distribution database cluster is never adopted or deleted
+ok 89 - existing distribution database cluster is never adopted or deleted
+  ---
+  duration_ms: 3.705174
+  type: 'test'
+  ...
+# Subtest: fresh managed host installs independent updater and unconfigured network before HTTPS first start
+ok 90 - fresh managed host installs independent updater and unconfigured network before HTTPS first start
+  ---
+  duration_ms: 37.782153
+  type: 'test'
+  ...
+# Subtest: fresh managed host rejects coherently declared controller 7.2.2 before commands or host writes
+ok 91 - fresh managed host rejects coherently declared controller 7.2.2 before commands or host writes
+  ---
+  duration_ms: 8.215794
+  type: 'test'
+  ...
+# Subtest: fresh managed host rejects coherently declared controller 8.0.0 before commands or host writes
+ok 92 - fresh managed host rejects coherently declared controller 8.0.0 before commands or host writes
+  ---
+  duration_ms: 6.142935
+  type: 'test'
+  ...
+# Subtest: fresh managed host rejects installed controller identity inconsistent with the 7.2.5 lock before mutation
+ok 93 - fresh managed host rejects installed controller identity inconsistent with the 7.2.5 lock before mutation
+  ---
+  duration_ms: 5.744913
+  type: 'test'
+  ...
+# Subtest: missing network tools abort fresh managed host before changes; later failure disables addon boot scheduling
+ok 94 - missing network tools abort fresh managed host before changes; later failure disables addon boot scheduling
+  ---
+  duration_ms: 51.029756
+  type: 'test'
+  ...
+# Subtest: legacy default admits precisely management; explicit new scope is fixed to six own adapters
+ok 95 - legacy default admits precisely management; explicit new scope is fixed to six own adapters
+  ---
+  duration_ms: 2.451772
+  type: 'test'
+  ...
+# Subtest: all-adapter catalog is rejected by management scope; new scope rejects missing or extra entries
+ok 96 - all-adapter catalog is rejected by management scope; new scope rejects missing or extra entries
+  ---
+  duration_ms: 1.006595
+  type: 'test'
+  ...
+# Subtest: source inventory reports candidate admission, never installation, activity or physical control
+ok 97 - source inventory reports candidate admission, never installation, activity or physical control
+  ---
+  duration_ms: 6.003909
+  type: 'test'
+  ...
+# Subtest: unknown scope is not a force or production switch
+ok 98 - unknown scope is not a force or production switch
+  ---
+  duration_ms: 0.473143
+  type: 'test'
+  ...
+# Subtest: historical and managed signed test contexts select six-adapter execution
+ok 99 - historical and managed signed test contexts select six-adapter execution
+  ---
+  duration_ms: 2.273517
+  type: 'test'
+  ...
+# Subtest: generic fresh install and additive activation cannot bypass journaled own-adapter migration
+ok 100 - generic fresh install and additive activation cannot bypass journaled own-adapter migration
+  ---
+  duration_ms: 11.251153
+  type: 'test'
+  ...
+# Subtest: host status uses no service actions and releases common maintenance lock
+ok 101 - host status uses no service actions and releases common maintenance lock
+  ---
+  duration_ms: 2254.331031
+  type: 'test'
+  ...
+# Subtest: explicit host rotation uses only fixed bounded stop/start operations and resets start limits
+ok 102 - explicit host rotation uses only fixed bounded stop/start operations and resets start limits
+  ---
+  duration_ms: 161.737191
+  type: 'test'
+  ...
+# Subtest: certificate workers follow the verified release Node and retain the historical executable
+ok 103 - certificate workers follow the verified release Node and retain the historical executable
+  ---
+  duration_ms: 523.820138
+  type: 'test'
+  ...
+# Subtest: root privilege and installed release verification precede service actions
+ok 104 - root privilege and installed release verification precede service actions
+  ---
+  duration_ms: 66.677267
+  type: 'test'
+  ...
+# Subtest: release activation/enrollment lock blocks certificate maintenance
+ok 105 - release activation/enrollment lock blocks certificate maintenance
+  ---
+  duration_ms: 67.035859
+  type: 'test'
+  ...
+# Subtest: live certificate process lock is not stolen by recovery
+ok 106 - live certificate process lock is not stolen by recovery
+  ---
+  duration_ms: 74.94463
+  type: 'test'
+  ...
+# Subtest: explicit recovery can reclaim dead certificate operation and preserve old generation
+ok 107 - explicit recovery can reclaim dead certificate operation and preserve old generation
+  ---
+  duration_ms: 163.095635
+  type: 'test'
+  ...
+# Subtest: a controller still running after stop prevents swap and retains recovery evidence
+ok 108 - a controller still running after stop prevents swap and retains recovery evidence
+  ---
+  duration_ms: 169.540347
+  type: 'test'
+  ...
+# Subtest: both marker hashes update; unrelated fields remain exact
+ok 109 - both marker hashes update; unrelated fields remain exact
+  ---
+  duration_ms: 157.787963
+  type: 'test'
+  ...
+# Subtest: invalid optional enrollment marker blocks both writes
+ok 110 - invalid optional enrollment marker blocks both writes
+  ---
+  duration_ms: 79.869225
+  type: 'test'
+  ...
+# Subtest: partial marker update can be reversed without accepting unrelated hashes
+ok 111 - partial marker update can be reversed without accepting unrelated hashes
+  ---
+  duration_ms: 176.86446
+  type: 'test'
+  ...
+# Subtest: version, service, role, ACL and password-setup drift all block both marker writes
+ok 112 - version, service, role, ACL and password-setup drift all block both marker writes
+  ---
+  duration_ms: 95.59398
+  type: 'test'
+  ...
+# Subtest: account drift during marker commit is detected by post-write verification
+ok 113 - account drift during marker commit is detected by post-write verification
+  ---
+  duration_ms: 63.510092
+  type: 'test'
+  ...
+# Subtest: real second marker write interruption recovers v2 hashes without changing accounts
+ok 114 - real second marker write interruption recovers v2 hashes without changing accounts
+  ---
+  duration_ms: 163.202991
+  type: 'test'
+  ...
+# Subtest: core-only marker update remains valid with no enrollment/account lookup
+ok 115 - core-only marker update remains valid with no enrollment/account lookup
+  ---
+  duration_ms: 60.432066
+  type: 'test'
+  ...
+# Subtest: status timer performs no rotation and systemd parses both units
+ok 116 - status timer performs no rotation and systemd parses both units
+  ---
+  duration_ms: 36.448434
+  type: 'test'
+  ...
+# Subtest: status includes HTTPS expiry and rejects exposed CA signing key
+ok 117 - status includes HTTPS expiry and rejects exposed CA signing key
+  ---
+  duration_ms: 157.747608
+  type: 'test'
+  ...
+# Subtest: explicit HTTPS renewal restarts controller and leaves Redis running
+ok 118 - explicit HTTPS renewal restarts controller and leaves Redis running
+  ---
+  duration_ms: 199.16705
+  type: 'test'
+  ...
+# Subtest: permit cleanup failure still attempts physical stop of controller and both Redis stores
+ok 119 - permit cleanup failure still attempts physical stop of controller and both Redis stores
+  ---
+  duration_ms: 167.116342
+  type: 'test'
+  ...
+# Subtest: checkout install requires explicit public inputs and independent trust hashes, never password arguments
+ok 120 - checkout install requires explicit public inputs and independent trust hashes, never password arguments
+  ---
+  duration_ms: 2.610337
+  type: 'test'
+  ...
+# Subtest: delivery selection binds test3 revision4, sequence7, platform, archive basename and independent public key digest
+ok 121 - delivery selection binds test3 revision4, sequence7, platform, archive basename and independent public key digest
+  ---
+  duration_ms: 6.045479
+  type: 'test'
+  ...
+# Subtest: archive digest streams exact bytes and rejects hardlinks, directories and missing files
+ok 122 - archive digest streams exact bytes and rejects hardlinks, directories and missing files
+  ---
+  duration_ms: 7.580471
+  type: 'test'
+  ...
+# Subtest: target native probe requires successful fixed child, matching host and no device I/O before installation
+ok 123 - target native probe requires successful fixed child, matching host and no device I/O before installation
+  ---
+  duration_ms: 5.901106
+  type: 'test'
+  ...
+# Subtest: deployment restores the operator umask on failure (process API fixture; POSIX filesystem acceptance remains open)
+ok 124 - deployment restores the operator umask on failure (process API fixture; POSIX filesystem acceptance remains open)
+  ---
+  duration_ms: 0.701302
+  type: 'test'
+  ...
+# Subtest: managed native installation probe uses the candidate binary and exact report version
+ok 125 - managed native installation probe uses the candidate binary and exact report version
+  ---
+  duration_ms: 0.923302
+  type: 'test'
+  ...
+# Subtest: fresh unit rendering pairs service executable with current while preserving source templates
+ok 126 - fresh unit rendering pairs service executable with current while preserving source templates
+  ---
+  duration_ms: 0.423369
+  type: 'test'
+  ...
+# Subtest: actual aliased installed tree and omitted optional package bind
+ok 127 - actual aliased installed tree and omitted optional package bind
+  ---
+  duration_ms: 7.877471
+  type: 'test'
+  ...
+# Subtest: stale or conflicting root digest is refused
+ok 128 - stale or conflicting root digest is refused
+  ---
+  duration_ms: 4.920459
+  type: 'test'
+  ...
+# Subtest: changed installed identity and unlisted package are refused
+ok 129 - changed installed identity and unlisted package are refused
+  ---
+  duration_ms: 5.014258
+  type: 'test'
+  ...
+# Subtest: npm boundaries inside package subdirectories cannot hide manifestless dependencies
+ok 130 - npm boundaries inside package subdirectories cannot hide manifestless dependencies
+  ---
+  duration_ms: 7.690434
+  type: 'test'
+  ...
+# Subtest: missing required package, phantom component and dangling dependency are refused
+ok 131 - missing required package, phantom component and dangling dependency are refused
+  ---
+  duration_ms: 5.888817
+  type: 'test'
+  ...
+# Subtest: manifestless packages and manifestless known vendored code cannot evade inventory
+ok 132 - manifestless packages and manifestless known vendored code cannot evade inventory
+  ---
+  duration_ms: 10.416543
+  type: 'test'
+  ...
+# Subtest: known vendored files must be present and bound by exact tree hash
+ok 133 - known vendored files must be present and bound by exact tree hash
+  ---
+  duration_ms: 6.390944
+  type: 'test'
+  ...
+# Subtest: modified component binds sorted exact transform rows and ancestor identity
+ok 134 - modified component binds sorted exact transform rows and ancestor identity
+  ---
+  duration_ms: 4.9145
+  type: 'test'
+  ...
+# Subtest: pre-transform identity, stale table, misleading archive hashes and wrong ancestor fail
+ok 135 - pre-transform identity, stale table, misleading archive hashes and wrong ancestor fail
+  ---
+  duration_ms: 15.938886
+  type: 'test'
+  ...
+# Subtest: changed actual transform rows and duplicated or unrecognized profile records fail
+ok 136 - changed actual transform rows and duplicated or unrecognized profile records fail
+  ---
+  duration_ms: 8.575769
+  type: 'test'
+  ...
+# Subtest: a Node runtime component cannot bypass package identity without the fresh signed binding
+ok 137 - a Node runtime component cannot bypass package identity without the fresh signed binding
+  ---
+  duration_ms: 1.444085
+  type: 'test'
+  ...
+1..137
+# tests 137
+# suites 0
+# pass 137
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5132.835626

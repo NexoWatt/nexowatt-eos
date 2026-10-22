@@ -1,8 +1,8 @@
 'use strict';
 // Managed TEST update transaction. Invoked only after the installed channel worker
 // authenticates the candidate with its persistent manufacturer trust anchor.
-// This revision permits app patches with unchanged enrollment and host contract.
-// A later version/host migration needs its own reviewed signed coordinator.
+// Node 24 security runtimes and own app patches are paired in the signed
+// payload; the single current pointer switches or restores both together.
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
@@ -18,7 +18,8 @@ const { isDeepStrictEqual: equal } = require('node:util');
 const own = require('./update-test-own-adapters.cjs');
 const product = require('../../runtime/product/scope.cjs');
 const UPLOAD_SERVICE = 'nexowatt-eos-upload.service';
-const NODE_VERSION = '24.21.0';
+const nodePolicy = require('../../runtime/updates/node-policy.cjs');
+const maintenanceLease = require('../../runtime/updates/maintenance-lease.cjs');
 const SERVICE = 'nexowatt-eos-controller.service';
 const DIRECTORY = '/etc/nexowatt-eos';
 const MALFORMED_PROTECTED_LOCK = Symbol('malformed-protected-lock');
@@ -28,7 +29,8 @@ const FAILURE_STAGES = new Set(['PREFLIGHT', 'SOURCE_VERIFY', 'STAGE', 'NATIVE_P
     'TRIAL', 'CONTROLLER_START', 'DB_CONNECT', 'DB_CLOSE', 'ADAPTER_HEARTBEAT', 'WEB_HTTPS', 'ADMIN_HTTPS', 'UI_HTTPS', 'VERIFY_LIVE', 'COMPLETION',
     'BOOT_CONFIGURATION', 'ACTIVE_REPORT', 'UNLOCK', 'BASELINE_READINESS', 'ROLLBACK_START', 'ROLLBACK_READINESS', 'NETWORK_CHECK', 'NETWORK_INSTALL', 'NETWORK_ROLLBACK', 'NETWORK_READINESS', 'ASSET_UPLOAD', 'ASSET_ROLLBACK']);
 const FAILURE_CODES = new Set([
-    'REPAIR_MANAGED_BASELINE_REQUIRED', 'REPAIR_COMPLETED_FIRST_START_REQUIRED', 'REPAIR_NATIVE_PROBE_FAILED', 'REPAIR_TRIAL_FAILED_RESTORED_ACTIVE',
+    'REPAIR_MAINTENANCE_LOCK', 'UPDATE_RUNTIME_VERSION', 'UPDATE_RUNTIME_DOWNGRADE', 'UPDATE_RUNTIME_BINDING',
+    'UPDATE_RUNTIME_DESCRIPTOR', 'UPDATE_RUNTIME_BINARY', 'UPDATE_RUNTIME_LICENSE', 'UPDATE_RUNTIME_REPACK', 'REPAIR_MANAGED_BASELINE_REQUIRED', 'REPAIR_COMPLETED_FIRST_START_REQUIRED', 'REPAIR_NATIVE_PROBE_FAILED', 'REPAIR_TRIAL_FAILED_RESTORED_ACTIVE',
     'INSTALLED_SIGNATURE', 'INSTALLED_CONTENT', 'INSTALLED_KEY', 'INSTALLED_PLATFORM', 'INSTALLED_RELEASE_ID', 'INSTALLED_UNTRUSTED_PATH',
     'BUNDLE_CHANGED', 'BUNDLE_CONTENT', 'BUNDLE_DIRECTORY', 'BUNDLE_EXISTS', 'BUNDLE_EXTRA_FILE', 'BUNDLE_FILE', 'BUNDLE_KEY',
     'BUNDLE_MANIFEST', 'BUNDLE_NODE_VERSION', 'BUNDLE_PATH', 'BUNDLE_PLATFORM', 'BUNDLE_ROLLBACK', 'BUNDLE_SEQUENCE',
@@ -74,13 +76,13 @@ function validateState(state) {
     if (!exact(state, ['schemaVersion', 'releaseId', 'sequence', 'nodeVersion', 'publicKeySha256', 'profile']) ||
         state.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(state.releaseId || '') ||
         !/^[a-f0-9]{64}$/.test(state.publicKeySha256 || '') || state.profile !== 'test' ||
-        state.nodeVersion !== NODE_VERSION || !Number.isSafeInteger(state.sequence) || state.sequence < 15) fail('REPAIR_MANAGED_BASELINE_REQUIRED');
+        !nodePolicy.supportedVersion(state.nodeVersion) || !Number.isSafeInteger(state.sequence) || state.sequence < 15) fail('REPAIR_MANAGED_BASELINE_REQUIRED');
     return state;
 }
 function validateBaselineDescription(row, baseline) {
     if (!row || row.releaseId !== baseline.releaseId || row.manifest.sequence !== baseline.sequence ||
         row.manifest.profile !== 'test' || row.manifest.releaseVersion !== '0.2.0-test.3' ||
-        row.manifest.nodeVersion !== NODE_VERSION || JSON.stringify(row.manifest.platforms) !== '["linux-arm64"]') fail('REPAIR_RELEASE_SCOPE');
+        row.manifest.nodeVersion !== baseline.nodeVersion || JSON.stringify(row.manifest.platforms) !== '["linux-arm64"]') fail('REPAIR_RELEASE_SCOPE');
 }
 const isoDate = value => typeof value === 'string' && Number.isFinite(Date.parse(value)) && new Date(value).toISOString() === value;
 function validateCompletion(complete) {
@@ -98,7 +100,9 @@ function validatePins(options) {
 function validateTransition(previous, next, options) {
     if (next.releaseId !== options.expectedReleaseId || next.manifest.sequence <= previous.manifest.sequence ||
         previous.manifest.sequence < 15 || next.manifest.profile !== 'test' || next.manifest.releaseVersion !== '0.2.0-test.3' ||
-        next.manifest.nodeVersion !== NODE_VERSION || JSON.stringify(next.manifest.platforms) !== '["linux-arm64"]') fail('REPAIR_RELEASE_SCOPE');
+        !nodePolicy.supportedVersion(next.manifest.nodeVersion) || JSON.stringify(next.manifest.platforms) !== '["linux-arm64"]') fail('REPAIR_RELEASE_SCOPE');
+    nodePolicy.assertTransition(previous.manifest.nodeVersion, next.manifest.nodeVersion);
+    const runtimeChanged = next.manifest.nodeVersion !== previous.manifest.nodeVersion;
     // Managed baselines start with the independently assembled 7.2.5 profile.
     // Derive both scopes from their authenticated manifests; never accept a
     // historical 7.2.2 catalogue merely because the six adapters are present.
@@ -113,7 +117,11 @@ function validateTransition(previous, next, options) {
         !name.slice(prefix.length).split('/').includes('node_modules'));
     for (const name of new Set([...oldRows.keys(), ...nextRows.keys()])) {
         if (equal(oldRows.get(name), nextRows.get(name))) continue;
-        if (ownSource(name) || ['catalog.json', 'sbom.cdx.json'].includes(name)) continue;
+        if ([nodePolicy.BINARY, nodePolicy.DESCRIPTOR, nodePolicy.LICENSE].includes(name)) {
+            if (!runtimeChanged || !oldRows.has(name) || !nextRows.has(name)) fail('UPDATE_RUNTIME_REPACK');
+            continue;
+        }
+        if (ownSource(name) || ['catalog.json', 'sbom.cdx.json', 'runtime-build.json'].includes(name)) continue;
         fail('REPAIR_HOST_MIGRATION_UNSUPPORTED');
     }
     const normalize = catalog => catalog.entries.map(({ sha256, ...row }) => row);
@@ -246,14 +254,14 @@ async function managedReadiness(releasePath, startedAt, setStage = () => {}) {
 }
 // Dependency boundary is only exported for fault-injection tests. No CLI flag
 // changes root paths, service commands, platform, owners or verification logic.
-async function update(options, dependencies = {}) {
+async function transaction(options, dependencies, lease) {
     let failureStage = 'PREFLIGHT';
-    const setStage = value => { if (!FAILURE_STAGES.has(value)) fail('REPAIR_FAILED'); failureStage = value; };
+    const setStage = value => { lease.assert(); if (!FAILURE_STAGES.has(value)) fail('REPAIR_FAILED'); failureStage = value; };
     try {
     validatePins(options);
     const invocationId = invocationIdentity(dependencies.invocationId);
     if ((dependencies.uid ?? process.getuid?.()) !== 0 || (dependencies.platform || `${process.platform}-${process.arch}`) !== 'linux-arm64' ||
-        (dependencies.nodeVersion || process.versions.node) !== NODE_VERSION) fail('REPAIR_TARGET_REQUIRED');
+        !nodePolicy.supportedVersion(dependencies.nodeVersion || process.versions.node)) fail('REPAIR_TARGET_REQUIRED');
     const at = value => path.join(dependencies.root || '/', value);
     const owner = dependencies.ownerCheck || rootOwned;
     const exec = dependencies.exec || command;
@@ -274,17 +282,20 @@ async function update(options, dependencies = {}) {
     const read = file => { owner(file); return bundle.readFileLimited(file, 1024 * 1024).bytes; };
     const inspect = dependencies.inspectInstalled || ((releasePath, expectedKey) => {
         const evidencePath = path.join(proofRoot, path.basename(releasePath));
-        checkInstalled({ releasePath, evidencePath, expectedNodeVersion: NODE_VERSION, expectedPlatform: 'linux-arm64', ownerCheck: owner });
-        if (bundle.sha256(read(path.join(evidencePath, 'release-public.pem'))) !== expectedKey) fail('REPAIR_INSTALLED_KEY');
         const manifestPath = path.join(evidencePath, 'manifest.json'); owner(manifestPath);
         const manifest = JSON.parse(bundle.readFileLimited(manifestPath, 16 * 1024 * 1024).bytes);
+        nodePolicy.validateVersion(manifest.nodeVersion);
+        checkInstalled({ releasePath, evidencePath, expectedNodeVersion: manifest.nodeVersion, expectedPlatform: 'linux-arm64', ownerCheck: owner });
+        nodePolicy.validateRuntime(releasePath, manifest);
+        if (bundle.sha256(read(path.join(evidencePath, 'release-public.pem'))) !== expectedKey) fail('REPAIR_INSTALLED_KEY');
         return { releaseId: path.basename(releasePath), manifest, ...validatePayload(releasePath, manifest) };
     });
     for (const file of [at(DIRECTORY), path.dirname(current), releaseRoot, proofRoot]) owner(file);
     if (fs.existsSync(at(DIRECTORY + '/maintenance-start.json'))) fail('REPAIR_ORPHAN_PERMIT');
-    for (const file of ['/usr/bin/systemctl', '/usr/bin/node', '/usr/bin/python3'])
+    for (const file of ['/usr/bin/systemctl', '/usr/bin/python3'])
         if (!(dependencies.toolTrust || toolTrust)(file)?.trusted) fail('REPAIR_UNTRUSTED_TOOL');
     const original = read(stateFile), baseline = validateState(JSON.parse(original));
+    if ((dependencies.nodeVersion || process.versions.node) !== baseline.nodeVersion) fail('REPAIR_TARGET_REQUIRED');
     const oldPath = path.join(releaseRoot, baseline.releaseId);
     const oldTarget = '/opt/nexowatt/eos/releases/' + baseline.releaseId;
     const assertPointer = expected => {
@@ -305,10 +316,11 @@ async function update(options, dependencies = {}) {
     if (bundle.sha256(key) !== options.expectedKeySha256) fail('REPAIR_NEW_KEY_PIN');
     (dependencies.trustedImport || trustedImport)(options.bundleDirectory);
     const verifyOptions = { bundleDirectory: options.bundleDirectory, publicKey: key, minimumSequence: baseline.sequence,
-        platform: 'linux-arm64', nodeVersion: NODE_VERSION };
+        platform: 'linux-arm64' };
     const candidate = (dependencies.verifyBundle || bundle.verifyBundle)(verifyOptions);
     const next = { ...candidate, ...(dependencies.validatePayload || validatePayload)(candidate.payloadPath, candidate.manifest) };
     validateTransition(previous, next, options);
+    (dependencies.validateRuntime || nodePolicy.validateRuntime)(candidate.payloadPath, candidate.manifest);
     const TARGET_SEQUENCE = next.manifest.sequence;
     for (const row of previous.manifest.files.filter(item => item.path.startsWith('system/postgresql-test/systemd/'))) {
         if (!row.path.endsWith('.service') && !row.path.endsWith('.timer') && !row.path.endsWith('.target') && !row.path.endsWith('.path')) fail('REPAIR_UNIT_SCOPE');
@@ -340,6 +352,7 @@ async function update(options, dependencies = {}) {
     };
     const ownRecord = file => privateRecord(file).equals(Buffer.from(lockRecord));
     const assertOwnLock = () => {
+        lease.assert();
         if (!ownRecord(lockPath) || !ownRecord(guardPath)) fail('REPAIR_COORDINATOR_OWNERSHIP_CHANGED');
     };
     if (fs.existsSync(guardPath)) fail('REPAIR_MAINTENANCE_IN_PROGRESS');
@@ -347,6 +360,7 @@ async function update(options, dependencies = {}) {
     const report = (phase, failure = null) => write(journal, JSON.stringify({ schemaVersion: 1, operation: 'test-release-repair', operationId, invocationId,
         phase, failureStage: failure?.failureStage ?? null, failureCode: failure?.failureCode ?? null, failureReason: failure?.failureReason ?? null,
         previousReleaseId: baseline.releaseId, targetSequence: TARGET_SEQUENCE, targetReleaseId: options.expectedReleaseId, at: new Date().toISOString(),
+        previousNodeVersion: baseline.nodeVersion, targetNodeVersion: next.manifest.nodeVersion,
         previousControllerState: serviceState, physicalControlEnabled: false, productionReleaseApproved: false }) + '\n');
     function switchPointer(expected, target) {
         assertPointer(expected);
@@ -410,7 +424,8 @@ async function update(options, dependencies = {}) {
             inspect(nextPath, options.expectedKeySha256);
         }
         setStage('NATIVE_PROBE');
-        const native = (dependencies.nativeProbe || probeNativeForInstallation)(nextPath, 'linux-arm64');
+        const native = (dependencies.nativeProbe || probeNativeForInstallation)(nextPath, 'linux-arm64', undefined,
+            { nodeExecutable: path.join(nextPath, nodePolicy.BINARY), nodeVersion: next.manifest.nodeVersion });
         if (native?.passed !== true) fail('REPAIR_NATIVE_PROBE_FAILED');
         write(path.join(proofRoot, options.expectedReleaseId, 'native-acceptance.json'), JSON.stringify(native) + '\n');
         setStage('PREPARED'); report('PREPARED');
@@ -427,7 +442,7 @@ async function update(options, dependencies = {}) {
         assertOwnLock(); assertPreserved(); stopped();
         setStage('TRIAL'); switchPointer(oldTarget, nextTarget);
         newState = Buffer.from(JSON.stringify({ ...JSON.parse(original), releaseId: options.expectedReleaseId,
-            sequence: TARGET_SEQUENCE, publicKeySha256: options.expectedKeySha256 }) + '\n');
+            sequence: TARGET_SEQUENCE, nodeVersion: next.manifest.nodeVersion, publicKeySha256: options.expectedKeySha256 }) + '\n');
         // Required before any trial start: new adapters validate active state,
         // current pointer and their own actual release entrypoint together.
         if (!read(stateFile).equals(original)) fail('REPAIR_STATE_CHANGED');
@@ -446,7 +461,7 @@ async function update(options, dependencies = {}) {
         maintenance.blockStart(at(DIRECTORY));
         setStage('ACTIVE_REPORT'); report('ACTIVE');
         setStage('UNLOCK'); removeOwnGates();
-        return { ok: true, phase: 'MANAGED_TEST_ACTIVE', releaseId: options.expectedReleaseId, sequence: TARGET_SEQUENCE,
+        return { ok: true, phase: 'MANAGED_TEST_ACTIVE', releaseId: options.expectedReleaseId, sequence: TARGET_SEQUENCE, nodeVersion: next.manifest.nodeVersion, previousNodeVersion: baseline.nodeVersion,
             hardwareTested: false, physicalControlEnabled: false, productionReleaseApproved: false };
     } catch (error) {
         const failure = { failureStage: FAILURE_STAGES.has(error?.failureStage) ? error.failureStage : failureStage,
@@ -535,6 +550,20 @@ async function update(options, dependencies = {}) {
             failureStage: FAILURE_STAGES.has(error?.failureStage) ? error.failureStage : failureStage,
             failureCode: safeCode(error?.failureCode || error?.code), failureReason: safeReason(error?.failureReason || error?.reason) });
     }
+}
+async function update(options, dependencies = {}) {
+    // Test doubles replace only external effects. Production always takes the
+    // same kernel lease as the OS security updater before reading host state.
+    validatePins(options);
+    invocationIdentity(dependencies.invocationId);
+    let lease;
+    try { lease = await (dependencies.acquireMaintenanceLease || maintenanceLease.acquire)(); }
+    catch (error) {
+        const code = safeCode(error?.code);
+        throw Object.assign(new Error(code), { code, failureStage: 'PREFLIGHT', failureCode: code });
+    }
+    try { return await transaction(options, dependencies, lease); }
+    finally { lease.release(); }
 }
 module.exports = { MALFORMED_PROTECTED_LOCK, PRESERVED, validateState, validateBaselineDescription, validateCompletion, validateTransition,
     validatePins, parseArgs, invocationIdentity, quiesceIncomplete, quiesceHost, failureOutput, update };

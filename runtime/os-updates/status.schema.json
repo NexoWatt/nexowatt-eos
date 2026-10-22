@@ -129,6 +129,12 @@
         },
         "serviceRestartsPossible": {
           "const": true
+        },
+        "serviceRestartPolicy": {
+          "enum": [
+            "unrestricted-package-actions",
+            "defer-package-service-actions"
+          ]
         }
       },
       "required": [
@@ -355,6 +361,12 @@
             {
               "type": "null"
             }
+          ]
+        },
+        "serviceActionsDeferred": {
+          "type": [
+            "boolean",
+            "null"
           ]
         }
       },

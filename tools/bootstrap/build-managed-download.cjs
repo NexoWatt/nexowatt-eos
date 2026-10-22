@@ -9,10 +9,12 @@ const { safeRelative, readFileLimited, sha256, trustedDirectory } = require('../
 const { verifyTestArchive } = require('../integration/create-test-archive.cjs');
 const { digestArchive, deliveryIdentity, DELIVERY_DIRECTORY, DELIVERY_REVISION, RELEASE_SEQUENCE } = require('../system/install-managed-from-checkout.cjs');
 const { validatePublicKeys } = require('../../components/admin/build/lib/eosLicenseCore.js');
+const nodeRuntime = require('../integration/prepare-node-runtime.cjs');
+const nodePolicy = require('../../runtime/updates/node-policy.cjs');
 const ROOT = path.resolve(__dirname, '../..');
-const NODE_ARCHIVE = 'node-v24.21.0-linux-arm64.tar.xz';
-const NODE_SHA256 = '6ad1325edbdb5649c379b75a237147a666c95d4f9ae8d340fef2d1575d289ad2';
-const FLAGS = ['--base-url', '--license-trust', '--license-trust-sha256', '--release-public-key-sha256', '--output'];
+const NODE_ARCHIVE = 'node-v24.22.1-linux-arm64.tar.xz';
+const NODE_SHA256 = 'dbabf7a1cbf947e6059ffad2c27b80041db97dea1e553b62afdee7f13fca336e';
+const FLAGS = ['--base-url', '--license-trust', '--license-trust-sha256', '--release-public-key-sha256', '--output', '--node-archive'];
 const FIXED_KIT_SOURCES = Object.freeze(['tools/bootstrap/first-start.cjs', 'tools/bootstrap/first-start-managed.cjs',
     'tools/integration/test-archive.py', 'tools/integration/check-runtime-architecture.cjs', 'tools/integration/bare-refresh-policy.json',
     'security/verify-runtime-tls.cjs', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'docs/history/UPSTREAM_README.md']);
@@ -36,7 +38,7 @@ function parse(argv) {
     baseUrl(args['--base-url']);
     for (const key of ['--license-trust-sha256', '--release-public-key-sha256'])
         if (!/^[a-f0-9]{64}$/.test(args[key] || '')) fail('DOWNLOAD_TRUST_PIN');
-    for (const key of ['--license-trust', '--output'])
+    for (const key of ['--license-trust', '--output', '--node-archive'])
         if (!path.isAbsolute(args[key]) || path.resolve(args[key]) !== args[key]) fail('DOWNLOAD_PATH');
     return args;
 }
@@ -131,6 +133,37 @@ function installCommand(url, scriptBytes) {
     const body = `set -euo pipefail; umask 077; [[ $EUID -eq 0 && -d /root && ! -L /root && $(/usr/bin/stat -c %u /root) == 0 ]] || exit 1; (( (8#$(/usr/bin/stat -c %a /root) & 0022) == 0 )) || exit 1; d=$(/usr/bin/mktemp -d /root/eos-installer-XXXXXXXX); /usr/bin/curl -q --proto =https --tlsv1.2 --fail --silent --show-error --connect-timeout 20 --max-time 120 --max-filesize ${scriptBytes.length} '${url}/install.sh' -o "$d/install.sh"; [[ -f "$d/install.sh" && ! -L "$d/install.sh" && $(/usr/bin/stat -c %h "$d/install.sh") == 1 && $(/usr/bin/stat -c %u "$d/install.sh") == 0 && $(/usr/bin/stat -c %s "$d/install.sh") == ${scriptBytes.length} ]] || exit 1; printf '%s  %s\\n' '${digest}' "$d/install.sh" | /usr/bin/sha256sum --check --status; /bin/bash "$d/install.sh"`;
     return '/usr/bin/sudo /usr/bin/env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C SSH_CONNECTION="${SSH_CONNECTION-}" /bin/bash -c ' + "'" + body.replace(/'/g, "'\\''") + "'";
 }
+function entryPublicationRequired(url, releaseId) {
+    baseUrl(url);
+    if (new URL(url).hostname !== 'github.com') return false;
+    if (!/^[a-f0-9]{64}$/.test(releaseId || '') || url !==
+        `https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-${RELEASE_SEQUENCE}-${releaseId}`)
+        fail('DOWNLOAD_RELEASE_ASSET_URL');
+    return true;
+}
+function finalizeCommand({ directory, entryBaseUrl }) {
+    if (typeof directory !== 'string' || !path.isAbsolute(directory) || path.resolve(directory) !== directory)
+        fail('DOWNLOAD_PATH');
+    trustedDirectory(directory);
+    if (typeof entryBaseUrl !== 'string' || !/^https:\/\/raw\.githubusercontent\.com\/NexoWatt\/nexowatt-eos\/[a-f0-9]{40}\/delivery\/[A-Za-z0-9_-]+$/.test(entryBaseUrl))
+        fail('DOWNLOAD_PINNED_ENTRY_URL');
+    const script = readFileLimited(path.join(directory, 'install.sh'), 512 * 1024).bytes;
+    const prepared = JSON.parse(readFileLimited(path.join(directory, 'download-preparation.json'), 65536).bytes);
+    if (prepared.schemaVersion !== 1 || prepared.kind !== 'eos-managed-test-download-preparation' ||
+        prepared.releaseSequence !== RELEASE_SEQUENCE || prepared.commandReady !== false ||
+        prepared.entryPublicationRequired !== true || prepared.bootstrapSha256 !== sha256(script) ||
+        !entryPublicationRequired(prepared.baseUrl, prepared.releaseId)) fail('DOWNLOAD_ENTRY_BINDING');
+    const command = path.join(directory, 'INSTALL_COMMAND.txt');
+    const record = path.join(directory, 'command-preparation.json');
+    if (fs.existsSync(command) || fs.existsSync(record)) fail('DOWNLOAD_COMMAND_EXISTS');
+    const report = { schemaVersion: 1, kind: 'eos-managed-test-command-preparation', entryBaseUrl,
+        releaseId: prepared.releaseId, releaseSequence: RELEASE_SEQUENCE, bootstrapSha256: sha256(script),
+        bootstrapBytes: script.length, commandReady: true, publicReadbackPerformed: false,
+        targetInstallationExecuted: false, productionReleaseApproved: false };
+    fs.writeFileSync(command, installCommand(entryBaseUrl, script) + '\n', { flag: 'wx' });
+    fs.writeFileSync(record, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
+    return report;
+}
 function build(args) {
     const url = baseUrl(args['--base-url']);
     const trust = licenseTrust(readFileLimited(args['--license-trust'], 32768).bytes, args['--license-trust-sha256']);
@@ -139,11 +172,13 @@ function build(args) {
     const delivery = deliveryIdentity(JSON.parse(readFileLimited(path.join(deliveryDir, 'delivery.json'), 65536).bytes),
         keyBytes, args['--release-public-key-sha256'], 'linux-arm64');
     const archiveFile = path.join(deliveryDir, delivery.archive);
-    const checked = verifyTestArchive({ archivePath: archiveFile, publicKey: keyBytes, expectedReleaseId: delivery.releaseId, platform: 'linux-arm64' });
+    const checked = verifyTestArchive({ archivePath: archiveFile, publicKey: keyBytes, expectedReleaseId: delivery.releaseId,
+        platform: 'linux-arm64', nodeVersion: nodePolicy.BASELINE_VERSION });
     if (checked.manifest.sequence !== RELEASE_SEQUENCE || checked.archiveSha256 !== delivery.sha256 || checked.archiveBytes !== delivery.bytes)
         fail('DOWNLOAD_RELEASE_BINDING');
-    const nodeFile = path.join(ROOT, 'delivery/test-pi-0.2.0-test.1', NODE_ARCHIVE);
-    if (digestArchive(nodeFile) !== NODE_SHA256) fail('DOWNLOAD_NODE_HASH');
+    const entryPending = entryPublicationRequired(url, checked.releaseId);
+    const nodeFile = args['--node-archive'];
+    if (nodeRuntime.verifyArchive(nodeFile, nodePolicy.BASELINE_VERSION).sha256 !== NODE_SHA256) fail('DOWNLOAD_NODE_HASH');
     const output = path.resolve(args['--output']); trustedDirectory(path.dirname(output));
     if (fs.existsSync(output)) fail('DOWNLOAD_FRESH_OUTPUT');
     const rows = collectKitSources();
@@ -164,11 +199,13 @@ function build(args) {
     const config = { schemaVersion: 1, baseUrl: url, assets, deliveryDirectory: DELIVERY_DIRECTORY };
     const script = Buffer.from(renderScript(config, readFileLimited(path.join(__dirname, 'prepare-managed-host.py')).bytes));
     fs.writeFileSync(path.join(output, 'install.sh'), script, { flag: 'wx' });
-    const command = installCommand(url, script);
-    fs.writeFileSync(path.join(output, 'INSTALL_COMMAND.txt'), command + '\n', { flag: 'wx' });
+    // GitHub Releases redirects large assets. The small authenticated entry is
+    // published separately on an immutable raw commit, then finalized below.
+    if (!entryPending) fs.writeFileSync(path.join(output, 'INSTALL_COMMAND.txt'), installCommand(url, script) + '\n', { flag: 'wx' });
     const report = { schemaVersion: 1, kind: 'eos-managed-test-download-preparation', baseUrl: url,
         releaseId: checked.releaseId, releaseSequence: RELEASE_SEQUENCE, deliveryRevision: DELIVERY_REVISION, assets,
         bootstrapSha256: sha256(script), sourceFilesBound, kit,
+        commandReady: !entryPending, entryPublicationRequired: entryPending,
         licenseTrustSha256: sha256(trust), releasePublicKeySha256: delivery.signingPublicKeySha256,
         published: false, targetInstallationExecuted: false, hardwareAcceptance: 'OPEN',
         browserCertificateTrust: 'Local device CA must be authenticated and trusted by the client.',
@@ -178,9 +215,16 @@ function build(args) {
     return report;
 }
 module.exports = { baseUrl, parse, licenseTrust, sourceBinding, collectKitSources, buildKit, FIXED_KIT_SOURCES,
-    renderScript, installCommand, build };
+    renderScript, installCommand, entryPublicationRequired, finalizeCommand, build };
 if (require.main === module) {
-    try { process.stdout.write(JSON.stringify(build(parse(process.argv.slice(2))), null, 2) + '\n'); }
+    try {
+        const argv = process.argv.slice(2);
+        const result = argv[0] === '--finalize-command'
+            ? (argv.length === 4 && argv[2] === '--entry-base-url'
+                ? finalizeCommand({ directory: argv[1], entryBaseUrl: argv[3] }) : fail('DOWNLOAD_USAGE'))
+            : build(parse(argv));
+        process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+    }
     catch (error) { process.stderr.write(JSON.stringify({ ok: false,
         code: /^DOWNLOAD_[A-Z_]+$/.test(error.code || '') ? error.code : 'DOWNLOAD_BUILD_FAILED' }) + '\n'); process.exitCode = 1; }
 }

@@ -102,6 +102,9 @@ jobs:
             "$RUNNER_TEMP/eos-architecture-venv/bin/python" "$test_script"
           done
 
+      - name: Check OS security automation with isolated root-owned fixtures
+        run: sudo -- "$RUNNER_TEMP/eos-architecture-venv/bin/python" -B tests/system/os-updates.test.py
+
       - name: Validate design links, examples and partial source inventory
         run: |
           "$RUNNER_TEMP/eos-architecture-venv/bin/python" tools/architecture/check-blueprint.py
@@ -140,7 +143,7 @@ jobs:
         # actions/setup-node v7; official tag resolved 2026-10-03.
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24.21.0'
+          node-version: '24.22.1'
           package-manager-cache: false
 
       - name: Record source and tool versions
@@ -188,7 +191,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24.21.0'
+          node-version: '24.22.1'
           package-manager-cache: false
       - name: Check actual published controller methods and explicit version boundaries
         run: |
@@ -218,7 +221,7 @@ jobs:
         if: always()
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
-          Exact published controller 7.2.5 behavior, PostgreSQL session callback compatibility, controller-8 denial and actual Admin Socket/HTTPS dependencies are tested on Node 24.21.0.
+          Exact published controller 7.2.5 behavior, PostgreSQL session callback compatibility, controller-8 denial and actual Admin Socket/HTTPS dependencies are tested on Node 24.22.1.
           Isolated database fixtures do not substitute for the separate fresh native PostgreSQL job. No test signs or publishes a delivery, changes a Pi, or constitutes production approval.
           SCOPE
 
@@ -240,13 +243,13 @@ jobs:
       - name: Use the target Node.js release
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24.21.0'
+          node-version: '24.22.1'
           package-manager-cache: false
 
       - name: Record source and verify fixture tools
         run: |
           git rev-parse HEAD
-          node -e 'if (process.version !== "v24.21.0" || process.platform !== "linux") process.exit(1); console.log(process.version, process.arch)'
+          node -e 'if (process.version !== "v24.22.1" || process.platform !== "linux") process.exit(1); console.log(process.version, process.arch)'
           python3 --version
           /usr/bin/openssl version
           /bin/bash --version
@@ -553,7 +556,7 @@ jobs:
       - name: Use qualified Node release
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24.21.0'
+          node-version: '24.22.1'
           package-manager-cache: false
       - name: Install only locked test and compiler dependencies
         run: |
@@ -699,7 +702,7 @@ jobs:
       - name: Use qualified Node release
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24.21.0'
+          node-version: '24.22.1'
           package-manager-cache: false
       - name: Prepare fresh explicit own-adapter laboratory
         run: |
@@ -714,12 +717,21 @@ jobs:
           node --test tests/integration-own-adapters/*.test.cjs
       - name: Build pinned PostgreSQL and locked laboratory dependencies
         run: bash tests/integration-controller/prepare-native.sh "$EOS_OWN_ADAPTERS_LAB_ROOT"
+      - name: Fetch the exact official ARM64 Node security release before runtime qualification
+        run: |
+          set -euo pipefail
+          umask 077
+          node_archive="$RUNNER_TEMP/node-v24.22.1-linux-arm64.tar.xz"
+          curl -q --proto '=https' --tlsv1.2 --fail --silent --show-error \
+            --connect-timeout 5 --max-time 60 --max-filesize 67108864 \
+            https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-arm64.tar.xz -o "$node_archive"
+          printf '%s  %s\n' dbabf7a1cbf947e6059ffad2c27b80041db97dea1e553b62afdee7f13fca336e "$node_archive" | sha256sum --check --status
       - name: Resolve once and assemble a fresh exact locked runtime without lifecycle scripts
         run: |
           set -euo pipefail
           npm --prefix components/ui ci --ignore-scripts --no-audit --no-fund
           node tools/integration/stage-security-refresh-cache.cjs --output "$RUNNER_TEMP/eos-refresh-resolution"
-          node tools/integration/prepare-security-refresh.cjs --output "$RUNNER_TEMP/eos-refresh-runtime" --sequence 15 --resolution-lock "$RUNNER_TEMP/eos-refresh-resolution/resolution-lock.json"
+          node tools/integration/prepare-security-refresh.cjs --output "$RUNNER_TEMP/eos-refresh-runtime" --sequence 15 --resolution-lock "$RUNNER_TEMP/eos-refresh-resolution/resolution-lock.json" --node-archive "$RUNNER_TEMP/node-v24.22.1-linux-arm64.tar.xz"
           node tests/integration-own-adapters/prepare-security-refresh.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" "$RUNNER_TEMP/eos-refresh-runtime"
       - name: Check PostgreSQL Objects permissions against the actual fresh 7.2.5 packages
         run: |
@@ -795,7 +807,7 @@ jobs:
         if: always()
         run: |
           cat >> "$GITHUB_STEP_SUMMARY" <<'SCOPE'
-          This job qualifies a fresh unsigned controller 7.2.5 candidate with current six-own-adapter packages and newly resolved, then offline-installed locked dependencies. Controller 8 is refused. No R9 dependency inheritance is claimed.
+          This job qualifies a fresh unsigned Node 24.22.1 / controller 7.2.5 candidate with current six-own-adapter packages and newly resolved, then offline-installed locked dependencies. Controller 8 is refused. No R9 dependency inheritance is claimed.
           Native x64 PostgreSQL 17.11 mTLS, immutable root-owned App, six actual adapter processes, central Home/Pro license responses, logical backup export, rejection before fresh-enrollment writes and enrollment retention after restart are tested without runtime mocks. Historical migration rollback is not claimed for this fresh scenario; managed-update rollback has separate contract tests.
           No real device or station is configured. Unconfigured processes do not mean connected plant devices. No Pi/ARM64, systemd mount-policy, full-system restore, timing, production or CRA acceptance is asserted.
           Private database/configuration, backup archives, journals, passwords, UUID, certificate keys and issuer material are deliberately excluded from artifacts. Only successful exact-source and exact-runtime evidence can satisfy a later release gate. The prepared app is unsigned; a persistent manufacturer key and separate publication/readback remain required.

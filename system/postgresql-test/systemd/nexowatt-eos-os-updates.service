@@ -5,6 +5,8 @@ After=network-online.target
 
 [Service]
 Type=oneshot
+# Shared EOS maintenance lease is busy: defer without a competing transaction.
+SuccessExitStatus=75
 User=root
 Group=root
 ExecStart=/usr/bin/python3 -I /opt/nexowatt/eos/current/runtime/os-updates/runner.py

@@ -20,18 +20,19 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 from urllib.parse import urlsplit
 import zipfile
 
-NODE_VERSION = "24.21.0"
-NODE_ASSET = "node-v24.21.0-linux-arm64.tar.xz"
-NODE_SHA256 = "6ad1325edbdb5649c379b75a237147a666c95d4f9ae8d340fef2d1575d289ad2"
-NODE_MEMBER = "node-v24.21.0-linux-arm64/bin/node"
+NODE_VERSION = "24.22.1"
+NODE_ASSET = "node-v24.22.1-linux-arm64.tar.xz"
+NODE_SHA256 = "dbabf7a1cbf947e6059ffad2c27b80041db97dea1e553b62afdee7f13fca336e"
+NODE_MEMBER = "node-v24.22.1-linux-arm64/bin/node"
 NODE_DEST = Path("/opt/nexowatt-node") / NODE_MEMBER
 EOS_ASSET = "eos-linux-arm64.tar.gz"
 ASSETS = ("installer-kit.zip", NODE_ASSET, EOS_ASSET)
 DELIVERY = "delivery/managed-test-15"
-LIMITS = {ASSETS[0]: 64 * 1024**2, NODE_ASSET: 128 * 1024**2, EOS_ASSET: 1024**3}
+LIMITS = {ASSETS[0]: 64 * 1024**2, NODE_ASSET: 128 * 1024**2, EOS_ASSET: 256 * 1024**2}
 ENV = {"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LANG": "C", "LC_ALL": "C",
        "DEBIAN_FRONTEND": "noninteractive", "NEEDRESTART_MODE": "l"}
 EOS_PATHS = ("/etc/nexowatt-eos", "/var/lib/nexowatt-eos", "/var/log/nexowatt-eos",
@@ -386,17 +387,128 @@ def download_assets(config, staging):
         with open(destination, "xb"):
             pass
         os.chmod(destination, 0o600)
-        result = run(["/usr/bin/curl", "-q", "--proto", "=https", "--proto-redir", "=https", "--tlsv1.2",
-                      "--fail", "--show-error", "--silent", "--connect-timeout", "30", "--max-time", "1800",
-                      "--max-filesize", str(asset["bytes"]), "--output", str(destination),
-                      "--url", config["baseUrl"] + "/" + name], timeout=1830)
-        if result.returncode != 0:
-            fail("BOOTSTRAP_DOWNLOAD_FAILED")
+        url = config["baseUrl"] + "/" + name
+        if github_release_asset(url):
+            download_github_asset(url, destination, asset["bytes"])
+        else:
+            result = run(["/usr/bin/curl", "-q", "--proto", "=https", "--proto-redir", "=https", "--tlsv1.2",
+                          "--fail", "--show-error", "--silent", "--connect-timeout", "30", "--max-time", "1800",
+                          "--max-filesize", str(asset["bytes"]), "--output", str(destination), "--url", url], timeout=1830)
+            if result.returncode != 0:
+                fail("BOOTSTRAP_DOWNLOAD_FAILED")
         digest_file(destination, asset)
         os.chmod(destination, 0o400)
         files[name] = destination
     # No extraction or host mutation can begin until all three have passed.
     return files
+
+
+def github_release_asset(url):
+    return bool(re.fullmatch(r"https://github\.com/NexoWatt/nexowatt-eos/releases/download/"
+                             r"managed-test-15-[a-f0-9]{64}/[A-Za-z0-9._-]+", url))
+
+
+def github_redirect(url):
+    # Only GitHub's asset CDN receives a redirected request. The signed public
+    # asset hash remains mandatory; HTTPS/redirect metadata is not authority.
+    try:
+        value = urlsplit(url)
+        return (isinstance(url, str) and len(url) <= 8192 and value.scheme == "https"
+                and value.hostname == "release-assets.githubusercontent.com" and value.port is None
+                and not value.username and not value.password and not value.fragment
+                and re.fullmatch(r"/[A-Za-z0-9/_-]+", value.path)
+                and not any(part in (".", "..") for part in value.path.split("/"))
+                and not re.search(r"[\x00-\x20\x7f\\]", url))
+    except (TypeError, ValueError):
+        return False
+
+
+def bounded_download_file(file, limit):
+    # Both files live inside a freshly created private range directory. Still
+    # reject links/replacement and enforce the bound before allocating bytes.
+    info = Path(file).lstat()
+    if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or info.st_size > limit:
+        fail("BOOTSTRAP_DOWNLOAD_SIZE")
+    descriptor = os.open(file, os.O_RDONLY | os.O_NOFOLLOW)
+    with os.fdopen(descriptor, "rb") as stream:
+        opened = os.fstat(stream.fileno())
+        if (opened.st_dev, opened.st_ino, opened.st_size) != (info.st_dev, info.st_ino, info.st_size):
+            fail("BOOTSTRAP_DOWNLOAD_SIZE")
+        data = stream.read(limit + 1)
+        after = os.fstat(stream.fileno())
+        if len(data) != info.st_size or (after.st_size, after.st_mtime_ns, after.st_ctime_ns) != \
+                (opened.st_size, opened.st_mtime_ns, opened.st_ctime_ns):
+            fail("BOOTSTRAP_DOWNLOAD_SIZE")
+        return data
+
+
+def response_headers(file):
+    raw = bounded_download_file(file, 65536)
+    try:
+        blocks = raw.decode("ascii").strip().split("\r\n\r\n")
+        lines = blocks[-1].split("\r\n")
+        if not re.fullmatch(r"HTTP/[12](?:\.\d)? [0-9]{3}(?: [^\r\n]*)?", lines[0]):
+            fail("BOOTSTRAP_DOWNLOAD_HEADERS")
+        result = {}
+        for line in lines[1:]:
+            name, value = line.split(":", 1)
+            name = name.lower()
+            if not re.fullmatch(r"[a-z0-9-]+", name):
+                fail("BOOTSTRAP_DOWNLOAD_HEADERS")
+            if name in ("location", "content-range", "content-length") and name in result:
+                fail("BOOTSTRAP_DOWNLOAD_HEADERS")
+            result[name] = value.strip()
+        return int(lines[0].split()[1]), result
+    except (UnicodeError, ValueError, IndexError):
+        fail("BOOTSTRAP_DOWNLOAD_HEADERS")
+
+
+def download_github_asset(url, destination, size):
+    if not github_release_asset(url) or type(size) is not int or not 0 < size <= 256 * 1024**2:
+        fail("BOOTSTRAP_DOWNLOAD_URL")
+    # One range plus any approved redirect shares a single five-second budget.
+    # The complete file is checked against the independently pinned asset hash
+    # by download_assets before extraction or package installation can begin.
+    with tempfile.TemporaryDirectory(prefix="eos-range-", dir=destination.parent) as directory:
+        header, chunk = Path(directory) / "headers", Path(directory) / "chunk"
+        current = url
+        with open(destination, "r+b") as output:
+            for start in range(0, size, 1024**2):
+                end = min(size, start + 1024**2) - 1
+                deadline = time.monotonic() + 5
+                for hop in range(3):
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        fail("BOOTSTRAP_DOWNLOAD_TIMEOUT")
+                    args = ["/usr/bin/curl", "-q", "--proto", "=https", "--tlsv1.2", "--fail", "--silent",
+                            "--connect-timeout", str(remaining), "--max-time", str(remaining),
+                            "--range", f"{start}-{end}", "--max-filesize", str(max(end - start + 1, 65536)),
+                            "--dump-header", str(header), "--output", str(chunk), "--write-out", "%{http_code}", "--url", current]
+                    result = run(args, capture=True, timeout=remaining + 1)
+                    if result.returncode != 0 or time.monotonic() > deadline:
+                        fail("BOOTSTRAP_DOWNLOAD_FAILED")
+                    status, fields = response_headers(header)
+                    if result.stdout.strip() != str(status).encode("ascii"):
+                        fail("BOOTSTRAP_DOWNLOAD_HEADERS")
+                    if status in (301, 302, 303, 307, 308):
+                        target = fields.get("location")
+                        if hop >= 2 or not github_redirect(target):
+                            fail("BOOTSTRAP_DOWNLOAD_REDIRECT")
+                        current = target
+                        continue
+                    expected_range = f"bytes {start}-{end}/{size}"
+                    if status != 206 or fields.get("content-range") != expected_range:
+                        if not (status == 200 and start == 0 and size <= 1024**2):
+                            fail("BOOTSTRAP_DOWNLOAD_RANGE")
+                    data = bounded_download_file(chunk, end - start + 1)
+                    if len(data) != end - start + 1:
+                        fail("BOOTSTRAP_DOWNLOAD_RANGE")
+                    output.write(data)
+                    break
+                else:
+                    fail("BOOTSTRAP_DOWNLOAD_REDIRECT")
+            output.flush()
+            os.fsync(output.fileno())
 
 
 def zip_path(name):

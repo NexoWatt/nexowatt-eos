@@ -22,15 +22,18 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24.21.0'
+          node-version: '24.22.1'
           package-manager-cache: false
       - name: Verify actual cryptography, transaction faults, fresh enrollment and authorization
         run: |
-          node --test tests/system/managed-channel.test.cjs tests/system/managed-trust.test.cjs tests/system/update-managed-release.test.cjs tests/integration/managed-fresh-enrollment.test.cjs components/admin/test/eos-update-http.test.cjs
+          node --test tests/system/managed-channel.test.cjs tests/system/managed-trust.test.cjs tests/system/update-managed-release.test.cjs tests/integration/managed-fresh-enrollment.test.cjs components/admin/test/eos-update-http.test.cjs components/admin/test/eos-os-update-status.test.cjs
           node --test tests/onboarding/enrollment.test.cjs tests/system/first-start-finalizer.test.cjs tests/postgresql/own-adapter-product.test.cjs tests/system/own-adapter-sbom.test.cjs
+          node --test tests/system/managed-node-runtime.test.cjs tests/integration/node-runtime-package.test.cjs tests/integration/serialport-native.test.cjs
+          python3 -I -B tests/integration/node-runtime-archive.test.py
+          node --test tests/system/os-updates-host-contract.test.cjs tests/system/os-updates-cross-contract.test.cjs
           node components/admin/tools/nexowatt-prebuilt-release-selftest.cjs
       - name: Check root-owned temporary fixtures and actual local socket
-        run: sudo -- "$(command -v node)" --test tests/system/managed-trust.test.cjs tests/system/managed-socket.test.cjs tests/postgresql/host-install.test.cjs
+        run: sudo -- "$(command -v node)" --test tests/system/managed-trust.test.cjs tests/system/managed-socket.test.cjs tests/postgresql/host-install.test.cjs tests/system/install-os-maintenance.test.cjs
   browser:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -40,7 +43,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '24.21.0'
+          node-version: '24.22.1'
           package-manager-cache: false
       - name: Install locked browser test tooling
         run: |

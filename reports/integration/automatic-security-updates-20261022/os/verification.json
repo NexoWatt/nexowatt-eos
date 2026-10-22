@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed-automatic-os-security-maintenance-contract-validation",
+  "date": "2026-10-22",
+  "sourceBaseCommit": "99ef5086bc5b0ee590de17e109b85e4738c973ae",
+  "environment": {
+    "os": "Linux x64 container",
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "pythonTestDependency": "jsonschema 4.26.0 in isolated temporary directory"
+  },
+  "checks": {
+    "pythonContracts": {
+      "passed": 28,
+      "failed": 0,
+      "command": "PYTHONPATH=<isolated-jsonschema-test-dependencies> python3 -B tests/system/os-updates.test.py"
+    },
+    "nodeContracts": {
+      "passed": 11,
+      "failed": 0,
+      "command": "node --test tests/system/install-os-maintenance.test.cjs tests/system/os-updates-host-contract.test.cjs tests/system/os-updates-cross-contract.test.cjs"
+    },
+    "actualAptConfigurationReadOnly": true,
+    "actualLocalKernelFlockContention": true,
+    "diffWhitespace": true
+  },
+  "inputBindings": [
+    {
+      "path": "runtime/os-updates/runner.py",
+      "sha256": "2ebb94a07eec27b39c80b940a4e08d62eab79c8e0077fb85657ab2cad09c669f"
+    },
+    {
+      "path": "runtime/os-updates/policy-rc.d",
+      "sha256": "c8a11670f1fc2bfc22cd64fd686c317efe5e41954079bd296d47305debd9164a"
+    },
+    {
+      "path": "runtime/os-updates/status.schema.json",
+      "sha256": "948f6361b13bfe59113d5d597659fd400e66b119c3eb6daae6e17d65c87a8bc8"
+    },
+    {
+      "path": "runtime/os-updates/README.md",
+      "sha256": "8efe86484b9d517693a99eebbc05a770c61096e0c77d51206f54ae6cfc2afd14"
+    },
+    {
+      "path": "system/managed-test/apt-managed.conf",
+      "sha256": "3b6edecede552b524db04db9690da77adf209d7d7516d37caacc7df6b14057a3"
+    },
+    {
+      "path": "system/test-base/os-updates/initial-status.json",
+      "sha256": "e387ccb47ce09f788e76b82957fe26646b39a1a1ba9e97ac5925ec5cd651faca"
+    },
+    {
+      "path": "system/test-base/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "e9dcac32f1f8d154b7a79328b789c108e70b419d6f8ab07d57c95045f508f26d"
+    },
+    {
+      "path": "system/postgresql-test/systemd/nexowatt-eos-os-updates.service",
+      "sha256": "e9dcac32f1f8d154b7a79328b789c108e70b419d6f8ab07d57c95045f508f26d"
+    },
+    {
+      "path": "tools/system/install-os-maintenance.cjs",
+      "sha256": "49b2ec8b938f35eff71b660e0fa4ccaaf146f79858ecb6115bf3a0ccb8cd9053"
+    },
+    {
+      "path": "tests/system/install-os-maintenance.test.cjs",
+      "sha256": "6dc4ba93e95f18a9021620084cf14e73090a05b0f3f54fe7542178613293344e"
+    },
+    {
+      "path": "tests/system/os-updates.test.py",
+      "sha256": "ff046d8ed6589d5c8d8585e3a114aa998e401b13cd98feb8e6b2eb405776a97e"
+    },
+    {
+      "path": "reports/integration/automatic-security-updates-20261022/os/README_DE.md",
+      "sha256": "417dd5457647cc3d166159f708b3e106415a1476f8827fc90ec9b2d85cb552b7"
+    },
+    {
+      "path": "reports/integration/automatic-security-updates-20261022/os/python-results.txt",
+      "sha256": "8b63a363614038dcc399348f1cf23e8c4c256620319844c3b982a2c2f4f47620"
+    },
+    {
+      "path": "reports/integration/automatic-security-updates-20261022/os/node-results.txt",
+      "sha256": "94688c20dd2977a1d7c066d4607f0b291a10fef9ae1238d771b325eafaec562b"
+    }
+  ],
+  "sharedIntegrationFiles": [
+    "tools/system/install-postgresql-host.cjs",
+    "tools/system/build-bundle.cjs"
+  ],
+  "sharedIntegrationNote": "Concurrent Node-update integration also changes these shared files; final combined source/CI evidence must bind them after integration. This report covers the OS helper and focused tests, not the final complete installation.",
+  "aptPackagesInstalled": false,
+  "systemdMutated": false,
+  "targetPiChanged": false,
+  "productionReleaseApproved": false,
+  "limits": [
+    "Debian service policy defers standard invoke-rc.d/deb-systemd-invoke actions; privileged maintainer scripts can bypass it with direct service control.",
+    "APT installs signed stable/security origins, including merged security fixes and ordinary stable fixes. Raspberry Pi stable main is not exclusively CVE classified.",
+    "Automatic reboot is disabled. Suppressed service actions remain pending until a subsequent boot is observed.",
+    "The fixed nightly timer does not catch up during the day; stale successful status remains visible.",
+    "Native Debian/ARM64 APT execution, helper handling in actual maintainer scripts, systemd constraints, crash/power-loss recovery and physical plant behavior remain untested."
+  ]
+}

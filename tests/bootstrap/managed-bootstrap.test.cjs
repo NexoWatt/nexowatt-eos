@@ -68,7 +68,7 @@ test('managed install diagnostics permit only the two additional fixed phases', 
 });
 test('managed generator retains independent public pins and rejects secret, URL and selector inputs', () => {
     const args = ['--base-url', 'https://downloads.example.com/eos/managed-15', '--license-trust', '/public/trust.json',
-        '--license-trust-sha256', 'a'.repeat(64), '--release-public-key-sha256', 'b'.repeat(64), '--output', '/new-output'];
+        '--license-trust-sha256', 'a'.repeat(64), '--release-public-key-sha256', 'b'.repeat(64), '--output', '/new-output', '--node-archive', '/public/node.tar.xz'];
     assert.equal(builder.parse(args)['--base-url'], args[1]);
     for (const bad of [[...args, '--private-key', '/secret'], [...args, '--sequence', '16'],
         args.map(x => x === args[1] ? 'https://user:secret@example.com/x' : x), args.slice(0, -2)])
@@ -107,11 +107,18 @@ test('actual payload copy and fixture-signed bundle authenticate the adjacent ar
     const catalogFile = path.join(directory, 'catalog.json'), sbomFile = path.join(directory, 'sbom.cdx.json');
     fs.writeFileSync(catalogFile, '{}\n');
     fs.writeFileSync(sbomFile, JSON.stringify({ bomFormat: 'CycloneDX', components: [] }));
+    const nodeRuntimeDirectory = path.join(directory, 'node-runtime');
+    fs.mkdirSync(path.join(nodeRuntimeDirectory, 'bin'), { recursive: true });
+    const nodeBytes = Buffer.alloc(64); nodeBytes.write('7f454c46020101', 'hex'); nodeBytes.writeUInt16LE(3, 16); nodeBytes.writeUInt16LE(183, 18);
+    fs.writeFileSync(path.join(nodeRuntimeDirectory, 'bin/node'), nodeBytes, { mode: 0o755 });
+    fs.writeFileSync(path.join(nodeRuntimeDirectory, 'LICENSE'), 'Synthetic license fixture\n');
+    fs.writeFileSync(path.join(nodeRuntimeDirectory, 'runtime.json'), JSON.stringify({ schemaVersion: 1, version: '24.22.1', platform: 'linux-arm64',
+        archiveSha256: 'a'.repeat(64), binarySha256: bundle.sha256(nodeBytes), licenseSha256: bundle.sha256('Synthetic license fixture\n') }) + '\n');
     // Exercise the production copy/inventory boundary with a deliberately tiny
     // app. This is not validatePayload, a product build or a native/Pi test.
     const { preparePayload } = require('../../tools/system/build-bundle.cjs');
     const { SECURITY_REFRESH_TEST } = require('../../runtime/product/scope.cjs');
-    const files = preparePayload({ appDirectory: app, destination: payload, catalogFile, sbomFile,
+    const files = preparePayload({ appDirectory: app, destination: payload, catalogFile, sbomFile, nodeRuntimeDirectory,
         releaseScope: SECURITY_REFRESH_TEST, networkProfile: true, managedProfile: true });
     const policy = 'tools/integration/bare-refresh-policy.json';
     const bytes = fs.readFileSync(path.join(ROOT, policy));
@@ -193,4 +200,35 @@ test('complete embedded managed preparer and command parse and verify exact byte
     assert.doesNotMatch(command, /--insecure|--location|\|\s*(?:sudo\s+)?bash/);
     assert.equal(spawnSync('/bin/bash', ['-n'], { input: script, encoding: 'utf8', timeout: 5000 }).status, 0);
     assert.equal(spawnSync('/bin/bash', ['-n'], { input: command, encoding: 'utf8', timeout: 5000 }).status, 0);
+});
+test('GitHub asset publication requires its exact release id and a separate immutable entry command', t => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-entry-command-'));
+    t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+    const releaseId = 'a'.repeat(64), baseUrl = `https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-${releaseId}`;
+    assert.equal(builder.entryPublicationRequired(baseUrl, releaseId), true);
+    assert.equal(builder.entryPublicationRequired('https://downloads.example.com/eos/managed-15', releaseId), false);
+    for (const url of [baseUrl.replace('15-', '16-'), baseUrl.replace('NexoWatt', 'other'), baseUrl.replace(releaseId, 'b'.repeat(64))])
+        assert.throws(() => builder.entryPublicationRequired(url, releaseId), /DOWNLOAD_RELEASE_ASSET_URL/);
+    const script = Buffer.from('#!/bin/bash\nexit 0\n');
+    fs.writeFileSync(path.join(directory, 'install.sh'), script);
+    fs.writeFileSync(path.join(directory, 'download-preparation.json'), JSON.stringify({ schemaVersion: 1,
+        kind: 'eos-managed-test-download-preparation', releaseSequence: 15, releaseId, baseUrl,
+        bootstrapSha256: bundle.sha256(script), commandReady: false, entryPublicationRequired: true }));
+    const entryBaseUrl = `https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/${'b'.repeat(40)}/delivery/managed-public-15`;
+    for (const url of [entryBaseUrl.replace('b'.repeat(40), 'main'), entryBaseUrl.replace('NexoWatt', 'other'), baseUrl])
+        assert.throws(() => builder.finalizeCommand({ directory, entryBaseUrl: url }), /DOWNLOAD_PINNED_ENTRY_URL/);
+    assert.equal(fs.existsSync(path.join(directory, 'INSTALL_COMMAND.txt')), false);
+    fs.appendFileSync(path.join(directory, 'install.sh'), '# changed\n');
+    assert.throws(() => builder.finalizeCommand({ directory, entryBaseUrl }), /DOWNLOAD_ENTRY_BINDING/);
+    assert.equal(fs.existsSync(path.join(directory, 'INSTALL_COMMAND.txt')), false);
+    fs.writeFileSync(path.join(directory, 'install.sh'), script);
+    const report = builder.finalizeCommand({ directory, entryBaseUrl });
+    assert.equal(report.commandReady, true);
+    assert.equal(report.publicReadbackPerformed, false);
+    const command = fs.readFileSync(path.join(directory, 'INSTALL_COMMAND.txt'), 'utf8');
+    assert.ok(command.includes(entryBaseUrl + '/install.sh'));
+    assert.ok(command.includes(bundle.sha256(script)));
+    assert.doesNotMatch(command, /--location|github\.com\/NexoWatt\/nexowatt-eos\/releases/);
+    assert.deepEqual(JSON.parse(fs.readFileSync(path.join(directory, 'command-preparation.json'))), report);
+    assert.throws(() => builder.finalizeCommand({ directory, entryBaseUrl }), /DOWNLOAD_COMMAND_EXISTS/);
 });

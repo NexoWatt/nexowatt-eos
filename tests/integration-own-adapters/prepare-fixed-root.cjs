@@ -38,7 +38,6 @@ function prepare(root, uidText, gidText) {
     if (process.getuid?.() !== 0) fail('ROOT_UID');
     if (process.env.GITHUB_ACTIONS !== 'true' || process.env.EOS_DISPOSABLE_OWN_ADAPTERS_LAB !== '1'
         || process.env.EOS_DISPOSABLE_MANAGEMENT_LAB !== '1') fail('CI_CONTEXT');
-    if (process.versions.node !== NODE) fail('NODE_VERSION');
     if (!/^[1-9][0-9]{0,8}$/.test(uidText || '') || !/^[1-9][0-9]{0,8}$/.test(gidText || '')
         || !path.isAbsolute(root || '') || fs.realpathSync(root) !== root) fail('LAB_ARGUMENTS');
     const st = fs.lstatSync(root), uid = Number(uidText), gid = Number(gidText);
@@ -50,6 +49,7 @@ function prepare(root, uidText, gidText) {
     const input = path.join(root, 'own-adapters-native-prepared.json'), inputStat = fs.lstatSync(input);
     if (!inputStat.isFile() || inputStat.uid !== uid || inputStat.nlink !== 1 || (inputStat.mode & 0o777) !== 0o600) fail('PREPARATION_FILE');
     const prepared = validatePreparation(JSON.parse(fs.readFileSync(input)), root);
+    if (process.versions.node !== prepared.nodeVersion) fail('NODE_VERSION');
     if (sha(JSON.stringify(contentRows(prepared.app))) !== prepared.appContentSha256) fail('PREPARATION_DIGEST');
     if (sha(JSON.stringify(contentRows(prepared.baselineApp))) !== prepared.baselineContentSha256) fail('PREPARATION_DIGEST');
     protectOpt(opt);
@@ -74,7 +74,7 @@ function prepare(root, uidText, gidText) {
             protectTree(path.join(release, 'system'));
         }
         const trustBytes = fs.readFileSync('/etc/nexowatt-eos/license-trust.json');
-        fs.writeFileSync(STATE, JSON.stringify({ schemaVersion: 1, releaseId, sequence: prepared.sequence, nodeVersion: NODE,
+        fs.writeFileSync(STATE, JSON.stringify({ schemaVersion: 1, releaseId, sequence: prepared.sequence, nodeVersion: prepared.nodeVersion,
             publicKeySha256: sha(trustBytes), profile: 'test' }) + '\n', { flag: 'wx', mode: 0o644 });
         fs.symlinkSync(release, CURRENT, 'dir');
         fs.writeFileSync(MARKER, JSON.stringify({ ...prepared, app: undefined,

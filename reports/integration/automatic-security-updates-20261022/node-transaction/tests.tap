@@ -1,0 +1,280 @@
+TAP version 13
+# Subtest: actual Ed25519 envelope authenticates an eligible update; unrelated and old releases are not offered
+ok 1 - actual Ed25519 envelope authenticates an eligible update; unrelated and old releases are not offered
+  ---
+  duration_ms: 6.466278
+  type: 'test'
+  ...
+# Subtest: altered payload, different key, expired/future envelope, unpinned URL, oversized archive and duplicate release fail closed
+ok 2 - altered payload, different key, expired/future envelope, unpinned URL, oversized archive and duplicate release fail closed
+  ---
+  duration_ms: 5.972185
+  type: 'test'
+  ...
+# Subtest: check is asynchronous; install uses displayed ID and explicit maintenance confirmation; duplicate clicks cannot start two jobs
+ok 3 - check is asynchronous; install uses displayed ID and explicit maintenance confirmation; duplicate clicks cannot start two jobs
+  ---
+  duration_ms: 10.108589
+  type: 'test'
+  ...
+# Subtest: restart with unfinished job retains recovery state and discards cached candidate
+ok 4 - restart with unfinished job retains recovery state and discards cached candidate
+  ---
+  duration_ms: 4.181631
+  type: 'test'
+  ...
+# Subtest: range transport accepts only exact 206 Content-Range and length, rejects redirect, whole-file fallback and overflow
+ok 5 - range transport accepts only exact 206 Content-Range and length, rejects redirect, whole-file fallback and overflow
+  ---
+  duration_ms: 2.050951
+  type: 'test'
+  ...
+# Subtest: archive is atomically exclusive and accepted only with exact downloaded SHA-256; failed data is removed
+ok 6 - archive is atomically exclusive and accepted only with exact downloaded SHA-256; failed data is removed
+  ---
+  duration_ms: 3.601941
+  type: 'test'
+  ...
+# Subtest: signed Release asset path binds sequence and release ID; Node downgrades are never offered
+ok 7 - signed Release asset path binds sequence and release ID; Node downgrades are never offered
+  ---
+  duration_ms: 2.037891
+  type: 'test'
+  ...
+# Subtest: Release download preserves range through only the fixed GitHub CDN redirect boundary
+ok 8 - Release download preserves range through only the fixed GitHub CDN redirect boundary
+  ---
+  duration_ms: 1.767321
+  type: 'test'
+  ...
+# Subtest: redirect does not reset the absolute 5-second request deadline
+ok 9 - redirect does not reset the absolute 5-second request deadline
+  ---
+  duration_ms: 1.329411
+  type: 'test'
+  ...
+# Subtest: durable successful worker result survives daemon restart and restart follows persisted success
+ok 10 - durable successful worker result survives daemon restart and restart follows persisted success
+  ---
+  duration_ms: 10.107077
+  type: 'test'
+  ...
+# Subtest: ordinary OS maintenance contention removes retryable staging after durable failure status
+ok 11 - ordinary OS maintenance contention removes retryable staging after durable failure status
+  ---
+  duration_ms: 6.58161
+  type: 'test'
+  ...
+# Subtest: post-activation result failure still retires old daemon runtime after durable failure report
+ok 12 - post-activation result failure still retires old daemon runtime after durable failure report
+  ---
+  duration_ms: 7.108771
+  type: 'test'
+  ...
+# Subtest: Node policy admits reviewed major 24 floor and strictly rejects downgrade, prerelease, malformed and alternate majors
+ok 13 - Node policy admits reviewed major 24 floor and strictly rejects downgrade, prerelease, malformed and alternate majors
+  ---
+  duration_ms: 2.705071
+  type: 'test'
+  ...
+# Subtest: signed runtime descriptor binds actual binary, ELF architecture, mode and full upstream license
+ok 14 - signed runtime descriptor binds actual binary, ELF architecture, mode and full upstream license
+  ---
+  duration_ms: 6.850799
+  type: 'test'
+  ...
+# Subtest: runtime rejects missing/extra signed files, mismatched versions and linked binary paths
+ok 15 - runtime rejects missing/extra signed files, mismatched versions and linked binary paths
+  ---
+  duration_ms: 8.596187
+  type: 'test'
+  ...
+# Subtest: kernel lease serializes independent processes and rejects unsafe lock files
+ok 16 - kernel lease serializes independent processes and rejects unsafe lock files
+  ---
+  duration_ms: 17.333183
+  type: 'test'
+  ...
+# Subtest: ordinary maintenance contention stays retryable; only durable trial failures require recovery
+ok 17 - ordinary maintenance contention stays retryable; only durable trial failures require recovery
+  ---
+  duration_ms: 0.300275
+  type: 'test'
+  ...
+# Subtest: fresh checkout installer accepts only its new ARM64 baseline and independent trust pin
+ok 18 - fresh checkout installer accepts only its new ARM64 baseline and independent trust pin
+  ---
+  duration_ms: 13.852782
+  type: 'test'
+  ...
+# Subtest: publisher signs a valid receiver envelope without claiming publication or exposing the key
+ok 19 - publisher signs a valid receiver envelope without claiming publication or exposing the key
+  ---
+  duration_ms: 5.729526
+  type: 'test'
+  ...
+# Subtest: publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output
+ok 20 - publisher rejects wrong trust, weak key permissions, linked keys and invalid documents before output
+  ---
+  duration_ms: 2.176968
+  type: 'test'
+  ...
+# Subtest: fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail
+ok 21 - fresh installer pins immutable service paths and public trust, never starts service; mismatched keys and overwrite fail
+  ---
+  duration_ms: 6.293833
+  type: 'test'
+  ...
+# Subtest: CLI requires explicit new trust, absolute paths and supervised invocation
+ok 22 - CLI requires explicit new trust, absolute paths and supervised invocation
+  ---
+  duration_ms: 6.482312
+  type: 'test'
+  ...
+# Subtest: only exact healthy managed state and fresh completion are accepted
+ok 23 - only exact healthy managed state and fresh completion are accepted
+  ---
+  duration_ms: 27.025314
+  type: 'test'
+  ...
+# Subtest: transition allows Admin own-package digests but refuses sequence, system/schema and admission changes
+ok 24 - transition allows Admin own-package digests but refuses sequence, system/schema and admission changes
+  ---
+  duration_ms: 2.552975
+  type: 'test'
+  ...
+# Subtest: managed transition pins controller 7.2.5 and rejects historical or major-8 catalogues
+ok 25 - managed transition pins controller 7.2.5 and rejects historical or major-8 catalogues
+  ---
+  duration_ms: 1.208652
+  type: 'test'
+  ...
+# Subtest: successful managed update installs state before trial start and preserves fresh completion/configuration
+ok 26 - successful managed update installs state before trial start and preserves fresh completion/configuration
+  ---
+  duration_ms: 19.936332
+  type: 'test'
+  ...
+# Subtest: Node upgrade switches signed runtime and EOS state as one pair and restores both after trial failure
+ok 27 - Node upgrade switches signed runtime and EOS state as one pair and restores both after trial failure
+  ---
+  duration_ms: 38.510435
+  type: 'test'
+  ...
+# Subtest: shared OS maintenance lease refusal prevents all transaction effects and runtime repacks/downgrades fail
+ok 28 - shared OS maintenance lease refusal prevents all transaction effects and runtime repacks/downgrades fail
+  ---
+  duration_ms: 2.592044
+  type: 'test'
+  ...
+# Subtest: baseline readiness failure never stages, locks or stops an unhealthy controller
+ok 29 - baseline readiness failure never stages, locks or stops an unhealthy controller
+  ---
+  duration_ms: 2.935353
+  type: 'test'
+  ...
+# Subtest: trust, signature, owner, linked state and installed-unit drift fail before mutation
+ok 30 - trust, signature, owner, linked state and installed-unit drift fail before mutation
+  ---
+  duration_ms: 15.951544
+  type: 'test'
+  ...
+# Subtest: pre-existing foreign coordinator lock and guard survive unmodified
+ok 31 - pre-existing foreign coordinator lock and guard survive unmodified
+  ---
+  duration_ms: 6.092054
+  type: 'test'
+  ...
+# Subtest: staging/native/report failure before stop leaves old controller running and removes only own gates
+ok 32 - staging/native/report failure before stop leaves old controller running and removes only own gates
+  ---
+  duration_ms: 30.929054
+  type: 'test'
+  ...
+# Subtest: trial failure restarts only authenticated healthy managed baseline and unlocks after readiness
+ok 33 - trial failure restarts only authenticated healthy managed baseline and unlocks after readiness
+  ---
+  duration_ms: 16.600145
+  type: 'test'
+  ...
+# Subtest: fallback readiness failure leaves exact managed baseline stopped and locked
+ok 34 - fallback readiness failure leaves exact managed baseline stopped and locked
+  ---
+  duration_ms: 15.683696
+  type: 'test'
+  ...
+# Subtest: foreign state, current, completion and coordinator bytes are never overwritten
+ok 35 - foreign state, current, completion and coordinator bytes are never overwritten
+  ---
+  duration_ms: 74.767037
+  type: 'test'
+  ...
+# Subtest: failed controller stop never claims restored state or unlocks
+ok 36 - failed controller stop never claims restored state or unlocks
+  ---
+  duration_ms: 11.499442
+  type: 'test'
+  ...
+# Subtest: state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+ok 37 - state, trial report, permit, start, active report and unlock faults exercise rollback boundaries
+  ---
+  duration_ms: 89.4229
+  type: 'test'
+  ...
+# Subtest: failure to record durable rollback leaves old release stopped and locked
+ok 38 - failure to record durable rollback leaves old release stopped and locked
+  ---
+  duration_ms: 15.33562
+  type: 'test'
+  ...
+# Subtest: ExecStopPost only quiesces same invocation seq16; malformed protected lock requires matching journal
+ok 39 - ExecStopPost only quiesces same invocation seq16; malformed protected lock requires matching journal
+  ---
+  duration_ms: 0.505269
+  type: 'test'
+  ...
+# Subtest: failure serializer exposes only fixed codes, stages and reasons
+ok 40 - failure serializer exposes only fixed codes, stages and reasons
+  ---
+  duration_ms: 0.177964
+  type: 'test'
+  ...
+# Subtest: real candidate signature and payload tampering are refused before any service effect
+ok 41 - real candidate signature and payload tampering are refused before any service effect
+  ---
+  duration_ms: 9.223136
+  type: 'test'
+  ...
+# Subtest: second guard durability failure reconstructs activation gate first and stops our trial
+ok 42 - second guard durability failure reconstructs activation gate first and stops our trial
+  ---
+  duration_ms: 13.515441
+  type: 'test'
+  ...
+# Subtest: protected configuration drift before stop aborts without overwriting or stopping healthy managed baseline
+ok 43 - protected configuration drift before stop aborts without overwriting or stopping healthy managed baseline
+  ---
+  duration_ms: 10.127998
+  type: 'test'
+  ...
+# Subtest: failed new assets are followed by old signed asset readback before rollback restart
+ok 44 - failed new assets are followed by old signed asset readback before rollback restart
+  ---
+  duration_ms: 14.186156
+  type: 'test'
+  ...
+# Subtest: old asset restoration failure prevents a claimed working rollback
+ok 45 - old asset restoration failure prevents a claimed working rollback
+  ---
+  duration_ms: 14.15921
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 543.663419
