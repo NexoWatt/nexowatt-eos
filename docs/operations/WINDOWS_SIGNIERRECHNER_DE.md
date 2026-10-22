@@ -1,8 +1,9 @@
 # Hersteller-Schlüssel unter Windows mit WSL 2 vorbereiten
 
-Stand 21.10.2026. Ubuntu unter WSL 2 ist beim Betreiber bestätigt.
-Dies bereitet die dauerhafte Schlüsselablage vor. Eine vollständige
-Ausführung des EOS-Signierlaufs unter WSL ist damit noch nicht nachgewiesen.
+Stand 22.10.2026. Ubuntu unter WSL 2 und Node 24.22.1 sind beim Betreiber
+bestätigt. Der folgende Herstellerhelfer bereitet die lokale Signierung der
+qualifizierten Sequenz 15 vor. Seine Ausführung mit dem tatsächlichen
+Herstellerschlüssel auf dem WSL-Rechner ist noch nicht nachgewiesen.
 
 ## Bestätigter öffentlicher Schlüssel
 
@@ -97,7 +98,7 @@ Masterdatei darf daher nicht direkt als `--private-key` übergeben werden.
 Für die eigentliche Signierung ist ein kontrollierter lokaler Schritt mit
 temporärer entschlüsselter Datei, Eigentümerrechten 0600, unabhängiger Prüfung
 des öffentlichen Fingerabdrucks und Aufräumen erforderlich. Dieser Schritt
-wird erst mit den exakten geprüften Laufzeit-/Nachweisdateien eingerichtet.
+wird durch den unten beschriebenen, auf feste Eingaben begrenzten Helfer ausgeführt.
 Der private Schlüssel wird dafür nicht an GitHub oder in den Chat übertragen.
 
 Seit dem Sicherheitsrelease vom 21.10.2026 wird die neue Frischlieferung unter
@@ -105,15 +106,69 @@ Linux mit Node 24.22.1 vorbereitet. Der zuvor qualifizierte Quellcommit
 `a2733fa5561f7327ff3689b7464f8727760fb670` gehört zur früheren Node-24.21.0-Basis
 und darf nicht als Nachweis für das neue Paket verwendet werden. Der Signierlauf
 benötigt den neu qualifizierten sauberen Quellcommit
-`06ed52f636d0da58d56a86646cdbe4ba601f1776`, dessen genaue vorbereitete
+`f353dd08bf8ac5897e9b1c357994d4047a82ed6d`, dessen genaue vorbereitete
 Laufzeit-/Nachweisdateien und das hashgeprüfte offizielle ARM64-Node-Archiv.
 Dieser neue Gesamtbuild und die Rückprüfung seines unsignierten Transportarchivs
-sind im [CI-Nachweis](../../reports/integration/automatic-security-updates-20261022/ci/verification.json)
+sind im [CI-Nachweis](../../reports/integration/automatic-security-updates-20261022/automatic-install/ci/qualification.json)
 dokumentiert. Ein späterer Dokumentationscommit ersetzt diesen Buildstand nicht.
-Ein späterer Dokumentationscommit ersetzt diesen Herkunftsnachweis nicht.
 Siehe [Node- und Linux-Aktualisierung](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
 
-Für Paketauflösung und Build wird zusätzlich exakt **npm 11.19.0** benötigt.
+## Qualifiziertes Paket lokal signieren
+
+Der Helfer [sign-qualified-r8-wsl.py](../../tools/bootstrap/sign-qualified-r8-wsl.py)
+läuft außerhalb des separaten Signier-Checkouts als normaler Ubuntu-Benutzer.
+Er erwartet den bereits hashgeprüften Interpreter
+`~/nexowatt-build/node-v24.22.1-linux-x64/bin/node`, den oben bestätigten Schlüssel
+und mindestens 5 GiB freien Platz unter `/home`. `unzip` und npm werden für
+diesen Signierlauf nicht benötigt. Beide originalen ZIP-Downloads des
+[qualifizierten CI-Laufs](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39736782733)
+werden als zwei Positionsargumente übergeben:
+
+```bash
+/usr/bin/python3 -I -B /absoluter/gepruefter/pfad/sign-qualified-r8-wsl.py \
+  /mnt/c/Users/User/Downloads/eos-unsigned-f353dd0.zip \
+  /mnt/c/Users/User/Downloads/eos-native-f353dd0.zip
+```
+
+Vor Ausführung den Helfer aus einem festgelegten veröffentlichten Commit laden
+und seinen separat mitgeteilten SHA-256 prüfen. Keinen veränderlichen
+`main`-Download ungeprüft starten. Der Helfer prüft Größe und Hash beider ZIPs
+vor dem Entpacken, feste Mitgliedslisten, das innere Archiv und die gebundenen
+Laufzeit-/Native-Nachweise. Er lädt nur den festen Quellcommit und das offizielle,
+hashgeprüfte ARM64-Node-Archiv. Es findet keine neue npm-Auflösung statt.
+
+Erst danach fragt OpenSSL am lokalen Terminal nach dem Schlüsselpasswort.
+Eine temporäre entschlüsselte Datei liegt mit Modus 0600 in einem privaten
+0700-Verzeichnis unter dem geprüften tmpfs `/dev/shm`. Der daraus abgeleitete
+öffentliche Hash muss zum bekannten Herstellerhash passen. Paket und anfänglich
+leerer Update-Kanal werden signiert und lokal rückgeprüft. Die temporäre Datei
+wird bei Erfolg, Fehler, Strg+C und behandeltem SIGTERM entfernt. SIGKILL und
+Hostabsturz können keine Aufräumroutine ausführen; tmpfs ersetzt keine Kontrolle
+des Signierrechners und kann abhängig vom Host in Swap gelangen. Die verschlüsselte
+Masterdatei bleibt erhalten. Niemals private Schlüssel oder Passwörter übertragen.
+
+Quell-Checkout und Build laufen mit `umask 022`, damit öffentliche Lieferdateien
+die vorgeschriebenen Modi behalten. Der übergeordnete Arbeitsordner ist 0700.
+Der Helfer erzeugt unter `~/eos-sign-15-*/public/` ausschließlich die vorgesehenen
+öffentlichen Lieferdateien, darunter `eos-linux-arm64.tar.gz`, `delivery.json`,
+`test.json`, `summary.json` und den R8-Einstieg. `eos-public-metadata.zip` enthält
+nur sechs ausdrücklich aufgezählte öffentliche Metadatendateien, kein Paket und
+keinen privaten Schlüssel. Für die Abstimmung genügt zuerst die abschließende
+JSON-Ausgabe beziehungsweise diese Metadaten-ZIP. Keine gesamten Arbeits- oder
+Schlüsselordner hochladen.
+
+Der leere Kanal ist 30 Tage gültig und bietet Sequenz 15 nicht erneut an.
+Herstellerseitige Erneuerung des Kanals sowie Prüfung und Signierung zukünftiger
+Node-Patches bleiben erforderlich. Die Anlage installiert nur freigegebene
+Updates nach ihrer bestehenden Richtlinie. Veröffentlichung, öffentlicher
+Download-/Signatur-Readback und tatsächlicher R8-Pi-Test folgen getrennt; dieser
+Helfer führt sie nicht aus und gibt noch keinen Pi-Installationsbefehl aus.
+
+## Toolchain für eine neue Paketauflösung
+
+Für eine neue Paketauflösung und einen neuen Laufzeitbuild wird zusätzlich
+exakt **npm 11.19.0** benötigt. Diesen Abschnitt für die Signierung der bereits
+qualifizierten ZIPs überspringen.
 Node 24.22.1 bringt npm 11.19.1 mit; diese Werkzeuge werden deshalb getrennt
 festgelegt. npm wird ausschließlich auf dem Hersteller-Buildrechner verwendet
 und nicht mit dem Node-Laufzeitpaket auf den Pi ausgeliefert.
