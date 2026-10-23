@@ -1,0 +1,37 @@
+name: Managed 15 public release readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/managed15-public-readback.yml'
+      - 'reports/integration/managed15-publication-20261023/verify-public-download.cjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-readback:
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Download fixed public assets without authentication and verify archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -- "$RUNNER_TEMP/managed15-public-readback"
+          node reports/integration/managed15-publication-20261023/verify-public-download.cjs --download > "$RUNNER_TEMP/managed15-public-readback/public-readback.json"
+      - name: Preserve successful JSON evidence only
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: managed15-public-readback
+          path: ${{ runner.temp }}/managed15-public-readback/public-readback.json
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 9
