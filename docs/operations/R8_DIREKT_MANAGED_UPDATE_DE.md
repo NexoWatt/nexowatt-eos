@@ -42,10 +42,12 @@ Fall wird die Migration verschoben.
 Der Hersteller erstellt aus dem fertig signierten Sequenz-15-Paket einen
 separaten öffentlichen Einstieg mit festem Archiv-, Skript-, Release- und
 Schlüsselhash. Dieser Einstieg verankert den dauerhaften Hersteller-Prüfschlüssel
-mit Hash `d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6`.
-Dieser am 23.10.2026 bestätigte Ersatzschlüssel wird verwendet, weil die
-Passphrase des zuvor vorgesehenen Herstellerschlüssels nicht mehr verfügbar
-ist. Der [Änderungs- und Prüfvermerk](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md)
+mit Hash `518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40`.
+Dieser später am 23.10.2026 bestätigte Ersatzschlüssel wird verwendet, weil auch
+die Passphrase des ersten Ersatzschlüssels nicht mehr verfügbar ist. Die beiden
+früheren öffentlichen Schlüssel und Prüfberichte bleiben historisch erhalten;
+eine Kompromittierung wurde nicht gemeldet. Der
+[Änderungs- und Prüfvermerk](../../reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md)
 trennt die neue Herstellerbindung vom unveränderten R8-Ausgangsvertrauen und
 vom weiterhin qualifizierten Laufzeitstand `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`.
 Eine bereits ausgeführte Vertrauensumstellung auf Geräten ist damit nicht belegt.

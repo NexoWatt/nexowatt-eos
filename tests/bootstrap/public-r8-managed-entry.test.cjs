@@ -8,8 +8,7 @@ const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 const entry = require('../../tools/bootstrap/build-public-r8-managed-entry.cjs');
 const root = path.resolve(__dirname, '../..');
-const key = fs.readFileSync(path.join(root, 'docs/security/release-trust/manufacturer-20261023.pem'));
-const formerKey = fs.readFileSync(path.join(root, 'docs/security/release-trust/manufacturer-20261021.pem'));
+const key = fs.readFileSync(path.join(root, 'docs/security/release-trust/manufacturer-20261023-2.pem'));
 const digest = value => crypto.createHash('sha256').update(value).digest('hex');
 const metadata = () => ({ schemaVersion: 1, runtimeVersion: '0.2.0-test.3', deliveryRevision: 12, releaseSequence: 15,
     platform: 'linux-arm64', archive: entry.ARCHIVE, bytes: 134040451, sha256: 'a'.repeat(64), releaseId: 'b'.repeat(64),
@@ -19,7 +18,7 @@ const fixture = t => { const directory = fs.mkdtempSync(path.join(os.tmpdir(), '
     t.after(() => fs.rmSync(directory, { recursive: true, force: true })); return directory; };
 
 test('R8 entry binds replacement manufacturer public key, exact managed15 target and GitHub asset path', () => {
-    assert.equal(entry.PUBLIC_KEY_SHA256, 'd8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6');
+    assert.equal(entry.PUBLIC_KEY_SHA256, '518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40');
     assert.equal(digest(key), entry.PUBLIC_KEY_SHA256);
     const config = entry.configFor(metadata(), key);
     assert.equal(entry.validateConfig(config), config);
@@ -29,9 +28,13 @@ test('R8 entry binds replacement manufacturer public key, exact managed15 target
     assert.equal(entry.BASELINE.releaseId, 'eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7');
     assert.equal(config.key.bytes, key.length);
 });
-test('replacement entry rejects former manufacturer trust in metadata, configuration and rendered key', () => {
+for (const [name, expectedHash] of [
+    ['manufacturer-20261021.pem', '95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248'],
+    ['manufacturer-20261023.pem', 'd8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6']
+]) test(`replacement entry rejects ${name} trust in metadata, configuration and rendered key`, () => {
+    const formerKey = fs.readFileSync(path.join(root, 'docs/security/release-trust', name));
     const formerHash = digest(formerKey);
-    assert.equal(formerHash, '95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248');
+    assert.equal(formerHash, expectedHash);
     assert.throws(() => entry.configFor(metadata(), formerKey), /R8_ENTRY_DELIVERY/);
     assert.throws(() => entry.configFor({ ...metadata(), signingPublicKeySha256: formerHash }, key), /R8_ENTRY_DELIVERY/);
     assert.throws(() => entry.configFor({ ...metadata(), signingPublicKeySha256: formerHash }, formerKey), /R8_ENTRY_DELIVERY/);
@@ -74,7 +77,7 @@ test('rendered R8 entry has valid Bash, all embedded helpers match and no interm
     assert.match(text, /update-r8-to-managed\.cjs/);
     assert.match(text, /ExecStopPost=.*--quiesce-incomplete/);
     assert.match(text, /--unit=nexowatt-eos-r8-managed-update/);
-    assert.match(text, /--expected-key-sha256 'd8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6'/);
+    assert.match(text, /--expected-key-sha256 '518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40'/);
     assert.doesNotMatch(text, /update-test-to-r9|update-test-to-r10|update-test-to-r11|apt-get|curl[^\n]*--location|--insecure/);
     assert.ok(text.indexOf('--destination "$eos_stage/extracted" --sha256') < text.indexOf('/usr/bin/node -e'));
     assert.throws(() => entry.render(config, Buffer.from('bad'), sources), /R8_ENTRY_KEY/);

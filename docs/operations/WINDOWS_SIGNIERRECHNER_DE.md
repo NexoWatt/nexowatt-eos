@@ -7,18 +7,20 @@ Herstellerschlüssel auf dem WSL-Rechner ist noch nicht nachgewiesen.
 
 ## Bestätigter öffentlicher Schlüssel
 
-Der Betreiber hat am 23.10.2026 den Verlust der bisherigen Schlüsselpassphrase
-und anschließend die lokale Erzeugung sowie das erfolgreiche erneute Öffnen
-eines verschlüsselten Ersatzschlüssels gemeldet. Eine Offenlegung des alten
-privaten Schlüssels wurde nicht gemeldet. Übermittelt wurden ausschließlich
+Der Betreiber hat am 23.10.2026 auch die Passphrase des ersten Ersatzschlüssels
+als nicht mehr verfügbar gemeldet. Anschließend meldete er die lokale Erzeugung
+und das erfolgreiche erneute Öffnen eines weiteren verschlüsselten Ersatzschlüssels.
+Dieser ersetzt die zuvor am selben Tag vorgesehene Herstellerbindung. Eine
+Kompromittierung der bisherigen privaten Schlüssel wurde nicht gemeldet.
+Übermittelt wurden ausschließlich
 der öffentliche Prüfschlüssel, sein Hash und der lokale Ordnerpfad.
-Die neue [öffentliche Datei](../security/release-trust/manufacturer-20261023.pem)
+Die neue [öffentliche Datei](../security/release-trust/manufacturer-20261023-2.pem)
 ist ein kanonisches Ed25519-SPKI-PEM mit 113 Byte einschließlich abschließendem
 Zeilenumbruch. Ihr SHA-256 stimmt exakt mit der zuvor gemeldeten Ausgabe
 von `sha256sum release-public.pem` überein:
 
 ```text
-d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6
+518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40
 ```
 
 Der private Schlüssel und die Passphrase wurden nicht übermittelt.
@@ -26,11 +28,13 @@ Die Prüfung bestätigt Format und Übereinstimmung des öffentlichen Schlüssel
 Das erfolgreiche Öffnen der verschlüsselten Datei ist eine Betreibermeldung;
 ein Signier-/Verifikationstest des Lieferpakets mit dem tatsächlichen privaten
 Schlüssel und eine wiederlesbare getrennte Sicherung sind noch nicht nachgewiesen.
-Siehe [Ersatzschlüssel und Prüfgrenzen](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md).
+Siehe [Ersatzschlüssel und Prüfgrenzen](../../reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md).
 Die [öffentliche Datei vom 21.10.](../security/release-trust/manufacturer-20261021.pem)
-und ihr [Prüfvermerk](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json)
-bleiben als historischer Nachweis erhalten. Ihr Hash ist für neue Lieferungen
-mit dem aktuellen Helfer nicht mehr zulässig.
+mit ihrem [Prüfvermerk](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json)
+sowie der [erste Ersatzschlüssel vom 23.10.](../security/release-trust/manufacturer-20261023.pem)
+mit seinem [Prüfbericht](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md)
+bleiben als historische Nachweise erhalten. Beide früheren Hashes sind für neue
+Lieferungen mit dem aktuellen Helfer nicht mehr zulässig.
 
 Den bereits erzeugten Ersatzschlüssel weiterverwenden. **Den folgenden
 Erzeugungsblock nicht erneut ausführen**, wenn dieser Schlüssel vorhanden ist.
@@ -233,7 +237,7 @@ authentifizierten öffentlichen Prüfschlüssel der vorhandenen NWL3-Lizenzen.
 Historische Nachweise: [ursprüngliche Formatprüfung](../../reports/integration/security-refresh-20261021/install/windows-key-custody.json)
 (an den Dokumentationsstand `20efcdc99b3dfbe5e34ad614b45cae70f9e22bc7` gebunden)
 und [Prüfung des damaligen öffentlichen Herstellerschlüssels](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json).
-Aktueller [Änderungs- und Prüfvermerk](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md).
+Aktueller [Änderungs- und Prüfvermerk](../../reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md).
 Offizielle Referenzen:
 [WSL](https://learn.microsoft.com/en-us/windows/wsl/install),
 [genpkey](https://docs.openssl.org/3.0/man1/openssl-genpkey/),

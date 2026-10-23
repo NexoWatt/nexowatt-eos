@@ -137,9 +137,9 @@ class SigningDirectoryTests(unittest.TestCase):
 
 class EntryToolTests(unittest.TestCase):
     OLD_KEY = b"95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248"
-    NEW_KEY = b"d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6"
+    NEW_KEY = b"518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40"
     ORIGINAL_SHA = "4709a10de3330ea7de740dda7cbf7f5e45d898c0cf16da470cb681ed4efa2278"
-    REPLACED_SHA = "319776f5a20716c7a1fe3dd2ca3dea293638e45af7b734a0f6285e444b9bb156"
+    REPLACED_SHA = "9a5cb7980c45ed1d3f812f70790b682c28f53f36050298c903587d74310ec388"
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix="eos-entry-tool-test-")

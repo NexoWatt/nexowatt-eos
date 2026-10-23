@@ -16,8 +16,11 @@ benötigt, einschließlich Manifest, Signatur, Payload und öffentlichem Schlüs
 Seine ursprüngliche `resolution-lock.json` muss zum signierten Buildnachweis
 passen. Kundendaten und installierte Gerätekonfiguration gehören nicht dazu.
 
-Die folgenden Beispiele verwenden den am 23.10.2026 bestätigten
-[Ersatzschlüssel des Herstellers](WINDOWS_SIGNIERRECHNER_DE.md). Zuerst muss die
+Die folgenden Beispiele verwenden den später am 23.10.2026 bestätigten
+[zweiten Ersatzschlüssel des Herstellers](WINDOWS_SIGNIERRECHNER_DE.md).
+Die erste Ersatzbindung vom selben Tag wurde nach erneutem Passphrasenverlust
+abgelöst; die historischen öffentlichen Schlüssel und Nachweise bleiben erhalten.
+Zuerst muss die
 damit signierte Basis über den authentifizierten Einstieg installiert sein;
 die Angaben ersetzen kein bereits auf einer Anlage verankertes Vertrauen.
 
@@ -35,7 +38,7 @@ Auf dem sauberen Linux-Herstellerstand mit der vorgesehenen Node-Werkzeugkette:
 node tools/integration/prepare-node-only-runtime.cjs \
   --baseline-bundle /pfad/authentifizierter-ausgang/bundle \
   --public-key /pfad/release-public.pem \
-  --public-key-sha256 d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6 \
+  --public-key-sha256 518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40 \
   --resolution-lock /pfad/ausgangsbuild/resolution-lock.json \
   --node-archive /pfad/geprueftes-offizielles-node-arm64-archiv.tar.xz \
   --output /pfad/neuer-node-kandidat \
@@ -92,7 +95,7 @@ des Repositorys; die lokale Behandlung des verschlüsselten Schlüssels folgt de
 node tools/bootstrap/build-node-only-test.cjs \
   --baseline-bundle /pfad/authentifizierter-ausgang/bundle \
   --public-key /pfad/release-public.pem \
-  --public-key-sha256 d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6 \
+  --public-key-sha256 518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40 \
   --prepared-runtime /pfad/neuer-node-kandidat \
   --native-evidence /pfad/neue-native-belege \
   --private-key /pfad/geschuetzt/temporarer-lokaler-signierschluessel.pem \

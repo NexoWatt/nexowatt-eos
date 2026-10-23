@@ -8,8 +8,11 @@ ZIP from source `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`. An optional third
 positional path selects a protected absolute signing-key directory below the
 current user's Linux home; omitted, it defaults to `~/nexowatt-signing`.
 It pins sequence 15, Node 24.22.1 and the replacement manufacturer public-key
-hash `d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6`
-confirmed on 2026-10-23. The directory argument does not override that trust pin.
+hash `518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40`
+confirmed later on 2026-10-23 after another passphrase loss. It supersedes the
+first replacement from that date; both earlier public keys and reports remain
+historical evidence. No private-key compromise was reported. The directory
+argument does not override that trust pin.
 No bypass, arbitrary-key, publication or host-installation option is provided.
 It runs as a normal Linux-x64 user under `/home`, with the prepared local Node
 distribution and encrypted key paths described in the

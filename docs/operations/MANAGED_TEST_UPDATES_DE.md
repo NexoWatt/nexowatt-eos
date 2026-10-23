@@ -89,16 +89,17 @@ sind dafür nicht verfügbar. Private Schlüssel nicht in den Chat kopieren.
 Für den Windows-Rechner ist die
 [verschlüsselte Schlüsselablage unter WSL 2](WINDOWS_SIGNIERRECHNER_DE.md)
 beschrieben. Die dauerhafte Schlüsseldatei wird ausschließlich beim
-Hersteller erzeugt. Nach Verlust der bisherigen Passphrase hat der Betreiber
-am 23.10.2026 die Erzeugung und das erfolgreiche erneute Öffnen eines
-verschlüsselten Ersatzschlüssels gemeldet. Der neue
-[öffentliche Prüfschlüssel](../security/release-trust/manufacturer-20261023.pem)
+Hersteller erzeugt. Nach erneutem Verlust der Passphrase hat der Betreiber
+am 23.10.2026 die Erzeugung und das erfolgreiche erneute Öffnen eines weiteren
+verschlüsselten Ersatzschlüssels gemeldet. Dieser ersetzt den ersten Ersatz
+vom selben Tag; eine Kompromittierung wurde nicht gemeldet. Der neue
+[öffentliche Prüfschlüssel](../security/release-trust/manufacturer-20261023-2.pem)
 wurde als kanonisches Ed25519-SPKI-PEM geprüft und stimmt mit dem vom
 Betreiber mitgeteilten SHA-256 überein:
-`d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6`.
-Der vorherige öffentliche Schlüssel bleibt als historischer Nachweis erhalten;
+`518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40`.
+Beide vorherigen öffentlichen Schlüssel und Prüfberichte bleiben historisch erhalten;
 der aktuelle Signierhelfer und R8-Einstieg binden ausschließlich den neuen Hash.
-Der [Änderungsvermerk](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md)
+Der [Änderungsvermerk](../../reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md)
 beschreibt die begrenzte Herstelleränderung und die noch offenen Liefergates.
 Private Schlüsseldatei und Passphrase bleiben auf dem Herstellerrechner.
 Getrennte Sicherung, tatsächlicher Signierlauf und Installation dieses

@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-23",
+  "parentCommit": "671e48faf3b547fc61f552a9a0bd116a986fee90",
+  "qualifiedRuntimeSource": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+  "scope": "Replacement of manufacturer pin only; qualified runtime and inputs unchanged",
+  "reason": "Repeated passphrase loss; no compromise reported",
+  "supersedesPublicKeySha256": "d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6",
+  "files": [
+    {
+      "path": "PARAMETERS.md",
+      "sha256": "2b45e30b49776281d17bee90581b8b40835938de5713cc791eb4f13e3ce57418"
+    },
+    {
+      "path": "docs/operations/WINDOWS_SIGNIERRECHNER_DE.md",
+      "sha256": "f1ac41f623c13943a195011ca08236b16c16986555d59ebd186d42e6e984d6d8"
+    },
+    {
+      "path": "docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md",
+      "sha256": "3e0f89c446ffb31ad02c422d88ea7a9f60748b7d21008fedd82015b0b1c015a5"
+    },
+    {
+      "path": "docs/operations/MANAGED_TEST_UPDATES_DE.md",
+      "sha256": "f60769a935b32ce55b1a2254dacb16cc7fb7086c1d7b081a5de5ddb521d2a960"
+    },
+    {
+      "path": "docs/operations/NODE_AUTOMATIK_HERSTELLER_DE.md",
+      "sha256": "81539a1cf7b27ca7f6debcbe01766af180976d295c672988c45a03ed8e6ff47d"
+    },
+    {
+      "path": "docs/security/release-trust/manufacturer-20261023-2.pem",
+      "sha256": "518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40"
+    },
+    {
+      "path": "tools/bootstrap/sign-qualified-r8-wsl.py",
+      "sha256": "8af8c0bcc31e8c2a12e80b915ae1723c94e1465d03f9cafe38953c6b8c37ca76"
+    },
+    {
+      "path": "tools/bootstrap/build-public-r8-managed-entry.cjs",
+      "sha256": "9a5cb7980c45ed1d3f812f70790b682c28f53f36050298c903587d74310ec388"
+    },
+    {
+      "path": "tests/bootstrap/sign-qualified-r8-wsl.test.py",
+      "sha256": "d8397ac069a8699b5b45228b8c521d8a47eb56f1b4ff943f277ad62bd9d84940"
+    },
+    {
+      "path": "tests/bootstrap/public-r8-managed-entry.test.cjs",
+      "sha256": "fa17daa621d27371125b2b6f41c41b6a0d034f3114d4e8d3c4518d5874d4c44d"
+    },
+    {
+      "path": "reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md",
+      "sha256": "c6a25685ae1de9a711563ea85e552c2f6cd07a5c73204a319bdf8625beadb8bc"
+    },
+    {
+      "path": "reports/integration/manufacturer-key-replacement-20261023-2/python-tests.txt",
+      "sha256": "7698a1a75c960221ccfa30d3caa7141c6278aeb57b26cb4114742d208a37da4c"
+    },
+    {
+      "path": "reports/integration/manufacturer-key-replacement-20261023-2/node-tests.txt",
+      "sha256": "ddbbd6eb31f33d9ff54c8d287e91e91644e29f0f0291e8845ad323b47a70e0e7"
+    }
+  ],
+  "publicKey": {
+    "path": "docs/security/release-trust/manufacturer-20261023-2.pem",
+    "bytes": 113,
+    "sha256": "518f89debdb0b396d2abe7be8136b7ea5670c2a1f043705ed5d5528124067a40",
+    "canonicalEd25519SpkiPem": true,
+    "reportedFingerprintMatched": true,
+    "privateKeyReopening": "operator-reported"
+  },
+  "entryTool": {
+    "qualifiedSha256": "4709a10de3330ea7de740dda7cbf7f5e45d898c0cf16da470cb681ed4efa2278",
+    "replacementSha256": "9a5cb7980c45ed1d3f812f70790b682c28f53f36050298c903587d74310ec388",
+    "realGitFixtureRestoredClean": true
+  },
+  "productionChangesLimitedToTwoPins": true,
+  "testEnvironment": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "openssl": "3.0.13",
+    "platform": "linux-x64"
+  },
+  "focusedTests": [
+    {
+      "command": "python3 -I -B tests/bootstrap/sign-qualified-r8-wsl.test.py -v",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test tests/bootstrap/public-r8-managed-entry.test.cjs",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "qualifiedRuntimeRebuilt": false,
+  "originalArtifactsRevalidatedThisChange": false,
+  "manufacturerWslExecutionTested": false,
+  "actualManufacturerKeyUsed": false,
+  "privateKeyReceived": false,
+  "privatePassphraseReceived": false,
+  "publicReleasePublished": false,
+  "physicalPiTested": false,
+  "productionReleaseApproved": false
+}
