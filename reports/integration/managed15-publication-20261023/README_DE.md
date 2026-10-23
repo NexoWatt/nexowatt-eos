@@ -9,7 +9,7 @@ Die fünf Assets stimmen in Größe und SHA-256 mit dem tatsächlich erhaltenen,
 signaturgeprüften Paket überein; siehe `release-metadata.json`. Die zwei von
 GitHub zusätzlich erzeugten Quellarchive sind keine Installationspakete.
 
-## Öffentlicher Download: noch laufender Nachweis
+## Öffentlicher Download: bestanden
 
 Der lokale Prüflauf des erhaltenen Pakets ist dokumentiert in
 [`../managed15-archive-verification-20261023/README_DE.md`](../managed15-archive-verification-20261023/README_DE.md).
@@ -24,9 +24,25 @@ vertrauenswürdigen Repository-Prüfer vollständig zurück; Ed25519-Signatur un
 Release-/Plattform-/Node-Bindung werden geprüft. Kein Payloadprogramm wird
 ausgeführt. Nur der JSON-Prüfbeleg wird als CI-Artefakt ausgegeben.
 
-Aktuell bleiben öffentlicher Rücklesetest, Aktivierung/Rücklesen des signierten
-leeren Feeds und Ausgabe des endgültigen Betreiberbefehls offen. Diese Datei
-wird mit den tatsächlichen Ergebnissen fortgeschrieben.
+Der [CI-Lauf 40024630784](https://github.com/NexoWatt/nexowatt-eos/actions/runs/40024630784)
+am Prüfcommit `eb08becf56e1e9c2b8b2a3c67cce17e1589c2a5e` ist erfolgreich.
+`public-readback.json` bestätigt den unauthentifizierten Download aller fünf
+Assets (133 begrenzte Rangeabrufe), Größen/Hashes, vollständigen Archivreadback,
+Signatur, 22606 Payload-Dateien und die SBOM-Assetbindung am 23.10.2026 um
+21:10:10 UTC. Der Runner-Prüfer nutzte Node 22.23.3; die geprüfte, nicht
+ausgeführte ARM64-Laufzeit im Paket bleibt Node 24.22.1.
+
+Der JSON-Beleg wurde unabhängig aus CI-Artefakt `12532401495` zurückgeholt:
+ZIP 1120 Byte, SHA-256
+`1b14e19ea32757f14dfd5eaf42586174b6e80a106ded7ae9eb39538732672e53`.
+Run-/Commitbindung, Archividentität und Flags wurden geprüft.
+Auch die [Workflowvalidierung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/40024630710)
+bestand. Der neue Prüfer bestand zuvor den lokalen Arbeitsbaumtest und wies
+eine gleich große manipulierte Metadatei mit `PUBLIC_ASSET_HASH` ab.
+
+Der unveränderte signierte leere Feed und der erzeugte R8-Befehl werden nun
+bereitgestellt. Ihre öffentliche Rückprüfung bleibt bis zum nachfolgenden
+Nachweis offen; der Befehl wird erst danach für den Test ausgegeben.
 
 ## Grenzen
 
