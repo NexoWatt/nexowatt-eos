@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-23",
+  "parentCommit": "2a9279db86b6f42b3c55fe4d79b29a5e02e8cccb",
+  "qualifiedRuntimeSource": "f353dd08bf8ac5897e9b1c357994d4047a82ed6d",
+  "scope": "Manufacturer-key pin and local WSL signing workflow; qualified runtime unchanged",
+  "reason": "Passphrase unavailable; no compromise reported",
+  "files": [
+    {
+      "path": "PARAMETERS.md",
+      "sha256": "2c19c0e415dfccc5c03f4a417040fddbbcc542b330384ba5c2bb54035a943636"
+    },
+    {
+      "path": "docs/operations/WINDOWS_SIGNIERRECHNER_DE.md",
+      "sha256": "ad4bb719eddf1666cede4f74d0f9d3bd1808cf729a3ebcf95e6b7334ce9b9657"
+    },
+    {
+      "path": "docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md",
+      "sha256": "3869dd720f098d8f9dc8c2a399677f89532c9bf4a0e301610e0a75d622b46b5d"
+    },
+    {
+      "path": "docs/operations/MANAGED_TEST_UPDATES_DE.md",
+      "sha256": "cd0bd4b30477bb5f8f436added43da55f377191d47ff7b692e3b9fb2ac5124ac"
+    },
+    {
+      "path": "docs/operations/NODE_AUTOMATIK_HERSTELLER_DE.md",
+      "sha256": "7062eb803fcb214cad98287f79c51d3bb8689ada71cee46759d667bd24360975"
+    },
+    {
+      "path": "docs/security/release-trust/manufacturer-20261023.pem",
+      "sha256": "d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6"
+    },
+    {
+      "path": "tools/bootstrap/sign-qualified-r8-wsl.py",
+      "sha256": "21c61d5f61b38011bf10dc72596ff683870d68ec2bb94e6ed337851a0ec358f5"
+    },
+    {
+      "path": "tools/bootstrap/build-public-r8-managed-entry.cjs",
+      "sha256": "319776f5a20716c7a1fe3dd2ca3dea293638e45af7b734a0f6285e444b9bb156"
+    },
+    {
+      "path": "tests/bootstrap/sign-qualified-r8-wsl.test.py",
+      "sha256": "e7dff4701f5e187e0a7e800e17688e68c96a37e980880fab5ea796b091f42516"
+    },
+    {
+      "path": "tests/bootstrap/public-r8-managed-entry.test.cjs",
+      "sha256": "6531cee7a60843051be9d8c95052f8540b6640c2a700898ac2217f430ad00f42"
+    },
+    {
+      "path": "reports/integration/manufacturer-key-replacement-20261023/README_DE.md",
+      "sha256": "d978b6059c25075d6bd9d24a8ba877c1b5413e7dc785d963ed21d932c297a925"
+    },
+    {
+      "path": "reports/integration/manufacturer-key-replacement-20261023/python-tests.txt",
+      "sha256": "9b94b2e7d0db66b0f1d62e7f53a0e3c91563f268e9c7c391e933f5f576d3fd6f"
+    },
+    {
+      "path": "reports/integration/manufacturer-key-replacement-20261023/node-tests.txt",
+      "sha256": "7a29441a7f59835b0bcd203d048afe23b92d86e682411ce8461a6967095082ef"
+    }
+  ],
+  "publicKey": {
+    "path": "docs/security/release-trust/manufacturer-20261023.pem",
+    "bytes": 113,
+    "sha256": "d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6",
+    "canonicalEd25519SpkiPem": true,
+    "reportedFingerprintMatched": true,
+    "privateKeyReopening": "operator-reported"
+  },
+  "entryTool": {
+    "qualifiedSha256": "4709a10de3330ea7de740dda7cbf7f5e45d898c0cf16da470cb681ed4efa2278",
+    "replacementSha256": "319776f5a20716c7a1fe3dd2ca3dea293638e45af7b734a0f6285e444b9bb156",
+    "qualifiedSourcePublicReadbackExact": true,
+    "realGitFixtureRestoredClean": true
+  },
+  "testEnvironment": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "openssl": "3.0.13",
+    "platform": "linux-x64"
+  },
+  "focusedTests": [
+    {
+      "command": "python3 -I -B tests/bootstrap/sign-qualified-r8-wsl.test.py -v",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test tests/bootstrap/public-r8-managed-entry.test.cjs",
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "qualifiedRuntimeRebuilt": false,
+  "originalArtifactsRevalidatedThisChange": false,
+  "manufacturerWslExecutionTested": false,
+  "actualManufacturerKeyUsed": false,
+  "privateKeyReceived": false,
+  "privatePassphraseReceived": false,
+  "publicReleasePublished": false,
+  "physicalPiTested": false,
+  "productionReleaseApproved": false
+}

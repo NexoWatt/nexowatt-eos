@@ -8,7 +8,7 @@ const { verifyTestArchive } = require('../integration/create-test-archive.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const DELIVERY = 'delivery/managed-test-15';
 const ARCHIVE = 'eos-linux-arm64.tar.gz';
-const PUBLIC_KEY_SHA256 = '95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248';
+const PUBLIC_KEY_SHA256 = 'd8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6';
 const BASELINE = Object.freeze({ revision: 8, sequence: 11,
     releaseId: 'eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7',
     publicKeySha256: 'bc104daef9346ef31fe7b51d447bc8d3c5103aa5e6cf532e7a83ea17551280c5' });

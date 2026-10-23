@@ -21,7 +21,11 @@ import tempfile
 import zipfile
 
 SOURCE = "f353dd08bf8ac5897e9b1c357994d4047a82ed6d"
-KEY_SHA = "95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248"
+KEY_SHA = "d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6"
+PREVIOUS_KEY_SHA = "95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248"
+ENTRY_TOOL = "tools/bootstrap/build-public-r8-managed-entry.cjs"
+ENTRY_ORIGINAL_SHA256 = "4709a10de3330ea7de740dda7cbf7f5e45d898c0cf16da470cb681ed4efa2278"
+ENTRY_REPLACED_SHA256 = "319776f5a20716c7a1fe3dd2ca3dea293638e45af7b734a0f6285e444b9bb156"
 UNSIGNED_SHA = "bc3965b3b1b4489199533c82e4bcc25ac98ab365f4bcf2b2bda62ac4ec11079c"
 NATIVE_SHA = "6ff9a62ccb0a6b8b6fec788cff77d982faf6f89c943ba3353b43bcd12e439ab3"
 TAR_SHA = "f3164a04ee70860bfd113ad4df4c4f967c0c0830f7c47b4456c68ac04d7b7378"
@@ -53,6 +57,62 @@ def check_file(path, size, sha256):
             digest.update(block)
     if digest.hexdigest() != sha256:
         raise ValueError("SHA-256 stimmt nicht: " + path.name)
+
+
+def signing_directory(home, argument=None):
+    home = Path(home)
+    directory = Path(argument) if argument is not None else home / "nexowatt-signing"
+    if (not directory.is_absolute() or directory.resolve() != directory
+            or directory == home or not directory.is_relative_to(home)
+            or not directory.is_dir()):
+        raise ValueError("Schluesselordner muss ein kanonisches Verzeichnis unter dem Linux-Heimverzeichnis sein")
+    return directory
+
+
+def entry_sources(path):
+    """Bind the only authorized entry-tool change; never change runtime inputs."""
+    path = Path(path)
+    info = path.lstat()
+    if (not path.is_absolute() or path.resolve() != path or not stat.S_ISREG(info.st_mode)
+            or info.st_uid != os.getuid() or info.st_nlink != 1
+            or stat.S_IMODE(info.st_mode) != 0o644 or info.st_size > 256 * 1024):
+        raise ValueError("R8-Einstiegswerkzeug: ungueltiger Pfad/Dateityp/Rechte")
+    original = path.read_bytes()
+    if (hashlib.sha256(original).hexdigest() != ENTRY_ORIGINAL_SHA256
+            or original.count(PREVIOUS_KEY_SHA.encode("ascii")) != 1):
+        raise ValueError("R8-Einstiegswerkzeug passt nicht zum qualifizierten Quellstand")
+    replacement = original.replace(PREVIOUS_KEY_SHA.encode("ascii"), KEY_SHA.encode("ascii"), 1)
+    if hashlib.sha256(replacement).hexdigest() != ENTRY_REPLACED_SHA256:
+        raise ValueError("R8-Einstiegswerkzeug passt nicht zur geprueften Schluesselersetzung")
+    return original, replacement
+
+
+def _write_entry_atomically(path, data):
+    fd, name = tempfile.mkstemp(prefix=".eos-entry-", dir=path.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(data)
+            os.fchmod(stream.fileno(), 0o644)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+@contextlib.contextmanager
+def replacement_entry_tool(path):
+    # Caller must finish package/feed signing and private-key cleanup first.
+    # Both full tool versions are pinned. Restore the qualified checkout even
+    # if the separate public entry preparation fails or is interrupted.
+    path = Path(path)
+    original, replacement = entry_sources(path)
+    try:
+        _write_entry_atomically(path, replacement)
+        yield
+    finally:
+        _write_entry_atomically(path, original)
 
 
 def extract_zip(archive, output, expected_members):
@@ -123,8 +183,8 @@ console.log('Laufzeit, native CI-Nachweise und ARM64-Node: OK');
 
 
 def main(argv):
-    if len(argv) != 2:
-        raise ValueError("Aufruf: python3 -I -B sign-qualified-r8-wsl.py UNSIGNED.zip NATIVE.zip")
+    if len(argv) not in (2, 3):
+        raise ValueError("Aufruf: python3 -I -B sign-qualified-r8-wsl.py UNSIGNED.zip NATIVE.zip [ABS_SCHLUESSELORDNER]")
     home = Path.home()
     if (os.geteuid() == 0 or platform.system() != "Linux" or platform.machine() != "x86_64"
             or not str(home).startswith("/home/") or home.resolve() != home):
@@ -138,7 +198,7 @@ def main(argv):
     node = home / "nexowatt-build/node-v24.22.1-linux-x64/bin/node"
     if run([node, "--version"], capture=True).strip() != b"v24.22.1":
         raise ValueError("Der vorbereitete Node 24.22.1 fehlt")
-    signing = home / "nexowatt-signing"
+    signing = signing_directory(home, argv[2] if len(argv) == 3 else None)
     encrypted = signing / "release-private.encrypted.pem"
     for item in (signing, encrypted):
         info = item.lstat()
@@ -189,6 +249,10 @@ def main(argv):
     run(["/usr/bin/python3", "-I", "-B", checkout / "tools/integration/prepared-runtime-archive.py", "extract", tar, prepared])
     native = work / "native" / NATIVE_DIR
     verify_inputs(node, checkout, prepared, native, arm)
+    # Precheck the narrowly authorized manufacturer-key replacement before the
+    # encrypted key is opened. Signing itself still uses a clean SOURCE tree.
+    entry_path = checkout / ENTRY_TOOL
+    entry_sources(entry_path)
     public = work / "public"
     public.mkdir()
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -205,13 +269,22 @@ def main(argv):
         run([node, checkout / "tools/bootstrap/sign-managed-channel.cjs", "--input", feed,
              "--private-key", key, "--public-key-sha256", KEY_SHA, "--output", public / "test.json"])
     print("Temporaere entschluesselte Schluesseldatei entfernt.", flush=True)
-    run([node, checkout / "tools/bootstrap/build-public-r8-managed-entry.cjs", "--output", public / "r8-entry"], timeout=300)
+    print("Bereite den R8-Einstieg mit dem bestaetigten Ersatz-Pruefschluessel vor.", flush=True)
+    try:
+        with replacement_entry_tool(entry_path):
+            run([node, entry_path, "--output", public / "r8-entry"], timeout=300)
+    finally:
+        if (git("status", "--porcelain", capture=True).strip()
+                or git("rev-parse", "HEAD", capture=True).strip().decode() != SOURCE):
+            raise ValueError("Qualifizierter Quellstand nach R8-Einstieg nicht sauber wiederhergestellt")
     delivery_dir = checkout / "delivery/managed-test-15"
     for name in ("eos-linux-arm64.tar.gz", "release-public.pem", "delivery.json"):
         shutil.copyfile(delivery_dir / name, public / name)
     delivery = json.loads((public / "delivery.json").read_text())
     summary = {name: delivery[name] for name in ("releaseId", "releaseSequence", "sourceCommit", "sha256", "bytes", "signingPublicKeySha256", "archiveReadbackVerified")}
     summary.update({"published": False, "physicalPiTested": False})
+    summary["entryTool"] = {"path": ENTRY_TOOL, "qualifiedSha256": ENTRY_ORIGINAL_SHA256,
+                            "replacementSha256": ENTRY_REPLACED_SHA256, "qualifiedSourceRestored": True}
     (public / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     # Explicit public allowlist: never recursively archive work or signing keys.
     with zipfile.ZipFile(public / "eos-public-metadata.zip", "x", zipfile.ZIP_DEFLATED) as output:

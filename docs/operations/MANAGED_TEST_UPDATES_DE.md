@@ -11,11 +11,14 @@ Ein installierbarer neuer Befehl setzt weiterhin Signierung, öffentliche
 Rückprüfung und Zielabnahme voraus.
 
 Nach dem Node-Sicherheitsrelease vom 21.10.2026 wird die neue Testbasis auf
-Node 24.22.1 und gekoppelte Node-/EOS-Updates umgestellt. Der neue Quellstand
+Node 24.22.1 und gekoppelte Node-/EOS-Updates umgestellt. Der frühere Zwischenstand
 `06ed52f636d0da58d56a86646cdbe4ba601f1776` hat seinen eigenen vollständigen
 Linux-x64-Lauf mit sechs Adaptern, Lizenzen, Backup und Neustart bestanden;
 das erzeugte unsignierte Paket wurde zurückgelesen und geprüft. Dieser
-Nachweis ersetzt keine ARM64-/Pi-Abnahme. Eine signierte Pi-Auslieferung fehlt noch.
+Nachweis ersetzt keine ARM64-/Pi-Abnahme. Für die jetzige Signierung ist der
+anschließend qualifizierte Quellstand `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`
+mit seinen eigenen [CI- und Artefaktnachweisen](../../reports/integration/automatic-security-updates-20261022/automatic-install/ci/qualification.json)
+maßgeblich. Eine signierte Pi-Auslieferung fehlt noch.
 Sie bleibt ausdrücklich auf js-controller **7.2.5**. Controller 8 wird weder
 automatisch bezogen noch durch den neuen Paket-/Katalogvertrag zugelassen.
 **Bestehenden Test-Pi noch nicht löschen.** Der R11-Befehl in der README ist
@@ -86,11 +89,17 @@ sind dafür nicht verfügbar. Private Schlüssel nicht in den Chat kopieren.
 Für den Windows-Rechner ist die
 [verschlüsselte Schlüsselablage unter WSL 2](WINDOWS_SIGNIERRECHNER_DE.md)
 beschrieben. Die dauerhafte Schlüsseldatei wird ausschließlich beim
-Hersteller erzeugt. Die erfolgreiche Erzeugung ist inzwischen vom Betreiber
-gemeldet. Der [öffentliche Prüfschlüssel](../security/release-trust/manufacturer-20261021.pem)
-wurde als kanonisches Ed25519-SPKI-PEM geprüft und stimmt mit dem vorher vom
+Hersteller erzeugt. Nach Verlust der bisherigen Passphrase hat der Betreiber
+am 23.10.2026 die Erzeugung und das erfolgreiche erneute Öffnen eines
+verschlüsselten Ersatzschlüssels gemeldet. Der neue
+[öffentliche Prüfschlüssel](../security/release-trust/manufacturer-20261023.pem)
+wurde als kanonisches Ed25519-SPKI-PEM geprüft und stimmt mit dem vom
 Betreiber mitgeteilten SHA-256 überein:
-`95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248`.
+`d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6`.
+Der vorherige öffentliche Schlüssel bleibt als historischer Nachweis erhalten;
+der aktuelle Signierhelfer und R8-Einstieg binden ausschließlich den neuen Hash.
+Der [Änderungsvermerk](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md)
+beschreibt die begrenzte Herstelleränderung und die noch offenen Liefergates.
 Private Schlüsseldatei und Passphrase bleiben auf dem Herstellerrechner.
 Getrennte Sicherung, tatsächlicher Signierlauf und Installation dieses
 Vertrauensankers auf einem Pi sind noch nicht nachgewiesen.

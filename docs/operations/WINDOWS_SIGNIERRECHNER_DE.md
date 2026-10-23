@@ -1,33 +1,44 @@
 # Hersteller-Schlüssel unter Windows mit WSL 2 vorbereiten
 
-Stand 22.10.2026. Ubuntu unter WSL 2 und Node 24.22.1 sind beim Betreiber
+Stand 23.10.2026. Ubuntu unter WSL 2 und Node 24.22.1 sind beim Betreiber
 bestätigt. Der folgende Herstellerhelfer bereitet die lokale Signierung der
 qualifizierten Sequenz 15 vor. Seine Ausführung mit dem tatsächlichen
 Herstellerschlüssel auf dem WSL-Rechner ist noch nicht nachgewiesen.
 
 ## Bestätigter öffentlicher Schlüssel
 
-Der Betreiber hat die erfolgreiche lokale Schlüsselerzeugung gemeldet und
-anschließend ausschließlich den öffentlichen Prüfschlüssel übermittelt.
-Die [öffentliche Datei](../security/release-trust/manufacturer-20261021.pem)
+Der Betreiber hat am 23.10.2026 den Verlust der bisherigen Schlüsselpassphrase
+und anschließend die lokale Erzeugung sowie das erfolgreiche erneute Öffnen
+eines verschlüsselten Ersatzschlüssels gemeldet. Eine Offenlegung des alten
+privaten Schlüssels wurde nicht gemeldet. Übermittelt wurden ausschließlich
+der öffentliche Prüfschlüssel, sein Hash und der lokale Ordnerpfad.
+Die neue [öffentliche Datei](../security/release-trust/manufacturer-20261023.pem)
 ist ein kanonisches Ed25519-SPKI-PEM mit 113 Byte einschließlich abschließendem
 Zeilenumbruch. Ihr SHA-256 stimmt exakt mit der zuvor gemeldeten Ausgabe
 von `sha256sum release-public.pem` überein:
 
 ```text
-95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248
+d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6
 ```
 
 Der private Schlüssel und die Passphrase wurden nicht übermittelt.
-Diese Prüfung bestätigt Format und Übereinstimmung des öffentlichen Schlüssels;
-ein Signier-/Verifikationstest mit dem tatsächlichen privaten Schlüssel und
-eine wiederlesbare getrennte Sicherung sind noch nicht nachgewiesen.
-[Prüfvermerk](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json).
+Die Prüfung bestätigt Format und Übereinstimmung des öffentlichen Schlüssels.
+Das erfolgreiche Öffnen der verschlüsselten Datei ist eine Betreibermeldung;
+ein Signier-/Verifikationstest des Lieferpakets mit dem tatsächlichen privaten
+Schlüssel und eine wiederlesbare getrennte Sicherung sind noch nicht nachgewiesen.
+Siehe [Ersatzschlüssel und Prüfgrenzen](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md).
+Die [öffentliche Datei vom 21.10.](../security/release-trust/manufacturer-20261021.pem)
+und ihr [Prüfvermerk](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json)
+bleiben als historischer Nachweis erhalten. Ihr Hash ist für neue Lieferungen
+mit dem aktuellen Helfer nicht mehr zulässig.
 
-Den bestehenden Schlüssel weiterverwenden. **Den folgenden Erzeugungsblock
-nicht erneut ausführen**, wenn die Schlüssel bereits vorhanden sind.
-Der öffentliche Schlüssel wird erst mit der signierten Frischlieferung auf
-dem Pi verankert; seine Ablage in der Dokumentation installiert keine Autorität.
+Den bereits erzeugten Ersatzschlüssel weiterverwenden. **Den folgenden
+Erzeugungsblock nicht erneut ausführen**, wenn dieser Schlüssel vorhanden ist.
+Sein eigener privater Ordner wird beim Signieren ausdrücklich angegeben;
+alte Schlüsseldateien werden nicht gelöscht oder überschrieben. Die neuen
+Werkzeuge binden den oben angegebenen öffentlichen Hash fest. Dessen Verankerung
+auf dem Pi erfolgt erst durch den authentifizierten Installationseinstieg
+beziehungsweise den R8-Übergang; diese Dokumentation ändert kein Gerät.
 
 ## Einmalige Erzeugung auf einem neuen Signierrechner
 
@@ -41,9 +52,10 @@ Den folgenden Block als normalen Ubuntu-Benutzer ohne `sudo` ausführen.
 Er benötigt das Ubuntu-Paket `openssl`. Bei `openssl: command not found`
 zunächst `sudo apt update && sudo apt install openssl` ausführen.
 
-Eine lange, einzigartige Passphrase im Passwortmanager bereithalten.
-OpenSSL fragt sie verdeckt zweimal zur Verschlüsselung und anschließend
-erneut zum Lesen des verschlüsselten Schlüssels ab. Keine Passphrase in
+Eine lange, einzigartige Passphrase zuerst im Passwortmanager speichern.
+OpenSSL fragt dasselbe Passwort verdeckt zweimal zur Verschlüsselung und
+Bestätigung und anschließend erneut zum Lesen des verschlüsselten Schlüssels ab.
+Es handelt sich um ein Passwort, nicht um drei verschiedene. Keine Passphrase in
 einen Befehl, eine Umgebungsvariable, einen Chat oder ein Protokoll schreiben.
 
 ```bash
@@ -122,12 +134,18 @@ Er erwartet den bereits hashgeprüften Interpreter
 und mindestens 5 GiB freien Platz unter `/home`. `unzip` und npm werden für
 diesen Signierlauf nicht benötigt. Beide originalen ZIP-Downloads des
 [qualifizierten CI-Laufs](https://github.com/NexoWatt/nexowatt-eos/actions/runs/39736782733)
-werden als zwei Positionsargumente übergeben:
+werden als erste zwei Positionsargumente übergeben. Das optionale dritte
+Argument ist der absolute Pfad zum privaten Schlüsselordner unter dem eigenen
+Linux-Heimverzeichnis. Für den neu erzeugten Ersatzschlüssel diesen Pfad
+ausdrücklich angeben; den Platzhalter im Beispiel durch seinen tatsächlichen
+Ordnernamen ersetzen. Ohne drittes Argument wird `~/nexowatt-signing` verwendet,
+aber weiterhin ausschließlich der neue feste Schlüsselhash akzeptiert:
 
 ```bash
 /usr/bin/python3 -I -B /absoluter/gepruefter/pfad/sign-qualified-r8-wsl.py \
   /mnt/c/Users/User/Downloads/eos-unsigned-f353dd0.zip \
-  /mnt/c/Users/User/Downloads/eos-native-f353dd0.zip
+  /mnt/c/Users/User/Downloads/eos-native-f353dd0.zip \
+  "$HOME/nexowatt-signing-neu-<Ordnerkennung>"
 ```
 
 Vor Ausführung den Helfer aus einem festgelegten veröffentlichten Commit laden
@@ -136,6 +154,8 @@ und seinen separat mitgeteilten SHA-256 prüfen. Keinen veränderlichen
 vor dem Entpacken, feste Mitgliedslisten, das innere Archiv und die gebundenen
 Laufzeit-/Native-Nachweise. Er lädt nur den festen Quellcommit und das offizielle,
 hashgeprüfte ARM64-Node-Archiv. Es findet keine neue npm-Auflösung statt.
+Ein abweichender oder alter öffentlicher Schlüssel wird abgewiesen; das
+Verzeichnisargument ist keine freie Wahl einer Update-Autorität.
 
 Erst danach fragt OpenSSL am lokalen Terminal nach dem Schlüsselpasswort.
 Eine temporäre entschlüsselte Datei liegt mit Modus 0600 in einem privaten
@@ -146,6 +166,20 @@ wird bei Erfolg, Fehler, Strg+C und behandeltem SIGTERM entfernt. SIGKILL und
 Hostabsturz können keine Aufräumroutine ausführen; tmpfs ersetzt keine Kontrolle
 des Signierrechners und kann abhängig vom Host in Swap gelangen. Die verschlüsselte
 Masterdatei bleibt erhalten. Niemals private Schlüssel oder Passwörter übertragen.
+
+Der signierte Laufzeitinhalt stammt weiterhin aus dem sauberen qualifizierten
+Quellstand `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`. Erst nach Paket-/Kanalsignierung
+und Entfernung der temporären Schlüsseldatei wird der öffentliche R8-Einstieg
+mit der neuen Herstellerbindung erzeugt. Dazu verwendet der Helfer vorübergehend
+die ausschließlich im Schlüsselhash geänderte, vollständig hashgebundene Fassung
+des Einstiegserzeugers und stellt dessen Original anschließend wieder her.
+Beide vollständigen Werkzeughashes werden bereits vor der Entschlüsselung
+geprüft und getrennt vom Laufzeitquellstand in `summary.json` ausgewiesen.
+Die Paket-/Signaturprüfung bleibt aktiv. Bei Fehler oder behandeltem Abbruch
+wird die Originaldatei ebenfalls wiederhergestellt; nach SIGKILL oder Hostausfall
+den Helfer neu in einer frischen Arbeitsablage starten. Die vorhandenen ZIPs,
+CI-Nachweise, historische R8-Vertrauensbasis und Lizenzschlüssel werden durch
+diese Herstellerbindung nicht ersetzt.
 
 Quell-Checkout und Build laufen mit `umask 022`, damit öffentliche Lieferdateien
 die vorgeschriebenen Modi behalten. Der übergeordnete Arbeitsordner ist 0700.
@@ -196,9 +230,10 @@ node -e "const p=require('node:path'); const f=p.resolve(p.dirname(process.execP
 Die neu erzeugte Update-Autorität ersetzt auch nicht die getrennten,
 authentifizierten öffentlichen Prüfschlüssel der vorhandenen NWL3-Lizenzen.
 
-Nachweise: [ursprüngliche Formatprüfung](../../reports/integration/security-refresh-20261021/install/windows-key-custody.json)
+Historische Nachweise: [ursprüngliche Formatprüfung](../../reports/integration/security-refresh-20261021/install/windows-key-custody.json)
 (an den Dokumentationsstand `20efcdc99b3dfbe5e34ad614b45cae70f9e22bc7` gebunden)
-und [Prüfung des übermittelten öffentlichen Herstellerschlüssels](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json).
+und [Prüfung des damaligen öffentlichen Herstellerschlüssels](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json).
+Aktueller [Änderungs- und Prüfvermerk](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md).
 Offizielle Referenzen:
 [WSL](https://learn.microsoft.com/en-us/windows/wsl/install),
 [genpkey](https://docs.openssl.org/3.0/man1/openssl-genpkey/),

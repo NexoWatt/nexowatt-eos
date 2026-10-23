@@ -1,6 +1,6 @@
 # Herstellerablauf für automatische Node-24-Aktualisierungen
 
-Stand: 22.10.2026. Die Anlage installiert dafür ausdrücklich freigegebene,
+Stand: 23.10.2026. Die Anlage installiert dafür ausdrücklich freigegebene,
 signierte Node-Pakete selbstständig. Jedes Paket bleibt innerhalb von Node 24
 und erhöht die Version. App, Adapter, Abhängigkeiten, Katalog, Hostwerkzeuge
 und Datenbankschema bleiben gegenüber dem authentifizierten Ausgangsrelease
@@ -16,6 +16,11 @@ benötigt, einschließlich Manifest, Signatur, Payload und öffentlichem Schlüs
 Seine ursprüngliche `resolution-lock.json` muss zum signierten Buildnachweis
 passen. Kundendaten und installierte Gerätekonfiguration gehören nicht dazu.
 
+Die folgenden Beispiele verwenden den am 23.10.2026 bestätigten
+[Ersatzschlüssel des Herstellers](WINDOWS_SIGNIERRECHNER_DE.md). Zuerst muss die
+damit signierte Basis über den authentifizierten Einstieg installiert sein;
+die Angaben ersetzen kein bereits auf einer Anlage verankertes Vertrauen.
+
 Der Hersteller prüft die nächste offizielle Node-24-Version und übernimmt deren
 ARM64-/x64-Archivpins in `tools/integration/node-runtime-policy.json`. Die
 Laufzeit- und Integrationsprüfung erfolgt mit dieser genauen neuen Version.
@@ -30,7 +35,7 @@ Auf dem sauberen Linux-Herstellerstand mit der vorgesehenen Node-Werkzeugkette:
 node tools/integration/prepare-node-only-runtime.cjs \
   --baseline-bundle /pfad/authentifizierter-ausgang/bundle \
   --public-key /pfad/release-public.pem \
-  --public-key-sha256 95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248 \
+  --public-key-sha256 d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6 \
   --resolution-lock /pfad/ausgangsbuild/resolution-lock.json \
   --node-archive /pfad/geprueftes-offizielles-node-arm64-archiv.tar.xz \
   --output /pfad/neuer-node-kandidat \
@@ -87,7 +92,7 @@ des Repositorys; die lokale Behandlung des verschlüsselten Schlüssels folgt de
 node tools/bootstrap/build-node-only-test.cjs \
   --baseline-bundle /pfad/authentifizierter-ausgang/bundle \
   --public-key /pfad/release-public.pem \
-  --public-key-sha256 95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248 \
+  --public-key-sha256 d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6 \
   --prepared-runtime /pfad/neuer-node-kandidat \
   --native-evidence /pfad/neue-native-belege \
   --private-key /pfad/geschuetzt/temporarer-lokaler-signierschluessel.pem \

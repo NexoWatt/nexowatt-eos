@@ -8,7 +8,8 @@ const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 const entry = require('../../tools/bootstrap/build-public-r8-managed-entry.cjs');
 const root = path.resolve(__dirname, '../..');
-const key = fs.readFileSync(path.join(root, 'docs/security/release-trust/manufacturer-20261021.pem'));
+const key = fs.readFileSync(path.join(root, 'docs/security/release-trust/manufacturer-20261023.pem'));
+const formerKey = fs.readFileSync(path.join(root, 'docs/security/release-trust/manufacturer-20261021.pem'));
 const digest = value => crypto.createHash('sha256').update(value).digest('hex');
 const metadata = () => ({ schemaVersion: 1, runtimeVersion: '0.2.0-test.3', deliveryRevision: 12, releaseSequence: 15,
     platform: 'linux-arm64', archive: entry.ARCHIVE, bytes: 134040451, sha256: 'a'.repeat(64), releaseId: 'b'.repeat(64),
@@ -17,13 +18,27 @@ const helpers = () => Object.fromEntries(Object.entries(entry.HELPERS).map(([nam
 const fixture = t => { const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-r8-entry-test-'));
     t.after(() => fs.rmSync(directory, { recursive: true, force: true })); return directory; };
 
-test('R8 entry binds permanent public key, exact managed15 target and GitHub asset path', () => {
+test('R8 entry binds replacement manufacturer public key, exact managed15 target and GitHub asset path', () => {
+    assert.equal(entry.PUBLIC_KEY_SHA256, 'd8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6');
     assert.equal(digest(key), entry.PUBLIC_KEY_SHA256);
     const config = entry.configFor(metadata(), key);
     assert.equal(entry.validateConfig(config), config);
     assert.equal(config.url, `https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-${'b'.repeat(64)}/eos-linux-arm64.tar.gz`);
     assert.deepEqual([entry.BASELINE.revision, entry.BASELINE.sequence], [8, 11]);
+    assert.equal(entry.BASELINE.publicKeySha256, 'bc104daef9346ef31fe7b51d447bc8d3c5103aa5e6cf532e7a83ea17551280c5');
+    assert.equal(entry.BASELINE.releaseId, 'eb3d1747c35988bdf8785e7a5cdfc786ab356fa87149054767d7c0ed211b7ea7');
     assert.equal(config.key.bytes, key.length);
+});
+test('replacement entry rejects former manufacturer trust in metadata, configuration and rendered key', () => {
+    const formerHash = digest(formerKey);
+    assert.equal(formerHash, '95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248');
+    assert.throws(() => entry.configFor(metadata(), formerKey), /R8_ENTRY_DELIVERY/);
+    assert.throws(() => entry.configFor({ ...metadata(), signingPublicKeySha256: formerHash }, key), /R8_ENTRY_DELIVERY/);
+    assert.throws(() => entry.configFor({ ...metadata(), signingPublicKeySha256: formerHash }, formerKey), /R8_ENTRY_DELIVERY/);
+    const config = entry.configFor(metadata(), key);
+    assert.throws(() => entry.validateConfig({ ...config, publicKeySha256: formerHash,
+        key: { bytes: formerKey.length, sha256: formerHash } }), /R8_ENTRY_CONFIG/);
+    assert.throws(() => entry.render(config, formerKey, helpers()), /R8_ENTRY_KEY/);
 });
 test('R8 preparation rejects wrong key, sequence, Node platform, archive, production scope and unbounded sizes', () => {
     const differentKey = crypto.generateKeyPairSync('ed25519').publicKey.export({ type: 'spki', format: 'pem' });
@@ -59,7 +74,7 @@ test('rendered R8 entry has valid Bash, all embedded helpers match and no interm
     assert.match(text, /update-r8-to-managed\.cjs/);
     assert.match(text, /ExecStopPost=.*--quiesce-incomplete/);
     assert.match(text, /--unit=nexowatt-eos-r8-managed-update/);
-    assert.match(text, /--expected-key-sha256 '95151b5f/);
+    assert.match(text, /--expected-key-sha256 'd8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6'/);
     assert.doesNotMatch(text, /update-test-to-r9|update-test-to-r10|update-test-to-r11|apt-get|curl[^\n]*--location|--insecure/);
     assert.ok(text.indexOf('--destination "$eos_stage/extracted" --sha256') < text.indexOf('/usr/bin/node -e'));
     assert.throws(() => entry.render(config, Buffer.from('bad'), sources), /R8_ENTRY_KEY/);

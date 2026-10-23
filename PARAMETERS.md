@@ -1,15 +1,25 @@
 # NexoWatt EOS review profile — parameters
 
-## Managed test baseline and update candidates (2026-10-22)
+## Managed test baseline and update candidates (2026-10-23)
 
-Manufacturer helper `tools/bootstrap/sign-qualified-r8-wsl.py` takes exactly
-two positional paths: the original qualified unsigned ZIP and native-evidence
-ZIP from source `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`. It pins sequence 15,
-Node 24.22.1 and the permanent manufacturer public-key hash; it has no bypass,
-key-rotation, publication or host-installation option. It runs as a normal
-Linux-x64 user under `/home`, with the prepared local Node distribution and
-encrypted key paths described in the [WSL procedure](docs/operations/WINDOWS_SIGNIERRECHNER_DE.md).
+Manufacturer helper `tools/bootstrap/sign-qualified-r8-wsl.py` takes two required
+positional paths: the original qualified unsigned ZIP and native-evidence
+ZIP from source `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`. An optional third
+positional path selects a protected absolute signing-key directory below the
+current user's Linux home; omitted, it defaults to `~/nexowatt-signing`.
+It pins sequence 15, Node 24.22.1 and the replacement manufacturer public-key
+hash `d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6`
+confirmed on 2026-10-23. The directory argument does not override that trust pin.
+No bypass, arbitrary-key, publication or host-installation option is provided.
+It runs as a normal Linux-x64 user under `/home`, with the prepared local Node
+distribution and encrypted key paths described in the
+[WSL procedure](docs/operations/WINDOWS_SIGNIERRECHNER_DE.md).
 The passphrase is requested interactively by OpenSSL, never as an argument.
+The runtime build retains its clean qualified source. After signing and private
+temporary-file cleanup, the helper temporarily uses the fully hash-pinned entry
+generator with only its manufacturer-key pin replaced, then restores the original
+and checks the clean source state. Original and replacement entry-tool hashes
+are recorded separately from the runtime source in the public summary.
 
 The automatic Node policy is separate from the manually confirmed EOS update
 operation. Signed feed entries may opt into `automaticNodeUpdate: true`; the

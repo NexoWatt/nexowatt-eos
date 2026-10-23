@@ -1,6 +1,6 @@
 # R8 direkt auf den verwalteten Teststand aktualisieren
 
-Stand: 22.10.2026. Der neue Quellpfad aktualisiert ein gesundes R8 direkt von
+Stand: 23.10.2026. Der neue Quellpfad aktualisiert ein gesundes R8 direkt von
 Sequenz 11 auf die neue verwaltete Basis mit Sequenz 15. R9, R10 und R11 werden
 weder heruntergeladen noch installiert oder gestartet. Ein veröffentlichtes,
 signiertes Paket und ein bytegenau zurückgelesener Betreiberbefehl stehen für
@@ -42,7 +42,13 @@ Fall wird die Migration verschoben.
 Der Hersteller erstellt aus dem fertig signierten Sequenz-15-Paket einen
 separaten öffentlichen Einstieg mit festem Archiv-, Skript-, Release- und
 Schlüsselhash. Dieser Einstieg verankert den dauerhaften Hersteller-Prüfschlüssel
-mit Hash `95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248`.
+mit Hash `d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6`.
+Dieser am 23.10.2026 bestätigte Ersatzschlüssel wird verwendet, weil die
+Passphrase des zuvor vorgesehenen Herstellerschlüssels nicht mehr verfügbar
+ist. Der [Änderungs- und Prüfvermerk](../../reports/integration/manufacturer-key-replacement-20261023/README_DE.md)
+trennt die neue Herstellerbindung vom unveränderten R8-Ausgangsvertrauen und
+vom weiterhin qualifizierten Laufzeitstand `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`.
+Eine bereits ausgeführte Vertrauensumstellung auf Geräten ist damit nicht belegt.
 Der alte R8-Schlüssel ist keine allgemeine Berechtigung zur Schlüsselrotation.
 Der Betreiber muss später den vollständig veröffentlichten, unveränderten Befehl
 verwenden; dieses Dokument enthält bewusst keinen ungepinnten Download-Aufruf.

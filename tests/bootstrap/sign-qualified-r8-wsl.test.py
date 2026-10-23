@@ -2,6 +2,7 @@
 """Local signing boundary fixtures; no downloads, real keys or Pi operations."""
 import hashlib
 import importlib.util
+import os
 from pathlib import Path
 import stat
 import subprocess
@@ -96,6 +97,143 @@ class InputTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     signing.extract_zip(self.archive([(entry, b"no")]), output, {"wanted": 2})
                 self.assertFalse(output.exists())
+
+
+class SigningDirectoryTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="eos-signing-directory-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.base = Path(self.temp.name)
+        self.home = self.base / "home"
+        self.home.mkdir()
+        self.default = self.home / "nexowatt-signing"
+        self.default.mkdir(mode=0o700)
+        self.replacement = self.home / "nexowatt-signing-neu-fixture"
+        self.replacement.mkdir(mode=0o700)
+
+    def test_default_is_fixed_and_replacement_requires_explicit_path(self):
+        self.assertEqual(signing.signing_directory(self.home), self.default)
+        self.assertEqual(signing.signing_directory(self.home, str(self.replacement)), self.replacement)
+        self.default.rmdir()
+        with self.assertRaises(ValueError):
+            signing.signing_directory(self.home)
+        self.assertTrue(self.replacement.is_dir())
+
+    def test_rejects_relative_outside_home_and_noncanonical_paths(self):
+        outside = self.base / "home-other"
+        outside.mkdir()
+        link = self.home / "key-alias"
+        link.symlink_to(self.replacement, target_is_directory=True)
+        file = self.home / "not-a-directory"
+        file.write_bytes(b"fixture")
+        candidates = ["nexowatt-signing-neu-fixture", self.home, outside, link,
+                      self.home / "missing", file,
+                      self.replacement / ".." / self.replacement.name]
+        for candidate in candidates:
+            with self.subTest(path=str(candidate)):
+                with self.assertRaises(ValueError):
+                    signing.signing_directory(self.home, str(candidate))
+
+
+class EntryToolTests(unittest.TestCase):
+    OLD_KEY = b"95151b5f26aa09a95c2f0cb5215fdfc7a7fc3066da9e670937d1e8b50c701248"
+    NEW_KEY = b"d8808e00b958f476684005a95f543d9dfb3d4532bd54f31552a701d1e6aabdf6"
+    ORIGINAL_SHA = "4709a10de3330ea7de740dda7cbf7f5e45d898c0cf16da470cb681ed4efa2278"
+    REPLACED_SHA = "319776f5a20716c7a1fe3dd2ca3dea293638e45af7b734a0f6285e444b9bb156"
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="eos-entry-tool-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.base = Path(self.temp.name)
+        self.replacement = (ROOT / "tools/bootstrap/build-public-r8-managed-entry.cjs").read_bytes()
+        self.original = self.replacement.replace(self.NEW_KEY, self.OLD_KEY)
+        self.file = self.base / "entry.cjs"
+        self.file.write_bytes(self.original)
+        self.file.chmod(0o644)
+
+    def assert_restored(self):
+        self.assertEqual(self.file.read_bytes(), self.original)
+        self.assertEqual(stat.S_IMODE(self.file.stat().st_mode), 0o644)
+        self.assertEqual(list(self.base.glob(".eos-entry-*")), [])
+
+    def test_full_pins_bind_qualified_source_and_actual_replacement_module(self):
+        self.assertEqual(signing.PREVIOUS_KEY_SHA.encode("ascii"), self.OLD_KEY)
+        self.assertEqual(signing.KEY_SHA.encode("ascii"), self.NEW_KEY)
+        self.assertEqual(signing.ENTRY_ORIGINAL_SHA256, self.ORIGINAL_SHA)
+        self.assertEqual(signing.ENTRY_REPLACED_SHA256, self.REPLACED_SHA)
+        self.assertEqual(hashlib.sha256(self.original).hexdigest(), self.ORIGINAL_SHA)
+        self.assertEqual(hashlib.sha256(self.replacement).hexdigest(), self.REPLACED_SHA)
+        self.assertEqual(self.original.count(self.OLD_KEY), 1)
+        self.assertEqual(self.replacement.count(self.NEW_KEY), 1)
+        self.assertEqual(signing.entry_sources(self.file), (self.original, self.replacement))
+        self.assert_restored()
+
+    def test_scoped_replacement_then_byte_exact_restoration(self):
+        with signing.replacement_entry_tool(self.file):
+            self.assertEqual(self.file.read_bytes(), self.replacement)
+            self.assertEqual(stat.S_IMODE(self.file.stat().st_mode), 0o644)
+            self.assertEqual(self.file.stat().st_nlink, 1)
+            self.assertEqual(list(self.base.glob(".eos-entry-*")), [])
+        self.assert_restored()
+
+    def test_body_failure_and_interrupt_restore_source_and_permissions(self):
+        for error in (RuntimeError, KeyboardInterrupt):
+            with self.subTest(error=error.__name__):
+                with self.assertRaises(error):
+                    with signing.replacement_entry_tool(self.file):
+                        self.assertEqual(self.file.read_bytes(), self.replacement)
+                        raise error("disposable entry fixture interrupted")
+                self.assert_restored()
+
+    def test_modified_source_and_wrong_replacement_pin_fail_before_write(self):
+        corrupt = self.original + b"\n// unexpected source change\n"
+        self.file.write_bytes(corrupt)
+        inode = self.file.stat().st_ino
+        with self.assertRaises(ValueError):
+            with signing.replacement_entry_tool(self.file):
+                self.fail("Modified original was accepted")
+        self.assertEqual(self.file.read_bytes(), corrupt)
+        self.assertEqual(self.file.stat().st_ino, inode)
+        self.file.write_bytes(self.original)
+        with patch.object(signing, "ENTRY_REPLACED_SHA256", "0" * 64):
+            with self.assertRaises(ValueError):
+                with signing.replacement_entry_tool(self.file):
+                    self.fail("Unbound replacement was applied")
+        self.assertEqual(self.file.stat().st_ino, inode)
+        self.assert_restored()
+
+    def test_symlink_hardlink_foreign_owner_and_unsafe_modes_are_rejected(self):
+        link = self.base / "symlink.cjs"
+        link.symlink_to(self.file)
+        with self.assertRaises(ValueError):
+            with signing.replacement_entry_tool(link):
+                self.fail("Symlink was followed")
+        self.assert_restored()
+        link.unlink()
+        os.link(self.file, link)
+        for candidate in (self.file, link):
+            with self.subTest(hardlink=str(candidate)):
+                with self.assertRaises(ValueError):
+                    with signing.replacement_entry_tool(candidate):
+                        self.fail("Multiply linked source was accepted")
+                self.assert_restored()
+        link.unlink()
+        uid = os.getuid()
+        with patch.object(signing.os, "getuid", return_value=uid + 1):
+            with self.assertRaises(ValueError):
+                with signing.replacement_entry_tool(self.file):
+                    self.fail("Foreign-owned source was accepted")
+        for mode in (0o600, 0o664, 0o755):
+            with self.subTest(mode=oct(mode)):
+                self.file.chmod(mode)
+                with self.assertRaises(ValueError):
+                    with signing.replacement_entry_tool(self.file):
+                        self.fail("Noncanonical source mode was accepted")
+                self.assertEqual(self.file.read_bytes(), self.original)
+                self.assertEqual(stat.S_IMODE(self.file.stat().st_mode), mode)
+                self.assertEqual(list(self.base.glob(".eos-entry-*")), [])
+        self.file.chmod(0o644)
+        self.assert_restored()
 
 
 @unittest.skipUnless(Path("/usr/bin/openssl").is_file() and Path("/dev/shm").is_dir(),
