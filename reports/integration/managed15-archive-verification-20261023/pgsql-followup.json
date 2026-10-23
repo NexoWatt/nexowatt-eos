@@ -1,0 +1,100 @@
+{
+  "kind": "read-only-backup-pgsql-reachability-review",
+  "checkedAt": "2026-10-23T19:53:55.972060+00:00",
+  "archive": {
+    "sha256": "dee6181281241c04c9f1a1526685c45a0d4de347d088312a1ce9fe647d82ac44",
+    "bytes": 134278673,
+    "signatureVerification": "already performed by parent/root; not independently rerun by this focused review"
+  },
+  "package": {
+    "name": "iobroker.nexowatt-backup",
+    "version": "1.0.10",
+    "main": "build/main.js"
+  },
+  "method": "Static reads of selected regular files safely extracted from authenticated artifact; selected controller/enrollment files read directly from tar. No payload code, shell, database, network, restore or production test executed.",
+  "result": [
+    {
+      "finding": "Optional pgsql provider is included executable product code, not a platform-disabled template.",
+      "evidence": [
+        "build/main.js:1344-1360 builds provider config from native settings",
+        "build/lib/execute.js:238-257 selects pgsql if config.name=iobroker and provider.enabled"
+      ]
+    },
+    {
+      "finding": "No default automatic pgsql execution is established. Shipped native pgSqlEnabled=false and host/name/user/password empty. New EOS enrollment disables adapter and all *Enabled flags. Existing modified installation settings are unknown.",
+      "evidence": [
+        "io-package.json:490-499",
+        "runtime/bootstrap/own-adapter-enrollment.cjs:56-77; actual artifact SHA256 62bb185e00b1b82de200392870b9753bfc4fa42b2e570862fa000db5efd6f872; byte-identical to working tree"
+      ]
+    },
+    {
+      "finding": "pgsql restore dispatch is not protected by pgSqlEnabled. After licensed/operational readiness and archive acquisition, filename selects provider. Native platform guards reject iobroker/redis or isStop modules, while pgsql.isStop=false. Therefore optional licensed restore remains statically reachable. Runtime caller authorization and successful end-to-end invocation were not tested.",
+      "evidence": [
+        "build/main.js:398-407",
+        "build/lib/restore.js:67-92,248-280,299-318,360-408",
+        "build/lib/restore/pgsql.js:139"
+      ]
+    },
+    {
+      "finding": "Legacy pgsql replay calls pg_dump rather than pg_restore and ignores create/replay errors, then can report successful restoration. This is a source-confirmed functional defect in the optional provider; no successful restore is claimed.",
+      "evidence": [
+        "build/lib/restore/pgsql.js:18-46,119-139"
+      ]
+    },
+    {
+      "finding": "Optional backup and restore use shell command interpolation of configured connection values, including password in URI. Double-quote wrapping is not complete shell escaping. Potential command injection/argv secret exposure requires separate threat-boundary/runtime validation; no actual credential or demonstrated exploit was found in this focused review.",
+      "evidence": [
+        "build/lib/scripts/30-pgsql.js:78-105",
+        "build/lib/restore/pgsql.js:18-39"
+      ]
+    },
+    {
+      "finding": "Normal logical EOS controller backup is a separate path: 10-iobroker forks controller CLI backup. Actual archive CLI files match private staging/archive transform hashes. This does not prove PostgreSQL physical/system restoration.",
+      "evidence": [
+        "build/lib/scripts/10-iobroker.js:27-76",
+        "app/node_modules/@iobroker/js-controller-cli/build/cjs/lib/setup/setupBackup.js SHA256 3c57c8fb32597e2e0b4c8fd3a822411749ac7a8ba7c83629146cf3baa7df9338",
+        "app/node_modules/@iobroker/js-controller-cli/build/esm/lib/setup/setupBackup.js SHA256 41ba67a57249f207607507d739681e34df2c93182de4b2aea843a07b41f26a33"
+      ]
+    },
+    {
+      "finding": "Literal iobroker:iobroker URI appears only in an explanatory comment; operative command uses configuration. Shipped pgSqlPassword is empty. This literal is not evidence of a bundled active operator credential.",
+      "evidence": [
+        "build/lib/restore/pgsql.js:24-25",
+        "io-package.json:497"
+      ]
+    }
+  ],
+  "existingDocumentation": [
+    "system/integration/backitup-observations.json contains historical open legacy-secret and restore privilege findings NW-EOS-INT-BAK-004/-005, against earlier source; it is not proof of current reachability or closure.",
+    "components/backitup/reports/startup-20261015/README_DE.md explicitly leaves native PostgreSQL/system recovery and file-server session security open.",
+    "reports/integration/own-adapter-test-20261015/controller-backup-state.md distinguishes logical controller export from complete PostgreSQL data-directory/system backup and records no restore test."
+  ],
+  "limits": [
+    "Read-only static inspection; no exploit, integration, hardware or restore execution.",
+    "No live installed adapter configuration, database credentials, command availability or caller authorization observed.",
+    "Not a blanket release blocker or production approval: default test provisioning does not activate optional provider, but provider must not be described as safely platform-disabled or as proven working restore.",
+    "The pgSqlEnabled===undefined fallback is true in main.js:1345, so absence of that property in a nonstandard/legacy configuration differs from shipped/new-enrollment defaults.",
+    "Targeted existing reports read; broad git search encountered missing partial-clone objects/network restriction and was stopped. No claim of exhaustive repository finding search."
+  ],
+  "hashes": {
+    "package.json": "40e9b1578c18b66cfb80ac51c887054305981af6f5caf65e41a8ef35c19f91ad",
+    "io-package.json": "b4343e924aca26267d136682aa23f02c676d4ae5fa6b4161689726dfe0c3f796",
+    "build/main.js": "9efb3b2a45d3b93ca796e52926662b064bf654561f30fda92333762934479846",
+    "build/lib/execute.js": "aba136feb4de4d3174bcfb68ab0d67ea1a10eccf3074a954acbe51f29378c819",
+    "build/lib/restore.js": "16ef7ee4b3fc9deb4d6af9710792e80567f106c4bf888be65f5618accbda7f1c",
+    "build/lib/scripts/10-iobroker.js": "78beb011f1f3287c678671f253621b1ebfc2fb645a9d6eb424386f0cb37dfb3d",
+    "build/lib/scripts/30-pgsql.js": "8ccaf7f9c78a9ac9306d8cb838c259da08b35e79167f5e5b29d9fbe752067ca3",
+    "build/lib/restore/pgsql.js": "27d077428662c2b678961494c059ca111f9397ae31285cc254e7d4d153bae01b"
+  },
+  "findingIds": [
+    "EOS-MANAGED15-PGSQL-20261023-01",
+    "EOS-MANAGED15-PGSQL-20261023-02"
+  ],
+  "relatedHistoricalFindings": [
+    "NW-EOS-INT-BAK-004",
+    "NW-EOS-INT-BAK-005"
+  ],
+  "historicalFindingsClosed": false,
+  "ownerRole": "NexoWatt engineering",
+  "nextAction": "Keep optional legacy provider unused in this test; implement shell-free secret-safe process invocation and correct restore error handling, then test authorized calls and full restoration before enabling this provider."
+}

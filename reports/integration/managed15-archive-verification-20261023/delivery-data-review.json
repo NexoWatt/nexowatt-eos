@@ -1,0 +1,71 @@
+{
+  "scope": "Independent read-only archive verification and bounded delivery-data triage; no payload execution",
+  "archive": {
+    "archiveSha256": "dee6181281241c04c9f1a1526685c45a0d4de347d088312a1ce9fe647d82ac44",
+    "archiveBytes": 134278673,
+    "releaseId": "95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534",
+    "fileCount": 22606,
+    "totalFileBytes": 437907032,
+    "executableFiles": [
+      "app/node_modules/@esbuild/linux-arm64/bin/esbuild",
+      "node-runtime/bin/node"
+    ],
+    "signatureVerified": true,
+    "payloadExecuted": false
+  },
+  "scanCounts": {
+    "entries": 25748,
+    "directories": 3140,
+    "regularFiles": 22608,
+    "bytesScanned": 441863617
+  },
+  "documentaryPrivateKey": {
+    "package": "http-signature@1.2.0",
+    "path": "bundle/payload/app/node_modules/http-signature/http_signing.md",
+    "fileSha256": "fda674ce3650c0e197d0010d4dce957a7cbc51f6a27f3fb6b54e825963ffef9c",
+    "classification": "Public RSA-1024 test vector in Appendix A - Test Values; not manufacturer/customer signing authority",
+    "publicUpstreamKeyMatchAfterWhitespaceNormalization": true,
+    "upstreamUrl": "https://github.com/TritonDataCenter/node-http-signature/blob/master/http_signing.md",
+    "upstreamBlob": "a52c26336d256294751da2fb83afbfe7d1daf261",
+    "entireDocumentMatchesCurrentUpstream": false,
+    "materialOccurrences": [
+      "bundle/payload/app/node_modules/http-signature/http_signing.md"
+    ],
+    "documentReferences": [
+      "bundle/manifest.json",
+      "bundle/payload/app/node_modules/http-signature/CHANGES.md",
+      "bundle/payload/app/node_modules/http-signature/README.md",
+      "bundle/payload/app/node_modules/request/README.md"
+    ],
+    "executableReferencesDetected": false
+  },
+  "credentialPatternTriage": {
+    "candidateFiles": 45,
+    "candidateMatches": 73,
+    "categories": {
+      "credential_url": 45
+    },
+    "classification": "Documentation/test URL examples and dynamic options.user/options.pass interpolation; no stored operator credential identified",
+    "knownProviderCodeConcern": "Legacy pgsql shell interpolation and incorrect restore implementation were separately statically reviewed for conditional reachability; see pgsql-followup.json. No embedded operator secret or demonstrated exploit identified."
+  },
+  "standardConfigurationFiles": [
+    {
+      "path": "bundle/payload/app/node_modules/iobroker.js-controller/conf/iobroker-dist.json",
+      "bytes": 8345
+    },
+    {
+      "path": "bundle/payload/runtime/postgresql/schema.sql",
+      "bytes": 3041
+    }
+  ],
+  "operatorPathMarkersFound": [],
+  "jsonPrivateJwkCandidates": [],
+  "credentialContainerPaths": [],
+  "noProductionSecurityApproval": true,
+  "limitations": [
+    "Pattern/content triage is not proof that every possible encoded secret is absent",
+    "Public documentation test key is intentionally present and must not be reported as a key-free archive",
+    "No ARM64 execution, Pi migration, hardware, restore, or penetration test performed by this review",
+    "Existing dependency and legacy provider risks remain separate and open"
+  ]
+}

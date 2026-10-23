@@ -60,6 +60,20 @@ and complete payload have not been independently verified in this metadata revie
 No runtime release, active feed or installation command was published by this step.
 See the [received metadata evidence](reports/integration/managed15-public-metadata-20261023/README_DE.md).
 
+Subsequently, the complete signed archive was received and independently verified:
+134278673 bytes, SHA-256 `dee6181281241c04c9f1a1526685c45a0d4de347d088312a1ce9fe647d82ac44`,
+release `95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534`.
+Ed25519 signature, all 22606 payload files, payload/SBOM checks, 169 qualified
+source/host bindings, and independently retrieved historical native CI evidence
+passed. No target code was executed. The actual archive and entry bindings are
+recorded in the [archive verification](reports/integration/managed15-archive-verification-20261023/README_DE.md).
+`delivery/r8-managed15/` now holds the prepared public entry and original
+preparation evidence; `delivery/managed-test-15/` holds public key/metadata only.
+The runtime is prepared as a GitHub Release asset, not a Git file. Asset upload,
+public archive readback, active channel publication and the final operator
+command remain pending. Existing dependency findings and conditional legacy
+PostgreSQL provider concerns remain open; no production or Pi acceptance follows.
+
 The automatic Node policy is separate from the manually confirmed EOS update
 operation. Signed feed entries may opt into `automaticNodeUpdate: true`; the
 receiver additionally requires a strictly newer supported Node 24 runtime and

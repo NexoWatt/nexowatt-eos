@@ -2,9 +2,11 @@
 
 Stand: 23.10.2026. Der neue Quellpfad aktualisiert ein gesundes R8 direkt von
 Sequenz 11 auf die neue verwaltete Basis mit Sequenz 15. R9, R10 und R11 werden
-weder heruntergeladen noch installiert oder gestartet. Ein veröffentlichtes,
-signiertes Paket und ein bytegenau zurückgelesener Betreiberbefehl stehen für
-diesen Pfad noch aus. Die bisherigen R9-/R11-Befehle sind kein Ersatz dafür.
+weder heruntergeladen noch installiert oder gestartet. Das tatsächliche signierte
+Paket liegt inzwischen vor und hat die unabhängige Signatur- und vollständige
+Archivprüfung bestanden. Seine öffentliche Veröffentlichung, der aktive
+Update-Kanal und ein öffentlich bytegenau zurückgelesener Betreiberbefehl stehen
+noch aus. Die bisherigen R9-/R11-Befehle sind kein Ersatz dafür.
 
 Ziel sind Node.js 24.22.1, js-controller 7.2.5, die sechs eigenen Adapter und die
 [automatischen Sicherheitsupdates](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
@@ -76,7 +78,7 @@ Releases. Erst nach erfolgreichen Datenbank-, Adapter- und HTTPS-Prüfungen
 werden der Update-Dienst und der Linux-Sicherheitsupdate-Timer aktiviert. Die
 ursprünglichen öffentlichen und privaten Lizenz-/TLS-Schlüssel bleiben am Pi;
 der private Hersteller-Signierschlüssel gehört weiterhin nur auf den
-Signierrechner und ist kein Bestandteil der Lieferung.
+Signierrechner und darf kein Bestandteil der Lieferung sein.
 
 ## Fehler und Rückfall
 
@@ -101,6 +103,17 @@ Die [Migrationsbelege](../../reports/integration/r8-direct-managed-20261022/READ
 trennen isolierte Vertrags-/Fehlertests, tatsächliche Dateisystemoperationen und
 noch offene Zielsystemprüfungen. Die Tests verwenden für systemd, Datenbank,
 Releaseinventar und native ARM64-Proben ausdrücklich Testdoubles. Sie belegen
-keine auf einem Pi ausgeführte Migration. Signierung, öffentlicher Readback,
-vollständiger R8-Systemd-/PostgreSQL-Test einschließlich Abbruch/Neustart,
-Wiederherstellung und physische Anlagenabnahme bleiben offen.
+keine auf einem Pi ausgeführte Migration.
+
+Die inzwischen erhaltene signierte Lieferung bestand am 23.10.2026 die
+Ed25519-Signaturprüfung und den vollständigen Archiv-Readback mit 22.606
+Payload-Dateien. Payload-Vertrag, 646 SBOM-Komponenten und die Herkunft von
+169 Quell-/Hostdateien wurden geprüft. Die erneut unabhängig abgerufenen
+CI-Nachweise binden den Laufzeitinhalt; deren 15 historische native Tests wurden
+nicht erneut ausgeführt. Details stehen im
+[Archivprüfbericht](../../reports/integration/managed15-archive-verification-20261023/README_DE.md).
+Dies ist keine pauschale Geheimnisfreiheits-, Produktions- oder Anlagenfreigabe.
+
+Öffentliche Veröffentlichung und Rückprüfung, aktiver Update-Kanal sowie der
+vollständige R8-systemd-/PostgreSQL-Test einschließlich Abbruch/Neustart,
+Wiederherstellung und physischer Anlagenabnahme bleiben offen.

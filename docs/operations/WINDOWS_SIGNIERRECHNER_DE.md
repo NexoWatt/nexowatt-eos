@@ -6,10 +6,12 @@ qualifizierten Sequenz 15 vor. Ein vom Betreiber übermitteltes WSL-Protokoll
 meldet inzwischen die lokale Signierung und Rückprüfung mit dem tatsächlichen
 Herstellerschlüssel sowie die Erzeugung des R8-Einstiegs. Der Lauf brach danach
 an der abschließenden Quellprüfung ab; der öffentliche Export war unvollständig.
-Inzwischen wurde die öffentliche Metadaten-ZIP zur Prüfung übermittelt; der
+Inzwischen wurden die öffentliche Metadaten-ZIP und anschließend das vollständige
+signierte Laufzeitarchiv übermittelt und unabhängig geprüft. Der
 [Nachtrag zur Metadatenlieferung](../../reports/integration/managed15-public-metadata-20261023/README_DE.md)
-grenzt den damit belegten Umfang ab. Die unabhängige Prüfung des tatsächlichen
-Lieferarchivs, Veröffentlichung und Pi-Abnahme bleiben offen.
+und der [Archivprüfbericht](../../reports/integration/managed15-archive-verification-20261023/README_DE.md)
+grenzen den belegten Umfang ab. Öffentliche Veröffentlichung und Rückprüfung,
+Bereitstellung des aktiven Update-Kanals sowie Pi-Abnahme bleiben offen.
 
 ## Bestätigter öffentlicher Schlüssel
 
@@ -32,8 +34,10 @@ von `sha256sum release-public.pem` überein:
 Der private Schlüssel und die Passphrase wurden nicht übermittelt.
 Die Prüfung bestätigt Format und Übereinstimmung des öffentlichen Schlüssels.
 Das erfolgreiche Öffnen der verschlüsselten Datei und die später im WSL-Protokoll
-gemeldete lokale Signierung/Rückprüfung sind Betreibernachweise. Sie ersetzen
-keine unabhängige Rückprüfung des tatsächlichen Lieferarchivs. Eine wiederlesbare
+gemeldete lokale Signierung/Rückprüfung sind Betreibernachweise. Die spätere
+unabhängige Signatur- und Archivprüfung ist im
+[Archivprüfbericht](../../reports/integration/managed15-archive-verification-20261023/README_DE.md)
+gesondert dokumentiert. Eine wiederlesbare
 getrennte Schlüsselsicherung ist ebenfalls noch nicht nachgewiesen.
 Siehe [Ersatzschlüssel und Prüfgrenzen](../../reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md).
 Die [öffentliche Datei vom 21.10.](../security/release-trust/manufacturer-20261021.pem)
@@ -265,9 +269,9 @@ umgehen. Erst die erfolgreiche Abschlussausgabe beziehungsweise die erlaubte
 öffentliche Metadaten-ZIP zur weiteren Prüfung übermitteln; keine vollständigen
 Arbeits- oder Schlüsselordner hochladen.
 
-Die unabhängige Prüfung des tatsächlichen signierten Lieferarchivs bleibt bis
-zu ihrem eigenen Nachweis offen. Öffentliche Veröffentlichung/Rückprüfung und
-R8-Pi-Abnahme sind weiterhin separate Schritte. Siehe
+Die inzwischen erfolgte unabhängige Prüfung des tatsächlichen signierten
+Lieferarchivs ist im nachfolgenden Archivnachtrag dokumentiert. Öffentliche
+Veröffentlichung/Rückprüfung und R8-Pi-Abnahme bleiben separate Schritte. Siehe
 [Korrektur und Prüfgrenzen](../../reports/integration/wsl-signing-finalization-20261023/README_DE.md).
 
 ## Erhaltene öffentliche Metadatenlieferung
@@ -281,12 +285,31 @@ das eigentliche signierte Laufzeitarchiv nicht. Angaben wie
 `archiveReadbackVerified` beschreiben den lokalen Herstellerlauf und ersetzen
 keine unabhängige Rückprüfung der vollständigen Archivdatei.
 
-Für den nächsten Prüfschritt die vollständige öffentliche Datei
-`eos-linux-arm64.tar.gz` aus `public-finished/` unverändert separat bereitstellen.
-Die Metadaten-ZIP genügt dafür nicht. Keine privaten Schlüsseldateien,
-Passwörter oder vollständigen Arbeits- beziehungsweise Schlüsselordner
-übermitteln. Archivprüfung, Veröffentlichung mit öffentlicher Rückprüfung
-und Installation/Abnahme auf dem Pi bleiben offen.
+Das vollständige öffentliche `eos-linux-arm64.tar.gz` wurde anschließend separat
+bereitgestellt und wie unten beschrieben geprüft. Die Metadaten-ZIP allein
+genügte dafür nicht. Weiterhin keine privaten Schlüsseldateien, Passwörter oder
+vollständigen Arbeits- beziehungsweise Schlüsselordner übermitteln.
+
+## Tatsächliche Prüfung des signierten Archivs
+
+Am 23.10.2026 wurden das übermittelte Archiv mit 134.278.673 Byte, seine
+Ed25519-Signatur und der vollständige Inhalt unabhängig geprüft. Die Rückprüfung
+erfasste 22.606 Payload-Dateien mit zusammen 437.907.032 Byte. `validatePayload`
+und die SBOM mit 646 Komponenten wurden geprüft; das Paket enthält weiterhin
+js-controller **7.2.5** und Node **24.22.1**.
+
+Die Quellenbindung umfasst 169 Quell-/Hostdateien: 152 direkte Übereinstimmungen
+und 17 dokumentierte Transformationen. Die ursprünglichen nativen CI-Nachweise
+wurden erneut unabhängig abgerufen und an App- und Buildnachweis gebunden.
+Die darin dokumentierten 15 nativen Tests wurden dabei nicht erneut ausgeführt.
+Archivhash, vollständige Bindungen, Methoden und Grenzen stehen im
+[Prüfbericht](../../reports/integration/managed15-archive-verification-20261023/README_DE.md).
+
+Dieser Nachweis betrifft das tatsächlich übermittelte Paket. Er ist keine
+pauschale Aussage zur Geheimnisfreiheit aller Dateiinhalte und ersetzt weder
+öffentliche Bereitstellung mit Rückprüfung noch den aktiven Update-Kanal oder
+eine Installation/Abnahme auf dem Pi. Diese Liefer- und Zielsystemschritte bleiben
+offen; eine Produktionsfreigabe ist damit nicht erteilt.
 
 ## Toolchain für eine neue Paketauflösung
 
