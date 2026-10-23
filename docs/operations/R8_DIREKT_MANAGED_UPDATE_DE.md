@@ -4,9 +4,14 @@ Stand: 23.10.2026. Der neue Quellpfad aktualisiert ein gesundes R8 direkt von
 Sequenz 11 auf die neue verwaltete Basis mit Sequenz 15. R9, R10 und R11 werden
 weder heruntergeladen noch installiert oder gestartet. Das tatsächliche signierte
 Paket liegt inzwischen vor und hat die unabhängige Signatur- und vollständige
-Archivprüfung bestanden. Seine öffentliche Veröffentlichung, der aktive
-Update-Kanal und ein öffentlich bytegenau zurückgelesener Betreiberbefehl stehen
-noch aus. Die bisherigen R9-/R11-Befehle sind kein Ersatz dafür.
+Archivprüfung bestanden. Es ist als
+[GitHub-Testrelease](https://github.com/NexoWatt/nexowatt-eos/releases/tag/managed-test-15-95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534)
+mit Kennzeichnung `prerelease` veröffentlicht. Der vollständige öffentliche
+Rücklesetest, die Bereitstellung des signierten leeren Update-Kanals und die
+bytegenaue öffentliche Rückprüfung des Betreiberbefehls sind abgeschlossen und
+im [Veröffentlichungsnachweis](../../reports/integration/managed15-publication-20261023/README_DE.md)
+dokumentiert. Der Befehl ist für den kontrollierten R8-Test verwendbar. Die bisherigen
+R9-/R11-Befehle sind kein Ersatz dafür.
 
 Ziel sind Node.js 24.22.1, js-controller 7.2.5, die sechs eigenen Adapter und die
 [automatischen Sicherheitsupdates](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
@@ -54,11 +59,17 @@ trennt die neue Herstellerbindung vom unveränderten R8-Ausgangsvertrauen und
 vom weiterhin qualifizierten Laufzeitstand `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`.
 Eine bereits ausgeführte Vertrauensumstellung auf Geräten ist damit nicht belegt.
 Der alte R8-Schlüssel ist keine allgemeine Berechtigung zur Schlüsselrotation.
-Der Betreiber muss später den vollständig veröffentlichten, unveränderten Befehl
-verwenden; dieses Dokument enthält bewusst keinen ungepinnten Download-Aufruf.
+Der Betreiber verwendet den vollständig veröffentlichten, unveränderten Befehl
+aus [R8_UPDATE_COMMAND.txt](../../delivery/r8-managed15/R8_UPDATE_COMMAND.txt).
+Diese Datei enthält den vom unveränderten Generator erzeugten Befehl.
+Die vollständige öffentliche Rückprüfung und die Feed-Bereitstellung sind
+nachgewiesen; dieses Dokument enthält keinen ungepinnten Download-Aufruf.
 
 Vor diesem einmaligen Systemwechsel müssen eine aktuelle Sicherung und ein
-geprüfter Rückfallstand vorhanden sein. Der Vorgang läuft unter einem zeitlich
+geprüfter Rückfallstand vorhanden sein. Der Test bleibt bei
+`physicalControlEnabled: false`; physische Regelung wird nicht freigegeben.
+Den optionalen alten `pgsql`-Provider weder aktivieren noch für
+Wiederherstellungen verwenden. Der Vorgang läuft unter einem zeitlich
 begrenzten systemd-Koordinator weiter, auch wenn die SSH-Verbindung abbricht.
 Der Koordinator prüft das neue ARM64-Node-/Native-Paar vor dem Stoppen des
 Controllers. Eine private, dauerhaft geschriebene Planung erfasst Hoständerungen
@@ -79,6 +90,50 @@ werden der Update-Dienst und der Linux-Sicherheitsupdate-Timer aktiviert. Die
 ursprünglichen öffentlichen und privaten Lizenz-/TLS-Schlüssel bleiben am Pi;
 der private Hersteller-Signierschlüssel gehört weiterhin nur auf den
 Signierrechner und darf kein Bestandteil der Lieferung sein.
+
+## Kontrollierter Test mit PuTTY
+
+1. Die oben genannten Ausgangsbedingungen, aktuelle Sicherung und den geprüften
+   Rückfallstand sicherstellen. Die Anlage bleibt ohne physische Steuerung.
+2. Per PuTTY am R8-Test-Pi anmelden. Die Datei
+   [R8_UPDATE_COMMAND.txt](../../delivery/r8-managed15/R8_UPDATE_COMMAND.txt)
+   öffnen und deren **vollständige einzelne Befehlszeile** unverändert im
+   SSH-Terminal ausführen. Bei der `sudo`-Abfrage das Passwort des Pi-Benutzers
+   eingeben. Der Hersteller-Signierschlüssel wird hierfür nicht benötigt.
+3. Den Abschluss beziehungsweise eine konkrete Fehlermeldung abwarten. Nach
+   erfolgreichem Abschluss ausschließlich folgenden Versions-/Dienststatus und
+   die vier öffentlichen Releasefelder prüfen:
+
+```bash
+/opt/nexowatt/eos/current/node-runtime/bin/node --version
+
+systemctl show \
+  nexowatt-eos-controller.service \
+  nexowatt-eos-postgresql.service \
+  nexowatt-eos-updates.service \
+  nexowatt-eos-os-updates.timer \
+  --property=Id,ActiveState,SubState,Result --no-pager
+
+sudo /usr/bin/python3 -I -B - <<'PY'
+import json
+from pathlib import Path
+
+state = json.loads(Path("/etc/nexowatt-eos/release-state.json").read_text())
+fields = ("releaseId", "sequence", "nodeVersion", "profile")
+print(json.dumps({key: state.get(key) for key in fields}, indent=2))
+PY
+```
+
+Erwartet sind Node `v24.22.1`, Sequenz `15`, Profil `test` und Release-ID
+`95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534`.
+Controller, PostgreSQL und Updatedienst sollen aktiv laufen; der
+OS-Update-Timer soll aktiv auf den nächsten Termin warten. Diese Abfrage liest
+keine Geräte-, Lizenz- oder Kundendaten aus. Eine erfolgreiche Statusabfrage ist
+noch keine vollständige Pi-, Wiederherstellungs- oder Anlagenabnahme.
+`/usr/bin/node` bleibt absichtlich auf dem vorhandenen Systemstand; für EOS ist
+die oben abgefragte gebündelte Node-Datei maßgeblich. Anschließend im Admin unter
+System/Grundeinstellungen → EOS-Updates → Updates prüfen den Kanalabruf prüfen.
+Beim zunächst leeren gültigen Feed ist „kein Update verfügbar“ korrekt.
 
 ## Fehler und Rückfall
 
@@ -114,6 +169,10 @@ nicht erneut ausgeführt. Details stehen im
 [Archivprüfbericht](../../reports/integration/managed15-archive-verification-20261023/README_DE.md).
 Dies ist keine pauschale Geheimnisfreiheits-, Produktions- oder Anlagenfreigabe.
 
-Öffentliche Veröffentlichung und Rückprüfung, aktiver Update-Kanal sowie der
-vollständige R8-systemd-/PostgreSQL-Test einschließlich Abbruch/Neustart,
-Wiederherstellung und physischer Anlagenabnahme bleiben offen.
+Das signierte Paket ist als Testrelease veröffentlicht. Öffentlicher
+Rücklesetest, gültiger signierter leerer Feed und bytegenaue Rückprüfung des
+Betreiberbefehls sind im
+[Veröffentlichungsbericht](../../reports/integration/managed15-publication-20261023/README_DE.md)
+abgeschlossen dokumentiert. Der vollständige R8-systemd-/PostgreSQL-Test einschließlich
+Abbruch/Neustart, Wiederherstellung und physischer Anlagenabnahme bleibt offen.
+Es gibt keine Produktions- oder CRA-Freigabe.

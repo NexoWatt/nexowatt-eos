@@ -69,10 +69,17 @@ passed. No target code was executed. The actual archive and entry bindings are
 recorded in the [archive verification](reports/integration/managed15-archive-verification-20261023/README_DE.md).
 `delivery/r8-managed15/` now holds the prepared public entry and original
 preparation evidence; `delivery/managed-test-15/` holds public key/metadata only.
-The runtime is prepared as a GitHub Release asset, not a Git file. Asset upload,
-public archive readback, active channel publication and the final operator
-command remain pending. Existing dependency findings and conditional legacy
-PostgreSQL provider concerns remain open; no production or Pi acceptance follows.
+The runtime is published as a GitHub prerelease asset, not a Git file. All five
+public assets passed an unauthenticated download and full signed archive readback
+in CI run `40024630784` at verifier commit `eb08becf56e1e9c2b8b2a3c67cce17e1589c2a5e`.
+The active signed empty channel and pinned R8 operator command were published in
+`a4d2f75ad2aaeaf0f83b2382e24c18b9aacffa5d` and read back byte-for-byte; the channel
+signature and expiry were revalidated. The original entry pin remains
+`fce5e279ddd2483e62c6c4ed2078e14855b1cb9c`; no signed archive bytes were changed.
+See the [publication evidence](reports/integration/managed15-publication-20261023/README_DE.md).
+Existing dependency findings and conditional legacy PostgreSQL provider concerns
+remain open; no production or Pi acceptance follows. The empty feed expires on
+`2026-11-22T19:13:09.971Z` and requires a newly signed feed before expiry.
 
 The automatic Node policy is separate from the manually confirmed EOS update
 operation. Signed feed entries may opt into `automaticNodeUpdate: true`; the

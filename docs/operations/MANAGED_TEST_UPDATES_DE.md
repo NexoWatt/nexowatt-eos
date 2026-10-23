@@ -1,25 +1,33 @@
 # Managed-Testbasis: Frischinstallation, direkter R8-Übergang und Updates
 
-**Präzisierung vom 22.10.2026:** Für den vorhandenen, vollständig eingerichteten
+**Präzisierung vom 23.10.2026:** Für den vorhandenen, vollständig eingerichteten
 R8-Teststand ist ein [direkter Übergang](R8_DIREKT_MANAGED_UPDATE_DE.md) auf diese neue Basis implementiert.
 Die Neuinstallation bleibt ein eigener Weg für einen leeren Test-Pi.
 Linux-Sicherheitsupdates und gesondert freigegebene reine Node-24-Pakete werden
 auf der neuen Basis automatisch installiert. Der Bedienknopf ist für allgemeine
 EOS-Änderungen vorgesehen. Details zum Nachtfenster und den Grenzen stehen in
 [Automatische Sicherheitsupdates](AUTOMATISCHE_SICHERHEITSUPDATES_DE.md).
-Ein installierbarer neuer Befehl setzt weiterhin Signierung, öffentliche
-Rückprüfung und Zielabnahme voraus.
+Die tatsächliche signierte Sequenz-15-Lieferung ist inzwischen als
+[GitHub-Testrelease](https://github.com/NexoWatt/nexowatt-eos/releases/tag/managed-test-15-95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534)
+veröffentlicht. Vollständiger öffentlicher Rücklesetest, Feed-Bereitstellung und
+bytegenaue öffentliche Rückprüfung des Betreiberbefehls sind abgeschlossen.
+Der [geprüfte R8-Befehl](../../delivery/r8-managed15/R8_UPDATE_COMMAND.txt) ist
+für den kontrollierten Test nach der R8-Anleitung nutzbar. Der
+[Veröffentlichungsnachweis](../../reports/integration/managed15-publication-20261023/README_DE.md)
+hält diese Ergebnisse fest; die Zielabnahme auf dem Pi bleibt offen.
 
 Nach dem Node-Sicherheitsrelease vom 21.10.2026 wird die neue Testbasis auf
 Node 24.22.1 und gekoppelte Node-/EOS-Updates umgestellt. Der frühere Zwischenstand
 `06ed52f636d0da58d56a86646cdbe4ba601f1776` hat seinen eigenen vollständigen
 Linux-x64-Lauf mit sechs Adaptern, Lizenzen, Backup und Neustart bestanden;
 das erzeugte unsignierte Paket wurde zurückgelesen und geprüft. Dieser
-Nachweis ersetzt keine ARM64-/Pi-Abnahme. Für die jetzige Signierung ist der
+Nachweis ersetzt keine ARM64-/Pi-Abnahme. Für die signierte Lieferung ist der
 anschließend qualifizierte Quellstand `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`
 mit seinen eigenen [CI- und Artefaktnachweisen](../../reports/integration/automatic-security-updates-20261022/automatic-install/ci/qualification.json)
-maßgeblich. Eine signierte Pi-Auslieferung fehlt noch.
-Sie bleibt ausdrücklich auf js-controller **7.2.5**. Controller 8 wird weder
+maßgeblich. Das tatsächliche signierte Archiv wurde unabhängig vollständig
+geprüft und als Testrelease veröffentlicht; die bestandene öffentliche Rückprüfung ist
+im oben verlinkten Veröffentlichungsnachweis dokumentiert.
+Die Testbasis bleibt ausdrücklich auf js-controller **7.2.5**. Controller 8 wird weder
 automatisch bezogen noch durch den neuen Paket-/Katalogvertrag zugelassen.
 **Bestehenden Test-Pi noch nicht löschen.** Der R11-Befehl in der README ist
 weiterhin ausschließlich der historische Updateweg von einem gesunden R10.
@@ -28,11 +36,15 @@ Er installiert diese neue Frischbasis nicht.
 ## Vorgesehener Betreiberablauf
 
 1. Vorhandene Sicherung auf Wiederherstellbarkeit prüfen, aktuelle Daten und
-   Lizenzinformationen sichern, Wartungsfenster vorsehen.
+   Lizenzinformationen sichern, geprüften Rückfallstand und Wartungsfenster vorsehen.
 2. Nach Freigabe die neue signierte ARM64-Testbasis auf einen frischen,
    vorbereiteten Debian-13-Host installieren. Node ist für diese Frischbasis exakt 24.22.1;
    PostgreSQL-, TLS-, OS-Update- und Netzwerkvoraussetzungen werden geprüft.
-3. Den HTTPS-Erststart abschließen. Konten und sechs eigene Adapter werden
+   Für den vorhandenen R8-Teststand stattdessen den
+   [direkten Übergang](R8_DIREKT_MANAGED_UPDATE_DE.md) mit dem gepinnten
+   [R8-Befehl](../../delivery/r8-managed15/R8_UPDATE_COMMAND.txt) verwenden;
+   seine öffentliche Rückprüfung und der Feednachweis sind abgeschlossen.
+3. Bei einer Frischinstallation den HTTPS-Erststart abschließen. Konten und sechs eigene Adapter werden
    einmalig eingerichtet; Geräteadapter haben zunächst keine physischen Ziele.
 4. Als Service oder Installateur im Admin unter System/Grundeinstellungen
    **EOS-Updates** öffnen, **Updates prüfen** wählen, angebotenen Stand prüfen
@@ -41,11 +53,15 @@ Er installiert diese neue Frischbasis nicht.
    Neustarts kann die Admin-Verbindung abbrechen. Dialog später wieder öffnen;
    bei Erfolg Admin neu laden. Kein zweiter SSH-Installationsbefehl vorgesehen.
 
-Die Wartungsbestätigung erstellt selbst kein Backup. Automatisch wird nur
-auf Angebote geprüft (beim Start und alle sechs Stunden); die Installation
-benötigt einen bewussten Klick. Ein Kunde ohne technische Rolle sieht keinen
-Installationsknopf. Bei `RECOVERY_REQUIRED` keine Sperrdateien manuell löschen
+Die Wartungsbestätigung erstellt selbst kein Backup. Auf Angebote wird beim
+Start und alle sechs Stunden geprüft. Allgemeine EOS-Änderungen benötigen einen
+bewussten Klick; gesondert freigegebene reine Node-24-Pakete und die zulässigen
+Linux-Sicherheitsupdates folgen den automatischen Wartungsregeln. Ein Kunde ohne
+technische Rolle sieht keinen Installationsknopf. Bei `RECOVERY_REQUIRED` keine Sperrdateien manuell löschen
 und keinen Prozessstart erzwingen: Service prüft zuerst Zustand und Journal.
+Der Test bleibt bei `physicalControlEnabled: false`. Den optionalen alten
+`pgsql`-Provider weder aktivieren noch für Wiederherstellungen verwenden.
+Die Testveröffentlichung ist keine Produktions- oder CRA-Freigabe.
 
 ## Technischer Vertrag
 
@@ -102,8 +118,10 @@ der aktuelle Signierhelfer und R8-Einstieg binden ausschließlich den neuen Hash
 Der [Änderungsvermerk](../../reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md)
 beschreibt die begrenzte Herstelleränderung und die noch offenen Liefergates.
 Private Schlüsseldatei und Passphrase bleiben auf dem Herstellerrechner.
-Getrennte Sicherung, tatsächlicher Signierlauf und Installation dieses
-Vertrauensankers auf einem Pi sind noch nicht nachgewiesen.
+Die tatsächliche Signierung und die unabhängige vollständige Archivprüfung
+sind im [Archivnachweis](../../reports/integration/managed15-archive-verification-20261023/README_DE.md)
+dokumentiert. Getrennte Schlüsselsicherung und Installation dieses
+Vertrauensankers auf einem Pi sind weiterhin nicht nachgewiesen.
 
 Die Sicherheitsaktualisierung benötigt eine **vollständig neue Laufzeitbasis**.
 Ein Quellen-Overlay auf R9 kann die geänderten Controller-/Dependency-Versionen
@@ -139,11 +157,17 @@ Auch für den ersten funktionsfähigen Updateabruf muss der Hersteller einen
 gültigen signierten Feed unter `delivery/update-channel/test.json`
 veröffentlichen. Ein anfangs leeres Angebot ist erlaubt; Kanal
 `eos-managed-test-v1`, Ablaufdatum und der auf dem Pi verankerte
-Herstellerschlüssel werden trotzdem geprüft. Der Feed fehlt im aktuellen
-Quellstand noch. Spätere Pakete verwenden eine Sequenz ab 16 und müssen die
+Herstellerschlüssel werden trotzdem geprüft. Der signierte leere Kanal ist am
+aktiven Feedpfad veröffentlicht und öffentlich bytegleich zurückgelesen.
+Seine Signatur ist geprüft; die Gültigkeit endet am
+`2026-11-22T19:13:09.971Z`. Die leere Releaseliste bietet noch kein Folgeupdate an.
+Diese Lieferprüfungen sind im
+[Veröffentlichungsnachweis](../../reports/integration/managed15-publication-20261023/README_DE.md)
+festgehalten. Spätere Pakete verwenden eine Sequenz ab 16 und müssen die
 zulässige Ausgangslieferung ausdrücklich benennen.
 
-Für den abschließenden Herstellerlauf werden konkret benötigt:
+Für weitere Herstellerläufe beziehungsweise eine gesonderte Frischinstallation
+werden weiterhin benötigt:
 
 - eine dauerhaft gesicherte Ed25519-Schlüsseldatei auf dem Signierrechner,
   außerhalb des Repositorys, nur für den Eigentümer lesbar;
@@ -187,10 +211,12 @@ Der vorherige vollständige Laufzeitbaum unter Node 24.21.0 am Quellstand
 sechs Adaptern, zentralen Lizenzen, Backup und Neustart. Das daraus erzeugte
 CI-Archiv ist ausdrücklich **unsignierter Transport für den Hersteller**.
 Es enthält weder eine Installationsfreigabe noch eine dauerhafte Updateautorität.
-Der öffentliche Herstellerschlüssel ist geprüft; die geschützte lokale
-Verwendung seines privaten Gegenstücks, signierte Lieferung, endgültige
-öffentliche Lieferpins und Pi-Abnahme fehlen weiterhin. Die vorhandenen R11-Befehle ersetzen diesen
-Schritt nicht. Der Hersteller muss die exakt geprüften Quell- und Paketbytes
+Die inzwischen tatsächlich signierte Lieferung stammt vom neueren qualifizierten
+Stand `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`, wurde unabhängig vollständig
+geprüft und als Testrelease veröffentlicht. Öffentliche Lieferpins sowie die
+bestandenen Rücklese- und Feedprüfungen stehen im aktuellen Veröffentlichungsbericht;
+die Pi-Abnahme bleibt offen. Die vorhandenen R11-Befehle ersetzen den direkten
+R8-Einstieg nicht. Der Hersteller muss die exakt geprüften Quell- und Paketbytes
 verwenden; ein späterer Dokumentationscommit qualifiziert keine neu gebaute
 Laufzeit automatisch mit.
 

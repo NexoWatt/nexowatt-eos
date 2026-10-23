@@ -40,9 +40,32 @@ Auch die [Workflowvalidierung](https://github.com/NexoWatt/nexowatt-eos/actions/
 bestand. Der neue Prüfer bestand zuvor den lokalen Arbeitsbaumtest und wies
 eine gleich große manipulierte Metadatei mit `PUBLIC_ASSET_HASH` ab.
 
-Der unveränderte signierte leere Feed und der erzeugte R8-Befehl werden nun
-bereitgestellt. Ihre öffentliche Rückprüfung bleibt bis zum nachfolgenden
-Nachweis offen; der Befehl wird erst danach für den Test ausgegeben.
+## Updatekanal und Betreiberbefehl: veröffentlicht und zurückgeprüft
+
+Der unveränderte signierte leere Feed und der erzeugte R8-Befehl sind in Commit
+`a4d2f75ad2aaeaf0f83b2382e24c18b9aacffa5d` veröffentlicht. Beide wurden über ihre
+öffentlichen Raw-URLs bytegenau zurückgelesen; der Feed über den tatsächlich
+konfigurierten `main/delivery/update-channel/test.json`-Pfad, der Befehl über
+seinen unveränderlichen Commit. Die Feed-Signatur wurde danach erneut geprüft.
+`publication-gate.json` dokumentiert diesen Abschluss um 21:12:40 UTC.
+
+- Feed: 322 Byte, SHA-256 `8c6dd3d316e397dda4a388e80865f637b142160a3b430d6ab52409b3c6c92acf`.
+  Gültig bis `2026-11-22T19:13:09.971Z`, Kanal `eos-managed-test-v1`, keine Angebote.
+  Der Hersteller muss vor Ablauf einen neuen signierten Feed bereitstellen;
+  die Datumsprüfung darf nicht ausgeschaltet werden.
+- [Betreiberbefehl](../../../delivery/r8-managed15/R8_UPDATE_COMMAND.txt):
+  983 Byte, SHA-256 `b0154b8b24c8847e6eb4a032acf36a1237450d0df46bb99912f24f6ec377ea5f`.
+  Er bleibt an Einstieg `fce5e279ddd2483e62c6c4ed2078e14855b1cb9c` gebunden:
+  81554 Byte, SHA-256 `42a66e9aa3a1a5f71a438d6606ffeebfdef5e55de4884bb906f8559e58293d67`.
+  Der Einstieg wurde bereits vor Veröffentlichung bytegenau zurückgeprüft.
+  Generatorvergleich und Bash-Syntaxprüfung bestanden; der Befehl wurde hier
+  nicht ausgeführt.
+
+Damit ist der direkte R8-Testbefehl für den qualifizierten Ausgangsstand
+bereitgestellt. Das ist keine erfolgreiche Pi-Migration. Die ursprünglichen
+`preparation.json`-/`command-preparation.json`-/Release-Metadaten behalten ihren
+Erzeugungsstand; der spätere Abschluss wird durch diesen Bericht und
+`publication-gate.json` belegt. Kein privater Herstellerschlüssel wurde benötigt.
 
 ## Grenzen
 

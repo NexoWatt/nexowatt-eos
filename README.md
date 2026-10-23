@@ -1,4 +1,33 @@
-# Aktueller Teststand: R11 mit Gerätenetzverwaltung
+# Aktueller Teststand: Managed15 mit direktem R8-Übergang
+
+**23. Oktober 2026: Die signierte Managed-Testbasis mit Sequenz 15 ist veröffentlicht.**
+Das [GitHub-Testrelease](https://github.com/NexoWatt/nexowatt-eos/releases/tag/managed-test-15-95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534)
+bindet **Node 24.22.1 und js-controller 7.2.5** an den qualifizierten Quellstand
+`f353dd08bf8ac5897e9b1c357994d4047a82ed6d`. Das tatsächliche signierte Paket
+hat die unabhängige Signatur- und vollständige Archivprüfung bestanden.
+Der [direkte Testweg von einem gesunden, vollständig eingerichteten R8](docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md)
+überspringt R9, R10 und R11. Anschließend stehen der EOS-Updateknopf sowie die
+automatischen Linux-Sicherheitsupdates und freigegebenen Node-24-Updates bereit.
+
+Der vollständige öffentliche Rücklesetest, die Bereitstellung des signierten
+Feeds und die bytegenaue öffentliche Rückprüfung des Betreiberbefehls sind
+abgeschlossen. Der [geprüfte R8-Befehl](delivery/r8-managed15/R8_UPDATE_COMMAND.txt)
+ist damit für den kontrollierten Test nach der
+[R8-Anleitung](docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md) verwendbar. Der
+[Veröffentlichungsnachweis](reports/integration/managed15-publication-20261023/README_DE.md)
+dokumentiert diese Lieferprüfungen. Die tatsächliche Installation und Abnahme
+auf dem Pi stehen aus.
+
+Vor dem Testwechsel sind eine aktuelle Sicherung und ein geprüfter Rückfallstand
+erforderlich. Die physische Steuerung bleibt aus (`physicalControlEnabled: false`).
+Den optionalen alten `pgsql`-Provider weder aktivieren noch für Wiederherstellungen
+verwenden. **Das ist eine Testveröffentlichung, keine Produktions- oder CRA-Freigabe.**
+
+## Historische Zwischenstände und Qualifikation
+
+Die folgenden datierten Meldungen beschreiben ihre damaligen Entwicklungsstände.
+Die anschließend aufgeführten R9-/R10-/R11-Befehle bleiben ausschließlich an ihre
+jeweiligen Ausgangsreleases gebunden; sie ersetzen den direkten Managed15-Weg nicht.
 
 **22. Oktober: Direkter R8-Übergang und automatische Node-Updates im Quellcode umgesetzt.**
 Der neue Migrationsweg führt von einem vollständig eingerichteten R8
@@ -12,8 +41,8 @@ seinen eigenen erfolgreichen Laufzeittest (15/15) und Chromium-Test (5/5).
 Das neu erzeugte unsignierte Archiv wurde gegen die tatsächlichen Build- und
 nativen Nachweise zurückgeprüft. Die direkte R8-Hostmigration ist damit noch
 nicht auf einem Pi ausgeführt.
-Dieser neue direkte Updatebefehl ist noch nicht signiert, veröffentlicht
-oder auf dem Pi abgenommen. Die folgenden historischen Befehle sind eigene,
+Am 22. Oktober war dieser neue direkte Updateweg noch nicht als signierte
+Lieferung veröffentlicht oder auf dem Pi abgenommen. Die folgenden historischen Befehle sind eigene,
 an ihre damaligen Ausgangsversionen gebundene Lieferwege.
 [Automatik](docs/operations/AUTOMATISCHE_SICHERHEITSUPDATES_DE.md) ·
 [Direkter R8-Übergang](docs/operations/R8_DIREKT_MANAGED_UPDATE_DE.md) ·
@@ -27,7 +56,7 @@ sichtbare Behandlung ausstehender Dienst-/Kernelaktivierungen. Der neue
 Quellstand `06ed52f636d0da58d56a86646cdbe4ba601f1776` hat den vollständigen
 Linux-x64-Test mit sechs Adaptern, Lizenzen, Backup und Neustart bestanden.
 Das unsignierte Paket wurde zurückgelesen und geprüft. Herstellersignierung,
-öffentliche Auslieferung und Pi-Abnahme fehlen weiterhin. Die unten genannten
+öffentliche Auslieferung und Pi-Abnahme fehlten zu diesem Zwischenstand. Die unten genannten
 älteren Prüfergebnisse und R11-Pakete enthalten diese Änderung nicht.
 [Betriebsablauf](docs/operations/AUTOMATISCHE_SICHERHEITSUPDATES_DE.md) ·
 [Änderungs- und Prüfbericht](reports/integration/automatic-security-updates-20261022/README_DE.md).
@@ -45,10 +74,12 @@ signierten R9–R11-Archive enthalten diese Änderungen nicht.
 Quellpfad soll eine einmalige Neuinstallation ohne R10-Voraussetzung und danach
 signierte Anpassungen über den Admin ermöglichen. Das unsignierte Paket ist
 gebaut und im Linux-x64-Labor geprüft. Dauerhafte Signierautorität, signierte
-Auslieferung und Pi-Abnahme sind noch offen. **Den Pi dafür noch nicht
-löschen; es gibt noch keinen freigegebenen neuen Neuinstallationsbefehl.**
+Auslieferung und Pi-Abnahme waren zu diesem Zeitpunkt noch offen. **Den Pi dafür
+nicht löschen; der direkte R8-Übergang und eine Frischinstallation sind getrennte Wege.**
 [Ablauf und Grenzen](docs/operations/MANAGED_TEST_UPDATES_DE.md) ·
 [Prüfbericht](reports/integration/managed-updates-20261021/README_DE.md).
+
+## Historischer R11-Testweg: ausschließlich von R10
 
 **20. Oktober 2026: test.3 Revision 11, Sequenz 14 ist signiert, veröffentlicht
 und über den geprüften öffentlichen Updatebefehl verfügbar.** Dieser Updateweg
@@ -98,7 +129,7 @@ Stromausfall, vollständige Wiederherstellung, Geräteverträglichkeit und
 ersetzt diese Zielgeräte- und Anlagenabnahme nicht. Bekannte
 Abhängigkeitsbefunde bleiben weitergeführt.
 
-## Bisheriger Teststand R10 mit sechs eigenen Adaptern (Update von R9)
+## Historischer R10-Testweg mit sechs eigenen Adaptern: ausschließlich von R9
 
 **15. Oktober 2026: test.3 Revision 10, Sequenz 13 ist signiert, veröffentlicht
 und für den nächsten Test auf einem vollständig eingerichteten, betriebsbereiten
@@ -142,7 +173,7 @@ und Geräteabnahme, vollständige Wiederherstellung sowie die Reaktionszeitziele
 werden weitergeführt; ein erfolgreicher CodeQL-Lauf belegt keine vollständige
 Schwachstellenfreiheit.
 
-## Bisheriger Management-Teststand R9 (Update von R8)
+## Historischer R9-Management-Testweg: ausschließlich von R8
 
 
 Die sechs eigenen Adapter beziehen ihre Freigabe aus der zentralen EOS-Lizenz (NWL3).

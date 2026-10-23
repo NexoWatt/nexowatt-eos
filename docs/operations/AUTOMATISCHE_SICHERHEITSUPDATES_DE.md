@@ -1,13 +1,20 @@
 # Automatische Aktualisierung von Node.js und Linux
 
-Stand: 22.10.2026. Ziel ist die selbstständige Installation von
+Stand: 23.10.2026. Ziel ist die selbstständige Installation von
 Linux-Sicherheitsupdates und freigegebenen Node-24-Aktualisierungen ohne
 Bedienklick. Die Funktion gehört zur neuen Managed-Basis ab Sequenz 15.
 Für einen vollständig eingerichteten R8-Teststand ist ein eigener direkter
 [Übergang implementiert](R8_DIREKT_MANAGED_UPDATE_DE.md); R9–R11 müssen dabei
 nicht nacheinander installiert werden.
-Ein Quellcommit verändert keinen Pi. Die signierte Auslieferung und die
-Abnahme auf dem Test-Pi sind weiterhin erforderlich.
+Ein Quellcommit verändert keinen Pi. Die tatsächliche signierte Sequenz-15-Basis
+ist inzwischen als
+[GitHub-Testrelease](https://github.com/NexoWatt/nexowatt-eos/releases/tag/managed-test-15-95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534)
+veröffentlicht. Der [Veröffentlichungsnachweis](../../reports/integration/managed15-publication-20261023/README_DE.md)
+dokumentiert den bestandenen vollständigen öffentlichen Rücklesetest, die
+Bereitstellung des gültigen signierten leeren Feeds und die bytegenaue öffentliche
+Rückprüfung des [R8-Befehls](../../delivery/r8-managed15/R8_UPDATE_COMMAND.txt).
+Dieser Befehl ist für den kontrollierten Test nach der R8-Anleitung nutzbar.
+Eine Installation oder Abnahme auf dem Test-Pi ist noch nicht erfolgt.
 
 ## Node.js als Bestandteil der EOS-Lieferung
 
@@ -17,11 +24,14 @@ ersetzt für diese Lieferung den zuvor vorgesehenen Node-Stand 24.21.0.
 Der bisherige native Nachweis am Quellcommit
 `a2733fa5561f7327ff3689b7464f8727760fb670` bleibt ein Nachweis für seinen
 damaligen Stand; er qualifiziert diese neue Laufzeit nicht.
-Der neue Stand `06ed52f636d0da58d56a86646cdbe4ba601f1776` besitzt inzwischen
+Der frühere Zwischenstand `06ed52f636d0da58d56a86646cdbe4ba601f1776` besitzt
 seinen eigenen erfolgreichen Linux-x64-Nachweis mit sechs Adaptern, Lizenzen,
 Backup und Neustart. Das erzeugte unsignierte Archiv wurde zurückgelesen und
-gegen Quell-, Stücklisten- und native Nachweise geprüft. Die ARM64-/Pi-Abnahme
-und die signierte Auslieferung stehen weiterhin aus.
+gegen Quell-, Stücklisten- und native Nachweise geprüft. Die aktuelle signierte
+Testlieferung bindet den anschließend qualifizierten Quellstand
+`f353dd08bf8ac5897e9b1c357994d4047a82ed6d`; das tatsächlich übermittelte Archiv
+bestand die [unabhängige vollständige Prüfung](../../reports/integration/managed15-archive-verification-20261023/README_DE.md)
+und ist veröffentlicht. Die ARM64-/Pi-Abnahme bleibt offen.
 
 Der Hersteller übernimmt eine genaue offizielle Node-Datei, prüft deren
 SHA-256 und bindet Binärdatei, Lizenztext, Versionsmetadaten und SBOM in die
@@ -55,6 +65,10 @@ für Adapterversionen, Abhängigkeiten und Datenbankmigrationen gelten weiter.
 Die aktuelle automatische Aktivierung gilt für den verifizierten Testbetrieb
 mit `physicalControlEnabled: false`. Daraus wird keine unbeaufsichtigte
 Neustartfreigabe für eine physisch regelnde Energieanlage abgeleitet.
+Vor dem ersten Systemwechsel sind eine aktuelle Sicherung und ein geprüfter
+Rückfallstand erforderlich. Den optionalen alten `pgsql`-Provider weder aktivieren
+noch für Wiederherstellungen verwenden. Testrelease und Automatik sind keine
+Produktions- oder CRA-Freigabe.
 
 Die vollständigen Pakete einschließlich Node können größer als das
 GitHub-Git-Dateilimit sein. Neue große Pakete werden als GitHub-Release-Assets
