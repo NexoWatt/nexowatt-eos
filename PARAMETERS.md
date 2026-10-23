@@ -2,8 +2,8 @@
 
 ## Managed test baseline and update candidates (2026-10-23)
 
-Manufacturer helper `tools/bootstrap/sign-qualified-r8-wsl.py` takes two required
-positional paths: the original qualified unsigned ZIP and native-evidence
+For fresh signing, manufacturer helper `tools/bootstrap/sign-qualified-r8-wsl.py`
+takes two required positional paths: the original qualified unsigned ZIP and native-evidence
 ZIP from source `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`. An optional third
 positional path selects a protected absolute signing-key directory below the
 current user's Linux home; omitted, it defaults to `~/nexowatt-signing`.
@@ -20,9 +20,35 @@ distribution and encrypted key paths described in the
 The passphrase is requested interactively by OpenSSL, never as an argument.
 The runtime build retains its clean qualified source. After signing and private
 temporary-file cleanup, the helper temporarily uses the fully hash-pinned entry
-generator with only its manufacturer-key pin replaced, then restores the original
-and checks the clean source state. Original and replacement entry-tool hashes
-are recorded separately from the runtime source in the public summary.
+generator with only its manufacturer-key pin replaced, then restores the original.
+The final source check rejects all tracked or staged changes reported by Git and
+every Git-visible untracked path except the three expected files below `delivery/managed-test-15/`:
+`eos-linux-arm64.tar.gz`, `release-public.pem`, and `delivery.json`. This is an
+exact output allowlist, not an exclusion of the delivery directory from checks.
+Original and replacement entry-tool hashes are recorded separately from the
+runtime source in the public summary.
+
+The separate recovery invocation `sign-qualified-r8-wsl.py --finish ABS_WORKDIR`
+is pinned to the specific release, archive, delivery metadata and R8 entry
+reported in the interrupted run; it is not a generic export or repair command.
+It checks canonical paths, ownership and modes, qualified HEAD and the exact
+output allowlist, the signed empty feed including expiry, and the signed archive
+through a complete readback. It regenerates the public entry and preparation
+metadata in a disposable subdirectory, compares both byte-for-byte, and restores
+the pinned original entry generator before checking the source state again.
+Only then does it create a new `public-finished/` with the allowlisted public
+files, summary and metadata ZIP. It retains the original `public/` and refuses
+to overwrite an existing `public-finished/`.
+An interruption during export can leave a partial destination; retain it for
+diagnosis rather than treating a repeated invocation as an overwrite or repair.
+It neither opens a private key nor requests a passphrase, signs again, downloads
+inputs, publishes files, or installs on a host. A reported signing run stopped
+at the former final clean-source check because the three generated delivery
+files were untracked. Its log reports successful local signing/readback and
+entry preparation, but does not prove an independently verified delivered
+archive, successful recovery, publication, or Pi migration. See the
+[finalization correction](reports/integration/wsl-signing-finalization-20261023/README_DE.md)
+and the recovery procedure in the WSL document.
 
 The automatic Node policy is separate from the manually confirmed EOS update
 operation. Signed feed entries may opt into `automaticNodeUpdate: true`; the

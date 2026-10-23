@@ -2,6 +2,7 @@
 """Local signing boundary fixtures; no downloads, real keys or Pi operations."""
 import hashlib
 import importlib.util
+import json
 import os
 from pathlib import Path
 import stat
@@ -133,6 +134,349 @@ class SigningDirectoryTests(unittest.TestCase):
             with self.subTest(path=str(candidate)):
                 with self.assertRaises(ValueError):
                     signing.signing_directory(self.home, str(candidate))
+
+
+class QualifiedCheckoutTests(unittest.TestCase):
+    DELIVERY_FILES = (
+        "delivery/managed-test-15/eos-linux-arm64.tar.gz",
+        "delivery/managed-test-15/release-public.pem",
+        "delivery/managed-test-15/delivery.json",
+    )
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="eos-qualified-checkout-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.checkout = Path(self.temp.name)
+        self.write("tracked.txt", b"qualified source fixture\n")
+        self.write(".gitignore", b"/.work/\n")
+        self.git("init", "-q")
+        self.git("config", "core.hooksPath", "/dev/null")
+        self.git("add", "tracked.txt", ".gitignore")
+        self.git("commit", "-qm", "Disposable qualified fixture")
+        self.source = self.git("rev-parse", "HEAD").strip().decode("ascii")
+        source_pin = patch.object(signing, "SOURCE", self.source)
+        source_pin.start()
+        self.addCleanup(source_pin.stop)
+
+    def git(self, *args):
+        return subprocess.check_output([
+            "/usr/bin/git", "-C", str(self.checkout),
+            "-c", "user.name=EOS fixture", "-c", "user.email=fixture@invalid",
+            "-c", "commit.gpgsign=false",
+            *args], stderr=subprocess.PIPE)
+
+    def write(self, relative, data=b"public delivery fixture\n"):
+        file = self.checkout / relative
+        file.parent.mkdir(parents=True, exist_ok=True)
+        file.write_bytes(data)
+        return file
+
+    def assert_rejected(self):
+        for allow_delivery in (False, True):
+            with self.subTest(allow_delivery=allow_delivery):
+                with self.assertRaises(ValueError):
+                    signing.assert_qualified_checkout(
+                        self.checkout, allow_delivery=allow_delivery)
+
+    def test_strict_clean_before_build_and_exact_untracked_delivery_after_build(self):
+        self.write(".work/ignored-build-output", b"temporary fixture\n")
+        signing.assert_qualified_checkout(self.checkout)
+        for name in self.DELIVERY_FILES:
+            self.write(name)
+        with self.assertRaises(ValueError):
+            signing.assert_qualified_checkout(self.checkout)
+        signing.assert_qualified_checkout(self.checkout, allow_delivery=True)
+        self.assertEqual(self.git("rev-parse", "HEAD").strip().decode("ascii"), self.source)
+
+    def test_each_allowlisted_delivery_path_is_untracked_and_requires_explicit_mode(self):
+        for name in self.DELIVERY_FILES:
+            with self.subTest(name=name):
+                file = self.write(name)
+                with self.assertRaises(ValueError):
+                    signing.assert_qualified_checkout(self.checkout)
+                signing.assert_qualified_checkout(self.checkout, allow_delivery=True)
+                file.unlink()
+
+    def test_unexpected_untracked_files_are_rejected_without_mutation(self):
+        for name in self.DELIVERY_FILES:
+            self.write(name)
+        extras = [
+            "unexpected.txt",
+            "delivery/private.pem",
+            "delivery/managed-test-15/private.pem",
+            "delivery/managed-test-15/eos-linux-arm64.tar.gz.extra",
+            "delivery/managed-test-15/nested/delivery.json",
+            "delivery/managed-test-150/delivery.json",
+            "delivery/managed-test-16/delivery.json",
+            "delivery/managed-test-15/delivery.json\n?? injected",
+        ]
+        for name in extras:
+            with self.subTest(name=name):
+                file = self.write(name, b"must not be accepted or removed\n")
+                before = self.git("status", "--porcelain=v1", "-z", "--untracked-files=all")
+                self.assert_rejected()
+                self.assertEqual(self.git("status", "--porcelain=v1", "-z", "--untracked-files=all"), before)
+                self.assertEqual(file.read_bytes(), b"must not be accepted or removed\n")
+                file.unlink()
+
+    def test_tracked_modified_source_is_rejected_even_with_allowed_delivery(self):
+        for name in self.DELIVERY_FILES:
+            self.write(name)
+        self.write("tracked.txt", b"modified source fixture\n")
+        self.assert_rejected()
+
+    def test_staged_modified_source_is_rejected(self):
+        self.write("tracked.txt", b"staged source fixture\n")
+        self.git("add", "tracked.txt")
+        self.assert_rejected()
+
+    def test_staged_delivery_is_rejected_even_at_an_allowlisted_path(self):
+        self.write(self.DELIVERY_FILES[0])
+        self.git("add", self.DELIVERY_FILES[0])
+        self.assert_rejected()
+
+    def test_tracked_deletion_is_rejected(self):
+        (self.checkout / "tracked.txt").unlink()
+        self.assert_rejected()
+
+    def test_tracked_rename_to_allowlisted_delivery_path_is_rejected(self):
+        (self.checkout / "delivery/managed-test-15").mkdir(parents=True)
+        self.git("mv", "tracked.txt", self.DELIVERY_FILES[0])
+        self.assert_rejected()
+
+    def test_clean_different_head_is_rejected(self):
+        self.git("commit", "--allow-empty", "-qm", "Different unqualified fixture")
+        self.assertFalse(self.git("status", "--porcelain=v1", "-z", "--untracked-files=all"))
+        self.assertNotEqual(self.git("rev-parse", "HEAD").strip().decode("ascii"), self.source)
+        self.assert_rejected()
+
+
+class PublicFileTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="eos-public-file-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.base = Path(self.temp.name)
+        self.file = self.base / "public.bin"
+        self.file.write_bytes(b"public fixture")
+        self.file.chmod(0o600)
+
+    def test_protected_file_accepts_owned_nonempty_regular_file_within_limit(self):
+        for mode in (0o600, 0o644):
+            with self.subTest(mode=oct(mode)):
+                self.file.chmod(mode)
+                self.assertEqual(signing.protected_file(self.file, self.file.stat().st_size), self.file)
+
+    def test_protected_file_rejects_empty_oversized_foreign_owned_or_writable_file(self):
+        with self.assertRaises(ValueError):
+            signing.protected_file(self.file, self.file.stat().st_size - 1)
+        uid = os.getuid()
+        with patch.object(signing.os, "getuid", return_value=uid + 1):
+            with self.assertRaises(ValueError):
+                signing.protected_file(self.file, 100)
+        for mode in (0o620, 0o602, 0o666):
+            with self.subTest(mode=oct(mode)):
+                self.file.chmod(mode)
+                with self.assertRaises(ValueError):
+                    signing.protected_file(self.file, 100)
+        self.file.chmod(0o600)
+        self.file.write_bytes(b"")
+        with self.assertRaises(ValueError):
+            signing.protected_file(self.file, 100)
+
+    def test_protected_file_rejects_links_noncanonical_paths_and_directories(self):
+        link = self.base / "link.bin"
+        link.symlink_to(self.file)
+        for candidate in (link, self.base, self.base / ".." / self.base.name / self.file.name):
+            with self.subTest(path=str(candidate)):
+                with self.assertRaises(ValueError):
+                    signing.protected_file(candidate, 100)
+        link.unlink()
+        os.link(self.file, link)
+        for candidate in (self.file, link):
+            with self.subTest(hardlink=str(candidate)):
+                with self.assertRaises(ValueError):
+                    signing.protected_file(candidate, 100)
+
+    def test_copy_public_is_byte_exact_and_never_overwrites(self):
+        output = self.base / "copied.bin"
+        signing.copy_public(self.file, output, 100)
+        self.assertEqual(output.read_bytes(), self.file.read_bytes())
+        output.write_bytes(b"preserved existing destination")
+        with self.assertRaises(FileExistsError):
+            signing.copy_public(self.file, output, 100)
+        self.assertEqual(output.read_bytes(), b"preserved existing destination")
+        self.assertEqual(self.file.read_bytes(), b"public fixture")
+
+    def test_copy_public_rejects_unsafe_source_before_creating_destination(self):
+        self.file.chmod(0o666)
+        output = self.base / "must-not-exist.bin"
+        with self.assertRaises(ValueError):
+            signing.copy_public(self.file, output, 100)
+        self.assertFalse(output.exists())
+
+    def test_copy_public_detects_real_source_shrink_or_growth_after_size_check(self):
+        original = self.file.read_bytes()
+        real_open = Path.open
+        for index, changed in enumerate((original[:-3], original + b"extra")):
+            with self.subTest(changed_size=len(changed)):
+                self.file.write_bytes(original)
+                output = self.base / ("changed-" + str(index))
+                def changed_before_read(path, mode="r", *args, **kwargs):
+                    if path == self.file and mode == "rb":
+                        with real_open(path, "wb") as stream:
+                            stream.write(changed)
+                    return real_open(path, mode, *args, **kwargs)
+                with patch.object(Path, "open", new=changed_before_read):
+                    with self.assertRaises(ValueError):
+                        signing.copy_public(self.file, output, 100)
+
+
+class PublicExportTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="eos-public-export-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.work = Path(self.temp.name)
+        self.delivery = self.work / "checkout/delivery/managed-test-15"
+        self.delivery.mkdir(parents=True)
+        self.public = self.work / "public-finished"
+        (self.public / "r8-entry").mkdir(parents=True)
+        archive = b"unsigned fixture; export boundary test only\n"
+        self.metadata = {"releaseId": "a" * 64, "releaseSequence": 15,
+                         "sourceCommit": signing.SOURCE, "sha256": hashlib.sha256(archive).hexdigest(),
+                         "bytes": len(archive), "signingPublicKeySha256": signing.KEY_SHA,
+                         "archiveReadbackVerified": False}
+        self.write(self.delivery / "eos-linux-arm64.tar.gz", archive)
+        public_key = (ROOT / "docs/security/release-trust/manufacturer-20261023-2.pem").read_bytes()
+        self.write(self.delivery / "release-public.pem", public_key)
+        self.write(self.delivery / "delivery.json", json.dumps(self.metadata).encode())
+        for name in ("test.json", "r8-entry/update.sh", "r8-entry/preparation.json"):
+            self.write(self.public / name, b"public export fixture only\n")
+
+    @staticmethod
+    def write(file, data):
+        file.write_bytes(data)
+        file.chmod(0o600)
+
+    def test_export_contains_exact_public_allowlist_without_recursive_private_inputs(self):
+        excluded = b"excluded sentinel fixture; not a real key\n"
+        self.write(self.work / "release-private.encrypted.pem", excluded)
+        self.write(self.delivery / "private.pem", excluded)
+        self.write(self.public / "private.pem", excluded)
+        delivery_bytes = (self.delivery / "delivery.json").read_bytes()
+        with patch("builtins.print"):
+            signing.export_public(self.work, self.public,
+                                  expected_delivery=(len(delivery_bytes), hashlib.sha256(delivery_bytes).hexdigest()))
+        for name in signing.DELIVERY_FILES:
+            self.assertEqual((self.public / name).read_bytes(), (self.delivery / name).read_bytes())
+        expected = {"release-public.pem", "delivery.json", "test.json", "summary.json",
+                    "r8-entry/update.sh", "r8-entry/preparation.json"}
+        with zipfile.ZipFile(self.public / "eos-public-metadata.zip") as output:
+            self.assertEqual(set(output.namelist()), expected)
+            self.assertEqual(len(output.namelist()), len(expected))
+            for name in expected:
+                self.assertEqual(output.read(name), (self.public / name).read_bytes())
+                self.assertNotIn(excluded, output.read(name))
+        summary = json.loads((self.public / "summary.json").read_text())
+        self.assertFalse(summary["published"])
+        self.assertFalse(summary["physicalPiTested"])
+        self.assertFalse(summary["archiveReadbackVerified"])
+        self.assertEqual(summary["signingPublicKeySha256"], signing.KEY_SHA)
+
+    def test_export_does_not_overwrite_existing_delivery_output(self):
+        existing = self.public / "eos-linux-arm64.tar.gz"
+        self.write(existing, b"preserve previous export")
+        with self.assertRaises(FileExistsError):
+            signing.export_public(self.work, self.public)
+        self.assertEqual(existing.read_bytes(), b"preserve previous export")
+        self.assertFalse((self.public / "summary.json").exists())
+        self.assertFalse((self.public / "eos-public-metadata.zip").exists())
+
+    def assert_unfinished(self, public=None):
+        public = self.public if public is None else public
+        self.assertFalse((public / "summary.json").exists())
+        self.assertFalse((public / "eos-public-metadata.zip").exists())
+
+    def test_export_rejects_copied_archive_digest_mismatch_before_summary(self):
+        archive = self.delivery / "eos-linux-arm64.tar.gz"
+        original = archive.read_bytes()
+        self.write(archive, bytes([original[0] ^ 1]) + original[1:])
+        with self.assertRaises(ValueError):
+            signing.export_public(self.work, self.public)
+        self.assert_unfinished()
+
+    def test_export_rejects_copied_archive_size_mismatch_before_summary(self):
+        self.metadata["bytes"] += 1
+        self.write(self.delivery / "delivery.json", json.dumps(self.metadata).encode())
+        with self.assertRaises(ValueError):
+            signing.export_public(self.work, self.public)
+        self.assert_unfinished()
+
+    def test_export_rejects_former_public_key_before_summary(self):
+        former = (ROOT / "docs/security/release-trust/manufacturer-20261023.pem").read_bytes()
+        self.write(self.delivery / "release-public.pem", former)
+        with self.assertRaises(ValueError):
+            signing.export_public(self.work, self.public)
+        self.assert_unfinished()
+
+    def test_export_rejects_unqualified_source_sequence_or_trust_before_summary(self):
+        cases = [{"sourceCommit": "b" * 40}, {"releaseSequence": 14},
+                 {"signingPublicKeySha256": "0" * 64}]
+        for index, change in enumerate(cases):
+            with self.subTest(change=change):
+                public = self.work / ("rejected-export-" + str(index))
+                public.mkdir(mode=0o700)
+                self.write(self.delivery / "delivery.json", json.dumps({**self.metadata, **change}).encode())
+                with self.assertRaises(ValueError):
+                    signing.export_public(self.work, public)
+                self.assert_unfinished(public)
+
+    def test_export_rejects_changed_recovery_delivery_pin_before_summary(self):
+        size = (self.delivery / "delivery.json").stat().st_size
+        with self.assertRaises(ValueError):
+            signing.export_public(self.work, self.public, expected_delivery=(size, "0" * 64))
+        self.assert_unfinished()
+
+
+class RecoveryPreflightTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="eos-recovery-preflight-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.base = Path(self.temp.name)
+        self.home = self.base / "home"
+        self.home.mkdir(mode=0o700)
+        self.work = self.home / "eos-sign-15-fixture"
+        self.work.mkdir(mode=0o700)
+        for name in ("checkout/.git", "checkout/delivery/managed-test-15", "public/r8-entry"):
+            (self.work / name).mkdir(parents=True, mode=0o700)
+
+    def assert_rejected_before_execution(self, work):
+        with patch.object(signing, "run", side_effect=AssertionError("Preflight must not execute a child")) as run:
+            with patch.object(signing, "decrypted_key", side_effect=AssertionError("Recovery must not open a key")) as key:
+                with self.assertRaises(ValueError):
+                    signing.finish_existing(self.home, work, Path("/unused-fixture-node"))
+                run.assert_not_called()
+                key.assert_not_called()
+        self.assertFalse((self.work / "public-finished").exists())
+
+    def test_recovery_rejects_wrong_home_prefix_and_relative_path_before_execution(self):
+        for candidate in (self.base / "eos-sign-15-outside", self.home / "other-name", Path(self.work.name)):
+            with self.subTest(path=str(candidate)):
+                self.assert_rejected_before_execution(candidate)
+
+    def test_recovery_rejects_nonprivate_or_symlinked_work_directory_before_execution(self):
+        self.work.chmod(0o755)
+        self.assert_rejected_before_execution(self.work)
+        self.work.chmod(0o700)
+        link = self.home / "eos-sign-15-link"
+        link.symlink_to(self.work, target_is_directory=True)
+        self.assert_rejected_before_execution(link)
+
+    def test_recovery_rejects_extra_delivery_files_before_any_child_execution(self):
+        directory = self.work / "checkout/delivery/managed-test-15"
+        for name in signing.DELIVERY_FILES:
+            (directory / name).write_bytes(b"not-yet-verified fixture\n")
+        (directory / "private.pem").write_bytes(b"excluded sentinel fixture\n")
+        self.assert_rejected_before_execution(self.work)
 
 
 class EntryToolTests(unittest.TestCase):

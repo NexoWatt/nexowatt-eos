@@ -30,6 +30,14 @@ UNSIGNED_SHA = "bc3965b3b1b4489199533c82e4bcc25ac98ab365f4bcf2b2bda62ac4ec11079c
 NATIVE_SHA = "6ff9a62ccb0a6b8b6fec788cff77d982faf6f89c943ba3353b43bcd12e439ab3"
 TAR_SHA = "f3164a04ee70860bfd113ad4df4c4f967c0c0830f7c47b4456c68ac04d7b7378"
 ARM_SHA = "dbabf7a1cbf947e6059ffad2c27b80041db97dea1e553b62afdee7f13fca336e"
+DELIVERY_FILES = ("eos-linux-arm64.tar.gz", "release-public.pem", "delivery.json")
+# Public identities reported by the operator for the interrupted signed run.
+# Recovery must verify these bytes and their signatures; it never opens a key.
+RECOVERY_RELEASE = "95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534"
+RECOVERY_ARCHIVE_SHA = "dee6181281241c04c9f1a1526685c45a0d4de347d088312a1ce9fe647d82ac44"
+RECOVERY_ARCHIVE_BYTES = 134278673
+RECOVERY_DELIVERY_SHA = "bd16e1cd02cf5816c869030686d5aec2a7d9f796a30aa4fd3c2d0d1048675d43"
+RECOVERY_ENTRY_SHA = "42a66e9aa3a1a5f71a438d6606ffeebfdef5e55de4884bb906f8559e58293d67"
 NATIVE_DIR = "eos-own-adapters.YWMeq1tR"
 NATIVE_MEMBERS = {name: 16 * 1024 * 1024 for name in (
     NATIVE_DIR + "/own-adapters-native-evidence.json",
@@ -57,6 +65,151 @@ def check_file(path, size, sha256):
             digest.update(block)
     if digest.hexdigest() != sha256:
         raise ValueError("SHA-256 stimmt nicht: " + path.name)
+
+
+def assert_qualified_checkout(checkout, *, allow_delivery=False):
+    def git(*args):
+        return run(["/usr/bin/git", *args], cwd=checkout, capture=True, timeout=30)
+    if git("rev-parse", "HEAD").strip().decode() != SOURCE:
+        raise ValueError("Qualifizierter Quellcommit stimmt nicht")
+    status = git("status", "--porcelain=v1", "-z", "--untracked-files=all")
+    allowed = {("?? delivery/managed-test-15/" + name).encode("ascii")
+               for name in DELIVERY_FILES} if allow_delivery else set()
+    if any(row not in allowed for row in status.split(b"\0") if row):
+        raise ValueError("Qualifizierter Quellstand hat unerwartete Aenderungen")
+
+
+def protected_directory(path, *, private=False):
+    path = Path(path)
+    info = path.lstat()
+    if (not path.is_absolute() or path.resolve() != path or not stat.S_ISDIR(info.st_mode)
+            or info.st_uid != os.getuid() or info.st_mode & 0o022
+            or (private and stat.S_IMODE(info.st_mode) != 0o700)):
+        raise ValueError("Ungueltiger Arbeitsordner")
+    return path
+
+
+def protected_file(path, maximum):
+    path = Path(path)
+    info = path.lstat()
+    if (not path.is_absolute() or path.resolve() != path or not stat.S_ISREG(info.st_mode)
+            or info.st_uid != os.getuid() or info.st_nlink != 1 or info.st_mode & 0o022
+            or not 0 < info.st_size <= maximum):
+        raise ValueError("Ungueltige oeffentliche Datei: " + path.name)
+    return path
+
+
+def copy_public(source, target, maximum):
+    source = protected_file(source, maximum)
+    size = source.stat().st_size
+    digest = hashlib.sha256()
+    with source.open("rb") as incoming, Path(target).open("xb") as outgoing:
+        remaining = size
+        while remaining:
+            block = incoming.read(min(1024 * 1024, remaining))
+            if not block:
+                raise ValueError("Oeffentliche Quelldatei wurde beim Kopieren verkuerzt")
+            outgoing.write(block)
+            digest.update(block)
+            remaining -= len(block)
+        if incoming.read(1):
+            raise ValueError("Oeffentliche Quelldatei wurde beim Kopieren vergroessert")
+    check_file(target, size, digest.hexdigest())
+
+
+def export_public(work, public, *, expected_delivery=None):
+    delivery_dir = work / "checkout/delivery/managed-test-15"
+    for name in DELIVERY_FILES:
+        copy_public(delivery_dir / name, public / name,
+                    256 * 1024 ** 2 if name == "eos-linux-arm64.tar.gz" else 65536)
+    if expected_delivery is not None:
+        check_file(public / "delivery.json", *expected_delivery)
+    delivery = json.loads((public / "delivery.json").read_text())
+    if (delivery.get("sourceCommit") != SOURCE or delivery.get("releaseSequence") != 15
+            or delivery.get("signingPublicKeySha256") != KEY_SHA):
+        raise ValueError("Oeffentlicher Export passt nicht zur qualifizierten Lieferung")
+    check_file(public / "eos-linux-arm64.tar.gz", delivery["bytes"], delivery["sha256"])
+    check_file(public / "release-public.pem", 113, KEY_SHA)
+    summary = {name: delivery[name] for name in ("releaseId", "releaseSequence", "sourceCommit", "sha256", "bytes", "signingPublicKeySha256", "archiveReadbackVerified")}
+    summary.update({"published": False, "physicalPiTested": False})
+    summary["entryTool"] = {"path": ENTRY_TOOL, "qualifiedSha256": ENTRY_ORIGINAL_SHA256,
+                            "replacementSha256": ENTRY_REPLACED_SHA256, "qualifiedSourceRestored": True}
+    with (public / "summary.json").open("x") as output:
+        output.write(json.dumps(summary, indent=2) + "\n")
+    # Explicit public allowlist: never recursively archive work or signing keys.
+    with zipfile.ZipFile(public / "eos-public-metadata.zip", "x", zipfile.ZIP_DEFLATED) as output:
+        for name in ("release-public.pem", "delivery.json", "test.json", "summary.json", "r8-entry/update.sh", "r8-entry/preparation.json"):
+            protected_file(public / name, 1024 ** 2)
+            output.write(public / name, name)
+    print("\nSIGNIERUNG ERFOLGREICH — noch nicht veroeffentlicht oder auf dem Pi installiert.")
+    print("Oeffentliche Dateien: " + str(public))
+    print(json.dumps(summary, indent=2))
+
+
+def finish_existing(home, work, node):
+    work = Path(work)
+    if work.parent != home or not work.name.startswith("eos-sign-15-"):
+        raise ValueError("Fortsetzung erwartet den bisherigen Signier-Arbeitsordner unter /home")
+    protected_directory(work, private=True)
+    checkout = protected_directory(work / "checkout")
+    protected_directory(checkout / ".git")
+    protected_directory(checkout / "delivery")
+    delivery_dir = protected_directory(checkout / "delivery/managed-test-15")
+    public = protected_directory(work / "public")
+    protected_directory(public / "r8-entry")
+    if set(path.name for path in delivery_dir.iterdir()) != set(DELIVERY_FILES):
+        raise ValueError("Lieferordner enthaelt unerwartete Dateien")
+    assert_qualified_checkout(checkout, allow_delivery=True)
+    entry_path = checkout / ENTRY_TOOL
+    entry_sources(entry_path)
+    for name, size, digest in (
+            ("eos-linux-arm64.tar.gz", RECOVERY_ARCHIVE_BYTES, RECOVERY_ARCHIVE_SHA),
+            ("release-public.pem", 113, KEY_SHA),
+            ("delivery.json", 2632, RECOVERY_DELIVERY_SHA)):
+        check_file(protected_file(delivery_dir / name, size), size, digest)
+    check_file(protected_file(public / "r8-entry/update.sh", 81554), 81554, RECOVERY_ENTRY_SHA)
+    protected_file(public / "r8-entry/preparation.json", 65536)
+    protected_file(public / "test.json", 65536)
+    public_identities = {}
+    for name in ("test.json", "r8-entry/update.sh", "r8-entry/preparation.json"):
+        data = (public / name).read_bytes()
+        public_identities[name] = (len(data), hashlib.sha256(data).hexdigest())
+    target = work / "public-finished"
+    if target.exists() or target.is_symlink():
+        raise ValueError("Der abgeschlossene Exportordner existiert bereits; nichts ueberschrieben")
+    print("Pruefe vorhandenes signiertes Paket, Kanal und R8-Einstieg ohne privaten Schluessel ...", flush=True)
+    script = """
+const [root, publicDir, output, sourceCommit, releaseId] = process.argv.slice(1);
+const fs = require('node:fs');
+const bundle = require(root + '/runtime/release/bundle.cjs');
+const delivery = JSON.parse(bundle.readFileLimited(root + '/delivery/managed-test-15/delivery.json', 65536).bytes);
+if (delivery.sourceCommit !== sourceCommit || delivery.releaseId !== releaseId || delivery.releaseSequence !== 15)
+  throw Error('RECOVERY_DELIVERY_BINDING');
+const key = bundle.readFileLimited(root + '/delivery/managed-test-15/release-public.pem', 16384).bytes;
+const feed = require(root + '/runtime/updates/channel.cjs').verifyFeed(bundle.readFileLimited(publicDir + '/test.json', 65536).bytes, key);
+if (feed.releases.length !== 0) throw Error('RECOVERY_CHANNEL_BINDING');
+require(root + '/tools/bootstrap/build-public-r8-managed-entry.cjs').build(output);
+for (const name of ['update.sh', 'preparation.json']) {
+  const expected = bundle.readFileLimited(output + '/' + name, 1024 * 1024).bytes;
+  const observed = bundle.readFileLimited(publicDir + '/r8-entry/' + name, 1024 * 1024).bytes;
+  if (!expected.equals(observed)) throw Error('RECOVERY_ENTRY_BINDING');
+}
+console.log('Archivsignatur, vollstaendige Ruecklesepruefung, Kanal und R8-Einstieg: OK');
+"""
+    try:
+        with tempfile.TemporaryDirectory(prefix="eos-entry-readback-", dir=work) as temporary:
+            with replacement_entry_tool(entry_path):
+                run([node, "-e", script, checkout, public, Path(temporary) / "r8-entry",
+                     SOURCE, RECOVERY_RELEASE], timeout=300)
+    finally:
+        assert_qualified_checkout(checkout, allow_delivery=True)
+    # Create a separate immutable public export only after all checks pass.
+    target.mkdir(mode=0o700)
+    (target / "r8-entry").mkdir()
+    for name in ("test.json", "r8-entry/update.sh", "r8-entry/preparation.json"):
+        copy_public(public / name, target / name, 1024 ** 2)
+        check_file(target / name, *public_identities[name])
+    export_public(work, target, expected_delivery=(2632, RECOVERY_DELIVERY_SHA))
 
 
 def signing_directory(home, argument=None):
@@ -184,7 +337,7 @@ console.log('Laufzeit, native CI-Nachweise und ARM64-Node: OK');
 
 def main(argv):
     if len(argv) not in (2, 3):
-        raise ValueError("Aufruf: python3 -I -B sign-qualified-r8-wsl.py UNSIGNED.zip NATIVE.zip [ABS_SCHLUESSELORDNER]")
+        raise ValueError("Aufruf: sign-qualified-r8-wsl.py UNSIGNED.zip NATIVE.zip [ABS_SCHLUESSELORDNER] oder --finish ABS_ARBEITSORDNER")
     home = Path.home()
     if (os.geteuid() == 0 or platform.system() != "Linux" or platform.machine() != "x86_64"
             or not str(home).startswith("/home/") or home.resolve() != home):
@@ -198,6 +351,11 @@ def main(argv):
     node = home / "nexowatt-build/node-v24.22.1-linux-x64/bin/node"
     if run([node, "--version"], capture=True).strip() != b"v24.22.1":
         raise ValueError("Der vorbereitete Node 24.22.1 fehlt")
+    if argv[0] == "--finish":
+        if len(argv) != 2:
+            raise ValueError("Fortsetzung erwartet genau --finish ABS_ARBEITSORDNER")
+        finish_existing(home, Path(argv[1]), node)
+        return
     signing = signing_directory(home, argv[2] if len(argv) == 3 else None)
     encrypted = signing / "release-private.encrypted.pem"
     for item in (signing, encrypted):
@@ -274,25 +432,8 @@ def main(argv):
         with replacement_entry_tool(entry_path):
             run([node, entry_path, "--output", public / "r8-entry"], timeout=300)
     finally:
-        if (git("status", "--porcelain", capture=True).strip()
-                or git("rev-parse", "HEAD", capture=True).strip().decode() != SOURCE):
-            raise ValueError("Qualifizierter Quellstand nach R8-Einstieg nicht sauber wiederhergestellt")
-    delivery_dir = checkout / "delivery/managed-test-15"
-    for name in ("eos-linux-arm64.tar.gz", "release-public.pem", "delivery.json"):
-        shutil.copyfile(delivery_dir / name, public / name)
-    delivery = json.loads((public / "delivery.json").read_text())
-    summary = {name: delivery[name] for name in ("releaseId", "releaseSequence", "sourceCommit", "sha256", "bytes", "signingPublicKeySha256", "archiveReadbackVerified")}
-    summary.update({"published": False, "physicalPiTested": False})
-    summary["entryTool"] = {"path": ENTRY_TOOL, "qualifiedSha256": ENTRY_ORIGINAL_SHA256,
-                            "replacementSha256": ENTRY_REPLACED_SHA256, "qualifiedSourceRestored": True}
-    (public / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
-    # Explicit public allowlist: never recursively archive work or signing keys.
-    with zipfile.ZipFile(public / "eos-public-metadata.zip", "x", zipfile.ZIP_DEFLATED) as output:
-        for name in ("release-public.pem", "delivery.json", "test.json", "summary.json", "r8-entry/update.sh", "r8-entry/preparation.json"):
-            output.write(public / name, name)
-    print("\nSIGNIERUNG ERFOLGREICH — noch nicht veroeffentlicht oder auf dem Pi installiert.")
-    print("Oeffentliche Dateien: " + str(public))
-    print(json.dumps(summary, indent=2))
+        assert_qualified_checkout(checkout, allow_delivery=True)
+    export_public(work, public)
 
 
 def interrupted(_signum, _frame):

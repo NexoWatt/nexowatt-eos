@@ -2,8 +2,12 @@
 
 Stand 23.10.2026. Ubuntu unter WSL 2 und Node 24.22.1 sind beim Betreiber
 bestätigt. Der folgende Herstellerhelfer bereitet die lokale Signierung der
-qualifizierten Sequenz 15 vor. Seine Ausführung mit dem tatsächlichen
-Herstellerschlüssel auf dem WSL-Rechner ist noch nicht nachgewiesen.
+qualifizierten Sequenz 15 vor. Ein vom Betreiber übermitteltes WSL-Protokoll
+meldet inzwischen die lokale Signierung und Rückprüfung mit dem tatsächlichen
+Herstellerschlüssel sowie die Erzeugung des R8-Einstiegs. Der Lauf brach danach
+an der abschließenden Quellprüfung ab; der öffentliche Export war unvollständig.
+Die unabhängige Prüfung des tatsächlichen Lieferarchivs, erfolgreiche Fortsetzung,
+Veröffentlichung und Pi-Abnahme bleiben offen.
 
 ## Bestätigter öffentlicher Schlüssel
 
@@ -25,9 +29,10 @@ von `sha256sum release-public.pem` überein:
 
 Der private Schlüssel und die Passphrase wurden nicht übermittelt.
 Die Prüfung bestätigt Format und Übereinstimmung des öffentlichen Schlüssels.
-Das erfolgreiche Öffnen der verschlüsselten Datei ist eine Betreibermeldung;
-ein Signier-/Verifikationstest des Lieferpakets mit dem tatsächlichen privaten
-Schlüssel und eine wiederlesbare getrennte Sicherung sind noch nicht nachgewiesen.
+Das erfolgreiche Öffnen der verschlüsselten Datei und die später im WSL-Protokoll
+gemeldete lokale Signierung/Rückprüfung sind Betreibernachweise. Sie ersetzen
+keine unabhängige Rückprüfung des tatsächlichen Lieferarchivs. Eine wiederlesbare
+getrennte Schlüsselsicherung ist ebenfalls noch nicht nachgewiesen.
 Siehe [Ersatzschlüssel und Prüfgrenzen](../../reports/integration/manufacturer-key-replacement-20261023-2/README_DE.md).
 Die [öffentliche Datei vom 21.10.](../security/release-trust/manufacturer-20261021.pem)
 mit ihrem [Prüfvermerk](../../reports/integration/security-refresh-20261021/install/manufacturer-public-key-20261021.json)
@@ -185,6 +190,15 @@ den Helfer neu in einer frischen Arbeitsablage starten. Die vorhandenen ZIPs,
 CI-Nachweise, historische R8-Vertrauensbasis und Lizenzschlüssel werden durch
 diese Herstellerbindung nicht ersetzt.
 
+Die abschließende Quellprüfung weist Änderungen an versionierten oder für einen
+Commit vorgemerkten Dateien weiterhin ab. Bei von Git angezeigten unversionierten Dateien erlaubt
+sie ausschließlich `delivery/managed-test-15/eos-linux-arm64.tar.gz`,
+`delivery/managed-test-15/release-public.pem` und
+`delivery/managed-test-15/delivery.json`. Diese vom Build erzeugten Ausgaben
+wurden zuvor irrtümlich als Quelländerung behandelt. Zusätzliche unversionierte
+Dateien bleiben unzulässig; der Lieferordner wird nicht pauschal ausgenommen.
+Die bisherigen Git-Ausschlussregeln für lokale Builddaten bleiben unverändert.
+
 Quell-Checkout und Build laufen mit `umask 022`, damit öffentliche Lieferdateien
 die vorgeschriebenen Modi behalten. Der übergeordnete Arbeitsordner ist 0700.
 Der Helfer erzeugt unter `~/eos-sign-15-*/public/` ausschließlich die vorgesehenen
@@ -201,6 +215,58 @@ Node-Patches bleiben erforderlich. Die Anlage installiert nur freigegebene
 Updates nach ihrer bestehenden Richtlinie. Veröffentlichung, öffentlicher
 Download-/Signatur-Readback und tatsächlicher R8-Pi-Test folgen getrennt; dieser
 Helfer führt sie nicht aus und gibt noch keinen Pi-Installationsbefehl aus.
+
+## Öffentlichen Export nach dem Abschlussfehler fortsetzen
+
+Das übermittelte WSL-Protokoll meldet eine erfolgreiche Paket-/Kanalsignierung,
+lokale Rückprüfung, Entfernung der temporären entschlüsselten Datei und
+Erzeugung des öffentlichen R8-Einstiegs. Anschließend erschien
+`Qualifizierter Quellstand nach R8-Einstieg nicht sauber wiederhergestellt`.
+Die Ursache war die abschließende Git-Prüfung der drei erwarteten unversionierten
+Lieferdateien. Der Fehler wurde unabhängig reproduziert; dies ist kein
+unabhängiger Signatur- oder Archivnachweis für die Dateien des Betreiberrechners.
+
+Für diesen bereits signierten Arbeitsstand gibt es einen getrennten Abschlussweg.
+Den korrigierten Helfer aus dem festgelegten veröffentlichten Commit herunterladen
+und seinen separat mitgeteilten SHA-256 prüfen. Danach als normaler Ubuntu-Benutzer
+den tatsächlichen vorhandenen Arbeitsordner als absoluten Pfad einsetzen:
+
+```bash
+/usr/bin/python3 -I -B /absoluter/gepruefter/pfad/sign-qualified-r8-wsl.py \
+  --finish "$HOME/eos-sign-15-<Arbeitskennung>"
+```
+
+Dieser Aufruf ist fest an das konkrete Release und die Hashes und Größen von
+Archiv, Liefermetadaten und R8-Einstieg aus dem gemeldeten Lauf gebunden. Er ist
+kein allgemeiner Reparatur- oder Exportbefehl. Er prüft kanonische Pfade,
+Eigentümer und Rechte, den qualifizierten Quellcommit sowie die genau erlaubten
+Lieferdateien. Zusätzlich prüft er den signierten leeren Kanal einschließlich
+Ablaufzeit und die Archivsignatur mit vollständiger Rückleseprüfung. Der Helfer
+erzeugt Einstieg und Vorbereitungsmetadaten erneut in einem temporären
+Unterordner und vergleicht beide bytegenau mit den vorhandenen Dateien. Danach
+stellt er den ursprünglichen Einstiegserzeuger wieder her und kontrolliert den
+Quellstand erneut mit derselben begrenzten Ausnahme für die drei Lieferdateien.
+
+Erst nach diesen Prüfungen entsteht ein neuer Ordner `public-finished/` innerhalb
+der bisherigen Arbeitsablage. Er enthält nur die erlaubten öffentlichen Dateien,
+die Zusammenfassung und die Metadaten-ZIP. Der bisherige Ordner `public/` bleibt
+erhalten. Existiert `public-finished/` bereits, stoppt der Helfer ohne Überschreiben.
+Ein Abbruch während des Exports kann einen teilweise gefüllten Zielordner
+hinterlassen. Diesen aufbewahren und die Fehlermeldung prüfen lassen; ein
+erneuter Aufruf überschreibt oder repariert ihn nicht automatisch.
+
+Der Abschluss liest keinen privaten Schlüssel, fragt kein Passwort ab, signiert
+nichts erneut und lädt keine Eingaben nach. Er verändert keine Anlage und
+veröffentlicht keine Dateien. Einen fehlgeschlagenen
+Prüfschritt nicht durch manuelles Ändern von Metadaten, Quellpins oder Signaturen
+umgehen. Erst die erfolgreiche Abschlussausgabe beziehungsweise die erlaubte
+öffentliche Metadaten-ZIP zur weiteren Prüfung übermitteln; keine vollständigen
+Arbeits- oder Schlüsselordner hochladen.
+
+Die erfolgreiche Fortsetzung auf dem Betreiberrechner und die unabhängige Prüfung
+des tatsächlichen signierten Lieferarchivs bleiben bis zu ihren eigenen Nachweisen
+offen. Öffentliche Veröffentlichung/Rückprüfung und R8-Pi-Abnahme sind weiterhin
+separate Schritte. Siehe [Korrektur und Prüfgrenzen](../../reports/integration/wsl-signing-finalization-20261023/README_DE.md).
 
 ## Toolchain für eine neue Paketauflösung
 
