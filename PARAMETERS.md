@@ -50,6 +50,16 @@ archive, successful recovery, publication, or Pi migration. See the
 [finalization correction](reports/integration/wsl-signing-finalization-20261023/README_DE.md)
 and the recovery procedure in the WSL document.
 
+The received public metadata export was independently checked on 2026-10-23:
+exact six-file ZIP inventory, confirmed public-key identity, matching delivery
+bindings, a byte-identical R8 entry and preparation document regenerated from
+trusted sources, and a cryptographically valid signed empty channel. The feed
+expires at `2026-11-22T19:13:09.971Z`; it must be rechecked before publication.
+The actual 134278673-byte signed runtime archive was not included. Its signature
+and complete payload have not been independently verified in this metadata review.
+No runtime release, active feed or installation command was published by this step.
+See the [received metadata evidence](reports/integration/managed15-public-metadata-20261023/README_DE.md).
+
 The automatic Node policy is separate from the manually confirmed EOS update
 operation. Signed feed entries may opt into `automaticNodeUpdate: true`; the
 receiver additionally requires a strictly newer supported Node 24 runtime and

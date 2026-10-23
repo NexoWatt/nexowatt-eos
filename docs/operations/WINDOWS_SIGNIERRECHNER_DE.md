@@ -6,8 +6,10 @@ qualifizierten Sequenz 15 vor. Ein vom Betreiber übermitteltes WSL-Protokoll
 meldet inzwischen die lokale Signierung und Rückprüfung mit dem tatsächlichen
 Herstellerschlüssel sowie die Erzeugung des R8-Einstiegs. Der Lauf brach danach
 an der abschließenden Quellprüfung ab; der öffentliche Export war unvollständig.
-Die unabhängige Prüfung des tatsächlichen Lieferarchivs, erfolgreiche Fortsetzung,
-Veröffentlichung und Pi-Abnahme bleiben offen.
+Inzwischen wurde die öffentliche Metadaten-ZIP zur Prüfung übermittelt; der
+[Nachtrag zur Metadatenlieferung](../../reports/integration/managed15-public-metadata-20261023/README_DE.md)
+grenzt den damit belegten Umfang ab. Die unabhängige Prüfung des tatsächlichen
+Lieferarchivs, Veröffentlichung und Pi-Abnahme bleiben offen.
 
 ## Bestätigter öffentlicher Schlüssel
 
@@ -263,10 +265,28 @@ umgehen. Erst die erfolgreiche Abschlussausgabe beziehungsweise die erlaubte
 öffentliche Metadaten-ZIP zur weiteren Prüfung übermitteln; keine vollständigen
 Arbeits- oder Schlüsselordner hochladen.
 
-Die erfolgreiche Fortsetzung auf dem Betreiberrechner und die unabhängige Prüfung
-des tatsächlichen signierten Lieferarchivs bleiben bis zu ihren eigenen Nachweisen
-offen. Öffentliche Veröffentlichung/Rückprüfung und R8-Pi-Abnahme sind weiterhin
-separate Schritte. Siehe [Korrektur und Prüfgrenzen](../../reports/integration/wsl-signing-finalization-20261023/README_DE.md).
+Die unabhängige Prüfung des tatsächlichen signierten Lieferarchivs bleibt bis
+zu ihrem eigenen Nachweis offen. Öffentliche Veröffentlichung/Rückprüfung und
+R8-Pi-Abnahme sind weiterhin separate Schritte. Siehe
+[Korrektur und Prüfgrenzen](../../reports/integration/wsl-signing-finalization-20261023/README_DE.md).
+
+## Erhaltene öffentliche Metadatenlieferung
+
+Die öffentliche Datei `eos-public-metadata.zip` wurde am 23.10.2026 übermittelt
+und für die gesonderte Prüfung sicher extrahiert. Der
+[Prüfvermerk](../../reports/integration/managed15-public-metadata-20261023/README_DE.md)
+dokumentiert die Prüfung der Metadatenbindung, des signierten Kanals und des
+aus diesen Angaben erzeugten R8-Einstiegs. Diese Metadatenlieferung enthält
+das eigentliche signierte Laufzeitarchiv nicht. Angaben wie
+`archiveReadbackVerified` beschreiben den lokalen Herstellerlauf und ersetzen
+keine unabhängige Rückprüfung der vollständigen Archivdatei.
+
+Für den nächsten Prüfschritt die vollständige öffentliche Datei
+`eos-linux-arm64.tar.gz` aus `public-finished/` unverändert separat bereitstellen.
+Die Metadaten-ZIP genügt dafür nicht. Keine privaten Schlüsseldateien,
+Passwörter oder vollständigen Arbeits- beziehungsweise Schlüsselordner
+übermitteln. Archivprüfung, Veröffentlichung mit öffentlicher Rückprüfung
+und Installation/Abnahme auf dem Pi bleiben offen.
 
 ## Toolchain für eine neue Paketauflösung
 
