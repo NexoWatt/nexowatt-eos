@@ -89,7 +89,8 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         require('./runtime-diagnostics.cjs').recordScan(activeBoot, phase, activeLog.scan(), runtimeDiagnostics);
         const runtimeCodes = new Set([...active.seen, ...activeBoot.runtimeLog.indicators]);
         if (['TYPE_ERROR', 'REFERENCE_ERROR', 'PG_TRANSACTION', 'TLS_PROVISIONING', 'READ_ONLY_WRITE', 'PERMISSION_DENIED',
-            'UNCAUGHT_EXCEPTION', 'UNHANDLED_REJECTION', 'RUNTIME_ERROR_LOGGED'].some(code => runtimeCodes.has(code))) fail('MANAGEMENT_RUNTIME_ERROR');
+            'UNCAUGHT_EXCEPTION', 'UNHANDLED_REJECTION', 'RUNTIME_ERROR_LOGGED',
+            'CONTROLLER_LOG_FORWARD_FAILED'].some(code => runtimeCodes.has(code))) fail('MANAGEMENT_RUNTIME_ERROR');
     }
     t.after(async () => {
         let logFailure;

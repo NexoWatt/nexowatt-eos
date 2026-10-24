@@ -47,3 +47,12 @@ test('actual adapter-core rejection spellings stay fatal without exposing their 
         assert.doesNotMatch(JSON.stringify([...indicators(text)]), /private|secret/);
     }
 });
+
+test('handled controller log delivery failure remains visible to native qualification', () => {
+    const codes = indicators('EOS_CONTROLLER_LOG_FORWARD_FAILED\n');
+    assert.deepEqual([...codes], ['CONTROLLER_LOG_FORWARD_FAILED']);
+    const diagnostics = new RuntimeDiagnostics();
+    diagnostics.observe('EOS_CONTROLLER_LOG_FORWARD_FAILED private-test-payload');
+    assert.deepEqual(diagnostics.snapshot(), [{ scope: 'unscoped', indicators: ['CONTROLLER_LOG_FORWARD_FAILED'] }]);
+    assert.doesNotMatch(JSON.stringify(diagnostics.snapshot()), /private|payload/);
+});

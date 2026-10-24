@@ -128,6 +128,8 @@ test('fresh native contract has no historical signature or migration claim and b
         x => x.evidence.postgresqlTransactionIsolation.independentWriteSucceeded = false,
         x => x.evidence.postgresqlTransactionIsolation.rejectedCode = 'EOS_PG_QUERY_FAILED',
         x => x.evidence.postgresqlTransactionIsolation.unreviewed = true,
+        x => { x.evidence.processIndicators[3].indicators.push('CONTROLLER_LOG_FORWARD_FAILED');
+            x.evidence.runtimeIndicators = [...new Set([...x.evidence.runtimeIndicators, 'CONTROLLER_LOG_FORWARD_FAILED'])].sort(); },
         x => x.evidence.stages.pop(),
         x => x.evidence.checks.nativePoststartEnrollmentRollback = true, x => x.evidence.processIndicators.pop(),
         x => x.tap = x.tap.replace('# skipped 0', '# skipped 1')]) {

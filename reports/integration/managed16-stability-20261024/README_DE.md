@@ -78,6 +78,15 @@ ursprünglichen Pi-Störung ausgegeben.
 
 ## Laufzeit- und Liefergrenzen
 
+Der neue feste Logweiterleitungs-Fehlercode wird ausdrücklich in der nativen
+Prozessdiagnose erkannt und verhindert eine erfolgreiche Qualifikation.
+Das Abfangen einer Ausnahme wird dadurch nicht mit fehlerfreiem Logtransport
+gleichgesetzt. 13 gezielte Diagnose-/Nachweisvertragsprüfungen bestanden;
+[Rohbeleg](native-gate-diagnostics.tap). Der ursprüngliche CI-Anlauf am
+Commit `6dad240688ada5e23c130434a0ce2016925a9e6b` wird durch einen neuen Lauf mit
+dieser zusätzlichen Nachweisgrenze ersetzt; seine Artefakte werden nicht
+als endgültiger signierbarer Stand übernommen.
+
 Das native Labor muss die neu gebauten sechs Adapter, HTTPS-Erststart, zentrale
 NWL3-Lizenzierung, Backup und Neustart prüfen. Eine neue verpflichtende native
 PostgreSQL-Prüfung ergänzt den Schutz abgeschlossener Transaktionskontexte mit
