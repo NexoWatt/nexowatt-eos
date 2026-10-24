@@ -83,3 +83,15 @@ und kann unbekannte Fehler übersehen. Keine neue Laufzeit, kein signiertes Arch
 und kein Einstieg wurden geändert. Ein erneuter Vollarchiv-/Hardwaretest wurde
 nicht ausgeführt. Ursache, stabile Betriebsbereitschaft und erfolgreiche Migration
 bleiben offen. Keine Produktions-/Anlagenfreigabe.
+
+### Nachprüfung des Ausgabefilters
+
+Die getrennte Quellprüfung fand vor Übergabe des Pi-Befehls eine zu breite
+Dateinamen-Erkennung im zunächst dokumentierten Filter: ein frei gewählter
+Konfigurationswert in Dateiform hätte als vermeintliche Fundstelle erscheinen
+können. Die Korrektur erlaubt ausschließlich die aufgeführten bekannten
+Quelldateinamen in Stackzeilen mit `at`-Präfix sowie numerische Zeilen/Spalten.
+Der zusätzliche Negativfall `password=SecretCanary.js:17:9` und ein Stack mit
+diesem unbekannten Namen werden verworfen. Unbekannte Quelldateien werden bewusst
+nicht exportiert. Nur der Diagnose-/Dokumentationsstand wurde korrigiert; der
+erste Filter wurde dem Betreiber nicht zur Ausführung übergeben.

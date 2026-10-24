@@ -176,7 +176,8 @@ Updatechecks ist noch nicht mit diesen Ereignissen abgeglichen.
 
 Für genau diesen Testlauf liest der folgende Block höchstens 400 Journaleinträge
 im Zeitfenster 05:27–05:31 UTC (07:27–07:31 CEST). Er gibt nur Zeitstempel,
-festgelegte Fehlerklassen/-codes sowie Dateibasename und Codezeilen aus.
+festgelegte Fehlerklassen/-codes sowie erlaubte Dateinamen und Codezeilen aus
+Stackzeilen aus. Frei gewählte Dateinamen werden verworfen.
 Meldungstexte, volle Pfade, Konfigurationswerte und Stack-Argumente werden nicht
 ausgegeben. Kein Dienst, Release oder Wartungsmarker wird verändert. Leere
 Ergebnisse sind kein Gesundheitsnachweis; unbekannte Fehler können dem Filter
@@ -196,7 +197,7 @@ except (OSError, subprocess.TimeoutExpired):
 if p.returncode:
     raise SystemExit("Journal nicht lesbar.")
 codes = re.compile(r"\b(?:TypeError|ReferenceError|RangeError|SyntaxError|AssertionError|AggregateError|Error|EACCES|EPERM|EROFS|ENOENT|EADDRINUSE|ECONNREFUSED|ECONNRESET|ETIMEDOUT|EPIPE|MODULE_NOT_FOUND|ERR_MODULE_NOT_FOUND|ERR_DLOPEN_FAILED)\b")
-frames = re.compile(r"\b([A-Za-z][A-Za-z0-9_.-]{0,80}\.(?:[cm]?js|ts):[0-9]+:[0-9]+)\b")
+frames = re.compile(r"^\s*at [^\n]*?/(main\.(?:js|ts)|controller\.js|index\.cjs|facade\.cjs|auth\.cjs|views\.cjs|host\.cjs|pid-state\.cjs|adapter-shutdown\.cjs|backup-state\.cjs):([0-9]{1,7}):([0-9]{1,7})(?:\)|$)", re.M)
 count = 0
 for raw in p.stdout.splitlines():
     try:
@@ -207,7 +208,7 @@ for raw in p.stdout.splitlines():
         kinds = sorted(set(codes.findall(message)))
         if re.search(r"uncaught exception|unhandled.?rejection", message, re.I):
             kinds.append("UNCAUGHT_EXCEPTION_OR_REJECTION")
-        locations = sorted(set(frames.findall(message)))
+        locations = sorted({":".join(hit) for hit in frames.findall(message)})
         if not kinds and not locations:
             continue
         stamp = datetime.datetime.fromtimestamp(int(row["__REALTIME_TIMESTAMP"]) / 1_000_000, datetime.timezone.utc).isoformat()
