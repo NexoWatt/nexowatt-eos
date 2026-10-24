@@ -7,6 +7,8 @@ neue Frischbasis mit Sequenz 16 qualifiziert. **js-controller bleibt 7.2.5**;
 die geprüfte Node-Basis bleibt 24.22.1. Der EOS-Updateknopf und automatische
 freigegebene Node-24-/Linux-Sicherheitsupdates bleiben Bestandteil.
 
+Der vollständige Build und die nativen Tests am Quellstand `f2ea9a7` sind
+bestanden; beide unsignierten CI-Artefakte wurden vollständig zurückgeprüft.
 Die neue Quelle ist noch kein signiertes, auf dem Pi abgenommenes Paket.
 Der alte Testdatenträger wird erst nach erfolgreicher neuer Build-/Lieferprüfung
 für die Neuinstallation ersetzt. Anleitung und Prüfstand:

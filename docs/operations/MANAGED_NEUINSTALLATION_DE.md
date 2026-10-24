@@ -6,9 +6,10 @@ den sechs EOS-Adaptern. Controller 8 bleibt ausgeschlossen.
 
 Der feste Installationspfad ist vorbereitet. **Für Sequenz 16 gibt es hier noch
 keinen installierbaren signierten Kandidaten und keinen veröffentlichten,
-öffentlich zurückgelesenen Installationsbefehl.** Der neue vollständige Build,
-seine native Qualifikation, die lokale Herstellersignatur und die
-Veröffentlichungsprüfung müssen sich auf denselben neuen Quellstand beziehen.
+öffentlich zurückgelesenen Installationsbefehl.** Der vollständige Build und die native Qualifikation am Quellstand
+`f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4` sind bestanden; beide tatsächlichen
+CI-Archive wurden unabhängig zurückgeprüft. Lokale Herstellersignatur und
+Veröffentlichungsprüfung müssen sich auf genau diesen Quellstand beziehen.
 Die bereits veröffentlichte Sequenz 15 und ihr R8-Einstieg bleiben unverändert;
 sie sind kein Nachweis für die späteren Stabilitätskorrekturen.
 
@@ -46,9 +47,10 @@ nicht als EOS-Netz eingerichtet.
    Herstellerrechner prüfen und mit `build-managed-test.cjs --sequence 16`
    lokal signieren. Der vollständige Aufruf benötigt zusätzlich die gebundenen
    Runtime-/Belegpfade, den geschützten privaten Schlüsselpfad, dessen bestätigten
-   öffentlichen Hash und das offizielle gepinnte ARM64-Node-Archiv. Ein neuer
-   WSL-Einstieg darf erst nach Vorliegen der echten Commit-/Artefaktpins erstellt
-   werden. `sign-qualified-r8-wsl.py` bleibt ausschließlich für seine historische
+   öffentlichen Hash und das offizielle gepinnte ARM64-Node-Archiv. Der neue
+   `tools/bootstrap/sign-qualified-managed16-wsl.py` bindet die tatsächlich
+   geprüften Commit-/Artefaktpins; sein separater Auslieferungscommit wird
+   nicht als Runtime-Buildcommit verwendet. `sign-qualified-r8-wsl.py` bleibt ausschließlich für seine historische
    Sequenz-15-Qualifikation zuständig.
 3. Der private Signierschlüssel und seine Passphrase bleiben auf dem vorhandenen
    WSL-Signierrechner. Sie werden weder hochgeladen noch auf den Pi kopiert.

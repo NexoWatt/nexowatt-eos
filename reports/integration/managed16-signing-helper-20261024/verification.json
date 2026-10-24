@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "kind": "managed16-local-signer-preparation-verification",
+  "date": "2026-10-24",
+  "qualifiedSourceTarget": "f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4",
+  "helperSourceState": "working tree; final pinned helper remains outside qualified runtime source",
+  "releaseEnabled": true,
+  "qualificationPins": "BOUND_TO_VERIFIED_DOWNLOADED_ARTIFACTS",
+  "tests": {
+    "command": [
+      "python3",
+      "-I",
+      "-B",
+      "tests/bootstrap/sign-qualified-managed16-wsl.test.py"
+    ],
+    "exitCode": 0,
+    "passed": 34,
+    "failed": 0,
+    "skipped": 0
+  },
+  "nodeArchiveSizeObservation": {
+    "url": "https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-arm64.tar.xz",
+    "method": "HTTPS HEAD",
+    "command": [
+      "curl",
+      "-q",
+      "--head",
+      "--fail",
+      "--silent",
+      "--show-error",
+      "--proto",
+      "=https",
+      "--connect-timeout",
+      "5",
+      "--max-time",
+      "10",
+      "https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-arm64.tar.xz"
+    ],
+    "exitCode": 0,
+    "contentLength": 30978868,
+    "fullArchiveHashRecomputed": false,
+    "versionedHashPolicy": "tools/integration/node-runtime-policy.json",
+    "storedHeaderWhitespaceNormalized": true
+  },
+  "sourceFiles": [
+    {
+      "path": "tools/bootstrap/sign-qualified-managed16-wsl.py",
+      "bytes": 21237,
+      "sha256": "f8311f70f6015942b23a829ee2210a0028b8f5abf1377893249579e0e36fc5f6"
+    },
+    {
+      "path": "tests/bootstrap/sign-qualified-managed16-wsl.test.py",
+      "bytes": 12758,
+      "sha256": "6bba148fc424d16c0bf53df89319379f58b45a30fc8f16ec2c60ff78c279ddd6"
+    }
+  ],
+  "historicalHelperUnchangedAgainstHead": {
+    "path": "tools/bootstrap/sign-qualified-r8-wsl.py",
+    "bytes": 23783,
+    "sha256": "3ff3eb552e4ec0d3f4e35296f0010640a2352d5b39e59f63abeae8a1e6c82d66"
+  },
+  "evidenceFiles": [
+    {
+      "path": "reports/integration/managed16-signing-helper-20261024/README_DE.md",
+      "bytes": 6494,
+      "sha256": "f93ec851557e8de302d89463a5900cf56512614993871051766d1594b2406d11"
+    },
+    {
+      "path": "reports/integration/managed16-signing-helper-20261024/signer-contracts.txt",
+      "bytes": 256,
+      "sha256": "cdd09c882d4748e8d908b7889b19c3b960497f92bd4546310820b0a1291fc345"
+    },
+    {
+      "path": "reports/integration/managed16-signing-helper-20261024/blocked-entry.txt",
+      "bytes": 27,
+      "sha256": "3e996e34969e902bcf3caa82f40bbd5dd342ae378b6030737b7f602ccbc92021"
+    },
+    {
+      "path": "reports/integration/managed16-signing-helper-20261024/node-arm64-head.txt",
+      "bytes": 547,
+      "sha256": "c97cba3ce7fc181eba20993315826604c6088686cdf874649f4c689f2f691c3f"
+    },
+    {
+      "path": "reports/integration/managed16-signing-helper-20261024/artifact-pins.json",
+      "bytes": 2121,
+      "sha256": "5251b21f42dcebccce5a61989c49ea28da86907158d00b1ceb39c1967c37fa1a"
+    }
+  ],
+  "executionScope": {
+    "realTemporaryFilesZipGit": true,
+    "realDisposableTmpfsCryptoFixtures": true,
+    "manufacturerKeyAccessed": false,
+    "actualQualificationArtifactsRead": true,
+    "realRuntimeSigned": false,
+    "publicReleasePublished": false,
+    "piInstalledOrWiped": false,
+    "fullNativePayloadGateReexecutedInThisStep": false
+  },
+  "productionReleaseApproved": false,
+  "reportedSecurityCiRun": 40069294296,
+  "reportedManagedCiRun": 40069294353,
+  "artifactPins": {
+    "sourceCommit": "f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4",
+    "apiPinsSeparatelyProvided": true,
+    "zipArtifacts": [
+      {
+        "file": "eos-unsigned-f2ea9a7.zip",
+        "bytes": 134047653,
+        "sha256": "9dfb4bac5dc501ca5815cefb5f862234b2dd2515a62f56bab24909fb5ae6c12d",
+        "members": [
+          "eos-security-refresh-unsigned.tar.gz"
+        ]
+      },
+      {
+        "file": "eos-native-f2ea9a7.zip",
+        "bytes": 218396,
+        "sha256": "37f871a1fe5df44d4d9dee67351a239c7abba2e523a105d1879e87dae2be1f3e",
+        "members": [
+          "eos-own-adapters.trlC30cd/own-adapters-native.tap",
+          "eos-own-adapters.trlC30cd/own-adapters-native-prepared.json",
+          "eos-own-adapters.trlC30cd/own-adapters-native-evidence.json",
+          "eos-own-adapters.trlC30cd/own-adapters-source-binding.json",
+          "eos-refresh-runtime/runtime-build.json",
+          "eos-refresh-runtime/runtime.cdx.json",
+          "eos-refresh-runtime/app/package-lock.json",
+          "eos-refresh-audit.json"
+        ]
+      }
+    ],
+    "unsignedArchive": {
+      "file": "eos-security-refresh-unsigned.tar.gz",
+      "bytes": 134047467,
+      "sha256": "734a6b296cdfec50bc084e722c1b8eb5eb838969813b311200eae9071cd73bb9"
+    },
+    "nativeDirectory": "eos-own-adapters.trlC30cd",
+    "nativeEvidenceIdentity": {
+      "sourceCommit": "f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4",
+      "sequence": 16,
+      "passed": true,
+      "checkCount": 22,
+      "checks": [
+        "adminHttpsLogin",
+        "allOwnAdapterConfigurationAssets",
+        "assetOnlyUploadPreservesEnrollment",
+        "backupAdapterReadiness",
+        "backupPrivatePathAndHostSecret",
+        "centralRevocation",
+        "freshEnrollmentPrewriteFailureIsAtomic",
+        "freshEnrollmentRetainedAfterRestart",
+        "homeActivation",
+        "homeQuotas",
+        "initiallyUnlicensed",
+        "logicalBackupCreatedAndListed",
+        "platformDeniesUnadmittedProcess",
+        "postgresqlMtls",
+        "postgresqlTransactionContextIsolation",
+        "proQuotas",
+        "proReactivation",
+        "restart",
+        "rootOwnedEosAdmission",
+        "sixOwnAdapterProcesses",
+        "uiHttpsLogin",
+        "unchangedApp"
+      ]
+    }
+  },
+  "initialBlockedEntry": {
+    "exitCode": 1,
+    "code": "QUALIFICATION_PINS_PENDING",
+    "scope": "Historical initial None-pin CLI observation; fail-closed regression remains exercised by current tests."
+  }
+}

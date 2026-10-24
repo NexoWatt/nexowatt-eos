@@ -4,7 +4,11 @@
 Frischbasis Sequenz 16 aufgebaut. Fehler in der Controller-Logweiterleitung
 und im PostgreSQL-Transaktionslebenszyklus wurden isoliert reproduziert und
 korrigiert. Die neuen nativen und Lieferprüfungen bleiben verpflichtend;
-historische grüne Sequenz-15-Nachweise ersetzen sie nicht.
+historische grüne Sequenz-15-Nachweise ersetzen sie nicht. Der neue vollständige
+CI-/Laufzeitnachweis am Commit `f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4`
+und die unabhängige Rückprüfung beider unsignierten Artefakte sind bestanden.
+19 hohe und acht moderate Abhängigkeitsbefunde bleiben offen; Herstellersignatur,
+öffentlicher Installationsreadback und Pi-Abnahme stehen noch aus.
 [Prüfumfang, Restgrenzen und Neuinstallation](../../reports/integration/managed16-stability-20261024/README_DE.md).
 
 **Umsetzungsnachtrag vom 21.10.2026:** Auf den [Upstream-Vergleich](../../reports/integration/upstream-review-20261021/README_DE.md) folgt die [Sicherheitsaktualisierung](../../reports/integration/security-refresh-20261021/README_DE.md) mit js-controller **7.2.5**, angepasstem PostgreSQL-Sitzungsvertrag, aktuellen Socket-/Webserver-Paketen und verfügbaren Dependency-Fixes. Controller 8 bleibt ausgeschlossen. EOS-UPSTREAM-20261021-01 bis -03 bleiben bis zum gebundenen vollständigen Laufzeitnachweis und zur neuen Lieferung offen; lokale Quelltests schließen diese Lieferbedingungen nicht. Historische signierte Archive werden nicht verändert. Keine Produktionsfreigabe.

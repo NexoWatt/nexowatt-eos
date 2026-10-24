@@ -87,19 +87,44 @@ Commit `6dad240688ada5e23c130434a0ce2016925a9e6b` wird durch einen neuen Lauf mi
 dieser zusätzlichen Nachweisgrenze ersetzt; seine Artefakte werden nicht
 als endgültiger signierbarer Stand übernommen.
 
-Das native Labor muss die neu gebauten sechs Adapter, HTTPS-Erststart, zentrale
-NWL3-Lizenzierung, Backup und Neustart prüfen. Eine neue verpflichtende native
-PostgreSQL-Prüfung ergänzt den Schutz abgeschlossener Transaktionskontexte mit
-echten Datenbankzugriffen und ausbleibendem verspätetem Canary-Schreibzugriff.
-Ergebnisse und Artefaktbindungen werden nach dem tatsächlichen Lauf ergänzt.
+Der endgültige Laufzeitquellstand
+`f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4` bestand den vollständigen
+[Security-CI-Lauf 40069294296](https://github.com/NexoWatt/nexowatt-eos/actions/runs/40069294296)
+mit acht erfolgreichen Pflichtjobs. Der historische manuelle R9-Job wurde
+übersprungen und wird nicht als ausgeführt gezählt. Die
+[Managed-Installations-/Updateverträge und Browserprüfung](https://github.com/NexoWatt/nexowatt-eos/actions/runs/40069294353)
+bestanden ebenfalls. CodeQL-Lauf 40069294303 lief zum Zeitpunkt dieses
+Rücklesebelegs noch und wird hier nicht als bestanden behauptet.
+
+Die nativen Belege weisen 16 bestandene TAP-Tests und alle 22 verpflichtenden
+Prüfmerkmale nach: echte PostgreSQL-17.11-mTLS-Verbindungen, die sechs frisch
+gebauten Adapter, HTTPS-Anmeldung, zentrale NWL3-Testlizenzen mit Entzug und
+Reaktivierung, zwei geprüfte logische Backups und Neustart. Der neue native
+Transaktionsfall verwirft den verspäteten Schreibzugriff mit
+`EOS_PG_TRANSACTION_ABORTED`; der bereits bestätigte Datensatz bleibt erhalten,
+der verspätete fehlt, und eine unabhängige Folgeoperation gelingt. Die Belege
+stammen aus Linux x64 mit Node 24.22.1 und unveränderten ARM64-App-Nutzdaten;
+sie ersetzen keine ARM64-/systemd-/Pi-Abnahme und keinen Restoretest.
+
+Beide tatsächlichen CI-ZIPs wurden vollständig heruntergeladen und mit den
+GitHub-Artefakthashes verglichen. Das innere TAR wurde begrenzt geprüft und
+extrahiert; `verifyPrepared` und `verifyNativeEvidence` bestätigten Quelle,
+Sequenz 16, Runtime/SBOM, 22.430 App-Dateien und native Quellbindungen.
+Der enthaltene Store entspricht der neuen Korrektur mit SHA-256
+`a217284d60ceeb157cec246952ebca861782869043d478c519f5c6704d72326f`.
+[Maschinenlesbarer Rücklesebeleg mit Archivpins](ci-artifact-readback.json).
+
+Der tatsächliche Abhängigkeitsscan bleibt **offen: 19 hohe und acht moderate
+Paketbefunde, keine kritischen**. Dies ist keine Zählung unabhängiger Schwachstellen;
+die Erreichbarkeit ist nicht vollständig bewertet. Erfolgreiche Funktions- und
+Security-Regressionstests schließen diese Befunde nicht. Keine Produktionsfreigabe.
 
 Die bisherige signierte Sequenz 15 und ihre öffentlichen Prüfsummen werden
 nicht verändert. Der private Hersteller-Schlüssel bleibt ausschließlich beim
-Betreiber. Neue qualifizierte Artefakte müssen vor der lokalen Signierung
-vorliegen; keine erfundenen Artefaktpins oder Testfreigaben.
+Betreiber. Der getrennte WSL-Signierhelfer bindet genau die tatsächlich geprüften
+Artefakte; sein eigener Auslieferungscommit verändert diesen Runtime-Quellstand nicht.
 
-Offen bleiben bis zum jeweiligen tatsächlichen Nachweis: neuer vollständiger
-CI-/Laufzeitbuild, Herstellersignatur, vollständiger Archiv-/öffentlicher
+Offen bleiben bis zum jeweiligen tatsächlichen Nachweis: Herstellersignatur, vollständiger signierter Archiv-/öffentlicher
 Readback, Debian-13-/ARM64-/systemd-Neuinstallation, Browser-Einrichtung und
 Pi-Neustart/Updates. Geräte-/Regelungsabnahme ist gesondert erforderlich.
 Keine Produktions-, Anlagen- oder CRA-Freigabe und keine Zusage vollständiger

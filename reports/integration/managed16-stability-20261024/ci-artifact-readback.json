@@ -1,0 +1,106 @@
+{
+  "ok": true,
+  "sourceCommit": "f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4",
+  "appContentSha256": "e39b77825202a391c9a8cdacd818e6b3b326b0844d2167632acc0efcfa02c723",
+  "baselineContentSha256": "e39b77825202a391c9a8cdacd818e6b3b326b0844d2167632acc0efcfa02c723",
+  "runtimeBuildSha256": "5fa3433b3e9903f0c86840a47fff060b8f80fd86b5cec8f1add65bc3dfe7a6e8",
+  "nativeTestsPassed": 16,
+  "scope": "fresh-controller7.2.5-native-x64-management-license-backup-and-restart",
+  "checks": [
+    "postgresqlMtls",
+    "platformDeniesUnadmittedProcess",
+    "initiallyUnlicensed",
+    "adminHttpsLogin",
+    "uiHttpsLogin",
+    "homeActivation",
+    "homeQuotas",
+    "rootOwnedEosAdmission",
+    "centralRevocation",
+    "proReactivation",
+    "proQuotas",
+    "restart",
+    "unchangedApp",
+    "sixOwnAdapterProcesses",
+    "freshEnrollmentPrewriteFailureIsAtomic",
+    "freshEnrollmentRetainedAfterRestart",
+    "backupPrivatePathAndHostSecret",
+    "logicalBackupCreatedAndListed",
+    "allOwnAdapterConfigurationAssets",
+    "assetOnlyUploadPreservesEnrollment",
+    "backupAdapterReadiness",
+    "postgresqlTransactionContextIsolation"
+  ],
+  "hardwareTested": false,
+  "productionReleaseApproved": false,
+  "evidenceFiles": [
+    {
+      "file": "own-adapters-native-prepared.json",
+      "bytes": 1025,
+      "sha256": "fb68ffdeb53f09ce13c15206567c294fee4d49d8691a1f1b282ffef7fc5202d8"
+    },
+    {
+      "file": "own-adapters-native-evidence.json",
+      "bytes": 23365,
+      "sha256": "a863e258aef63905dcd17d8281cb659db24595a5d2cd278665c25bda32eb4b83"
+    },
+    {
+      "file": "own-adapters-source-binding.json",
+      "bytes": 16969,
+      "sha256": "8ecbd335cbfb63f275ed403396d2df05525a7d0857f505f990da455ffac1d40e"
+    },
+    {
+      "file": "own-adapters-native.tap",
+      "bytes": 4482,
+      "sha256": "754c5915b5bb4486e6668b1a7eaa3a208930fee8da2869a1fb3b7343919de281"
+    }
+  ],
+  "verifiedPayloadFiles": 22430,
+  "sequence": 16,
+  "controllerVersion": "7.2.5",
+  "nodeVersion": "24.22.1",
+  "storeSha256": "a217284d60ceeb157cec246952ebca861782869043d478c519f5c6704d72326f",
+  "schemaVersion": 1,
+  "kind": "managed16-qualified-unsigned-artifact-readback",
+  "securityRun": 40069294296,
+  "securityConclusion": "success",
+  "managedContractsRun": 40069294353,
+  "managedContractsConclusion": "success",
+  "codeQLRun": 40069294303,
+  "codeQLStatusAtReadback": "in_progress",
+  "unsigned": true,
+  "manufacturerSigned": false,
+  "publicInstallerReadback": false,
+  "piInstalled": false,
+  "artifacts": [
+    {
+      "artifactId": 12550861292,
+      "file": "eos-unsigned-f2ea9a7.zip",
+      "bytes": 134047653,
+      "sha256": "9dfb4bac5dc501ca5815cefb5f862234b2dd2515a62f56bab24909fb5ae6c12d"
+    },
+    {
+      "artifactId": 12550289644,
+      "file": "eos-native-f2ea9a7.zip",
+      "bytes": 218396,
+      "sha256": "37f871a1fe5df44d4d9dee67351a239c7abba2e523a105d1879e87dae2be1f3e"
+    }
+  ],
+  "innerTar": {
+    "file": "eos-security-refresh-unsigned.tar.gz",
+    "bytes": 134047467,
+    "sha256": "734a6b296cdfec50bc084e722c1b8eb5eb838969813b311200eae9071cd73bb9"
+  },
+  "dependencyAudit": {
+    "status": "OPEN_DEPENDENCY_FINDINGS",
+    "counts": {
+      "info": 0,
+      "low": 0,
+      "moderate": 8,
+      "high": 19,
+      "critical": 0,
+      "total": 27
+    },
+    "reachabilityAssessed": false,
+    "productionReleaseApproved": false
+  }
+}
