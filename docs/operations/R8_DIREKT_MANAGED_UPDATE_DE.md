@@ -166,6 +166,59 @@ Umgebungsvariablen oder ungefilterten Journale übermitteln. Der
 [Befundvermerk](../../reports/integration/r8-controller-precondition-20261024/README_DE.md)
 trennt die gemeldete Beobachtung von der Quellprüfung und den offenen Hostdaten.
 
+Bei der anschließenden Betreiberdiagnose wurden am 24.10.2026 um 07:28:23 und
+07:29:50 CEST Controller-Abbrüche mit Exitcode 6 und jeweils automatischem
+Neustart gemeldet. Um 07:30:15 CEST war der Dienst wieder aktiv. Bei
+js-controller 7.2.2 bedeutet 6 `UNCAUGHT_EXCEPTION`; das generische
+systemd-Etikett `NOTCONFIGURED` ist keine Diagnose einer fehlenden Konfiguration.
+Ein weiterer Exitcode 6 wurde bereits am 22.10. gemeldet. Der Zeitpunkt des
+Updatechecks ist noch nicht mit diesen Ereignissen abgeglichen.
+
+Für genau diesen Testlauf liest der folgende Block höchstens 400 Journaleinträge
+im Zeitfenster 05:27–05:31 UTC (07:27–07:31 CEST). Er gibt nur Zeitstempel,
+festgelegte Fehlerklassen/-codes sowie Dateibasename und Codezeilen aus.
+Meldungstexte, volle Pfade, Konfigurationswerte und Stack-Argumente werden nicht
+ausgegeben. Kein Dienst, Release oder Wartungsmarker wird verändert. Leere
+Ergebnisse sind kein Gesundheitsnachweis; unbekannte Fehler können dem Filter
+entgehen. Ausgabezeiten sind UTC.
+
+```bash
+sudo /usr/bin/python3 -I -B - <<'PY'
+import datetime, json, re, subprocess
+try:
+    p = subprocess.run([
+        "/usr/bin/journalctl", "-b", "-u", "nexowatt-eos-controller.service",
+        "--since", "2026-10-24 05:27:00 UTC", "--until", "2026-10-24 05:31:00 UTC",
+        "-n", "400", "--no-pager", "-o", "json"
+    ], capture_output=True, text=True, timeout=10)
+except (OSError, subprocess.TimeoutExpired):
+    raise SystemExit("Journalabfrage fehlgeschlagen oder Zeitlimit erreicht.")
+if p.returncode:
+    raise SystemExit("Journal nicht lesbar.")
+codes = re.compile(r"\b(?:TypeError|ReferenceError|RangeError|SyntaxError|AssertionError|AggregateError|Error|EACCES|EPERM|EROFS|ENOENT|EADDRINUSE|ECONNREFUSED|ECONNRESET|ETIMEDOUT|EPIPE|MODULE_NOT_FOUND|ERR_MODULE_NOT_FOUND|ERR_DLOPEN_FAILED)\b")
+frames = re.compile(r"\b([A-Za-z][A-Za-z0-9_.-]{0,80}\.(?:[cm]?js|ts):[0-9]+:[0-9]+)\b")
+count = 0
+for raw in p.stdout.splitlines():
+    try:
+        row = json.loads(raw)
+        message = row.get("MESSAGE", "")
+        if not isinstance(message, str):
+            continue
+        kinds = sorted(set(codes.findall(message)))
+        if re.search(r"uncaught exception|unhandled.?rejection", message, re.I):
+            kinds.append("UNCAUGHT_EXCEPTION_OR_REJECTION")
+        locations = sorted(set(frames.findall(message)))
+        if not kinds and not locations:
+            continue
+        stamp = datetime.datetime.fromtimestamp(int(row["__REALTIME_TIMESTAMP"]) / 1_000_000, datetime.timezone.utc).isoformat()
+    except (ValueError, KeyError, TypeError, AttributeError, OverflowError, OSError):
+        continue
+    print(json.dumps({"utc": stamp, "codes": kinds, "stellen": locations}, ensure_ascii=True))
+    count += 1
+print("Gefilterte Eintraege:", count)
+PY
+```
+
 ### Fehler nach Beginn der Umstellung
 
 Ein fehlgeschlagener Testwechsel stellt soweit überprüfbar die ursprünglichen
