@@ -137,6 +137,37 @@ Beim zunächst leeren gültigen Feed ist „kein Update verfügbar“ korrekt.
 
 ## Fehler und Rückfall
 
+### `REPAIR_CONTROLLER_BUSY` in `SOURCE_VERIFY`
+
+Beim gemeldeten Pi-Versuch vom 24.10.2026 war der Controller am ersten
+Dienstzustandscheck nicht exakt `active`. Dieser Fehlername bedeutet hier
+**nicht**, dass ein laufender Controller gestoppt werden soll. Der Abbruch liegt
+vor Aktivierungssperre, Release-Installation sowie Host-/Datenbankmigration.
+`manualRecoveryRequired:true` ist in dieser frühen Fehlerausgabe pauschal und
+belegt allein keine begonnene Migration. Der Nachlauf
+`REPAIR_NO_INCOMPLETE_TRIAL` bedeutet, dass er keine Aktivierungssperre vorfand.
+Ein aktueller Dienstzustand ist dadurch noch nicht bekannt.
+
+Zuerst diesen ausschließlich lesenden Statusblock auf dem Pi ausführen:
+
+```bash
+systemctl show \
+  nexowatt-eos-controller.service \
+  nexowatt-eos-postgresql.service \
+  nexowatt-eos-upload.service \
+  nexowatt-eos-r8-managed-update.service \
+  --property=Id,LoadState,ActiveState,SubState,Result,ExecMainCode,ExecMainStatus,MainPID,NRestarts,ConditionResult,AssertResult \
+  --no-pager
+```
+
+Bis zur Auswertung keinen erneuten Updateversuch, Neustart, `reset-failed` oder
+manuelles Löschen von Sperren durchführen. Keine vollständigen Konfigurationen,
+Umgebungsvariablen oder ungefilterten Journale übermitteln. Der
+[Befundvermerk](../../reports/integration/r8-controller-precondition-20261024/README_DE.md)
+trennt die gemeldete Beobachtung von der Quellprüfung und den offenen Hostdaten.
+
+### Fehler nach Beginn der Umstellung
+
 Ein fehlgeschlagener Testwechsel stellt soweit überprüfbar die ursprünglichen
 Datenbankmarker, Host-Units, R8-Releasezeiger, Releasezustand und R8-Webdateien
 wieder her. Erst ein erneuter positiver Bereitschaftsnachweis erlaubt den Start
