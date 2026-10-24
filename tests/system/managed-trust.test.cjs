@@ -12,11 +12,11 @@ const hash = b => crypto.createHash('sha256').update(b).digest('hex');
 test('fresh checkout installer accepts only its new ARM64 baseline and independent trust pin', () => {
     const installer = require('../../tools/system/install-managed-from-checkout.cjs');
     const key = crypto.generateKeyPairSync('ed25519').publicKey.export({ format: 'pem', type: 'spki' });
-    const delivery = { runtimeVersion: '0.2.0-test.3', deliveryRevision: 12, releaseSequence: 15,
+    const delivery = { runtimeVersion: '0.2.0-test.3', deliveryRevision: 13, releaseSequence: 16,
         platform: 'linux-arm64', archive: 'eos-linux-arm64.tar.gz', releaseId: 'a'.repeat(64), sha256: 'b'.repeat(64),
         productionReleaseApproved: false, signingPublicKeySha256: hash(key) };
     assert.equal(installer.deliveryIdentity(delivery, key, hash(key), 'linux-arm64'), delivery);
-    for (const changed of [{ releaseSequence: 14 }, { deliveryRevision: 11 }, { productionReleaseApproved: true }, { archive: '../archive' }])
+    for (const changed of [{ releaseSequence: 15 }, { releaseSequence: 17 }, { deliveryRevision: 12 }, { productionReleaseApproved: true }, { archive: '../archive' }])
         assert.throws(() => installer.deliveryIdentity({ ...delivery, ...changed }, key, hash(key), 'linux-arm64'), /CHECKOUT_DELIVERY/);
     assert.throws(() => installer.deliveryIdentity(delivery, key, '0'.repeat(64), 'linux-arm64'), /CHECKOUT_RELEASE_TRUST_MISMATCH/);
     assert.throws(() => installer.deliveryIdentity(delivery, key, hash(key), 'linux-x64'), /CHECKOUT_DELIVERY/);

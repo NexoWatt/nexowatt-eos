@@ -21,7 +21,7 @@ def load(name, file):
 
 
 legacy = load("shared_eos_host_tests", ROOT / "tests/bootstrap/prepare-host.test.py")
-subject = load("eos_managed_host", ROOT / "tools/bootstrap/prepare-managed-host.py")
+subject = load("eos_managed_host", ROOT / "tools/bootstrap/prepare-managed16-host.py")
 legacy.subject = subject
 legacy.FIRST_START = "tools/bootstrap/first-start-managed.cjs"
 original_entries = legacy.kit_entries
@@ -43,12 +43,13 @@ class ManagedProfile(legacy.HostPreparation):
         pass
 
     def test_new_profile_has_exact_assets_and_no_legacy_release_selection(self):
-        self.assertEqual(subject.DELIVERY, "delivery/managed-test-15")
+        self.assertEqual(subject.DELIVERY, "delivery/managed-test-16")
         self.assertEqual(subject.EOS_ASSET, "eos-linux-arm64.tar.gz")
         self.assertEqual(subject.NODE_VERSION, "24.22.1")
-        value = legacy.config()
-        value["deliveryDirectory"] = "delivery/test-pi-0.2.0-test.3-r4"
-        self.rejected(lambda: subject.validate_config(value), "BOOTSTRAP_CONFIG")
+        for directory in ["delivery/test-pi-0.2.0-test.3-r4", "delivery/managed-test-15", "delivery/managed-test-17"]:
+            value = legacy.config()
+            value["deliveryDirectory"] = directory
+            self.rejected(lambda: subject.validate_config(value), "BOOTSTRAP_CONFIG")
         value = legacy.config()
         value["assets"][2]["name"] = "eos-0.2.0-test.3-linux-arm64.tar.gz"
         self.rejected(lambda: subject.validate_config(value), "BOOTSTRAP_ASSET")
@@ -80,10 +81,13 @@ class ManagedProfile(legacy.HostPreparation):
             self.assertFalse(destination.exists())
 
     def test_release_redirects_allow_only_fixed_release_and_https_github_asset_cdn(self):
-        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-" + "a" * 64
+        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-16-" + "a" * 64
         self.assertTrue(subject.github_release_asset(release + "/eos-linux-arm64.tar.gz"))
         self.assertTrue(subject.github_redirect("https://release-assets.githubusercontent.com/github-production-release-asset/1/a-b?sig=fixture%2Bvalue"))
-        for url in [release.replace("managed-test-15", "latest") + "/asset", release.replace("NexoWatt", "other") + "/asset"]:
+        for url in [release.replace("managed-test-16", "latest") + "/asset",
+                    release.replace("managed-test-16", "managed-test-15") + "/asset",
+                    release.replace("managed-test-16", "managed-test-17") + "/asset",
+                    release.replace("NexoWatt", "other") + "/asset"]:
             self.assertFalse(subject.github_release_asset(url))
         for url in [None, "http://release-assets.githubusercontent.com/a", "https://example.com/a",
                     "https://release-assets.githubusercontent.com.evil.example/a", "https://user@release-assets.githubusercontent.com/a",
@@ -92,7 +96,7 @@ class ManagedProfile(legacy.HostPreparation):
             self.assertFalse(subject.github_redirect(url))
 
     def test_release_download_follows_bounded_redirect_then_exact_ranges(self):
-        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-" + "a" * 64 + "/eos-linux-arm64.tar.gz"
+        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-16-" + "a" * 64 + "/eos-linux-arm64.tar.gz"
         cdn = "https://release-assets.githubusercontent.com/production/1/asset?signature=fixture"
         data = b"x" * (1024**2) + b"last"
         destination = self.directory / "download"
@@ -122,7 +126,7 @@ class ManagedProfile(legacy.HostPreparation):
         self.assertEqual(list(self.directory.iterdir()), [destination])
 
     def test_release_download_rejects_untrusted_redirect_and_incorrect_range(self):
-        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-" + "a" * 64 + "/asset"
+        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-16-" + "a" * 64 + "/asset"
         destination = self.directory / "download"
         destination.touch()
         for header, data, status, code in [
@@ -142,7 +146,7 @@ class ManagedProfile(legacy.HostPreparation):
                 self.assertEqual(destination.read_bytes(), b"")
 
     def test_release_download_deadline_and_redirect_loop_are_bounded(self):
-        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-" + "a" * 64 + "/asset"
+        release = "https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-16-" + "a" * 64 + "/asset"
         destination = self.directory / "download"
         destination.touch()
         with mock.patch.object(subject.time, "monotonic", side_effect=[0, 6]), mock.patch.object(subject, "run") as run:

@@ -303,6 +303,7 @@ jobs:
             tests/integration/own-adapter-enrollment.test.cjs \
             tests/postgresql/own-adapter-product.test.cjs \
             tests/postgresql/store.test.cjs \
+            tests/postgresql/store-lifecycle.test.cjs \
             tests/postgresql/controller-config-contract.test.cjs \
             tests/postgresql/store-channel-hardening.test.cjs \
             tests/postgresql/states.test.cjs \
@@ -745,11 +746,12 @@ jobs:
           set -euo pipefail
           npm --prefix components/ui ci --ignore-scripts --no-audit --no-fund
           node tools/integration/stage-security-refresh-cache.cjs --output "$RUNNER_TEMP/eos-refresh-resolution"
-          node tools/integration/prepare-security-refresh.cjs --output "$RUNNER_TEMP/eos-refresh-runtime" --sequence 15 --resolution-lock "$RUNNER_TEMP/eos-refresh-resolution/resolution-lock.json" --node-archive "$RUNNER_TEMP/node-v24.22.1-linux-arm64.tar.xz"
+          node tools/integration/prepare-security-refresh.cjs --output "$RUNNER_TEMP/eos-refresh-runtime" --sequence 16 --resolution-lock "$RUNNER_TEMP/eos-refresh-resolution/resolution-lock.json" --node-archive "$RUNNER_TEMP/node-v24.22.1-linux-arm64.tar.xz"
           node tests/integration-own-adapters/prepare-security-refresh.cjs "$EOS_OWN_ADAPTERS_LAB_ROOT" "$RUNNER_TEMP/eos-refresh-runtime"
       - name: Check PostgreSQL Objects permissions against the actual fresh 7.2.5 packages
         run: |
           EOS_CONTROLLER725_APP="$RUNNER_TEMP/eos-refresh-runtime/app" NODE_PATH="$RUNNER_TEMP/eos-refresh-runtime/app/node_modules" node --test tests/postgresql/controller725-objects.test.cjs
+          NODE_PATH="$RUNNER_TEMP/eos-refresh-runtime/app/node_modules" node --test tests/postgresql/store-review.test.cjs
       - name: Record current production audit for the actual runtime lock without hiding open findings
         shell: bash
         run: |

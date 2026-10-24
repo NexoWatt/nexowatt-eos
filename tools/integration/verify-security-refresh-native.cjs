@@ -13,7 +13,8 @@ const CHECKS = Object.freeze(['postgresqlMtls', 'platformDeniesUnadmittedProcess
   'adminHttpsLogin', 'uiHttpsLogin', 'homeActivation', 'homeQuotas', 'rootOwnedEosAdmission',
   'centralRevocation', 'proReactivation', 'proQuotas', 'restart', 'unchangedApp', 'sixOwnAdapterProcesses',
   'freshEnrollmentPrewriteFailureIsAtomic', 'freshEnrollmentRetainedAfterRestart', 'backupPrivatePathAndHostSecret', 'logicalBackupCreatedAndListed',
-  'allOwnAdapterConfigurationAssets', 'assetOnlyUploadPreservesEnrollment', 'backupAdapterReadiness']);
+  'allOwnAdapterConfigurationAssets', 'assetOnlyUploadPreservesEnrollment', 'backupAdapterReadiness',
+  'postgresqlTransactionContextIsolation']);
 // The native scenario deliberately starts without a license, activates Home,
 // revokes it, then activates Pro. Retain those observed lifecycle signals in
 // evidence; they are not runtime faults. Scope every observation so an expected
@@ -21,6 +22,7 @@ const CHECKS = Object.freeze(['postgresqlMtls', 'platformDeniesUnadmittedProcess
 const LICENSE_SIGNALS = new Set(['LICENSE_MISSING', 'LICENSE_VALID']);
 const PROCESS_SCOPES = Object.freeze(['cli-setup', 'cli-upload', 'cli-upload', 'controller', 'cli-backup', 'cli-backup', 'controller']);
 const SETUP_STAGE = 'ordinary setup loads actual PostgreSQL wrappers with read-only config';
+const TRANSACTION_STAGE = 'native PostgreSQL rejects detached writes from a released transaction context';
 const fail = () => { throw Object.assign(new Error('FRESH_NATIVE_EVIDENCE_REJECTED'), { code: 'FRESH_NATIVE_EVIDENCE_REJECTED' }); };
 function validateProcessIndicators(evidence) {
   const records = evidence.processIndicators;
@@ -85,6 +87,11 @@ function validate({ preparation, evidence, binding, tap, sourceCommit, appConten
       !Array.isArray(evidence.stages) || !evidence.stages.length || evidence.stages.some(s => s.passed !== true || s.failureCode !== null) ||
       evidence.logReadFailure) fail();
   validateProcessIndicators(evidence);
+  const transactionStages = evidence.stages.filter(row => row.name === TRANSACTION_STAGE);
+  if (transactionStages.length !== 1 || transactionStages[0].passed !== true || transactionStages[0].failureCode !== null ||
+      !equal(evidence.postgresqlTransactionIsolation, { nativeStore: true, contextRejected: true,
+        rejectedCode: 'EOS_PG_TRANSACTION_ABORTED', escapedWriteAbsent: true,
+        committedWritePreserved: true, independentWriteSucceeded: true, probeRowsRemoved: true })) fail();
   for (const name of ['bootstrapSteps', 'finalSteps']) if (!Array.isArray(evidence[name]) || !evidence[name].length ||
     evidence[name].some(s => s.passed !== true || s.failureCode !== null)) fail();
   if (evidence.logicalBackup?.archives !== 2 || evidence.logicalBackup.privatePermissions !== true || evidence.logicalBackup.previousArchivesExcluded !== true ||

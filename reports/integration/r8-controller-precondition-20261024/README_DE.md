@@ -1,6 +1,9 @@
 # R8-Testmeldung: Controller beim Vorabcheck nicht aktiv
 
 Stand: 24.10.2026. Befund `EOS-R8-PREFLIGHT-20261024-01`, offen.
+Der Betreiber hat anschließend den Wechsel zur stabilisierten Neuinstallation
+beauftragt. Der R8-Übergang wird für dieses Testgerät nicht weiterverfolgt;
+[Nachfolgearbeit](../managed16-stability-20261024/README_DE.md).
 Quelle ist eine Betreiber-Rückmeldung vom Test-Pi, keine eigene SSH-Messung.
 Einstieg: `fce5e279ddd2483e62c6c4ed2078e14855b1cb9c`;
 signierter Laufzeit-/Koordinatorstand: `f353dd08bf8ac5897e9b1c357994d4047a82ed6d`;

@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed16-fresh-installer-source-verification",
+  "date": "2026-10-24",
+  "baseCommit": "f27c8d425e59ec9db10f7e9df006f3289d280e12",
+  "workingTreeSourceHashes": true,
+  "target": {
+    "sequence": 16,
+    "deliveryRevision": 13,
+    "controller": "7.2.5",
+    "node": "24.22.1",
+    "platform": "linux-arm64",
+    "os": "admitted fresh Debian 13 / Raspberry Pi OS 13"
+  },
+  "environment": {
+    "node": "24.19.0",
+    "platform": "linux",
+    "architecture": "x64"
+  },
+  "tests": [
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/bootstrap/managed-bootstrap.test.cjs",
+        "tests/system/managed-trust.test.cjs",
+        "tests/bootstrap/public-r8-managed-entry.test.cjs"
+      ],
+      "exitCode": 0,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "log": "bootstrap-and-trust.tap"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "tests/bootstrap/prepare-managed-host.test.py"
+      ],
+      "exitCode": 0,
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "log": "fresh-host.txt"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "tests/bootstrap/download-r8-managed.test.py"
+      ],
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "log": "historical-r8-transport.txt"
+    }
+  ],
+  "passed": 62,
+  "failed": 0,
+  "skipped": 0,
+  "sourceFiles": [
+    {
+      "path": "tools/bootstrap/prepare-managed16-host.py",
+      "bytes": 35601,
+      "sha256": "28076192a865ed00f41354db67fde25bdca98b02a85a2aacde2704db0f13ee82"
+    },
+    {
+      "path": "tools/bootstrap/first-start-managed.cjs",
+      "bytes": 659,
+      "sha256": "7ea39c32606c5c58043a0c0eb7a6aee60bad0b64dc792f61c95cbca7f79dd90a"
+    },
+    {
+      "path": "tools/bootstrap/build-managed-download.cjs",
+      "bytes": 16632,
+      "sha256": "8d6640820c01159bb7b65069360916eafbf8b220118a5fb2f72a72c82b8af1f7"
+    },
+    {
+      "path": "tools/system/install-managed-from-checkout.cjs",
+      "bytes": 7646,
+      "sha256": "3e8778ce1f4e5f49de9b695df0c1de38e4f84382032888e02d698572105db90a"
+    },
+    {
+      "path": "tests/bootstrap/managed-bootstrap.test.cjs",
+      "bytes": 19767,
+      "sha256": "60e8f30e5c897d9161d9ac27b06fcee7efd31763814da12df695eedda6d33bd9"
+    },
+    {
+      "path": "tests/bootstrap/prepare-managed-host.test.py",
+      "bytes": 10549,
+      "sha256": "f6f4911e12b761cb8ad1ee95dc42873c0349ad107ef3f32fbd328ac3f0e64680"
+    },
+    {
+      "path": "tests/system/managed-trust.test.cjs",
+      "bytes": 6170,
+      "sha256": "ce3b4c2f11e48ead7df7a2cbe2d9fdd852d709738ded55427e71b614312baf94"
+    },
+    {
+      "path": "docs/operations/MANAGED_NEUINSTALLATION_DE.md",
+      "bytes": 6474,
+      "sha256": "78f642d067c787b070d902a2fcf8f166b383a9dfd8a4e2ede8e7fd58fdcaad3c"
+    }
+  ],
+  "historicalUnchangedAgainstHead": [
+    {
+      "path": "tools/bootstrap/prepare-managed-host.py",
+      "bytes": 35581,
+      "sha256": "d152e4d713e64c2e724e2ccd9936a329582cc17cac8e4361e0e96c27b9925205"
+    },
+    {
+      "path": "tools/bootstrap/download-r8-managed.py",
+      "bytes": 2663,
+      "sha256": "6226188d823f0001e85863b3ed702823279d52a6d4adf4ba5947338604fe3af4"
+    },
+    {
+      "path": "tools/bootstrap/build-public-r8-managed-entry.cjs",
+      "bytes": 14673,
+      "sha256": "9a5cb7980c45ed1d3f812f70790b682c28f53f36050298c903587d74310ec388"
+    },
+    {
+      "path": "tools/bootstrap/sign-qualified-r8-wsl.py",
+      "bytes": 23783,
+      "sha256": "3ff3eb552e4ec0d3f4e35296f0010640a2352d5b39e59f63abeae8a1e6c82d66"
+    }
+  ],
+  "evidenceFiles": [
+    {
+      "path": "reports/integration/managed16-fresh-install-20261024/bootstrap-and-trust.tap",
+      "bytes": 6051,
+      "sha256": "ec10c447c2169392a99520165c30a90623a600c1628310a37d9aaa3e3830e251"
+    },
+    {
+      "path": "reports/integration/managed16-fresh-install-20261024/fresh-host.txt",
+      "bytes": 6845,
+      "sha256": "02373fb5dba73a742f090c3f995c0a61737238e14e5ef6b35ce86e2716659d99"
+    },
+    {
+      "path": "reports/integration/managed16-fresh-install-20261024/historical-r8-transport.txt",
+      "bytes": 101,
+      "sha256": "edb4e2159c923ea45a32656078835cdf531c3d7b414c670dd786978875cb0678"
+    }
+  ],
+  "publicLicenseTrust": {
+    "source": "delivery/bootstrap-test3-r4/license-public-trust.json",
+    "bytes": 140,
+    "sha256": "470dce1dec8f4a5da87339e9166aed025789ea86ab85613f2c508f5e9d434b6f",
+    "currentFormatValidatorPassed": true,
+    "provenance": "reports/integration/github-bootstrap-ready-20261003/license-trust-provenance.json",
+    "liveNwl3ActivationTested": false
+  },
+  "actualOperations": {
+    "actualTemporaryZipAndModuleLoad": true,
+    "syntheticFixtureSignatureVerified": true,
+    "hostEffectsDoubled": true,
+    "aptExecuted": false,
+    "targetInstalled": false,
+    "targetWiped": false,
+    "manufacturerKeyAccessed": false,
+    "runtimeCandidateSigned": false,
+    "published": false
+  },
+  "limits": [
+    "Tests ran on Node 24.19.0 Linux x64; new exact-source Node24.22.1/native CI qualification remains open.",
+    "No real sequence16 release id/archive pins/public command were fabricated.",
+    "Historical R8/sequence15 source and signed deliveries remain immutable.",
+    "Actual Pi installation, NWL3 activation, restart, automatic Node/Linux maintenance and Admin update-button acceptance remain open."
+  ],
+  "productionReleaseApproved": false
+}

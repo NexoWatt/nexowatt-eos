@@ -159,6 +159,48 @@ test('actual prepared six-own-adapter controller: native PostgreSQL, HTTPS, cent
         }
     });
     evidence.checks.postgresqlMtls = true;
+    if (freshRuntime) {
+        await stage('native PostgreSQL rejects detached writes from a released transaction context', async () => {
+            // Exercise the exact built Store against the real mTLS database.
+            // The barrier callback inherits AsyncLocalStorage inside the real
+            // transaction and runs only after COMMIT has released its client.
+            const { Store } = appRequire('@nexowatt/eos-postgresql-store');
+            const probe = new Store(config.states, { domain: 'states' });
+            const ids = ['io.eos_native_context.committed', 'io.eos_native_context.escaped', 'io.eos_native_context.fresh'];
+            let releaseDetached, detached;
+            const barrier = new Promise(resolve => { releaseDetached = resolve; });
+            try {
+                await probe.connect();
+                await probe.transaction(async () => {
+                    await probe.set(ids[0], 'committed');
+                    // Attach rejection handling before releasing the barrier;
+                    // the probe must not manufacture an unhandled rejection.
+                    detached = barrier.then(async () => {
+                        try { await probe.set(ids[1], 'must-not-escape'); return { rejected: false, code: null }; }
+                        catch (error) { return { rejected: true, code: error?.code }; }
+                    });
+                });
+                releaseDetached();
+                const result = await detached;
+                assert.equal(result.rejected, true);
+                assert.equal(result.code, 'EOS_PG_TRANSACTION_ABORTED');
+                assert.equal(await probe.get(ids[1]), null);
+                assert.equal((await probe.get(ids[0]))?.toString(), 'committed');
+                await probe.set(ids[2], 'independent');
+                assert.equal((await probe.get(ids[2]))?.toString(), 'independent');
+                await probe.delete(ids);
+                assert.ok((await probe.getMany(ids)).every(value => value === null));
+                evidence.postgresqlTransactionIsolation = { nativeStore: true, contextRejected: true,
+                    rejectedCode: 'EOS_PG_TRANSACTION_ABORTED', escapedWriteAbsent: true,
+                    committedWritePreserved: true, independentWriteSucceeded: true, probeRowsRemoved: true };
+                evidence.checks.postgresqlTransactionContextIsolation = true;
+            } finally {
+                releaseDetached();
+                if (detached) await detached;
+                await probe.close();
+            }
+        });
+    }
     const configBytes = Buffer.from(JSON.stringify(config)), configFile = path.join(data, 'iobroker.json');
     fs.writeFileSync(configFile, configBytes, { mode: 0o400, flag: 'wx' });
     assert.throws(() => fs.accessSync(configFile, fs.constants.W_OK), { code: 'EACCES' });

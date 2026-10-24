@@ -102,27 +102,37 @@ class Store extends EventEmitter {
     if(!this.retry){this.retry=setTimeout(()=>{this.retry=null;this.connect().catch(()=>this._lost());},Math.min(5000,250*2**Math.min(this.retries++,5)));this.retry.unref();}
   }
   async _query(sql,params=[]) {
-    ensure(this.pool&&!this.closed,'EOS_PG_CLOSED');ensure(this.connected,'EOS_PG_UNAVAILABLE');const ctx=this.context.getStore();ensure(!ctx?.failed,'EOS_PG_TRANSACTION_ABORTED');
+    ensure(this.pool&&!this.closed,'EOS_PG_CLOSED');ensure(this.connected,'EOS_PG_UNAVAILABLE');const ctx=this.context.getStore();ensure(!ctx||!ctx.failed&&ctx.generation===this.generation,'EOS_PG_TRANSACTION_ABORTED');
     try{return await(ctx?.client||this.pool).query(sql,params);}catch(e){if(ctx)ctx.failed=true;throw fail(e.code==='42501'?'EOS_PG_ACCESS_DENIED':'EOS_PG_QUERY_FAILED');}
   }
   async transaction(fn,{lockKey='write'}={}) {
     ensure(this.connected&&!this.closed,'EOS_PG_UNAVAILABLE');ensure(typeof fn==='function','EOS_PG_TRANSACTION');key(lockKey);
-    const parent=this.context.getStore();if(parent){ensure(!parent.failed,'EOS_PG_TRANSACTION_ABORTED');try{return await fn();}catch(e){parent.failed=true;throw e;}}
+    const parent=this.context.getStore();if(parent){ensure(!parent.failed&&parent.generation===this.generation,'EOS_PG_TRANSACTION_ABORTED');try{return await fn();}catch(e){parent.failed=true;throw e;}}
+    const generation=this.generation;
     let client;try{client=await this.pool.connect();}catch{throw fail('EOS_PG_UNAVAILABLE');}
-    const ctx={client,failed:false};let timedOut=false,rejectDeadline;
+    // A queued mutation belongs to the connection generation that admitted it.
+    // Never replay it after loss/reconnect, even if the pool grants a new client.
+    if(!this.connected||this.closed||generation!==this.generation){client.release();throw fail('EOS_PG_UNAVAILABLE');}
+    const ctx={client,failed:false,generation};let timedOut=false,discard=false,rejectDeadline;
+    const assertCurrent=()=>ensure(!ctx.failed&&!timedOut&&!this.closed&&this.connected&&generation===this.generation,'EOS_PG_TRANSACTION_ABORTED');
     const deadline=new Promise((_,reject)=>{rejectDeadline=reject;});
     const timer=setTimeout(()=>{timedOut=true;ctx.failed=true;client.end().catch(()=>{});rejectDeadline(fail('EOS_PG_TRANSACTION_TIMEOUT'));},LIMITS.transaction);
     const work=(async()=>{
       await client.query('BEGIN');
+      assertCurrent();
       // One shared domain lock also covers nested ACL reads and file mutations.
       // Parallelism can be refined only with measured cross-key invariants.
       await client.query('SELECT pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended($1,0))',[`${this.domain}:mutation`]);
-      const result=await this.context.run(ctx,fn);ensure(!ctx.failed&&!timedOut,'EOS_PG_TRANSACTION_ABORTED');
+      assertCurrent();
+      const result=await this.context.run(ctx,fn);assertCurrent();
       await client.query('COMMIT');return result;
     })();
     try{return await Promise.race([work,deadline]);}
-    catch(e){ctx.failed=true;if(!timedOut)try{await client.query('ROLLBACK');}catch{}throw e.code?.startsWith('EOS_PG_')?e:fail('EOS_PG_TRANSACTION_FAILED');}
-    finally{clearTimeout(timer);client.release(timedOut);}
+    // Cleanup shares the original deadline; a stuck ROLLBACK must not extend it.
+    catch(e){ctx.failed=true;if(!timedOut)try{await Promise.race([client.query('ROLLBACK'),deadline]);}catch{discard=true;}throw e.code?.startsWith('EOS_PG_')?e:fail('EOS_PG_TRANSACTION_FAILED');}
+    // Detached callbacks retain AsyncLocalStorage. Fence them before the client
+    // returns to the pool, and discard any connection with an unproven rollback.
+    finally{ctx.failed=true;clearTimeout(timer);client.release(timedOut||discard);}
   }
 
   async get(id) { key(id);const r=await this._query('SELECT value FROM eos_store.kv WHERE domain=$1 AND key=$2 AND (expires_at IS NULL OR expires_at>clock_timestamp())',[this.domain,id]);return r.rows[0]?.value??null; }

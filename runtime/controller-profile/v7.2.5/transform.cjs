@@ -38,6 +38,52 @@ function afterSignature(source, name, insertion) {
     if (brace < 0) fail('EOS_TRANSFORM_ANCHOR');
     return source.slice(0, brace + 1) + insertion + source.slice(brace + 1);
 }
+function protectLogForwarding(source, flavor) {
+    const indent = flavor === 'cjs' ? '  ' : '    ';
+    const original = flavor === 'cjs' ? [
+        'ts.on("logged", (info) => {',
+        '  info.from = hostLogPrefix;',
+        '  for (const log of logList) {',
+        '    states.pushLog(log, info);',
+        '  }',
+        '});'
+    ] : [
+        "ts.on('logged', info => {",
+        '    info.from = hostLogPrefix;',
+        '    for (const log of logList) {',
+        '        states.pushLog(log, info);',
+        '    }',
+        '});'
+    ];
+    const replacement = [
+        '// EOS: DB log delivery is best effort; local journal/file logging remains independent.',
+        '// Bound outstanding forwards and never feed transport failures back into this logger.',
+        'let eosLogForwardPending = 0;',
+        'let eosLogForwardFailureReported = false;',
+        'const eosLogForwardFailed = () => {',
+        '    if (!eosLogForwardFailureReported) {',
+        '        eosLogForwardFailureReported = true;',
+        '        try { console.error("EOS_CONTROLLER_LOG_FORWARD_FAILED"); } catch {}',
+        '    }',
+        '};',
+        'ts.on("logged", info => {',
+        '    info.from = hostLogPrefix;',
+        '    for (const log of logList) {',
+        '        if (eosLogForwardPending >= 64) { eosLogForwardFailed(); continue; }',
+        '        eosLogForwardPending++;',
+        '        try {',
+        '            const forwarded = states.pushLog(log, info);',
+        '            Promise.resolve(forwarded).then(',
+        '                () => { eosLogForwardPending--; },',
+        '                () => { eosLogForwardPending--; eosLogForwardFailed(); }',
+        '            );',
+        '        } catch { eosLogForwardPending--; eosLogForwardFailed(); }',
+        '    }',
+        '});'
+    ];
+    return once(source, original.map(line => indent + line).join('\n'),
+        replacement.map(line => indent + line).join('\n'));
+}
 function transformMain(input, flavor) {
     let source = input;
     const moduleLine = flavor === 'cjs' ? 'const eosTestProfile = require("../../eos-test-profile.cjs");\n' :
@@ -88,7 +134,7 @@ function transformMain(input, flavor) {
         'logger.info(`${hostLogPrefix} Successfully updated capabilities "${capabilities.join(\', \')}" for ${process.execPath}`);';
     source = once(source, capabilityLog,
         'logger.debug("EOS_PROFILE_NODE_CAPABILITIES_DISABLED");');
-    return source;
+    return protectLogForwarding(source, flavor);
 }
 function transformCli(input) {
     return afterSignature(input, 'processCommand', `

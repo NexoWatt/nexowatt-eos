@@ -1,5 +1,19 @@
 # NexoWatt EOS review profile — parameters
 
+## Fresh stability baseline 16 (2026-10-24)
+
+The current fresh installer and download generator admit only
+`delivery/managed-test-16`, release sequence 16 and delivery revision 13.
+The separate `prepare-managed16-host.py` admits only the corresponding pinned
+GitHub release-tag form. The historical `prepare-managed-host.py` remains bound
+to sequence 15 for the historical R8 transport. No command-line override selects
+a different sequence, trust root or existing installation. A fresh approved
+Debian 13 ARM64 host is required; this code does not erase an existing host.
+Build qualification, native evidence and protected signing must bind the new
+source and sequence. The historical qualified R8 WSL helper cannot sign it.
+See [fresh installation](docs/operations/MANAGED_NEUINSTALLATION_DE.md) and
+[stability evidence](reports/integration/managed16-stability-20261024/README_DE.md).
+
 ## Managed test baseline and update candidates (2026-10-23)
 
 For fresh signing, manufacturer helper `tools/bootstrap/sign-qualified-r8-wsl.py`

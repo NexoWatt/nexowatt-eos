@@ -32,7 +32,10 @@ function fixture(t) {
         install: args => { calls.push(args); throw Object.assign(new Error('private fixture message'), { code: 'CHECKOUT_HOST_PREFLIGHT_REJECTED' }); } };
     return { root, calls, deps, pub, trust };
 }
-test('managed first-start selects only the fixed sequence-15 checkout and retains normal installer flags', t => {
+test('managed first-start selects only the fixed sequence-16 checkout and retains normal installer flags', t => {
+    assert.equal(checkout.DELIVERY_DIRECTORY, 'delivery/managed-test-16');
+    assert.equal(checkout.DELIVERY_REVISION, 13);
+    assert.equal(checkout.RELEASE_SEQUENCE, 16);
     const f = fixture(t);
     assert.throws(() => managed.main([], f.deps), /private fixture message/);
     assert.equal(f.calls[0], 'tty');
@@ -42,6 +45,7 @@ test('managed first-start selects only the fixed sequence-15 checkout and retain
     assert.equal(f.calls.includes('disclosure'), false);
     assert.equal(f.calls.at(-1), 'close');
     assert.equal(fs.existsSync(path.join(f.root, 'delivery/test-pi-0.2.0-test.3-r4')), false);
+    assert.equal(fs.existsSync(path.join(f.root, 'delivery/managed-test-15')), false);
 });
 test('managed entry cannot be directed to a historical or arbitrary checkout adapter', t => {
     const f = fixture(t);
@@ -67,7 +71,7 @@ test('managed install diagnostics permit only the two additional fixed phases', 
     assert.equal(shared.safeFailure({ code: 'PG_FAILED', phase: 'private arbitrary detail' }).phase, undefined);
 });
 test('managed generator retains independent public pins and rejects secret, URL and selector inputs', () => {
-    const args = ['--base-url', 'https://downloads.example.com/eos/managed-15', '--license-trust', '/public/trust.json',
+    const args = ['--base-url', 'https://downloads.example.com/eos/managed-16', '--license-trust', '/public/trust.json',
         '--license-trust-sha256', 'a'.repeat(64), '--release-public-key-sha256', 'b'.repeat(64), '--output', '/new-output', '--node-archive', '/public/node.tar.xz'];
     assert.equal(builder.parse(args)['--base-url'], args[1]);
     for (const bad of [[...args, '--private-key', '/secret'], [...args, '--sequence', '16'],
@@ -187,8 +191,8 @@ test('actual public kit excludes untracked private inputs and loads its fixed ma
     assert.deepEqual(fs.readdirSync(os.tmpdir()).filter(name => name.startsWith('eos-managed-download-build-')).sort(), before);
 });
 test('complete embedded managed preparer and command parse and verify exact bytes before execution', () => {
-    const code = fs.readFileSync(path.join(ROOT, 'tools/bootstrap/prepare-managed-host.py'));
-    const config = { schemaVersion: 1, baseUrl: 'https://downloads.example.com/eos/managed-15',
+    const code = fs.readFileSync(path.join(ROOT, 'tools/bootstrap/prepare-managed16-host.py'));
+    const config = { schemaVersion: 1, baseUrl: 'https://downloads.example.com/eos/managed-16',
         deliveryDirectory: checkout.DELIVERY_DIRECTORY, assets: [] };
     const script = builder.renderScript(config, code);
     const embedded = /<<'EOS_PYTHON_BASE64'\n([A-Za-z0-9+/=\n]+)\nEOS_PYTHON_BASE64/.exec(script)[1];
@@ -204,17 +208,17 @@ test('complete embedded managed preparer and command parse and verify exact byte
 test('GitHub asset publication requires its exact release id and a separate immutable entry command', t => {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'eos-entry-command-'));
     t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
-    const releaseId = 'a'.repeat(64), baseUrl = `https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-15-${releaseId}`;
+    const releaseId = 'a'.repeat(64), baseUrl = `https://github.com/NexoWatt/nexowatt-eos/releases/download/managed-test-16-${releaseId}`;
     assert.equal(builder.entryPublicationRequired(baseUrl, releaseId), true);
-    assert.equal(builder.entryPublicationRequired('https://downloads.example.com/eos/managed-15', releaseId), false);
-    for (const url of [baseUrl.replace('15-', '16-'), baseUrl.replace('NexoWatt', 'other'), baseUrl.replace(releaseId, 'b'.repeat(64))])
+    assert.equal(builder.entryPublicationRequired('https://downloads.example.com/eos/managed-16', releaseId), false);
+    for (const url of [baseUrl.replace('16-', '15-'), baseUrl.replace('16-', '17-'), baseUrl.replace('NexoWatt', 'other'), baseUrl.replace(releaseId, 'b'.repeat(64))])
         assert.throws(() => builder.entryPublicationRequired(url, releaseId), /DOWNLOAD_RELEASE_ASSET_URL/);
     const script = Buffer.from('#!/bin/bash\nexit 0\n');
     fs.writeFileSync(path.join(directory, 'install.sh'), script);
     fs.writeFileSync(path.join(directory, 'download-preparation.json'), JSON.stringify({ schemaVersion: 1,
-        kind: 'eos-managed-test-download-preparation', releaseSequence: 15, releaseId, baseUrl,
+        kind: 'eos-managed-test-download-preparation', releaseSequence: 16, releaseId, baseUrl,
         bootstrapSha256: bundle.sha256(script), commandReady: false, entryPublicationRequired: true }));
-    const entryBaseUrl = `https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/${'b'.repeat(40)}/delivery/managed-public-15`;
+    const entryBaseUrl = `https://raw.githubusercontent.com/NexoWatt/nexowatt-eos/${'b'.repeat(40)}/delivery/managed-public-16`;
     for (const url of [entryBaseUrl.replace('b'.repeat(40), 'main'), entryBaseUrl.replace('NexoWatt', 'other'), baseUrl])
         assert.throws(() => builder.finalizeCommand({ directory, entryBaseUrl: url }), /DOWNLOAD_PINNED_ENTRY_URL/);
     assert.equal(fs.existsSync(path.join(directory, 'INSTALL_COMMAND.txt')), false);
@@ -222,6 +226,11 @@ test('GitHub asset publication requires its exact release id and a separate immu
     assert.throws(() => builder.finalizeCommand({ directory, entryBaseUrl }), /DOWNLOAD_ENTRY_BINDING/);
     assert.equal(fs.existsSync(path.join(directory, 'INSTALL_COMMAND.txt')), false);
     fs.writeFileSync(path.join(directory, 'install.sh'), script);
+    const preparation = JSON.parse(fs.readFileSync(path.join(directory, 'download-preparation.json')));
+    fs.writeFileSync(path.join(directory, 'download-preparation.json'), JSON.stringify({ ...preparation, releaseSequence: 15 }));
+    assert.throws(() => builder.finalizeCommand({ directory, entryBaseUrl }), /DOWNLOAD_ENTRY_BINDING/);
+    assert.equal(fs.existsSync(path.join(directory, 'INSTALL_COMMAND.txt')), false);
+    fs.writeFileSync(path.join(directory, 'download-preparation.json'), JSON.stringify(preparation));
     const report = builder.finalizeCommand({ directory, entryBaseUrl });
     assert.equal(report.commandReady, true);
     assert.equal(report.publicReadbackPerformed, false);

@@ -1,5 +1,12 @@
 # EOS: Änderungen, Migration und Freigabesperren
 
+**Stabilitätsnachtrag vom 24.10.2026:** Der nächste Teststand wird als neue
+Frischbasis Sequenz 16 aufgebaut. Fehler in der Controller-Logweiterleitung
+und im PostgreSQL-Transaktionslebenszyklus wurden isoliert reproduziert und
+korrigiert. Die neuen nativen und Lieferprüfungen bleiben verpflichtend;
+historische grüne Sequenz-15-Nachweise ersetzen sie nicht.
+[Prüfumfang, Restgrenzen und Neuinstallation](../../reports/integration/managed16-stability-20261024/README_DE.md).
+
 **Umsetzungsnachtrag vom 21.10.2026:** Auf den [Upstream-Vergleich](../../reports/integration/upstream-review-20261021/README_DE.md) folgt die [Sicherheitsaktualisierung](../../reports/integration/security-refresh-20261021/README_DE.md) mit js-controller **7.2.5**, angepasstem PostgreSQL-Sitzungsvertrag, aktuellen Socket-/Webserver-Paketen und verfügbaren Dependency-Fixes. Controller 8 bleibt ausgeschlossen. EOS-UPSTREAM-20261021-01 bis -03 bleiben bis zum gebundenen vollständigen Laufzeitnachweis und zur neuen Lieferung offen; lokale Quelltests schließen diese Lieferbedingungen nicht. Historische signierte Archive werden nicht verändert. Keine Produktionsfreigabe.
 
 **Gebundener CI-Fortschritt:** Der neue vollständige Laufzeitbaum am Commit

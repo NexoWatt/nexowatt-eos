@@ -1,5 +1,5 @@
 'use strict';
-// Manufacturer build host only. Prepares the fixed managed sequence-15 download; never publishes.
+// Manufacturer build host only. Prepares the fixed managed sequence-16 download; never publishes.
 // Public trust exports must be authenticated by the manufacturer before use.
 const fs = require('node:fs');
 const path = require('node:path');
@@ -106,7 +106,7 @@ function renderScript(config, pythonSource) {
     const encode = bytes => Buffer.from(bytes).toString('base64').match(/.{1,76}/g).join('\n');
     return `#!/bin/bash
 # NexoWatt EOS TEST bootstrap. Generated from reviewed sources; complete download required.
-BOOTSTRAP_VERSION=2026-10-21-managed-15
+BOOTSTRAP_VERSION=2026-10-24-managed-16
 set -euo pipefail
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
 umask 077
@@ -197,7 +197,7 @@ function build(args) {
         assets.push({ name, sha256: expected, bytes: fs.statSync(destination).size });
     }
     const config = { schemaVersion: 1, baseUrl: url, assets, deliveryDirectory: DELIVERY_DIRECTORY };
-    const script = Buffer.from(renderScript(config, readFileLimited(path.join(__dirname, 'prepare-managed-host.py')).bytes));
+    const script = Buffer.from(renderScript(config, readFileLimited(path.join(__dirname, 'prepare-managed16-host.py')).bytes));
     fs.writeFileSync(path.join(output, 'install.sh'), script, { flag: 'wx' });
     // GitHub Releases redirects large assets. The small authenticated entry is
     // published separately on an immutable raw commit, then finalized below.

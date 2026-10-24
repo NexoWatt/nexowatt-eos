@@ -1,4 +1,20 @@
-# Aktueller Teststand: Managed15 mit direktem R8-Übergang
+# Aktuelle Arbeit: stabile Frischinstallation Managed16
+
+**24. Oktober 2026: Der nächste Test erfolgt als Neuinstallation.** Nach den
+gemeldeten Controller-Abbrüchen des R8-Testgeräts wird der aktuelle Quellstand
+gezielt an den PostgreSQL- und Controller-Fehlergrenzen stabilisiert und als
+neue Frischbasis mit Sequenz 16 qualifiziert. **js-controller bleibt 7.2.5**;
+die geprüfte Node-Basis bleibt 24.22.1. Der EOS-Updateknopf und automatische
+freigegebene Node-24-/Linux-Sicherheitsupdates bleiben Bestandteil.
+
+Die neue Quelle ist noch kein signiertes, auf dem Pi abgenommenes Paket.
+Der alte Testdatenträger wird erst nach erfolgreicher neuer Build-/Lieferprüfung
+für die Neuinstallation ersetzt. Anleitung und Prüfstand:
+[Neuinstallation](docs/operations/MANAGED_NEUINSTALLATION_DE.md) ·
+[Stabilisierung und offene Abnahmen](reports/integration/managed16-stability-20261024/README_DE.md).
+Der R8-Migrationsversuch wird für dieses Testgerät nicht weiterverfolgt.
+
+## Unveränderte historische Testlieferung Managed15
 
 **23. Oktober 2026: Die signierte Managed-Testbasis mit Sequenz 15 ist veröffentlicht.**
 Das [GitHub-Testrelease](https://github.com/NexoWatt/nexowatt-eos/releases/tag/managed-test-15-95a87d5dad4d7c29b5b4e849bef5451ff113388e6ee07da6bd9e36bd9178d534)

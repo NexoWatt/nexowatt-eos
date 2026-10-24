@@ -13,9 +13,9 @@ const { validatePublicInput } = require('./prepare-onboarding.cjs');
 const { command } = require('./host-preflight.cjs');
 const eos = require('./eos-base.cjs');
 const ROOT = path.resolve(__dirname, '../..');
-const DELIVERY_DIRECTORY = 'delivery/managed-test-15';
-const DELIVERY_REVISION = 12;
-const RELEASE_SEQUENCE = 15;
+const DELIVERY_DIRECTORY = 'delivery/managed-test-16';
+const DELIVERY_REVISION = 13;
+const RELEASE_SEQUENCE = 16;
 const FLAGS = ['--release-public-key-sha256', '--origin', '--hosts-file', '--license-trust', '--license-trust-sha256'];
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 function parse(argv) {

@@ -103,6 +103,13 @@ function nativeFixture() {
         targetSequence: 15, sequence: 15, sourceCommit, appContentSha256, runtimeBuildSha256, nodeVersion: fresh.NODE });
     delete evidence.checks.nativeEnrollmentAndPrestartRollback; delete evidence.checks.nativePoststartEnrollmentRollback;
     evidence.checks.freshEnrollmentPrewriteFailureIsAtomic = true; evidence.checks.freshEnrollmentRetainedAfterRestart = true;
+    // Synthetic contract fields only: this old fixture did not execute the new
+    // native transaction probe and is never written back as qualification data.
+    evidence.checks.postgresqlTransactionContextIsolation = true;
+    evidence.postgresqlTransactionIsolation = { nativeStore: true, contextRejected: true,
+        rejectedCode: 'EOS_PG_TRANSACTION_ABORTED', escapedWriteAbsent: true,
+        committedWritePreserved: true, independentWriteSucceeded: true, probeRowsRemoved: true };
+    evidence.stages.push({ name: 'native PostgreSQL rejects detached writes from a released transaction context', passed: true, failureCode: null });
     const binding = { schemaVersion: 1, kind: 'eos-security-refresh-native-source-binding', sourceCommit, sourceTreeClean: true,
         signed: false, unsignedFixture: true, previousSignatureVerified: false, previousReleaseId,
         appContentSha256, baselineContentSha256, runtimeBuildSha256, runtimeBuild: record };
@@ -116,6 +123,12 @@ test('fresh native contract has no historical signature or migration claim and b
     for (const change of [x => x.preparation.previousSignatureVerified = true, x => x.evidence.sourceSequence = 12,
         x => x.record.sourceCommit = 'e'.repeat(40), x => x.evidence.runtimeBuildSha256 = 'e'.repeat(64),
         x => x.evidence.checks.freshEnrollmentPrewriteFailureIsAtomic = false,
+        x => delete x.evidence.checks.postgresqlTransactionContextIsolation,
+        x => x.evidence.postgresqlTransactionIsolation.escapedWriteAbsent = false,
+        x => x.evidence.postgresqlTransactionIsolation.independentWriteSucceeded = false,
+        x => x.evidence.postgresqlTransactionIsolation.rejectedCode = 'EOS_PG_QUERY_FAILED',
+        x => x.evidence.postgresqlTransactionIsolation.unreviewed = true,
+        x => x.evidence.stages.pop(),
         x => x.evidence.checks.nativePoststartEnrollmentRollback = true, x => x.evidence.processIndicators.pop(),
         x => x.tap = x.tap.replace('# skipped 0', '# skipped 1')]) {
         const value = structuredClone(input); change(value); assert.throws(() => native.validate(value), { code: 'FRESH_NATIVE_EVIDENCE_REJECTED' });

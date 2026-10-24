@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
-// Fixed sequence-15 entry inside the independently authenticated managed kit.
+// Fixed sequence-16 entry inside the independently authenticated managed kit.
 // No caller-controlled installer, trust path, version or target-root selection.
 const shared = require('./first-start.cjs');
 const checkout = require('../system/install-managed-from-checkout.cjs');
