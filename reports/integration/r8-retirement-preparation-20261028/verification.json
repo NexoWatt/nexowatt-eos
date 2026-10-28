@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-r8-retirement-readonly-inspection-review",
+  "baselineCommit": "a7295a63d0edd45f84acd3e5c12be5925cbe086f",
+  "scriptBytes": 11089,
+  "scriptSha256": "e51b4fe27a43ad0763a3ffa499df4a077082548d31fe0e7b60cad3c56cc4ff4b",
+  "pythonFixtureTestsPassed": 19,
+  "testCommand": "python3 -I -B tests/security/r8-removal-inspection.test.py",
+  "syntaxPassed": true,
+  "executorReadOnlySmokePassed": true,
+  "executorSmokeSections": 19,
+  "expectedR8UnitCount": 14,
+  "independentCodeReviewBlockers": 0,
+  "piInventoryExecuted": false,
+  "piRetirementExecuted": false,
+  "piInstallationExecuted": false,
+  "productionReleaseApproved": false,
+  "limitations": [
+    "Planning facts only; no removal approval or signature attestation.",
+    "Read-only unit/account metadata is not an atomic snapshot.",
+    "Local passwd/group inspection does not establish complete NSS state.",
+    "Fixed OS query output limits are checked after capture, each query has five-second timeout.",
+    "Mounts, running processes, lock ownership and signed source state require fresh checks before any mutation."
+  ]
+}
