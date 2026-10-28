@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed16-independent-archive-data-triage",
+  "checkedAt": "2026-10-28T21:15:00.017729+00:00",
+  "sourceCommit": "f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4",
+  "scanner": {
+    "kind": "Python standard-library streaming tar content and path pattern scan",
+    "chunkBytes": 1048576,
+    "overlapBytes": 8192,
+    "allRegularFileBytesScanned": true,
+    "jsonParsingMaximumFileBytes": 2097152,
+    "patterns": [
+      "pem_private_key",
+      "github_token",
+      "aws_access_id",
+      "slack_token",
+      "credential_url",
+      "operator_home_path",
+      "jwt_like"
+    ],
+    "credentialValuesPrinted": false,
+    "linksFollowed": false,
+    "payloadExecuted": false,
+    "scriptSha256": "9f4ddf26c07ef3835ad582e04d82628a447a0fca3487394eb5eb167e47d5c8b8",
+    "opaqueNestedArchivesDecoded": false,
+    "base64OrEncryptedMaterialExhaustivelyDecoded": false,
+    "reviewedCompletePrivatePemBlocks": [
+      {
+        "archive": "eos-linux-arm64.tar.gz",
+        "path": "bundle/payload/app/node_modules/http-signature/http_signing.md",
+        "pemKind": "RSA PRIVATE KEY",
+        "base64Bytes": 816,
+        "derBytes": 610,
+        "keyMaterialSha256": "09ec38989a5fb269b4e640efde1351fe6dd491f0980ef6f52e720fb21990596d",
+        "documentSha256": "fda674ce3650c0e197d0010d4dce957a7cbc51f6a27f3fb6b54e825963ffef9c"
+      }
+    ],
+    "completePrivateKeyMaterialReferences": [
+      {
+        "archive": "eos-linux-arm64.tar.gz",
+        "path": "bundle/payload/app/node_modules/http-signature/http_signing.md",
+        "publicKeyCandidateIndex": 0
+      }
+    ],
+    "placeholderDocumentChecks": [
+      {
+        "archive": "eos-linux-arm64.tar.gz",
+        "path": "bundle/payload/app/node_modules/gtoken/README.md",
+        "hasEllipsisPlaceholder": true,
+        "completeEndDelimiterPresent": false
+      },
+      {
+        "archive": "node-v24.22.1-linux-arm64.tar.xz",
+        "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/docs/content/using-npm/config.md",
+        "hasEllipsisPlaceholder": true
+      },
+      {
+        "archive": "node-v24.22.1-linux-arm64.tar.xz",
+        "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/docs/output/using-npm/config.html",
+        "hasEllipsisPlaceholder": true
+      },
+      {
+        "archive": "node-v24.22.1-linux-arm64.tar.xz",
+        "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/man/man7/config.7",
+        "hasEllipsisPlaceholder": true
+      },
+      {
+        "archive": "node-v24.22.1-linux-arm64.tar.xz",
+        "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/node_modules/@npmcli/config/lib/definitions/definitions.js",
+        "hasEllipsisPlaceholder": true
+      }
+    ]
+  },
+  "archives": [
+    {
+      "name": "eos-linux-arm64.tar.gz",
+      "bytes": 134278495,
+      "sha256": "39681c4618546607df0c6e648620baa6285441301564c583fe3fbffd47d0fdfe",
+      "entries": 25747,
+      "regularFiles": 22607,
+      "directories": 3140,
+      "links": [],
+      "otherTypes": [],
+      "bytesScanned": 441869134,
+      "credentialContainerPaths": [],
+      "jsonPrivateJwkCandidates": [],
+      "categories": {
+        "pem_private_key": 3,
+        "github_token": 0,
+        "aws_access_id": 0,
+        "slack_token": 0,
+        "credential_url": 72,
+        "operator_home_path": 3,
+        "jwt_like": 0
+      },
+      "candidateFiles": 50,
+      "candidateMatches": 78,
+      "privatePemMarkerDocuments": [
+        {
+          "path": "bundle/payload/app/node_modules/gtoken/README.md",
+          "bytes": 5527,
+          "sha256": "9fa01d5857ddf1c44e258d456f8898a49262330cba90c983c07e428696f66957",
+          "hasAppendixATestValues": false
+        },
+        {
+          "path": "bundle/payload/app/node_modules/http-signature/http_signing.md",
+          "bytes": 13849,
+          "sha256": "fda674ce3650c0e197d0010d4dce957a7cbc51f6a27f3fb6b54e825963ffef9c",
+          "hasAppendixATestValues": true
+        },
+        {
+          "path": "bundle/payload/app/node_modules/iobroker.nexowatt-ui/scripts/check-repository-secrets.cjs",
+          "bytes": 6750,
+          "sha256": "46931a1de81ccd8921e616143db775c34eeccddad1ea5bf025a1297db36fce6a",
+          "hasAppendixATestValues": false
+        },
+        {
+          "path": "bundle/payload/app/node_modules/iobroker.nexowatt-ui/scripts/verify-stable-1.0.10-secret-guard.cjs",
+          "bytes": 6184,
+          "sha256": "406a63b3812224a79934c08c205cb437809ef925a81753495808f640bed45581",
+          "hasAppendixATestValues": false
+        },
+        {
+          "path": "bundle/payload/app/node_modules/jose/dist/webapi/key/import.js",
+          "bytes": 2279,
+          "sha256": "ab2f57a9db99e8d48451a8d0a8adf75379381f65b0e3e28ba6c02aa5bb3ee5fa",
+          "hasAppendixATestValues": false
+        },
+        {
+          "path": "bundle/payload/app/node_modules/jose/dist/webapi/lib/asn1.js",
+          "bytes": 5872,
+          "sha256": "b67f65067322baf007226faf96ddba521d19558d4ec946a8d0e3399740e754ca",
+          "hasAppendixATestValues": false
+        }
+      ]
+    },
+    {
+      "name": "node-v24.22.1-linux-arm64.tar.xz",
+      "bytes": 30978868,
+      "sha256": "dbabf7a1cbf947e6059ffad2c27b80041db97dea1e553b62afdee7f13fca336e",
+      "entries": 5888,
+      "regularFiles": 4797,
+      "directories": 1088,
+      "links": [
+        {
+          "path": "node-v24.22.1-linux-arm64/bin/npm",
+          "target": "../lib/node_modules/npm/bin/npm-cli.js"
+        },
+        {
+          "path": "node-v24.22.1-linux-arm64/bin/npx",
+          "target": "../lib/node_modules/npm/bin/npx-cli.js"
+        },
+        {
+          "path": "node-v24.22.1-linux-arm64/bin/corepack",
+          "target": "../lib/node_modules/corepack/dist/corepack.js"
+        }
+      ],
+      "otherTypes": [],
+      "bytesScanned": 198254896,
+      "credentialContainerPaths": [
+        {
+          "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/.npmrc",
+          "bytes": 0
+        }
+      ],
+      "jsonPrivateJwkCandidates": [],
+      "categories": {
+        "pem_private_key": 4,
+        "github_token": 0,
+        "aws_access_id": 0,
+        "slack_token": 0,
+        "credential_url": 0,
+        "operator_home_path": 0,
+        "jwt_like": 0
+      },
+      "candidateFiles": 4,
+      "candidateMatches": 4,
+      "privatePemMarkerDocuments": [
+        {
+          "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/docs/content/using-npm/config.md",
+          "bytes": 59697,
+          "sha256": "01feec10d720e14f67b9d835e27db58e30fa13b73eee13471194deb241cb0495",
+          "hasAppendixATestValues": false
+        },
+        {
+          "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/docs/output/using-npm/config.html",
+          "bytes": 94629,
+          "sha256": "da4248cf2fde95167e6a7d7b36d411d84de6b7ec9bfc70530d61cc68e8831475",
+          "hasAppendixATestValues": false
+        },
+        {
+          "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/man/man7/config.7",
+          "bytes": 69364,
+          "sha256": "622513e1ff263677e32e5b0221bd0612c79b3fc09481b8650a29a2906d864b3e",
+          "hasAppendixATestValues": false
+        },
+        {
+          "path": "node-v24.22.1-linux-arm64/lib/node_modules/npm/node_modules/@npmcli/config/lib/definitions/definitions.js",
+          "bytes": 91720,
+          "sha256": "f9cffb281460dfc5aa98f4f2e91a47052b814faece72fc9a80eaf3fff2ceb8eb",
+          "hasAppendixATestValues": false
+        }
+      ]
+    }
+  ],
+  "assessmentPending": false,
+  "scope": "Independent read-only bounded data triage of the actual uploaded signed EOS archive and official Node transport archive; no payload execution, no signature attestation by this scanner.",
+  "assessment": {
+    "manufacturerOrCustomerSecretIdentified": false,
+    "operatorCredentialIdentified": false,
+    "completePrivateKeyBlocks": 1,
+    "documentaryKey": {
+      "classification": "Public RSA test vector in http-signature Appendix A - Test Values, byte-identical document to the previously verified Managed15 public upstream test-vector evidence. Not an EOS signing authority.",
+      "documentSha256": "fda674ce3650c0e197d0010d4dce957a7cbc51f6a27f3fb6b54e825963ffef9c",
+      "upstreamReFetchedThisReview": false,
+      "executableReferencesDetected": false
+    },
+    "otherPemMarkers": "gtoken README contains ellipsis; jose imports check a PEM header literal; npm documentation/config schema uses XXXX placeholders. UI secret guard scripts match BEGIN/PRIVATE KEY text but do not contain actual key blocks.",
+    "credentialUrlCandidates": "72 EOS matches in documentation, source-map copies of documentation, type annotations, test cases, and dynamically interpolated options in the legacy PostgreSQL backup provider. No embedded operator credential identified. No Node-archive credential URL match.",
+    "operatorPathMarkers": [
+      {
+        "path": "bundle/payload/app/node_modules/iobroker.nexowatt-devices/docs/NPM_PUBLISH_MERGE_CONFLICT.md",
+        "occurrences": 2,
+        "classification": "Historical development setup instructions using generic Windows user User and an ioBroker project directory. No unique person identifier, signing path or credential; documentary path retained in signed artifact."
+      },
+      {
+        "path": "bundle/payload/app/node_modules/readline-sync/README.md",
+        "occurrences": 1,
+        "classification": "Generic Windows command-prompt example using User/Path/To/Directory."
+      }
+    ],
+    "credentialContainer": "The only sensitive filename candidate is the zero-byte npm/.npmrc in the official Node transport. No token or configuration content.",
+    "knownRuntimeConcern": "Legacy optional PostgreSQL backup-provider shell interpolation/restore concerns remain open in prior findings; source candidates do not represent a stored secret. This scan neither fixes nor clears that concern.",
+    "releaseBlockingSecretFindingIdentified": false
+  },
+  "limitations": [
+    "Pattern and targeted context triage cannot prove absence of every encoded, encrypted, novel-format or obfuscated secret.",
+    "All regular file bytes received pattern scans. Structured JSON private-JWK inspection was limited to files at most 2 MiB, and nested opaque archives were not recursively decoded.",
+    "Credential-URL triage examines embedded material, not runtime-generated logs or data flows.",
+    "The public RSA documentation test vector and generic Windows development paths remain present; do not label this archive free of all private-key blocks or operator-path markers.",
+    "No payload execution, ARM64/Pi installation, hardware test, restoration test or penetration test performed.",
+    "Existing dependency and optional legacy provider findings remain separately open. No production/CRA approval follows."
+  ],
+  "completedAt": "2026-10-28T21:16:49.348364+00:00"
+}
