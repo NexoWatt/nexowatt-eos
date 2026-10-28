@@ -36,9 +36,10 @@ und benötigte Daten außerhalb dieses Mediums zu sichern. Dieser Stand enthält
 keinen Lösch- oder Formatierungsbefehl und hat keinen Pi verändert. Ein leerer
 EOS-Ordner allein ersetzt keinen frischen Host.
 
-Für die gewünschte R8-Entfernung unter Beibehaltung von Debian wird eine
-[separate lesende Bestandsaufnahme](R8_ENTFERNUNG_VORBEREITEN_DE.md) vorbereitet.
-Sie entfernt keine Installation und umgeht keine dieser Voraussetzungen.
+Für den konkret inventarisierten R8-Test-Pi steht der separate
+[Stilllegungs- und Neuinstallationsablauf](R8_ENTFERNUNG_VORBEREITEN_DE.md) bereit.
+Er bewahrt R8 privat auf und ruft erst nach bestandenen unveränderten
+Frischhost-Prüfungen diesen Installer auf. Der reale Pi-Test bleibt offen.
 
 Die Basis muss `python3`, `curl`, funktionierendes DNS/HTTPS und eine lokale oder
 SSH-Terminalsitzung mit TTY bereitstellen. Nach Prüfung des Frischzustands und

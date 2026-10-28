@@ -19,6 +19,11 @@ Pi-Frischinstallation, reale Lizenzaktivierung, Wiederherstellung und Folgeupdat
 bleiben **OFFEN**. Physische Steuerung bleibt deaktiviert; offene Dependency-
 und Legacy-Backup-Befunde sind dokumentiert. Keine Produktions-/CRA-Freigabe.
 
+Für den bereits inventarisierten R8-Test-Pi gibt es einen getrennten
+[Ablauf zur Stilllegung und anschließenden R16-Neuinstallation](docs/operations/R8_ENTFERNUNG_VORBEREITEN_DE.md).
+Er bewahrt die Originaldaten privat auf; die unveränderten Frischhost-Prüfungen
+des Installers bleiben erforderlich. Die reale Pi-Abnahme steht noch aus.
+
 ## Unveränderte historische Testlieferung Managed15
 
 **23. Oktober 2026: Die signierte Managed-Testbasis mit Sequenz 15 ist veröffentlicht.**

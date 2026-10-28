@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "kind": "r8-retirement-fixture-verification",
+  "verifiedAt": "2026-10-28T22:23:52.462968+00:00",
+  "baseCommit": "18889818426bd063aabce1ce51feffc08e6b1c85",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "linux",
+    "architecture": "x86_64",
+    "uid": 0
+  },
+  "sources": [
+    {
+      "path": "tools/system/retire-r8-for-managed16.py",
+      "bytes": 33794,
+      "sha256": "20d2a82711538cd20f3754c76868a876a647875e66428e8d4c399756151843da"
+    },
+    {
+      "path": "tests/security/r8-retirement.test.py",
+      "bytes": 30582,
+      "sha256": "3076814da2a93d338a6fad31e24316f0870ce99c8c2555c3d54bdbd7bf3ef2d1"
+    },
+    {
+      "path": "tests/security/r8-retirement-host.test.py",
+      "bytes": 10074,
+      "sha256": "b2b82857850bc469b1b51cf742bc67b759160a617916e94eb53d7f6d0b6d0a5d"
+    }
+  ],
+  "tests": [
+    {
+      "command": "python3 -I -B tests/security/r8-retirement.test.py",
+      "passed": 28,
+      "failed": 0,
+      "rawEvidence": "retirement-tests.txt",
+      "sha256": "e143fc387f2d281dc14cd87179db88bdc4f8e2f66854abad0c85ce0d9c987cd8"
+    },
+    {
+      "command": "python3 -I -B tests/security/r8-retirement-host.test.py",
+      "passed": 24,
+      "failed": 0,
+      "rawEvidence": "host-tests.txt",
+      "sha256": "743e1dc5109380b30920f86db55d2e67281876d62d5cb03f1a41d001aa06b4d4"
+    },
+    {
+      "command": "python3 -I -B tests/security/r8-removal-inspection.test.py",
+      "passed": 19,
+      "failed": 0,
+      "rawEvidence": "inspection-regression.txt",
+      "sha256": "93b99fb1af6ef44092a8fc31112cc8af832b9b3ef2c839e75db0cdd63ed5c5ad"
+    }
+  ],
+  "syntax": "passed",
+  "managed16EntryUnchanged": {
+    "commit": "1707dfcb5a12c92ec472899ea1f554ed6850ec02",
+    "sha256": "cf930e26fb6d45235017e0bba55bd43ef74214d06cb465719ecdbf4a1515431f"
+  },
+  "actualFilesystemMovesTested": true,
+  "actualAccountOrSystemdChangesTested": false,
+  "physicalPiRetirementTested": false,
+  "managed16OnPiInstalled": false,
+  "powerLossTested": false,
+  "productionReleaseApproved": false
+}
