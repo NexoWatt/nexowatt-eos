@@ -7,6 +7,13 @@ sammelt die tatsächlichen Hostdaten ausschließlich lesend.
 
 ## Bestandsaufnahme
 
+[Den vollständigen Prüfaufruf in PuTTY auf dem Test-Pi ausführen](R8_INSPECTION_COMMAND.txt).
+Der Aufruf lädt den unveränderlichen Helfer von Commit
+`dc1b3792cb983a0694dd5a9e137798dc9ddaaf69` vollständig in eine root-private Arbeitsablage.
+Vor der Ausführung prüft er SHA-256
+`e51b4fe27a43ad0763a3ffa499df4a077082548d31fe0e7b60cad3c56cc4ff4b`; bei Download-/Hashfehler wird nicht ausgeführt.
+Der Helfer wurde nach Veröffentlichung bytegleich zurückgelesen.
+
 `tools/system/inspect-r8-removal.py` darf als vollständig geladene, hashgeprüfte
 Datei mit `/usr/bin/python3 -I -B` unter root auf dem Test-Pi aufgerufen werden.
 Kein Code aus dem installierten EOS wird ausgeführt. Die Ausgabe enthält feste
