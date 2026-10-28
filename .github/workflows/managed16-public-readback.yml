@@ -1,0 +1,63 @@
+name: Managed 16 public release readback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/managed16-public-readback.yml'
+      - 'reports/integration/managed16-publication-20261028/verify-public-download.cjs'
+      - 'delivery/managed16/install.sh'
+  workflow_dispatch:
+    inputs:
+      entry_commit:
+        description: 'Exact 40-character commit containing the pinned Managed16 entry'
+        default: '1707dfcb5a12c92ec472899ea1f554ed6850ec02'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  public-readback:
+    if: github.repository == 'NexoWatt/nexowatt-eos' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check out the immutable qualified validators separately
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4
+          path: qualified-source
+          persist-credentials: false
+          sparse-checkout: |
+            runtime
+            tools
+            system
+            security
+            licenses
+            components/admin/build/lib
+            docs/history
+      - name: Read all fixed assets and exact installer entry without authentication
+        shell: bash
+        env:
+          EOS_ENTRY_COMMIT: ${{ inputs.entry_commit || '1707dfcb5a12c92ec472899ea1f554ed6850ec02' }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -- "$RUNNER_TEMP/managed16-public-readback"
+          node reports/integration/managed16-publication-20261028/verify-public-download.cjs \
+            --download --qualified-source "$GITHUB_WORKSPACE/qualified-source" \
+            --entry-commit "$EOS_ENTRY_COMMIT" \
+            > "$RUNNER_TEMP/managed16-public-readback/public-readback.json"
+      - name: Preserve successful JSON evidence only
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: managed16-public-readback
+          path: ${{ runner.temp }}/managed16-public-readback/public-readback.json
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 9
