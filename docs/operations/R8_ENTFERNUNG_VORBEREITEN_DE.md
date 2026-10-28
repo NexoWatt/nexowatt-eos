@@ -99,7 +99,11 @@ Format, feste Prüfergebnisse und ausschließlich bekannte öffentliche
 Host-/Pfad-/Suitebezeichnungen. Unbekannte Werte, Dateinamen, URLs,
 Benutzerinformationen, Query-/Fragmentinhalte und Ausnahmedetails fehlen.
 Es werden keine APT-Dateien verändert, Dienste gesteuert oder Pakete installiert.
-Der hashgebundene Aufruf folgt nach Veröffentlichung und Rückleseprüfung.
+[Den hashgebundenen Diagnoseaufruf in PuTTY ausführen](R8_APT_INSPECTION_COMMAND.txt).
+Er ist an Commit `38c93eb35430be3a1364a09493703e82c1a3222c` und SHA-256
+`4c016dcd4d97ad93140d9815db8ed66cf3155c7ec9e06279b8e99de86df2794e` gebunden;
+die öffentliche Datei wurde bytegleich zurückgelesen. Der Download legt nur
+den geprüften Helfer in einer neuen privaten Arbeitsablage ab.
 
 Ursache und konkrete Korrektur bleiben bis zur Rückmeldung dieser Prüfung
 offen. [Nachweis](../../reports/integration/r8-retirement-20261028/apt-inspection.json).
