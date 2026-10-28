@@ -79,6 +79,31 @@ nach gesetztem Startschutz können Dienste bereits gestoppt sein. Der Helfer
 startet R8 dann nicht automatisch und löscht keine Rückfallablage.
 Keine zweite Wartungs-/Installationssitzung parallel starten.
 
+### Gemeldeter Abbruch `BOOTSTRAP_APT_SOURCE`
+
+Am 28.10.2026 meldete der konkrete Test-Pi diesen Code im ersten Host-Preflight.
+Zu diesem Zeitpunkt hat der Helfer R8 noch nicht gestoppt, verschoben oder seine
+Konten umbenannt. Der Download-Einstieg und die private Arbeitsablage können
+bereits vorhanden sein. R16 wurde noch nicht installiert.
+
+Der Code bezeichnet eine abgelehnte Repository-URL oder Distributionssuite.
+Er belegt weder eine beschädigte Linux-Installation noch eine bestimmte Ursache.
+Paketquellen nicht pauschal überschreiben oder entfernen; den Installer nicht
+mit einer abgeschalteten Quellenprüfung erneut starten.
+
+`tools/system/inspect-managed16-apt.py` erklärt diese Prüfung ausschließlich
+lesend. Es findet den bereits heruntergeladenen, exakt gepinnten Managed16-
+Einstieg, lädt dessen unveränderten Parser ohne Installerstart und lässt dessen
+erste Ablehnung bestehen. Ausgegeben werden Quellenordinal, Dateihash,
+Format, feste Prüfergebnisse und ausschließlich bekannte öffentliche
+Host-/Pfad-/Suitebezeichnungen. Unbekannte Werte, Dateinamen, URLs,
+Benutzerinformationen, Query-/Fragmentinhalte und Ausnahmedetails fehlen.
+Es werden keine APT-Dateien verändert, Dienste gesteuert oder Pakete installiert.
+Der hashgebundene Aufruf folgt nach Veröffentlichung und Rückleseprüfung.
+
+Ursache und konkrete Korrektur bleiben bis zur Rückmeldung dieser Prüfung
+offen. [Nachweis](../../reports/integration/r8-retirement-20261028/apt-inspection.json).
+
 Vor `INSTALLING_MANAGED16` unterstützt derselbe geprüfte Helfer:
 
 ```text

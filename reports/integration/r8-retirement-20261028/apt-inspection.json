@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "finding": "EOS-R8-APT-20261028-01",
+  "state": "OPEN_AWAITING_REDACTED_HOST_DIAGNOSIS",
+  "reportedCode": "BOOTSTRAP_APT_SOURCE",
+  "reportedHelperCommit": "48f0157c4afffb9f23ff0ec8a0211882ddc93eaa",
+  "reportedStage": "first read-only host preflight, before retirement",
+  "causeKnown": false,
+  "aptSourcesChanged": false,
+  "r8RetirementReached": false,
+  "privateHostConfigurationCollected": false,
+  "sources": [
+    {
+      "path": "tools/system/inspect-managed16-apt.py",
+      "bytes": 6873,
+      "sha256": "4c016dcd4d97ad93140d9815db8ed66cf3155c7ec9e06279b8e99de86df2794e"
+    },
+    {
+      "path": "tests/security/managed16-apt-inspection.test.py",
+      "bytes": 13844,
+      "sha256": "644ea9fb0b2bb2bfd429572a24690c18b981cff0451938c99f03a5ed57cd1865"
+    }
+  ],
+  "verification": {
+    "checkedAt": "2026-10-28T22:37:52.879999+00:00",
+    "python": "3.12.14",
+    "architecture": "x86_64",
+    "command": "python3 -I -B tests/security/managed16-apt-inspection.test.py -v",
+    "passed": 27,
+    "failed": 0,
+    "rawEvidence": "apt-inspection-tests.txt",
+    "rawEvidenceSha256": "8420e57ced69da4c92995451036d5f1952f42680ac9fee74c8b5c01890a2e352",
+    "hostCalls": "isolated mocks and root-private entry file fixtures only"
+  },
+  "unchangedManaged16EntrySha256": "cf930e26fb6d45235017e0bba55bd43ef74214d06cb465719ecdbf4a1515431f",
+  "originalAptRejectionPreserved": true,
+  "publicOutput": "finite public labels, predicate booleans, source ordinal and SHA-256; unknown inputs redacted",
+  "diagnosticRunOnPi": false,
+  "actualPiInstallationTested": false,
+  "productionReleaseApproved": false
+}
