@@ -1,20 +1,23 @@
-# Aktuelle Arbeit: stabile Frischinstallation Managed16
+# Aktuelle Testbasis: Managed16 frisch auf dem Pi installieren
 
-**24. Oktober 2026: Der nächste Test erfolgt als Neuinstallation.** Nach den
-gemeldeten Controller-Abbrüchen des R8-Testgeräts wird der aktuelle Quellstand
-gezielt an den PostgreSQL- und Controller-Fehlergrenzen stabilisiert und als
-neue Frischbasis mit Sequenz 16 qualifiziert. **js-controller bleibt 7.2.5**;
-die geprüfte Node-Basis bleibt 24.22.1. Der EOS-Updateknopf und automatische
-freigegebene Node-24-/Linux-Sicherheitsupdates bleiben Bestandteil.
+**28. Oktober 2026: Managed16 ist als signiertes Testrelease veröffentlicht.**
+Die PostgreSQL-/Controller-Korrekturen sind an den qualifizierten Quellstand
+`f2ea9a7` gebunden. **js-controller bleibt 7.2.5**, Node **24.22.1**;
+Sequenz 16, Lieferrevision 13. EOS-Updateknopf sowie freigegebene automatische
+Node-24-Updates und Linux-Sicherheitswartung sind enthalten.
 
-Der vollständige Build und die nativen Tests am Quellstand `f2ea9a7` sind
-bestanden; beide unsignierten CI-Artefakte wurden vollständig zurückgeprüft.
-Die neue Quelle ist noch kein signiertes, auf dem Pi abgenommenes Paket.
-Der alte Testdatenträger wird erst nach erfolgreicher neuer Build-/Lieferprüfung
-für die Neuinstallation ersetzt. Anleitung und Prüfstand:
-[Neuinstallation](docs/operations/MANAGED_NEUINSTALLATION_DE.md) ·
-[Stabilisierung und offene Abnahmen](reports/integration/managed16-stability-20261024/README_DE.md).
-Der R8-Migrationsversuch wird für dieses Testgerät nicht weiterverfolgt.
+[Neuinstallation und Voraussetzungen](docs/operations/MANAGED_NEUINSTALLATION_DE.md) ·
+[Exakter PuTTY-Installationsbefehl](delivery/managed16/INSTALL_COMMAND.txt) ·
+[Signiertes Testrelease](https://github.com/NexoWatt/nexowatt-eos/releases/tag/managed-test-16-06f8e06f923b180c0bcbb03f6f853f402cf5a8649a1e6b8172d34262aca63e3d) ·
+[Veröffentlichungs- und Downloadnachweis](reports/integration/managed16-publication-20261028/README_DE.md).
+
+Der Befehl gilt ausschließlich für eine frische zugelassene Debian-13-/Raspberry-
+Pi-OS-13-ARM64-Testbasis. Bestehendes EOS/PostgreSQL wird abgewiesen; keine
+Löschung oder R8-Migration. Private Signierschlüssel werden nicht auf den Pi
+kopiert. Vollständige öffentliche Hash-/Signatur-/Quellprüfung ist bestanden;
+Pi-Frischinstallation, reale Lizenzaktivierung, Wiederherstellung und Folgeupdates
+bleiben **OFFEN**. Physische Steuerung bleibt deaktiviert; offene Dependency-
+und Legacy-Backup-Befunde sind dokumentiert. Keine Produktions-/CRA-Freigabe.
 
 ## Unveränderte historische Testlieferung Managed15
 

@@ -1,5 +1,8 @@
 # Managed16: tatsächliche Herstellerdateien und Veröffentlichung
 
+**Aktueller Status: veröffentlicht; vollständiger öffentlicher Downloadtest bestanden.**
+[Exakter Installationsbefehl](../../../delivery/managed16/INSTALL_COMMAND.txt) für den frischen Test-Pi.
+
 Stand: 28.10.2026. Der lokal vom Hersteller signierte Kandidat wurde unverändert
 empfangen und vollständig als Daten geprüft. Ziel: frische Debian-13-/zugelassene
 Raspberry-Pi-OS-13-ARM64-Testbasis, Sequenz 16, Lieferrevision 13,
@@ -69,3 +72,46 @@ Große signierte Assets bleiben außerhalb Git. Öffentliche Downloadprüfung un
 finaler Installationsbefehl werden erst nach tatsächlicher Veröffentlichung
 separat ergänzt. Pi-Frischinstallation, APT/systemd/TLS, reale Lizenzaktivierung,
 Reboot, Wiederherstellung, Updateknopf und zwei Folgeupdates bleiben OFFEN.
+
+## Veröffentlichung und öffentlicher Download abgeschlossen
+
+GitHub-Testrelease **427203730** wurde am 28.10.2026 um 21:21:15 UTC mit sieben
+Assets veröffentlicht. Tag und Release zeigen auf den qualifizierten Commit
+`f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4`; kein Asset wurde nachträglich
+ersetzt. API-Größen/Digests stimmen mit allen vorgesehenen Assetpins überein.
+[Veröffentlichungsbeleg](release-publication.json).
+
+Der tatsächliche [öffentliche Prüflauf 40771795820](https://github.com/NexoWatt/nexowatt-eos/actions/runs/40771795820)
+bestand um 21:29:52 UTC ohne Anmeldung/Cookies/Token im Downloader. **330
+HTTPS-Anfragen** mit begrenzten Ranges und fünf Sekunden Gesamtbudget je Range
+(einschließlich vorab erlaubnisgeprüfter Redirects) lasen alle sieben Assets,
+den unveränderlichen Installer-Einstieg und den aktuellen signierten Feed.
+Hashes, Ed25519, alle 22.605 Payload-Dateien, sichere Datenextraktion,
+SBOM-/Buildverträge, 169 Quellenbindungen, 142 Kitquellen und bytegleicher
+ARM64-Node bestanden. Kein heruntergeladener Code wurde ausgeführt.
+Der Prüfer lief auf Node 22.23.4; die gelieferte ARM64-Runtime bleibt Node 24.22.1.
+
+[Öffentlicher Vollnachweis](public-readback.json),
+[Prüfer](verify-public-download.cjs),
+[lokaler vollständiger Probelauf](local-public-verifier.json),
+[Negativ-/Syntax-/Codeprüfung](verifier-review.json),
+[abschließende Identität und Freigabeumfang](ready-for-pi-test.json).
+Das CI-Nachweisartefakt 12853640586 wurde unabhängig heruntergeladen und gegen
+5.976 Bytes / SHA-256
+`e8bea02d7813a740ab98c8969a96a471c407391ae63c59ece27877076aa0330a` geprüft.
+Die separate Workflow-Syntax-/Expressionsprüfung bestand ebenfalls
+([Lauf 40771795830](https://github.com/NexoWatt/nexowatt-eos/actions/runs/40771795830)).
+
+Der Befehl wurde mit dem qualifizierten Generator und Entrycommit
+`1707dfcb5a12c92ec472899ea1f554ed6850ec02` erzeugt, Bash-Syntax geprüft und erst
+nach diesem tatsächlichen öffentlichen Vollnachweis veröffentlicht. Ursprüngliche
+Erzeugungs-/Vorbereitungsbelege mit `published: false` oder
+`publicReadbackPerformed: false` bleiben unverändert als historische Schritte;
+`ready-for-pi-test.json` belegt den späteren aktuellen Veröffentlichungszustand.
+
+**Nächster Schritt ist die echte Frischinstallation durch den Betreiber.**
+Der Installer löscht keinen Altbestand. Pi-/ARM64-Ausführung, Geräte-CA/TLS,
+Lizenzaktivierung, systemd/APT/Reboot, Wiederherstellung, Updateknopf und folgende
+Updates sind weiterhin OFFEN. Ein leerer signierter Feed enthält keine weiteren
+Pakete; Herstellerfreigabe und rechtzeitige Erneuerung bleiben erforderlich.
+Keine Produktions-, Anlagen- oder CRA-Freigabe.

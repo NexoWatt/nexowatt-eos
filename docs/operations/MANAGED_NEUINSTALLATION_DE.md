@@ -1,17 +1,26 @@
 # Neue EOS-Testbasis auf einem frisch aufgesetzten Pi
 
-Stand: 24.10.2026. Ziel ist die stabilisierte Managed-Frischbasis **Sequenz 16,
+Stand: 28.10.2026. Veröffentlicht ist die signierte Managed-Frischbasis **Sequenz 16,
 Lieferrevision 13**, mit js-controller **7.2.5**, gebündeltem Node **24.22.1** und
 den sechs EOS-Adaptern. Controller 8 bleibt ausgeschlossen.
 
-Der feste Installationspfad ist vorbereitet. **Für Sequenz 16 gibt es hier noch
-keinen installierbaren signierten Kandidaten und keinen veröffentlichten,
-öffentlich zurückgelesenen Installationsbefehl.** Der vollständige Build und die native Qualifikation am Quellstand
-`f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4` sind bestanden; beide tatsächlichen
-CI-Archive wurden unabhängig zurückgeprüft. Lokale Herstellersignatur und
-Veröffentlichungsprüfung müssen sich auf genau diesen Quellstand beziehen.
-Die bereits veröffentlichte Sequenz 15 und ihr R8-Einstieg bleiben unverändert;
-sie sind kein Nachweis für die späteren Stabilitätskorrekturen.
+Das tatsächlich vom Hersteller signierte Paket ist veröffentlicht und vollständig
+öffentlich ohne Anmeldung zurückgelesen: Signatur, Hashes, Dateiinventar,
+SBOM, qualifizierte Quellen, Installer und aktiver leerer Updatefeed sind geprüft.
+Der vollständige Build und die nativen Tests stammen vom Quellcommit
+`f2ea9a7ba67ef46a7de8a4f0ef05eaa672ca38f4`; die Prüfung führt kein ARM64-Programm
+aus und ersetzt keine Pi-Abnahme.
+
+**Auf dem frisch vorbereiteten Pi per PuTTY ausführen:**
+[Den vollständigen gepinnten Installationsbefehl kopieren](../../delivery/managed16/INSTALL_COMMAND.txt).
+Der Befehl lädt den Einstieg vom unveränderlichen Commit
+`1707dfcb5a12c92ec472899ea1f554ed6850ec02`, prüft 49.985 Bytes und SHA-256
+`cf930e26fb6d45235017e0bba55bd43ef74214d06cb465719ecdbf4a1515431f`
+und führt ihn erst danach aus. Der Einstieg prüft alle drei festen Release-Assets.
+Nicht in Windows-WSL oder auf dem alten EOS-Host ausführen.
+
+[Veröffentlichung und vollständiger öffentlicher Downloadtest](../../reports/integration/managed16-publication-20261028/README_DE.md).
+Die historische Sequenz 15 und ihr R8-Einstieg bleiben unverändert.
 
 ## Vorbereitung des Test-Pi
 
@@ -84,10 +93,11 @@ Lizenzaktivierung. Ein privater Lizenzschlüssel wird dafür nicht benötigt.
 
 ## Erststart und folgende Updates
 
-Auf dem frischen Pi wird ausschließlich der später vollständig geprüfte
+Auf dem frischen Pi wird ausschließlich der oben verlinkte gepinnte
 Installationsbefehl verwendet. Die Einrichtung erfolgt über HTTPS; der
-Einrichtungscode erscheint nur im kontrollierenden Terminal. Geräte-CA,
-Anmeldung, Anlagenidentität und Lizenzaktivierung werden vor der Abnahme geprüft.
+Einrichtungscode erscheint nur im kontrollierenden Terminal. Einrichtungscode
+und Kennwörter nicht in öffentliche Logs oder Chats kopieren. Geräte-CA, Anmeldung,
+Anlagenidentität und Lizenzaktivierung werden vor der Abnahme geprüft.
 
 Nach Einrichtung übernimmt der bestehende signierte Updatekanal weitere
 freigegebene EOS-Stände über den Admin-Updateknopf. Reine freigegebene Node-24-
