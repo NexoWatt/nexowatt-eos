@@ -14,9 +14,13 @@ Debian-13-ARM64-Testbestand vorgesehen: R8-Release-ID
 Node 24.21.0 und die drei bestätigten Dienstidentitäten. Keine anderen
 Installationen, Force-Optionen oder frei wählbaren Löschziele werden unterstützt.
 
-Der veröffentlichte, gepinnte PuTTY-Aufruf wird nach dem Byte-Readback des
-Helfers in dieser Anleitung ergänzt. Nicht direkt eine veränderliche Datei
-von `main` als root ausführen.
+[Den vollständigen geprüften PuTTY-Aufruf ausführen](R8_RETIRE_INSTALL_COMMAND.txt).
+Er lädt den Helfer von Commit `48f0157c4afffb9f23ff0ec8a0211882ddc93eaa`,
+prüft 33794 Bytes und SHA-256
+`20d2a82711538cd20f3754c76868a876a647875e66428e8d4c399756151843da`.
+Die veröffentlichte Datei wurde bytegleich zurückgelesen. Der Aufruf installiert
+anschließend R16 automatisch; eine zweite manuelle Installationsrunde ist nicht
+erforderlich. Nicht direkt eine veränderliche Datei von `main` als root ausführen.
 
 Der Ablauf benötigt die offene PuTTY-Sitzung und den vorhandenen sudo-Zugang:
 
