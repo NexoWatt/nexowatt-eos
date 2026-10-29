@@ -4,6 +4,26 @@
 Ausgangspunkt: `18889818426bd063aabce1ce51feffc08e6b1c85` auf `main`.
 Quellhash und Ergebnisse stehen in [verification.json](verification.json).
 
+**Gemeldeter Pi-Erststart vom 29.10.2026:** Der Nutzer meldet die erfolgreiche
+R8-Stilllegung, den beendeten R16-Installer und den bereiten geschützten
+Browser-Erststart. Die abschließende Erfolgsmeldung wird im gepinnten Helfer
+erst nach der letzten VPN-Zustandsprüfung ausgegeben; daraus folgt deren
+gemeldeter Erfolg, keine durchgehende Erreichbarkeitsmessung. Dies ist ein
+Nutzerbericht, kein eigener Fernzugriff. Browservertrauen, Einrichtung,
+Authentifizierung, Lizenz, konfigurierter Controller-/Admin-/UI-Betrieb,
+Folgeupdates und Hardwareabnahme bleiben offen.
+[Bereinigter Statusbeleg](tailscale-pi-first-start.json); keine Rohlogs,
+Einrichtungscodes, Geräteadressen, Zertifikatsfingerabdrücke oder privaten
+Ablagepfade wurden übernommen.
+
+APT meldete null Paketänderungen und zehn zurückgestellte Aktualisierungen.
+Die nicht fatale Verzeichniswarnung gehört zur isolierten APT-Konfiguration:
+deren `-`-Werte werden als relative Verzeichnispfade aufgelöst; diese Auflösung
+wurde mit `apt-config` ausschließlich lesend nachvollzogen. Die Warnung
+verhinderte den gemeldeten Installerabschluss nicht. Sie erfordert keinen
+erneuten Installationslauf vor der Browser-Einrichtung und belegt keine
+vollständig erledigte Sicherheitswartung.
+
 **Nachtrag 29.10.2026:** Die frühere APT-Sperre ist als Ablehnung der offiziellen
 Tailscale-Trixie-Quelldatei identifiziert. Der Nutzer ist über VPN verbunden.
 Die zusätzliche Quellentrennung und Fernzugriffsprüfung werden in

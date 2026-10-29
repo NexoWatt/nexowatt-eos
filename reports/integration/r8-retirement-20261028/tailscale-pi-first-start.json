@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "kind": "eos-managed16-operator-reported-first-start",
+  "reportedDate": "2026-10-29",
+  "evidenceSource": "OPERATOR_REPORTED_TERMINAL_RESULT",
+  "helperCommit": "7309a3ff0d80fc0c2604798b8f487f78508737fd",
+  "targetReleaseSequence": 16,
+  "reportedStatus": {
+    "r8Retirement": "FINISHED",
+    "managed16Installer": "FINISHED",
+    "protectedFirstStart": "READY",
+    "privateRollbackStorage": "RETAINED_LOCALLY"
+  },
+  "vpnAssessment": {
+    "finalContinuityGuard": "PASSED_INFERRED_FROM_REPORTED_FINAL_SUCCESS",
+    "basis": "PINNED_HELPER_PRINTS_FINAL_SUCCESS_ONLY_AFTER_FINAL_VPN_SNAPSHOT_CHECK",
+    "uninterruptedConnectivity": "NOT_PROVEN"
+  },
+  "aptReport": {
+    "upgraded": 0,
+    "newlyInstalled": 0,
+    "removed": 0,
+    "notUpgraded": 10,
+    "warning": "NONFATAL_ISOLATED_APT_DIRECTORY",
+    "warningCause": "DASH_CONFIGURATION_VALUE_RESOLVES_AS_RELATIVE_DIRECTORY",
+    "causeCheck": "READ_ONLY_APT_CONFIG_PATH_RESOLUTION_REPRODUCED",
+    "onboardingBlockedByWarning": false,
+    "allSecurityUpdatesCompleted": "NOT_ESTABLISHED"
+  },
+  "acceptance": {
+    "browserCertificateTrust": "OPEN",
+    "browserOnboarding": "OPEN",
+    "authentication": "OPEN",
+    "licenseActivation": "OPEN",
+    "configuredControllerOperation": "OPEN",
+    "adminAndUiOperation": "OPEN",
+    "endToEndFunction": "OPEN",
+    "backupAndRestore": "OPEN",
+    "followupUpdates": "OPEN",
+    "hardware": "OPEN",
+    "productionRelease": "NOT_APPROVED"
+  },
+  "evidenceHandling": {
+    "directPiAccess": false,
+    "rawOperatorLogsStored": false,
+    "setupCodeStored": false,
+    "deviceAddressStored": false,
+    "deviceCertificateFingerprintStored": false,
+    "privateRollbackPathStored": false
+  }
+}

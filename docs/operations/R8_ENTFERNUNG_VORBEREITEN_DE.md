@@ -6,6 +6,21 @@ bekannten R8-Stand, deaktivierte physische Steuerung und die zugehörigen
 EOS-Dateien/Konten. Der neue Helfer prüft diese Bedingungen vor Ort erneut.
 Ein erfolgreiches Prüfergebnis allein war keine ausgeführte Stilllegung.
 
+**Gemeldeter Fortschritt vom 29.10.2026:** Der Test-Pi hat inzwischen die
+R8-Stilllegung und den R16-Installer mit bereitem geschütztem Erststart beendet.
+Der gepinnte Helfer prüft vor dieser Abschlussmeldung auch den VPN-Zustand
+erneut. Browservertrauen, Einrichtung, Lizenz, Anmeldung sowie der vollständige
+Controller-/Admin-/UI- und Hardwaretest stehen weiterhin aus. Der
+[bereinigte Nutzerbeleg](../../reports/integration/r8-retirement-20261028/tailscale-pi-first-start.json)
+enthält keine Zugangscodes, Geräteadressen oder privaten Ablagepfade.
+
+Auf diesem bereits installierten Gerät den Stilllegungsbefehl nicht erneut
+ausführen, sondern den [Browser-Erststart](FIRST_START_INSTALLATION_DE.md#ablauf-im-browser)
+fortsetzen. Die gemeldete APT-Verzeichniswarnung stammt aus den `-`-Einträgen
+der getrennten APT-Konfiguration und hat den Installerabschluss nicht verhindert.
+Null Paketänderungen und zehn zurückgestellte Updates sind kein Nachweis einer
+vollständig abgeschlossenen Linux-Sicherheitswartung.
+
 ## Ablauf
 
 `tools/system/retire-r8-for-managed16.py` ist ausschließlich für diesen
