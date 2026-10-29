@@ -22,7 +22,16 @@ und Legacy-Backup-Befunde sind dokumentiert. Keine Produktions-/CRA-Freigabe.
 Für den bereits inventarisierten R8-Test-Pi gibt es einen getrennten
 [Ablauf zur Stilllegung und anschließenden R16-Neuinstallation](docs/operations/R8_ENTFERNUNG_VORBEREITEN_DE.md).
 Er bewahrt die Originaldaten privat auf; die unveränderten Frischhost-Prüfungen
-des Installers bleiben erforderlich. Die reale Pi-Abnahme steht noch aus.
+des Installers bleiben bis auf die unten beschriebene APT-Quellentrennung
+erforderlich. Die reale Pi-Abnahme steht noch aus.
+
+**29. Oktober: R8-Ablösung bei bestehender Tailscale-VPN-Verbindung.** Die
+gemeldete APT-Ablehnung wurde auf die offizielle Tailscale-Trixie-Quelldatei
+zurückgeführt. Der angepasste Stilllegungshelfer trennt die EOS-Paketvorbereitung
+von dieser Quelle; Tailscale, seine Quelle und die vorhandene Netzwerkverbindung
+werden dabei nicht umkonfiguriert. Paketplan und Fernzugriffsprozess werden
+zusätzlich geprüft. Debian bleibt installiert. Die signierten R16-Dateien
+bleiben unverändert. [Umfang und verbleibender Pi-Test](docs/operations/R8_ENTFERNUNG_VORBEREITEN_DE.md).
 
 ## Unveränderte historische Testlieferung Managed15
 

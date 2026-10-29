@@ -1,6 +1,6 @@
 # R8-Testinstallation durch Managed16 ersetzen, Debian behalten
 
-Stand: 28.10.2026. Der Nutzer hat die Ablösung des konkreten R8-Test-Pi
+Stand: 29.10.2026. Der Nutzer hat die Ablösung des konkreten R8-Test-Pi
 beauftragt. Seine Rückmeldung zur lesenden Bestandsaufnahme bestätigt den
 bekannten R8-Stand, deaktivierte physische Steuerung und die zugehörigen
 EOS-Dateien/Konten. Der neue Helfer prüft diese Bedingungen vor Ort erneut.
@@ -15,12 +15,13 @@ Node 24.21.0 und die drei bestätigten Dienstidentitäten. Keine anderen
 Installationen, Force-Optionen oder frei wählbaren Löschziele werden unterstützt.
 
 [Den vollständigen geprüften PuTTY-Aufruf ausführen](R8_RETIRE_INSTALL_COMMAND.txt).
-Er lädt den Helfer von Commit `48f0157c4afffb9f23ff0ec8a0211882ddc93eaa`,
-prüft 33794 Bytes und SHA-256
-`20d2a82711538cd20f3754c76868a876a647875e66428e8d4c399756151843da`.
+Er lädt den Helfer von Commit `7309a3ff0d80fc0c2604798b8f487f78508737fd`,
+prüft 54599 Bytes und SHA-256
+`af366707ee0765cc4aad3b0ca9cdaf1e02f1f4ce4cd3333ff8a4e615a24db65c`.
 Die veröffentlichte Datei wurde bytegleich zurückgelesen. Der Aufruf installiert
 anschließend R16 automatisch; eine zweite manuelle Installationsrunde ist nicht
 erforderlich. Nicht direkt eine veränderliche Datei von `main` als root ausführen.
+[Veröffentlichungs- und Befehlsprüfung](../../reports/integration/r8-retirement-20261028/tailscale-publication.json).
 
 Der Ablauf benötigt die offene PuTTY-Sitzung und den vorhandenen sudo-Zugang:
 
@@ -31,7 +32,12 @@ Der Ablauf benötigt die offene PuTTY-Sitzung und den vorhandenen sudo-Zugang:
 2. Host, authentifizierten R8-Manifesthash, 14 Unitdateien, Konten, Symlinks,
    Mounts, Prozesse und Paketverwaltung erneut prüfen. Der Manifesthash bindet
    die Unit-Pins; kein installierter EOS-/Node-Code wird zur Prüfung gestartet.
-   APT-Quellen werden mit den unveränderten Managed16-Regeln geprüft.
+   Distributionsquellen werden mit den ursprünglichen Managed16-Regeln geprüft.
+   Zusätzlich wird ausschließlich die bytegenau bekannte öffentliche
+   Tailscale-Trixie-Quelldatei erkannt und aus der getrennten EOS-Paketvorbereitung
+   ausgelassen. Sie bleibt in der globalen APT-Konfiguration erhalten.
+   Die benötigten Pakete werden vor der Stilllegung vollständig vorab geladen;
+   der simulierte Paketplan darf keine vorhandenen Pakete ändern oder entfernen.
 3. Bestehende APT/dpkg-Sperrdateien mit POSIX-Sperren reservieren, den eigenen
    EOS-Startschutz setzen, Aktivierungsquellen und Dienste geordnet stoppen.
    PostgreSQL erhält sein normales systemd-Stopverfahren. Verbliebene Prozesse,
@@ -45,10 +51,14 @@ Der Ablauf benötigt die offene PuTTY-Sitzung und den vorhandenen sudo-Zugang:
    `eos-r8-runtime`, `eos-r8-postgres` und `eos-r8-setup` umbenennen. UID/GID,
    gesperrte Anmeldedaten und `/nonexistent`/`nologin` bleiben erhalten.
    Die alten numerischen IDs bleiben belegt. R16 legt eigene Dienstkonten an.
-6. Die vollständige, unveränderte Fresh-Host-Prüfung des Managed16-Preparers
+6. Die Fresh-Host-Prüfung des Managed16-Preparers mit dieser eng begrenzten
+   APT-Quellentrennung
    ausführen. Paketsperren freigeben und dessen `install_downloaded()` mit den
    bereits geprüften Archiven aufrufen; diese Funktion prüft Host und Dateien
-   erneut und startet den ursprünglichen Installer.
+   erneut und startet den ursprünglichen Installer. Paketinstallation erfolgt
+   aus dem vorbereiteten, getrennten Cache; ein zusätzlicher Prüfhook kontrolliert
+   die tatsächlich an dpkg übergebenen Pakete. Signatur-, Lizenz-, Pfad- und
+   Frischhostgrenzen bleiben erhalten.
 
 Es wird keine neue Laufzeit signiert. Ziel bleibt die veröffentlichte
 Managed16-Testlieferung mit **js-controller 7.2.5**, Node **24.22.1** und Release-ID
@@ -105,8 +115,46 @@ Er ist an Commit `38c93eb35430be3a1364a09493703e82c1a3222c` und SHA-256
 die öffentliche Datei wurde bytegleich zurückgelesen. Der Download legt nur
 den geprüften Helfer in einer neuen privaten Arbeitsablage ab.
 
-Ursache und konkrete Korrektur bleiben bis zur Rückmeldung dieser Prüfung
-offen. [Nachweis](../../reports/integration/r8-retirement-20261028/apt-inspection.json).
+Die anschließende Rückmeldung identifizierte `pkgs.tailscale.com`. Der gemeldete
+Dateihash `5a1b21b30892bf22fb5d7c4f52fefe9b65efda2100e82abba2e0849da2a2264b`
+stimmt exakt mit der [öffentlichen Tailscale-Trixie-Quelldatei](https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list)
+überein. Die alte Quellenprüfung hatte diese Drittquelle nicht berücksichtigt.
+Dies ist kein Nachweis eines Schadprogramms oder einer beschädigten Debian-Basis.
+[Diagnose und Fortschritt](../../reports/integration/r8-retirement-20261028/apt-inspection.json).
+
+### Installation über die bestehende VPN-Verbindung
+
+Für diesen gemeldeten Zustand bleibt Tailscale aktiv. Der neue Helfer entfernt
+weder Tailscale noch seine Paketquelle oder Schlüsseldatei und führt keinen
+Netzwerk- oder Geräte-Neustart aus. Die EOS-Paketvorbereitung verwendet eigene
+Quellkopien, Paketlisten und Archive; globale APT-Hooks werden nicht geladen.
+Die Tailscale-Quelle beeinflusst dadurch keine EOS-Paketauswahl.
+
+Vorhandene Pakete werden in dieser Ferninstallation nicht aktualisiert.
+Benötigt eine neue Abhängigkeit eine solche Änderung, endet die Vorbereitung
+vor dem EOS-Stop. Ein eigener Hook prüft diese Grenze unmittelbar vor dpkg
+erneut. Das ist eine Grenze dieser einmaligen Installation; die spätere
+Linux-Sicherheitswartung hat ihren eigenen dokumentierten Ablauf.
+
+Vorher und nachher prüft der Helfer Tailscale-Paketversion, laufenden Dienst mit
+PID/Startzeit sowie die lokale Adress- und Routenzuordnung der SSH-Sitzung.
+Diese Werte bleiben ausschließlich im Arbeitsspeicher und werden nicht ausgegeben.
+Die Prüfungen erkennen beobachtete Änderungen, garantieren aber keine
+unterbrechungsfreie Netzverbindung. Keine zweite Paketwartung parallel starten.
+
+Der signierte R16-Netzwerkzusatz startet ohne eingerichtetes Gerätenetz;
+seine Installation ändert keine Schnittstellenadressen oder Routen. Die
+Ersteinrichtung kann die lokale Tailscale-IPv4-Adresse aus `SSH_CONNECTION`
+für ihre HTTPS-Adresse und Zertifikate verwenden. Der PuTTY-Aufruf muss diese
+Variable wie vorgegeben an den Installer weiterreichen.
+
+**Updateumfang:** Die EOS-Linux-Wartung nutzt ihrerseits isolierte Debian-/
+Raspberry-Pi-Quellen. Sie aktualisiert Tailscale nicht. Der R16-Installer stellt
+die globale periodische APT-Wartung auf den EOS-Ablauf um; eine zuvor darüber
+laufende Tailscale-Automatik wäre damit nicht erhalten. Tailscales eigener
+Updater bzw. eine gezielte Paketwartung bleiben möglich, ihre Aktivierung
+wurde auf diesem Pi noch nicht festgestellt. Tailscale gehört deshalb nicht
+zum nachgewiesenen automatischen Updateumfang von EOS.
 
 Vor `INSTALLING_MANAGED16` unterstützt derselbe geprüfte Helfer:
 

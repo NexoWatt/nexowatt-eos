@@ -1,5 +1,20 @@
 # NexoWatt EOS review profile — parameters
 
+## R8 retirement with an existing Tailscale source (2026-10-29)
+
+The separate `tools/system/retire-r8-for-managed16.py` retains its fixed R8
+host scope and existing `--restore-stopped` recovery form. It exposes no new
+force, repository, network or key overrides. Its explicitly bound compatibility
+adapter accepts only the exact canonical public Tailscale Debian-Trixie list
+file in addition to the original distro-source rules, and excludes that vendor
+source from a separate APT configuration, source snapshot and package cache.
+The global source and Tailscale daemon remain in place. Package preparation is
+checked before R8 retirement and rejects changes to protected remote-access
+packages. Existing signed Managed16 entry, installer kit and runtime are not
+rewritten. This is a changed retirement bootstrap, not a newly signed runtime.
+Actual Pi/VPN continuity remains to be tested. See the
+[operator procedure](docs/operations/R8_ENTFERNUNG_VORBEREITEN_DE.md).
+
 ## Fresh stability baseline 16 (2026-10-24)
 
 The current fresh installer and download generator admit only
