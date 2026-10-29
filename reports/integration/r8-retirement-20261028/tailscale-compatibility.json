@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "finding": "EOS-R8-APT-20261028-01",
+  "state": "COMPATIBILITY_IMPLEMENTED_TARGET_ACCEPTANCE_OPEN",
+  "checkedAt": "2026-10-29T13:15:47.859379+00:00",
+  "parentCommit": "3df8e6dfab1e32f410fd497d4c233950e5495774",
+  "sources": [
+    {
+      "path": "tools/system/retire-r8-for-managed16.py",
+      "bytes": 54599,
+      "sha256": "af366707ee0765cc4aad3b0ca9cdaf1e02f1f4ce4cd3333ff8a4e615a24db65c"
+    },
+    {
+      "path": "tests/security/r8-retirement.test.py",
+      "bytes": 30582,
+      "sha256": "3076814da2a93d338a6fad31e24316f0870ce99c8c2555c3d54bdbd7bf3ef2d1"
+    },
+    {
+      "path": "tests/security/r8-retirement-host.test.py",
+      "bytes": 10074,
+      "sha256": "b2b82857850bc469b1b51cf742bc67b759160a617916e94eb53d7f6d0b6d0a5d"
+    },
+    {
+      "path": "tests/security/r8-removal-inspection.test.py",
+      "bytes": 6151,
+      "sha256": "0306cedf2e2ecc0dec3834a4c37fddae115ad7053fde43bc78c46400eb45b559"
+    },
+    {
+      "path": "tests/security/managed16-apt-inspection.test.py",
+      "bytes": 13844,
+      "sha256": "644ea9fb0b2bb2bfd429572a24690c18b981cff0451938c99f03a5ed57cd1865"
+    },
+    {
+      "path": "tests/security/r8-vpn-continuity.test.py",
+      "bytes": 11943,
+      "sha256": "ceb08c204c6c4f055b3c52f6f432ff98b0750b0c6aed385bb4b1885b79ad3bfe"
+    },
+    {
+      "path": "tests/security/managed16-apt-compat.test.py",
+      "bytes": 15513,
+      "sha256": "d398e2b34b97c804afd08196029231ce6f7fc2d530384bcf24315c57a0850bf8"
+    },
+    {
+      "path": "tests/security/managed16-apt-native.test.py",
+      "bytes": 7964,
+      "sha256": "646480a3c2b3f0ca8a700adfdc36291e2e262004e6a595b7c64830597bea077c"
+    },
+    {
+      "path": "tests/security/r8-retirement-handoff.test.py",
+      "bytes": 18409,
+      "sha256": "67b3930998a6e0db99645663c956b6834b602628d34c2ca7384631e4965b551a"
+    }
+  ],
+  "cause": {
+    "canonicalPublicSourceUrl": "https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list",
+    "canonicalSourceSha256": "5a1b21b30892bf22fb5d7c4f52fefe9b65efda2100e82abba2e0849da2a2264b",
+    "matchesOperatorReportedHash": true,
+    "activeVpnReportedByOperator": true,
+    "directPiAccess": false
+  },
+  "change": {
+    "originalManaged16EntrySha256": "cf930e26fb6d45235017e0bba55bd43ef74214d06cb465719ecdbf4a1515431f",
+    "signedRuntimeOrKitChanged": false,
+    "changedPreparerBindings": [
+      "check_apt_sources",
+      "prepare_packages"
+    ],
+    "globalTailscaleSourceModified": false,
+    "vpnServiceControlCommandsAdded": false,
+    "publicSourceSnapshots": "validated active distro sources only, no comments or disabled stanzas",
+    "aptIsolation": "early APT_CONFIG, own sources/lists/archives/preferences, no host hooks/credentials/shared binary caches",
+    "packagePolicy": "download and simulate before R8 stop; no installed-package changes; offline apply; fixed pre-install metadata guard",
+    "vpnObservation": "service PID/start tick, installed package version, SSH local interface and return route; memory only"
+  },
+  "verification": {
+    "python": "3.12.14",
+    "architecture": "x86_64",
+    "nativeAptEnvironment": "Ubuntu 24.04 x64; APT 2.8.3; dpkg 1.22.6",
+    "tests": [
+      {
+        "command": "python3 -I -B tests/security/r8-retirement.test.py -v",
+        "passed": 28,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-r8-retirement-tests.txt",
+        "rawEvidenceSha256": "9c709a202f23e611b42f56ae23f9c4e8f5431113d261ce198c67ef841416e70a"
+      },
+      {
+        "command": "python3 -I -B tests/security/r8-retirement-host.test.py -v",
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-r8-retirement-host-tests.txt",
+        "rawEvidenceSha256": "96b526de7e27e5525657d16651873dd08136bef8a0f5ece79d511b28c09946e5"
+      },
+      {
+        "command": "python3 -I -B tests/security/r8-removal-inspection.test.py -v",
+        "passed": 19,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-r8-removal-inspection-tests.txt",
+        "rawEvidenceSha256": "5626b56810cc735be4d7c8174766a4afffda45ee440ab896d05354e2ffd0be45"
+      },
+      {
+        "command": "python3 -I -B tests/security/managed16-apt-inspection.test.py -v",
+        "passed": 27,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-managed16-apt-inspection-tests.txt",
+        "rawEvidenceSha256": "7c0827db0fe405f934167b45b27ef2589f39cacd601c6d409ed59a03cadbe241"
+      },
+      {
+        "command": "python3 -I -B tests/security/r8-vpn-continuity.test.py -v",
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-r8-vpn-continuity-tests.txt",
+        "rawEvidenceSha256": "966c9db712d4ecb18c1a6c37ff31845dba1fca57ef040f9bfb091d49541204b7"
+      },
+      {
+        "command": "python3 -I -B tests/security/managed16-apt-compat.test.py -v",
+        "passed": 31,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-managed16-apt-compat-tests.txt",
+        "rawEvidenceSha256": "0e584d7714aee812de65a85ba60a13640c383f21357392f3ea19e1bd216b70e3"
+      },
+      {
+        "command": "python3 -I -B tests/security/managed16-apt-native.test.py -v",
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-managed16-apt-native-tests.txt",
+        "rawEvidenceSha256": "ab7e2ac468a55c0c07d3b1af2eb7fa044ba02f241356527cef4299df224a8503"
+      },
+      {
+        "command": "python3 -I -B tests/security/r8-retirement-handoff.test.py -v",
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0,
+        "rawEvidence": "tailscale-r8-retirement-handoff-tests.txt",
+        "rawEvidenceSha256": "166647ef895e72542282ec58bf07722338f13162e248aac1d6e0806dccd7ed3a"
+      }
+    ],
+    "totalPassed": 156,
+    "nativeScope": "actual apt-config dump and dpkg-deb metadata hook, no apt-get execution/network/package installation",
+    "realAptSandboxUidExecutionTested": false,
+    "hostChanges": "disposable fixture directories only; systemd/account/route/installation calls modelled"
+  },
+  "reviewCorrections": [
+    "strip inline .list comments from public copies",
+    "omit unchecked disabled deb822 stanzas from public copies",
+    "match dpkg rc/iU status rejection before retirement to actual metadata guard"
+  ],
+  "limits": {
+    "debian13Arm64InstallationTested": false,
+    "actualPiRetirementTested": false,
+    "vpnContinuityOnPiTested": false,
+    "uninterruptedVpnGuaranteed": false,
+    "hardwareAcceptance": "OPEN",
+    "productionReleaseApproved": false,
+    "tailscaleAutomaticUpdatesCoveredByEos": false,
+    "tailscaleNativeUpdaterEnablementKnown": false,
+    "distributionPeriodicAptPolicy": "R16 replaces distribution automatic upgrades with EOS distro-only maintenance; previous vendor automation through that path is not preserved"
+  },
+  "references": [
+    "https://manpages.debian.org/trixie/apt/apt.conf.5.en.html",
+    "https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list"
+  ]
+}

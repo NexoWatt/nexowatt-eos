@@ -4,6 +4,31 @@
 Ausgangspunkt: `18889818426bd063aabce1ce51feffc08e6b1c85` auf `main`.
 Quellhash und Ergebnisse stehen in [verification.json](verification.json).
 
+**Nachtrag 29.10.2026:** Die frühere APT-Sperre ist als Ablehnung der offiziellen
+Tailscale-Trixie-Quelldatei identifiziert. Der Nutzer ist über VPN verbunden.
+Die zusätzliche Quellentrennung und Fernzugriffsprüfung werden in
+[tailscale-compatibility.json](tailscale-compatibility.json) gesondert belegt.
+Die folgenden ursprünglichen Prüfergebnisse beziehen sich auf den damaligen
+Helfer; sie ersetzen weder die neuen Regressionen noch einen realen Pi-Test.
+
+Für die Korrektur bestanden **156 Prüfungen** in acht gezielten Python-Suiten:
+98 bestehende Stilllegungs-/Diagnoseprüfungen, 31 APT-Kompatibilitätsprüfungen,
+14 VPN-Beobachtungsprüfungen, acht Übergabe-/Abbruchprüfungen und fünf native
+APT-Konfigurations-/Paketmetadatenprüfungen. Letztere führen `apt-config`,
+`dpkg-deb` und `dpkg-query` in einer Ubuntu-24.04-x64-Umgebung aus, aber keine
+Paketinstallation oder Netzwerkabfrage. Die Übergabeprüfung lädt den echten
+gepinnten Einstieg und modelliert nur die Hostwirkungen. Ein realer Lauf unter
+der `_apt`-UID war im Executor nicht möglich; Dateimodi und Vorfahren wurden
+geprüft. Tatsächliche Debian-13-/ARM64-/VPN-Abnahme bleibt offen.
+
+Die ergänzende Prüfung korrigierte zwei Datenschutzprobleme vor Veröffentlichung:
+Inline-Kommentare und deaktivierte deb822-Abschnitte werden nicht in die für
+APT lesbaren Quellkopien übernommen. Die Originaldateien bleiben unverändert.
+Tailscale gehört weiterhin nicht zum automatischen EOS-Paketwartungsumfang;
+der R16-Installer ersetzt die globale periodische APT-Wartung durch seine
+Distributionswartung. Die Aktivierung eines eigenständigen Tailscale-Updaters
+wurde auf dem Gerät nicht festgestellt.
+
 ## Umsetzung und Herkunft
 
 Der Nutzer autorisierte R8-Ablösung und Neuinstallation und lieferte die Ausgabe

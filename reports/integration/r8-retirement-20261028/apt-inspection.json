@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "finding": "EOS-R8-APT-20261028-01",
-  "state": "OPEN_AWAITING_REDACTED_HOST_DIAGNOSIS",
+  "state": "CAUSE_CONFIRMED_COMPATIBILITY_IMPLEMENTED_PI_PENDING",
   "reportedCode": "BOOTSTRAP_APT_SOURCE",
   "reportedHelperCommit": "48f0157c4afffb9f23ff0ec8a0211882ddc93eaa",
   "reportedStage": "first read-only host preflight, before retirement",
-  "causeKnown": false,
+  "causeKnown": true,
   "aptSourcesChanged": false,
   "r8RetirementReached": false,
   "privateHostConfigurationCollected": false,
@@ -35,7 +35,7 @@
   "unchangedManaged16EntrySha256": "cf930e26fb6d45235017e0bba55bd43ef74214d06cb465719ecdbf4a1515431f",
   "originalAptRejectionPreserved": true,
   "publicOutput": "finite public labels, predicate booleans, source ordinal and SHA-256; unknown inputs redacted",
-  "diagnosticRunOnPi": false,
+  "diagnosticRunOnPi": true,
   "actualPiInstallationTested": false,
   "productionReleaseApproved": false,
   "publication": {
@@ -45,5 +45,15 @@
     "operatorCommandSha256": "bbb249260dd707853062ba71969c998fc3994729d14039692157d8e46795163c",
     "outerAndInnerShellSyntaxPassed": true,
     "targetExecuted": false
-  }
+  },
+  "reportedDiagnosis": {
+    "sourceFileSha256": "5a1b21b30892bf22fb5d7c4f52fefe9b65efda2100e82abba2e0849da2a2264b",
+    "publicHost": "pkgs.tailscale.com",
+    "canonicalPublicSourceMatched": true,
+    "sourceFormat": "one-line",
+    "suite": "trixie",
+    "activeVpnReportedByUser": true,
+    "observedBy": "operator-provided filtered output; no direct Pi access"
+  },
+  "followupEvidence": "tailscale-compatibility.json"
 }

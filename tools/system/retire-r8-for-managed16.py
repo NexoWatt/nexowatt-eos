@@ -2,8 +2,9 @@
 """Retire the diagnosed R8 TEST host, retaining private data and numeric owners.
 
 No target-root, force, key, shell, or release override. The unchanged, pinned
-Managed16 preparer supplies download and fresh-host admission; installed EOS
-code is never imported/executed by this helper. Root must not run another host
+Managed16 preparer supplies downloads and admission; an explicit APT adapter
+separates distro packages from the canonical Tailscale source. Signed runtime
+files stay unchanged. Installed EOS code is never imported by this helper. Root must not run another host
 maintenance operation concurrently. See R8_ENTFERNUNG_VORBEREITEN_DE.md.
 """
 import base64
@@ -470,6 +471,280 @@ def preflight(prep):
     process_check(stopped=False)
 
 
+TAILSCALE_SOURCE_SHA256 = "5a1b21b30892bf22fb5d7c4f52fefe9b65efda2100e82abba2e0849da2a2264b"
+APT_PROTECTED = frozenset({
+    "tailscale", "tailscale-archive-keyring", "openssh-client", "openssh-server",
+    "openssh-sftp-server", "ssh", "network-manager", "network-manager-gnome",
+    "systemd", "systemd-sysv", "systemd-resolved", "systemd-timesyncd", "udev",
+    "dbus", "dbus-daemon", "dbus-system-bus-common", "ifupdown", "dhcpcd",
+    "dhcpcd-base", "dhcpcd5", "isc-dhcp-client", "resolvconf", "openresolv",
+    "iproute2", "nftables", "iptables", "dnsmasq", "dnsmasq-base", "ufw",
+    "firewalld", "netplan.io", "connman", "wpasupplicant", "iwd", "wireguard",
+    "wireguard-tools", "libc6", "libc-bin", "libpam0g", "libpam-modules",
+    "libpam-modules-bin", "libpam-runtime", "sysvinit-utils", "sudo",
+})
+
+
+def apt_plan(text):
+    """Fail closed for changed installed packages and transport-related actions."""
+    require(isinstance(text, str) and len(text) <= 1024**2, "APT_PLAN_OUTPUT")
+    rows = []
+    for line in text.splitlines():
+        if not re.match(r"^(?:Inst|Conf|Remv)(?:\s|$)", line):
+            continue
+        match = re.fullmatch(r"(Inst|Conf) ([a-z0-9][a-z0-9+.-]*(?::[a-z0-9]+)?) "
+                             r"(?:\[([^\]]+)\] )?\(([0-9A-Za-z.+:~\-]+)(?: [^\r\n]*)?\)", line)
+        require(match is not None, "APT_PLAN_ACTION")
+        action, package, previous, version = match.groups()
+        require(previous is None, "APT_EXISTING_PACKAGE_CHANGE")
+        require(package.split(":", 1)[0] not in APT_PROTECTED, "APT_TRANSPORT_PACKAGE_CHANGE")
+        rows.append((action, package, version))
+    return tuple(rows)
+
+
+def apt_guard_source(archives):
+    """Fixed Version-1 APT hook; actual .deb metadata is checked before dpkg."""
+    require(re.fullmatch(r"/var/lib/eos-managed16-apt-[A-Za-z0-9_-]+/archives", str(archives)), "APT_PRIVATE_PATH")
+    return '''#!/usr/bin/python3
+import os, re, stat, subprocess, sys
+from pathlib import Path
+ARCHIVES = Path(''' + repr(str(archives)) + ''')
+PROTECTED = frozenset(''' + repr(sorted(APT_PROTECTED)) + ''')
+def stop():
+    print("EOS: APT_TRANSPORT_GUARD", file=sys.stderr)
+    raise SystemExit(1)
+try:
+    data = sys.stdin.buffer.read(1048577)
+    if len(data) > 1048576: stop()
+    names = data.decode("utf-8", errors="strict").splitlines()
+    if len(names) > 4096: stop()
+    for name in names:
+        file = Path(name)
+        if file.parent != ARCHIVES or not re.fullmatch(r"[A-Za-z0-9_.%+~:-]+\\.deb", file.name): stop()
+        st = file.lstat()
+        if not stat.S_ISREG(st.st_mode) or st.st_nlink != 1 or st.st_mode & 0o022: stop()
+        result = subprocess.run(["/usr/bin/dpkg-deb", "--field", str(file), "Package"],
+                                capture_output=True, timeout=20, check=False,
+                                env={"PATH":"/usr/sbin:/usr/bin:/sbin:/bin", "LC_ALL":"C"})
+        if result.returncode or len(result.stdout) > 256 or result.stderr: stop()
+        package = result.stdout.decode("ascii").strip()
+        if not re.fullmatch(r"[a-z0-9][a-z0-9+.-]*", package) or package in PROTECTED: stop()
+        existing = subprocess.run(["/usr/bin/dpkg-query", "-W", "-f=${db:Status-Abbrev}", package],
+                                  capture_output=True, timeout=20, check=False,
+                                  env={"PATH":"/usr/sbin:/usr/bin:/sbin:/bin", "LC_ALL":"C"})
+        if len(existing.stdout) > 16 or len(existing.stderr) > 4096: stop()
+        if existing.returncode not in (0, 1): stop()
+        if existing.returncode == 0 and existing.stdout != b"un ": stop()
+except (OSError, UnicodeError, subprocess.TimeoutExpired):
+    stop()
+'''
+
+
+class Managed16AptCompat:
+    """A separate bootstrap policy, bound only after the frozen entry is verified.
+
+    Host APT configuration/sources and the active VPN daemon are never changed.
+    The root-owned public download area survives failure for diagnosis; no
+    private EOS data or credentials are stored there.
+    """
+    def __init__(self, prep):
+        self.prep = prep
+        self.folder = None
+        self.inputs = None
+        self.allowed = None
+        self.ready = False
+        self.has_tailscale = False
+
+    def sources(self):
+        prep = self.prep
+        files = []
+        if prep.exists("/etc/apt/sources.list"):
+            files.append(Path("/etc/apt/sources.list"))
+        directory = Path("/etc/apt/sources.list.d")
+        if prep.exists(directory):
+            prep.trusted_path(directory, directory=True)
+            files += sorted(p for p in directory.iterdir() if p.suffix in (".list", ".sources"))
+        require(len(files) <= 64, "APT_SOURCE_COUNT")
+        snapshots, admitted, count, omitted = [], [], 0, 0
+        for file in files:
+            raw = prep.private_file(file, 65536)
+            snapshots.append((str(file), raw))
+            if file.suffix == ".list" and hashlib.sha256(raw).hexdigest() == TAILSCALE_SOURCE_SHA256:
+                omitted += 1
+                require(omitted == 1, "APT_TAILSCALE_DUPLICATE")
+                continue
+            text = raw.decode("utf-8", errors="strict")
+            count += prep.validate_apt_sources(text, deb822=file.suffix == ".sources")
+            # Comments may contain private operator notes; only validated source
+            # syntax is copied into the public, _apt-readable acquisition area.
+            lines = (line.split("#", 1)[0] for line in text.splitlines()) if file.suffix == ".list" else text.splitlines()
+            clean = "\n".join(line for line in lines if not line.lstrip().startswith("#")) + "\n"
+            if file.suffix == ".sources":
+                # The frozen validator intentionally ignores disabled stanzas;
+                # their unchecked URIs/credentials must not enter this public
+                # snapshot even though APT would ignore those stanzas too.
+                clean = "\n\n".join(paragraph for paragraph in re.split(r"\n[ \t]*\n", clean)
+                                    if not any(re.fullmatch(r"Enabled:[ \t]*no", line)
+                                               for line in paragraph.splitlines())) + "\n"
+            admitted.append((file.suffix, clean.encode("utf-8")))
+        require(count > 0, "BOOTSTRAP_APT_SOURCES_MISSING")
+        self.has_tailscale = omitted == 1
+        return tuple(snapshots), tuple(admitted)
+
+    def preferences(self):
+        prep = self.prep
+        paths = []
+        if prep.exists("/etc/apt/preferences"):
+            paths.append(Path("/etc/apt/preferences"))
+        directory = Path("/etc/apt/preferences.d")
+        if prep.exists(directory):
+            prep.trusted_path(directory, directory=True)
+            for path in sorted(directory.iterdir()):
+                if re.fullmatch(r"[A-Za-z0-9_-]+(?:\.pref)?", path.name):
+                    paths.append(path)
+        require(len(paths) <= 64, "APT_PREFERENCE_COUNT")
+        return tuple((str(path), prep.private_file(path, 65536)) for path in paths)
+
+    def check_sources(self):
+        self.sources()
+        self.preferences()
+
+    def check_snapshot(self):
+        require((self.sources()[0], self.preferences()) == self.inputs, "APT_CONFIGURATION_CHANGED")
+
+    def create_snapshot(self):
+        require(self.folder is None, "APT_ALREADY_PREPARED")
+        snapshots, admitted = self.sources()
+        preferences = self.preferences()
+        self.inputs = snapshots, preferences
+        self.prep.trusted_path("/var/lib", directory=True)
+        self.folder = Path(tempfile.mkdtemp(prefix="eos-managed16-apt-", dir="/var/lib"))
+        os.chmod(self.folder, 0o711)
+        for name in ("sources", "lists", "archives", "preferences"):
+            path = self.folder / name
+            path.mkdir(mode=0o755)
+            os.chmod(path, 0o755 if name != "preferences" else 0o700)
+        for index, (suffix, contents) in enumerate(admitted):
+            self.write(self.folder / "sources" / (f"{index:03d}" + suffix), contents, 0o644)
+        for index, (_, contents) in enumerate(preferences):
+            self.write(self.folder / "preferences" / (f"{index:03d}" + ".pref"), contents, 0o600)
+        self.write(self.folder / "empty.list", b"", 0o644)
+        self.write(self.folder / "empty.preferences", b"", 0o600)
+        self.write(self.folder / "guard.py", apt_guard_source(self.folder / "archives").encode(), 0o600)
+        self.write(self.folder / "apt.conf", self.configuration().encode(), 0o644)
+        for tool in ("/usr/bin/apt-get", "/usr/bin/dpkg-deb", "/usr/bin/dpkg-query", "/usr/bin/python3"):
+            self.prep.trusted_path(tool, executable=True)
+        self.check_snapshot()
+
+    @staticmethod
+    def write(path, contents, mode):
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode)
+        with os.fdopen(fd, "wb") as stream:
+            os.fchmod(stream.fileno(), mode)
+            stream.write(contents)
+            stream.flush()
+            os.fsync(stream.fileno())
+
+    def configuration(self):
+        folder = self.folder
+        require(folder is not None and re.fullmatch(r"/var/lib/eos-managed16-apt-[A-Za-z0-9_-]+", str(folder)), "APT_PRIVATE_PATH")
+        return f'''Dir::Etc::parts "-";
+Dir::Etc::main "-";
+Dir::Etc::sourcelist "{folder}/empty.list";
+Dir::Etc::sourceparts "{folder}/sources";
+Dir::Etc::preferences "{folder}/empty.preferences";
+Dir::Etc::preferencesparts "{folder}/preferences";
+Dir::Etc::netrc "-";
+Dir::Etc::netrcparts "-";
+Dir::State::lists "{folder}/lists";
+Dir::Cache::archives "{folder}/archives";
+Dir::Cache::pkgcache "";
+Dir::Cache::srcpkgcache "";
+APT::Get::AllowUnauthenticated "false";
+Acquire::AllowInsecureRepositories "false";
+Acquire::AllowDowngradeToInsecureRepositories "false";
+Acquire::AllowWeakRepositories "false";
+Acquire::Check-Valid-Until "true";
+Acquire::Check-Date "true";
+Acquire::https::Verify-Peer "true";
+Acquire::https::Verify-Host "true";
+Acquire::https::Timeout "60";
+Acquire::http::Timeout "60";
+Acquire::Retries "2";
+APT::Update::Error-Mode "any";
+DPkg::Lock::Timeout "120";
+DPkg::Pre-Install-Pkgs {{ "/usr/bin/python3 -I -B {folder}/guard.py"; }};
+'''
+
+    def command(self, args, *, capture=False):
+        require(self.folder is not None, "APT_NOT_PREPARED")
+        result = self.prep.run(["/usr/bin/apt-get", *args], capture=capture, timeout=1800,
+                               env={**self.prep.ENV, "APT_CONFIG": str(self.folder / "apt.conf"),
+                                    "NEEDRESTART_MODE": "l"})
+        require(result.returncode == 0, "APT_ISOLATED_FAILED")
+        return result
+
+    @staticmethod
+    def install_args(packages):
+        return ["install", "-y", "--no-remove", "--no-upgrade", "--no-install-recommends", *packages]
+
+    def simulate(self, packages):
+        result = self.command(["--simulate", *self.install_args(packages)], capture=True)
+        try:
+            plan = apt_plan(result.stdout.decode("utf-8", errors="strict"))
+        except UnicodeError:
+            raise Rejected("APT_PLAN_OUTPUT") from None
+        # Match the actual pre-install hook before retiring EOS, including rc
+        # (configuration-only) records which APT may print without [oldVersion].
+        for package in sorted({name.split(":", 1)[0] for _, name, _ in plan}):
+            result = self.prep.run(["/usr/bin/dpkg-query", "-W", "-f=${db:Status-Abbrev}", package],
+                                   capture=True, timeout=30)
+            require(result.returncode in (0, 1), "APT_PACKAGE_QUERY")
+            require(result.returncode == 1 or result.stdout == b"un ", "APT_EXISTING_PACKAGE_CHANGE")
+        return plan
+
+    def prepare_downloads(self, staging):
+        """Must finish before the coordinator stops or moves R8."""
+        require(not self.ready, "APT_ALREADY_PREPARED")
+        self.create_snapshot()
+        self.command(["update"])
+        packages = (*self.prep.PACKAGES, "postgresql-17", "postgresql-client-17")
+        plan = self.simulate(packages)
+        self.command(["--download-only", *self.install_args(packages)])
+        require(self.simulate(packages) == plan, "APT_PLAN_CHANGED")
+        self.check_snapshot()
+        self.allowed = frozenset((package, version) for _, package, version in plan)
+        self.ready = True
+
+    def apply(self, packages):
+        require(self.ready, "APT_NOT_PREPARED")
+        self.check_snapshot()
+        before = self.prep.private_file("/var/lib/dpkg/status", 32 * 1024**2)
+        plan = self.simulate(packages)
+        require(all((package, version) in self.allowed for _, package, version in plan), "APT_PLAN_CHANGED")
+        require(self.prep.private_file("/var/lib/dpkg/status", 32 * 1024**2) == before, "APT_PACKAGE_STATE_CHANGED")
+        self.command(["--no-download", *self.install_args(packages)])
+
+    def prepare_packages(self, staging):
+        require(self.ready, "APT_NOT_PREPARED")
+        self.prep.check_existing_installation()
+        self.check_snapshot()
+        require(shutil.disk_usage("/").free >= 6 * 1024**3, "BOOTSTRAP_SPACE_REQUIRED")
+        self.apply(self.prep.PACKAGES)
+        self.prep.check_clusters()
+        self.prep.disable_distribution_cluster(staging)
+        self.prep.check_clusters()
+        self.apply(("postgresql-17", "postgresql-client-17"))
+        self.prep.check_clusters()
+
+
+def bind_managed16_apt_compat(prep):
+    compatibility = Managed16AptCompat(prep)
+    prep.check_apt_sources = compatibility.check_sources
+    prep.prepare_packages = compatibility.prepare_packages
+    return compatibility
+
+
 def load_preparer(entry_bytes):
     require(len(entry_bytes) == ENTRY_SIZE and hashlib.sha256(entry_bytes).hexdigest() == ENTRY_SHA, "ENTRY_PIN")
     blocks = []
@@ -620,6 +895,136 @@ def restore_stopped(q, state):
     journal(q, state, "RESTORED_STOPPED")
 
 
+# Read-only continuity evidence for the canonical Tailscale coexistence profile.
+# Keep the snapshot only in memory: SSH addresses and routes are private. This
+# detects observed changes; it neither probes remote reachability nor guarantees
+# that the connection cannot be interrupted between the bounded observations.
+def _vpn_daemon_identity():
+    service = unit_state("tailscaled.service")
+    require(service["LoadState"] == "loaded" and service["ActiveState"] == "active"
+            and service["SubState"] == "running" and service["ControlPID"] == "0",
+            "VPN_DAEMON_NOT_READY")
+    pid = service["MainPID"]
+    require(re.fullmatch(r"[1-9][0-9]{0,9}", pid) is not None and int(pid) <= 2147483647,
+            "VPN_DAEMON_PID")
+    return pid, process_identity(Path("/proc") / pid)
+
+
+def _vpn_package_version():
+    value = output(["/usr/bin/dpkg-query", "-W", "-f=${db:Status-Status}\\t${Version}\\n", "tailscale"])
+    require(re.fullmatch(r"installed\t[0-9][A-Za-z0-9.+:~\-]{0,255}\n", value) is not None,
+            "VPN_PACKAGE_NOT_READY")
+    return value.partition("\t")[2].rstrip("\n")
+
+
+def _vpn_ssh_snapshot():
+    import ipaddress
+    connection = os.environ.get("SSH_CONNECTION", "")
+    require(isinstance(connection, str) and len(connection) <= 512, "VPN_SSH_INPUT")
+    if not connection:
+        return None  # Local console; caller still preserves the active daemon.
+    parts = connection.split()
+    require(len(parts) == 4, "VPN_SSH_INPUT")
+    remote, remote_port, local, local_port = parts
+    require(all(re.fullmatch(r"[0-9]{1,5}", port) and 1 <= int(port) <= 65535
+                for port in (remote_port, local_port)), "VPN_SSH_INPUT")
+    # No scope suffix, hostname, option or caller-controlled path reaches ip.
+    require("%" not in remote + local, "VPN_SSH_INPUT")
+    try:
+        peer, address = ipaddress.ip_address(remote), ipaddress.ip_address(local)
+    except ValueError:
+        raise Rejected("VPN_SSH_INPUT") from None
+    require(peer.version == address.version and not any(
+        item.is_unspecified or item.is_multicast for item in (peer, address)), "VPN_SSH_INPUT")
+    family = "inet" if address.version == 4 else "inet6"
+    raw = output(["/usr/sbin/ip", "-j", "address", "show"])
+    interfaces = decoded(raw)
+    require(isinstance(interfaces, list) and 0 < len(interfaces) <= 128, "VPN_INTERFACE_OUTPUT")
+    bindings, devices = [], {}
+    for interface in interfaces:
+        require(isinstance(interface, dict), "VPN_INTERFACE_OUTPUT")
+        name, index = interface.get("ifname"), interface.get("ifindex")
+        require(isinstance(name, str) and re.fullmatch(r"[A-Za-z0-9_.:-]{1,15}", name)
+                and type(index) is int and 0 < index <= 2147483647
+                and name not in devices, "VPN_INTERFACE_OUTPUT")
+        flags, entries = interface.get("flags"), interface.get("addr_info")
+        require(isinstance(flags, list) and len(flags) <= 64
+                and all(isinstance(flag, str) for flag in flags)
+                and isinstance(entries, list) and len(entries) <= 128, "VPN_INTERFACE_OUTPUT")
+        devices[name] = (index, "UP" in flags)
+        for entry in entries:
+            require(isinstance(entry, dict), "VPN_INTERFACE_OUTPUT")
+            if entry.get("family") != family:
+                continue
+            try:
+                candidate = ipaddress.ip_address(entry.get("local", ""))
+            except ValueError:
+                raise Rejected("VPN_INTERFACE_OUTPUT") from None
+            if candidate != address:
+                continue
+            prefix = entry.get("prefixlen")
+            require(type(prefix) is int and 0 <= prefix <= address.max_prefixlen
+                    and "UP" in flags, "VPN_SSH_ADDRESS")
+            bindings.append((name, index, prefix))
+    require(len(bindings) == 1, "VPN_SSH_ADDRESS")
+    routes = decoded(output(["/usr/sbin/ip", "-j", "-4" if address.version == 4 else "-6",
+                             "route", "get", str(peer), "from", str(address),
+                             "ipproto", "tcp", "sport", str(int(local_port)),
+                             "dport", str(int(remote_port))]))
+    require(isinstance(routes, list) and len(routes) == 1 and isinstance(routes[0], dict),
+            "VPN_ROUTE_OUTPUT")
+    route = routes[0]
+    device = route.get("dev")
+    require(route.get("type", "unicast") == "unicast" and isinstance(device, str)
+            and device in devices and devices[device][1], "VPN_SSH_ROUTE")
+    try:
+        destination = ipaddress.ip_network(route.get("dst", ""), strict=False)
+    except ValueError:
+        raise Rejected("VPN_ROUTE_OUTPUT") from None
+    require(destination.version == peer.version and destination.prefixlen == peer.max_prefixlen
+            and peer in destination, "VPN_SSH_ROUTE")
+    # These identity fields affect the return path. Dynamic cache/expiry/uid
+    # details do not, and must not cause false changes on a healthy VPN.
+    identity = {"dev": device, "ifindex": devices[device][0]}
+    table = route.get("table", "main")
+    require((type(table) is int and 0 <= table <= 4294967295)
+            or (isinstance(table, str) and re.fullmatch(r"[A-Za-z0-9_.-]{1,64}", table)),
+            "VPN_ROUTE_OUTPUT")
+    identity["table"] = str(table)
+    for key in ("gateway", "prefsrc", "src", "from"):
+        value = route.get(key)
+        if value is not None:
+            try:
+                parsed = ipaddress.ip_address(value)
+            except ValueError:
+                raise Rejected("VPN_ROUTE_OUTPUT") from None
+            require(parsed.version == peer.version, "VPN_ROUTE_OUTPUT")
+            identity[key] = str(parsed)
+    return {"connection": (str(peer), int(remote_port), str(address), int(local_port)),
+            "binding": bindings[0], "route": identity}
+
+
+def vpn_snapshot():
+    """Required active Tailscale profile; no writes or caller-visible host data."""
+    try:
+        daemon = _vpn_daemon_identity()
+        version = _vpn_package_version()
+        ssh = _vpn_ssh_snapshot()
+        require(_vpn_daemon_identity() == daemon and _vpn_package_version() == version,
+                "VPN_CHANGED_DURING_INSPECTION")
+        return {"daemon": daemon, "version": version, "ssh": ssh}
+    except Rejected:
+        raise
+    except (OSError, ValueError, TypeError, KeyError, RecursionError):
+        raise Rejected("VPN_INSPECTION_FAILED") from None
+
+
+def check_vpn_snapshot(previous):
+    require(isinstance(previous, dict) and set(previous) == {"daemon", "version", "ssh"},
+            "VPN_SNAPSHOT_REQUIRED")
+    require(vpn_snapshot() == previous, "VPN_CONTINUITY_CHANGED")
+
+
 def main():
     require(os.geteuid() == 0, "ROOT_REQUIRED")
     require(len(sys.argv) == 1 or (len(sys.argv) == 3 and sys.argv[1] == "--restore-stopped"), "USAGE")
@@ -645,9 +1050,15 @@ def main():
     run(["/usr/bin/curl", "-q", "--proto", "=https", "--tlsv1.2", "--fail", "--silent", "--show-error",
          "--connect-timeout", "20", "--max-time", "120", "--max-filesize", str(ENTRY_SIZE), ENTRY_URL, "-o", str(entry)], timeout=125)
     prep, config, blocks = load_preparer(read(entry, ENTRY_SIZE))
+    compatibility = bind_managed16_apt_compat(prep)
     preflight(prep)
+    vpn = vpn_snapshot() if compatibility.has_tailscale else None
     print("EOS: R8 erkannt. Lade und pruefe R16 vollstaendig vor der Stilllegung.", flush=True)
     prep.download_assets(config, staging)
+    print("EOS: Pruefe und lade benoetigte Debian-Pakete vor dem R8-Stop.", flush=True)
+    compatibility.prepare_downloads(staging)
+    if vpn is not None:
+        check_vpn_snapshot(vpn)
     write_new(staging / "prepare-host.py", blocks[0])
     write_new(staging / "download.json", blocks[1])
     locks = package_locks()
@@ -655,13 +1066,18 @@ def main():
     state = None
     try:
         preflight(prep)
+        compatibility.check_snapshot()
+        if vpn is not None:
+            check_vpn_snapshot(vpn)
         q = Path(tempfile.mkdtemp(prefix="eos-r8-retired-", dir="/root"))
         state = {"schemaVersion": 1, "releaseId": R8, "token": os.urandom(32).hex(),
                  "phase": "PREPARED", "originals": {path: fingerprint(path) for path in MOVES}}
         journal(q, state)
         print("EOS: Private R8-Rueckfallablage (nicht hochladen): " + str(q), flush=True)
         retire(q, state)
-        prep.preflight(staging)  # the original, unchanged fresh-host admission
+        if vpn is not None:
+            check_vpn_snapshot(vpn)
+        prep.preflight(staging)  # original admission with the explicit APT adapter
     except BaseException:
         if q is not None and state is not None and state["phase"] != "PREPARED":
             print("EOS: Angehalten. Private Rueckfallablage: " + str(q), flush=True)
@@ -671,8 +1087,10 @@ def main():
         for fd in locks:
             os.close(fd)
     journal(q, state, "INSTALLING_MANAGED16")
-    print("EOS: R8 stillgelegt; unveraenderte R16-Neuinstallation startet.", flush=True)
+    print("EOS: R8 stillgelegt; R16-Neuinstallation mit gepruefter APT-Quellentrennung startet.", flush=True)
     prep.install_downloaded(config, staging)
+    if vpn is not None:
+        check_vpn_snapshot(vpn)
     journal(q, state, "MANAGED16_INSTALLER_FINISHED")
     print("EOS: R16-Installer beendet. Pi-Funktionspruefung steht noch aus. R8-Ablage: " + str(q), flush=True)
 
