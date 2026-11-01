@@ -124,7 +124,7 @@ jobs:
 
       - name: Preserve bounded native test and source transformation evidence
         if: always() && env.EOS_NATIVE_LAB_ROOT != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: eos-r8-native-controller-${{ github.sha }}
           retention-days: 14
@@ -213,7 +213,7 @@ jobs:
 
       - name: Preserve only bounded management evidence
         if: always() && env.EOS_MANAGEMENT_LAB_ROOT != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: eos-r8-native-management-${{ github.sha }}
           retention-days: 14
@@ -310,7 +310,7 @@ jobs:
       - name: Retain exact generated candidate and evidence
         id: archive
         if: steps.fresh.outputs.ready == 'true'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: eos-r8-candidate-${{ github.sha }}
           path: |
